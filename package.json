@@ -11,7 +11,8 @@
     "art:anchor": "pnpm --filter @amanda/art anchor",
     "art:cards": "pnpm --filter @amanda/art cards",
     "art:card": "pnpm --filter @amanda/art card",
-    "art:process": "pnpm --filter @amanda/art process"
+    "art:process": "pnpm --filter @amanda/art process",
+    "art:actions": "pnpm --filter @amanda/art actions"
   },
   "engines": {
     "node": ">=20"

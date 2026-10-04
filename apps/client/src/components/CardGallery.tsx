@@ -1,7 +1,9 @@
 import { useState } from "react";
-import { CATALOG, SERIES } from "../data/catalog";
+import { ACTIONS, CATALOG, SERIES } from "../data/catalog";
 import { CardView } from "./CardView";
 import { CardDetailModal } from "./CardDetailModal";
+import { ActionCardView } from "./ActionCardView";
+import { ActionDetailModal } from "./ActionDetailModal";
 
 /**
  * Art-review gallery (open the game with ?gallery). Shows every launch card at
@@ -11,6 +13,7 @@ import { CardDetailModal } from "./CardDetailModal";
 export function CardGallery() {
   const [detail, setDetail] = useState<string | null>(null);
   const [onlyArt, setOnlyArt] = useState(false);
+  const [actionDetail, setActionDetail] = useState<string | null>(null);
 
   return (
     <div className="gallery">
@@ -54,7 +57,29 @@ export function CardGallery() {
         );
       })}
 
+      <section className="gallery__series">
+        <h3>
+          קלפי פעולה <small>({ACTIONS.size})</small>
+        </h3>
+        <div className="gallery__row">
+          {[...ACTIONS.keys()].map((id) => (
+            <div key={id} className="gallery__item">
+              <div className="gallery__slot gallery__slot--board">
+                <ActionCardView actionId={id} size="medium" onInfo={() => setActionDetail(id)} />
+              </div>
+              <div className="gallery__slot gallery__slot--hand">
+                <ActionCardView actionId={id} size="large" onInfo={() => setActionDetail(id)} />
+              </div>
+              <span className="gallery__cap">{ACTIONS.get(id)?.name.he}</span>
+            </div>
+          ))}
+        </div>
+      </section>
+
       {detail && <CardDetailModal cardId={detail} onClose={() => setDetail(null)} />}
+      {actionDetail && (
+        <ActionDetailModal actionId={actionDetail} onClose={() => setActionDetail(null)} />
+      )}
     </div>
   );
 }

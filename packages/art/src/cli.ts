@@ -12,7 +12,7 @@
 import { existsSync } from "node:fs";
 import { join } from "node:path";
 import { CARDS, REPO_ROOT, SERIES, launchCards } from "./catalog.js";
-import { buildAnchoredPrompt, buildPrompt } from "./prompt.js";
+import { buildActionPrompt, buildAnchoredPrompt, buildPrompt } from "./prompt.js";
 import { STYLE_DIRECTIONS, TEST_MONSTERS } from "./styles.js";
 import { download, generate, generateWithReference, uploadFile } from "./fal.js";
 
@@ -117,6 +117,36 @@ async function cmdCard(cardId?: string, styleId?: string, ...notes: string[]): P
   console.log(`✓ saved → assets/raw/${card.seriesId}/${card.id}.png\n`);
 }
 
+/** Generate artwork for every Action Card. */
+async function cmdActions(styleId?: string): Promise<void> {
+  const dir = dirById(styleId ?? "");
+  const { readFileSync } = await import("node:fs");
+  const actions = JSON.parse(
+    readFileSync(join(REPO_ROOT, "data", "action-cards.json"), "utf8"),
+  ) as Array<{ id: string; name: { en: string }; description: { he: string }; rarity: string }>;
+
+  console.log(`\nGenerating ${actions.length} action cards (style: ${dir.id})\n`);
+  for (const a of actions) {
+    const dest = join(RAW, "actions", `${a.id}.png`);
+    if (existsSync(dest)) {
+      console.log(`   skip  ${a.name.en} (exists)`);
+      continue;
+    }
+    process.stdout.write(`   ${a.name.en.padEnd(24)} ... `);
+    try {
+      const [img] = await generate(
+        buildActionPrompt(a.id, a.name.en, a.description.he, a.rarity, dir),
+      );
+      if (!img) throw new Error("no image returned");
+      await download(img.url, dest);
+      console.log("OK");
+    } catch (err) {
+      console.log(`FAIL ${(err as Error).message}`);
+    }
+  }
+  console.log("\nDone -> assets/raw/actions/\n");
+}
+
 const [cmd, ...args] = process.argv.slice(2);
 const run = async () => {
   switch (cmd) {
@@ -126,6 +156,8 @@ const run = async () => {
       return cmdAnchor(args[0]);
     case "cards":
       return cmdCards(args[0], args[1]);
+    case "actions":
+      return cmdActions(args[0]);
     case "card":
       return cmdCard(args[0], args[1], ...args.slice(2));
     default:

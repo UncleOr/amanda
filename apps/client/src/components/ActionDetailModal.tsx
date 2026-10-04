@@ -1,16 +1,8 @@
 import type { CSSProperties } from "react";
 import { ACTIONS, isPassiveAction } from "../data/catalog";
 import { RARITY_META } from "../data/cardMeta";
+import { actionArtUrl } from "./ActionCardView";
 
-const ACTION_ICON: Record<string, string> = {
-  energy_boost: "⚡",
-  xray: "👁️",
-  full_refuel: "⬆️",
-  fill_lava: "🌋",
-  fill_colossus: "🪨",
-  fill_flame: "🔥",
-  fill_cube: "💧",
-};
 
 export function ActionDetailModal({
   actionId,
@@ -35,9 +27,14 @@ export function ActionDetailModal({
           ✕
         </button>
         <div className="modal__banner">
-          <div className="modal__portrait" style={{ fontSize: 34, display: "flex", alignItems: "center", justifyContent: "center" }}>
-            {ACTION_ICON[actionId] ?? "🎴"}
-          </div>
+          <div
+            className="modal__portrait"
+            style={{
+              backgroundImage: `url("${actionArtUrl(actionId)}")`,
+              backgroundSize: "cover",
+              backgroundPosition: "top center",
+            }}
+          />
           <div className="modal__title">
             <h2>{card.name.he}</h2>
             <p className="modal__subtitle">{card.name.en}</p>

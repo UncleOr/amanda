@@ -10,7 +10,8 @@
     "cards": "tsx src/cli.ts cards",
     "card": "tsx src/cli.ts card",
     "process": "tsx src/process.ts",
-    "typecheck": "tsc --noEmit"
+    "typecheck": "tsc --noEmit",
+    "actions": "tsx src/cli.ts actions"
   },
   "dependencies": {
     "@amanda/shared": "workspace:*",

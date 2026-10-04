@@ -1,6 +1,7 @@
 import type { Card } from "@amanda/shared";
 import { FRAMING, SERIES_TEMPLATE, type StyleDirection } from "./styles.js";
 import { CARD_LOOK } from "./cardLooks.js";
+import { ACTION_FRAMING, ACTION_LOOK } from "./actionLooks.js";
 
 /**
  * Turns a card's own GDD data into a visual description. The English name plus
@@ -104,4 +105,28 @@ export function buildAnchoredPrompt(card: Card, dir: StyleDirection): string {
     buildPrompt(card, dir) +
     " Do not copy the reference creature's shape, colors or species — only its art style."
   );
+}
+
+/** Build the prompt for an Action Card (an object/effect, never a creature). */
+export function buildActionPrompt(
+  id: string,
+  nameEn: string,
+  description: string,
+  rarity: string,
+  dir: StyleDirection,
+): string {
+  const look = ACTION_LOOK[id];
+  const grandeur =
+    rarity === "legendary"
+      ? "legendary and awe-inspiring, the centrepiece of the whole set"
+      : rarity === "epic"
+        ? "epic and powerful, heavy magical presence"
+        : "clean and punchy, instantly readable";
+  return [
+    `Key art for a trading-card game ACTION CARD called "${nameEn}".`,
+    look ? `DESIGN (follow closely): ${look}.` : `It represents: ${description}`,
+    `${grandeur}.`,
+    dir.style + ".",
+    ACTION_FRAMING,
+  ].join(" ");
 }
