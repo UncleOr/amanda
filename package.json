@@ -13,7 +13,8 @@
     "art:card": "pnpm --filter @amanda/art card",
     "art:process": "pnpm --filter @amanda/art process",
     "art:actions": "pnpm --filter @amanda/art actions",
-    "art:arena": "pnpm --filter @amanda/art arena"
+    "art:arena": "pnpm --filter @amanda/art arena",
+    "copy": "node scripts/copy-inventory.mjs"
   },
   "engines": {
     "node": ">=20"
