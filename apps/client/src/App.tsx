@@ -1,5 +1,6 @@
 import { useEffect, useRef, useState } from "react";
 import { PHASES } from "@amanda/shared";
+import type { BattleResult } from "@amanda/engine";
 import { useMatch } from "./game/useMatch";
 import { useDrag } from "./game/useDrag";
 import { sfx } from "./game/sfx";
@@ -16,6 +17,34 @@ import { CardGallery } from "./components/CardGallery";
 import { ArenaPreview } from "./components/ArenaPreview";
 import { BattleLog } from "./components/BattleLog";
 
+
+/**
+ * Why the match ended. A battle that runs the full 15 seconds with both Kings
+ * standing is settled by a tiebreak chain — and a player who sees their King
+ * and half their board alive deserves to be told which link decided it.
+ */
+function verdictText(result: BattleResult, iWon: boolean): string {
+  const them = iWon ? "היריב" : "שלך";
+  const pct = (n: number) => `${Math.round(n * 100)}%`;
+  switch (result.winReason) {
+    case "kingDown":
+      return `המלך ${them} נפל — זה מסיים את הקרב מיד.`;
+    case "kingHp": {
+      const t = result.tiebreak!;
+      const mine = result.winner === "A" ? t.b : t.a;
+      const theirs = result.winner === "A" ? t.a : t.b;
+      return `נגמר הזמן ושני המלכים שרדו — הוכרע לפי חיי המלך: ${pct(
+        iWon ? theirs : mine,
+      )} שלך מול ${pct(iWon ? mine : theirs)} של היריב.`;
+    }
+    case "totalHp":
+      return "נגמר הזמן והמלכים שרדו עם אותו אחוז חיים — הוכרע לפי סך החיים על הלוח.";
+    case "aliveCount":
+      return "נגמר הזמן והחיים היו שווים — הוכרע לפי מספר הקלפים ששרדו.";
+    case "coinFlip":
+      return "נגמר הזמן והכול יצא שווה לחלוטין — הוכרע בהטלת מטבע.";
+  }
+}
 
 const PHASE_LABEL: Record<string, string> = {
   countdown: "מתכוננים…",
@@ -98,6 +127,13 @@ function Game() {
 
   return (
     <div className="app">
+      {/* Two 4x4 boards of portrait cards only fit side by side in landscape,
+          so on a phone held upright we ask for a turn instead of squashing. */}
+      <div className="rotate-hint">
+        <div className="rotate-hint__icon">📱</div>
+        <h2>סובבו את המכשיר</h2>
+        <p>אמנדה משוחקת לרוחב — ככה שני הלוחות נכנסים אחד מול השני.</p>
+      </div>
       <header className="topbar">
         <div className="topbar__title">אמנדה — המשחקון</div>
         {PHASE_LABEL[m.phase] && (
@@ -402,14 +438,20 @@ function Game() {
           <div className="result__card">
             <h1>{winnerText}</h1>
             {m.result && (
-              <p>
-                הקרב נמשך {(m.result.ticks / 30).toFixed(1)} שניות ·{" "}
-                {m.result.events.filter((e) => e.type === "death").length} מפלצות נפלו
-              </p>
+              <>
+                <p className="result__verdict">{verdictText(m.result, m.iWon)}</p>
+                <p>
+                  הקרב נמשך {(m.result.ticks / 30).toFixed(1)} שניות ·{" "}
+                  {m.result.events.filter((e) => e.type === "death").length} מפלצות נפלו
+                </p>
+              </>
             )}
             <div className="result__buttons">
-              <button className="btn-fight" onClick={m.reset}>
+              <button className="btn-fight" onClick={m.playAgain}>
                 🔄 משחק חדש
+              </button>
+              <button className="btn-fight btn-ghost" onClick={m.reset}>
+                ☰ תפריט
               </button>
               {m.result && (
                 <button className="btn-fight btn-online" onClick={() => setShowLog((v) => !v)}>

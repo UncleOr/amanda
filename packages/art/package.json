@@ -12,7 +12,8 @@
     "process": "tsx src/process.ts",
     "typecheck": "tsc --noEmit",
     "actions": "tsx src/cli.ts actions",
-    "arena": "tsx src/cli.ts arena"
+    "arena": "tsx src/cli.ts arena",
+    "icons": "tsx src/icons.ts"
   },
   "dependencies": {
     "@amanda/shared": "workspace:*",

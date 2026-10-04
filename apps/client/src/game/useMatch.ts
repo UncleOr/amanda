@@ -279,7 +279,10 @@ export interface MatchApi {
   placeKing: () => void;
   toBattle: () => void;
   finishBattle: () => void;
+  /** Back to the main menu, abandoning whatever is in progress. */
   reset: () => void;
+  /** Straight into another match of the same kind, skipping the menu. */
+  playAgain: () => void;
 }
 
 export function useMatch(): MatchApi {
@@ -533,7 +536,8 @@ export function useMatch(): MatchApi {
     setPhase("result");
   }, [result]);
 
-  const reset = useCallback(() => {
+  /** Tear the match down to a clean slate, without deciding where to go next. */
+  const clearMatch = useCallback(() => {
     netRef.current?.close();
     netRef.current = null;
     aiPlanRef.current = generateAiPlan();
@@ -551,8 +555,28 @@ export function useMatch(): MatchApi {
     setMySide("A");
     setNetOpp({ placements: {}, king: null });
     setTimeLeft(COUNTDOWN_SECONDS);
-    setPhase("intro");
   }, []);
+
+  const reset = useCallback(() => {
+    clearMatch();
+    setPhase("intro");
+  }, [clearMatch]);
+
+  /**
+   * "New game" means a new game — not a trip back to the menu. An online match
+   * queues up another online match; a match against the computer starts another
+   * one immediately.
+   */
+  const playAgain = useCallback(() => {
+    const wasOnline = onlineRef.current;
+    clearMatch();
+    if (wasOnline && ONLINE_AVAILABLE) {
+      startOnline();
+      return;
+    }
+    sfx.play("click");
+    setPhase("countdown");
+  }, [clearMatch, startOnline]);
 
   useEffect(() => {
     if (!["countdown", "build", "panic", "prebattle"].includes(phase)) return;
@@ -657,6 +681,7 @@ export function useMatch(): MatchApi {
     toBattle: enterPrebattle,
     finishBattle,
     reset,
+    playAgain,
   };
 }
 

@@ -111,6 +111,8 @@ export interface BattleState {
   units: Unit[];
   events: BattleEvent[];
   winner: Owner | null;
+  winReason: WinReason;
+  tiebreak: Tiebreak | null;
   ended: boolean;
   nextUid: number;
   synergies: SynergyDef[];
@@ -136,9 +138,27 @@ export interface BattleFrame {
   units: FrameUnit[];
 }
 
+/**
+ * Why the battle ended. A match is never a draw, so when the clock runs out a
+ * tiebreak chain decides it — and the player is owed an explanation of which
+ * link in that chain did the deciding.
+ */
+export type WinReason = "kingDown" | "kingHp" | "totalHp" | "aliveCount" | "coinFlip";
+
+/** The numbers that settled a timeout, for showing the player the margin. */
+export interface Tiebreak {
+  reason: WinReason;
+  a: number;
+  b: number;
+}
+
 export interface BattleResult {
   winner: Owner | null;
   ticks: number;
+  /** How the match was decided. */
+  winReason: WinReason;
+  /** Present only when the clock ran out and a tiebreak settled it. */
+  tiebreak: Tiebreak | null;
   events: BattleEvent[];
   /** Final unit snapshot (useful for tests and post-battle UI). */
   finalUnits: Unit[];

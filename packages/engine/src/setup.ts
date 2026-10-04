@@ -144,6 +144,8 @@ export function buildBattle(setup: BattleSetup): BattleState {
     units: [],
     events: [],
     winner: null,
+    winReason: "kingDown",
+    tiebreak: null,
     ended: false,
     nextUid: 0,
     synergies: setup.synergies ?? [],

@@ -19,7 +19,14 @@ import {
   sharesLane,
 } from "./combat.js";
 import { buildBattle, createUnitFromCard, type BattleSetup } from "./setup.js";
-import type { BattleFrame, BattleResult, BattleState, Owner, Unit } from "./types.js";
+import type {
+  BattleFrame,
+  BattleResult,
+  BattleState,
+  Owner,
+  Unit,
+  WinReason,
+} from "./types.js";
 
 const TPS = SIMULATION.ticksPerSecond;
 const DT = 1 / TPS;
@@ -178,6 +185,7 @@ export function runBattle(setup: BattleSetup): BattleResult {
     if (u.isKing) {
       // The King's death ends the match; its owner loses.
       state.winner = u.owner === "A" ? "B" : "A";
+      state.winReason = "kingDown";
       state.ended = true;
     }
   };
@@ -258,18 +266,28 @@ export function runBattle(setup: BattleSetup): BattleResult {
     const aliveCount = (owner: Owner): number =>
       state.units.reduce((n, u) => (u.alive && u.owner === owner ? n + 1 : n), 0);
 
-    const tiebreaks = [kingFrac, totalHp, aliveCount];
-    for (const metric of tiebreaks) {
+    const tiebreaks: Array<[WinReason, (o: Owner) => number]> = [
+      ["kingHp", kingFrac],
+      ["totalHp", totalHp],
+      ["aliveCount", aliveCount],
+    ];
+    for (const [reason, metric] of tiebreaks) {
       const a = metric("A");
       const b = metric("B");
       if (a !== b) {
         state.winner = a > b ? "A" : "B";
+        // Record WHICH link of the chain decided it, and by how much, so the
+        // result screen can explain a loss where nothing of yours even died.
+        state.winReason = reason;
+        state.tiebreak = { reason, a, b };
         state.ended = true;
         return;
       }
     }
     // Perfectly even → a deterministic coin flip (seeded), still never a draw.
     state.winner = state.rng.next() < 0.5 ? "A" : "B";
+    state.winReason = "coinFlip";
+    state.tiebreak = { reason: "coinFlip", a: 0, b: 0 };
     state.ended = true;
   }
 
@@ -287,6 +305,8 @@ export function runBattle(setup: BattleSetup): BattleResult {
   return {
     winner: state.winner,
     ticks: state.tick,
+    winReason: state.winReason,
+    tiebreak: state.tiebreak,
     events: state.events,
     finalUnits: state.units,
     frames,

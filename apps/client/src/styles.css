@@ -1292,3 +1292,151 @@ button:disabled {
 .log__swatch--top { background: rgba(255, 176, 32, 0.5); border-color: var(--accent); }
 .log__swatch--some { background: rgba(74, 163, 255, 0.4); }
 .log__swatch--idle { background: transparent; border-style: dashed; }
+
+/* a secondary action next to the primary one */
+.btn-ghost {
+  background: transparent;
+  border-color: var(--line);
+  color: var(--muted);
+}
+.btn-ghost:hover {
+  border-color: var(--accent);
+  color: var(--text);
+}
+
+/* =========================================================================
+   Phone, held sideways.
+   A 4x4 board of portrait cards is tall, and two of them have to sit side by
+   side — that only works in landscape. Below ~560px of height the hand moves
+   out of the bottom band and becomes a narrow side column, which hands the
+   whole height back to the boards.
+   ========================================================================= */
+@media (max-height: 560px) and (orientation: landscape) {
+  .topbar {
+    padding: 4px 10px;
+    gap: 8px;
+  }
+  .topbar__title { font-size: 14px; }
+  .topbar__phase { font-size: 11px; }
+  .topbar__timer { font-size: 16px; }
+  .topbar__exit { padding: 2px 7px; font-size: 11px; }
+  .mute { padding: 4px 7px; }
+
+  /* boards beside the hand, instead of above it */
+  .build {
+    flex-direction: row;
+    align-items: stretch;
+  }
+  .boards {
+    order: 1;
+    /* room at the bottom for the action strip that floats over this column */
+    padding: 6px 8px 26px;
+    gap: 8px;
+  }
+  .side__label { font-size: 10px; }
+
+  /* the action bar becomes a strip under the boards inside their own column */
+  .actions {
+    order: 1;
+    position: absolute;
+    /* spans the boards column only — the hand owns the inline-end side */
+    inset-inline-start: 0;
+    inset-inline-end: 146px;
+    bottom: 0;
+    padding: 2px 8px;
+    background: rgba(12, 17, 29, 0.85);
+    border-top: none;
+    gap: 5px;
+  }
+  .actions__title,
+  .actions__empty { font-size: 10px; }
+  .action-chip__card { width: 40px; height: 52px; }
+  .action-chip__main,
+  .action-chip__info { font-size: 9px; padding: 1px 5px; }
+
+  /* the hand: a fixed-width column on the trailing edge */
+  .hand {
+    order: 2;
+    flex-direction: column;
+    flex-wrap: nowrap;
+    width: 146px;
+    flex-shrink: 0;
+    align-items: stretch;
+    justify-content: center;
+    gap: 5px;
+    padding: 6px 8px;
+    border-top: none;
+    border-inline-start: 1px solid var(--line);
+    overflow-y: auto;
+  }
+  .hand__current {
+    width: 92px;
+    height: 120px;
+    align-self: center;
+  }
+  .hand__counts { margin-bottom: 0; gap: 5px; }
+  .count { font-size: 11px; padding: 1px 7px; }
+  .hand__buttons {
+    justify-content: center;
+    gap: 5px;
+  }
+  .hand__buttons button {
+    font-size: 11px;
+    padding: 5px 8px;
+  }
+  /* the long explainer has no room here and the icons already say it */
+  .hand__hint { display: none; }
+  .warn { font-size: 11px; text-align: center; }
+  .hand .btn-fight {
+    margin-inline-start: 0;
+    font-size: 14px;
+    padding: 8px 12px;
+  }
+
+  /* the arena fills the width it can get */
+  .battle { padding: 6px; }
+
+  .result { padding: 6px 0; }
+  .result__card { padding: 14px 18px; }
+  .result__card h1 { font-size: 26px; margin: 0 0 4px; }
+}
+
+/* Portrait on a phone: say so rather than showing a squashed board. */
+.rotate-hint { display: none; }
+@media (max-width: 560px) and (orientation: portrait) {
+  .rotate-hint {
+    position: fixed;
+    inset: 0;
+    z-index: 100;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 14px;
+    text-align: center;
+    padding: 30px;
+    background: var(--bg);
+  }
+  .rotate-hint__icon {
+    font-size: 64px;
+    animation: tilt 1.6s ease-in-out infinite;
+  }
+  .rotate-hint p {
+    color: var(--muted);
+    margin: 0;
+    font-size: 15px;
+  }
+  @keyframes tilt {
+    0%, 100% { transform: rotate(0deg); }
+    50% { transform: rotate(90deg); }
+  }
+}
+
+/* why the match ended — especially when nothing of yours died */
+.result__verdict {
+  margin: 0 auto 6px;
+  max-width: 44ch;
+  color: var(--text);
+  font-size: 14px;
+  line-height: 1.5;
+}

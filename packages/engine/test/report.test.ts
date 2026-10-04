@@ -79,3 +79,58 @@ describe("battle report", () => {
     expect(report.sides.A.kills + report.sides.B.kills).toBeLessThanOrEqual(report.totalDeaths);
   });
 });
+
+/**
+ * How a match is decided. A battle where nothing of yours died and your King
+ * survived can still be a loss, so the result has to say WHICH rule settled it.
+ */
+describe("win conditions", () => {
+  const brick = testCard({ id: "brick", hp: 400, power: 1, attackSpeed: 10, moveSpeed: 0 });
+  const bigBrick = testCard({ id: "big_brick", hp: 900, power: 1, attackSpeed: 10, moveSpeed: 0 });
+  const killer = testCard({ id: "killer", power: 80, moveSpeed: 2, hp: 900 });
+  const paperKing = testCard({ id: "paper_king", hp: 20, power: 1, attackSpeed: 10 });
+
+  it("a King going down ends it immediately and says so", () => {
+    const cat = catalogOf(killer, paperKing);
+    const r = runBattle({
+      seed: 1,
+      catalog: cat,
+      a: { owner: "A", placements: [{ cardId: "killer", x: 3, y: 1 }] },
+      b: { owner: "B", placements: [{ cardId: "paper_king", x: 1, y: 1, king: true }] },
+    });
+    expect(r.winner).toBe("A");
+    expect(r.winReason).toBe("kingDown");
+    expect(r.tiebreak).toBeNull();
+    expect(r.ticks).toBeLessThan(450); // it did not need the full clock
+  });
+
+  it("a timeout reports which tiebreak decided it, and by what margin", () => {
+    const cat = catalogOf(brick, bigBrick);
+    const r = runBattle({
+      seed: 1,
+      catalog: cat,
+      a: { owner: "A", placements: [{ cardId: "big_brick", x: 1, y: 1, king: true }] },
+      b: { owner: "B", placements: [{ cardId: "brick", x: 1, y: 1, king: true }] },
+    });
+    // Neither King can be reached, so the clock runs all the way out.
+    expect(r.ticks).toBe(450);
+    expect(r.winReason).not.toBe("kingDown");
+    expect(r.tiebreak).not.toBeNull();
+    expect(r.tiebreak!.reason).toBe(r.winReason);
+    // Both Kings are at full health, so it cannot have been decided on that.
+    expect(r.winReason).toBe("totalHp");
+    expect(r.winner).toBe("A"); // 900 x3 HP beats 400 x3
+  });
+
+  it("never ends in a draw", () => {
+    const cat = catalogOf(brick);
+    const r = runBattle({
+      seed: 7,
+      catalog: cat,
+      a: { owner: "A", placements: [{ cardId: "brick", x: 1, y: 1, king: true }] },
+      b: { owner: "B", placements: [{ cardId: "brick", x: 1, y: 1, king: true }] },
+    });
+    expect(r.winner).not.toBeNull();
+    expect(r.winReason).toBe("coinFlip");
+  });
+});
