@@ -33,7 +33,7 @@ export async function generate(prompt: string, opts: { numImages?: number; seed?
   const res = (await fal.subscribe(MODEL, {
     input: {
       prompt,
-      aspect_ratio: "1:1",
+      aspect_ratio: "3:4", // portrait — matches the 1:1.3 card shape
       resolution: "1K",
       output_format: "png",
       num_images: opts.numImages ?? 1,
@@ -53,7 +53,7 @@ export async function generateWithReference(
     input: {
       prompt,
       image_urls: referenceUrls,
-      aspect_ratio: "1:1",
+      aspect_ratio: "3:4", // portrait — matches the 1:1.3 card shape
       resolution: "1K",
       output_format: "png",
       num_images: opts.numImages ?? 1,

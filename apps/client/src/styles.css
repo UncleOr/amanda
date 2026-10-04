@@ -154,9 +154,12 @@ body {
   grid-template-columns: repeat(4, 1fr);
   grid-template-rows: repeat(4, 1fr);
   gap: 6px;
-  width: max(160px, min(42vh, 44vw));
-  max-width: 380px;
-  aspect-ratio: 1;
+  /* Cards are portrait (a real trading-card shape), so each cell is 1:1.3 and
+     the 4x4 board ends up taller than wide: 4 : (4 x 1.3) = 4 : 5.2.
+     Width is capped by BOTH axes so two boards still sit side by side. */
+  width: max(132px, min(40vw, 44vh));
+  max-width: 330px;
+  aspect-ratio: 4 / 5.2;
   padding: 7px;
   background: var(--panel);
   border: 1px solid var(--line);
@@ -528,8 +531,8 @@ body {
   flex-wrap: wrap;
 }
 .hand__current {
-  width: 138px;
-  height: 126px;
+  width: 124px;
+  height: 161px; /* 1 : 1.3 — same card shape as on the board */
   flex-shrink: 0;
 }
 .hand__empty {
@@ -827,7 +830,8 @@ button:disabled {
 
 /* ---- portrait / small screens ---- */
 @media (max-width: 760px) {
-  .board { width: max(150px, min(40vh, 46vw)); }
+  .board { width: max(120px, min(43vw, 40vh)); }
+  .hand__current { width: 104px; height: 135px; }
   .midline { font-size: 16px; }
   .modal__stats { grid-template-columns: repeat(3, 1fr); }
   .hand { gap: 10px; padding: 8px 12px; }
@@ -850,6 +854,6 @@ button:disabled {
 .gallery__row { display: flex; flex-wrap: wrap; gap: 18px; }
 .gallery__item { display: flex; flex-direction: column; align-items: center; gap: 6px; }
 .gallery__slot { flex: none; }
-.gallery__slot--board { width: 86px; height: 86px; }
-.gallery__slot--hand { width: 138px; height: 126px; }
+.gallery__slot--board { width: 74px; height: 96px; }
+.gallery__slot--hand { width: 124px; height: 161px; }
 .gallery__cap { font-size: 12px; color: var(--muted); }

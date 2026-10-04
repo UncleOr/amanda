@@ -13,8 +13,9 @@ import { CARDS, REPO_ROOT, SERIES } from "./catalog.js";
 
 const RAW = join(REPO_ROOT, "assets", "raw");
 const OUT = join(REPO_ROOT, "apps", "client", "public", "cards");
-/** Card art is shown at ~140px on the hand card, so 384 covers retina. */
-const SIZE = 384;
+/** Portrait card art (3:4). Hand card is ~124px wide, so 384 covers retina. */
+const W = 384;
+const H = 512;
 
 async function main(): Promise<void> {
   if (!existsSync(RAW)) {
@@ -37,7 +38,7 @@ async function main(): Promise<void> {
       }
       const outFile = `${cardId}.webp`;
       await sharp(join(dir, file))
-        .resize(SIZE, SIZE, { fit: "contain", background: { r: 0, g: 0, b: 0, alpha: 0 } })
+        .resize(W, H, { fit: "cover", position: "top" })
         .webp({ quality: 82 })
         .toFile(join(OUT, outFile));
       spriteFor.set(cardId, `cards/${outFile}`);
