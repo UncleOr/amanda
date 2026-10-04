@@ -17,6 +17,8 @@ import { ArenaPreview } from "./components/ArenaPreview";
 
 
 const PHASE_LABEL: Record<string, string> = {
+  countdown: "מתכוננים…",
+  waiting: "מחפש יריב…",
   build: PHASES.build.label.he,
   panic: PHASES.panic.label.he + "!",
   prebattle: "נועלים לוחות…",
@@ -24,16 +26,32 @@ const PHASE_LABEL: Record<string, string> = {
   result: "סיום",
 };
 
-export default function App() {
-  // Review views: ?gallery for the card art, ?arena for the battle effects.
-  const review = new URLSearchParams(location.search);
-  if (review.has("gallery")) return <CardGallery />;
-  if (review.has("arena")) return <ArenaPreview />;
+/** Phases where leaving means abandoning a match in progress. */
+const IN_MATCH = ["countdown", "build", "panic", "prebattle", "battle"];
 
+/**
+ * Review views, chosen once at module load: ?gallery for the card art, ?arena
+ * for the battle effects. Reading this inside App would mean returning before
+ * its hooks run, which breaks the rules of hooks (and Fast Refresh with it).
+ */
+const REVIEW = new URLSearchParams(location.search).has("gallery")
+  ? "gallery"
+  : new URLSearchParams(location.search).has("arena")
+    ? "arena"
+    : null;
+
+export default function App() {
+  if (REVIEW === "gallery") return <CardGallery />;
+  if (REVIEW === "arena") return <ArenaPreview />;
+  return <Game />;
+}
+
+function Game() {
   const m = useMatch();
   const [detail, setDetail] = useState<string | null>(null);
   const [actionDetail, setActionDetail] = useState<string | null>(null);
   const [muted, setMuted] = useState(false);
+  const [confirmExit, setConfirmExit] = useState(false);
   const openInfo = (cardId: string) => setDetail(cardId);
 
   const showBoards = m.phase === "build" || m.phase === "panic" || m.phase === "prebattle";
@@ -80,24 +98,39 @@ export default function App() {
     <div className="app">
       <header className="topbar">
         <div className="topbar__title">אמנדה — המשחקון</div>
-        {m.phase !== "intro" && (
+        {PHASE_LABEL[m.phase] && (
           <div className={`topbar__phase phase--${m.phase}`}>{PHASE_LABEL[m.phase]}</div>
         )}
         {(m.phase === "build" || m.phase === "panic") && (
           <div className="topbar__timer">⏱️ {Math.ceil(m.timeLeft)}s</div>
         )}
-        <button
-          className="mute"
-          title="צליל"
-          onClick={() => {
-            const nowMuted = sfx.toggleMute();
-            music.setMuted(nowMuted);
-            setMuted(nowMuted);
-          }}
-          style={{ marginInlineStart: m.phase === "build" || m.phase === "panic" ? 0 : "auto" }}
-        >
-          {muted ? "🔇" : "🔊"}
-        </button>
+        <div className="topbar__right">
+          {m.phase !== "intro" && (
+            <button
+              className="topbar__exit"
+              title="חזרה לתפריט"
+              onClick={() => {
+                sfx.play("click");
+                // Leaving mid-match throws the board away, so ask first.
+                if (IN_MATCH.includes(m.phase)) setConfirmExit(true);
+                else m.reset();
+              }}
+            >
+              ✕ יציאה
+            </button>
+          )}
+          <button
+            className="mute"
+            title={muted ? "הפעלת צליל" : "השתקה"}
+            onClick={() => {
+              const nowMuted = sfx.toggleMute();
+              music.setMuted(nowMuted);
+              setMuted(nowMuted);
+            }}
+          >
+            {muted ? "🔇" : "🔊"}
+          </button>
+        </div>
       </header>
 
       {/* ---- intro / start screen ---- */}
@@ -147,12 +180,25 @@ export default function App() {
       {m.phase === "waiting" && (
         <main className="intro">
           <div className="intro__card">
-            <div className="overlay__count" style={{ fontSize: 60 }}>🌐</div>
-            <h2>מחפש יריב…</h2>
-            <p className="intro__tag">פתחו את המשחק בטאב/מכשיר נוסף כדי לשחק אחד נגד השני</p>
-            <button className="btn-fight" onClick={m.reset}>
-              ביטול
-            </button>
+            <div className="overlay__count" style={{ fontSize: 60 }}>
+              {m.netError ? "🔌" : "🌐"}
+            </div>
+            <h2>{m.netError ? "אין חיבור לשרת" : "מחפש יריב…"}</h2>
+            <p className="intro__tag">
+              {m.netError
+                ? "לא הצלחנו להתחבר לשרת המשחק. אפשר לשחק נגד המחשב בינתיים."
+                : "פתחו את המשחק בטאב/מכשיר נוסף כדי לשחק אחד נגד השני"}
+            </p>
+            <div className="intro__buttons">
+              {m.netError && (
+                <button className="btn-fight" onClick={m.startMatch}>
+                  🤖 נגד המחשב
+                </button>
+              )}
+              <button className="btn-fight btn-online" onClick={m.reset}>
+                {m.netError ? "חזרה" : "ביטול"}
+              </button>
+            </div>
           </div>
         </main>
       )}
@@ -275,6 +321,17 @@ export default function App() {
                   </div>
                 )}
               </div>
+              <div className="hand__counts">
+                <span
+                  className={`count count--deck${m.deckLeft <= 3 ? " count--low" : ""}`}
+                  title="קלפים שנשארו בחפיסה"
+                >
+                  🃏 {m.deckLeft}
+                </span>
+                <span className="count count--discard" title="קלפים בפח">
+                  🗑️ {m.discardCount}
+                </span>
+              </div>
               <div className="hand__buttons">
                 {m.handIsAction && (
                   <button className="take-action" onClick={m.takeAction} disabled={m.barFull}>
@@ -359,6 +416,29 @@ export default function App() {
       {drag.cardId && (
         <div className="drag-ghost" style={{ left: drag.x, top: drag.y }}>
           <CardView cardId={drag.cardId} size="medium" />
+        </div>
+      )}
+
+      {confirmExit && (
+        <div className="modal-overlay" onClick={() => setConfirmExit(false)}>
+          <div className="modal modal--confirm" onClick={(e) => e.stopPropagation()}>
+            <h2>לצאת מהמשחק?</h2>
+            <p className="modal__role">הלוח שבנית יימחק והקרב לא יתקיים.</p>
+            <div className="modal__actions">
+              <button
+                className="btn-fight btn-danger"
+                onClick={() => {
+                  setConfirmExit(false);
+                  m.reset();
+                }}
+              >
+                צא מהמשחק
+              </button>
+              <button className="btn-fight btn-online" onClick={() => setConfirmExit(false)}>
+                המשך לשחק
+              </button>
+            </div>
+          </div>
         </div>
       )}
 

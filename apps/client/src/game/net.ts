@@ -25,20 +25,26 @@ export interface NetHandlers {
   onOpp?: (view: BoardView) => void;
   onResult?: (r: { seed: number; boardA: NetBoard; boardB: NetBoard; winner: Side | null }) => void;
   onOppLeft?: () => void;
-  onClose?: () => void;
+  /** The socket closed. `connected` is false when it never opened at all. */
+  onClose?: (connected: boolean) => void;
 }
 
 export class Net {
   private ws: WebSocket | null = null;
   private handlers: NetHandlers = {};
+  /** True once the socket actually opened — tells a dead server from a drop. */
+  private connected = false;
 
   connect(handlers: NetHandlers): void {
     this.handlers = handlers;
     const ws = new WebSocket(SERVER_URL);
     this.ws = ws;
-    ws.onopen = () => this.sendMsg({ t: "hello" });
-    ws.onclose = () => this.handlers.onClose?.();
-    ws.onerror = () => this.handlers.onClose?.();
+    ws.onopen = () => {
+      this.connected = true;
+      this.sendMsg({ t: "hello" });
+    };
+    ws.onclose = () => this.handlers.onClose?.(this.connected);
+    ws.onerror = () => this.handlers.onClose?.(this.connected);
     ws.onmessage = (ev) => {
       let msg: ServerMessage;
       try {

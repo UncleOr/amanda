@@ -242,6 +242,10 @@ export interface MatchApi {
   hand: string | null;
   handIsAction: boolean;
   discardTop: string | null;
+  /** Cards still face-down in the deck — drives the "do I discard?" decision. */
+  deckLeft: number;
+  /** Cards in the discard pile (any of which the top one can be taken back). */
+  discardCount: number;
   placements: Record<string, string>;
   king: string | null;
   result: BattleResult | null;
@@ -259,6 +263,8 @@ export interface MatchApi {
   onlineAvailable: boolean;
   mySide: Side;
   oppLeft: boolean;
+  /** Set when the server could not be reached, so "searching" never hangs. */
+  netError: boolean;
   iWon: boolean;
   takeAction: () => void;
   activateAction: (id: string) => void;
@@ -288,6 +294,7 @@ export function useMatch(): MatchApi {
   const [xrayActive, setXrayActive] = useState(false);
   const [targeting, setTargeting] = useState<string | null>(null);
   const [online, setOnline] = useState(false);
+  const [netError, setNetError] = useState(false);
   const [mySide, setMySide] = useState<Side>("A");
   const [oppLeft, setOppLeft] = useState(false);
   const [netOpp, setNetOpp] = useState<BoardView>({ placements: {}, king: null });
@@ -477,6 +484,7 @@ export function useMatch(): MatchApi {
     sfx.play("click");
     setOnline(true);
     setOppLeft(false);
+    setNetError(false);
     setPhase("waiting");
     const net = new Net();
     netRef.current = net;
@@ -510,7 +518,12 @@ export function useMatch(): MatchApi {
         // If the match hadn't resolved, you win by forfeit.
         setPhase((prev) => (prev === "battle" || prev === "result" ? prev : "result"));
       },
-      onClose: () => setOppLeft(true),
+      onClose: (connected) => {
+        // Never opened (or dropped before the match began) = no server to play
+        // against; say so instead of leaving "searching…" spinning forever.
+        if (!connected) setNetError(true);
+        else setOppLeft(true);
+      },
     });
   }, [enterPrebattle]);
 
@@ -534,6 +547,7 @@ export function useMatch(): MatchApi {
     setTargeting(null);
     setOnline(false);
     setOppLeft(false);
+    setNetError(false);
     setMySide("A");
     setNetOpp({ placements: {}, king: null });
     setTimeLeft(COUNTDOWN_SECONDS);
@@ -610,6 +624,8 @@ export function useMatch(): MatchApi {
     hand: gs.hand,
     handIsAction: gs.hand !== null && isActionId(gs.hand),
     discardTop: gs.discard.length ? gs.discard[gs.discard.length - 1]! : null,
+    deckLeft: gs.deck.length,
+    discardCount: gs.discard.length,
     placements: gs.placements,
     king: gs.king,
     result,
@@ -623,6 +639,7 @@ export function useMatch(): MatchApi {
     mods: { boardPowerAdd, boostedCells },
     online,
     onlineAvailable: ONLINE_AVAILABLE,
+    netError,
     mySide,
     oppLeft,
     iWon: result != null && result.winner === mySide,

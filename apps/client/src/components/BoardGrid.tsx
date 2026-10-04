@@ -77,6 +77,7 @@ export function BoardGrid({
       <div
         className={
           `slot slot--king${king ? " slot--filled" : ""}` +
+          `${king && revealKing ? " slot--readable" : ""}` +
           `${targeting && king ? " slot--target" : ""}` +
           `${interactive && dragging && !king ? " slot--droppable" : ""}` +
           `${dragOver === KING_KEY && !king ? " slot--dragover" : ""}`
@@ -84,13 +85,14 @@ export function BoardGrid({
         data-drop={interactive && !king ? KING_KEY : undefined}
         style={{ gridColumn: "2 / 4", gridRow: "2 / 4" }}
         onClick={() => {
-          if (!interactive) return;
-          if (targeting) {
+          if (targeting && interactive) {
             if (king) onTargetKing?.();
             return;
           }
-          if (king) onCardInfo?.(king);
-          else onKingClick?.();
+          // Looking at a card is always allowed — including the opponent's,
+          // once it has been revealed. Only placing one needs an active turn.
+          if (king && revealKing) onCardInfo?.(king);
+          else if (interactive && !king) onKingClick?.();
         }}
       >
         {!revealKing ? (
@@ -116,7 +118,7 @@ export function BoardGrid({
           <div
             key={key}
             className={
-              `slot${occ && shown ? " slot--filled" : ""}` +
+              `slot${occ && shown ? " slot--filled slot--readable" : ""}` +
               `${targeting && occ ? " slot--target" : ""}` +
               `${interactive && dragging && !occ ? " slot--droppable" : ""}` +
               `${dragOver === key && !occ ? " slot--dragover" : ""}`
@@ -124,13 +126,12 @@ export function BoardGrid({
             data-drop={interactive && !occ ? key : undefined}
             style={{ gridColumn: colForX(x), gridRow: rowForY(y) }}
             onClick={() => {
-              if (!interactive) return;
-              if (targeting) {
+              if (targeting && interactive) {
                 if (occ) onTarget?.(x, y);
                 return;
               }
-              if (occ) onCardInfo?.(occ);
-              else onCellClick?.(x, y);
+              if (occ && shown) onCardInfo?.(occ);
+              else if (interactive && !occ) onCellClick?.(x, y);
             }}
           >
             {!shown ? (
