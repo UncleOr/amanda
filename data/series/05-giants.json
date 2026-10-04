@@ -1,168 +1,439 @@
 {
   "id": "giants",
   "seriesNumber": 5,
-  "name": { "he": "הענקים", "en": "The Giants" },
+  "name": {
+    "he": "הענקים",
+    "en": "The Giants"
+  },
   "specialty": {
     "he": "טנקים, התגרות והחזרת נזק",
     "en": "Tanks, taunts and damage reflection"
   },
   "synergy": {
     "threshold": 3,
-    "name": { "he": "עור עבה", "en": "Thick Hide" },
+    "name": {
+      "he": "עור עבה",
+      "en": "Thick Hide"
+    },
     "description": {
       "he": "כל הענקים שלכם מקבלים שריון פסיבי שחוסם חלק מכל מכה נכנסת.",
       "en": "All your giants gain passive armor that blocks part of every incoming hit."
     },
-    "ability": { "type": "armorAura", "trigger": "aura", "params": { "armor": 120 } }
+    "ability": {
+      "type": "armorAura",
+      "trigger": "aura",
+      "params": {
+        "armor": 120
+      }
+    }
   },
   "cards": [
     {
       "id": "giants_01_stone_colossus",
       "seriesId": "giants",
       "numberInSeries": 1,
-      "name": { "he": "גולם אבן", "en": "Stone Colossus" },
-      "elements": ["earth"],
+      "name": {
+        "he": "גולם אבן",
+        "en": "Stone Colossus"
+      },
+      "elements": [
+        "earth"
+      ],
       "rarity": "common",
-      "stats": { "hp": 1800, "power": 350, "attackSpeed": 3, "moveSpeed": 0.5, "range": "melee" },
+      "stats": {
+        "hp": 1800,
+        "power": 350,
+        "attackSpeed": 3,
+        "moveSpeed": 0.5,
+        "range": "melee"
+      },
       "flying": false,
       "midBoss": false,
-      "abilities": [{ "type": "damageReflect", "trigger": "onDamaged", "params": { "pct": 25 } }],
-      "role": { "he": "טנק הליכה שמחזיר נזק.", "en": "A walking tank that reflects damage." },
-      "art": { "placeholderColor": "#8a6d3b", "sprite": null }
+      "abilities": [
+        {
+          "type": "damageReflect",
+          "trigger": "onDamaged",
+          "params": {
+            "pct": 25
+          }
+        }
+      ],
+      "role": {
+        "he": "טנק הליכה שמחזיר נזק.",
+        "en": "A walking tank that reflects damage."
+      },
+      "art": {
+        "placeholderColor": "#8a6d3b",
+        "sprite": null
+      },
+      "launch": true
     },
     {
       "id": "giants_02_steel_warden",
       "seriesId": "giants",
       "numberInSeries": 2,
-      "name": { "he": "שומר הפלדה", "en": "Steel Warden" },
-      "elements": ["metal"],
+      "name": {
+        "he": "שומר הפלדה",
+        "en": "Steel Warden"
+      },
+      "elements": [
+        "metal"
+      ],
       "rarity": "rare",
-      "stats": { "hp": 1400, "power": 250, "attackSpeed": 2.5, "moveSpeed": 0, "range": "melee" },
+      "stats": {
+        "hp": 1400,
+        "power": 250,
+        "attackSpeed": 2.5,
+        "moveSpeed": 0,
+        "range": "melee"
+      },
       "flying": false,
       "midBoss": false,
-      "abilities": [{ "type": "armorAura", "trigger": "aura", "params": { "armor": 200 } }],
-      "role": { "he": "מעניק שריון לכל בעלי הברית סביבו.", "en": "Grants armor to nearby allies." },
-      "art": { "placeholderColor": "#9aa4ad", "sprite": null }
+      "abilities": [
+        {
+          "type": "armorAura",
+          "trigger": "aura",
+          "params": {
+            "armor": 200
+          }
+        }
+      ],
+      "role": {
+        "he": "מעניק שריון לכל בעלי הברית סביבו.",
+        "en": "Grants armor to nearby allies."
+      },
+      "art": {
+        "placeholderColor": "#9aa4ad",
+        "sprite": null
+      },
+      "launch": true
     },
     {
       "id": "giants_03_hill_giant",
       "seriesId": "giants",
       "numberInSeries": 3,
-      "name": { "he": "ענק הגבעות", "en": "Hill Giant" },
-      "elements": ["earth"],
+      "name": {
+        "he": "ענק הגבעות",
+        "en": "Hill Giant"
+      },
+      "elements": [
+        "earth"
+      ],
       "rarity": "common",
-      "stats": { "hp": 1600, "power": 500, "attackSpeed": 3, "moveSpeed": 0.75, "range": "melee" },
+      "stats": {
+        "hp": 1600,
+        "power": 500,
+        "attackSpeed": 3,
+        "moveSpeed": 0.75,
+        "range": "melee"
+      },
       "flying": false,
       "midBoss": false,
-      "abilities": [{ "type": "knockback", "trigger": "onHit", "params": { "slots": 1 } }],
-      "role": { "he": "מכה כבדה שהודפת יריבים אחורה.", "en": "Heavy blows that knock enemies back." },
-      "art": { "placeholderColor": "#8a6d3b", "sprite": null }
+      "abilities": [
+        {
+          "type": "knockback",
+          "trigger": "onHit",
+          "params": {
+            "slots": 1
+          }
+        }
+      ],
+      "role": {
+        "he": "מכה כבדה שהודפת יריבים אחורה.",
+        "en": "Heavy blows that knock enemies back."
+      },
+      "art": {
+        "placeholderColor": "#8a6d3b",
+        "sprite": null
+      },
+      "launch": false
     },
     {
       "id": "giants_04_rock_troll",
       "seriesId": "giants",
       "numberInSeries": 4,
-      "name": { "he": "טרול סלע", "en": "Rock Troll" },
-      "elements": ["earth"],
+      "name": {
+        "he": "טרול סלע",
+        "en": "Rock Troll"
+      },
+      "elements": [
+        "earth"
+      ],
       "rarity": "rare",
-      "stats": { "hp": 1200, "power": 450, "attackSpeed": 2.5, "moveSpeed": 1, "range": "melee" },
+      "stats": {
+        "hp": 1200,
+        "power": 450,
+        "attackSpeed": 2.5,
+        "moveSpeed": 1,
+        "range": "melee"
+      },
       "flying": false,
       "midBoss": false,
-      "abilities": [{ "type": "regen", "trigger": "passive", "params": { "hpPerSecond": 70 } }],
-      "role": { "he": "מתחדש: מרפא את עצמו לאורך הקרב.", "en": "Regenerates its own health during battle." },
-      "art": { "placeholderColor": "#6fbf3b", "sprite": null }
+      "abilities": [
+        {
+          "type": "regen",
+          "trigger": "passive",
+          "params": {
+            "hpPerSecond": 70
+          }
+        }
+      ],
+      "role": {
+        "he": "מתחדש: מרפא את עצמו לאורך הקרב.",
+        "en": "Regenerates its own health during battle."
+      },
+      "art": {
+        "placeholderColor": "#6fbf3b",
+        "sprite": null
+      },
+      "launch": false
     },
     {
       "id": "giants_05_wall_breaker",
       "seriesId": "giants",
       "numberInSeries": 5,
-      "name": { "he": "שובר החומות", "en": "Wall Breaker" },
-      "elements": ["metal"],
+      "name": {
+        "he": "שובר החומות",
+        "en": "Wall Breaker"
+      },
+      "elements": [
+        "metal"
+      ],
       "rarity": "common",
-      "stats": { "hp": 1000, "power": 900, "attackSpeed": 4, "moveSpeed": 1, "range": "melee" },
+      "stats": {
+        "hp": 1000,
+        "power": 900,
+        "attackSpeed": 4,
+        "moveSpeed": 1,
+        "range": "melee"
+      },
       "flying": false,
       "midBoss": false,
-      "abilities": [{ "type": "armorBreak", "trigger": "onHit", "params": {} }],
-      "role": { "he": "מכה איטית שמנפצת שריון.", "en": "A slow blow that shatters armor." },
-      "art": { "placeholderColor": "#9aa4ad", "sprite": null }
+      "abilities": [
+        {
+          "type": "armorBreak",
+          "trigger": "onHit",
+          "params": {}
+        }
+      ],
+      "role": {
+        "he": "מכה איטית שמנפצת שריון.",
+        "en": "A slow blow that shatters armor."
+      },
+      "art": {
+        "placeholderColor": "#9aa4ad",
+        "sprite": null
+      },
+      "launch": true
     },
     {
       "id": "giants_06_frost_giant",
       "seriesId": "giants",
       "numberInSeries": 6,
-      "name": { "he": "ענק הקרח", "en": "Frost Giant" },
-      "elements": ["water"],
+      "name": {
+        "he": "ענק הקרח",
+        "en": "Frost Giant"
+      },
+      "elements": [
+        "water"
+      ],
       "rarity": "rare",
-      "stats": { "hp": 1500, "power": 400, "attackSpeed": 3, "moveSpeed": 0.5, "range": "melee" },
+      "stats": {
+        "hp": 1500,
+        "power": 400,
+        "attackSpeed": 3,
+        "moveSpeed": 0.5,
+        "range": "melee"
+      },
       "flying": false,
       "midBoss": false,
-      "abilities": [{ "type": "freezeOnHit", "trigger": "onHit", "params": { "freezeSeconds": 1.5 } }],
-      "role": { "he": "כל מכה מקפיאה את היריב לרגע.", "en": "Each hit briefly freezes the enemy." },
-      "art": { "placeholderColor": "#2f7fe2", "sprite": null }
+      "abilities": [
+        {
+          "type": "freezeOnHit",
+          "trigger": "onHit",
+          "params": {
+            "freezeSeconds": 1.5
+          }
+        }
+      ],
+      "role": {
+        "he": "כל מכה מקפיאה את היריב לרגע.",
+        "en": "Each hit briefly freezes the enemy."
+      },
+      "art": {
+        "placeholderColor": "#2f7fe2",
+        "sprite": null
+      },
+      "launch": true
     },
     {
       "id": "giants_07_iron_bulwark",
       "seriesId": "giants",
       "numberInSeries": 7,
-      "name": { "he": "מגן הברזל", "en": "Iron Bulwark" },
-      "elements": ["metal"],
+      "name": {
+        "he": "מגן הברזל",
+        "en": "Iron Bulwark"
+      },
+      "elements": [
+        "metal"
+      ],
       "rarity": "rare",
-      "stats": { "hp": 2200, "power": 150, "attackSpeed": 5, "moveSpeed": 0, "range": "melee" },
+      "stats": {
+        "hp": 2200,
+        "power": 150,
+        "attackSpeed": 5,
+        "moveSpeed": 0,
+        "range": "melee"
+      },
       "flying": false,
       "midBoss": false,
-      "abilities": [{ "type": "damageReflect", "trigger": "onDamaged", "params": { "pct": 40 } }],
-      "role": { "he": "חומה כמעט בלתי חדירה שמחזירה 40% נזק.", "en": "A near-impenetrable wall reflecting 40% damage." },
-      "art": { "placeholderColor": "#9aa4ad", "sprite": null }
+      "abilities": [
+        {
+          "type": "damageReflect",
+          "trigger": "onDamaged",
+          "params": {
+            "pct": 40
+          }
+        }
+      ],
+      "role": {
+        "he": "חומה כמעט בלתי חדירה שמחזירה 40% נזק.",
+        "en": "A near-impenetrable wall reflecting 40% damage."
+      },
+      "art": {
+        "placeholderColor": "#9aa4ad",
+        "sprite": null
+      },
+      "launch": false
     },
     {
       "id": "giants_08_vengeful_rok",
       "seriesId": "giants",
       "numberInSeries": 8,
-      "name": { "he": "רוק הנוקם", "en": "Vengeful Rok" },
-      "elements": ["dark"],
+      "name": {
+        "he": "רוק הנוקם",
+        "en": "Vengeful Rok"
+      },
+      "elements": [
+        "dark"
+      ],
       "rarity": "rare",
-      "stats": { "hp": 1300, "power": 600, "attackSpeed": 3, "moveSpeed": 0.75, "range": "melee" },
+      "stats": {
+        "hp": 1300,
+        "power": 600,
+        "attackSpeed": 3,
+        "moveSpeed": 0.75,
+        "range": "melee"
+      },
       "flying": false,
       "midBoss": false,
-      "abilities": [{ "type": "damageReflect", "trigger": "onDamaged", "params": { "pct": 30 } }],
-      "role": { "he": "מעניש כל מי שמעז לתקוף אותו.", "en": "Punishes anyone who dares strike it." },
-      "art": { "placeholderColor": "#4b2e6b", "sprite": null }
+      "abilities": [
+        {
+          "type": "damageReflect",
+          "trigger": "onDamaged",
+          "params": {
+            "pct": 30
+          }
+        }
+      ],
+      "role": {
+        "he": "מעניש כל מי שמעז לתקוף אותו.",
+        "en": "Punishes anyone who dares strike it."
+      },
+      "art": {
+        "placeholderColor": "#4b2e6b",
+        "sprite": null
+      },
+      "launch": false
     },
     {
       "id": "giants_09_thunder_giant",
       "seriesId": "giants",
       "numberInSeries": 9,
-      "name": { "he": "ענק הרעם", "en": "Thunder Giant" },
-      "elements": ["electric"],
+      "name": {
+        "he": "ענק הרעם",
+        "en": "Thunder Giant"
+      },
+      "elements": [
+        "electric"
+      ],
       "rarity": "rare",
-      "stats": { "hp": 1400, "power": 550, "attackSpeed": 3.5, "moveSpeed": 0.5, "range": "melee" },
+      "stats": {
+        "hp": 1400,
+        "power": 550,
+        "attackSpeed": 3.5,
+        "moveSpeed": 0.5,
+        "range": "melee"
+      },
       "flying": false,
       "midBoss": false,
       "abilities": [
-        { "type": "aoeRowAttack", "trigger": "onAttack", "params": { "lanes": 2, "knockback": 1 } }
+        {
+          "type": "aoeRowAttack",
+          "trigger": "onAttack",
+          "params": {
+            "lanes": 2,
+            "knockback": 1
+          }
+        }
       ],
-      "role": { "he": "מכת רעם שפוגעת בשני נתיבים.", "en": "A thunderclap that strikes two lanes." },
-      "art": { "placeholderColor": "#f2c530", "sprite": null }
+      "role": {
+        "he": "מכת רעם שפוגעת בשני נתיבים.",
+        "en": "A thunderclap that strikes two lanes."
+      },
+      "art": {
+        "placeholderColor": "#f2c530",
+        "sprite": null
+      },
+      "launch": true
     },
     {
       "id": "giants_10_titan_king",
       "seriesId": "giants",
       "numberInSeries": 10,
-      "name": { "he": "אבי-הענקים", "en": "Titan King" },
-      "elements": ["earth"],
+      "name": {
+        "he": "אבי-הענקים",
+        "en": "Titan King"
+      },
+      "elements": [
+        "earth"
+      ],
       "rarity": "epic",
-      "stats": { "hp": 2500, "power": 700, "attackSpeed": 4, "moveSpeed": 0, "range": "melee" },
+      "stats": {
+        "hp": 2500,
+        "power": 700,
+        "attackSpeed": 4,
+        "moveSpeed": 0,
+        "range": "melee"
+      },
       "flying": false,
       "midBoss": true,
       "abilities": [
-        { "type": "aoeRowAttack", "trigger": "onAttack", "params": { "lanes": 3, "knockback": 1 } },
-        { "type": "armorAura", "trigger": "aura", "params": { "armor": 150 } }
+        {
+          "type": "aoeRowAttack",
+          "trigger": "onAttack",
+          "params": {
+            "lanes": 3,
+            "knockback": 1
+          }
+        },
+        {
+          "type": "armorAura",
+          "trigger": "aura",
+          "params": {
+            "armor": 150
+          }
+        }
       ],
       "role": {
         "he": "ענק אמצע למשבצת ה-2×2: טנק עצום שמגן על כל הלוח.",
         "en": "Mid-boss for the 2×2 King slot: a colossal tank that shields the whole board."
       },
-      "art": { "placeholderColor": "#8a6d3b", "sprite": null }
+      "art": {
+        "placeholderColor": "#8a6d3b",
+        "sprite": null
+      },
+      "launch": true
     }
   ]
 }

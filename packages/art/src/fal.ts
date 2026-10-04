@@ -1,7 +1,11 @@
 import { writeFile, mkdir } from "node:fs/promises";
-import { dirname } from "node:path";
+import { dirname, join } from "node:path";
+import { fileURLToPath } from "node:url";
 import { fal } from "@fal-ai/client";
-import "dotenv/config";
+import { config as loadEnv } from "dotenv";
+
+// The CLI runs from packages/art, but .env lives at the repo root.
+loadEnv({ path: join(dirname(fileURLToPath(import.meta.url)), "..", "..", "..", ".env") });
 
 const MODEL = "fal-ai/nano-banana-pro";
 const EDIT_MODEL = "fal-ai/nano-banana-pro/edit";

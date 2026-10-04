@@ -1,14 +1,20 @@
 {
   "id": "dragons",
   "seriesNumber": 1,
-  "name": { "he": "הדרקונים", "en": "The Dragons" },
+  "name": {
+    "he": "הדרקונים",
+    "en": "The Dragons"
+  },
   "specialty": {
     "he": "פינוי קו ראייה, נזק אזורי ופצצות מתקתקות",
     "en": "Clearing line of sight, area damage, and ticking bombs"
   },
   "synergy": {
     "threshold": 3,
-    "name": { "he": "קשקשי דרקון", "en": "Dragon Scales" },
+    "name": {
+      "he": "קשקשי דרקון",
+      "en": "Dragon Scales"
+    },
     "description": {
       "he": "כל הדרקונים בלוח שלכם מקבלים הגנה פסיבית שמפחיתה את כל הנזק הנכנס אליהם ב-20%.",
       "en": "All your dragons gain a passive 20% reduction to all incoming damage."
@@ -16,7 +22,9 @@
     "ability": {
       "type": "damageReductionAura",
       "trigger": "aura",
-      "params": { "pct": 20 }
+      "params": {
+        "pct": 20
+      }
     }
   },
   "cards": [
@@ -24,37 +32,76 @@
       "id": "dragons_01_flame_dragon",
       "seriesId": "dragons",
       "numberInSeries": 1,
-      "name": { "he": "פליים דראגון", "en": "Flame Dragon" },
-      "elements": ["fire"],
+      "name": {
+        "he": "פליים דראגון",
+        "en": "Flame Dragon"
+      },
+      "elements": [
+        "fire"
+      ],
       "rarity": "common",
-      "stats": { "hp": 433, "power": 1300, "attackSpeed": 1.5, "moveSpeed": 1.5, "range": "melee" },
+      "stats": {
+        "hp": 433,
+        "power": 1300,
+        "attackSpeed": 1.5,
+        "moveSpeed": 1.5,
+        "range": "melee"
+      },
       "flying": false,
       "midBoss": false,
       "abilities": [
-        { "type": "knockback", "trigger": "onHit", "params": { "slots": 1 } },
-        { "type": "trample", "trigger": "onKill", "params": {} }
+        {
+          "type": "knockback",
+          "trigger": "onHit",
+          "params": {
+            "slots": 1
+          }
+        },
+        {
+          "type": "trample",
+          "trigger": "onKill",
+          "params": {}
+        }
       ],
       "role": {
         "he": "יוזמה מהירה: מכה שהודפת את היריב, ממשיך לצעוד לתוך שטח היריב ומפנה קו ראייה לצלפים שמאחור.",
         "en": "Fast initiative: knocks the enemy back, advances into enemy territory and clears line of sight for your snipers."
       },
-      "art": { "placeholderColor": "#e2492f", "sprite": null }
+      "art": {
+        "placeholderColor": "#e2492f",
+        "sprite": null
+      },
+      "launch": true
     },
     {
       "id": "dragons_02_obsidian_egg",
       "seriesId": "dragons",
       "numberInSeries": 2,
-      "name": { "he": "ביצת אובסידיאן", "en": "Obsidian Egg" },
-      "elements": ["earth"],
+      "name": {
+        "he": "ביצת אובסידיאן",
+        "en": "Obsidian Egg"
+      },
+      "elements": [
+        "earth"
+      ],
       "rarity": "rare",
-      "stats": { "hp": 950, "power": 50, "attackSpeed": 10, "moveSpeed": 0, "range": "melee" },
+      "stats": {
+        "hp": 950,
+        "power": 50,
+        "attackSpeed": 10,
+        "moveSpeed": 0,
+        "range": "melee"
+      },
       "flying": false,
       "midBoss": false,
       "abilities": [
         {
           "type": "delayedTransform",
           "trigger": "delayed",
-          "params": { "afterSeconds": 10, "powerBonus": 1500 },
+          "params": {
+            "afterSeconds": 10,
+            "powerBonus": 1500
+          },
           "description": {
             "he": "אחרי 10 שניות בוקע דרקון הרסני עם +1500 עוצמה.",
             "en": "After 10 seconds a destructive dragon hatches with +1500 power."
@@ -65,16 +112,31 @@
         "he": "פצצה מתקתקת לקומת קרקע: מניחים אותה למטה ומעליה טנק; עד שהטנק נפרץ הטיימר נגמר.",
         "en": "Ground-floor ticking bomb: place it under a tank; by the time the tank breaks, its timer is up."
       },
-      "art": { "placeholderColor": "#8a6d3b", "sprite": null }
+      "art": {
+        "placeholderColor": "#8a6d3b",
+        "sprite": null
+      },
+      "launch": true
     },
     {
       "id": "dragons_03_thunderwing",
       "seriesId": "dragons",
       "numberInSeries": 3,
-      "name": { "he": "רעם-כנף", "en": "Thunderwing" },
-      "elements": ["electric"],
+      "name": {
+        "he": "רעם-כנף",
+        "en": "Thunderwing"
+      },
+      "elements": [
+        "electric"
+      ],
       "rarity": "common",
-      "stats": { "hp": 350, "power": 900, "attackSpeed": 3, "moveSpeed": 0, "range": "sniper" },
+      "stats": {
+        "hp": 350,
+        "power": 900,
+        "attackSpeed": 3,
+        "moveSpeed": 0,
+        "range": "sniper"
+      },
       "flying": true,
       "midBoss": false,
       "abilities": [],
@@ -82,23 +144,40 @@
         "he": "צלף מותנה: יורה לקלף האחרון בנתיב המקביל, דורש קו ראייה פנוי.",
         "en": "Conditional sniper: fires at the last card in its lane, requires a clear line of sight."
       },
-      "art": { "placeholderColor": "#f2c530", "sprite": null }
+      "art": {
+        "placeholderColor": "#f2c530",
+        "sprite": null
+      },
+      "launch": true
     },
     {
       "id": "dragons_04_lava",
       "seriesId": "dragons",
       "numberInSeries": 4,
-      "name": { "he": "לאבה", "en": "Lava" },
-      "elements": ["fire"],
+      "name": {
+        "he": "לאבה",
+        "en": "Lava"
+      },
+      "elements": [
+        "fire"
+      ],
       "rarity": "common",
-      "stats": { "hp": 763, "power": 735, "attackSpeed": 1, "moveSpeed": 0, "range": "ranged" },
+      "stats": {
+        "hp": 763,
+        "power": 735,
+        "attackSpeed": 1,
+        "moveSpeed": 0,
+        "range": "ranged"
+      },
       "flying": false,
       "midBoss": false,
       "abilities": [
         {
           "type": "lineDenialDot",
           "trigger": "passive",
-          "params": { "dps": 120 },
+          "params": {
+            "dps": 120
+          },
           "description": {
             "he": "משאיר זרם געש בנתיב; כל מסתער נכנס לשלולית הלבה ונשרף.",
             "en": "Leaves a lava stream in the lane; any advancer walks into the pool and burns."
@@ -109,69 +188,121 @@
         "he": "שליטת נתיבים / חסימת הסתערות עם נזק מתמשך.",
         "en": "Lane control / advance-denial with damage over time."
       },
-      "art": { "placeholderColor": "#e2492f", "sprite": null }
+      "art": {
+        "placeholderColor": "#e2492f",
+        "sprite": null
+      },
+      "launch": true
     },
     {
       "id": "dragons_05_spike",
       "seriesId": "dragons",
       "numberInSeries": 5,
-      "name": { "he": "ספייק", "en": "Spike" },
-      "elements": ["earth"],
+      "name": {
+        "he": "ספייק",
+        "en": "Spike"
+      },
+      "elements": [
+        "earth"
+      ],
       "rarity": "common",
-      "stats": { "hp": 550, "power": 300, "attackSpeed": 2, "moveSpeed": 0, "range": "melee" },
+      "stats": {
+        "hp": 550,
+        "power": 300,
+        "attackSpeed": 2,
+        "moveSpeed": 0,
+        "range": "melee"
+      },
       "flying": false,
       "midBoss": false,
       "abilities": [
         {
           "type": "damageReflect",
           "trigger": "onDamaged",
-          "params": { "pct": 30 }
+          "params": {
+            "pct": 30
+          }
         }
       ],
       "role": {
         "he": "מגן מחזיר-נזק לקומת קרקע: מחזיר 30% מהנזק שספג, מצוין תחת קלף מתפוצץ.",
         "en": "Damage-reflect wall for the ground floor: returns 30% of damage taken, great under a bomb card."
       },
-      "art": { "placeholderColor": "#8a6d3b", "sprite": null }
+      "art": {
+        "placeholderColor": "#8a6d3b",
+        "sprite": null
+      },
+      "launch": false
     },
     {
       "id": "dragons_06_frost_breath",
       "seriesId": "dragons",
       "numberInSeries": 6,
-      "name": { "he": "נשיפת כפור", "en": "Frost Breath" },
-      "elements": ["water"],
+      "name": {
+        "he": "נשיפת כפור",
+        "en": "Frost Breath"
+      },
+      "elements": [
+        "water"
+      ],
       "rarity": "common",
-      "stats": { "hp": 500, "power": 400, "attackSpeed": 2.5, "moveSpeed": 0, "range": "ranged" },
+      "stats": {
+        "hp": 500,
+        "power": 400,
+        "attackSpeed": 2.5,
+        "moveSpeed": 0,
+        "range": "ranged"
+      },
       "flying": false,
       "midBoss": false,
       "abilities": [
         {
           "type": "freezeOnHit",
           "trigger": "onHit",
-          "params": { "freezeSeconds": 2, "resetCooldown": true }
+          "params": {
+            "freezeSeconds": 2,
+            "resetCooldown": true
+          }
         }
       ],
       "role": {
         "he": "בקרת קצב: מקפיא יריב מסתער ל-2 שניות ומאפס לו את זמן הטעינה.",
         "en": "Crowd control: freezes an advancing enemy for 2s and resets its attack cooldown."
       },
-      "art": { "placeholderColor": "#2f7fe2", "sprite": null }
+      "art": {
+        "placeholderColor": "#2f7fe2",
+        "sprite": null
+      },
+      "launch": false
     },
     {
       "id": "dragons_07_gold_horn",
       "seriesId": "dragons",
       "numberInSeries": 7,
-      "name": { "he": "גולד-הורן", "en": "Gold-Horn" },
-      "elements": ["metal"],
+      "name": {
+        "he": "גולד-הורן",
+        "en": "Gold-Horn"
+      },
+      "elements": [
+        "metal"
+      ],
       "rarity": "rare",
-      "stats": { "hp": 600, "power": 600, "attackSpeed": 2, "moveSpeed": 1, "range": "melee" },
+      "stats": {
+        "hp": 600,
+        "power": 600,
+        "attackSpeed": 2,
+        "moveSpeed": 1,
+        "range": "melee"
+      },
       "flying": false,
       "midBoss": false,
       "abilities": [
         {
           "type": "sacrificeAdjacent",
           "trigger": "onSpawn",
-          "params": { "armorGain": 400 },
+          "params": {
+            "armorGain": 400
+          },
           "description": {
             "he": "מוחץ קלף חלש שלכם שלידו בתמורה לשריון, ואז צועד כטנק מוגן.",
             "en": "Crushes a weak adjacent ally for armor, then advances as a protected tank."
@@ -182,46 +313,82 @@
         "he": "טנק כבד שניזון מהקרבה.",
         "en": "Heavy tank fueled by sacrifice."
       },
-      "art": { "placeholderColor": "#9aa4ad", "sprite": null }
+      "art": {
+        "placeholderColor": "#9aa4ad",
+        "sprite": null
+      },
+      "launch": false
     },
     {
       "id": "dragons_08_ghost_dragon",
       "seriesId": "dragons",
       "numberInSeries": 8,
-      "name": { "he": "דרקון רפאים", "en": "Ghost Dragon" },
-      "elements": ["dark"],
+      "name": {
+        "he": "דרקון רפאים",
+        "en": "Ghost Dragon"
+      },
+      "elements": [
+        "dark"
+      ],
       "rarity": "rare",
-      "stats": { "hp": 250, "power": 850, "attackSpeed": 1.5, "moveSpeed": 2, "range": "melee" },
+      "stats": {
+        "hp": 250,
+        "power": 850,
+        "attackSpeed": 1.5,
+        "moveSpeed": 2,
+        "range": "melee"
+      },
       "flying": true,
       "midBoss": false,
       "abilities": [
         {
           "type": "swarmOnDeath",
           "trigger": "onDeath",
-          "params": { "count": 3, "spiritHp": 50, "spiritPower": 100 }
+          "params": {
+            "count": 3,
+            "spiritHp": 50,
+            "spiritPower": 100
+          }
         }
       ],
       "role": {
         "he": "נחיל מתפרץ: נועד למות מהר, ואז בוקעות 3 רוחות שממשיכות להסתער.",
         "en": "Bursting swarm: meant to die fast, then 3 spirits hatch and keep charging."
       },
-      "art": { "placeholderColor": "#4b2e6b", "sprite": null }
+      "art": {
+        "placeholderColor": "#4b2e6b",
+        "sprite": null
+      },
+      "launch": false
     },
     {
       "id": "dragons_09_typhoon_dragon",
       "seriesId": "dragons",
       "numberInSeries": 9,
-      "name": { "he": "דרקון הטייפון", "en": "Typhoon Dragon" },
-      "elements": ["air"],
+      "name": {
+        "he": "דרקון הטייפון",
+        "en": "Typhoon Dragon"
+      },
+      "elements": [
+        "air"
+      ],
       "rarity": "rare",
-      "stats": { "hp": 400, "power": 700, "attackSpeed": 3, "moveSpeed": 0, "range": "ranged" },
+      "stats": {
+        "hp": 400,
+        "power": 700,
+        "attackSpeed": 3,
+        "moveSpeed": 0,
+        "range": "ranged"
+      },
       "flying": false,
       "midBoss": false,
       "abilities": [
         {
           "type": "sideKnockback",
           "trigger": "onHit",
-          "params": { "columns": 1 },
+          "params": {
+            "columns": 1
+          },
           "description": {
             "he": "דוחף את היריב הצידה מעמודה לעמודה, מזיז צלפים מחוץ לנתיב.",
             "en": "Pushes the enemy sideways between columns, moving snipers out of the lane."
@@ -232,23 +399,41 @@
         "he": "שליטה מרחבית / הדף צדדי.",
         "en": "Spatial control / lateral knockback."
       },
-      "art": { "placeholderColor": "#9fd6e8", "sprite": null }
+      "art": {
+        "placeholderColor": "#9fd6e8",
+        "sprite": null
+      },
+      "launch": true
     },
     {
       "id": "dragons_10_sky_king",
       "seriesId": "dragons",
       "numberInSeries": 10,
-      "name": { "he": "מלך השחקים", "en": "Sky King" },
-      "elements": ["air"],
+      "name": {
+        "he": "מלך השחקים",
+        "en": "Sky King"
+      },
+      "elements": [
+        "air"
+      ],
       "rarity": "epic",
-      "stats": { "hp": 1200, "power": 950, "attackSpeed": 5, "moveSpeed": 0, "range": "melee" },
+      "stats": {
+        "hp": 1200,
+        "power": 950,
+        "attackSpeed": 5,
+        "moveSpeed": 0,
+        "range": "melee"
+      },
       "flying": false,
       "midBoss": true,
       "abilities": [
         {
           "type": "aoeRowAttack",
           "trigger": "onAttack",
-          "params": { "lanes": 3, "knockback": 1 },
+          "params": {
+            "lanes": 3,
+            "knockback": 1
+          },
           "description": {
             "he": "מכת כנפיים לרוחב 3 נתיבים כל 5 שניות עם הדף.",
             "en": "A wing sweep across 3 lanes every 5 seconds with knockback."
@@ -259,7 +444,11 @@
         "he": "ענק אמצע למשבצת ה-2×2: שליטת חזית מוחלטת עם נזק אזורי.",
         "en": "Mid-boss for the 2×2 King slot: total front control with area damage."
       },
-      "art": { "placeholderColor": "#9fd6e8", "sprite": null }
+      "art": {
+        "placeholderColor": "#9fd6e8",
+        "sprite": null
+      },
+      "launch": true
     }
   ]
 }

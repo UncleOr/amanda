@@ -1,170 +1,435 @@
 {
   "id": "insects",
   "seriesNumber": 7,
-  "name": { "he": "החרקים", "en": "The Insects" },
+  "name": {
+    "he": "החרקים",
+    "en": "The Insects"
+  },
   "specialty": {
     "he": "מלכודות, רעל ופגיעה ישירה במרכז",
     "en": "Traps, poison and striking straight at the center"
   },
   "synergy": {
     "threshold": 3,
-    "name": { "he": "נחיל", "en": "The Swarm" },
+    "name": {
+      "he": "נחיל",
+      "en": "The Swarm"
+    },
     "description": {
       "he": "כל החרקים שלכם מקבלים +20% מהירות תקיפה כשהם נלחמים יחד.",
       "en": "All your insects gain +20% attack speed when fighting together."
     },
-    "ability": { "type": "attackSpeedAura", "trigger": "aura", "params": { "pct": 20 } }
+    "ability": {
+      "type": "attackSpeedAura",
+      "trigger": "aura",
+      "params": {
+        "pct": 20
+      }
+    }
   },
   "cards": [
     {
       "id": "insects_01_ant_soldier",
       "seriesId": "insects",
       "numberInSeries": 1,
-      "name": { "he": "חייל נמלה", "en": "Ant Soldier" },
-      "elements": ["earth"],
+      "name": {
+        "he": "חייל נמלה",
+        "en": "Ant Soldier"
+      },
+      "elements": [
+        "earth"
+      ],
       "rarity": "common",
-      "stats": { "hp": 250, "power": 200, "attackSpeed": 1, "moveSpeed": 2, "range": "melee" },
+      "stats": {
+        "hp": 250,
+        "power": 200,
+        "attackSpeed": 1,
+        "moveSpeed": 2,
+        "range": "melee"
+      },
       "flying": false,
       "midBoss": false,
       "abilities": [],
-      "role": { "he": "מסתער מהיר וזול להצפת נתיבים.", "en": "A cheap, fast rusher to flood lanes." },
-      "art": { "placeholderColor": "#8a6d3b", "sprite": null }
+      "role": {
+        "he": "מסתער מהיר וזול להצפת נתיבים.",
+        "en": "A cheap, fast rusher to flood lanes."
+      },
+      "art": {
+        "placeholderColor": "#8a6d3b",
+        "sprite": null
+      },
+      "launch": true
     },
     {
       "id": "insects_02_ant_queen",
       "seriesId": "insects",
       "numberInSeries": 2,
-      "name": { "he": "מלכת הנמלים", "en": "Ant Queen" },
-      "elements": ["earth"],
+      "name": {
+        "he": "מלכת הנמלים",
+        "en": "Ant Queen"
+      },
+      "elements": [
+        "earth"
+      ],
       "rarity": "rare",
-      "stats": { "hp": 900, "power": 150, "attackSpeed": 3, "moveSpeed": 0, "range": "melee" },
+      "stats": {
+        "hp": 900,
+        "power": 150,
+        "attackSpeed": 3,
+        "moveSpeed": 0,
+        "range": "melee"
+      },
       "flying": false,
       "midBoss": false,
       "abilities": [
-        { "type": "swarmOnDeath", "trigger": "onDeath", "params": { "count": 3, "spiritHp": 150, "spiritPower": 120 } }
+        {
+          "type": "swarmOnDeath",
+          "trigger": "onDeath",
+          "params": {
+            "count": 3,
+            "spiritHp": 150,
+            "spiritPower": 120
+          }
+        }
       ],
-      "role": { "he": "במוות בוקעות ממנה 3 נמלים חדשות.", "en": "On death hatches 3 fresh ants." },
-      "art": { "placeholderColor": "#8a6d3b", "sprite": null }
+      "role": {
+        "he": "במוות בוקעות ממנה 3 נמלים חדשות.",
+        "en": "On death hatches 3 fresh ants."
+      },
+      "art": {
+        "placeholderColor": "#8a6d3b",
+        "sprite": null
+      },
+      "launch": true
     },
     {
       "id": "insects_03_venom_scorpion",
       "seriesId": "insects",
       "numberInSeries": 3,
-      "name": { "he": "עקרב ארסי", "en": "Venom Scorpion" },
-      "elements": ["poison"],
+      "name": {
+        "he": "עקרב ארסי",
+        "en": "Venom Scorpion"
+      },
+      "elements": [
+        "poison"
+      ],
       "rarity": "common",
-      "stats": { "hp": 400, "power": 350, "attackSpeed": 1.5, "moveSpeed": 1, "range": "melee" },
+      "stats": {
+        "hp": 400,
+        "power": 350,
+        "attackSpeed": 1.5,
+        "moveSpeed": 1,
+        "range": "melee"
+      },
       "flying": false,
       "midBoss": false,
-      "abilities": [{ "type": "stackingDot", "trigger": "onHit", "params": { "dotPerStack": 40 } }],
-      "role": { "he": "עוקץ ומרעיל; הרעל מצטבר.", "en": "Stings and poisons; the venom stacks." },
-      "art": { "placeholderColor": "#6fbf3b", "sprite": null }
+      "abilities": [
+        {
+          "type": "stackingDot",
+          "trigger": "onHit",
+          "params": {
+            "dotPerStack": 40
+          }
+        }
+      ],
+      "role": {
+        "he": "עוקץ ומרעיל; הרעל מצטבר.",
+        "en": "Stings and poisons; the venom stacks."
+      },
+      "art": {
+        "placeholderColor": "#6fbf3b",
+        "sprite": null
+      },
+      "launch": true
     },
     {
       "id": "insects_04_toxic_moth",
       "seriesId": "insects",
       "numberInSeries": 4,
-      "name": { "he": "עש רעל", "en": "Toxic Moth" },
-      "elements": ["poison"],
+      "name": {
+        "he": "עש רעל",
+        "en": "Toxic Moth"
+      },
+      "elements": [
+        "poison"
+      ],
       "rarity": "common",
-      "stats": { "hp": 300, "power": 250, "attackSpeed": 2, "moveSpeed": 1.5, "range": "melee" },
+      "stats": {
+        "hp": 300,
+        "power": 250,
+        "attackSpeed": 2,
+        "moveSpeed": 1.5,
+        "range": "melee"
+      },
       "flying": true,
       "midBoss": false,
-      "abilities": [{ "type": "stackingDot", "trigger": "onHit", "params": { "dotPerStack": 30 } }],
-      "role": { "he": "מרחף מעל הקרקע ומפזר אבקת רעל.", "en": "Flies over the ground spreading toxic dust." },
-      "art": { "placeholderColor": "#6fbf3b", "sprite": null }
+      "abilities": [
+        {
+          "type": "stackingDot",
+          "trigger": "onHit",
+          "params": {
+            "dotPerStack": 30
+          }
+        }
+      ],
+      "role": {
+        "he": "מרחף מעל הקרקע ומפזר אבקת רעל.",
+        "en": "Flies over the ground spreading toxic dust."
+      },
+      "art": {
+        "placeholderColor": "#6fbf3b",
+        "sprite": null
+      },
+      "launch": false
     },
     {
       "id": "insects_05_armored_beetle",
       "seriesId": "insects",
       "numberInSeries": 5,
-      "name": { "he": "חיפושית שריון", "en": "Armored Beetle" },
-      "elements": ["metal"],
+      "name": {
+        "he": "חיפושית שריון",
+        "en": "Armored Beetle"
+      },
+      "elements": [
+        "metal"
+      ],
       "rarity": "common",
-      "stats": { "hp": 800, "power": 300, "attackSpeed": 3, "moveSpeed": 1, "range": "melee" },
+      "stats": {
+        "hp": 800,
+        "power": 300,
+        "attackSpeed": 3,
+        "moveSpeed": 1,
+        "range": "melee"
+      },
       "flying": false,
       "midBoss": false,
-      "abilities": [{ "type": "damageReflect", "trigger": "onDamaged", "params": { "pct": 20 } }],
-      "role": { "he": "שריון קשה שמחזיר מעט נזק.", "en": "A hard shell that reflects some damage." },
-      "art": { "placeholderColor": "#9aa4ad", "sprite": null }
+      "abilities": [
+        {
+          "type": "damageReflect",
+          "trigger": "onDamaged",
+          "params": {
+            "pct": 20
+          }
+        }
+      ],
+      "role": {
+        "he": "שריון קשה שמחזיר מעט נזק.",
+        "en": "A hard shell that reflects some damage."
+      },
+      "art": {
+        "placeholderColor": "#9aa4ad",
+        "sprite": null
+      },
+      "launch": false
     },
     {
       "id": "insects_06_ambush_spider",
       "seriesId": "insects",
       "numberInSeries": 6,
-      "name": { "he": "עכביש מארב", "en": "Ambush Spider" },
-      "elements": ["dark"],
+      "name": {
+        "he": "עכביש מארב",
+        "en": "Ambush Spider"
+      },
+      "elements": [
+        "dark"
+      ],
       "rarity": "rare",
-      "stats": { "hp": 350, "power": 500, "attackSpeed": 2, "moveSpeed": 0, "range": "melee" },
+      "stats": {
+        "hp": 350,
+        "power": 500,
+        "attackSpeed": 2,
+        "moveSpeed": 0,
+        "range": "melee"
+      },
       "flying": false,
       "midBoss": false,
-      "abilities": [{ "type": "rootOnReveal", "trigger": "onReveal", "params": {} }],
-      "role": { "he": "מלכודת קומת-קרקע: כשנחשף מדביק את היריב.", "en": "Ground-floor trap: roots the enemy when revealed." },
-      "art": { "placeholderColor": "#4b2e6b", "sprite": null }
+      "abilities": [
+        {
+          "type": "rootOnReveal",
+          "trigger": "onReveal",
+          "params": {}
+        }
+      ],
+      "role": {
+        "he": "מלכודת קומת-קרקע: כשנחשף מדביק את היריב.",
+        "en": "Ground-floor trap: roots the enemy when revealed."
+      },
+      "art": {
+        "placeholderColor": "#4b2e6b",
+        "sprite": null
+      },
+      "launch": false
     },
     {
       "id": "insects_07_aggressive_wasp",
       "seriesId": "insects",
       "numberInSeries": 7,
-      "name": { "he": "צרעה תוקפנית", "en": "Aggressive Wasp" },
-      "elements": ["air"],
+      "name": {
+        "he": "צרעה תוקפנית",
+        "en": "Aggressive Wasp"
+      },
+      "elements": [
+        "air"
+      ],
       "rarity": "common",
-      "stats": { "hp": 300, "power": 400, "attackSpeed": 1, "moveSpeed": 2.5, "range": "melee" },
+      "stats": {
+        "hp": 300,
+        "power": 400,
+        "attackSpeed": 1,
+        "moveSpeed": 2.5,
+        "range": "melee"
+      },
       "flying": true,
       "midBoss": false,
-      "abilities": [{ "type": "knockback", "trigger": "onHit", "params": { "slots": 1 } }],
-      "role": { "he": "עפה מהר, עוקצת והודפת.", "en": "Flies fast, stings and knocks back." },
-      "art": { "placeholderColor": "#9fd6e8", "sprite": null }
+      "abilities": [
+        {
+          "type": "knockback",
+          "trigger": "onHit",
+          "params": {
+            "slots": 1
+          }
+        }
+      ],
+      "role": {
+        "he": "עפה מהר, עוקצת והודפת.",
+        "en": "Flies fast, stings and knocks back."
+      },
+      "art": {
+        "placeholderColor": "#9fd6e8",
+        "sprite": null
+      },
+      "launch": true
     },
     {
       "id": "insects_08_firefly",
       "seriesId": "insects",
       "numberInSeries": 8,
-      "name": { "he": "גחלילית", "en": "Firefly" },
-      "elements": ["fire"],
+      "name": {
+        "he": "גחלילית",
+        "en": "Firefly"
+      },
+      "elements": [
+        "fire"
+      ],
       "rarity": "common",
-      "stats": { "hp": 200, "power": 150, "attackSpeed": 1.5, "moveSpeed": 2, "range": "melee" },
+      "stats": {
+        "hp": 200,
+        "power": 150,
+        "attackSpeed": 1.5,
+        "moveSpeed": 2,
+        "range": "melee"
+      },
       "flying": true,
       "midBoss": false,
-      "abilities": [{ "type": "attackSpeedAura", "trigger": "aura", "params": { "pct": 20 } }],
-      "role": { "he": "מאיצה את קצב התקיפה של הנחיל סביבה.", "en": "Speeds up the attack rate of the nearby swarm." },
-      "art": { "placeholderColor": "#e2492f", "sprite": null }
+      "abilities": [
+        {
+          "type": "attackSpeedAura",
+          "trigger": "aura",
+          "params": {
+            "pct": 20
+          }
+        }
+      ],
+      "role": {
+        "he": "מאיצה את קצב התקיפה של הנחיל סביבה.",
+        "en": "Speeds up the attack rate of the nearby swarm."
+      },
+      "art": {
+        "placeholderColor": "#e2492f",
+        "sprite": null
+      },
+      "launch": true
     },
     {
       "id": "insects_09_bombardier",
       "seriesId": "insects",
       "numberInSeries": 9,
-      "name": { "he": "חרק פצצה", "en": "Bombardier" },
-      "elements": ["fire"],
+      "name": {
+        "he": "חרק פצצה",
+        "en": "Bombardier"
+      },
+      "elements": [
+        "fire"
+      ],
       "rarity": "rare",
-      "stats": { "hp": 250, "power": 300, "attackSpeed": 2, "moveSpeed": 1, "range": "melee" },
+      "stats": {
+        "hp": 250,
+        "power": 300,
+        "attackSpeed": 2,
+        "moveSpeed": 1,
+        "range": "melee"
+      },
       "flying": false,
       "midBoss": false,
       "abilities": [
-        { "type": "splitOnDeath", "trigger": "onDeath", "params": { "count": 2, "childHp": 100, "childPower": 150 } }
+        {
+          "type": "splitOnDeath",
+          "trigger": "onDeath",
+          "params": {
+            "count": 2,
+            "childHp": 100,
+            "childPower": 150
+          }
+        }
       ],
-      "role": { "he": "מתפוצץ במוות לשני חרקים קטנים.", "en": "Explodes on death into two small bugs." },
-      "art": { "placeholderColor": "#e2492f", "sprite": null }
+      "role": {
+        "he": "מתפוצץ במוות לשני חרקים קטנים.",
+        "en": "Explodes on death into two small bugs."
+      },
+      "art": {
+        "placeholderColor": "#e2492f",
+        "sprite": null
+      },
+      "launch": false
     },
     {
       "id": "insects_10_insect_empress",
       "seriesId": "insects",
       "numberInSeries": 10,
-      "name": { "he": "קיסרית החרקים", "en": "Insect Empress" },
-      "elements": ["poison"],
+      "name": {
+        "he": "קיסרית החרקים",
+        "en": "Insect Empress"
+      },
+      "elements": [
+        "poison"
+      ],
       "rarity": "epic",
-      "stats": { "hp": 1600, "power": 400, "attackSpeed": 3, "moveSpeed": 0, "range": "ranged" },
+      "stats": {
+        "hp": 1600,
+        "power": 400,
+        "attackSpeed": 3,
+        "moveSpeed": 0,
+        "range": "ranged"
+      },
       "flying": false,
       "midBoss": true,
       "abilities": [
-        { "type": "stackingDot", "trigger": "onHit", "params": { "dotPerStack": 50 } },
-        { "type": "swarmOnDeath", "trigger": "onDeath", "params": { "count": 4, "spiritHp": 120, "spiritPower": 120 } }
+        {
+          "type": "stackingDot",
+          "trigger": "onHit",
+          "params": {
+            "dotPerStack": 50
+          }
+        },
+        {
+          "type": "swarmOnDeath",
+          "trigger": "onDeath",
+          "params": {
+            "count": 4,
+            "spiritHp": 120,
+            "spiritPower": 120
+          }
+        }
       ],
       "role": {
         "he": "ענק אמצע למשבצת ה-2×2: מרעילה מרחוק ובוקעת נחיל במוות.",
         "en": "Mid-boss for the 2×2 King slot: poisons from afar and bursts a swarm on death."
       },
-      "art": { "placeholderColor": "#6fbf3b", "sprite": null }
+      "art": {
+        "placeholderColor": "#6fbf3b",
+        "sprite": null
+      },
+      "launch": true
     }
   ]
 }

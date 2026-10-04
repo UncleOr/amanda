@@ -15,6 +15,11 @@ export const SERIES: Series[] = readdirSync(seriesDir)
 export const CARDS = new Map<string, Card>();
 for (const s of SERIES) for (const c of s.cards) CARDS.set(c.id, c);
 
+/** Only the curated launch roster gets artwork generated. */
+export function launchCards(series: Series): Card[] {
+  return series.cards.filter((c) => c.launch);
+}
+
 export function seriesOf(card: Card): Series | undefined {
   return SERIES.find((s) => s.id === card.seriesId);
 }

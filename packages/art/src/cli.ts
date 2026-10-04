@@ -11,7 +11,7 @@
  */
 import { existsSync } from "node:fs";
 import { join } from "node:path";
-import { CARDS, REPO_ROOT, SERIES } from "./catalog.js";
+import { CARDS, REPO_ROOT, SERIES, launchCards } from "./catalog.js";
 import { buildAnchoredPrompt, buildPrompt } from "./prompt.js";
 import { STYLE_DIRECTIONS, TEST_MONSTERS } from "./styles.js";
 import { download, generate, generateWithReference, uploadFile } from "./fal.js";
@@ -76,7 +76,7 @@ async function cmdCards(styleId?: string, seriesFilter?: string): Promise<void> 
 
   for (const series of list) {
     console.log(`── ${series.name.he} (${series.id})`);
-    for (const card of series.cards) {
+    for (const card of launchCards(series)) {
       const dest = join(RAW, series.id, `${card.id}.png`);
       if (existsSync(dest)) {
         console.log(`   ⏭  ${card.name.en} (exists)`);

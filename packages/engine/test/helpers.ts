@@ -27,6 +27,7 @@ export function testCard(input: {
     },
     flying: false,
     midBoss: false,
+    launch: true,
     abilities: input.abilities ?? [],
     art: { placeholderColor: "#ffffff", sprite: null },
   };

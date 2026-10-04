@@ -1,173 +1,450 @@
 {
   "id": "plants",
   "seriesNumber": 14,
-  "name": { "he": "הצמחים", "en": "The Plants" },
+  "name": {
+    "he": "הצמחים",
+    "en": "The Plants"
+  },
   "specialty": {
     "he": "התפשטות על הלוח, צמיחה ותוספת חיים",
     "en": "Spreading across the board, growth and added health"
   },
   "synergy": {
     "threshold": 3,
-    "name": { "he": "פוטוסינתזה", "en": "Photosynthesis" },
+    "name": {
+      "he": "פוטוסינתזה",
+      "en": "Photosynthesis"
+    },
     "description": {
       "he": "כל הצמחים שלכם מתרפאים לאט לאורך כל הקרב.",
       "en": "All your plants slowly heal throughout the battle."
     },
-    "ability": { "type": "healAura", "trigger": "aura", "params": { "hpPerSecond": 40 } }
+    "ability": {
+      "type": "healAura",
+      "trigger": "aura",
+      "params": {
+        "hpPerSecond": 40
+      }
+    }
   },
   "cards": [
     {
       "id": "plants_01_thorn_sprout",
       "seriesId": "plants",
       "numberInSeries": 1,
-      "name": { "he": "נבט קוצני", "en": "Thorn Sprout" },
-      "elements": ["earth"],
+      "name": {
+        "he": "נבט קוצני",
+        "en": "Thorn Sprout"
+      },
+      "elements": [
+        "earth"
+      ],
       "rarity": "common",
-      "stats": { "hp": 400, "power": 200, "attackSpeed": 2, "moveSpeed": 0, "range": "melee" },
+      "stats": {
+        "hp": 400,
+        "power": 200,
+        "attackSpeed": 2,
+        "moveSpeed": 0,
+        "range": "melee"
+      },
       "flying": false,
       "midBoss": false,
-      "abilities": [{ "type": "damageReflect", "trigger": "onDamaged", "params": { "pct": 20 } }],
-      "role": { "he": "קוצים שדוקרים את מי שנוגע.", "en": "Thorns that prick whoever touches it." },
-      "art": { "placeholderColor": "#6fbf3b", "sprite": null }
+      "abilities": [
+        {
+          "type": "damageReflect",
+          "trigger": "onDamaged",
+          "params": {
+            "pct": 20
+          }
+        }
+      ],
+      "role": {
+        "he": "קוצים שדוקרים את מי שנוגע.",
+        "en": "Thorns that prick whoever touches it."
+      },
+      "art": {
+        "placeholderColor": "#6fbf3b",
+        "sprite": null
+      },
+      "launch": false
     },
     {
       "id": "plants_02_ancient_tree",
       "seriesId": "plants",
       "numberInSeries": 2,
-      "name": { "he": "עץ עתיק", "en": "Ancient Tree" },
-      "elements": ["earth"],
+      "name": {
+        "he": "עץ עתיק",
+        "en": "Ancient Tree"
+      },
+      "elements": [
+        "earth"
+      ],
       "rarity": "rare",
-      "stats": { "hp": 2000, "power": 150, "attackSpeed": 4, "moveSpeed": 0, "range": "melee" },
+      "stats": {
+        "hp": 2000,
+        "power": 150,
+        "attackSpeed": 4,
+        "moveSpeed": 0,
+        "range": "melee"
+      },
       "flying": false,
       "midBoss": false,
-      "abilities": [{ "type": "regen", "trigger": "passive", "params": { "hpPerSecond": 80 } }],
-      "role": { "he": "חומה חיה שמתחדשת ללא הרף.", "en": "A living wall that constantly regenerates." },
-      "art": { "placeholderColor": "#8a6d3b", "sprite": null }
+      "abilities": [
+        {
+          "type": "regen",
+          "trigger": "passive",
+          "params": {
+            "hpPerSecond": 80
+          }
+        }
+      ],
+      "role": {
+        "he": "חומה חיה שמתחדשת ללא הרף.",
+        "en": "A living wall that constantly regenerates."
+      },
+      "art": {
+        "placeholderColor": "#8a6d3b",
+        "sprite": null
+      },
+      "launch": true
     },
     {
       "id": "plants_03_healing_bloom",
       "seriesId": "plants",
       "numberInSeries": 3,
-      "name": { "he": "פרח מרפא", "en": "Healing Bloom" },
-      "elements": ["light"],
+      "name": {
+        "he": "פרח מרפא",
+        "en": "Healing Bloom"
+      },
+      "elements": [
+        "light"
+      ],
       "rarity": "rare",
-      "stats": { "hp": 600, "power": 50, "attackSpeed": 3, "moveSpeed": 0, "range": "melee" },
+      "stats": {
+        "hp": 600,
+        "power": 50,
+        "attackSpeed": 3,
+        "moveSpeed": 0,
+        "range": "melee"
+      },
       "flying": false,
       "midBoss": false,
-      "abilities": [{ "type": "healAura", "trigger": "aura", "params": { "hpPerSecond": 60 } }],
-      "role": { "he": "מרפא את כל בעלי הברית סביבו.", "en": "Heals all nearby allies." },
-      "art": { "placeholderColor": "#f5f0d0", "sprite": null }
+      "abilities": [
+        {
+          "type": "healAura",
+          "trigger": "aura",
+          "params": {
+            "hpPerSecond": 60
+          }
+        }
+      ],
+      "role": {
+        "he": "מרפא את כל בעלי הברית סביבו.",
+        "en": "Heals all nearby allies."
+      },
+      "art": {
+        "placeholderColor": "#f5f0d0",
+        "sprite": null
+      },
+      "launch": true
     },
     {
       "id": "plants_04_venus_trap",
       "seriesId": "plants",
       "numberInSeries": 4,
-      "name": { "he": "צמח טורף", "en": "Venus Trap" },
-      "elements": ["poison"],
+      "name": {
+        "he": "צמח טורף",
+        "en": "Venus Trap"
+      },
+      "elements": [
+        "poison"
+      ],
       "rarity": "common",
-      "stats": { "hp": 700, "power": 450, "attackSpeed": 2, "moveSpeed": 0, "range": "melee" },
+      "stats": {
+        "hp": 700,
+        "power": 450,
+        "attackSpeed": 2,
+        "moveSpeed": 0,
+        "range": "melee"
+      },
       "flying": false,
       "midBoss": false,
-      "abilities": [{ "type": "stackingDot", "trigger": "onHit", "params": { "dotPerStack": 45 } }],
-      "role": { "he": "נושך ומזריק רעל מצטבר.", "en": "Bites and injects stacking poison." },
-      "art": { "placeholderColor": "#6fbf3b", "sprite": null }
+      "abilities": [
+        {
+          "type": "stackingDot",
+          "trigger": "onHit",
+          "params": {
+            "dotPerStack": 45
+          }
+        }
+      ],
+      "role": {
+        "he": "נושך ומזריק רעל מצטבר.",
+        "en": "Bites and injects stacking poison."
+      },
+      "art": {
+        "placeholderColor": "#6fbf3b",
+        "sprite": null
+      },
+      "launch": false
     },
     {
       "id": "plants_05_creeping_vine",
       "seriesId": "plants",
       "numberInSeries": 5,
-      "name": { "he": "גפן מתפשטת", "en": "Creeping Vine" },
-      "elements": ["earth"],
+      "name": {
+        "he": "גפן מתפשטת",
+        "en": "Creeping Vine"
+      },
+      "elements": [
+        "earth"
+      ],
       "rarity": "common",
-      "stats": { "hp": 500, "power": 250, "attackSpeed": 2, "moveSpeed": 1, "range": "melee" },
+      "stats": {
+        "hp": 500,
+        "power": 250,
+        "attackSpeed": 2,
+        "moveSpeed": 1,
+        "range": "melee"
+      },
       "flying": false,
       "midBoss": false,
       "abilities": [
-        { "type": "splitOnDeath", "trigger": "onDeath", "params": { "count": 2, "childHp": 250, "childPower": 120 } }
+        {
+          "type": "splitOnDeath",
+          "trigger": "onDeath",
+          "params": {
+            "count": 2,
+            "childHp": 250,
+            "childPower": 120
+          }
+        }
       ],
-      "role": { "he": "מתפשטת: במוות צומחות ממנה שתי גפנים.", "en": "Spreads: on death two new vines grow." },
-      "art": { "placeholderColor": "#6fbf3b", "sprite": null }
+      "role": {
+        "he": "מתפשטת: במוות צומחות ממנה שתי גפנים.",
+        "en": "Spreads: on death two new vines grow."
+      },
+      "art": {
+        "placeholderColor": "#6fbf3b",
+        "sprite": null
+      },
+      "launch": true
     },
     {
       "id": "plants_06_toxic_mushroom",
       "seriesId": "plants",
       "numberInSeries": 6,
-      "name": { "he": "פטריית רעל", "en": "Toxic Mushroom" },
-      "elements": ["poison"],
+      "name": {
+        "he": "פטריית רעל",
+        "en": "Toxic Mushroom"
+      },
+      "elements": [
+        "poison"
+      ],
       "rarity": "common",
-      "stats": { "hp": 450, "power": 400, "attackSpeed": 2, "moveSpeed": 0, "range": "ranged" },
+      "stats": {
+        "hp": 450,
+        "power": 400,
+        "attackSpeed": 2,
+        "moveSpeed": 0,
+        "range": "ranged"
+      },
       "flying": false,
       "midBoss": false,
-      "abilities": [{ "type": "stackingDot", "trigger": "onHit", "params": { "dotPerStack": 40 } }],
-      "role": { "he": "יורה נבגי רעל מרחוק.", "en": "Fires poison spores from afar." },
-      "art": { "placeholderColor": "#6fbf3b", "sprite": null }
+      "abilities": [
+        {
+          "type": "stackingDot",
+          "trigger": "onHit",
+          "params": {
+            "dotPerStack": 40
+          }
+        }
+      ],
+      "role": {
+        "he": "יורה נבגי רעל מרחוק.",
+        "en": "Fires poison spores from afar."
+      },
+      "art": {
+        "placeholderColor": "#6fbf3b",
+        "sprite": null
+      },
+      "launch": true
     },
     {
       "id": "plants_07_dandelion",
       "seriesId": "plants",
       "numberInSeries": 7,
-      "name": { "he": "שן הארי", "en": "Dandelion" },
-      "elements": ["air"],
+      "name": {
+        "he": "שן הארי",
+        "en": "Dandelion"
+      },
+      "elements": [
+        "air"
+      ],
       "rarity": "common",
-      "stats": { "hp": 300, "power": 150, "attackSpeed": 2, "moveSpeed": 1, "range": "melee" },
+      "stats": {
+        "hp": 300,
+        "power": 150,
+        "attackSpeed": 2,
+        "moveSpeed": 1,
+        "range": "melee"
+      },
       "flying": true,
       "midBoss": false,
       "abilities": [
-        { "type": "swarmOnDeath", "trigger": "onDeath", "params": { "count": 3, "spiritHp": 80, "spiritPower": 80 } }
+        {
+          "type": "swarmOnDeath",
+          "trigger": "onDeath",
+          "params": {
+            "count": 3,
+            "spiritHp": 80,
+            "spiritPower": 80
+          }
+        }
       ],
-      "role": { "he": "במוות מפזרת זרעים שממשיכים להילחם.", "en": "On death scatters seeds that fight on." },
-      "art": { "placeholderColor": "#9fd6e8", "sprite": null }
+      "role": {
+        "he": "במוות מפזרת זרעים שממשיכים להילחם.",
+        "en": "On death scatters seeds that fight on."
+      },
+      "art": {
+        "placeholderColor": "#9fd6e8",
+        "sprite": null
+      },
+      "launch": false
     },
     {
       "id": "plants_08_cactus",
       "seriesId": "plants",
       "numberInSeries": 8,
-      "name": { "he": "קקטוס", "en": "Cactus" },
-      "elements": ["earth"],
+      "name": {
+        "he": "קקטוס",
+        "en": "Cactus"
+      },
+      "elements": [
+        "earth"
+      ],
       "rarity": "rare",
-      "stats": { "hp": 900, "power": 300, "attackSpeed": 3, "moveSpeed": 0.5, "range": "melee" },
+      "stats": {
+        "hp": 900,
+        "power": 300,
+        "attackSpeed": 3,
+        "moveSpeed": 0.5,
+        "range": "melee"
+      },
       "flying": false,
       "midBoss": false,
       "abilities": [
-        { "type": "damageReflect", "trigger": "onDamaged", "params": { "pct": 30 } },
-        { "type": "regen", "trigger": "passive", "params": { "hpPerSecond": 40 } }
+        {
+          "type": "damageReflect",
+          "trigger": "onDamaged",
+          "params": {
+            "pct": 30
+          }
+        },
+        {
+          "type": "regen",
+          "trigger": "passive",
+          "params": {
+            "hpPerSecond": 40
+          }
+        }
       ],
-      "role": { "he": "קוצני ועמיד — דוקר ומתחדש.", "en": "Spiky and hardy — pricks and regenerates." },
-      "art": { "placeholderColor": "#6fbf3b", "sprite": null }
+      "role": {
+        "he": "קוצני ועמיד — דוקר ומתחדש.",
+        "en": "Spiky and hardy — pricks and regenerates."
+      },
+      "art": {
+        "placeholderColor": "#6fbf3b",
+        "sprite": null
+      },
+      "launch": true
     },
     {
       "id": "plants_09_sunflower",
       "seriesId": "plants",
       "numberInSeries": 9,
-      "name": { "he": "חמנייה", "en": "Sunflower" },
-      "elements": ["light"],
+      "name": {
+        "he": "חמנייה",
+        "en": "Sunflower"
+      },
+      "elements": [
+        "light"
+      ],
       "rarity": "common",
-      "stats": { "hp": 500, "power": 200, "attackSpeed": 2.5, "moveSpeed": 0, "range": "ranged" },
+      "stats": {
+        "hp": 500,
+        "power": 200,
+        "attackSpeed": 2.5,
+        "moveSpeed": 0,
+        "range": "ranged"
+      },
       "flying": false,
       "midBoss": false,
-      "abilities": [{ "type": "healAura", "trigger": "aura", "params": { "hpPerSecond": 40 } }],
-      "role": { "he": "אוגרת אור ומרפאת את הסובבים.", "en": "Stores sunlight and heals those around it." },
-      "art": { "placeholderColor": "#f5f0d0", "sprite": null }
+      "abilities": [
+        {
+          "type": "healAura",
+          "trigger": "aura",
+          "params": {
+            "hpPerSecond": 40
+          }
+        }
+      ],
+      "role": {
+        "he": "אוגרת אור ומרפאת את הסובבים.",
+        "en": "Stores sunlight and heals those around it."
+      },
+      "art": {
+        "placeholderColor": "#f5f0d0",
+        "sprite": null
+      },
+      "launch": false
     },
     {
       "id": "plants_10_great_mother_tree",
       "seriesId": "plants",
       "numberInSeries": 10,
-      "name": { "he": "עץ-האם הענק", "en": "Great Mother Tree" },
-      "elements": ["earth"],
+      "name": {
+        "he": "עץ-האם הענק",
+        "en": "Great Mother Tree"
+      },
+      "elements": [
+        "earth"
+      ],
       "rarity": "epic",
-      "stats": { "hp": 2400, "power": 350, "attackSpeed": 4, "moveSpeed": 0, "range": "melee" },
+      "stats": {
+        "hp": 2400,
+        "power": 350,
+        "attackSpeed": 4,
+        "moveSpeed": 0,
+        "range": "melee"
+      },
       "flying": false,
       "midBoss": true,
       "abilities": [
-        { "type": "regen", "trigger": "passive", "params": { "hpPerSecond": 120 } },
-        { "type": "healAura", "trigger": "aura", "params": { "hpPerSecond": 50 } }
+        {
+          "type": "regen",
+          "trigger": "passive",
+          "params": {
+            "hpPerSecond": 120
+          }
+        },
+        {
+          "type": "healAura",
+          "trigger": "aura",
+          "params": {
+            "hpPerSecond": 50
+          }
+        }
       ],
       "role": {
         "he": "ענק אמצע למשבצת ה-2×2: מתחדש בעצמו ומרפא את כל הצמחים.",
         "en": "Mid-boss for the 2×2 King slot: self-regenerates and heals all plants."
       },
-      "art": { "placeholderColor": "#8a6d3b", "sprite": null }
+      "art": {
+        "placeholderColor": "#8a6d3b",
+        "sprite": null
+      },
+      "launch": true
     }
   ]
 }

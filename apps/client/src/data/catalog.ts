@@ -54,22 +54,28 @@ export const CRUMB_DEMON_CARD: Card = {
   },
   flying: false,
   midBoss: false,
+  launch: false,
   abilities: [],
   art: { placeholderColor: "#7a7a7a", sprite: null },
 };
 CATALOG.set(CRUMB_DEMON_CARD.id, CRUMB_DEMON_CARD);
 
 /** Cards designed to sit in the King slot (big mid-bosses first, then the rest). */
-export const KING_CANDIDATES: Card[] = [...CATALOG.values()].filter((c) => c.midBoss);
+export const KING_CANDIDATES: Card[] = [...CATALOG.values()].filter(
+  (c) => c.midBoss && c.launch,
+);
 
 /** The colour used to render a card's placeholder shape. */
 export function cardColor(cardId: string): string {
   return CATALOG.get(cardId)?.art.placeholderColor ?? "#888888";
 }
 
-/** The full collectible pool (every real monster card). A match deck is drawn from it. */
+/**
+ * The playable pool — the curated launch roster. Cards outside it stay in the
+ * data, ready to switch on in a later content update (set `launch: true`).
+ */
 export function cardPool(): string[] {
-  return [...CATALOG.keys()].filter((id) => id !== "crumb_demon");
+  return [...CATALOG.values()].filter((c) => c.launch).map((c) => c.id);
 }
 
 /** All action cards, keyed by id. */

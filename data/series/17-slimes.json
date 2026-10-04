@@ -1,14 +1,20 @@
 {
   "id": "slimes",
   "seriesNumber": 17,
-  "name": { "he": "הריריים", "en": "The Slimes" },
+  "name": {
+    "he": "הריריים",
+    "en": "The Slimes"
+  },
   "specialty": {
     "he": "משאירים שובל ריר שמאט את היריב",
     "en": "Leaving a slime trail that slows the enemy"
   },
   "synergy": {
     "threshold": 3,
-    "name": { "he": "דביקות", "en": "Stickiness" },
+    "name": {
+      "he": "דביקות",
+      "en": "Stickiness"
+    },
     "description": {
       "he": "כל קלף יריב שמנסה להסתער בנתיב שיש בו קלף רירי סובל מהאטה של 50% במהירות התנועה.",
       "en": "Any enemy advancing in a lane containing a slime suffers a 50% movement slow."
@@ -16,7 +22,9 @@
     "ability": {
       "type": "slowAura",
       "trigger": "aura",
-      "params": { "pct": 50 }
+      "params": {
+        "pct": 50
+      }
     }
   },
   "cards": [
@@ -24,36 +32,68 @@
       "id": "slimes_01_basic_slime",
       "seriesId": "slimes",
       "numberInSeries": 1,
-      "name": { "he": "סליים בסיסי", "en": "Basic Slime" },
-      "elements": ["earth"],
+      "name": {
+        "he": "סליים בסיסי",
+        "en": "Basic Slime"
+      },
+      "elements": [
+        "earth"
+      ],
       "rarity": "common",
-      "stats": { "hp": 600, "power": 300, "attackSpeed": 2, "moveSpeed": 0.5, "range": "melee" },
+      "stats": {
+        "hp": 600,
+        "power": 300,
+        "attackSpeed": 2,
+        "moveSpeed": 0.5,
+        "range": "melee"
+      },
       "flying": false,
       "midBoss": false,
       "abilities": [
-        { "type": "knockbackImmune", "trigger": "passive", "params": {} }
+        {
+          "type": "knockbackImmune",
+          "trigger": "passive",
+          "params": {}
+        }
       ],
       "role": {
         "he": "בולם זעזועים: המבנה הג'לטיני סופג הדף, לא ניתן לדחוף אותו אחורה.",
         "en": "Shock absorber: its gelatinous body soaks knockback — it cannot be pushed back."
       },
-      "art": { "placeholderColor": "#8a6d3b", "sprite": null }
+      "art": {
+        "placeholderColor": "#8a6d3b",
+        "sprite": null
+      },
+      "launch": true
     },
     {
       "id": "slimes_02_gelatinous_cube",
       "seriesId": "slimes",
       "numberInSeries": 2,
-      "name": { "he": "קוביית ג'לי", "en": "Gelatinous Cube" },
-      "elements": ["water"],
+      "name": {
+        "he": "קוביית ג'לי",
+        "en": "Gelatinous Cube"
+      },
+      "elements": [
+        "water"
+      ],
       "rarity": "common",
-      "stats": { "hp": 850, "power": 150, "attackSpeed": 2, "moveSpeed": 0.75, "range": "melee" },
+      "stats": {
+        "hp": 850,
+        "power": 150,
+        "attackSpeed": 2,
+        "moveSpeed": 0.75,
+        "range": "melee"
+      },
       "flying": false,
       "midBoss": false,
       "abilities": [
         {
           "type": "absorbOnCollision",
           "trigger": "onCollision",
-          "params": { "stunSeconds": 3 },
+          "params": {
+            "stunSeconds": 3
+          },
           "description": {
             "he": "בולעת את הקלף המסתער של היריב ומשהה אותו 3 שניות.",
             "en": "Swallows the enemy's advancing card, stunning it for 3 seconds."
@@ -64,16 +104,32 @@
         "he": "עיכול / בקרת קצב: שוברת ליריב את טיימר ההתקפות.",
         "en": "Digestion / crowd control: breaks the enemy's attack timer."
       },
-      "art": { "placeholderColor": "#2f7fe2", "sprite": null }
+      "art": {
+        "placeholderColor": "#2f7fe2",
+        "sprite": null
+      },
+      "launch": true
     },
     {
       "id": "slimes_03_acid_ooze",
       "seriesId": "slimes",
       "numberInSeries": 3,
-      "name": { "he": "רפש חומצי", "en": "Acid Ooze" },
-      "elements": ["fire", "poison"],
+      "name": {
+        "he": "רפש חומצי",
+        "en": "Acid Ooze"
+      },
+      "elements": [
+        "fire",
+        "poison"
+      ],
       "rarity": "common",
-      "stats": { "hp": 400, "power": 500, "attackSpeed": 1.5, "moveSpeed": 0, "range": "ranged" },
+      "stats": {
+        "hp": 400,
+        "power": 500,
+        "attackSpeed": 1.5,
+        "moveSpeed": 0,
+        "range": "ranged"
+      },
       "flying": false,
       "midBoss": false,
       "abilities": [
@@ -91,23 +147,42 @@
         "he": "ממיס שריון.",
         "en": "Armor melter."
       },
-      "art": { "placeholderColor": "#6fbf3b", "sprite": null }
+      "art": {
+        "placeholderColor": "#6fbf3b",
+        "sprite": null
+      },
+      "launch": false
     },
     {
       "id": "slimes_04_splitting_blob",
       "seriesId": "slimes",
       "numberInSeries": 4,
-      "name": { "he": "בלוב מתפצל", "en": "Splitting Blob" },
-      "elements": ["water"],
+      "name": {
+        "he": "בלוב מתפצל",
+        "en": "Splitting Blob"
+      },
+      "elements": [
+        "water"
+      ],
       "rarity": "common",
-      "stats": { "hp": 500, "power": 400, "attackSpeed": 2, "moveSpeed": 0, "range": "melee" },
+      "stats": {
+        "hp": 500,
+        "power": 400,
+        "attackSpeed": 2,
+        "moveSpeed": 0,
+        "range": "melee"
+      },
       "flying": false,
       "midBoss": false,
       "abilities": [
         {
           "type": "splitOnDeath",
           "trigger": "onDeath",
-          "params": { "count": 2, "childHp": 250, "childPower": 200 },
+          "params": {
+            "count": 2,
+            "childHp": 250,
+            "childPower": 200
+          },
           "description": {
             "he": "במוות נחתך לשני בלובים קטנים שקופצים לנתיבים הסמוכים וממשיכים להילחם.",
             "en": "On death splits into two small blobs that leap to adjacent lanes and keep fighting."
@@ -118,16 +193,31 @@
         "he": "נחיל במוות.",
         "en": "Swarm on death."
       },
-      "art": { "placeholderColor": "#2f7fe2", "sprite": null }
+      "art": {
+        "placeholderColor": "#2f7fe2",
+        "sprite": null
+      },
+      "launch": false
     },
     {
       "id": "slimes_05_sticky_rug",
       "seriesId": "slimes",
       "numberInSeries": 5,
-      "name": { "he": "שטיח-דבק", "en": "Sticky Rug" },
-      "elements": ["earth"],
+      "name": {
+        "he": "שטיח-דבק",
+        "en": "Sticky Rug"
+      },
+      "elements": [
+        "earth"
+      ],
       "rarity": "common",
-      "stats": { "hp": 350, "power": 0, "attackSpeed": 0, "moveSpeed": 0, "range": "melee" },
+      "stats": {
+        "hp": 350,
+        "power": 0,
+        "attackSpeed": 0,
+        "moveSpeed": 0,
+        "range": "melee"
+      },
       "flying": false,
       "midBoss": false,
       "abilities": [
@@ -145,23 +235,40 @@
         "he": "מלכודת קומת-קרקע.",
         "en": "Ground-floor trap."
       },
-      "art": { "placeholderColor": "#8a6d3b", "sprite": null }
+      "art": {
+        "placeholderColor": "#8a6d3b",
+        "sprite": null
+      },
+      "launch": true
     },
     {
       "id": "slimes_06_toxic_sludge",
       "seriesId": "slimes",
       "numberInSeries": 6,
-      "name": { "he": "סליים רדיואקטיבי", "en": "Toxic Sludge" },
-      "elements": ["dark"],
+      "name": {
+        "he": "סליים רדיואקטיבי",
+        "en": "Toxic Sludge"
+      },
+      "elements": [
+        "dark"
+      ],
       "rarity": "rare",
-      "stats": { "hp": 300, "power": 650, "attackSpeed": 2, "moveSpeed": 0, "range": "ranged" },
+      "stats": {
+        "hp": 300,
+        "power": 650,
+        "attackSpeed": 2,
+        "moveSpeed": 0,
+        "range": "ranged"
+      },
       "flying": false,
       "midBoss": false,
       "abilities": [
         {
           "type": "stackingDot",
           "trigger": "onHit",
-          "params": { "dotPerStack": 50 },
+          "params": {
+            "dotPerStack": 50
+          },
           "description": {
             "he": "יורה בועות רעל; הרעל מצטבר וכל פגיעה מגדילה את הנזק לשנייה.",
             "en": "Fires poison bubbles; poison stacks and each hit raises the damage per second."
@@ -172,23 +279,40 @@
         "he": "נזק מתמשך מרחוק.",
         "en": "Ranged damage over time."
       },
-      "art": { "placeholderColor": "#4b2e6b", "sprite": null }
+      "art": {
+        "placeholderColor": "#4b2e6b",
+        "sprite": null
+      },
+      "launch": false
     },
     {
       "id": "slimes_07_floating_brain",
       "seriesId": "slimes",
       "numberInSeries": 7,
-      "name": { "he": "מוח-צף", "en": "Floating Brain" },
-      "elements": ["electric"],
+      "name": {
+        "he": "מוח-צף",
+        "en": "Floating Brain"
+      },
+      "elements": [
+        "electric"
+      ],
       "rarity": "rare",
-      "stats": { "hp": 450, "power": 200, "attackSpeed": 2, "moveSpeed": 0, "range": "ranged" },
+      "stats": {
+        "hp": 450,
+        "power": 200,
+        "attackSpeed": 2,
+        "moveSpeed": 0,
+        "range": "ranged"
+      },
       "flying": true,
       "midBoss": false,
       "abilities": [
         {
           "type": "attackSpeedAura",
           "trigger": "aura",
-          "params": { "pct": 25 },
+          "params": {
+            "pct": 25
+          },
           "description": {
             "he": "משדר פולסים חשמליים שמעניקים +25% מהירות תקיפה למפלצות ברדיוס.",
             "en": "Emits electric pulses granting +25% attack speed to monsters in range."
@@ -199,16 +323,31 @@
         "he": "באף אזורי.",
         "en": "Area buffer."
       },
-      "art": { "placeholderColor": "#f2c530", "sprite": null }
+      "art": {
+        "placeholderColor": "#f2c530",
+        "sprite": null
+      },
+      "launch": false
     },
     {
       "id": "slimes_08_assimilator",
       "seriesId": "slimes",
       "numberInSeries": 8,
-      "name": { "he": "מטמיע הצורות", "en": "Assimilator" },
-      "elements": ["variable"],
+      "name": {
+        "he": "מטמיע הצורות",
+        "en": "Assimilator"
+      },
+      "elements": [
+        "variable"
+      ],
       "rarity": "rare",
-      "stats": { "hp": 550, "power": 500, "attackSpeed": 1.75, "moveSpeed": 1, "range": "melee" },
+      "stats": {
+        "hp": 550,
+        "power": 500,
+        "attackSpeed": 1.75,
+        "moveSpeed": 1,
+        "range": "melee"
+      },
       "flying": false,
       "midBoss": false,
       "abilities": [
@@ -226,23 +365,40 @@
         "he": "גנב אלמנטים.",
         "en": "Element thief."
       },
-      "art": { "placeholderColor": "#b06fd6", "sprite": null }
+      "art": {
+        "placeholderColor": "#b06fd6",
+        "sprite": null
+      },
+      "launch": true
     },
     {
       "id": "slimes_09_pudding_shield",
       "seriesId": "slimes",
       "numberInSeries": 9,
-      "name": { "he": "פודינג-מגן", "en": "Pudding Shield" },
-      "elements": ["light"],
+      "name": {
+        "he": "פודינג-מגן",
+        "en": "Pudding Shield"
+      },
+      "elements": [
+        "light"
+      ],
       "rarity": "rare",
-      "stats": { "hp": 700, "power": 100, "attackSpeed": 3, "moveSpeed": 0, "range": "melee" },
+      "stats": {
+        "hp": 700,
+        "power": 100,
+        "attackSpeed": 3,
+        "moveSpeed": 0,
+        "range": "melee"
+      },
       "flying": false,
       "midBoss": false,
       "abilities": [
         {
           "type": "damageShareAdjacent",
           "trigger": "passive",
-          "params": { "pct": 50 },
+          "params": {
+            "pct": 50
+          },
           "description": {
             "he": "סופג חצי מהנזק שמופנה לקלפים הצמודים אליו מימין ומשמאל.",
             "en": "Absorbs half the damage aimed at the cards directly to its left and right."
@@ -253,23 +409,42 @@
         "he": "הגנה היקפית / שומר ראש.",
         "en": "Perimeter guard / bodyguard."
       },
-      "art": { "placeholderColor": "#f5f0d0", "sprite": null }
+      "art": {
+        "placeholderColor": "#f5f0d0",
+        "sprite": null
+      },
+      "launch": true
     },
     {
       "id": "slimes_10_zelig_giant_ooze",
       "seriesId": "slimes",
       "numberInSeries": 10,
-      "name": { "he": "זליג הענק", "en": "Zelig the Giant Ooze" },
-      "elements": ["water", "poison"],
+      "name": {
+        "he": "זליג הענק",
+        "en": "Zelig the Giant Ooze"
+      },
+      "elements": [
+        "water",
+        "poison"
+      ],
       "rarity": "epic",
-      "stats": { "hp": 1500, "power": 400, "attackSpeed": 6, "moveSpeed": 0, "range": "melee" },
+      "stats": {
+        "hp": 1500,
+        "power": 400,
+        "attackSpeed": 6,
+        "moveSpeed": 0,
+        "range": "melee"
+      },
       "flying": false,
       "midBoss": true,
       "abilities": [
         {
           "type": "pullVacuum",
           "trigger": "onAttack",
-          "params": { "everySeconds": 6, "slots": 1 },
+          "params": {
+            "everySeconds": 6,
+            "slots": 1
+          },
           "description": {
             "he": "כל 6 שניות מושך את כל קלפי היריב המסתערים משבצת אחת פנימה למרכז ומשבש נתיבים.",
             "en": "Every 6 seconds pulls all advancing enemy cards one slot inward, disrupting lanes."
@@ -280,7 +455,11 @@
         "he": "ענק אמצע למשבצת ה-2×2: שואב עולמי איטי אך קטלני.",
         "en": "Mid-boss for the 2×2 King slot: a slow but lethal world-sucker."
       },
-      "art": { "placeholderColor": "#2f7fe2", "sprite": null }
+      "art": {
+        "placeholderColor": "#2f7fe2",
+        "sprite": null
+      },
+      "launch": true
     }
   ]
 }

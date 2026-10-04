@@ -47,6 +47,11 @@ export const CardSchema = z.object({
   flying: z.boolean().default(false),
   /** Designed as a mid-boss for the 2×2 King slot (informational; any card is legal there). */
   midBoss: z.boolean().default(false),
+  /**
+   * In the curated launch roster. Cards outside it stay in the data (balanced
+   * and ready) but are held back for a later content update.
+   */
+  launch: z.boolean().default(false),
   /** Data-driven behaviors interpreted by the engine. */
   abilities: z.array(AbilitySchema).default([]),
   /** Design/tooltip text describing the card's role. Not read by the engine. */

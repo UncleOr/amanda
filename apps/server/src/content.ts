@@ -24,6 +24,7 @@ CATALOG.set("crumb_demon", {
   stats: { hp: CRUMB_DEMON.hp, power: CRUMB_DEMON.power, attackSpeed: CRUMB_DEMON.attackSpeed, moveSpeed: 0, range: "melee" },
   flying: false,
   midBoss: false,
+  launch: false,
   abilities: [],
   art: { placeholderColor: "#7a7a7a", sprite: null },
 });
