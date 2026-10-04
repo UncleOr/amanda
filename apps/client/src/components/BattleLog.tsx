@@ -11,7 +11,8 @@ import {
   type UnitReport,
 } from "@amanda/engine";
 import { CATALOG } from "../data/catalog";
-import { seriesColor } from "../data/cardMeta";
+import { ELEMENT_META, RANGE_META, seriesColor } from "../data/cardMeta";
+
 
 const TPS = SIMULATION.ticksPerSecond;
 const secs = (tick: number): string => (tick / TPS).toFixed(1);
@@ -61,6 +62,7 @@ const ICON: Record<TimelineEntry["kind"], string> = {
 export function BattleLog({ result, mySide }: { result: BattleResult; mySide: Owner }) {
   const [tab, setTab] = useState<"analysis" | "map" | "units" | "timeline">("analysis");
   const [copied, setCopied] = useState(false);
+  const [inspect, setInspect] = useState<UnitReport | null>(null);
   const report = useMemo(() => buildReport(result, CATALOG), [result]);
 
   const theirSide: Owner = mySide === "A" ? "B" : "A";
@@ -153,7 +155,14 @@ export function BattleLog({ result, mySide }: { result: BattleResult; mySide: Ow
           <p className="log__quiet">הלוחות כפי שנראו בתחילת הקרב — מה כל קלף עשה מהמקום שלו.</p>
           <div className="log__maps">
             {([mySide, theirSide] as Owner[]).map((o) => (
-              <BoardMap key={o} report={report} owner={o} title={sideName(o)} mine={o === mySide} />
+              <BoardMap
+                key={o}
+                report={report}
+                owner={o}
+                title={sideName(o)}
+                mine={o === mySide}
+                onPick={setInspect}
+              />
             ))}
           </div>
           <div className="log__legend">
@@ -161,6 +170,7 @@ export function BattleLog({ result, mySide }: { result: BattleResult; mySide: Ow
             <span><i className="log__swatch log__swatch--some" /> תרם נזק</span>
             <span><i className="log__swatch log__swatch--idle" /> לא עשה כלום</span>
             <span>💀 נפל · ✅ שרד · 🧊 לא זז</span>
+            <span>לחצו על קלף לפרטים</span>
           </div>
         </div>
       )}
@@ -183,7 +193,7 @@ export function BattleLog({ result, mySide }: { result: BattleResult; mySide: Ow
                 report.sides[o].units
                   .filter((u) => u.cardId !== "crumb_demon")
                   .map((u) => (
-                    <tr key={u.uid}>
+                    <tr key={u.uid} className="log__row" onClick={() => setInspect(u)}>
                       <td>
                         <span
                           className="log__dot"
@@ -203,6 +213,15 @@ export function BattleLog({ result, mySide }: { result: BattleResult; mySide: Ow
             </tbody>
           </table>
         </div>
+      )}
+
+      {inspect && (
+        <UnitReportModal
+          unit={inspect}
+          mine={inspect.owner === mySide}
+          report={report}
+          onClose={() => setInspect(null)}
+        />
       )}
 
       {tab === "timeline" && (
@@ -238,11 +257,13 @@ function BoardMap({
   owner,
   title,
   mine,
+  onPick,
 }: {
   report: BattleReport;
   owner: Owner;
   title: string;
   mine: boolean;
+  onPick: (u: UnitReport) => void;
 }) {
   const units = report.sides[owner].units;
   const top = Math.max(...units.filter((u) => u.cardId !== FILLER_CARD_ID).map((u) => u.damageDealt), 1);
@@ -252,11 +273,13 @@ function BoardMap({
   const colFor = (x: number) => (mine ? x + 1 : 4 - x);
 
   const cell = (u: UnitReport) => (
-    <div
+    <button
       key={u.uid}
+      type="button"
       className={`log__cell log__cell--${band(u, top)}${u.survived ? "" : " log__cell--dead"}`}
       style={{ gridColumn: colFor(u.startX), gridRow: u.lane + 1 }}
-      title={`${u.name} · נזק ${u.damageDealt} · ספג ${u.damageTaken}${u.kills ? ` · ${u.kills} הפלות` : ""}`}
+      title={`${u.name} — לחצו לפרטים`}
+      onClick={() => onPick(u)}
     >
       <span className="log__cell-name">{u.name}</span>
       <span className="log__cell-dmg">{u.damageDealt.toLocaleString("he-IL")}</span>
@@ -265,7 +288,7 @@ function BoardMap({
         {u.colsMoved === 0 && !u.isKing && "🧊"}
         {u.kills > 0 && `⚔${u.kills}`}
       </span>
-    </div>
+    </button>
   );
 
   return (
@@ -273,20 +296,137 @@ function BoardMap({
       <figcaption className={mine ? "log__me" : "log__them"}>{title}</figcaption>
       <div className="log__grid" dir="ltr">
         {king && (
-          <div
+          <button
+            type="button"
             className={`log__cell log__cell--king log__cell--${band(king, top)}${king.survived ? "" : " log__cell--dead"}`}
             style={{ gridColumn: "2 / 4", gridRow: "2 / 4" }}
-            title={`${king.name} · נזק ${king.damageDealt}`}
+            title={`${king.name} — לחצו לפרטים`}
+            onClick={() => onPick(king)}
           >
             <span className="log__cell-name">👑 {king.name}</span>
             <span className="log__cell-dmg">{king.damageDealt.toLocaleString("he-IL")}</span>
             <span className="log__cell-marks">{king.survived ? "✅" : "💀"}</span>
-          </div>
+          </button>
         )}
         {units
           .filter((u) => !u.isKing && u.cardId !== FILLER_CARD_ID)
           .map(cell)}
       </div>
     </figure>
+  );
+}
+
+/** One card's own account of the battle, opened from the map or the table. */
+function UnitReportModal({
+  unit,
+  mine,
+  report,
+  onClose,
+}: {
+  unit: UnitReport;
+  mine: boolean;
+  report: BattleReport;
+  onClose: () => void;
+}) {
+  const card = CATALOG.get(unit.cardId);
+  const art = card?.art.sprite ? `${import.meta.env.BASE_URL}${card.art.sprite}` : null;
+  const sideTotal = Math.max(1, report.sides[unit.owner].damageDealt);
+  const share = Math.round((unit.damageDealt / sideTotal) * 100);
+  const col = ["עורף", "שלישית", "שנייה", "חזית"][unit.startX] ?? "";
+
+  // What this card actually did, in one line, rather than making the player
+  // read the numbers and work it out.
+  const story = (() => {
+    if (unit.damageDealt === 0 && unit.damageTaken === 0)
+      return "לא נגע בקרב — אף אחד לא הגיע אליו והוא לא הגיע לאף אחד.";
+    if (unit.damageDealt === 0) return "ספג מכות אבל לא הספיק להחזיר ולו מכה אחת.";
+    if (unit.kills >= 2) return `חתך את הדרך — הפיל ${unit.kills} קלפים.`;
+    if (share >= 30) return `נשא את הצד שלו: ${share}% מכל הנזק.`;
+    return `תרם ${share}% מהנזק של הצד שלו.`;
+  })();
+
+  return (
+    <div className="modal-overlay" onClick={onClose}>
+      <div
+        className="modal modal--unit"
+        onClick={(e) => e.stopPropagation()}
+        style={{ ["--card-color"]: seriesColor(unit.seriesId) } as React.CSSProperties}
+      >
+        <button className="modal__close" onClick={onClose} title="סגירה">
+          ✕
+        </button>
+        <div className="modal__banner">
+          <div
+            className="modal__portrait"
+            style={
+              art
+                ? { backgroundImage: `url("${art}")`, backgroundSize: "cover", backgroundPosition: "top center" }
+                : { background: seriesColor(unit.seriesId) }
+            }
+          />
+          <div className="modal__title">
+            <h2>
+              {unit.isKing && "👑 "}
+              {unit.name}
+            </h2>
+            <p className="modal__subtitle">
+              {mine ? "שלך" : "של היריב"} · {col}, מסלול {unit.lane + 1}
+            </p>
+            <div className="modal__badges">
+              {card && (
+                <span className="badge">
+                  {ELEMENT_META[card.elements[0]!].icon} {ELEMENT_META[card.elements[0]!].he}
+                </span>
+              )}
+              {card && <span className="badge">{RANGE_META[card.stats.range].he}</span>}
+              <span className={`badge${unit.survived ? " badge--king" : ""}`}>
+                {unit.survived ? "✅ שרד" : `💀 נפל ב-${secs(unit.diedAtTick ?? 0)}s`}
+              </span>
+            </div>
+          </div>
+        </div>
+
+        <p className="modal__role">{story}</p>
+
+        <div className="log__scores">
+          <div className="log__score">
+            <dl>
+              <div>
+                <dt>נזק שעשה</dt>
+                <dd>{unit.damageDealt.toLocaleString("he-IL")}</dd>
+              </div>
+              <div>
+                <dt>נזק שספג</dt>
+                <dd>{unit.damageTaken.toLocaleString("he-IL")}</dd>
+              </div>
+              <div>
+                <dt>הפלות</dt>
+                <dd>{unit.kills}</dd>
+              </div>
+              <div>
+                <dt>מכות</dt>
+                <dd>{unit.hits}</dd>
+              </div>
+            </dl>
+          </div>
+        </div>
+
+        <ul className="log__facts">
+          <li>
+            <b>מהנזק של הצד:</b> {share}%
+          </li>
+          <li>
+            <b>חיים:</b> {unit.maxHp.toLocaleString("he-IL")}
+            {unit.isKing && " (כולל בונוס מלך ×3)"}
+          </li>
+          <li>
+            <b>תזוזה:</b>{" "}
+            {unit.colsMoved === 0
+              ? "נשאר במקום לאורך כל הקרב"
+              : `התקדם ${unit.colsMoved.toFixed(1)} משבצות`}
+          </li>
+        </ul>
+      </div>
+    </div>
   );
 }

@@ -28,6 +28,10 @@ function artUrlOf(cardId: string): string | null {
   return sprite ? `${import.meta.env.BASE_URL}${sprite}` : null;
 }
 const FINALE_MS = 1700;
+/** Seconds left at which the clock starts warning. */
+const WARN_AT = 5;
+/** How long "time's up" and the verdict stay on screen before the result. */
+const VERDICT_MS = 2600;
 
 const cx = (col: number): number => (col + 0.5) * CELL;
 const cy = (lane: number): number => HEAD + (lane + 0.5) * CELL;
@@ -106,11 +110,14 @@ export function Arena({
   result,
   onFinish,
   flip = false,
+  verdict,
 }: {
   result: BattleResult;
   onFinish: () => void;
   /** Mirror horizontally so the local player (B) still sees themselves on the left. */
   flip?: boolean;
+  /** One sentence saying how the match was decided, shown when the clock runs out. */
+  verdict?: string;
 }) {
   const hostRef = useRef<HTMLDivElement>(null);
   const finishedRef = useRef(false);
@@ -120,6 +127,7 @@ export function Arena({
     let disposed = false;
     let initialized = false;
     let finaleStarted = false;
+    let timeUp = false;
     let clock = 0; // replay time in ms, shared by every effect
     const timers: number[] = [];
     const app = new Application();
@@ -525,6 +533,67 @@ export function Arena({
         banner("🧑 אתה", W * 0.25, localTint);
         banner("🤖 היריב", W * 0.75, oppTint);
 
+        // Battle clock, centred in the header band. A 30 second fight needs to
+        // show how much of it is left, and shout when it is nearly gone.
+        const clockText = new Text({
+          text: "",
+          style: {
+            fontFamily: "Segoe UI, sans-serif",
+            fontSize: 16,
+            fill: 0xffffff,
+            fontWeight: "800",
+          },
+        });
+        clockText.anchor.set(0.5);
+        clockText.x = W / 2;
+        clockText.y = HEAD / 2;
+        uiLayer.addChild(clockText);
+
+        // Red breathing edge for the final seconds.
+        const urgency = new Graphics();
+        urgency.alpha = 0;
+        uiLayer.addChild(urgency);
+
+        // The end-of-time announcement: "time is up", then how it was decided.
+        const announce = new Container();
+        announce.alpha = 0;
+        const annBg = new Graphics();
+        const annTitle = new Text({
+          text: "⏱ נגמר הזמן!",
+          style: {
+            fontFamily: "Segoe UI, sans-serif",
+            fontSize: 26,
+            fill: 0xffd36b,
+            fontWeight: "800",
+          },
+        });
+        annTitle.anchor.set(0.5);
+        const annBody = new Text({
+          text: verdict ?? "",
+          style: {
+            fontFamily: "Segoe UI, sans-serif",
+            fontSize: 13,
+            fill: 0xe7ecf5,
+            fontWeight: "600",
+            align: "center",
+            wordWrap: true,
+            wordWrapWidth: W - 80,
+          },
+        });
+        annBody.anchor.set(0.5);
+        annTitle.y = -18;
+        annBody.y = 16;
+        const annH = 90;
+        annBg
+          .roundRect(-W / 2 + 28, -annH / 2, W - 56, annH, 14)
+          .fill({ color: 0x080c16, alpha: 0.92 })
+          .roundRect(-W / 2 + 28, -annH / 2, W - 56, annH, 14)
+          .stroke({ width: 2, color: 0xffd36b, alpha: 0.7 });
+        announce.addChild(annBg, annTitle, annBody);
+        announce.x = W / 2;
+        announce.y = HEAD + (H - HEAD) / 2;
+        uiLayer.addChild(announce);
+
         const frames = result.frames;
         const events = result.events;
         const msPerFrame = 1000 / SIMULATION.ticksPerSecond;
@@ -626,6 +695,30 @@ export function Arena({
           elapsed += dt;
           clock = elapsed;
           const k = Math.min(1, dt / 90);
+
+          // The clock reads from the replay position, so it can never drift
+          // away from what is actually happening on the field.
+          const totalSec = frames.length / SIMULATION.ticksPerSecond;
+          const leftSec = Math.max(0, totalSec - elapsed / 1000);
+          const shown = Math.ceil(leftSec);
+          if (clockText.text !== `${shown}s`) clockText.text = `${shown}s`;
+          const warning = leftSec <= WARN_AT && leftSec > 0;
+          clockText.style.fill = warning ? 0xff6b6b : 0xffffff;
+          const beat = warning ? 1 + Math.sin(clock / 90) * 0.12 : 1;
+          clockText.scale.set(beat);
+          if (warning) {
+            urgency.clear();
+            const pulse = 0.18 + Math.sin(clock / 160) * 0.1;
+            urgency
+              .rect(0, HEAD, W, H - HEAD)
+              .stroke({ width: 6, color: 0xff5a5a, alpha: Math.max(0, pulse) });
+            urgency.alpha = 1;
+          } else if (urgency.alpha !== 0) {
+            urgency.clear();
+            urgency.alpha = 0;
+          }
+          // Once the clock is out, say so and say what decided it.
+          if (timeUp) announce.alpha += (1 - announce.alpha) * Math.min(1, dt / 180);
 
           if (!finaleStarted) {
             const idx = Math.min(frames.length - 1, Math.floor(elapsed / msPerFrame));
@@ -761,14 +854,25 @@ export function Arena({
         });
 
         const playbackMs = frames.length * msPerFrame;
-        timers.push(window.setTimeout(() => triggerFinale(lastUnits), playbackMs));
+        // A fight that went the distance gets the clock-out announcement before
+        // the board collapses; one that ended on a King going down does not.
+        const ranOutOfTime = result.winReason !== "kingDown";
+        const holdMs = ranOutOfTime ? VERDICT_MS : 0;
+        if (ranOutOfTime)
+          timers.push(
+            window.setTimeout(() => {
+              timeUp = true;
+              sfx.play("beep");
+            }, playbackMs),
+          );
+        timers.push(window.setTimeout(() => triggerFinale(lastUnits), playbackMs + holdMs));
         timers.push(
           window.setTimeout(() => {
             if (!finishedRef.current) {
               finishedRef.current = true;
               onFinish();
             }
-          }, playbackMs + FINALE_MS),
+          }, playbackMs + holdMs + FINALE_MS),
         );
       });
 
@@ -777,7 +881,7 @@ export function Arena({
       for (const t of timers) window.clearTimeout(t);
       if (initialized) app.destroy(true, { children: true });
     };
-  }, [result, onFinish]);
+  }, [result, onFinish, verdict]);
 
   return <div className="arena" ref={hostRef} />;
 }

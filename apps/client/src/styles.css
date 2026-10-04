@@ -19,6 +19,23 @@ body,
   height: 100%;
   margin: 0;
 }
+/*
+ * Mobile browsers hide and show their own chrome as you scroll, so `100%`
+ * (and `100vh`) is the height of the page WITHOUT the chrome — the app ends up
+ * taller than the visible area and the bottom gets cut off. `dvh` is the live
+ * visible height, which is what we actually want.
+ */
+@supports (height: 100dvh) {
+  html,
+  body,
+  #root {
+    height: 100dvh;
+  }
+}
+body {
+  overflow: hidden;
+  overscroll-behavior: none; /* no rubber-banding the whole game around */
+}
 body {
   color: var(--text);
   font-family: "Segoe UI", "Assistant", system-ui, sans-serif;
@@ -47,6 +64,9 @@ body {
   display: flex;
   flex-direction: column;
   overflow: hidden;
+  /* keep clear of notches and home indicators (viewport-fit=cover) */
+  padding: env(safe-area-inset-top) env(safe-area-inset-right)
+    env(safe-area-inset-bottom) env(safe-area-inset-left);
 }
 
 /* ---- top bar ---- */
@@ -270,18 +290,55 @@ body {
   from { box-shadow: inset 0 0 0 2px rgba(255, 210, 74, 0.5); }
   to { box-shadow: inset 0 0 14px 3px rgba(255, 210, 74, 0.85); }
 }
+/* Picking a target is a MODE: it floats over the board, dims everything that
+   is not a legal target, and keeps its own way out within reach. */
 .targeting-bar {
+  position: absolute;
+  top: 8px;
+  inset-inline: 10px;
+  z-index: 20;
   display: flex;
   align-items: center;
   justify-content: center;
   gap: 12px;
   padding: 8px 14px;
-  background: rgba(255, 176, 32, 0.16);
-  border-top: 1px solid var(--accent);
+  background: rgba(40, 28, 4, 0.96);
+  border: 1px solid var(--accent);
+  border-radius: 12px;
   color: var(--accent);
   font-weight: 700;
+  box-shadow: 0 8px 30px rgba(0, 0, 0, 0.6);
+  animation: targetin 0.18s ease-out;
 }
-.targeting-bar button { padding: 4px 14px; }
+@keyframes targetin {
+  from { opacity: 0; transform: translateY(-8px); }
+  to { opacity: 1; transform: none; }
+}
+.targeting-bar__text { font-size: 14px; }
+.targeting-bar__cancel {
+  padding: 7px 16px;
+  border-color: var(--accent);
+  color: var(--accent);
+  background: transparent;
+  flex-shrink: 0;
+}
+
+/* While picking: push everything that cannot be picked into the background. */
+.build--targeting .side--enemy,
+.build--targeting .hand,
+.build--targeting .actions {
+  opacity: 0.3;
+  pointer-events: none;
+  filter: grayscale(0.6);
+}
+.build--targeting .slot:not(.slot--target) {
+  opacity: 0.35;
+}
+.build--targeting .slot--target {
+  outline: 3px solid var(--accent);
+  outline-offset: 2px;
+  border-radius: 11px;
+}
 
 /* ---- cards ---- */
 /* ─────────────── CARD TEMPLATE ───────────────
@@ -1440,3 +1497,63 @@ button:disabled {
   font-size: 14px;
   line-height: 1.5;
 }
+
+/* music is opt-in; the button shows which way it is set */
+.mute--off {
+  opacity: 0.45;
+  text-decoration: line-through;
+}
+
+/* a card's own account of the battle */
+.log__cell {
+  font-family: inherit;
+  cursor: pointer;
+  color: var(--text);
+}
+.log__cell:hover {
+  outline: 2px solid var(--accent);
+  outline-offset: -1px;
+}
+.log__row { cursor: pointer; }
+.log__row:hover { background: rgba(255, 255, 255, 0.05); }
+.modal--unit .log__scores { margin: 10px 0; }
+.modal--unit .log__score { border-color: var(--line); }
+.log__facts {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+  font-size: 13px;
+}
+.log__facts b { color: var(--muted); font-weight: 700; }
+
+/* ---- action bar on a phone: bigger targets, scrollable, never clipped ---- */
+@media (max-height: 560px) and (orientation: landscape) {
+  .actions {
+    flex-wrap: nowrap;
+    overflow-x: auto;
+    justify-content: flex-start;
+    scrollbar-width: none;
+  }
+  .actions::-webkit-scrollbar { display: none; }
+  .actions__title,
+  .actions__empty { flex-shrink: 0; }
+  .action-chip { flex-shrink: 0; }
+  /* The whole mini-card is the tap target — it opens the card, where a
+     full-size "הפעל" button lives. The inline row would be 9px here. */
+  .action-chip__card { width: 46px; height: 60px; }
+  .action-chip__row { display: none; }
+
+  .targeting-bar {
+    top: 4px;
+    inset-inline: 6px;
+    padding: 6px 10px;
+    gap: 8px;
+  }
+  .targeting-bar__text { font-size: 12px; }
+  .targeting-bar__cancel { padding: 6px 12px; font-size: 12px; }
+}
+
+/* end of stylesheet */

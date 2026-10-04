@@ -37,14 +37,54 @@ function ramp(el: Ramping, target: number, ms: number, onDone?: () => void): voi
   }, 30);
 }
 
+/**
+ * Music is OFF until someone asks for it. Playtesting the same twenty seconds
+ * of board-building over and over with a soundtrack underneath is maddening, so
+ * the game stays quiet by default and remembers the choice per browser.
+ */
+const ENABLED_KEY = "amanda.music";
+
+function loadEnabled(): boolean {
+  try {
+    return localStorage.getItem(ENABLED_KEY) === "on";
+  } catch {
+    return false; // private mode / blocked storage — stay quiet
+  }
+}
+
 class Music {
   private el: Ramping | null = null;
   private current: MusicName | null = null;
   private muted = false;
+  private enabled = loadEnabled();
   private baseVolume = 0.35;
 
-  play(name: MusicName, opts: { loop?: boolean } = {}): void {
+  isEnabled(): boolean {
+    return this.enabled;
+  }
+
+  /** Turn the soundtrack on or off. Returns the new state. */
+  toggleEnabled(): boolean {
+    this.enabled = !this.enabled;
+    try {
+      localStorage.setItem(ENABLED_KEY, this.enabled ? "on" : "off");
+    } catch {
+      /* not being able to remember it is not worth failing over */
+    }
+    if (!this.enabled) this.stop();
+    else if (this.current) this.play(this.current, { restart: true });
+    return this.enabled;
+  }
+
+  play(name: MusicName, opts: { loop?: boolean; restart?: boolean } = {}): void {
     const loop = opts.loop ?? true;
+    if (!this.enabled) {
+      // Remember what WOULD be playing, so switching music on starts the right
+      // track for the phase the player is already in.
+      this.current = name;
+      return;
+    }
+    if (opts.restart) this.current = null;
     // Already playing this track → nothing to do (but retry if a prior attempt
     // was blocked before a user gesture and is still paused).
     if (this.current === name && this.el && !this.el.paused) return;

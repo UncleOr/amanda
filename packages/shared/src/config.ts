@@ -42,16 +42,22 @@ export const KING = {
   instantKillFlatDamage: 2000,
 } as const;
 
-/** Match phase timeline in seconds (GDD §4). Total ≈ 85s. */
+/**
+ * Match phase timeline in seconds (GDD §4). Total ≈ 105s.
+ *
+ * Tuned from playtesting (Or, 2026-10-04): a minute is plenty to build a
+ * board, and 15 seconds of battle was too short for the fight to resolve —
+ * most matches were timing out with both Kings untouched.
+ */
 export const PHASES = {
-  build: { seconds: 90, label: { he: "טירוף הבנייה", en: "Build Frenzy" } },
+  build: { seconds: 60, label: { he: "טירוף הבנייה", en: "Build Frenzy" } },
   panic: { seconds: 15, label: { he: "שניות הפאניקה", en: "Panic Seconds" } },
-  battle: { seconds: 15, label: { he: "הקרב האוטומטי", en: "Auto-Battle" } },
+  battle: { seconds: 30, label: { he: "הקרב האוטומטי", en: "Auto-Battle" } },
 } as const;
 
 /**
- * Deterministic simulation cadence. The 15s battle is computed as a fixed
- * number of integer ticks so both server and clients reproduce it identically.
+ * Deterministic simulation cadence. The battle is computed as a fixed number of
+ * integer ticks so both server and clients reproduce it identically.
  */
 export const SIMULATION = {
   ticksPerSecond: 30,

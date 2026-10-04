@@ -1,4 +1,5 @@
 import { describe, expect, it } from "vitest";
+import { SIMULATION } from "@amanda/shared";
 import { buildReport, runBattle, type BattleSetup } from "../src/index.js";
 import { catalogOf, testCard } from "./helpers.js";
 
@@ -101,7 +102,7 @@ describe("win conditions", () => {
     expect(r.winner).toBe("A");
     expect(r.winReason).toBe("kingDown");
     expect(r.tiebreak).toBeNull();
-    expect(r.ticks).toBeLessThan(450); // it did not need the full clock
+    expect(r.ticks).toBeLessThan(SIMULATION.totalBattleTicks); // it did not need the full clock
   });
 
   it("a timeout reports which tiebreak decided it, and by what margin", () => {
@@ -113,7 +114,7 @@ describe("win conditions", () => {
       b: { owner: "B", placements: [{ cardId: "brick", x: 1, y: 1, king: true }] },
     });
     // Neither King can be reached, so the clock runs all the way out.
-    expect(r.ticks).toBe(450);
+    expect(r.ticks).toBe(SIMULATION.totalBattleTicks);
     expect(r.winReason).not.toBe("kingDown");
     expect(r.tiebreak).not.toBeNull();
     expect(r.tiebreak!.reason).toBe(r.winReason);

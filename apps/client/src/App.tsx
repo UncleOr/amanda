@@ -24,11 +24,11 @@ import { BattleLog } from "./components/BattleLog";
  * and half their board alive deserves to be told which link decided it.
  */
 function verdictText(result: BattleResult, iWon: boolean): string {
-  const them = iWon ? "היריב" : "שלך";
+  const whose = iWon ? "של היריב" : "שלך";
   const pct = (n: number) => `${Math.round(n * 100)}%`;
   switch (result.winReason) {
     case "kingDown":
-      return `המלך ${them} נפל — זה מסיים את הקרב מיד.`;
+      return `המלך ${whose} נפל — זה מסיים את הקרב מיד.`;
     case "kingHp": {
       const t = result.tiebreak!;
       const mine = result.winner === "A" ? t.b : t.a;
@@ -81,6 +81,7 @@ function Game() {
   const [detail, setDetail] = useState<string | null>(null);
   const [actionDetail, setActionDetail] = useState<string | null>(null);
   const [muted, setMuted] = useState(false);
+  const [musicOn, setMusicOn] = useState(music.isEnabled());
   const [confirmExit, setConfirmExit] = useState(false);
   const [showLog, setShowLog] = useState(false);
   const openInfo = (cardId: string) => setDetail(cardId);
@@ -158,6 +159,13 @@ function Game() {
             </button>
           )}
           <button
+            className={`mute${musicOn ? "" : " mute--off"}`}
+            title={musicOn ? "כיבוי מוזיקה" : "הפעלת מוזיקה"}
+            onClick={() => setMusicOn(music.toggleEnabled())}
+          >
+            {musicOn ? "🎵" : "🎵̸"}
+          </button>
+          <button
             className="mute"
             title={muted ? "הפעלת צליל" : "השתקה"}
             onClick={() => {
@@ -202,7 +210,8 @@ function Game() {
               </button>
             </div>
             <p className="intro__hint">
-              דקה וחצי לבנות את הלוח · 15 שניות פאניקה · 15 שניות קרב
+              {PHASES.build.seconds} שניות לבנות את הלוח · {PHASES.panic.seconds} שניות
+              פאניקה · {PHASES.battle.seconds} שניות קרב
               {!m.onlineAvailable && (
                 <>
                   <br />
@@ -243,7 +252,11 @@ function Game() {
 
       {/* ---- build / panic / prebattle: two facing boards ---- */}
       {showBoards && (
-        <main className={`build${m.phase === "panic" ? " build--panic" : ""}`}>
+        <main
+          className={`build${m.phase === "panic" ? " build--panic" : ""}${
+            m.targeting ? " build--targeting" : ""
+          }`}
+        >
           <div className="boards">
             <section className="side side--me">
               <div className="side__label">🧑 אתה · חזית ⟶</div>
@@ -286,8 +299,12 @@ function Game() {
 
           {m.targeting && (
             <div className="targeting-bar">
-              🎯 בחרו קלף על הלוח שלכם עבור "{ACTIONS.get(m.targeting)?.name.he}"
-              <button onClick={m.cancelTargeting}>ביטול</button>
+              <span className="targeting-bar__text">
+                🎯 בחרו קלף על הלוח שלכם עבור "{ACTIONS.get(m.targeting)?.name.he}"
+              </span>
+              <button className="targeting-bar__cancel" onClick={m.cancelTargeting}>
+                ✕ ביטול
+              </button>
             </div>
           )}
 
@@ -427,7 +444,12 @@ function Game() {
               </div>
             }
           >
-            <Arena result={m.result} onFinish={m.finishBattle} flip={m.mySide === "B"} />
+            <Arena
+              result={m.result}
+              onFinish={m.finishBattle}
+              flip={m.mySide === "B"}
+              verdict={verdictText(m.result, m.iWon)}
+            />
           </ErrorBoundary>
         </main>
       )}
@@ -495,9 +517,26 @@ function Game() {
       )}
 
       {detail && <CardDetailModal cardId={detail} onClose={() => setDetail(null)} />}
-      {actionDetail && (
-        <ActionDetailModal actionId={actionDetail} onClose={() => setActionDetail(null)} />
-      )}
+      {actionDetail &&
+        (() => {
+          const inBar = m.actionBar.find((a) => a.id === actionDetail);
+          const playable = inBar && !inBar.passive && !inBar.used;
+          return (
+            <ActionDetailModal
+              actionId={actionDetail}
+              onClose={() => setActionDetail(null)}
+              state={inBar ? (inBar.used ? "used" : inBar.passive ? "passive" : null) : undefined}
+              onActivate={
+                playable
+                  ? () => {
+                      setActionDetail(null);
+                      m.activateAction(actionDetail);
+                    }
+                  : undefined
+              }
+            />
+          );
+        })()}
     </div>
   );
 }

@@ -7,9 +7,15 @@ import { actionArtUrl } from "./ActionCardView";
 export function ActionDetailModal({
   actionId,
   onClose,
+  onActivate,
+  state,
 }: {
   actionId: string;
   onClose: () => void;
+  /** Present when this card is in the bar and can be played right now. */
+  onActivate?: () => void;
+  /** Why it cannot be played, when it cannot. */
+  state?: "used" | "passive" | null;
 }) {
   const card = ACTIONS.get(actionId);
   if (!card) return null;
@@ -53,6 +59,22 @@ export function ActionDetailModal({
           <h3>{passive ? "מה הוא עושה (אוטומטית)" : "מה הוא עושה בלחיצה"}</h3>
           <p className="modal__role">{card.description.he}</p>
         </div>
+
+        {/* Playing the card lives here, where there is room for a real button,
+            rather than on a 9px control wedged under a thumbnail. */}
+        {(onActivate || state) && (
+          <div className="modal__actions">
+            {onActivate ? (
+              <button className="btn-fight" onClick={onActivate}>
+                ▶ הפעל עכשיו
+              </button>
+            ) : (
+              <button className="btn-fight btn-ghost" disabled>
+                {state === "used" ? "✔ כבר נוצל" : "♾️ פועל מעצמו"}
+              </button>
+            )}
+          </div>
+        )}
       </div>
     </div>
   );
