@@ -69,7 +69,7 @@
       },
       "art": {
         "placeholderColor": "#e2492f",
-        "sprite": null
+        "sprite": "cards/dragons_01_flame_dragon.webp"
       },
       "launch": true
     },

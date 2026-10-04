@@ -56,7 +56,7 @@
       },
       "art": {
         "placeholderColor": "#8a6d3b",
-        "sprite": null
+        "sprite": "cards/insects_01_ant_soldier.webp"
       },
       "launch": true
     },
@@ -336,7 +336,7 @@
       },
       "art": {
         "placeholderColor": "#e2492f",
-        "sprite": null
+        "sprite": "cards/insects_08_firefly.webp"
       },
       "launch": true
     },

@@ -64,7 +64,7 @@
       },
       "art": {
         "placeholderColor": "#8a6d3b",
-        "sprite": null
+        "sprite": "cards/giants_01_stone_colossus.webp"
       },
       "launch": true
     },

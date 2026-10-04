@@ -256,6 +256,10 @@ body {
 .targeting-bar button { padding: 4px 14px; }
 
 /* ---- cards ---- */
+/* ─────────────── CARD TEMPLATE ───────────────
+   Every card is the same template: art fills the face, furniture sits at
+   fixed coordinates — element top-left, flags top-right, and a bottom plate
+   carrying traits · name · ❤️HP (left) ⚔️Power (right). */
 .card {
   --card-color: #888;
   --rarity-color: #9aa4ad;
@@ -265,14 +269,9 @@ body {
   min-width: 0;
   min-height: 0;
   overflow: hidden;
-  border-radius: 8px;
-  padding: 3px;
+  border-radius: 10px;
   cursor: pointer;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  gap: 1px;
+  display: block;
   color: #fff;
   text-align: center;
   border: 2px solid var(--rarity-color);
@@ -281,28 +280,63 @@ body {
     color-mix(in srgb, var(--card-color) 90%, #fff 10%),
     color-mix(in srgb, var(--card-color) 72%, #000 28%)
   );
-  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.7);
+  background-size: cover;
+  background-position: center top;
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.8);
+  box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.14),
+    0 0 7px -1px color-mix(in srgb, var(--rarity-color) 55%, transparent);
   animation: pop 0.14s ease-out;
+}
+/* artwork cards: dark scrim at the bottom so the plate text stays readable */
+.card--art::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(to top, rgba(4, 7, 14, 0.96) 0%, rgba(4, 7, 14, 0.9) 26%, rgba(4, 7, 14, 0) 46%),
+    linear-gradient(to bottom, rgba(4, 7, 14, 0.5) 0%, rgba(4, 7, 14, 0) 26%);
+  pointer-events: none;
 }
 @keyframes pop {
   from { transform: scale(0.85); opacity: 0.4; }
   to { transform: scale(1); opacity: 1; }
 }
 .card--large { animation: none; }
-.card__header {
+
+/* top row */
+.card__top {
   position: absolute;
-  top: 2px;
-  inset-inline: 3px;
+  top: 3px;
+  inset-inline: 4px;
+  z-index: 2;
   display: flex;
-  align-items: center;
+  align-items: flex-start;
   justify-content: space-between;
-  font-size: 12px;
+  font-size: 13px;
 }
 .card__element { line-height: 1; }
-.card__boss { font-size: 11px; }
+.card__traits {
+  display: flex;
+  align-items: center;
+  gap: 2px;
+  font-size: 11px;
+  line-height: 1;
+  padding: 2px 4px;
+  border-radius: 999px;
+  background: rgba(0, 0, 0, 0.5);
+}
+.card--large .card__traits { font-size: 13px; gap: 3px; }
+.card__flags { display: flex; align-items: center; gap: 3px; }
+.card__boss {
+  font-size: 10px;
+  font-weight: 800;
+  background: rgba(0, 0, 0, 0.55);
+  border-radius: 999px;
+  padding: 1px 5px;
+  white-space: nowrap;
+}
 .card__info {
   border: none;
-  background: rgba(0, 0, 0, 0.45);
+  background: rgba(0, 0, 0, 0.5);
   color: #fff;
   width: 16px;
   height: 16px;
@@ -313,45 +347,77 @@ body {
   cursor: pointer;
   line-height: 16px;
 }
-.card__info:hover {
-  background: var(--accent);
-  color: #101010;
+.card__info:hover { background: var(--accent); color: #101010; }
+
+/* bottom plate — the fixed information block */
+.card__plate {
+  position: absolute;
+  inset-inline: 0;
+  bottom: 0;
+  z-index: 2;
+  padding: 2px 3px 3px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 2px;
 }
 .card__name {
-  font-weight: 700;
-  font-size: 13px;
-  line-height: 1.08;
-  margin-top: 9px;
+  font-weight: 800;
+  font-size: 11px;
+  line-height: 1.15;
   max-width: 100%;
+  white-space: nowrap;
   overflow: hidden;
-  display: -webkit-box;
-  -webkit-line-clamp: 2;
-  -webkit-box-orient: vertical;
-  word-break: break-word;
+  text-overflow: ellipsis;
+  letter-spacing: -0.2px;
+  text-shadow: 0 1px 3px #000, 0 0 6px rgba(0, 0, 0, 0.9);
 }
-.card--small .card__name { font-size: 11px; margin-top: 7px; }
-.card--large .card__name { font-size: 16px; }
-.card--large .card__stats { font-size: 14px; gap: 12px; }
-.card__stats--buffed {
-  color: #7be07b;
-  text-shadow: 0 0 6px rgba(90, 210, 90, 0.55);
-}
+.card--small .card__name { font-size: 9px; }
+.card--large .card__name { font-size: 15px; }
+
 .card__stats {
   display: flex;
-  gap: 8px;
-  font-size: 11px;
-  font-weight: 700;
-  /* Fixed order everywhere: ❤️ HP on the left, ⚔️ Power on the right. */
-  direction: ltr;
-  justify-content: center;
-  white-space: nowrap;
+  gap: 3px;
+  width: 100%;
+  direction: ltr; /* fixed order: ❤ HP left, ⚔ Power right */
 }
-.card--large .card__stats { font-size: 15px; gap: 12px; }
-.card__tags { font-size: 11px; display: flex; gap: 3px; }
+.card__stats .stat {
+  flex: 1 1 0;
+  min-width: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 2px;
+  line-height: 1;
+  padding: 2px 1px;
+  border-radius: 4px;
+  background: rgba(0, 0, 0, 0.62);
+  box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.1);
+}
+.card__stats .stat b {
+  font-size: 11px;
+  font-weight: 800;
+  font-variant-numeric: tabular-nums;
+}
+.stat__icon { font-size: 9px; font-style: normal; line-height: 1; }
+.stat--hp .stat__icon { color: #ff6b7a; }
+.stat--pw .stat__icon { color: #ffd36b; }
+.card--small .card__stats .stat b { font-size: 9px; }
+.card--large .card__stats { gap: 5px; }
+.card--large .card__stats .stat b { font-size: 15px; }
+.card--large .stat__icon { font-size: 12px; }
+.card__stats--buffed .stat {
+  color: #8dff8d;
+  box-shadow: inset 0 0 0 1px rgba(125, 255, 125, 0.55);
+}
+
 .card--back {
   background: repeating-linear-gradient(45deg, #141d33 0 7px, #1c2743 7px 14px);
   border-color: var(--line);
   cursor: default;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 .card-back__mark { font-size: 20px; opacity: 0.5; }
 
@@ -733,7 +799,8 @@ button:disabled {
   gap: 6px;
   margin-bottom: 6px;
 }
-.stat {
+/* scoped to the detail modal so they never clash with the card template */
+.modal__stats .stat {
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -742,9 +809,9 @@ button:disabled {
   background: var(--panel-2);
   border-radius: 10px;
 }
-.stat__icon { font-size: 16px; }
-.stat__value { font-weight: 800; font-size: 14px; }
-.stat__label { font-size: 10px; color: var(--muted); }
+.modal__stats .stat__icon { font-size: 16px; }
+.modal__stats .stat__value { font-weight: 800; font-size: 14px; }
+.modal__stats .stat__label { font-size: 10px; color: var(--muted); }
 .modal__section { margin-top: 14px; }
 .modal__section h3 { margin: 0 0 6px; font-size: 15px; }
 .ability-list { margin: 0; padding-inline-start: 18px; display: flex; flex-direction: column; gap: 4px; }
@@ -766,3 +833,23 @@ button:disabled {
   .hand { gap: 10px; padding: 8px 12px; }
   .intro__card { padding: 28px 24px; }
 }
+
+/* ---- card gallery (art review, ?gallery) ---- */
+.gallery { padding: 16px 20px 40px; overflow-y: auto; height: 100%; }
+.gallery__bar {
+  display: flex; align-items: center; gap: 20px;
+  position: sticky; top: 0; z-index: 5;
+  background: rgba(11, 14, 23, 0.95);
+  padding: 8px 0 12px; border-bottom: 1px solid var(--line); margin-bottom: 14px;
+}
+.gallery__bar h2 { margin: 0; font-size: 20px; }
+.gallery__bar label { color: var(--muted); font-size: 13px; cursor: pointer; }
+.gallery__series { margin-bottom: 26px; }
+.gallery__series h3 { margin: 0 0 10px; font-size: 16px; color: var(--accent); }
+.gallery__series small { color: var(--muted); font-weight: 400; }
+.gallery__row { display: flex; flex-wrap: wrap; gap: 18px; }
+.gallery__item { display: flex; flex-direction: column; align-items: center; gap: 6px; }
+.gallery__slot { flex: none; }
+.gallery__slot--board { width: 86px; height: 86px; }
+.gallery__slot--hand { width: 138px; height: 126px; }
+.gallery__cap { font-size: 12px; color: var(--muted); }

@@ -144,7 +144,7 @@
       },
       "art": {
         "placeholderColor": "#f5f0d0",
-        "sprite": null
+        "sprite": "cards/plants_03_healing_bloom.webp"
       },
       "launch": true
     },

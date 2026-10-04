@@ -11,6 +11,7 @@ import { CardDetailModal } from "./components/CardDetailModal";
 import { ActionDetailModal } from "./components/ActionDetailModal";
 import { Arena } from "./components/Arena";
 import { ErrorBoundary } from "./components/ErrorBoundary";
+import { CardGallery } from "./components/CardGallery";
 
 const ACTION_ICON: Record<string, string> = {
   energy_boost: "⚡",
@@ -31,6 +32,9 @@ const PHASE_LABEL: Record<string, string> = {
 };
 
 export default function App() {
+  // Art-review gallery: open the game with ?gallery
+  if (new URLSearchParams(location.search).has("gallery")) return <CardGallery />;
+
   const m = useMatch();
   const [detail, setDetail] = useState<string | null>(null);
   const [actionDetail, setActionDetail] = useState<string | null>(null);

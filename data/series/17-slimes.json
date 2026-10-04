@@ -106,7 +106,7 @@
       },
       "art": {
         "placeholderColor": "#2f7fe2",
-        "sprite": null
+        "sprite": "cards/slimes_02_gelatinous_cube.webp"
       },
       "launch": true
     },
@@ -457,7 +457,7 @@
       },
       "art": {
         "placeholderColor": "#2f7fe2",
-        "sprite": null
+        "sprite": "cards/slimes_10_zelig_giant_ooze.webp"
       },
       "launch": true
     }
