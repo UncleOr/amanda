@@ -10,4 +10,5 @@ export * from "./rng.js";
 export * from "./combat.js";
 export * from "./setup.js";
 export { runBattle } from "./simulate.js";
+export * from "./report.js";
 export type { BattleOps, ChildProto } from "./abilities.js";

@@ -14,6 +14,7 @@ import { Arena } from "./components/Arena";
 import { ErrorBoundary } from "./components/ErrorBoundary";
 import { CardGallery } from "./components/CardGallery";
 import { ArenaPreview } from "./components/ArenaPreview";
+import { BattleLog } from "./components/BattleLog";
 
 
 const PHASE_LABEL: Record<string, string> = {
@@ -52,6 +53,7 @@ function Game() {
   const [actionDetail, setActionDetail] = useState<string | null>(null);
   const [muted, setMuted] = useState(false);
   const [confirmExit, setConfirmExit] = useState(false);
+  const [showLog, setShowLog] = useState(false);
   const openInfo = (cardId: string) => setDetail(cardId);
 
   const showBoards = m.phase === "build" || m.phase === "panic" || m.phase === "prebattle";
@@ -405,9 +407,17 @@ function Game() {
                 {m.result.events.filter((e) => e.type === "death").length} מפלצות נפלו
               </p>
             )}
-            <button className="btn-fight" onClick={m.reset}>
-              🔄 משחק חדש
-            </button>
+            <div className="result__buttons">
+              <button className="btn-fight" onClick={m.reset}>
+                🔄 משחק חדש
+              </button>
+              {m.result && (
+                <button className="btn-fight btn-online" onClick={() => setShowLog((v) => !v)}>
+                  {showLog ? "הסתר דוח" : "📋 מה קרה בקרב?"}
+                </button>
+              )}
+            </div>
+            {showLog && m.result && <BattleLog result={m.result} mySide={m.mySide} />}
           </div>
         </main>
       )}
