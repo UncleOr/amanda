@@ -3,13 +3,19 @@ import { Application, Assets, Container, Graphics, Sprite, Text, Texture } from 
 import { ARENA, SIMULATION } from "@amanda/shared";
 import type { BattleResult, FrameUnit, Owner } from "@amanda/engine";
 import { cardColor, CATALOG } from "../data/catalog";
-import { ELEMENT_META } from "../data/cardMeta";
+import { ELEMENT_META, seriesColor } from "../data/cardMeta";
 import { sfx } from "../game/sfx";
 
 const CELL = 72;
 const W = ARENA.width * CELL;
 const H = ARENA.lanes * CELL;
 const OWNER_TINT = { A: 0x4aa3ff, B: 0xff5a5a } as const;
+
+/** Series tint as a Pixi colour, so same-family units read as a group. */
+function seriesTint(cardId: string): number {
+  const id = CATALOG.get(cardId)?.seriesId ?? "";
+  return Number.parseInt(seriesColor(id).replace("#", ""), 16);
+}
 
 /** Public URL of a card's artwork, or null when it has none yet. */
 function artUrlOf(cardId: string): string | null {
@@ -71,7 +77,7 @@ export function Arena({
 
     function drawUnit(fu: FrameUnit): UnitGfx {
       const container = new Container();
-      const w = (fu.isKing ? 2 : 1) * CELL * 0.8;
+      const w = (fu.isKing ? 2 : 1) * CELL * 0.88;
       const body = new Graphics();
       body.roundRect(-w / 2, -w / 2, w, w, 10).fill(cardColor(fu.cardId));
       container.addChild(body);
@@ -89,30 +95,51 @@ export function Arena({
         container.addChild(mask, sprite);
       }
 
-      // Owner-coloured frame drawn above the art.
+      // Double frame: the outer ring says whose unit it is, the inner ring says
+      // which series it belongs to (so synergy groups are visible in battle too).
       const frame = new Graphics();
       frame
         .roundRect(-w / 2, -w / 2, w, w, 10)
         .stroke({ width: fu.isKing ? 5 : 3, color: OWNER_TINT[fu.owner] });
+      const inner = w - (fu.isKing ? 8 : 5);
+      frame
+        .roundRect(-inner / 2, -inner / 2, inner, inner, 8)
+        .stroke({ width: 2, color: seriesTint(fu.cardId), alpha: 0.95 });
       container.addChild(frame);
 
       const hp = new Graphics();
       const card = CATALOG.get(fu.cardId);
       const icon = card ? ELEMENT_META[card.elements[0]!].icon : "";
-      const name = card?.name.he ?? "";
+      const rawName = card?.name.he ?? "";
+
+      // The name sits INSIDE the unit on a dark strip. Drawing it below the box
+      // made neighbouring units' labels collide across lanes.
+      const plateH = fu.isKing ? 18 : 14;
+      const plate = new Graphics();
+      plate
+        .roundRect(-w / 2, w / 2 - plateH, w, plateH, 6)
+        .fill({ color: 0x05080f, alpha: 0.85 })
+        .roundRect(-w / 2, w / 2 - plateH, w, 2, 1)
+        .fill({ color: seriesTint(fu.cardId), alpha: 0.9 });
+      container.addChild(plate);
+
+      const fontSize = fu.isKing ? 11 : 9;
+      const maxChars = Math.max(4, Math.floor(w / (fontSize * 0.62)));
+      const name =
+        rawName.length > maxChars ? rawName.slice(0, maxChars - 1) + "\u2026" : rawName;
       const label = new Text({
-        text: `${fu.isKing ? "👑 " : ""}${icon} ${name}\n⚔ ${fu.power}`,
+        text: `${fu.isKing ? "\u{1F451}" : icon}${name}`,
         style: {
           fontFamily: "Segoe UI, sans-serif",
-          fontSize: 11,
+          fontSize,
           fill: 0xffffff,
-          fontWeight: "600",
+          fontWeight: "700",
           align: "center",
-          lineHeight: 13,
         },
       });
       label.anchor.set(0.5);
-      label.y = w / 2 + 13;
+      label.y = w / 2 - plateH / 2;
+      if (label.width > w - 4) label.scale.set((w - 4) / label.width);
       container.addChild(hp, label);
       app.stage.addChild(container);
       const g: UnitGfx = {
@@ -136,11 +163,14 @@ export function Arena({
         g.container.y = cy(laneCenter(fu.lanes));
         g.targetAlpha = fu.alive ? 1 : 0;
         const ratio = Math.max(0, Math.min(1, fu.hp / fu.maxHp));
+        // HP bar sits inside the top of the unit, so it can never be confused
+        // with the unit above it in the next lane.
+        const barW = g.half * 2 - 6;
         g.hp.clear();
         g.hp
-          .roundRect(-g.half, -g.half - 11, g.half * 2, 6, 3)
-          .fill(0x222833)
-          .roundRect(-g.half, -g.half - 11, g.half * 2 * ratio, 6, 3)
+          .roundRect(-barW / 2, -g.half + 3, barW, 5, 2.5)
+          .fill({ color: 0x05080f, alpha: 0.85 })
+          .roundRect(-barW / 2 + 1, -g.half + 4, (barW - 2) * ratio, 3, 1.5)
           .fill(ratio > 0.35 ? 0x5ad25a : 0xe2c04a);
       }
     }
@@ -219,13 +249,30 @@ export function Arena({
         hostRef.current?.appendChild(app.canvas);
 
         const bg = new Graphics();
-        bg.rect(0, 0, W / 2, H).fill({ color: localTint, alpha: 0.06 });
-        bg.rect(W / 2, 0, W / 2, H).fill({ color: oppTint, alpha: 0.06 });
+        // territory tint, strongest at each player's back edge
+        bg.rect(0, 0, W / 2, H).fill({ color: localTint, alpha: 0.1 });
+        bg.rect(W / 2, 0, W / 2, H).fill({ color: oppTint, alpha: 0.1 });
+        // alternating lane bands make the four lanes readable at a glance
+        for (let l = 0; l < ARENA.lanes; l++)
+          if (l % 2 === 1)
+            bg.rect(0, l * CELL, W, CELL).fill({ color: 0xffffff, alpha: 0.035 });
+        // lane separators (stronger) and column guides (faint)
+        for (let c = 0; c <= ARENA.width; c++)
+          bg.moveTo(c * CELL, 0).lineTo(c * CELL, H);
+        bg.stroke({ width: 1, color: 0x2a3550, alpha: 0.5 });
         for (let l = 0; l <= ARENA.lanes; l++) bg.moveTo(0, l * CELL).lineTo(W, l * CELL);
-        for (let c = 0; c <= ARENA.width; c++) bg.moveTo(c * CELL, 0).lineTo(c * CELL, H);
-        bg.stroke({ width: 1, color: 0x263041 });
-        bg.moveTo(W / 2, 0).lineTo(W / 2, H).stroke({ width: 3, color: 0x3a4a63 });
+        bg.stroke({ width: 1, color: 0x3a4a63 });
+        // the front line where the two boards meet
+        bg.moveTo(W / 2, 0).lineTo(W / 2, H).stroke({ width: 4, color: 0x5d7399 });
+        bg.rect(W / 2 - 2, 0, 4, H).fill({ color: 0xffd36b, alpha: 0.12 });
         app.stage.addChildAt(bg, 0);
+
+        // soft vignette so the bright artwork reads against the frame
+        const vignette = new Graphics();
+        const edge = 26;
+        vignette.rect(0, 0, W, edge).fill({ color: 0x05080f, alpha: 0.5 });
+        vignette.rect(0, H - edge, W, edge).fill({ color: 0x05080f, alpha: 0.5 });
+        app.stage.addChildAt(vignette, 1);
 
         // Identity banners: you on the left (A), opponent on the right (B).
         const banner = (text: string, x: number, color: number) => {

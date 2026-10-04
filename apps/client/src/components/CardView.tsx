@@ -1,7 +1,7 @@
 import type { CSSProperties } from "react";
 import { KING } from "@amanda/shared";
 import { CATALOG } from "../data/catalog";
-import { ELEMENT_META, RANGE_META, RARITY_META } from "../data/cardMeta";
+import { ELEMENT_META, RANGE_META, RARITY_META, seriesColor } from "../data/cardMeta";
 
 interface StatBuff {
   powerAdd?: number;
@@ -43,6 +43,8 @@ export function CardView({ cardId, onClick, onInfo, size = "medium", king = fals
   const style: CSSProperties = {
     "--card-color": card.art.placeholderColor,
     "--rarity-color": rarity.color,
+    // frame + name plate are tinted by SERIES so synergy groups read instantly
+    "--series-color": seriesColor(card.seriesId),
     ...(art ? { backgroundImage: `url("${art}")` } : {}),
   } as CSSProperties;
 
@@ -65,6 +67,7 @@ export function CardView({ cardId, onClick, onInfo, size = "medium", king = fals
         <span className="card__flags">
           {king && <span className="card__boss" title="בונוס מלך ×3">👑×3</span>}
           {!king && card.midBoss && <span className="card__boss" title="ענק אמצע (מתאים למלך)">👑</span>}
+          <span className="card__rarity" title={rarity.he} />
           {onInfo && (
             <button
               type="button"

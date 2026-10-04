@@ -33,6 +33,24 @@ export const RARITY_META: Record<Rarity, { he: string; color: string }> = {
   legendary: { he: "אגדי", color: "#ffb020" },
 };
 
+/**
+ * One colour per series. The series bonus needs 3+ cards of the same family on
+ * the board, so the family has to be readable at a glance — this colour drives
+ * the card frame and name plate, making same-series cards group visually.
+ */
+export const SERIES_META: Record<string, { he: string; color: string }> = {
+  dragons: { he: "דרקונים", color: "#ff6a3d" },
+  giants: { he: "ענקים", color: "#b98a4e" },
+  insects: { he: "חרקים", color: "#c04ddb" },
+  plants: { he: "צמחים", color: "#4fc85f" },
+  slimes: { he: "ריריים", color: "#2fc5c0" },
+};
+export const SERIES_FALLBACK_COLOR = "#8a93a6";
+
+export function seriesColor(seriesId: string): string {
+  return SERIES_META[seriesId]?.color ?? SERIES_FALLBACK_COLOR;
+}
+
 /** Short Hebrew labels for ability types (used when a card has no custom text). */
 export const ABILITY_LABEL: Partial<Record<AbilityType, string>> = {
   knockback: "הדף אחורה",
