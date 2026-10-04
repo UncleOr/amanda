@@ -24,9 +24,10 @@ export const STYLE_DIRECTIONS: StyleDirection[] = [
     id: "darkcomic",
     he: "קומיקס אפל",
     style:
-      "dark graphic-novel illustration, heavy inked linework, dramatic rim lighting, moody " +
-      "desaturated palette with one neon accent color, gritty urban underworld atmosphere, " +
-      "subtle film grain, cinematic",
+      "bold graphic-novel comic illustration, heavy black ink linework and confident cel shading, " +
+      "RICH SATURATED VIVID colors, strong bright key light on the creature plus glowing elemental " +
+      "rim light so it pops off the page, deep but COLORFUL shadows (never muddy, never black-on-black), " +
+      "high contrast, energetic heroic presence, crisp readable silhouette, clean uncluttered backdrop",
   },
   {
     id: "softtoy",
@@ -48,9 +49,13 @@ export const STYLE_DIRECTIONS: StyleDirection[] = [
 
 /** Framing rules shared by every generated card so the set stays uniform. */
 export const FRAMING =
-  "single full-body character centered in frame, three-quarter front view, facing slightly left, " +
-  "clean simple background with soft radial gradient, no text, no words, no logo, no watermark, " +
-  "no border art, no UI elements, character fully inside the frame with small margin";
+  "ONE single full-body creature, centered, three-quarter front view facing slightly left, " +
+  "consistent camera distance, character fully inside the image with a small even margin, " +
+  "plain simple backdrop with a soft radial glow behind the creature. " +
+  "ABSOLUTELY NO TEXT of any kind: no letters, no words, no numbers, no name, no title, no caption, " +
+  "no signature, no watermark, no logo. " +
+  "NO CARD FRAME and NO BORDER: do not draw a trading card, do not draw a frame, panel, inner " +
+  "rectangle, rounded-rectangle outline or picture-in-picture. Just the creature on the backdrop.";
 
 /** Per-series colour/motif guidance layered on top of the chosen style. */
 export const SERIES_TEMPLATE: Record<string, string> = {
@@ -58,7 +63,7 @@ export const SERIES_TEMPLATE: Record<string, string> = {
   slimes: "translucent glossy gel body, wet highlights, acid green and aqua blue palette, drip shapes",
   plants: "verdant greens with flower-bright accents, leaf and vine shapes, soft organic silhouettes",
   insects: "chitinous exoskeleton sheen, amber and deep violet palette, sharp angular limbs",
-  golems: "rough stone and raw metal textures, earthy grey-brown palette, heavy blocky silhouette",
+  giants: "rough craggy stone and raw hammered metal, earthy grey-brown palette with warm mineral veins, massive heavy blocky silhouette",
 };
 
 /** Test monsters used for the style bake-off (aggressive / cute / giant boss). */

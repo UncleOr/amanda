@@ -26,6 +26,33 @@ const RANGE_LOOK: Record<string, string> = {
   sniper: "long-range shooter silhouette, focused precise stance",
 };
 
+/**
+ * Temperament axis. Not every monster should be scary — tiny support creatures
+ * read better as adorable, while bosses and heavy hitters stay menacing.
+ */
+export type Vibe = "cute" | "fierce" | "neutral";
+
+export function vibeOf(card: Card): Vibe {
+  const supportive = card.abilities.some((a) =>
+    ["healAura", "attackSpeedAura", "armorAura", "regen"].includes(a.type),
+  );
+  const dark = card.elements.includes("dark");
+  const venomous = card.elements.includes("poison");
+  const huge = card.stats.hp >= 1000; // a 1400hp steel giant is never "cute"
+  if (card.midBoss || dark || card.stats.power >= 700) return "fierce";
+  if (!huge && !venomous && (supportive || (card.stats.power <= 350 && card.stats.hp <= 900)))
+    return "cute";
+  return "neutral";
+}
+
+const VIBE_LOOK: Record<Vibe, string> = {
+  cute: "ADORABLE and friendly: big expressive sparkling eyes, soft rounded chunky proportions, " +
+    "small and huggable, cheerful charming expression, utterly non-threatening and lovable",
+  fierce: "MENACING and intimidating: fearsome aggressive expression, bared fangs or sharp " +
+    "dangerous forms, powerful imposing presence, battle-ready snarl",
+  neutral: "confident and characterful, determined battle-ready expression, appealing heroic design",
+};
+
 /** Pose scales with actual movement speed so slow crawlers don't look like chargers. */
 function poseFor(card: Card): string {
   if (card.stats.moveSpeed <= 0) return "grounded planted stance";
@@ -47,6 +74,7 @@ export function buildPrompt(card: Card, dir: StyleDirection): string {
   return [
     `A ${scale} named "${card.name.en}" for a monster trading-card game.`,
     role && `Character concept: ${role}`,
+    VIBE_LOOK[vibeOf(card)] + ".",
     [element, seriesLook, range, motion].filter(Boolean).join(", ") + ".",
     dir.style + ".",
     FRAMING + ".",
