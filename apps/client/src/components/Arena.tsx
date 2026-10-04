@@ -5,6 +5,7 @@ import type { BattleResult, FrameUnit, Owner } from "@amanda/engine";
 import { cardColor, CATALOG } from "../data/catalog";
 import { ELEMENT_META, seriesColor } from "../data/cardMeta";
 import { sfx } from "../game/sfx";
+import { combatLook, drawAura, drawProjectile, type CombatLook } from "./arenaFx";
 
 const CELL = 72;
 /** Header band above the lanes, so the identity banners never cover a unit. */
@@ -12,6 +13,8 @@ const HEAD = 26;
 const W = ARENA.width * CELL;
 const H = ARENA.lanes * CELL + HEAD;
 const OWNER_TINT = { A: 0x4aa3ff, B: 0xff5a5a } as const;
+/** Which generated battlefield backdrop to fight on (assets/raw/arena/<id>). */
+const BACKDROP = "rift";
 
 /** Series tint as a Pixi colour, so same-family units read as a group. */
 function seriesTint(cardId: string): number {
@@ -31,12 +34,31 @@ const cy = (lane: number): number => HEAD + (lane + 0.5) * CELL;
 const laneCenter = (lanes: number[]): number => lanes.reduce((s, l) => s + l, 0) / lanes.length;
 
 interface UnitGfx {
+  /** Positioned from the replay frame — never touched by the effects. */
   container: Container;
-  body: Graphics;
+  /** Everything visible. Carries the lunge, recoil and shake offsets. */
+  art: Container;
   hp: Graphics;
+  /** White overlay that pops when the unit is struck. */
+  flash: Graphics;
+  /** Ground ring for units that project an aura. */
+  aura: Graphics | null;
+  /** Frost ring + orbiting shards while the unit is frozen. */
+  stun: Graphics;
+  look: CombatLook;
   targetAlpha: number;
   pulse: number;
+  flashAmt: number;
+  shake: number;
+  /** Current displacement from a lunge or a recoil, springing back to zero. */
+  offX: number;
+  offY: number;
+  /** Phase for the idle bob of flying units. */
+  bob: number;
+  /** Replay time (ms) until which the unit shows as frozen. */
+  stunnedUntilMs: number;
   exploding: boolean;
+  dead: boolean;
   half: number;
   owner: Owner;
 }
@@ -47,6 +69,37 @@ interface Floater {
 interface Burst {
   g: Graphics;
   life: number;
+}
+/** A shot in flight, carrying the damage reaction it will trigger on arrival. */
+interface Projectile {
+  g: Graphics;
+  x0: number;
+  y0: number;
+  targetUid: string;
+  look: CombatLook;
+  t: number;
+  /** Total flight time in ms. */
+  dur: number;
+  /** Lob height in px — 0 for flat shots. */
+  arc: number;
+  damage: number;
+  phase: number;
+}
+interface Particle {
+  g: Graphics;
+  vx: number;
+  vy: number;
+  life: number;
+  gravity: number;
+}
+/** An expanding ring: impacts, deaths, splits and revealed cards all use one. */
+interface Ring {
+  g: Graphics;
+  life: number;
+  color: number;
+  from: number;
+  to: number;
+  width: number;
 }
 
 export function Arena({
@@ -67,11 +120,21 @@ export function Arena({
     let disposed = false;
     let initialized = false;
     let finaleStarted = false;
+    let clock = 0; // replay time in ms, shared by every effect
     const timers: number[] = [];
     const app = new Application();
     const gfxByUid = new Map<string, UnitGfx>();
+    const uidByGfx = new Map<UnitGfx, string>();
     const floaters: Floater[] = [];
     const bursts: Burst[] = [];
+    const shots: Projectile[] = [];
+    const particles: Particle[] = [];
+    const rings: Ring[] = [];
+    // Layers, so projectiles and debris always draw over the units.
+    const bgLayer = new Container();
+    const unitLayer = new Container();
+    const fxLayer = new Container();
+    const uiLayer = new Container();
     // When flipped, mirror horizontally so the local player is on the left.
     const fx = (col: number): number => (flip ? W - cx(col) : cx(col));
     const localTint = flip ? OWNER_TINT.B : OWNER_TINT.A;
@@ -79,10 +142,22 @@ export function Arena({
 
     function drawUnit(fu: FrameUnit): UnitGfx {
       const container = new Container();
+      const art = new Container();
+      const look = combatLook(fu.cardId);
       const w = (fu.isKing ? 2 : 1) * CELL * 0.88;
+
+      // The aura ring lies on the ground under the unit, so it must not inherit
+      // the lunge and shake that `art` carries.
+      let aura: Graphics | null = null;
+      if (look.aura) {
+        aura = new Graphics();
+        aura.y = w / 2 - 4;
+        container.addChild(aura);
+      }
+
       const body = new Graphics();
       body.roundRect(-w / 2, -w / 2, w, w, 10).fill(cardColor(fu.cardId));
-      container.addChild(body);
+      art.addChild(body);
 
       // Card artwork, cover-fitted into the unit box and rounded off.
       const url = artUrlOf(fu.cardId);
@@ -94,7 +169,7 @@ export function Arena({
         sprite.scale.set(w / tex.width); // portrait art → fills width, top-aligned
         const mask = new Graphics().roundRect(-w / 2, -w / 2, w, w, 10).fill(0xffffff);
         sprite.mask = mask;
-        container.addChild(mask, sprite);
+        art.addChild(mask, sprite);
       }
 
       // Double frame: the outer ring says whose unit it is, the inner ring says
@@ -107,7 +182,7 @@ export function Arena({
       frame
         .roundRect(-inner / 2, -inner / 2, inner, inner, 8)
         .stroke({ width: 2, color: seriesTint(fu.cardId), alpha: 0.95 });
-      container.addChild(frame);
+      art.addChild(frame);
 
       const hp = new Graphics();
       const card = CATALOG.get(fu.cardId);
@@ -123,12 +198,12 @@ export function Arena({
         .fill({ color: 0x05080f, alpha: 0.85 })
         .roundRect(-w / 2, w / 2 - plateH, w, 2, 1)
         .fill({ color: seriesTint(fu.cardId), alpha: 0.9 });
-      container.addChild(plate);
+      art.addChild(plate);
 
       const fontSize = fu.isKing ? 11 : 9;
       const maxChars = Math.max(4, Math.floor(w / (fontSize * 0.62)));
       const name =
-        rawName.length > maxChars ? rawName.slice(0, maxChars - 1) + "\u2026" : rawName;
+        rawName.length > maxChars ? rawName.slice(0, maxChars - 1) + "…" : rawName;
       const label = new Text({
         text: `${fu.isKing ? "\u{1F451}" : icon}${name}`,
         style: {
@@ -142,19 +217,41 @@ export function Arena({
       label.anchor.set(0.5);
       label.y = w / 2 - plateH / 2;
       if (label.width > w - 4) label.scale.set((w - 4) / label.width);
-      container.addChild(hp, label);
-      app.stage.addChild(container);
+      art.addChild(hp, label);
+
+      // Hit flash: a white silhouette that is normally fully transparent.
+      const flash = new Graphics();
+      flash.roundRect(-w / 2, -w / 2, w, w, 10).fill(0xffffff);
+      flash.alpha = 0;
+      art.addChild(flash);
+
+      const stun = new Graphics();
+      container.addChild(art, stun);
+      unitLayer.addChild(container);
+
       const g: UnitGfx = {
         container,
-        body,
+        art,
         hp,
+        flash,
+        aura,
+        stun,
+        look,
         targetAlpha: 1,
         pulse: 0,
+        flashAmt: 0,
+        shake: 0,
+        offX: 0,
+        offY: 0,
+        bob: Math.random() * Math.PI * 2,
+        stunnedUntilMs: 0,
         exploding: false,
+        dead: false,
         half: w / 2,
         owner: fu.owner,
       };
       gfxByUid.set(fu.uid, g);
+      uidByGfx.set(g, fu.uid);
       return g;
     }
 
@@ -177,27 +274,130 @@ export function Arena({
       }
     }
 
-    function spawnDamage(uid: string | undefined, amount: number): void {
-      if (!uid || amount <= 0) return;
-      const g = gfxByUid.get(uid);
-      if (!g) return;
+    function spawnDamage(g: UnitGfx, amount: number): void {
+      if (amount <= 0) return;
       const t = new Text({
         text: `-${amount}`,
-        style: { fontFamily: "Segoe UI, sans-serif", fontSize: 15, fill: 0xff6b6b, fontWeight: "800" },
+        style: {
+          fontFamily: "Segoe UI, sans-serif",
+          fontSize: 15,
+          fill: 0xff6b6b,
+          fontWeight: "800",
+        },
       });
       t.anchor.set(0.5);
-      t.x = g.container.x;
+      t.x = g.container.x + (Math.random() - 0.5) * 14;
       t.y = g.container.y - g.half;
-      app.stage.addChild(t);
+      uiLayer.addChild(t);
       floaters.push({ text: t, life: 1 });
+    }
+
+    function spawnRing(
+      x: number,
+      y: number,
+      color: number,
+      from: number,
+      to: number,
+      width = 3,
+    ): void {
+      const g = new Graphics();
+      g.x = x;
+      g.y = y;
+      fxLayer.addChild(g);
+      rings.push({ g, life: 1, color, from, to, width });
+    }
+
+    function spawnParticles(
+      x: number,
+      y: number,
+      color: number,
+      count: number,
+      speed: number,
+      opts: { gravity?: number; size?: number } = {},
+    ): void {
+      for (let i = 0; i < count; i++) {
+        const a = Math.random() * Math.PI * 2;
+        const v = speed * (0.4 + Math.random() * 0.8);
+        const size = (opts.size ?? 3) * (0.5 + Math.random());
+        const g = new Graphics();
+        g.circle(0, 0, size).fill(color);
+        g.x = x;
+        g.y = y;
+        fxLayer.addChild(g);
+        particles.push({
+          g,
+          vx: Math.cos(a) * v,
+          vy: Math.sin(a) * v,
+          life: 1,
+          gravity: opts.gravity ?? 0.00035,
+        });
+      }
     }
 
     function spawnBurst(x: number, y: number): void {
       const g = new Graphics();
       g.x = x;
       g.y = y;
-      app.stage.addChild(g);
+      fxLayer.addChild(g);
       bursts.push({ g, life: 1 });
+    }
+
+    /** The strike itself: flash, recoil, sparks and the damage number. */
+    function landHit(
+      target: UnitGfx,
+      fromX: number,
+      fromY: number,
+      look: CombatLook,
+      damage: number,
+    ): void {
+      target.flashAmt = 1;
+      target.shake = 1;
+      const dx = target.container.x - fromX;
+      const dy = target.container.y - fromY;
+      const d = Math.hypot(dx, dy) || 1;
+      // Recoil away from whatever hit it.
+      target.offX += (dx / d) * 7;
+      target.offY += (dy / d) * 7;
+      spawnParticles(
+        target.container.x - (dx / d) * target.half * 0.6,
+        target.container.y - (dy / d) * target.half * 0.6,
+        look.glow,
+        6,
+        0.14,
+        { size: 2.5 },
+      );
+      spawnRing(
+        target.container.x,
+        target.container.y,
+        look.color,
+        target.half * 0.35,
+        target.half * 1.1,
+        2,
+      );
+      spawnDamage(target, damage);
+    }
+
+    function fireProjectile(from: UnitGfx, target: UnitGfx, damage: number): void {
+      const g = new Graphics();
+      fxLayer.addChild(g);
+      const dist = Math.hypot(
+        target.container.x - from.container.x,
+        target.container.y - from.container.y,
+      );
+      const lobbed = from.look.shape === "rock" || from.look.shape === "blob";
+      shots.push({
+        g,
+        x0: from.container.x,
+        y0: from.container.y,
+        targetUid: uidByGfx.get(target) ?? "",
+        look: from.look,
+        t: 0,
+        dur: Math.max(80, (dist / CELL) * from.look.flightMs),
+        // A lobbed rock or blob travels in an arc; bolts and shards fly flat.
+        arc: lobbed ? Math.min(26, dist * 0.12) : 0,
+        damage,
+        phase: Math.random() * 10,
+      });
     }
 
     function triggerFinale(units: FrameUnit[]): void {
@@ -236,6 +436,14 @@ export function Arena({
               .filter((u): u is string => u !== null),
           ),
         ];
+        let bgTexture: Texture | null = null;
+        try {
+          bgTexture = (await Assets.load(
+            `${import.meta.env.BASE_URL}arena/${BACKDROP}.webp`,
+          )) as Texture;
+        } catch {
+          /* no backdrop yet — the painted floor below still stands on its own */
+        }
         if (urls.length) {
           try {
             await Assets.load(urls);
@@ -249,42 +457,70 @@ export function Arena({
           return;
         }
         hostRef.current?.appendChild(app.canvas);
+        app.stage.addChild(bgLayer, unitLayer, fxLayer, uiLayer);
+
+        const FIELD = H - HEAD; // playable area, below the header band
+
+        // The painted battlefield, cover-fitted under everything else.
+        if (bgTexture) {
+          const bgSprite = new Sprite(bgTexture);
+          bgSprite.anchor.set(0.5);
+          bgSprite.scale.set(Math.max(W / bgTexture.width, FIELD / bgTexture.height));
+          bgSprite.x = W / 2;
+          bgSprite.y = HEAD + FIELD / 2;
+          bgLayer.addChild(bgSprite);
+          // Knock it back just enough that the cards standing on it keep their
+          // contrast — any heavier and the painted floor stops reading at all.
+          bgLayer.addChild(
+            new Graphics().rect(0, HEAD, W, FIELD).fill({ color: 0x060912, alpha: 0.22 }),
+          );
+        }
 
         const bg = new Graphics();
-        const FIELD = H - HEAD; // playable area, below the header band
         // header strip that carries the two identity banners
         bg.rect(0, 0, W, HEAD).fill({ color: 0x070b14, alpha: 0.95 });
         bg.rect(0, 0, W / 2, HEAD).fill({ color: localTint, alpha: 0.18 });
         bg.rect(W / 2, 0, W / 2, HEAD).fill({ color: oppTint, alpha: 0.18 });
         // territory tint over each half of the field
-        bg.rect(0, HEAD, W / 2, FIELD).fill({ color: localTint, alpha: 0.1 });
-        bg.rect(W / 2, HEAD, W / 2, FIELD).fill({ color: oppTint, alpha: 0.1 });
+        const terr = bgTexture ? 0.05 : 0.1;
+        bg.rect(0, HEAD, W / 2, FIELD).fill({ color: localTint, alpha: terr });
+        bg.rect(W / 2, HEAD, W / 2, FIELD).fill({ color: oppTint, alpha: terr });
         // alternating lane bands make the four lanes readable at a glance
         for (let l = 0; l < ARENA.lanes; l++)
           if (l % 2 === 1)
-            bg.rect(0, HEAD + l * CELL, W, CELL).fill({ color: 0xffffff, alpha: 0.035 });
+            bg.rect(0, HEAD + l * CELL, W, CELL).fill({ color: 0xffffff, alpha: bgTexture ? 0.02 : 0.03 });
         // column guides (faint) and lane separators (stronger)
-        for (let c = 0; c <= ARENA.width; c++)
-          bg.moveTo(c * CELL, HEAD).lineTo(c * CELL, H);
-        bg.stroke({ width: 1, color: 0x2a3550, alpha: 0.5 });
+        for (let c = 0; c <= ARENA.width; c++) bg.moveTo(c * CELL, HEAD).lineTo(c * CELL, H);
+        bg.stroke({ width: 1, color: 0x2a3550, alpha: bgTexture ? 0.3 : 0.5 });
         for (let l = 0; l <= ARENA.lanes; l++)
           bg.moveTo(0, HEAD + l * CELL).lineTo(W, HEAD + l * CELL);
-        bg.stroke({ width: 1, color: 0x3a4a63 });
+        bg.stroke({ width: 1, color: 0x3a4a63, alpha: bgTexture ? 0.45 : 1 });
         // the front line where the two boards meet
         bg.moveTo(W / 2, HEAD).lineTo(W / 2, H).stroke({ width: 4, color: 0x5d7399 });
         bg.rect(W / 2 - 2, HEAD, 4, FIELD).fill({ color: 0xffd36b, alpha: 0.12 });
-        app.stage.addChildAt(bg, 0);
+        // soft edge bands keep the eye on the middle of the field
+        const edge = 26;
+        bg.rect(0, HEAD, W, edge).fill({ color: 0x05070e, alpha: 0.3 });
+        bg.rect(0, H - edge, W, edge).fill({ color: 0x05070e, alpha: 0.3 });
+        bg.rect(0, HEAD, edge, FIELD).fill({ color: 0x05070e, alpha: 0.25 });
+        bg.rect(W - edge, HEAD, edge, FIELD).fill({ color: 0x05070e, alpha: 0.25 });
+        bgLayer.addChild(bg);
 
         // Identity banners: you on the left (A), opponent on the right (B).
         const banner = (text: string, x: number, color: number) => {
           const t = new Text({
             text,
-            style: { fontFamily: "Segoe UI, sans-serif", fontSize: 15, fill: color, fontWeight: "800" },
+            style: {
+              fontFamily: "Segoe UI, sans-serif",
+              fontSize: 15,
+              fill: color,
+              fontWeight: "800",
+            },
           });
           t.anchor.set(0.5, 0.5);
           t.x = x;
           t.y = HEAD / 2;
-          app.stage.addChild(t);
+          uiLayer.addChild(t);
         };
         banner("🧑 אתה", W * 0.25, localTint);
         banner("🤖 היריב", W * 0.75, oppTint);
@@ -297,9 +533,99 @@ export function Arena({
         let eventCursor = 0;
         if (frames.length > 0) applyFrame(frames[0]!.units);
 
+        /** Translate one battle event into the effects it should play. */
+        function playEvent(ev: (typeof events)[number]): void {
+          const actor = ev.uid ? gfxByUid.get(ev.uid) : undefined;
+          const target = ev.targetUid ? gfxByUid.get(ev.targetUid) : undefined;
+
+          switch (ev.type) {
+            case "attack": {
+              if (!actor) return;
+              actor.pulse = 1;
+              if (actor.look.attack === "lunge" && target) {
+                // Melee: throw the body half a unit at whatever it is hitting.
+                const dx = target.container.x - actor.container.x;
+                const dy = target.container.y - actor.container.y;
+                const d = Math.hypot(dx, dy) || 1;
+                actor.offX = (dx / d) * actor.half * 0.5;
+                actor.offY = (dy / d) * actor.half * 0.5;
+              }
+              return;
+            }
+            case "hit": {
+              if (!target) return;
+              const damage = ev.damage ?? 0;
+              if (actor && actor.look.attack === "projectile") {
+                // Ranged: the reaction waits until the shot actually arrives.
+                fireProjectile(actor, target, damage);
+              } else {
+                const from = actor ?? target;
+                landHit(target, from.container.x, from.container.y, from.look, damage);
+              }
+              return;
+            }
+            case "death": {
+              const g = actor ?? target;
+              if (!g || g.dead) return;
+              g.dead = true;
+              spawnParticles(g.container.x, g.container.y, g.look.death, 14, 0.22, { size: 3.5 });
+              spawnParticles(g.container.x, g.container.y, 0x1a1f2e, 8, 0.12, {
+                size: 5,
+                gravity: -0.0002,
+              });
+              spawnRing(g.container.x, g.container.y, g.look.death, g.half * 0.4, g.half * 1.8, 3);
+              return;
+            }
+            case "knockback": {
+              if (!target) return;
+              spawnParticles(
+                target.container.x,
+                target.container.y + target.half * 0.6,
+                0xb9a98a,
+                7,
+                0.1,
+                { size: 3, gravity: -0.0001 },
+              );
+              target.shake = 1;
+              return;
+            }
+            case "stun": {
+              if (!target) return;
+              target.stunnedUntilMs = (ev.untilTick ?? 0) * msPerFrame;
+              spawnRing(
+                target.container.x,
+                target.container.y,
+                0x9fe6ff,
+                target.half * 0.3,
+                target.half * 1.4,
+                2,
+              );
+              return;
+            }
+            case "split": {
+              if (!actor) return;
+              spawnRing(actor.container.x, actor.container.y, actor.look.color, 4, actor.half * 2.2, 3);
+              spawnParticles(actor.container.x, actor.container.y, actor.look.color, 10, 0.18, {
+                size: 3,
+              });
+              return;
+            }
+            case "reveal": {
+              if (ev.col === undefined || !ev.lanes) return;
+              // A Ground Floor card coming up from under a corpse.
+              spawnRing(fx(ev.col), cy(laneCenter(ev.lanes)), 0xffd36b, 6, CELL * 0.7, 3);
+              return;
+            }
+            default:
+              return;
+          }
+        }
+
         app.ticker.add((ticker) => {
-          elapsed += ticker.deltaMS;
-          const k = Math.min(1, ticker.deltaMS / 90);
+          const dt = ticker.deltaMS;
+          elapsed += dt;
+          clock = elapsed;
+          const k = Math.min(1, dt / 90);
 
           if (!finaleStarted) {
             const idx = Math.min(frames.length - 1, Math.floor(elapsed / msPerFrame));
@@ -307,32 +633,113 @@ export function Arena({
             if (frame) applyFrame(frame.units);
             const currentTick = frame?.tick ?? 0;
             while (eventCursor < events.length && events[eventCursor]!.tick <= currentTick) {
-              const ev = events[eventCursor]!;
-              if (ev.type === "hit") spawnDamage(ev.targetUid, ev.damage ?? 0);
-              else if (ev.type === "attack" && ev.uid) {
-                const g = gfxByUid.get(ev.uid);
-                if (g) g.pulse = 1;
-              }
+              playEvent(events[eventCursor]!);
               eventCursor++;
             }
           }
 
+          // --- units: lunge spring, hit flash, shake, bob, aura, frost ---
           for (const g of gfxByUid.values()) {
             if (g.exploding) {
               g.container.alpha += (0 - g.container.alpha) * k * 1.4;
               const s = g.container.scale.x + (2.1 - g.container.scale.x) * k * 1.4;
               g.container.scale.set(s);
+              continue;
+            }
+            g.container.alpha += (g.targetAlpha - g.container.alpha) * k;
+            const s = (g.targetAlpha < 0.5 ? 0.6 : 1) + g.pulse * 0.18;
+            g.container.scale.set(g.container.scale.x + (s - g.container.scale.x) * k);
+            g.pulse *= 0.82;
+
+            // the lunge / recoil springs back toward rest
+            const decay = 1 - Math.min(1, k * 1.1);
+            g.offX *= decay;
+            g.offY *= decay;
+            g.shake *= 0.84;
+            const shakeAmp = g.shake * 3;
+            g.bob += dt * 0.004;
+            const bobY = g.look.flying && g.targetAlpha > 0.5 ? Math.sin(g.bob) * 3 : 0;
+            g.art.x = g.offX + (Math.random() - 0.5) * shakeAmp;
+            g.art.y = g.offY + bobY + (Math.random() - 0.5) * shakeAmp;
+
+            g.flashAmt *= 0.8;
+            g.flash.alpha = g.flashAmt * 0.65;
+
+            if (g.aura && g.look.aura) {
+              const on = g.targetAlpha > 0.5;
+              g.aura.alpha = on ? 1 : 0;
+              if (on) drawAura(g.aura, g.look.aura.kind, g.look.aura.color, g.half * 0.95, clock / 1000);
+            }
+
+            // frozen: a pale ring plus three shards orbiting the unit
+            if (clock < g.stunnedUntilMs && g.targetAlpha > 0.5) {
+              g.stun.clear();
+              const r = g.half * 0.95;
+              g.stun.circle(0, 0, r).stroke({ width: 2, color: 0x9fe6ff, alpha: 0.5 });
+              for (let i = 0; i < 3; i++) {
+                const a = clock / 320 + (i * Math.PI * 2) / 3;
+                g.stun
+                  .circle(Math.cos(a) * r, Math.sin(a) * r * 0.5 - g.half * 0.5, 3)
+                  .fill({ color: 0xdff6ff, alpha: 0.9 });
+              }
             } else {
-              g.container.alpha += (g.targetAlpha - g.container.alpha) * k;
-              const s = (g.targetAlpha < 0.5 ? 0.6 : 1) + g.pulse * 0.18;
-              g.container.scale.set(g.container.scale.x + (s - g.container.scale.x) * k);
-              g.pulse *= 0.82;
+              g.stun.clear();
             }
           }
+
+          // --- projectiles ---
+          for (let i = shots.length - 1; i >= 0; i--) {
+            const p = shots[i]!;
+            p.t += dt / p.dur;
+            const target = gfxByUid.get(p.targetUid);
+            const tx = target ? target.container.x : p.x0;
+            const ty = target ? target.container.y : p.y0;
+            const u = Math.min(1, p.t);
+            p.g.x = p.x0 + (tx - p.x0) * u;
+            // a lob rises and falls on the way over
+            p.g.y = p.y0 + (ty - p.y0) * u - Math.sin(u * Math.PI) * p.arc;
+            drawProjectile(p.g, p.look, Math.atan2(ty - p.y0, tx - p.x0), p.phase + clock / 100, 5);
+            if (p.t >= 1) {
+              if (target) landHit(target, p.x0, p.y0, p.look, p.damage);
+              p.g.destroy();
+              shots.splice(i, 1);
+            }
+          }
+
+          // --- debris ---
+          for (let i = particles.length - 1; i >= 0; i--) {
+            const q = particles[i]!;
+            q.g.x += q.vx * dt;
+            q.g.y += q.vy * dt;
+            q.vy += q.gravity * dt;
+            q.life -= dt / 620;
+            q.g.alpha = Math.max(0, q.life);
+            q.g.scale.set(Math.max(0.1, q.life));
+            if (q.life <= 0) {
+              q.g.destroy();
+              particles.splice(i, 1);
+            }
+          }
+
+          // --- expanding rings ---
+          for (let i = rings.length - 1; i >= 0; i--) {
+            const r = rings[i]!;
+            r.life -= dt / 380;
+            const u = 1 - Math.max(0, r.life);
+            r.g.clear();
+            r.g
+              .circle(0, 0, r.from + (r.to - r.from) * u)
+              .stroke({ width: r.width, color: r.color, alpha: Math.max(0, r.life) * 0.9 });
+            if (r.life <= 0) {
+              r.g.destroy();
+              rings.splice(i, 1);
+            }
+          }
+
           for (let i = floaters.length - 1; i >= 0; i--) {
             const f = floaters[i]!;
-            f.text.y -= ticker.deltaMS * 0.03;
-            f.life -= ticker.deltaMS / 700;
+            f.text.y -= dt * 0.03;
+            f.life -= dt / 700;
             f.text.alpha = Math.max(0, f.life);
             if (f.life <= 0) {
               f.text.destroy();
@@ -341,7 +748,7 @@ export function Arena({
           }
           for (let i = bursts.length - 1; i >= 0; i--) {
             const b = bursts[i]!;
-            b.life -= ticker.deltaMS / FINALE_MS;
+            b.life -= dt / FINALE_MS;
             const r = (1 - b.life) * 60;
             b.g.clear();
             b.g.circle(0, 0, r).stroke({ width: 4, color: 0xffcc44, alpha: Math.max(0, b.life) });

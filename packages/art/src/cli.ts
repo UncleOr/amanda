@@ -14,6 +14,7 @@ import { join } from "node:path";
 import { CARDS, REPO_ROOT, SERIES, launchCards } from "./catalog.js";
 import { buildActionPrompt, buildAnchoredPrompt, buildPrompt } from "./prompt.js";
 import { STYLE_DIRECTIONS, TEST_MONSTERS } from "./styles.js";
+import { ARENA_LOOKS, buildArenaPrompt } from "./arenaLooks.js";
 import { download, generate, generateWithReference, uploadFile } from "./fal.js";
 
 const RAW = join(REPO_ROOT, "assets", "raw");
@@ -147,6 +148,32 @@ async function cmdActions(styleId?: string): Promise<void> {
   console.log("\nDone -> assets/raw/actions/\n");
 }
 
+/** Battlefield backdrops for the battle arena (one per candidate look). */
+async function cmdArena(styleId?: string): Promise<void> {
+  const dir = dirById(styleId ?? "");
+  console.log(`\nGenerating ${ARENA_LOOKS.length} arena backdrops (style: ${dir.id})\n`);
+  for (const look of ARENA_LOOKS) {
+    const dest = join(RAW, "arena", `${look.id}.png`);
+    if (existsSync(dest)) {
+      console.log(`   skip  ${look.id} (exists)`);
+      continue;
+    }
+    process.stdout.write(`   ${look.id.padEnd(14)} ... `);
+    try {
+      // 16:9 - the arena is a wide strip, nothing like the portrait cards.
+      const [img] = await generate(buildArenaPrompt(look, dir.style), {
+        aspectRatio: "16:9",
+      });
+      if (!img) throw new Error("no image returned");
+      await download(img.url, dest);
+      console.log("OK");
+    } catch (err) {
+      console.log(`FAIL ${(err as Error).message}`);
+    }
+  }
+  console.log("\nDone -> assets/raw/arena/\n");
+}
+
 const [cmd, ...args] = process.argv.slice(2);
 const run = async () => {
   switch (cmd) {
@@ -158,10 +185,14 @@ const run = async () => {
       return cmdCards(args[0], args[1]);
     case "actions":
       return cmdActions(args[0]);
+    case "arena":
+      return cmdArena(args[0]);
     case "card":
       return cmdCard(args[0], args[1], ...args.slice(2));
     default:
-      console.log("Usage: style | anchor <style> | cards <style> [series] | card <cardId> <style> [notes…]");
+      console.log(
+        "Usage: style | anchor <style> | cards <style> [series] | card <cardId> <style> [notes…] | actions <style> | arena <style>",
+      );
   }
 };
 run().catch((err) => {

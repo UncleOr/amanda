@@ -7,6 +7,11 @@ import { config as loadEnv } from "dotenv";
 // The CLI runs from packages/art, but .env lives at the repo root.
 loadEnv({ path: join(dirname(fileURLToPath(import.meta.url)), "..", "..", "..", ".env") });
 
+/** The aspect ratios the model accepts. */
+type AspectRatio =
+  | "auto" | "21:9" | "16:9" | "3:2" | "4:3" | "5:4"
+  | "1:1" | "4:5" | "3:4" | "2:3" | "9:16";
+
 const MODEL = "fal-ai/nano-banana-pro";
 const EDIT_MODEL = "fal-ai/nano-banana-pro/edit";
 
@@ -29,11 +34,15 @@ interface FalResult {
 }
 
 /** Generate from text only. Used for the style bake-off and the anchor. */
-export async function generate(prompt: string, opts: { numImages?: number; seed?: number } = {}) {
+export async function generate(
+  prompt: string,
+  opts: { numImages?: number; seed?: number; aspectRatio?: AspectRatio } = {},
+) {
   const res = (await fal.subscribe(MODEL, {
     input: {
       prompt,
-      aspect_ratio: "3:4", // portrait — matches the 1:1.3 card shape
+      // portrait by default — it matches the 1:1.3 card shape
+      aspect_ratio: opts.aspectRatio ?? "3:4",
       resolution: "1K",
       output_format: "png",
       num_images: opts.numImages ?? 1,

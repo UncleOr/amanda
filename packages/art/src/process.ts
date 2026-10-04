@@ -13,9 +13,13 @@ import { CARDS, REPO_ROOT, SERIES } from "./catalog.js";
 
 const RAW = join(REPO_ROOT, "assets", "raw");
 const OUT = join(REPO_ROOT, "apps", "client", "public", "cards");
+const ARENA_OUT = join(REPO_ROOT, "apps", "client", "public", "arena");
 /** Portrait card art (3:4). Hand card is ~124px wide, so 384 covers retina. */
 const W = 384;
 const H = 512;
+/** Arena backdrops are a wide 2:1 strip, not a card. */
+const ARENA_W = 1152;
+const ARENA_H = 576;
 
 async function main(): Promise<void> {
   if (!existsSync(RAW)) {
@@ -47,6 +51,21 @@ async function main(): Promise<void> {
       spriteFor.set(cardId, `cards/${outFile}`);
       processed++;
       console.log(`  ✓ ${cardId}`);
+    }
+  }
+
+  // Arena backdrops live in their own folder at their own (wide) size.
+  const arenaDir = join(RAW, "arena");
+  if (existsSync(arenaDir)) {
+    await mkdir(ARENA_OUT, { recursive: true });
+    for (const file of readdirSync(arenaDir).filter((f) => f.endsWith(".png"))) {
+      const id = file.replace(/\.png$/, "");
+      await sharp(join(arenaDir, file))
+        .resize(ARENA_W, ARENA_H, { fit: "cover", position: "centre" })
+        .webp({ quality: 80 })
+        .toFile(join(ARENA_OUT, `${id}.webp`));
+      processed++;
+      console.log(`  arena ${id}`);
     }
   }
 

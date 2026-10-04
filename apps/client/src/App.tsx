@@ -13,6 +13,7 @@ import { ActionDetailModal } from "./components/ActionDetailModal";
 import { Arena } from "./components/Arena";
 import { ErrorBoundary } from "./components/ErrorBoundary";
 import { CardGallery } from "./components/CardGallery";
+import { ArenaPreview } from "./components/ArenaPreview";
 
 
 const PHASE_LABEL: Record<string, string> = {
@@ -24,8 +25,10 @@ const PHASE_LABEL: Record<string, string> = {
 };
 
 export default function App() {
-  // Art-review gallery: open the game with ?gallery
-  if (new URLSearchParams(location.search).has("gallery")) return <CardGallery />;
+  // Review views: ?gallery for the card art, ?arena for the battle effects.
+  const review = new URLSearchParams(location.search);
+  if (review.has("gallery")) return <CardGallery />;
+  if (review.has("arena")) return <ArenaPreview />;
 
   const m = useMatch();
   const [detail, setDetail] = useState<string | null>(null);
