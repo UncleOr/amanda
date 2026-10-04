@@ -98,7 +98,7 @@
       },
       "art": {
         "placeholderColor": "#8a6d3b",
-        "sprite": null
+        "sprite": "cards/insects_02_ant_queen.webp"
       },
       "launch": true
     },
@@ -138,7 +138,7 @@
       },
       "art": {
         "placeholderColor": "#6fbf3b",
-        "sprite": null
+        "sprite": "cards/insects_03_venom_scorpion.webp"
       },
       "launch": true
     },
@@ -296,7 +296,7 @@
       },
       "art": {
         "placeholderColor": "#9fd6e8",
-        "sprite": null
+        "sprite": "cards/insects_07_aggressive_wasp.webp"
       },
       "launch": true
     },
@@ -427,7 +427,7 @@
       },
       "art": {
         "placeholderColor": "#6fbf3b",
-        "sprite": null
+        "sprite": "cards/insects_10_insect_empress.webp"
       },
       "launch": true
     }

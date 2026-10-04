@@ -27,12 +27,15 @@ async function main(): Promise<void> {
   let processed = 0;
   const spriteFor = new Map<string, string>();
 
-  for (const series of SERIES) {
-    const dir = join(RAW, series.id);
+  // "system" holds cards synthesised in code (the Crumb Demon filler) rather
+  // than defined in data/series.
+  const folders = [...SERIES.map((s) => s.id), "system"];
+  for (const seriesId of folders) {
+    const dir = join(RAW, seriesId);
     if (!existsSync(dir)) continue;
     for (const file of readdirSync(dir).filter((f) => f.endsWith(".png"))) {
       const cardId = file.replace(/\.png$/, "");
-      if (!CARDS.has(cardId)) {
+      if (!CARDS.has(cardId) && seriesId !== "system") {
         console.warn(`  ⚠ ${file} has no matching card id — skipped`);
         continue;
       }

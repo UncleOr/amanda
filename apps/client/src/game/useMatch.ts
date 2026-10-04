@@ -356,13 +356,22 @@ export function useMatch(): MatchApi {
     if (ok) sfx.play("draw");
   }, []);
 
+  // Guards against a fast double-click taking the same action card twice: the
+  // refs still hold the old hand until React commits the state update.
+  const takingRef = useRef(false);
   const takeAction = useCallback(() => {
+    if (takingRef.current) return;
     const hand = gsRef.current.hand;
     if (hand === null || !isActionId(hand) || barRef.current.length >= ACTION_SLOTS) return;
+    takingRef.current = true;
     setActionBar((bar) => (bar.length < ACTION_SLOTS ? [...bar, hand] : bar));
     setGs((s) => drawIfEmpty({ ...s, hand: null }));
     sfx.play("draw");
   }, []);
+  // released once the take above has actually been committed
+  useEffect(() => {
+    takingRef.current = false;
+  });
 
   /**
    * Shuffle the lanes of the opponent's front-row cards (Sandstorm).

@@ -104,7 +104,7 @@
       },
       "art": {
         "placeholderColor": "#9aa4ad",
-        "sprite": null
+        "sprite": "cards/giants_02_steel_warden.webp"
       },
       "launch": true
     },
@@ -222,7 +222,7 @@
       },
       "art": {
         "placeholderColor": "#9aa4ad",
-        "sprite": null
+        "sprite": "cards/giants_05_wall_breaker.webp"
       },
       "launch": true
     },
@@ -262,7 +262,7 @@
       },
       "art": {
         "placeholderColor": "#2f7fe2",
-        "sprite": null
+        "sprite": "cards/giants_06_frost_giant.webp"
       },
       "launch": true
     },
@@ -383,7 +383,7 @@
       },
       "art": {
         "placeholderColor": "#f2c530",
-        "sprite": null
+        "sprite": "cards/giants_09_thunder_giant.webp"
       },
       "launch": true
     },
@@ -431,7 +431,7 @@
       },
       "art": {
         "placeholderColor": "#8a6d3b",
-        "sprite": null
+        "sprite": "cards/giants_10_titan_king.webp"
       },
       "launch": true
     }

@@ -114,7 +114,7 @@
       },
       "art": {
         "placeholderColor": "#8a6d3b",
-        "sprite": null
+        "sprite": "cards/dragons_02_obsidian_egg.webp"
       },
       "launch": true
     },
@@ -146,7 +146,7 @@
       },
       "art": {
         "placeholderColor": "#f2c530",
-        "sprite": null
+        "sprite": "cards/dragons_03_thunderwing.webp"
       },
       "launch": true
     },
@@ -190,7 +190,7 @@
       },
       "art": {
         "placeholderColor": "#e2492f",
-        "sprite": null
+        "sprite": "cards/dragons_04_lava.webp"
       },
       "launch": true
     },
@@ -401,7 +401,7 @@
       },
       "art": {
         "placeholderColor": "#9fd6e8",
-        "sprite": null
+        "sprite": "cards/dragons_09_typhoon_dragon.webp"
       },
       "launch": true
     },
@@ -446,7 +446,7 @@
       },
       "art": {
         "placeholderColor": "#9fd6e8",
-        "sprite": null
+        "sprite": "cards/dragons_10_sky_king.webp"
       },
       "launch": true
     }

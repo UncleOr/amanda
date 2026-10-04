@@ -7,8 +7,10 @@ import { ELEMENT_META, seriesColor } from "../data/cardMeta";
 import { sfx } from "../game/sfx";
 
 const CELL = 72;
+/** Header band above the lanes, so the identity banners never cover a unit. */
+const HEAD = 26;
 const W = ARENA.width * CELL;
-const H = ARENA.lanes * CELL;
+const H = ARENA.lanes * CELL + HEAD;
 const OWNER_TINT = { A: 0x4aa3ff, B: 0xff5a5a } as const;
 
 /** Series tint as a Pixi colour, so same-family units read as a group. */
@@ -25,7 +27,7 @@ function artUrlOf(cardId: string): string | null {
 const FINALE_MS = 1700;
 
 const cx = (col: number): number => (col + 0.5) * CELL;
-const cy = (lane: number): number => (lane + 0.5) * CELL;
+const cy = (lane: number): number => HEAD + (lane + 0.5) * CELL;
 const laneCenter = (lanes: number[]): number => lanes.reduce((s, l) => s + l, 0) / lanes.length;
 
 interface UnitGfx {
@@ -249,30 +251,29 @@ export function Arena({
         hostRef.current?.appendChild(app.canvas);
 
         const bg = new Graphics();
-        // territory tint, strongest at each player's back edge
-        bg.rect(0, 0, W / 2, H).fill({ color: localTint, alpha: 0.1 });
-        bg.rect(W / 2, 0, W / 2, H).fill({ color: oppTint, alpha: 0.1 });
+        const FIELD = H - HEAD; // playable area, below the header band
+        // header strip that carries the two identity banners
+        bg.rect(0, 0, W, HEAD).fill({ color: 0x070b14, alpha: 0.95 });
+        bg.rect(0, 0, W / 2, HEAD).fill({ color: localTint, alpha: 0.18 });
+        bg.rect(W / 2, 0, W / 2, HEAD).fill({ color: oppTint, alpha: 0.18 });
+        // territory tint over each half of the field
+        bg.rect(0, HEAD, W / 2, FIELD).fill({ color: localTint, alpha: 0.1 });
+        bg.rect(W / 2, HEAD, W / 2, FIELD).fill({ color: oppTint, alpha: 0.1 });
         // alternating lane bands make the four lanes readable at a glance
         for (let l = 0; l < ARENA.lanes; l++)
           if (l % 2 === 1)
-            bg.rect(0, l * CELL, W, CELL).fill({ color: 0xffffff, alpha: 0.035 });
-        // lane separators (stronger) and column guides (faint)
+            bg.rect(0, HEAD + l * CELL, W, CELL).fill({ color: 0xffffff, alpha: 0.035 });
+        // column guides (faint) and lane separators (stronger)
         for (let c = 0; c <= ARENA.width; c++)
-          bg.moveTo(c * CELL, 0).lineTo(c * CELL, H);
+          bg.moveTo(c * CELL, HEAD).lineTo(c * CELL, H);
         bg.stroke({ width: 1, color: 0x2a3550, alpha: 0.5 });
-        for (let l = 0; l <= ARENA.lanes; l++) bg.moveTo(0, l * CELL).lineTo(W, l * CELL);
+        for (let l = 0; l <= ARENA.lanes; l++)
+          bg.moveTo(0, HEAD + l * CELL).lineTo(W, HEAD + l * CELL);
         bg.stroke({ width: 1, color: 0x3a4a63 });
         // the front line where the two boards meet
-        bg.moveTo(W / 2, 0).lineTo(W / 2, H).stroke({ width: 4, color: 0x5d7399 });
-        bg.rect(W / 2 - 2, 0, 4, H).fill({ color: 0xffd36b, alpha: 0.12 });
+        bg.moveTo(W / 2, HEAD).lineTo(W / 2, H).stroke({ width: 4, color: 0x5d7399 });
+        bg.rect(W / 2 - 2, HEAD, 4, FIELD).fill({ color: 0xffd36b, alpha: 0.12 });
         app.stage.addChildAt(bg, 0);
-
-        // soft vignette so the bright artwork reads against the frame
-        const vignette = new Graphics();
-        const edge = 26;
-        vignette.rect(0, 0, W, edge).fill({ color: 0x05080f, alpha: 0.5 });
-        vignette.rect(0, H - edge, W, edge).fill({ color: 0x05080f, alpha: 0.5 });
-        app.stage.addChildAt(vignette, 1);
 
         // Identity banners: you on the left (A), opponent on the right (B).
         const banner = (text: string, x: number, color: number) => {
@@ -280,9 +281,9 @@ export function Arena({
             text,
             style: { fontFamily: "Segoe UI, sans-serif", fontSize: 15, fill: color, fontWeight: "800" },
           });
-          t.anchor.set(0.5, 0);
+          t.anchor.set(0.5, 0.5);
           t.x = x;
-          t.y = 4;
+          t.y = HEAD / 2;
           app.stage.addChild(t);
         };
         banner("🧑 אתה", W * 0.25, localTint);

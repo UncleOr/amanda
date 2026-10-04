@@ -56,7 +56,7 @@ export const CRUMB_DEMON_CARD: Card = {
   midBoss: false,
   launch: false,
   abilities: [],
-  art: { placeholderColor: "#7a7a7a", sprite: null },
+  art: { placeholderColor: "#7a7a7a", sprite: "cards/crumb_demon.webp" },
 };
 CATALOG.set(CRUMB_DEMON_CARD.id, CRUMB_DEMON_CARD);
 

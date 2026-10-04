@@ -62,7 +62,7 @@
       },
       "art": {
         "placeholderColor": "#8a6d3b",
-        "sprite": null
+        "sprite": "cards/slimes_01_basic_slime.webp"
       },
       "launch": true
     },
@@ -237,7 +237,7 @@
       },
       "art": {
         "placeholderColor": "#8a6d3b",
-        "sprite": null
+        "sprite": "cards/slimes_05_sticky_rug.webp"
       },
       "launch": true
     },
@@ -367,7 +367,7 @@
       },
       "art": {
         "placeholderColor": "#b06fd6",
-        "sprite": null
+        "sprite": "cards/slimes_08_assimilator.webp"
       },
       "launch": true
     },
@@ -411,7 +411,7 @@
       },
       "art": {
         "placeholderColor": "#f5f0d0",
-        "sprite": null
+        "sprite": "cards/slimes_09_pudding_shield.webp"
       },
       "launch": true
     },

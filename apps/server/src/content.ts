@@ -26,7 +26,7 @@ CATALOG.set("crumb_demon", {
   midBoss: false,
   launch: false,
   abilities: [],
-  art: { placeholderColor: "#7a7a7a", sprite: null },
+  art: { placeholderColor: "#7a7a7a", sprite: "cards/crumb_demon.webp" },
 });
 
 /** Series synergies applied in battle (same as the client passes). */

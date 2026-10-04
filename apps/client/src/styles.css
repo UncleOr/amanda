@@ -391,7 +391,15 @@ body {
   text-shadow: 0 1px 3px #000, 0 0 6px rgba(0, 0, 0, 0.9);
 }
 .card--small .card__name { font-size: 9px; }
-.card--large .card__name { font-size: 15px; }
+/* the big card has room for two lines, so long names are not chopped */
+.card--large .card__name {
+  font-size: 13px;
+  white-space: normal;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  text-overflow: clip;
+}
 
 .card__stats {
   display: flex;
@@ -430,9 +438,9 @@ body {
 .card--small .stat--pw b,
 .card--medium .stat--pw b { color: #ffd98a; }
 .card--small .card__stats .stat b { font-size: 9px; }
-.card--large .card__stats { gap: 5px; }
-.card--large .card__stats .stat b { font-size: 15px; }
-.card--large .stat__icon { font-size: 12px; }
+.card--large .card__stats { gap: 4px; }
+.card--large .card__stats .stat b { font-size: 12px; }
+.card--large .stat__icon { font-size: 10px; }
 .card--large .stat--hp .stat__icon { color: #ff6b7a; }
 .card--large .stat--pw .stat__icon { color: #ffd36b; }
 .card__stats--buffed .stat {

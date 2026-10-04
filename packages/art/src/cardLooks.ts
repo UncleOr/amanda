@@ -7,6 +7,13 @@
  * read at card size), then a signature feature, then colour.
  */
 export const CARD_LOOK: Record<string, string> = {
+  // The filler that auto-spawns on every empty slot — it is on screen in every
+  // single match, so it needs art too. Deliberately pathetic.
+  crumb_demon:
+    "a tiny pathetic crumb goblin barely bigger than a breadcrumb, scrawny and lumpy, " +
+    "made of stale crumbs and dust, oversized worried eyes, knobbly little arms, " +
+    "comically weak and harmless, drab grey-brown",
+
   // ── Dragons — vary the body plan hard, not just the flame colour ──
   dragons_01_flame_dragon:
     "a classic armoured western dragon standing on two muscular legs, broad spread membranous wings, " +
