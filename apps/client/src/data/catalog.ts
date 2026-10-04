@@ -61,9 +61,11 @@ export const CRUMB_DEMON_CARD: Card = {
 CATALOG.set(CRUMB_DEMON_CARD.id, CRUMB_DEMON_CARD);
 
 /** Cards designed to sit in the King slot (big mid-bosses first, then the rest). */
-export const KING_CANDIDATES: Card[] = [...CATALOG.values()].filter(
-  (c) => c.midBoss && c.launch,
-);
+export const KING_CANDIDATES: Card[] = (() => {
+  const kings = [...CATALOG.values()].filter((c) => c.midBoss && c.launch);
+  const illustrated = kings.filter((c) => c.art.sprite);
+  return illustrated.length > 0 ? illustrated : kings;
+})();
 
 /** The colour used to render a card's placeholder shape. */
 export function cardColor(cardId: string): string {
@@ -73,9 +75,17 @@ export function cardColor(cardId: string): string {
 /**
  * The playable pool — the curated launch roster. Cards outside it stay in the
  * data, ready to switch on in a later content update (set `launch: true`).
+ *
+ * While artwork is still being produced we prefer illustrated cards, so a match
+ * never mixes finished cards with placeholder colour blocks. Once every launch
+ * card has art this is simply the whole roster.
  */
 export function cardPool(): string[] {
-  return [...CATALOG.values()].filter((c) => c.launch).map((c) => c.id);
+  const launch = [...CATALOG.values()].filter((c) => c.launch);
+  const illustrated = launch.filter((c) => c.art.sprite);
+  // need a sensible deck's worth before we can restrict to illustrated cards
+  const pool = illustrated.length >= 12 ? illustrated : launch;
+  return pool.map((c) => c.id);
 }
 
 /** All action cards, keyed by id. */

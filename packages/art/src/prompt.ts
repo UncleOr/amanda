@@ -1,5 +1,6 @@
 import type { Card } from "@amanda/shared";
 import { FRAMING, SERIES_TEMPLATE, type StyleDirection } from "./styles.js";
+import { CARD_LOOK } from "./cardLooks.js";
 
 /**
  * Turns a card's own GDD data into a visual description. The English name plus
@@ -71,13 +72,21 @@ export function buildPrompt(card: Card, dir: StyleDirection): string {
     : "creature character";
   const motion = poseFor(card);
 
+  const look = CARD_LOOK[card.id];
   return [
     `A ${scale} named "${card.name.en}" for a monster trading-card game.`,
-    role && `Character concept: ${role}`,
+    // The per-card brief leads: it fixes the silhouette and keeps creatures in
+    // the same series from coming out as near-identical twins.
+    look ? `DESIGN (follow closely): ${look}.` : "",
+    role && `Role flavour: ${role}`,
     VIBE_LOOK[vibeOf(card)] + ".",
-    [element, seriesLook, range, motion].filter(Boolean).join(", ") + ".",
+    [element, range, motion].filter(Boolean).join(", ") + ".",
+    // Series cue is a light touch only — it must not flatten the design above.
+    seriesLook ? `Subtle family cue (do not let this override the design): ${seriesLook}.` : "",
     dir.style + ".",
     FRAMING + ".",
+    "Make this creature clearly and immediately distinguishable from every other " +
+      "monster in its family — a different body plan and silhouette, not a recolour.",
   ]
     .filter(Boolean)
     .join(" ");

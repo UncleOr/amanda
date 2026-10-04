@@ -1,5 +1,5 @@
 import { useEffect, useRef } from "react";
-import { Application, Container, Graphics, Text } from "pixi.js";
+import { Application, Assets, Container, Graphics, Sprite, Text, Texture } from "pixi.js";
 import { ARENA, SIMULATION } from "@amanda/shared";
 import type { BattleResult, FrameUnit, Owner } from "@amanda/engine";
 import { cardColor, CATALOG } from "../data/catalog";
@@ -10,6 +10,12 @@ const CELL = 72;
 const W = ARENA.width * CELL;
 const H = ARENA.lanes * CELL;
 const OWNER_TINT = { A: 0x4aa3ff, B: 0xff5a5a } as const;
+
+/** Public URL of a card's artwork, or null when it has none yet. */
+function artUrlOf(cardId: string): string | null {
+  const sprite = CATALOG.get(cardId)?.art.sprite;
+  return sprite ? `${import.meta.env.BASE_URL}${sprite}` : null;
+}
 const FINALE_MS = 1700;
 
 const cx = (col: number): number => (col + 0.5) * CELL;
@@ -67,10 +73,29 @@ export function Arena({
       const container = new Container();
       const w = (fu.isKing ? 2 : 1) * CELL * 0.8;
       const body = new Graphics();
-      body
+      body.roundRect(-w / 2, -w / 2, w, w, 10).fill(cardColor(fu.cardId));
+      container.addChild(body);
+
+      // Card artwork, cover-fitted into the unit box and rounded off.
+      const url = artUrlOf(fu.cardId);
+      if (url && Assets.cache.has(url)) {
+        const tex = Texture.from(url);
+        const sprite = new Sprite(tex);
+        sprite.anchor.set(0.5, 0);
+        sprite.y = -w / 2;
+        sprite.scale.set(w / tex.width); // portrait art → fills width, top-aligned
+        const mask = new Graphics().roundRect(-w / 2, -w / 2, w, w, 10).fill(0xffffff);
+        sprite.mask = mask;
+        container.addChild(mask, sprite);
+      }
+
+      // Owner-coloured frame drawn above the art.
+      const frame = new Graphics();
+      frame
         .roundRect(-w / 2, -w / 2, w, w, 10)
-        .fill(cardColor(fu.cardId))
         .stroke({ width: fu.isKing ? 5 : 3, color: OWNER_TINT[fu.owner] });
+      container.addChild(frame);
+
       const hp = new Graphics();
       const card = CATALOG.get(fu.cardId);
       const icon = card ? ELEMENT_META[card.elements[0]!].icon : "";
@@ -88,7 +113,7 @@ export function Arena({
       });
       label.anchor.set(0.5);
       label.y = w / 2 + 13;
-      container.addChild(body, hp, label);
+      container.addChild(hp, label);
       app.stage.addChild(container);
       const g: UnitGfx = {
         container,
@@ -168,7 +193,24 @@ export function Arena({
         resolution: window.devicePixelRatio || 1,
         autoDensity: true,
       })
-      .then(() => {
+      .then(async () => {
+        // Preload every card texture this battle needs, so units are drawn with
+        // their artwork from the very first frame instead of flat colour boxes.
+        const urls = [
+          ...new Set(
+            result.frames
+              .flatMap((f) => f.units.map((u) => u.cardId))
+              .map(artUrlOf)
+              .filter((u): u is string => u !== null),
+          ),
+        ];
+        if (urls.length) {
+          try {
+            await Assets.load(urls);
+          } catch {
+            /* missing art just falls back to the colour box */
+          }
+        }
         initialized = true;
         if (disposed) {
           app.destroy(true, { children: true });

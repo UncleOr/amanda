@@ -79,7 +79,12 @@ function generateAiPlan(): Placement[] {
   const kingPool = KING_CANDIDATES.length ? KING_CANDIDATES : [...CATALOG.values()];
   const king = kingPool[Math.floor(Math.random() * kingPool.length)]!.id;
   const pool = shuffle(shuffle(cardPool()).slice(0, DECK.size).filter((id) => id !== king));
-  const chosen = shuffle(perimeterCells()).slice(0, 7);
+  // Fill the front row first (an opponent that leaves its front open is both
+  // unrealistic and makes fog-of-war / Sandstorm meaningless), then the rest.
+  const cells = perimeterCells();
+  const front = shuffle(cells.filter((c) => c.x === 3));
+  const back = shuffle(cells.filter((c) => c.x !== 3));
+  const chosen = [...front, ...back].slice(0, 7);
   const reals: Placement[] = chosen.map((c, i) => ({ cardId: pool[i % pool.length]!, x: c.x, y: c.y }));
   reals.sort((a, b) => b.x - a.x);
   return [...reals, { cardId: king, x: 1, y: 1, king: true }];
@@ -164,22 +169,52 @@ interface GameState {
  * held Fill-action cards first and Crumb Demons after. Pure + used once so the
  * displayed board and the battle board match exactly (the shuffle runs once).
  */
+/**
+ * Sandstorm: rotate the lanes of the opponent's front-row cards.
+ * A rotation by a random non-zero offset guarantees every card actually moves —
+ * a plain shuffle of two or three cards often returned the original order, so
+ * the card looked like it did nothing. Returns how many cards moved.
+ */
+export function rotateFrontLanes(plan: Placement[]): number {
+  const fronts = plan.filter((p) => !p.king && p.x === 3);
+  if (fronts.length < 2) return 0;
+  const ys = fronts.map((p) => p.y);
+  const shift = 1 + Math.floor(Math.random() * (ys.length - 1));
+  fronts.forEach((p, i) => (p.y = ys[(i + shift) % ys.length]!));
+  return fronts.length;
+}
+
 function fillGs(s: GameState, bar: string[]): GameState {
-  const resolved = resolveKing(s.king, s.placements);
-  const placements = { ...resolved.placements };
-  const empties = shuffle(perimeterCells().filter((c) => !placements[cellKey(c.x, c.y)]));
-  let idx = 0;
+  // Every monster a held Fill card can place, in order.
+  const fillQueue: string[] = [];
   for (const actId of bar) {
     const a = ACTIONS.get(actId);
     if (a?.effect !== "fillEmpty") continue;
     const cardId = String(a.params.cardId);
     const count = Number(a.params.count ?? 3);
-    for (let n = 0; n < count && idx < empties.length; n++, idx++)
-      placements[cellKey(empties[idx]!.x, empties[idx]!.y)] = cardId;
+    for (let n = 0; n < count; n++) fillQueue.push(cardId);
   }
+
+  let king = s.king;
+  let placements = { ...s.placements };
+  // An empty King slot IS an empty slot: fill it from the Fill card first.
+  // (Previously we auto-promoted one of the player's placed cards here, so the
+  // Fill monster never reached the centre and a placed card was swallowed.)
+  if (!king && fillQueue.length > 0) king = fillQueue.shift()!;
+  if (!king) {
+    const resolved = resolveKing(null, placements);
+    king = resolved.king;
+    placements = resolved.placements;
+  }
+
+  const empties = shuffle(perimeterCells().filter((c) => !placements[cellKey(c.x, c.y)]));
+  let idx = 0;
+  for (; idx < empties.length && fillQueue.length > 0; idx++)
+    placements[cellKey(empties[idx]!.x, empties[idx]!.y)] = fillQueue.shift()!;
   for (; idx < empties.length; idx++)
     placements[cellKey(empties[idx]!.x, empties[idx]!.y)] = "crumb_demon";
-  return { ...s, king: resolved.king, placements, hand: null };
+
+  return { ...s, king, placements, hand: null };
 }
 
 function initialGameState(): GameState {
@@ -329,13 +364,16 @@ export function useMatch(): MatchApi {
     sfx.play("draw");
   }, []);
 
-  /** Shuffle the lanes of the opponent's front-row cards (Sandstorm). */
-  const shuffleEnemyFront = useCallback(() => {
-    const plan = aiPlanRef.current!;
-    const fronts = plan.filter((p) => !p.king && p.x === 3);
-    const ys = shuffle(fronts.map((p) => p.y));
-    fronts.forEach((p, i) => (p.y = ys[i]!));
-  }, []);
+  /**
+   * Shuffle the lanes of the opponent's front-row cards (Sandstorm).
+   * Uses a derangement so every card really moves — a plain shuffle of two or
+   * three cards frequently returned the original order and looked like a dud.
+   * Returns how many cards were moved.
+   */
+  const shuffleEnemyFront = useCallback(
+    (): number => rotateFrontLanes(aiPlanRef.current!),
+    [],
+  );
 
   const activateAction = useCallback(
     (id: string) => {
@@ -595,3 +633,6 @@ export function useMatch(): MatchApi {
     reset,
   };
 }
+
+/** Internals exposed for unit tests. */
+export const __testing = { fillGs, cellKey, resolveKing, rotateFrontLanes, generateAiPlan };
