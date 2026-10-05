@@ -7,7 +7,7 @@
  * back to the cache only when offline); hashed assets and artwork are immutable,
  * so they come from the CACHE first.
  */
-const VERSION = "amanda-v1";
+const VERSION = "amanda-v2";
 
 self.addEventListener("install", (event) => {
   // Take over as soon as this version is ready; nothing is pre-cached, so the
@@ -39,7 +39,13 @@ self.addEventListener("fetch", (event) => {
     event.respondWith(
       (async () => {
         try {
-          const fresh = await fetch(request);
+          // `cache: "reload"` is the whole point. GitHub Pages serves the HTML
+          // with Cache-Control: max-age=600, and a plain fetch() here goes
+          // through the browser's HTTP cache — so for ten minutes after a
+          // deploy this "network first" happily returned the OLD page, and the
+          // old bundle with it. Going around the cache is what makes the
+          // promise in the comment above true.
+          const fresh = await fetch(request, { cache: "reload" });
           const cache = await caches.open(VERSION);
           cache.put(request, fresh.clone());
           return fresh;
