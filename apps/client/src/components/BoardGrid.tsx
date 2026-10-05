@@ -1,5 +1,6 @@
 import { CardView, CardBack } from "./CardView";
 import { BOARD_SIZE, cellKey, isKingCell, type BattleMods } from "../game/useMatch";
+import { isCornerKey } from "../data/catalog";
 
 interface Props {
   placements: Record<string, string>;
@@ -29,6 +30,12 @@ interface Props {
   dragOver?: string | null;
   /** True while a card is being dragged — marks legal empty slots. */
   dragging?: boolean;
+  /** Cells with a second card hidden underneath (Ground Floor). */
+  stacked?: Record<string, string>;
+  /** How many more cells may still be stacked onto. */
+  stackSlots?: number;
+  /** True when the four corners are stackable without spending a slot. */
+  stackCorners?: boolean;
 }
 
 const KING_KEY = "king";
@@ -61,6 +68,9 @@ export function BoardGrid({
   onTargetKing,
   dragOver = null,
   dragging = false,
+  stacked = {},
+  stackSlots = 0,
+  stackCorners = false,
 }: Props) {
   const buffFor = (key: string, cardId: string) => {
     if (!mods) return undefined;
@@ -72,6 +82,11 @@ export function BoardGrid({
     }
     return Object.keys(buff).length ? buff : undefined;
   };
+  /** Stackable either because a slot is left, or because this is a free corner. */
+  const canStackOn = (key: string) => stackSlots > 0 || (stackCorners && isCornerKey(key));
+  /** A cell already holding a card that will accept a second one on top. */
+  const stackableHere = (key: string, occ?: string) => !!occ && !stacked[key] && canStackOn(key);
+
   const cells: Array<{ x: number; y: number }> = [];
   for (let x = 0; x < BOARD_SIZE; x++)
     for (let y = 0; y < BOARD_SIZE; y++) if (!isKingCell(x, y)) cells.push({ x, y });
@@ -130,21 +145,36 @@ export function BoardGrid({
             className={
               `slot${occ && shown ? " slot--filled slot--readable" : ""}` +
               `${isGuardPost(x, y) ? " slot--guard" : ""}` +
+              `${stacked[key] ? " slot--stacked" : ""}` +
+              `${stackableHere(key, occ) ? " slot--stackable" : ""}` +
               `${targeting && occ ? " slot--target" : ""}` +
-              `${interactive && dragging && !occ ? " slot--droppable" : ""}` +
-              `${dragOver === key && !occ ? " slot--dragover" : ""}`
+              `${interactive && dragging && (!occ || stackableHere(key, occ)) ? " slot--droppable" : ""}` +
+              `${dragOver === key && (!occ || stackableHere(key, occ)) ? " slot--dragover" : ""}`
             }
-            data-drop={interactive && !occ ? key : undefined}
+            data-drop={interactive && (!occ || stackableHere(key, occ)) ? key : undefined}
             style={{ gridColumn: colForX(x), gridRow: rowForY(y) }}
             onClick={() => {
               if (targeting && interactive) {
                 if (occ) onTarget?.(x, y);
                 return;
               }
+              // With Ground Floor active and a monster in hand, tapping a card
+              // you already placed stacks onto it rather than opening it — the
+              // ℹ button is still there for a closer look.
+              const canStack = interactive && handActive && stackableHere(key, occ);
+              if (canStack) {
+                onCellClick?.(x, y);
+                return;
+              }
               if (occ && shown) onCardInfo?.(occ);
               else if (interactive && !occ) onCellClick?.(x, y);
             }}
           >
+            {stacked[key] && (
+              <span className="slot__stack-mark" title="יש קלף נוסף מתחת — ייחשף כשהעליון ייפול">
+                🏗️
+              </span>
+            )}
             {isGuardPost(x, y) && !occ && interactive && (
               <span className="slot__guard-mark" title="משמר המלך — כאן עוצרים את מי שבא אליו">
                 🛡

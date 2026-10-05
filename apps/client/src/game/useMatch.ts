@@ -1,5 +1,5 @@
 import { useCallback, useEffect, useRef, useState } from "react";
-import { DECK, PHASES, type Card, type RoomError, type Side } from "@amanda/shared";
+import { DECK, KING, PHASES, type Card, type RoomError, type Side } from "@amanda/shared";
 import {
   runBattle,
   type BattleResult,
@@ -15,10 +15,12 @@ import {
   KING_CANDIDATES,
   ACTIVE_ACTIONS,
   FILL_CARDS_PER_DECK,
+  GROUND_FLOOR_SLOTS,
   FILL_CARD_CHANCE,
   PASSIVE_ACTIONS,
   SYNERGIES,
   cardPool,
+  isCornerKey,
   isPassiveAction,
   isTargetedAction,
 } from "../data/catalog";
@@ -205,14 +207,25 @@ export function cellBuff(
   return Object.keys(buff).length ? buff : undefined;
 }
 
-function buildPlayerBoard(state: GameState, mods: BattleMods): BoardInput {
+function buildPlayerBoard(
+  state: GameState,
+  mods: BattleMods,
+  stacked: Record<string, string> = {},
+): BoardInput {
   const resolved = resolveKing(state.king, state.placements);
   const ps: Placement[] = [
     { cardId: resolved.king, x: 1, y: 1, king: true, buff: cellBuff(mods, KING_KEY, false) },
   ];
   for (const [key, cardId] of Object.entries(resolved.placements)) {
     const [x, y] = key.split("-").map(Number) as [number, number];
-    ps.push({ cardId, x, y, buff: cellBuff(mods, key, cardId === "crumb_demon") });
+    ps.push({
+      cardId,
+      x,
+      y,
+      buff: cellBuff(mods, key, cardId === "crumb_demon"),
+      // Ground Floor: when the card on top dies, this one is revealed.
+      ...(stacked[key] ? { below: stacked[key] } : {}),
+    });
   }
   return { owner: "A", placements: fillCrumbs(ps) };
 }
@@ -307,6 +320,18 @@ export interface MatchApi {
   deckLeft: number;
   /** Cards in the discard pile (any of which the top one can be taken back). */
   discardCount: number;
+  /** Cards already drawn ahead, waiting behind the one in your hand. */
+  extraHand: string[];
+  /** Cells you may still stack a second card onto. */
+  stackSlots: number;
+  /** True once "dark corners" has opened the four corners for stacking. */
+  stackCorners: boolean;
+  /** Which cells have a card hidden underneath. */
+  stacked: Record<string, string>;
+  /** True while the next action card played against you will be blocked. */
+  shielded: boolean;
+  /** First cell chosen for a two-step action, or null. */
+  firstPick: string | null;
   placements: Record<string, string>;
   king: string | null;
   result: BattleResult | null;
@@ -369,6 +394,18 @@ export function useMatch(): MatchApi {
   const [netError, setNetError] = useState(false);
   const [roomCode, setRoomCode] = useState<string | null>(null);
   const [roomError, setRoomError] = useState<RoomError | null>(null);
+  /** Cards stacked underneath a placed card, revealed when the top one dies. */
+  const [stacked, setStacked] = useState<Record<string, string>>({});
+  /** Cells "ground floor" has unlocked for stacking but not yet used. */
+  const [stackSlots, setStackSlots] = useState(0);
+  /** "Dark corners" opens the four corners for stacking, and never runs out. */
+  const [stackCorners, setStackCorners] = useState(false);
+  /** Blocks the next action card the opponent plays against you. */
+  const [shielded, setShielded] = useState(false);
+  /** Cards drawn ahead by "triple draw", offered before the deck is touched. */
+  const [extraHand, setExtraHand] = useState<string[]>([]);
+  /** First cell picked by a two-step action, waiting for its partner. */
+  const [firstPick, setFirstPick] = useState<string | null>(null);
   /** True once the server has paired us with an opponent. */
   const matchStartedRef = useRef(false);
   const [mySide, setMySide] = useState<Side>("A");
@@ -377,6 +414,16 @@ export function useMatch(): MatchApi {
 
   const onlineRef = useRef(online);
   onlineRef.current = online;
+  const firstPickRef = useRef(firstPick);
+  firstPickRef.current = firstPick;
+  const extraHandRef = useRef(extraHand);
+  extraHandRef.current = extraHand;
+  const stackSlotsRef = useRef(stackSlots);
+  stackSlotsRef.current = stackSlots;
+  const stackCornersRef = useRef(stackCorners);
+  stackCornersRef.current = stackCorners;
+  const stackedRef = useRef(stacked);
+  stackedRef.current = stacked;
   const mySideRef = useRef(mySide);
   mySideRef.current = mySide;
   const netRef = useRef<Net | null>(null);
@@ -394,17 +441,44 @@ export function useMatch(): MatchApi {
   const aiPlanRef = useRef<Placement[] | null>(null);
   if (!aiPlanRef.current) aiPlanRef.current = generateAiPlan();
 
-  const placeAt = useCallback((x: number, y: number) => {
-    if (isKingCell(x, y)) return;
-    const key = cellKey(x, y);
-    let ok = false;
-    setGs((s) => {
-      if (s.hand === null || !isMonsterId(s.hand) || s.placements[key]) return s;
-      ok = true;
-      return drawIfEmpty({ ...s, placements: { ...s.placements, [key]: s.hand }, hand: null });
-    });
-    if (ok) sfx.play("place");
+  /** Refill the hand, preferring cards already drawn ahead by "triple draw". */
+  const refill = useCallback((next: GameState): GameState => {
+    if (next.hand !== null) return next;
+    const ahead = extraHandRef.current;
+    if (ahead.length) {
+      setExtraHand(ahead.slice(1));
+      return { ...next, hand: ahead[0]! };
+    }
+    return drawIfEmpty(next);
   }, []);
+
+  const placeAt = useCallback(
+    (x: number, y: number) => {
+      if (isKingCell(x, y)) return;
+      const key = cellKey(x, y);
+      const s = gsRef.current;
+      if (s.hand === null || !isMonsterId(s.hand)) return;
+
+      // Stacking: "ground floor" lets a card go on TOP of one already placed,
+      // and the one underneath is revealed when the top card dies in battle.
+      if (s.placements[key]) {
+        if (stackedRef.current[key]) return;
+        // A corner opened by "dark corners" is free; anywhere else spends one
+        // of the slots "ground floor" handed out.
+        const onTheHouse = stackCornersRef.current && isCornerKey(key);
+        if (!onTheHouse && stackSlotsRef.current <= 0) return;
+        const under = s.placements[key]!;
+        setStacked((st) => ({ ...st, [key]: under }));
+        if (!onTheHouse) setStackSlots((n) => n - 1);
+        setGs(refill({ ...s, placements: { ...s.placements, [key]: s.hand }, hand: null }));
+        sfx.play("place");
+        return;
+      }
+      setGs(refill({ ...s, placements: { ...s.placements, [key]: s.hand }, hand: null }));
+      sfx.play("place");
+    },
+    [refill],
+  );
 
   const placeKing = useCallback(() => {
     let ok = false;
@@ -421,10 +495,10 @@ export function useMatch(): MatchApi {
     setGs((s) => {
       if (s.hand === null) return s;
       ok = true;
-      return drawIfEmpty({ ...s, discard: [...s.discard, s.hand], hand: null });
+      return refill({ ...s, discard: [...s.discard, s.hand], hand: null });
     });
     if (ok) sfx.play("discard");
-  }, []);
+  }, [refill]);
 
   const takeDiscard = useCallback(() => {
     let ok = false;
@@ -467,6 +541,34 @@ export function useMatch(): MatchApi {
     [],
   );
 
+  /**
+   * The radioactive eraser, aimed at a cell on the opponent's board. An
+   * ordinary card is simply gone; a King is too important to delete, so it
+   * takes a heavy wound instead — carried into the battle as a health cut.
+   */
+  const eraseEnemyAt = useCallback((key: string, kingDamage: number) => {
+    const plan = aiPlanRef.current;
+    if (!plan) return;
+    if (key === KING_KEY) {
+      const king = plan.find((p) => p.king);
+      if (!king) return;
+      const card = CATALOG.get(king.cardId);
+      const full = (card?.stats.hp ?? 0) * KING.hpMultiplier;
+      if (full <= 0) return;
+      const left = Math.max(1, full - kingDamage);
+      king.buff = { ...(king.buff ?? {}), hpMult: left / full };
+      return;
+    }
+    const [x, y] = key.split("-").map(Number) as [number, number];
+    const at = plan.findIndex((p) => !p.king && p.x === x && p.y === y);
+    if (at >= 0) plan.splice(at, 1);
+    setNetOpp((v) => {
+      const placements = { ...v.placements };
+      delete placements[key];
+      return { ...v, placements };
+    });
+  }, []);
+
   const activateAction = useCallback(
     (id: string) => {
       if (isPassiveAction(id) || usedRef.current[id]) return;
@@ -478,6 +580,36 @@ export function useMatch(): MatchApi {
       const a = ACTIONS.get(id);
       const params = a?.params ?? {};
       if (a?.effect === "boardPowerBuff") setBoardPowerAdd((b) => b + Number(params.power ?? 50));
+      else if (a?.effect === "recycleDiscard") {
+        // Straight back into your hand, without spending a draw on it.
+        const st = gsRef.current;
+        if (st.discard.length) {
+          const discard = [...st.discard];
+          const back = discard.pop()!;
+          const held = st.hand;
+          if (held) setExtraHand((e) => [held, ...e]);
+          setGs({ ...st, hand: back, discard });
+        }
+      } else if (a?.effect === "freezeEnemy") {
+        // Seconds are the currency of the build phase, so this buys you some.
+        setTimeLeft((t) => t + Number(params.seconds ?? 3));
+      } else if (a?.effect === "blockNextActionCard") {
+        setShielded(true);
+      } else if (a?.effect === "draw") {
+        // Hold several at once instead of one, so you stop cycling the deck.
+        const st = gsRef.current;
+        const deck = [...st.deck];
+        const want = Math.max(1, Number(params.count ?? 3));
+        const drawn: string[] = [];
+        while (drawn.length < want && deck.length) drawn.push(deck.shift()!);
+        const hand = st.hand ?? drawn.shift() ?? null;
+        if (drawn.length) setExtraHand((e) => [...e, ...drawn]);
+        setGs({ ...st, deck, hand });
+      } else if (a?.effect === "enableStacking") {
+        setStackSlots((n) => n + Number(params.slots ?? GROUND_FLOOR_SLOTS));
+      } else if (a?.effect === "autoStackCorners") {
+        setStackCorners(true);
+      }
       else if (a?.effect === "revealBoard") {
         setXrayActive(true);
         window.setTimeout(() => setXrayActive(false), XRAY_MS);
@@ -500,9 +632,39 @@ export function useMatch(): MatchApi {
         delete placements[key];
         return { ...s, placements, discard: removed ? [...s.discard, removed] : s.discard };
       });
+    } else if (effect === "swapOwnCards") {
+      // Two picks: remember the first, swap on the second.
+      const first = firstPickRef.current;
+      if (!first) {
+        setFirstPick(key);
+        sfx.play("click");
+        return; // still targeting — do not spend the card yet
+      }
+      if (first !== key) {
+        const s0 = gsRef.current;
+        const placements = { ...s0.placements };
+        const a = first === KING_KEY ? s0.king : (placements[first] ?? null);
+        const b = key === KING_KEY ? s0.king : (placements[key] ?? null);
+        // Both cells have to hold something; swapping with an empty slot is
+        // just a move, and the card does not promise that.
+        if (a !== null && b !== null) {
+          let king = s0.king;
+          if (first === KING_KEY) king = b;
+          else placements[first] = b;
+          if (key === KING_KEY) king = a;
+          else placements[key] = a;
+          setGs({ ...s0, placements, king });
+        }
+      }
+      setFirstPick(null);
+    } else if (effect === "eraseEnemyCard") {
+      // Aimed at the opponent's board: the card is gone. A King cannot be
+      // erased outright, so it takes a heavy wound instead.
+      eraseEnemyAt(key, Number(ACTIONS.get(id)?.params?.kingFlatDamage ?? 2000));
     }
     setUsedActions((u) => ({ ...u, [id]: true }));
     setTargeting(null);
+    setFirstPick(null);
     sfx.play("place");
   }, []);
 
@@ -529,7 +691,8 @@ export function useMatch(): MatchApi {
     setPhase("prebattle");
     setTimeLeft(PREBATTLE_SECONDS);
     // In an online match, submit the locked board to the server now.
-    if (onlineRef.current) netRef.current?.lock(buildPlayerBoard(filled, modsRef.current));
+    if (onlineRef.current)
+      netRef.current?.lock(buildPlayerBoard(filled, modsRef.current, stackedRef.current));
   }, []);
 
   const startBattle = useCallback(() => {
@@ -538,7 +701,7 @@ export function useMatch(): MatchApi {
       seed: BATTLE_SEED,
       catalog: CATALOG,
       synergies: SYNERGIES,
-      a: buildPlayerBoard(gsRef.current, modsRef.current),
+      a: buildPlayerBoard(gsRef.current, modsRef.current, stackedRef.current),
       b: aiFull,
       recordFrames: true,
     });
@@ -565,6 +728,12 @@ export function useMatch(): MatchApi {
     setNetError(false);
     setRoomCode(null);
     setRoomError(null);
+    setStacked({});
+    setStackSlots(0);
+    setStackCorners(false);
+    setShielded(false);
+    setExtraHand([]);
+    setFirstPick(null);
     setMySide("A");
     setNetOpp({ placements: {}, king: null });
     setTimeLeft(COUNTDOWN_SECONDS);
@@ -754,6 +923,12 @@ export function useMatch(): MatchApi {
     discardTop: gs.discard.length ? gs.discard[gs.discard.length - 1]! : null,
     deckLeft: gs.deck.length,
     discardCount: gs.discard.length,
+    extraHand,
+    stackSlots,
+    stackCorners,
+    stacked,
+    shielded,
+    firstPick,
     placements: gs.placements,
     king: gs.king,
     result,

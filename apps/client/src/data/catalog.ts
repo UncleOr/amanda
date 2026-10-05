@@ -104,12 +104,44 @@ export const ACTIVE_ACTIONS = [
   "full_refuel", // ×1.5 a chosen card (targeted)
   "recall_card", // remove a chosen card (targeted)
   "sandstorm", // shuffle the enemy front row
+  "recycle_bin", // take the last card you threw away back
+  "time_freeze", // buy yourself seconds
+  "steel_wall", // block the next action card played against you
+  "triple_draw", // hold three cards at once instead of one
+  "swap_places", // swap two of your placed cards (targeted ×2)
+  "radioactive_eraser", // delete an enemy card (targeted on THEIR board)
+  "ground_floor", // stack a second card onto your own slots
+  "dark_corners", // the same, applied to the four corners at once
 ] as const;
 export const PASSIVE_ACTIONS = ["fill_lava", "fill_colossus", "fill_flame", "fill_cube"] as const;
 export const SUPPORTED_ACTIONS: string[] = [...ACTIVE_ACTIONS, ...PASSIVE_ACTIONS];
 
-/** Active actions that require picking a card on your board before they apply. */
-export const TARGETED_ACTIONS = ["full_refuel", "recall_card"];
+/**
+ * Which board an effect asks you to pick a card on, if any.
+ *
+ * Keyed by effect rather than by card id on purpose: a card needs a target
+ * because of what it does. Listing the ids separately let "ground floor" ask
+ * for a target it had no use for, and the four stacking slots it promised were
+ * never handed out.
+ */
+export const TARGET_EFFECTS: Record<string, "own" | "enemy"> = {
+  upgradeCardTemp: "own",
+  removeCard: "own",
+  swapOwnCards: "own",
+  eraseEnemyCard: "enemy",
+};
+
+/** Effects that need two picks, not one. */
+export const TWO_PICK_EFFECTS = ["swapOwnCards"];
+
+/** How many separate cells "ground floor" lets you stack onto. */
+export const GROUND_FLOOR_SLOTS = 4;
+
+/** The four outer corners of a player's board — what "dark corners" opens up. */
+export const CORNER_KEYS = ["0-0", "3-0", "0-3", "3-3"];
+export function isCornerKey(key: string): boolean {
+  return CORNER_KEYS.includes(key);
+}
 
 /** How many action cards get shuffled into a match deck (GDD: 4). */
 export const ACTION_DECK_COUNT = 4;
@@ -134,5 +166,16 @@ export function isPassiveAction(id: string): boolean {
 }
 /** True if an active action needs a board target to apply. */
 export function isTargetedAction(id: string): boolean {
-  return TARGETED_ACTIONS.includes(id);
+  return effectOf(id) in TARGET_EFFECTS;
+}
+/** True if the target has to be picked on the opponent's board. */
+export function isEnemyTargeted(id: string): boolean {
+  return TARGET_EFFECTS[effectOf(id)] === "enemy";
+}
+/** True if the action wants two cards picked before it does anything. */
+export function isTwoPickAction(id: string): boolean {
+  return TWO_PICK_EFFECTS.includes(effectOf(id));
+}
+function effectOf(id: string): string {
+  return ACTIONS.get(id)?.effect ?? "";
 }

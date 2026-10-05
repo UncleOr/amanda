@@ -713,9 +713,18 @@ button:disabled {
 /* ---- result ---- */
 .result {
   flex: 1;
+  /* a flex item will not shrink below its content without this, and then the
+     screen scrolls instead of this box */
+  min-height: 0;
   display: flex;
-  align-items: center;
-  justify-content: center;
+  /*
+   * `safe` is what stops the top of the card being cut off. Plain centring
+   * overflows a scroll container in BOTH directions, and the half that goes
+   * past the top edge cannot be scrolled back — which is exactly what the
+   * battle report did once it made the card taller than the window.
+   */
+  align-items: safe center;
+  justify-content: safe center;
   /* the battle report makes this card tall, so the screen has to give */
   overflow-y: auto;
   padding: 16px 0;
@@ -740,9 +749,12 @@ button:disabled {
 /* ---- intro / start screen ---- */
 .intro {
   flex: 1;
+  min-height: 0;
   display: flex;
-  align-items: center;
-  justify-content: center;
+  /* `safe` for the same reason as .result — centring inside a scroll container
+     puts the top of a tall card out of reach */
+  align-items: safe center;
+  justify-content: safe center;
   padding: 20px;
   /* a short window (a phone on its side) can be shorter than this card —
      scroll it rather than cutting the buttons off below the fold, but without
@@ -1922,3 +1934,17 @@ button:disabled {
   .topbar__title { font-size: 12px; }
   .actions__handle { font-size: 12px; padding: 5px 8px; }
 }
+
+/* ---- Ground Floor: a second card hidden under the one on the board ---- */
+.slot--stacked { box-shadow: 0 0 0 2px rgba(120, 200, 255, 0.5) inset; }
+.slot--stackable { outline: 2px dashed rgba(120, 200, 255, 0.45); outline-offset: -3px; }
+.slot__stack-mark {
+  position: absolute;
+  inset-block-end: 3px;
+  inset-inline-start: 4px;
+  font-size: 11px;
+  opacity: 0.85;
+  pointer-events: none;
+  z-index: 2;
+}
+.hand__hint--stack { color: #9fd0ff; font-weight: 700; }

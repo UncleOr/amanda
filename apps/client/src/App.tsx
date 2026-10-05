@@ -6,7 +6,7 @@ import { useDrag } from "./game/useDrag";
 import { sfx } from "./game/sfx";
 import { music } from "./game/music";
 import { hardRefresh } from "./game/refresh";
-import { ACTIONS } from "./data/catalog";
+import { ACTIONS, isEnemyTargeted } from "./data/catalog";
 import { BoardGrid } from "./components/BoardGrid";
 import { CardView } from "./components/CardView";
 import { CardDetailModal } from "./components/CardDetailModal";
@@ -386,9 +386,12 @@ function Game() {
                 interactive={interactive}
                 handActive={m.hand !== null}
                 mods={m.mods}
-                targeting={m.targeting !== null}
+                targeting={m.targeting !== null && !isEnemyTargeted(m.targeting)}
                 onTarget={m.applyTargetCell}
                 onTargetKing={m.applyTargetKing}
+                stacked={m.stacked}
+                stackSlots={m.stackSlots}
+                stackCorners={m.stackCorners}
                 dragging={dragging}
                 dragOver={drag.over}
                 onCellClick={(x, y) => m.placeAt(x, y)}
@@ -412,6 +415,10 @@ function Game() {
                 reveal={m.revealOpponentCell}
                 revealKing={m.revealOpponentKing}
                 onCardInfo={openInfo}
+                targeting={m.targeting !== null && isEnemyTargeted(m.targeting)}
+                interactive={m.targeting !== null && isEnemyTargeted(m.targeting)}
+                onTarget={m.applyTargetCell}
+                onTargetKing={m.applyTargetKing}
               />
             </section>
           </div>
@@ -419,7 +426,13 @@ function Game() {
           {m.targeting && (
             <div className="targeting-bar">
               <span className="targeting-bar__text">
-                🎯 בחרו קלף על הלוח שלכם עבור "{ACTIONS.get(m.targeting)?.name.he}"
+                🎯{" "}
+                {isEnemyTargeted(m.targeting)
+                  ? "בחרו קלף על הלוח של היריב"
+                  : m.firstPick
+                    ? "ועכשיו את הקלף השני"
+                    : "בחרו קלף על הלוח שלכם"}{" "}
+                עבור "{ACTIONS.get(m.targeting)?.name.he}"
               </span>
               <button className="targeting-bar__cancel" onClick={m.cancelTargeting}>
                 ✕ ביטול
@@ -527,6 +540,16 @@ function Game() {
                   קח מהפח {m.discardTop ? "♻️" : ""}
                 </button>
               </div>
+              {m.stackSlots > 0 && (
+                <p className="hand__hint hand__hint--stack">
+                  🏗️ אפשר להניח קלף על קלף שכבר הנחתם — נשארו {m.stackSlots}
+                </p>
+              )}
+              {m.stackCorners && (
+                <p className="hand__hint hand__hint--stack">
+                  🏗️ ארבע הפינות פתוחות להנחה כפולה
+                </p>
+              )}
               <p className="hand__hint">
                 מפלצת: הנחה על משבצת (קבוע!) · קלף פעולה: "קח לפעולה" (עד 3) · 👑 = מלך
               </p>
