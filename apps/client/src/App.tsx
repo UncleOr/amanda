@@ -64,6 +64,9 @@ const IN_MATCH = ["countdown", "build", "panic", "prebattle", "battle"];
  * for the battle effects. Reading this inside App would mean returning before
  * its hooks run, which breaks the rules of hooks (and Fast Refresh with it).
  */
+/** A room code from an invite link (?join=XXXX), used once on first load. */
+const INVITE_CODE = new URLSearchParams(location.search).get("join");
+
 const REVIEW = new URLSearchParams(location.search).has("gallery")
   ? "gallery"
   : new URLSearchParams(location.search).has("arena")
@@ -83,6 +86,9 @@ function Game() {
   const [muted, setMuted] = useState(false);
   const [musicOn, setMusicOn] = useState(music.isEnabled());
   const [confirmExit, setConfirmExit] = useState(false);
+  const [joining, setJoining] = useState(false);
+  const [codeInput, setCodeInput] = useState("");
+  const [copied, setCopied] = useState(false);
   const [showLog, setShowLog] = useState(false);
   const openInfo = (cardId: string) => setDetail(cardId);
 
@@ -97,6 +103,15 @@ function Game() {
       if (x !== undefined && y !== undefined) m.placeAt(x, y);
     }
   });
+
+  // An invite link (?join=XXXX) joins that room on its own, so the person you
+  // sent it to only has to open it.
+  const invitedRef = useRef(false);
+  useEffect(() => {
+    if (invitedRef.current || !INVITE_CODE || !m.onlineAvailable) return;
+    invitedRef.current = true;
+    m.joinRoom(INVITE_CODE);
+  }, [m]);
 
   // Background music follows the phase (crossfading between clips).
   useEffect(() => {
@@ -202,13 +217,60 @@ function Game() {
               </button>
               <button
                 className="btn-fight btn-online"
-                onClick={m.startOnline}
+                onClick={() => m.hostRoom()}
                 disabled={!m.onlineAvailable}
                 title={m.onlineAvailable ? "" : "לא זמין בבנייה הזו (צריך שרת)"}
               >
-                🌐 אונליין
+                👥 שחק עם חבר
               </button>
             </div>
+            <div className="intro__secondary">
+              <button
+                className="btn-link"
+                onClick={() => m.startOnline()}
+                disabled={!m.onlineAvailable}
+              >
+                🌐 יריב אקראי
+              </button>
+              <button
+                className="btn-link"
+                onClick={() => setJoining(true)}
+                disabled={!m.onlineAvailable}
+              >
+                🔑 הצטרף לחבר
+              </button>
+            </div>
+            {joining && (
+              <form
+                className="join"
+                onSubmit={(e) => {
+                  e.preventDefault();
+                  if (codeInput.trim().length >= 3) m.joinRoom(codeInput);
+                }}
+              >
+                <input
+                  className="join__input"
+                  value={codeInput}
+                  onChange={(e) => setCodeInput(e.target.value.toUpperCase())}
+                  placeholder="קוד החדר"
+                  maxLength={6}
+                  autoFocus
+                  inputMode="text"
+                />
+                <button className="btn-fight" type="submit">
+                  הצטרף
+                </button>
+              </form>
+            )}
+            {m.roomError && (
+              <p className="warn">
+                {m.roomError === "notFound"
+                  ? "לא נמצא חדר עם הקוד הזה. אולי הוא נסגר?"
+                  : m.roomError === "self"
+                    ? "זה הקוד שלך — שלח אותו למישהו אחר."
+                    : "החדר כבר מלא."}
+              </p>
+            )}
             <p className="intro__hint">
               {PHASES.build.seconds} שניות לבנות את הלוח · {PHASES.panic.seconds} שניות
               פאניקה · {PHASES.battle.seconds} שניות קרב
@@ -228,14 +290,35 @@ function Game() {
         <main className="intro">
           <div className="intro__card">
             <div className="overlay__count" style={{ fontSize: 60 }}>
-              {m.netError ? "🔌" : "🌐"}
+              {m.netError ? "🔌" : m.roomCode ? "👥" : "🌐"}
             </div>
-            <h2>{m.netError ? "אין חיבור לשרת" : "מחפש יריב…"}</h2>
-            <p className="intro__tag">
-              {m.netError
-                ? "החיבור לשרת המשחק לא נוצר או שנפל. אפשר לשחק נגד המחשב בינתיים."
-                : "פתחו את המשחק בטאב/מכשיר נוסף כדי לשחק אחד נגד השני"}
-            </p>
+            <h2>
+              {m.netError ? "אין חיבור לשרת" : m.roomCode ? "מחכים לחבר…" : "מחפש יריב…"}
+            </h2>
+            {m.roomCode ? (
+              <>
+                <p className="intro__tag">שלחו את הקוד הזה למי שתרצו לשחק נגדו:</p>
+                <div className="room-code">{m.roomCode}</div>
+                <button
+                  className="btn-link"
+                  onClick={() => {
+                    const link = `${location.origin}${location.pathname}?join=${m.roomCode}`;
+                    void navigator.clipboard?.writeText(link).then(() => {
+                      setCopied(true);
+                      window.setTimeout(() => setCopied(false), 2000);
+                    });
+                  }}
+                >
+                  {copied ? "✔ הקישור הועתק" : "⧉ העתק קישור הזמנה"}
+                </button>
+              </>
+            ) : (
+              <p className="intro__tag">
+                {m.netError
+                  ? "החיבור לשרת המשחק לא נוצר או שנפל. אפשר לשחק נגד המחשב בינתיים."
+                  : "מחברים אתכם לשחקן הראשון שיתפנה"}
+              </p>
+            )}
             <div className="intro__buttons">
               {m.netError && (
                 <button className="btn-fight" onClick={m.startMatch}>

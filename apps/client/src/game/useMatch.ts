@@ -1,5 +1,5 @@
 import { useCallback, useEffect, useRef, useState } from "react";
-import { DECK, PHASES, type Side } from "@amanda/shared";
+import { DECK, PHASES, type RoomError, type Side } from "@amanda/shared";
 import {
   runBattle,
   type BattleResult,
@@ -20,7 +20,7 @@ import {
   isTargetedAction,
 } from "../data/catalog";
 import { sfx } from "./sfx";
-import { Net, ONLINE_AVAILABLE } from "./net";
+import { Net, ONLINE_AVAILABLE, type Intent } from "./net";
 
 export type Phase =
   | "intro"
@@ -265,6 +265,10 @@ export interface MatchApi {
   oppLeft: boolean;
   /** Set when the server could not be reached, so "searching" never hangs. */
   netError: boolean;
+  /** Code of the private room you opened, once the server has given one. */
+  roomCode: string | null;
+  /** Why joining a room failed, if it did. */
+  roomError: RoomError | null;
   iWon: boolean;
   takeAction: () => void;
   activateAction: (id: string) => void;
@@ -273,6 +277,10 @@ export interface MatchApi {
   cancelTargeting: () => void;
   startMatch: () => void;
   startOnline: () => void;
+  /** Open a private room and wait for a friend to join it. */
+  hostRoom: () => void;
+  /** Join a friend's private room by its code. */
+  joinRoom: (code: string) => void;
   discardHand: () => void;
   takeDiscard: () => void;
   placeAt: (x: number, y: number) => void;
@@ -298,6 +306,8 @@ export function useMatch(): MatchApi {
   const [targeting, setTargeting] = useState<string | null>(null);
   const [online, setOnline] = useState(false);
   const [netError, setNetError] = useState(false);
+  const [roomCode, setRoomCode] = useState<string | null>(null);
+  const [roomError, setRoomError] = useState<RoomError | null>(null);
   /** True once the server has paired us with an opponent. */
   const matchStartedRef = useRef(false);
   const [mySide, setMySide] = useState<Side>("A");
@@ -483,18 +493,28 @@ export function useMatch(): MatchApi {
     setTimeLeft(COUNTDOWN_SECONDS);
   }, []);
 
-  const startOnline = useCallback(() => {
+  const startOnline = useCallback((intent: Intent = { kind: "quick" }) => {
     if (!ONLINE_AVAILABLE) return;
     sfx.unlock();
     sfx.play("click");
     setOnline(true);
     setOppLeft(false);
     setNetError(false);
+    setRoomCode(null);
+    setRoomError(null);
     matchStartedRef.current = false;
     setPhase("waiting");
     const net = new Net();
     netRef.current = net;
-    net.connect({
+    net.connect(
+      {
+      onRoom: (code) => setRoomCode(code),
+      onRoomError: (reason) => {
+        // The code was wrong or the room is gone; stop waiting and say why.
+        setRoomError(reason);
+        netRef.current?.close();
+        netRef.current = null;
+      },
       onStart: (side) => {
         matchStartedRef.current = true;
         setMySide(side);
@@ -535,8 +555,16 @@ export function useMatch(): MatchApi {
         if (!connected || !matchStartedRef.current) setNetError(true);
         else setOppLeft(true);
       },
-    });
+      },
+      intent,
+    );
   }, [enterPrebattle]);
+
+  const hostRoom = useCallback(() => startOnline({ kind: "host" }), [startOnline]);
+  const joinRoom = useCallback(
+    (code: string) => startOnline({ kind: "join", code: code.toUpperCase().trim() }),
+    [startOnline],
+  );
 
   const finishBattle = useCallback(() => {
     const w = result?.winner;
@@ -560,6 +588,8 @@ export function useMatch(): MatchApi {
     setOnline(false);
     setOppLeft(false);
     setNetError(false);
+    setRoomCode(null);
+    setRoomError(null);
     setMySide("A");
     setNetOpp({ placements: {}, king: null });
     setTimeLeft(COUNTDOWN_SECONDS);
@@ -672,6 +702,8 @@ export function useMatch(): MatchApi {
     online,
     onlineAvailable: ONLINE_AVAILABLE,
     netError,
+    roomCode,
+    roomError,
     mySide,
     oppLeft,
     iWon: result != null && result.winner === mySide,
@@ -681,7 +713,9 @@ export function useMatch(): MatchApi {
     applyTargetKing,
     cancelTargeting,
     startMatch,
-    startOnline,
+    startOnline: () => startOnline(),
+    hostRoom,
+    joinRoom,
     discardHand,
     takeDiscard,
     placeAt,

@@ -3,6 +3,7 @@ import {
   type BoardView,
   type ClientMessage,
   type NetBoard,
+  type RoomError,
   type ServerMessage,
   type Side,
 } from "@amanda/shared";
@@ -18,8 +19,17 @@ export const SERVER_URL: string =
 
 export const ONLINE_AVAILABLE = SERVER_URL !== "";
 
+/** What to ask the lobby for once the socket opens. */
+export type Intent =
+  | { kind: "quick" }
+  | { kind: "host" }
+  | { kind: "join"; code: string };
+
 export interface NetHandlers {
   onWaiting?: () => void;
+  /** A private room was opened — share this code. */
+  onRoom?: (code: string) => void;
+  onRoomError?: (reason: RoomError) => void;
   onStart?: (side: Side) => void;
   onPhase?: (phase: string, timeLeft: number) => void;
   onOpp?: (view: BoardView) => void;
@@ -34,14 +44,23 @@ export class Net {
   private handlers: NetHandlers = {};
   /** True once the socket actually opened — tells a dead server from a drop. */
   private connected = false;
+  private intent: Intent = { kind: "quick" };
 
-  connect(handlers: NetHandlers): void {
+  /**
+   * Open the socket. `intent` decides what to ask for once it is up: join the
+   * open queue, open a private room, or join someone else's by code.
+   */
+  connect(handlers: NetHandlers, intent: Intent = { kind: "quick" }): void {
     this.handlers = handlers;
+    this.intent = intent;
     const ws = new WebSocket(SERVER_URL);
     this.ws = ws;
     ws.onopen = () => {
       this.connected = true;
-      this.sendMsg({ t: "hello" });
+      const i = this.intent;
+      this.sendMsg(
+        i.kind === "host" ? { t: "host" } : i.kind === "join" ? { t: "join", code: i.code } : { t: "hello" },
+      );
     };
     ws.onclose = () => this.handlers.onClose?.(this.connected);
     ws.onerror = () => this.handlers.onClose?.(this.connected);
@@ -55,6 +74,12 @@ export class Net {
       switch (msg.t) {
         case "waiting":
           this.handlers.onWaiting?.();
+          break;
+        case "room":
+          this.handlers.onRoom?.(msg.code);
+          break;
+        case "roomError":
+          this.handlers.onRoomError?.(msg.reason);
           break;
         case "start":
           this.handlers.onStart?.(msg.side);
