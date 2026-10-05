@@ -47,6 +47,9 @@ function verdictText(result: BattleResult, iWon: boolean): string {
   }
 }
 
+/** Vite serves the app under /amanda/ on Pages and / in dev. */
+const BASE = import.meta.env.BASE_URL;
+
 const PHASE_LABEL: Record<string, string> = {
   countdown: "מתארגנת…",
   waiting: "מחפשת לך יריב…",
@@ -170,7 +173,10 @@ function Game() {
         <p>אני משוחקת לרוחב, ילד. ככה אני רואה את שניכם.</p>
       </div>
       <header className="topbar">
-        <div className="topbar__title">אמנדה | משחק קלפים מפלצתי</div>
+        <div className="topbar__title">
+          <img className="topbar__mark" src={`${BASE}brand/amanda_portrait.webp`} alt="" />
+          אמנדה | משחק קלפים מפלצתי
+        </div>
         {PHASE_LABEL[m.phase] && (
           <div className={`topbar__phase phase--${m.phase}`}>
             {/* holding a room is waiting for one person, not hunting for anyone */}
@@ -220,7 +226,14 @@ function Game() {
       {m.phase === "intro" && (
         <main className="intro">
           <div className="intro__card">
-            <h1>אמנדה</h1>
+            <img
+              className="intro__logo"
+              src={`${BASE}brand/amanda_logo.png`}
+              alt="אמנדה"
+              width={512}
+              height={512}
+            />
+            <h1 className="sr-only">אמנדה</h1>
             <p className="intro__tag">קרב מדבקות · 4×4 · בוא, ילד</p>
             <div className="intro__main">
             <div className="versus">
@@ -230,8 +243,10 @@ function Game() {
               </div>
               <div className="versus__x">VS</div>
               <div className="who who--enemy">
-                <div className="who__avatar">🤖</div>
-                <div className="who__name">היריב</div>
+                <div className="who__avatar who__avatar--amanda">
+                  <img src={`${BASE}brand/amanda_portrait.webp`} alt="" />
+                </div>
+                <div className="who__name">אמנדה</div>
               </div>
             </div>
             <div className="intro__choices">

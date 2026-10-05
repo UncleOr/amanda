@@ -13,7 +13,8 @@
     "typecheck": "tsc --noEmit",
     "actions": "tsx src/cli.ts actions",
     "arena": "tsx src/cli.ts arena",
-    "icons": "tsx src/icons.ts"
+    "icons": "tsx src/icons.ts",
+    "brand": "tsx src/cli.ts brand"
   },
   "dependencies": {
     "@amanda/shared": "workspace:*",

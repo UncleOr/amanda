@@ -15,6 +15,7 @@ import { CARDS, REPO_ROOT, SERIES, launchCards } from "./catalog.js";
 import { buildActionPrompt, buildAnchoredPrompt, buildPrompt } from "./prompt.js";
 import { STYLE_DIRECTIONS, TEST_MONSTERS } from "./styles.js";
 import { ARENA_LOOKS, buildArenaPrompt } from "./arenaLooks.js";
+import { BRAND_ASPECT, BRAND_LOOK, buildBrandPrompt } from "./brandLooks.js";
 import { download, generate, generateWithReference, uploadFile } from "./fal.js";
 
 const RAW = join(REPO_ROOT, "assets", "raw");
@@ -174,6 +175,32 @@ async function cmdArena(styleId?: string): Promise<void> {
   console.log("\nDone -> assets/raw/arena/\n");
 }
 
+/** Amanda's own likeness: the logo, the portrait and the menu banner. */
+async function cmdBrand(styleId?: string): Promise<void> {
+  const dir = dirById(styleId ?? "");
+  const ids = Object.keys(BRAND_LOOK);
+  console.log(`\nGenerating ${ids.length} brand images (style: ${dir.id})\n`);
+  for (const id of ids) {
+    const dest = join(RAW, "brand", `${id}.png`);
+    if (existsSync(dest)) {
+      console.log(`   skip  ${id} (exists)`);
+      continue;
+    }
+    process.stdout.write(`   ${id.padEnd(18)} ... `);
+    try {
+      const [img] = await generate(buildBrandPrompt(id, dir.style), {
+        aspectRatio: BRAND_ASPECT[id] ?? "1:1",
+      });
+      if (!img) throw new Error("no image returned");
+      await download(img.url, dest);
+      console.log("OK");
+    } catch (err) {
+      console.log(`FAIL ${(err as Error).message}`);
+    }
+  }
+  console.log("\nDone -> assets/raw/brand/\n");
+}
+
 const [cmd, ...args] = process.argv.slice(2);
 const run = async () => {
   switch (cmd) {
@@ -187,11 +214,13 @@ const run = async () => {
       return cmdActions(args[0]);
     case "arena":
       return cmdArena(args[0]);
+    case "brand":
+      return cmdBrand(args[0]);
     case "card":
       return cmdCard(args[0], args[1], ...args.slice(2));
     default:
       console.log(
-        "Usage: style | anchor <style> | cards <style> [series] | card <cardId> <style> [notes…] | actions <style> | arena <style>",
+        "Usage: style | anchor <style> | cards <style> [series] | card <cardId> <style> [notes…] | actions <style> | arena <style> | brand <style>",
       );
   }
 };

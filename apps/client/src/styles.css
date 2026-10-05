@@ -2003,3 +2003,50 @@ button:disabled {
   color: #a8e4ff;
 }
 .frozen__note { font-size: 12px; color: var(--muted); }
+
+/* ---- Amanda's own face ---- */
+.topbar__title {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.topbar__mark {
+  width: 24px;
+  height: 24px;
+  border-radius: 50%;
+  object-fit: cover;
+  /* her portrait is drawn on a violet field; a ring keeps it from bleeding
+     into the dark bar behind it */
+  box-shadow: 0 0 0 1px rgba(200, 140, 255, 0.5);
+  flex: none;
+}
+.intro__logo {
+  display: block;
+  width: min(220px, 42vh);
+  height: auto;
+  margin: 0 auto 4px;
+}
+/* The heading is still there for screen readers and for search results —
+   the logo carries the name visually. */
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+  white-space: nowrap;
+  border: 0;
+}
+.who__avatar--amanda {
+  padding: 0;
+  overflow: hidden;
+}
+.who__avatar--amanda img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  border-radius: 50%;
+  display: block;
+}
