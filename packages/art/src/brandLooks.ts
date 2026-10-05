@@ -55,6 +55,31 @@ export const CHUPPY = [
   "NO menace. Appealing to a child.",
 ].join(" ");
 
+
+/**
+ * The two faces on the opening screen.
+ *
+ * They were emoji — 🤖 and 🧑 — which is exactly what Or means by borrowed.
+ * The robot is the everyday opponent (Amanda is NOT: she is the event, see
+ * AMANDA-MODE.md), so he is a sparring partner, not a villain: a bit battered,
+ * a bit cocky, clearly beatable. The player avatar is deliberately neutral —
+ * any kid should be able to see themselves in it.
+ */
+export const ROBOT = [
+  "A friendly battle-robot opponent, head and shoulders, facing forward.",
+  "Boxy rounded metal head in steel grey and red, two big round glowing",
+  "cyan eye-lenses, a small antenna bent slightly off true, a dented plate",
+  "on one cheek, a confident lopsided grin cut into the faceplate.",
+  "Scuffed and well used — a sparring partner, not a menace. Appealing to a child.",
+].join(" ");
+
+export const PLAYER = [
+  "A cheerful young duelist, head and shoulders, facing forward, grinning.",
+  "Deliberately generic so any child can read themselves into it: warm skin",
+  "tone, tousled hair, bright eyes, a raised collar or hood. No logos, no team",
+  "colours, nothing that fixes who they are. Confident and ready.",
+].join(" ");
+
 /** One brief per brand image. */
 export const BRAND_LOOK: Record<string, string> = {
   // The face. Everything else is cropped from this, so it is centred and
@@ -93,6 +118,19 @@ export const BRAND_LOOK: Record<string, string> = {
     "raised, mid-cheer, lightning bolts forking down on both sides of him against " +
     "a deep electric-blue sky. Energetic hero pose.",
 
+  // The opening screen's two faces, cropped to circles by the UI.
+  versus_robot:
+    `${ROBOT} Perfectly centred and symmetrical head-and-shoulders portrait, ` +
+    "the subject filling the middle 70% with clear margin on all four sides so " +
+    "it survives being cropped to a circle. Flat deep-blue backdrop with a soft " +
+    "glow behind the head. Readable at small sizes.",
+
+  versus_player:
+    `${PLAYER} Perfectly centred and symmetrical head-and-shoulders portrait, ` +
+    "the subject filling the middle 70% with clear margin on all four sides so " +
+    "it survives being cropped to a circle. Flat deep-blue backdrop with a soft " +
+    "glow behind the head. Readable at small sizes.",
+
   // Wide art for the Amanda-mode screen, where she shares the frame with UI.
   amanda_banner:
     `${AMANDA} Wide horizontal banner. Amanda looms in from the RIGHT side of the ` +
@@ -105,6 +143,8 @@ export const BRAND_LOOK: Record<string, string> = {
 export const BRAND_ASPECT: Record<string, "1:1" | "16:9" | "3:4"> = {
   amanda_portrait: "1:1",
   chuppy_portrait: "1:1",
+  versus_robot: "1:1",
+  versus_player: "1:1",
   chuppy_card: "3:4",
   amanda_logo: "1:1",
   amanda_banner: "16:9",

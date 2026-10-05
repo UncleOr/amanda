@@ -1,4 +1,5 @@
 import { useEffect, useRef, useState } from "react";
+import { Icon } from "./components/Icon";
 import { PHASES } from "@amanda/shared";
 import type { BattleResult } from "@amanda/engine";
 import { useMatch } from "./game/useMatch";
@@ -228,7 +229,9 @@ function Game() {
           </div>
         )}
         {(m.phase === "build" || m.phase === "panic") && (
-          <div className="topbar__timer">⏱️ {Math.ceil(m.timeLeft)}s</div>
+          <div className="topbar__timer">
+            <Icon name="timer" size={15} /> {Math.ceil(m.timeLeft)}s
+          </div>
         )}
         <div className="topbar__right">
           {m.phase !== "intro" && (
@@ -282,12 +285,16 @@ function Game() {
             <div className="intro__main">
             <div className="versus">
               <div className="who who--me">
-                <div className="who__avatar">🧑</div>
+                <div className="who__avatar who__avatar--art">
+                  <img src={`${BASE}brand/versus_player.webp`} alt="" />
+                </div>
                 <div className="who__name">אתה</div>
               </div>
               <div className="versus__x">VS</div>
               <div className="who who--enemy">
-                <div className="who__avatar">🤖</div>
+                <div className="who__avatar who__avatar--art">
+                  <img src={`${BASE}brand/versus_robot.webp`} alt="" />
+                </div>
                 <div className="who__name">היריב</div>
               </div>
             </div>
@@ -466,7 +473,7 @@ function Game() {
             </section>
 
             <div className="midline">
-              <span>⚔️</span>
+              <Icon name="power" size={22} />
             </div>
 
             <section className="side side--enemy">
@@ -593,10 +600,10 @@ function Game() {
                   className={`count count--deck${m.deckLeft <= 3 ? " count--low" : ""}`}
                   title="קלפים שנשארו בחפיסה"
                 >
-                  🃏 {m.deckLeft}
+                  <Icon name="deck" size={15} /> {m.deckLeft}
                 </span>
                 <span className="count count--discard" title="קלפים בפח">
-                  🗑️ {m.discardCount}
+                  <Icon name="discard" size={15} /> {m.discardCount}
                 </span>
               </div>
               <div className="hand__buttons">

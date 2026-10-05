@@ -1,29 +1,31 @@
+import type { IconName } from "../components/Icon";
 import type { AbilityType, Element, Range, Rarity } from "@amanda/shared";
 
 export interface ElementMeta {
   he: string;
   en: string;
-  icon: string;
+  /** An id in `icons/` — see components/Icon.tsx, not an emoji. */
+  icon: IconName;
   color: string;
 }
 
 export const ELEMENT_META: Record<Element, ElementMeta> = {
-  fire: { he: "אש", en: "Fire", icon: "🔥", color: "#e2492f" },
-  water: { he: "מים", en: "Water", icon: "💧", color: "#2f7fe2" },
-  earth: { he: "אדמה", en: "Earth", icon: "🪨", color: "#8a6d3b" },
-  air: { he: "אוויר", en: "Air", icon: "💨", color: "#9fd6e8" },
-  electric: { he: "חשמל", en: "Electric", icon: "⚡", color: "#f2c530" },
-  metal: { he: "מתכת", en: "Metal", icon: "⚙️", color: "#9aa4ad" },
-  light: { he: "אור", en: "Light", icon: "✨", color: "#f5f0d0" },
-  dark: { he: "אופל", en: "Dark", icon: "🌑", color: "#7a5cad" },
-  poison: { he: "רעל", en: "Poison", icon: "☠️", color: "#6fbf3b" },
-  variable: { he: "משתנה", en: "Variable", icon: "🔀", color: "#b06fd6" },
+  fire: { he: "אש", en: "Fire", icon: "fire", color: "#e2492f" },
+  water: { he: "מים", en: "Water", icon: "water", color: "#2f7fe2" },
+  earth: { he: "אדמה", en: "Earth", icon: "earth", color: "#8a6d3b" },
+  air: { he: "אוויר", en: "Air", icon: "air", color: "#9fd6e8" },
+  electric: { he: "חשמל", en: "Electric", icon: "electric", color: "#f2c530" },
+  metal: { he: "מתכת", en: "Metal", icon: "metal", color: "#9aa4ad" },
+  light: { he: "אור", en: "Light", icon: "light", color: "#f5f0d0" },
+  dark: { he: "אופל", en: "Dark", icon: "dark", color: "#7a5cad" },
+  poison: { he: "רעל", en: "Poison", icon: "poison", color: "#6fbf3b" },
+  variable: { he: "משתנה", en: "Variable", icon: "variable", color: "#b06fd6" },
 };
 
-export const RANGE_META: Record<Range, { he: string; icon: string }> = {
-  melee: { he: "קרוב", icon: "🗡️" },
-  ranged: { he: "רחוק", icon: "🏹" },
-  sniper: { he: "צלף", icon: "🎯" },
+export const RANGE_META: Record<Range, { he: string; icon: IconName }> = {
+  melee: { he: "קרוב", icon: "melee" },
+  ranged: { he: "רחוק", icon: "ranged" },
+  sniper: { he: "צלף", icon: "sniper" },
 };
 
 export const RARITY_META: Record<Rarity, { he: string; color: string }> = {

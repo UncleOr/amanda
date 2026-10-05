@@ -1,4 +1,5 @@
 import { CardView, CardBack } from "./CardView";
+import { Icon } from "./Icon";
 import { BOARD_SIZE, cellKey, isKingCell, type BattleMods } from "../game/useMatch";
 import { isCornerKey } from "../data/catalog";
 
@@ -131,7 +132,9 @@ export function BoardGrid({
             onInfo={onCardInfo ? () => onCardInfo(king) : undefined}
           />
         ) : (
-          <span className="slot__hint">👑 המלך</span>
+          <span className="slot__hint">
+            <Icon name="king" size={16} /> המלך
+          </span>
         )}
       </div>
 
@@ -172,12 +175,12 @@ export function BoardGrid({
           >
             {stacked[key] && (
               <span className="slot__stack-mark" title="יש קלף מתחת. הוא יצוץ כשהעליון ייפול.">
-                🏗️
+                <Icon name="stacked" size={15} />
               </span>
             )}
             {isGuardPost(x, y) && !occ && interactive && (
               <span className="slot__guard-mark" title="משמר המלך. כאן עוצרים את מי שבא לאכול אותו.">
-                🛡
+                <Icon name="guard" size={15} />
               </span>
             )}
             {!shown ? (

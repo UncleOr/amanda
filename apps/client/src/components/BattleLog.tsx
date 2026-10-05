@@ -1,4 +1,5 @@
 import { useMemo, useState } from "react";
+import { Icon } from "./Icon";
 import { SIMULATION } from "@amanda/shared";
 import {
   buildReport,
@@ -421,7 +422,8 @@ function UnitReportModal({
             <div className="modal__badges">
               {card && (
                 <span className="badge">
-                  {ELEMENT_META[card.elements[0]!].icon} {ELEMENT_META[card.elements[0]!].he}
+                  <Icon name={ELEMENT_META[card.elements[0]!].icon} size={13} />{" "}
+                  {ELEMENT_META[card.elements[0]!].he}
                 </span>
               )}
               {card && <span className="badge">{RANGE_META[card.stats.range].he}</span>}

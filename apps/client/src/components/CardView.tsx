@@ -1,4 +1,5 @@
 import type { CSSProperties } from "react";
+import { Icon } from "./Icon";
 import { KING } from "@amanda/shared";
 import { CATALOG } from "../data/catalog";
 import { ELEMENT_META, RANGE_META, RARITY_META, seriesColor } from "../data/cardMeta";
@@ -58,15 +59,21 @@ export function CardView({ cardId, onClick, onInfo, size = "medium", king = fals
       <div className="card__top">
         <span className="card__traits">
           <span className="card__element" title={el.he}>
-            {el.icon}
+            <Icon name={el.icon} size={13} />
           </span>
-          <span title={RANGE_META[card.stats.range].he}>{RANGE_META[card.stats.range].icon}</span>
+          <span title={RANGE_META[card.stats.range].he}>
+            <Icon name={RANGE_META[card.stats.range].icon} size={12} />
+          </span>
           {card.stats.moveSpeed > 0 && <span title="מסתער">🏃</span>}
           {card.flying && <span title="מעופף">🕊️</span>}
         </span>
         <span className="card__flags">
-          {king && <span className="card__boss" title="בונוס מלך ×3">👑×3</span>}
-          {!king && card.midBoss && <span className="card__boss" title="ענק אמצע (מתאים למלך)">👑</span>}
+          {king && <span className="card__boss" title="בונוס מלך ×3">
+              <Icon name="king" size={13} />×3
+            </span>}
+          {!king && card.midBoss && <span className="card__boss" title="ענק אמצע (מתאים למלך)">
+              <Icon name="king" size={13} />
+            </span>}
           <span className="card__rarity" title={rarity.he} />
           {onInfo && (
             <button
@@ -90,11 +97,11 @@ export function CardView({ cardId, onClick, onInfo, size = "medium", king = fals
         {size !== "small" && (
           <span className={`card__stats${buffed ? " card__stats--buffed" : ""}`}>
             <span className="stat stat--hp" title="חיים">
-              <i className="stat__icon">❤</i>
+              <Icon name="hp" size={13} className="stat__icon" />
               <b>{hp}</b>
             </span>
             <span className="stat stat--pw" title="עוצמה">
-              <i className="stat__icon">⚔</i>
+              <Icon name="power" size={13} className="stat__icon" />
               <b>{power}</b>
             </span>
           </span>

@@ -1,4 +1,5 @@
 import type { CSSProperties } from "react";
+import { Icon } from "./Icon";
 import { CATALOG, SERIES_BY_ID } from "../data/catalog";
 import { ABILITY_LABEL, ELEMENT_META, RANGE_META, RARITY_META } from "../data/cardMeta";
 
@@ -36,7 +37,7 @@ export function CardDetailModal({
               </span>
               {card.elements.map((e) => (
                 <span key={e} className="badge">
-                  {ELEMENT_META[e].icon} {ELEMENT_META[e].he}
+                  <Icon name={ELEMENT_META[e].icon} size={14} /> {ELEMENT_META[e].he}
                 </span>
               ))}
               {series && <span className="badge">{series.name.he}</span>}

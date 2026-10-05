@@ -3,7 +3,7 @@ import { Application, Assets, Container, Graphics, Sprite, Text, Texture } from 
 import { ARENA, SIMULATION } from "@amanda/shared";
 import type { BattleResult, FrameUnit, Owner } from "@amanda/engine";
 import { cardColor, CATALOG } from "../data/catalog";
-import { ELEMENT_META, seriesColor } from "../data/cardMeta";
+import { seriesColor } from "../data/cardMeta";
 import { sfx } from "../game/sfx";
 import { combatLook, drawAura, drawProjectile, type CombatLook } from "./arenaFx";
 
@@ -225,7 +225,6 @@ export function Arena({
 
       const hp = new Graphics();
       const card = CATALOG.get(fu.cardId);
-      const icon = card ? ELEMENT_META[card.elements[0]!].icon : "";
       const rawName = card?.name.he ?? "";
 
       // The name sits INSIDE the unit on a dark strip. Drawing it below the box
@@ -243,8 +242,12 @@ export function Arena({
       const maxChars = Math.max(4, Math.floor(w / (fontSize * 0.62)));
       const name =
         rawName.length > maxChars ? rawName.slice(0, maxChars - 1) + "…" : rawName;
+      // The element used to be an emoji glyph prefixed to this label. Element
+      // icons are image files now and a Pixi Text cannot draw one — it would
+      // print the file name. The series colour already runs along the top of
+      // this plate and the card art sits right above it, so the name is enough.
       const label = new Text({
-        text: `${fu.isKing ? "\u{1F451}" : icon}${name}`,
+        text: name,
         style: {
           fontFamily: "Segoe UI, sans-serif",
           fontSize,
