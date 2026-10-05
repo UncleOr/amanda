@@ -29,6 +29,15 @@ let timeout = 0;
 let totalTicks = 0;
 const quick: number[] = [];
 let rangedKingKills = 0;
+/** How much of a side's damage its single best card did. */
+const topShare: number[] = [];
+let carriedByOne = 0;
+let kingShare = 0;
+/** Cards that were placed and never landed a single hit. */
+let placed = 0;
+let silent = 0;
+const silentByStartX = [0, 0, 0, 0];
+const placedByStartX = [0, 0, 0, 0];
 
 for (let i = 0; i < runs; i++) {
   const r = runBattle({
@@ -43,6 +52,28 @@ for (let i = 0; i < runs; i++) {
     b: board("B"),
   });
   totalTicks += r.ticks;
+  {
+    const rep = buildReport(r, catalog);
+    for (const owner of ["A", "B"] as const) {
+      const side = rep.sides[owner];
+      if (side.damageDealt <= 0) continue;
+      const best = side.units[0]!; // sorted by damage dealt
+      const share = best.damageDealt / side.damageDealt;
+      topShare.push(share);
+      if (share > 0.5) carriedByOne++;
+      const king = side.units.find((u) => u.isKing);
+      if (king) kingShare += king.damageDealt / side.damageDealt;
+      for (const u of side.units) {
+        if (u.cardId === "crumb_demon") continue;
+        placed++;
+        placedByStartX[u.startX] = (placedByStartX[u.startX] ?? 0) + 1;
+        if (u.hits === 0) {
+          silent++;
+          silentByStartX[u.startX] = (silentByStartX[u.startX] ?? 0) + 1;
+        }
+      }
+    }
+  }
   if (r.winReason === "kingDown") {
     kingDown++;
     quick.push(r.ticks);
@@ -63,3 +94,14 @@ console.log(`ran out of time         ${timeout} (${Math.round((timeout / runs) *
 console.log(`average length          ${(totalTicks / runs / TPS).toFixed(1)}s of ${SIMULATION.totalBattleTicks / TPS}s`);
 console.log(`King deaths under 5s    ${under5} (${kingDown ? Math.round((under5 / kingDown) * 100) : 0}% of them)`);
 console.log(`top damage was a ranged unit in ${rangedKingKills}/${kingDown} King-death matches`);
+const avg = (xs: number[]) => xs.reduce((a, b) => a + b, 0) / Math.max(1, xs.length);
+console.log(`best card did                   ${Math.round(avg(topShare) * 100)}% of its side's damage (average)`);
+console.log(`ONE card did over half the damage in ${carriedByOne}/${topShare.length} boards (${Math.round((carriedByOne / topShare.length) * 100)}%)`);
+console.log(`the King alone did              ${Math.round((kingShare / topShare.length) * 100)}% of its side's damage (average)`);
+console.log(`cards that never landed a hit   ${silent}/${placed} (${Math.round((silent / placed) * 100)}%)`);
+console.log("silent by starting column (0 = back row, 3 = front):");
+for (let x = 0; x < 4; x++)
+  console.log(
+    `   column ${x}: ${silentByStartX[x]}/${placedByStartX[x]} silent ` +
+      `(${Math.round(((silentByStartX[x] ?? 0) / Math.max(1, placedByStartX[x] ?? 1)) * 100)}%)`,
+  );
