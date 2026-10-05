@@ -169,7 +169,7 @@ export function BattleLog({ result, mySide }: { result: BattleResult; mySide: Ow
           </div>
 
           <ul className="log__findings">
-            {report.findings.length === 0 && <li className="log__quiet">קרב משעמם. לא קרה כלום ששווה לדבר עליו.</li>}
+            {report.findings.length === 0 && <li className="log__quiet">קרב משעמם. לא קרה כלום.</li>}
             {report.findings.map((f, i) => (
               <li key={i} className={`log__finding log__finding--${f.owner === mySide ? "me" : "them"}`}>
                 <span className="log__who">{sideName(f.owner)}</span>
@@ -182,7 +182,7 @@ export function BattleLog({ result, mySide }: { result: BattleResult; mySide: Ow
 
       {tab === "map" && (
         <div className="log__body">
-          <p className="log__quiet">ככה נראו הלוחות כשהתחלנו. עכשיו תראה מה כל קלף עשה מהמקום שלו.</p>
+          <p className="log__quiet">ככה נראו הלוחות בהתחלה. תראה מה כל קלף עשה.</p>
           <div className="log__maps">
             {([mySide, theirSide] as Owner[]).map((o) => (
               <BoardMap
@@ -384,7 +384,7 @@ function UnitReportModal({
   // read the numbers and work it out.
   const story = (() => {
     if (unit.damageDealt === 0 && unit.damageTaken === 0)
-      return "לא נגע בקרב. אף אחד לא הגיע אליו, והוא לא טרח להגיע לאף אחד.";
+      return "לא נגע בקרב. לא הגיע לאף אחד, ואף אחד לא הגיע אליו.";
     if (unit.damageDealt === 0) return "חטף ולא הספיק להחזיר אפילו מכה אחת.";
     if (unit.kills >= 2) return `חתך את הדרך — הפיל ${unit.kills} קלפים.`;
     if (share >= 30) return `נשא את הצד שלו: ${share}% מכל הנזק.`;

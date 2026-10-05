@@ -50,8 +50,8 @@ export const KING = {
  * they resolved (Or, 2026-10-05).
  */
 export const PHASES = {
-  build: { seconds: 90, label: { he: "טירוף הבנייה", en: "Build Frenzy" } },
-  panic: { seconds: 15, label: { he: "שניות הפאניקה", en: "Panic Seconds" } },
+  build: { seconds: 90, label: { he: "בונים את שדה הקרב", en: "Build Frenzy" } },
+  panic: { seconds: 15, label: { he: "פאניקה", en: "Panic Seconds" } },
   battle: { seconds: 45, label: { he: "הקרב האוטומטי", en: "Auto-Battle" } },
 } as const;
 

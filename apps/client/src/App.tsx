@@ -48,7 +48,7 @@ function verdictText(result: BattleResult, iWon: boolean): string {
 }
 
 const PHASE_LABEL: Record<string, string> = {
-  countdown: "מתארגנים…",
+  countdown: "מתארגנת…",
   waiting: "מחפשת לך יריב…",
   build: PHASES.build.label.he,
   panic: PHASES.panic.label.he + "!",
@@ -167,10 +167,10 @@ function Game() {
       <div className="rotate-hint">
         <div className="rotate-hint__icon">📱</div>
         <h2>סובב את המכשיר</h2>
-        <p>אני משוחקת לרוחב. ככה שני הלוחות נכנסים אחד מול השני, ואני רואה את שניכם.</p>
+        <p>אני משוחקת לרוחב, ילד. ככה אני רואה את שניכם.</p>
       </div>
       <header className="topbar">
-        <div className="topbar__title">אמנדה — המשחקון</div>
+        <div className="topbar__title">אמנדה | משחק קלפים מפלצתי</div>
         {PHASE_LABEL[m.phase] && (
           <div className={`topbar__phase phase--${m.phase}`}>
             {/* holding a room is waiting for one person, not hunting for anyone */}
@@ -221,7 +221,7 @@ function Game() {
         <main className="intro">
           <div className="intro__card">
             <h1>אמנדה</h1>
-            <p className="intro__tag">קרב מדבקות · 4×4 · בוא, יש לי זמן</p>
+            <p className="intro__tag">קרב מדבקות · 4×4 · בוא, ילד</p>
             <div className="intro__main">
             <div className="versus">
               <div className="who who--me">
@@ -243,9 +243,9 @@ function Game() {
                 className="btn-fight btn-online"
                 onClick={() => m.hostRoom()}
                 disabled={!m.onlineAvailable}
-                title={m.onlineAvailable ? "" : "לא בגרסה הזאת — חסר לי שרת"}
+                title={m.onlineAvailable ? "" : "לא בגרסה הזאת"}
               >
-                👥 הביא חבר
+                👥 תביא חבר
               </button>
             </div>
             <div className="intro__secondary">
@@ -254,7 +254,7 @@ function Game() {
                 onClick={() => m.startOnline()}
                 disabled={!m.onlineAvailable}
               >
-                🌐 תן לי למצוא לך מישהו
+                🌐 אמצא לך מישהו
               </button>
               <button
                 className="btn-link"
@@ -291,10 +291,10 @@ function Game() {
             {m.roomError && (
               <p className="warn">
                 {m.roomError === "notFound"
-                  ? "אין לי חדר כזה. אולי הוא נסגר, אולי המצאת אותו."
+                  ? "אין חדר כזה. אולי המצאת אותו."
                   : m.roomError === "self"
                     ? "זה הקוד שלך. אתה לא יכול לאכול את עצמך."
-                    : "החדר מלא. שניים זה בדיוק מה שאני מספיקה."}
+                    : "החדר מלא. שניים מספיקים לי."}
               </p>
             )}
             <p className="intro__version">
@@ -333,7 +333,7 @@ function Game() {
             </h2>
             {m.roomCode ? (
               <>
-                <p className="intro__tag">שלח את הקוד הזה למי שבא לך לאכול:</p>
+                <p className="intro__tag">שלח את הקוד למי שבא לך לאכול:</p>
                 <div className="room-code">{m.roomCode}</div>
                 <button
                   className="btn-link"
@@ -351,8 +351,8 @@ function Game() {
             ) : (
               <p className="intro__tag">
                 {m.netError
-                  ? "השרת לא עונה לי. עד שיתעשת — אני פנויה."
-                  : "אני מחפשת לך מישהו. מישהו מתוק."}
+                  ? "השרת לא עונה. אני פנויה."
+                  : "מחפשת לך מישהו מתוק"}
               </p>
             )}
             <div className="intro__buttons">
@@ -414,7 +414,7 @@ function Game() {
 
             <section className="side side--enemy">
               <div className="side__label">
-                🤖 היריב {m.phase === "build" ? "· ערפל" : "· נחשף!"} ⟵ חזית
+                🤖 היריב {m.phase === "build" ? "" : "· נחשף!"} ⟵ חזית
               </div>
               <BoardGrid
                 placements={m.opponent.placements}
@@ -462,7 +462,7 @@ function Game() {
                 קלפי פעולה {m.actionBar.length}/3:
               </span>
               {m.actionBar.length === 0 && (
-                <span className="actions__empty">שלוף קלפי פעולה מהחפיסה. כאן הם מחכים.</span>
+                <span className="actions__empty">קלפי פעולה מחכים כאן</span>
               )}
               {m.actionBar.map((a) => (
                 <div key={a.id} className="action-chip">
@@ -520,7 +520,7 @@ function Game() {
                   <div
                     className={`hand__draggable${dragging ? " hand__draggable--dragging" : ""}`}
                     onPointerDown={(e) => startDrag(m.hand!, e)}
-                    title="גרור ללוח. או לחץ, אם אתה רוצה לקרוא עליו קודם."
+                    title="גרור ללוח. לחץ כדי לקרוא."
                   >
                     <CardView
                       cardId={m.hand}
@@ -568,7 +568,7 @@ function Game() {
               <p className="hand__hint">
                 מפלצת: הנחה על משבצת (קבוע!) · קלף פעולה: "קח לפעולה" (עד 3) · 👑 = מלך
               </p>
-              {!m.hasKing && <p className="warn">⚠️ עוד לא מינית מלך. בלי מלך זאת לא ממלכה, זאת ארוחה.</p>}
+              {!m.hasKing && <p className="warn">⚠️ עדיין אין מלך</p>}
               <button className="btn-fight" onClick={m.toBattle}>
                 ⚔️ התחל קרב!
               </button>
@@ -579,7 +579,7 @@ function Game() {
             <div className="overlay">
               <div className="overlay__mini">ממלאת לך את החורים…</div>
               <div className="overlay__count">{Math.ceil(m.timeLeft)}</div>
-              <div className="overlay__label">הקרב מתחיל!</div>
+              <div className="overlay__label">הקרב מתחיל, ילד</div>
             </div>
           )}
         </main>
@@ -590,7 +590,7 @@ function Game() {
         <main className="build">
           <div className="overlay">
             <div className="overlay__count">{Math.ceil(m.timeLeft)}</div>
-            <div className="overlay__label">תכף מתחילים…</div>
+            <div className="overlay__label">התכונן לקרב, ילד</div>
           </div>
         </main>
       )}
@@ -642,7 +642,7 @@ function Game() {
               </button>
               {m.result && (
                 <button className="btn-fight btn-online" onClick={() => setShowLog((v) => !v)}>
-                  {showLog ? "מספיק, הבנתי" : "📋 שנסביר לך מה קרה?"}
+                  {showLog ? "מספיק, הבנתי" : "📋 שאסביר לך מה קרה?"}
                 </button>
               )}
             </div>
@@ -663,7 +663,7 @@ function Game() {
           <div className="modal modal--confirm" onClick={(e) => e.stopPropagation()}>
             <h2>כבר הולך?</h2>
             <p className="modal__role">
-              הלוח שבנית נמחק והקרב לא יקרה. אשמור לך מקום בתפריט — בתפריט שלי.
+              הלוח שבנית נמחק. אשמור לך מקום בתפריט שלי, ילד.
             </p>
             <div className="modal__actions">
               <button
