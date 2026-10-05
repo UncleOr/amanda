@@ -1,4 +1,4 @@
-import { ARENA, SIMULATION } from "@amanda/shared";
+import { ARENA, RANGE_REACH, SIMULATION } from "@amanda/shared";
 import {
   runAuras,
   runDelayed,
@@ -63,9 +63,11 @@ function pickTarget(state: BattleState, u: Unit): TargetPick | null {
 }
 
 function inAttackRange(u: Unit, gap: number): boolean {
-  // Ranged and snipers fire down the whole lane; melee must be in contact.
-  // The epsilon absorbs float rounding when a unit halts exactly at reach.
-  return u.range === "melee" ? gap <= MELEE_REACH + 1e-6 : true;
+  // Melee must be in contact; everything else has a reach in columns (see
+  // RANGE_REACH). The epsilon absorbs float rounding when a unit halts exactly
+  // at the edge of its reach.
+  const reach = u.range === "melee" ? MELEE_REACH : RANGE_REACH[u.range];
+  return gap <= reach + 1e-6;
 }
 
 function effectiveMoveSpeed(u: Unit): number {

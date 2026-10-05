@@ -1792,3 +1792,11 @@ button:disabled {
   font-variant-numeric: tabular-nums;
 }
 .intro__version .btn-link { font-size: 11px; padding: 2px 4px; }
+
+/* Auto-filler monsters on the report map: present, but clearly not a choice
+   the player made — otherwise a locked board reads as half empty. */
+.log__cell--filler {
+  opacity: 0.4;
+  border-style: dotted;
+}
+.log__cell--filler .log__cell-dmg { display: none; }

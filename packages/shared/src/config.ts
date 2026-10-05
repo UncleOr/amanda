@@ -56,6 +56,26 @@ export const PHASES = {
 } as const;
 
 /**
+ * How far each kind of attacker can actually reach, in arena columns.
+ *
+ * Ranged units used to fire down the WHOLE lane, which made the depth of the
+ * board meaningless: a static ranged King could kill the enemy King across the
+ * entire arena from its own square, and in a 300-battle sample a third of all
+ * decisive matches were over inside five seconds. With a real reach, the front
+ * row is a shield again and distance is a decision.
+ *
+ * For scale: the two front rows touch at columns 3 and 4, and each King sits
+ * about 4 columns from the other. So a ranged unit can cover the enemy's front
+ * half, and only a sniper can threaten the far King.
+ */
+export const RANGE_REACH = {
+  /** Contact only — the engine's melee reach applies instead. */
+  melee: 0,
+  ranged: 3,
+  sniper: 6,
+} as const;
+
+/**
  * Deterministic simulation cadence. The battle is computed as a fixed number of
  * integer ticks so both server and clients reproduce it identically.
  */

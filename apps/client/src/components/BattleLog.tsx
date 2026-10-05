@@ -276,9 +276,17 @@ function BoardMap({
     <button
       key={u.uid}
       type="button"
-      className={`log__cell log__cell--${band(u, top)}${u.survived ? "" : " log__cell--dead"}`}
+      className={
+        `log__cell log__cell--${band(u, top)}` +
+        `${u.survived ? "" : " log__cell--dead"}` +
+        `${u.cardId === FILLER_CARD_ID ? " log__cell--filler" : ""}`
+      }
       style={{ gridColumn: colFor(u.startX), gridRow: u.lane + 1 }}
-      title={`${u.name} — לחצו לפרטים`}
+      title={
+        u.cardId === FILLER_CARD_ID
+          ? `${u.name} — מילוי אוטומטי של משבצת ריקה`
+          : `${u.name} — לחצו לפרטים`
+      }
       onClick={() => onPick(u)}
     >
       <span className="log__cell-name">{u.name}</span>
@@ -308,9 +316,12 @@ function BoardMap({
             <span className="log__cell-marks">{king.survived ? "✅" : "💀"}</span>
           </button>
         )}
-        {units
-          .filter((u) => !u.isKing && u.cardId !== FILLER_CARD_ID)
-          .map(cell)}
+        {/*
+          * Filler monsters are shown, faint. Hiding them left the map looking
+          * like half the board was never filled at all, which is the opposite
+          * of what happened — every empty slot gets one when the board locks.
+          */}
+        {units.filter((u) => !u.isKing).map(cell)}
       </div>
     </figure>
   );

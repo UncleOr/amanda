@@ -135,3 +135,36 @@ describe("win conditions", () => {
     expect(r.winReason).toBe("coinFlip");
   });
 });
+
+/**
+ * Reach. Ranged attacks used to carry down the entire lane, which made the
+ * depth of the board meaningless and let a static King kill the enemy King
+ * from its own square.
+ */
+describe("attack reach", () => {
+  const sniperCard = testCard({ id: "sniper", power: 50, range: "sniper", moveSpeed: 0, hp: 500 });
+  const archer = testCard({ id: "archer", power: 50, range: "ranged", moveSpeed: 0, hp: 500 });
+  const farKing = testCard({ id: "far_king", hp: 40, power: 0, attackSpeed: 10 });
+
+  /** Shooter in its own back row, enemy King across the arena. */
+  function duel(shooter: string) {
+    const cat = catalogOf(sniperCard, archer, farKing);
+    return runBattle({
+      seed: 1,
+      catalog: cat,
+      a: { owner: "A", placements: [{ cardId: shooter, x: 0, y: 1 }] },
+      b: { owner: "B", placements: [{ cardId: "far_king", x: 1, y: 1, king: true }] },
+    });
+  }
+
+  it("a ranged attacker cannot reach across the whole arena", () => {
+    const r = duel("archer");
+    expect(r.winReason).not.toBe("kingDown");
+    expect(r.finalUnits.find((u) => u.isKing)!.alive).toBe(true);
+  });
+
+  it("a sniper still can — that is what it is for", () => {
+    const r = duel("sniper");
+    expect(r.winReason).toBe("kingDown");
+  });
+});

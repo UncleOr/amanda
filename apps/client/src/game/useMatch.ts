@@ -486,12 +486,40 @@ export function useMatch(): MatchApi {
     setPhase("battle");
   }, []);
 
+  /** Tear the match down to a clean slate, without deciding where to go next. */
+  const clearMatch = useCallback(() => {
+    netRef.current?.close();
+    netRef.current = null;
+    aiPlanRef.current = generateAiPlan();
+    setGs(initialGameState());
+    setResult(null);
+    setActionBar([]);
+    setUsedActions({});
+    setBoardPowerAdd(0);
+    setBoostedCells({});
+    setXrayActive(false);
+    setTargeting(null);
+    setOnline(false);
+    setOppLeft(false);
+    setNetError(false);
+    setRoomCode(null);
+    setRoomError(null);
+    setMySide("A");
+    setNetOpp({ placements: {}, king: null });
+    setTimeLeft(COUNTDOWN_SECONDS);
+  }, []);
+
   const startMatch = useCallback(() => {
     sfx.unlock();
     sfx.play("click");
+    // Start from a clean slate. This used to only set the phase, so anything
+    // left over from a previous match came along — including `mySide`, which
+    // an online match can set to "B". A single-player game is always side A,
+    // and getting that wrong swaps the battle report's labels and inverts the
+    // win check.
+    clearMatch();
     setPhase("countdown");
-    setTimeLeft(COUNTDOWN_SECONDS);
-  }, []);
+  }, [clearMatch]);
 
   const startOnline = useCallback((intent: Intent = { kind: "quick" }) => {
     if (!ONLINE_AVAILABLE) return;
@@ -571,29 +599,6 @@ export function useMatch(): MatchApi {
     sfx.play(w === mySideRef.current ? "win" : "lose");
     setPhase("result");
   }, [result]);
-
-  /** Tear the match down to a clean slate, without deciding where to go next. */
-  const clearMatch = useCallback(() => {
-    netRef.current?.close();
-    netRef.current = null;
-    aiPlanRef.current = generateAiPlan();
-    setGs(initialGameState());
-    setResult(null);
-    setActionBar([]);
-    setUsedActions({});
-    setBoardPowerAdd(0);
-    setBoostedCells({});
-    setXrayActive(false);
-    setTargeting(null);
-    setOnline(false);
-    setOppLeft(false);
-    setNetError(false);
-    setRoomCode(null);
-    setRoomError(null);
-    setMySide("A");
-    setNetOpp({ placements: {}, king: null });
-    setTimeLeft(COUNTDOWN_SECONDS);
-  }, []);
 
   const reset = useCallback(() => {
     clearMatch();
