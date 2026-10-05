@@ -34,8 +34,13 @@ function num(v: unknown, fallback = 0): number {
 function clampCol(col: number): number {
   return Math.min(ARENA.width, Math.max(0, col));
 }
-function clampLane(lane: number): number {
-  return Math.min(ARENA.lanes - 1, Math.max(0, lane));
+/**
+ * Clamp to THIS battle's lanes rather than the constant. In Amanda mode the
+ * arena is eight lanes deep, and a knockback that clamped to four would have
+ * flung half the board into lane 3.
+ */
+function clampLane(state: BattleState, lane: number): number {
+  return Math.min(state.lanes - 1, Math.max(0, lane));
 }
 
 /**
@@ -197,7 +202,7 @@ export function runOnHit(state: BattleState, attacker: Unit, target: Unit): void
       case "sideKnockback":
         if (!target.knockbackImmune && target.lanes.length === 1) {
           const from = target.lanes[0]!;
-          const to = clampLane(from + (from < ARENA.lanes - 1 ? 1 : -1) * num(ab.params.columns, 1));
+          const to = clampLane(state, from + (from < state.lanes - 1 ? 1 : -1) * num(ab.params.columns, 1));
           target.lanes = [to];
           state.events.push({ tick: state.tick, type: "knockback", uid: attacker.uid, targetUid: target.uid, lanes: target.lanes });
         }
@@ -268,7 +273,7 @@ export function runOnDeath(state: BattleState, ops: BattleOps, u: Unit): void {
           owner: u.owner,
           facing: u.facing,
           col: u.col,
-          lane: clampLane(baseLane + offset),
+          lane: clampLane(state, baseLane + offset),
           hp,
           power,
           attackSpeed: u.attackSpeed,

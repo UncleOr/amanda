@@ -14,7 +14,8 @@
     "test:watch": "vitest",
     "demo": "tsx scripts/demo-battle.ts",
     "measure": "tsx scripts/measure.ts",
-    "typecheck": "tsc --noEmit"
+    "typecheck": "tsc --noEmit",
+    "amanda": "tsx scripts/amanda-mode.ts"
   },
   "dependencies": {
     "@amanda/shared": "workspace:*"

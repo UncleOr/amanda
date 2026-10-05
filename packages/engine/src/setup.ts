@@ -1,4 +1,4 @@
-import { BOARD, KING, type Card } from "@amanda/shared";
+import { ARENA, BOARD, KING, type Card } from "@amanda/shared";
 import { createRng } from "./rng.js";
 import type { BattleState, Owner, SynergyDef, Unit } from "./types.js";
 
@@ -40,6 +40,14 @@ export interface BattleSetup {
   synergies?: SynergyDef[];
   /** Capture a per-tick snapshot for animated client replay. */
   recordFrames?: boolean;
+  /**
+   * How many lanes the arena has. Four for an ordinary 1v1 — but Amanda mode
+   * stacks both players' boards on one side, which is eight. Nothing else in
+   * the engine cares how many there are: a unit's lanes come straight from its
+   * placement. This exists so the things that CLAMP to the arena know how big
+   * it is.
+   */
+  lanes?: number;
 }
 
 /** Map a local board coordinate to the shared arena column. */
@@ -119,8 +127,16 @@ function makeUnit(
   const facing: 1 | -1 = owner === "A" ? 1 : -1;
   const isKing = placement.king === true;
 
-  // King occupies the central 2×2 (local cols 1-2, lanes 1-2), is static, ×5 HP.
-  const lanes = isKing ? [BOARD.kingSlot.y, BOARD.kingSlot.y + 1] : [placement.y];
+  /*
+   * A King occupies a 2×2: two lanes, starting at the lane it was PLACED in.
+   *
+   * This used to ignore placement.y and hard-code BOARD.kingSlot.y, which is
+   * invisible in an ordinary match — every 4×4 puts its King at y=1 anyway —
+   * and wrong the moment a side is deeper than one board. In Amanda mode both
+   * players stack on one side, and every King on it, theirs and hers, was
+   * being stacked into lanes 1-2 on top of each other.
+   */
+  const lanes = isKing ? [placement.y, placement.y + 1] : [placement.y];
   const width = isKing ? BOARD.kingSlot.width : 1;
   const col = isKing
     ? (toArenaCol(owner, BOARD.kingSlot.x) + toArenaCol(owner, BOARD.kingSlot.x + 1)) / 2
@@ -150,6 +166,7 @@ export function buildBattle(setup: BattleSetup): BattleState {
     ended: false,
     nextUid: 0,
     synergies: setup.synergies ?? [],
+    lanes: setup.lanes ?? ARENA.lanes,
   };
 
   for (const board of [setup.a, setup.b]) {

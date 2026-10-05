@@ -120,6 +120,8 @@ export interface BattleState {
   ended: boolean;
   nextUid: number;
   synergies: SynergyDef[];
+  /** Lanes in this arena — 4 normally, 8 in Amanda mode. */
+  lanes: number;
 }
 
 /** Lightweight per-unit snapshot used for animated replay on the client. */

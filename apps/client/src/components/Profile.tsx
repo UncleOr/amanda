@@ -167,9 +167,6 @@ export function Profile({ account, onClose, onChanged }: Props) {
             <p className="profile__note">מחובר. האלבום שלך שמור גם אם תחליף מכשיר.</p>
           ) : (
             <>
-              <p className="profile__note">
-                בלי חשבון, האלבום קיים רק בדפדפן הזה.
-              </p>
               <button
                 className="btn-fight btn-online profile__wide"
                 onClick={() => void linkGoogle().then(setNote)}

@@ -1,0 +1,79 @@
+{
+  "id": "legends",
+  "seriesNumber": 18,
+  "name": {
+    "he": "האגדיים",
+    "en": "The Legends"
+  },
+  "specialty": {
+    "he": "לא נאספים ולא נבנים. מופיעים.",
+    "en": "Not collected, not built. They arrive."
+  },
+  "synergy": {
+    "threshold": 3,
+    "name": {
+      "he": "תוהו",
+      "en": "Chaos"
+    },
+    "description": {
+      "he": "אין. הם לא באים בשלושה.",
+      "en": "None. They do not come in threes."
+    },
+    "ability": {
+      "type": "damageReductionAura",
+      "trigger": "aura",
+      "params": {
+        "pct": 0
+      }
+    }
+  },
+  "cards": [
+    {
+      "id": "legends_01_amanda",
+      "seriesId": "legends",
+      "numberInSeries": 1,
+      "name": {
+        "he": "אמנדה",
+        "en": "Amanda"
+      },
+      "elements": [
+        "dark"
+      ],
+      "rarity": "legendary",
+      "stats": {
+        "hp": 42000,
+        "power": 900,
+        "attackSpeed": 0.8,
+        "moveSpeed": 0,
+        "range": "ranged"
+      },
+      "flying": false,
+      "midBoss": true,
+      "abilities": [
+        {
+          "type": "damageReflect",
+          "trigger": "onDamaged",
+          "params": {
+            "pct": 15
+          }
+        },
+        {
+          "type": "healAura",
+          "trigger": "aura",
+          "params": {
+            "amount": 30
+          }
+        }
+      ],
+      "role": {
+        "he": "מלכת הצד שלה. לא זזה, יורה רחוק, מחזירה נזק ומרפאה את מי שסביבה. היא לא אמורה להיות הוגנת — בשביל זה אתם שניים.",
+        "en": "Queen of her side. Never moves, shoots far, reflects damage and heals what stands near her. She is not meant to be fair — that is why there are two of you."
+      },
+      "art": {
+        "placeholderColor": "#3bbfd6",
+        "sprite": "cards/legends_01_amanda.webp"
+      },
+      "launch": false
+    }
+  ]
+}

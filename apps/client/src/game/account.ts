@@ -270,11 +270,29 @@ export async function linkGoogle(): Promise<string | null> {
     const user = session.session?.user;
     if (!user) return "צריך להתחיל לשחק קודם";
     if (!user.is_anonymous) return "כבר מחובר";
+
     const { error } = await sb.auth.linkIdentity({
       provider: "google",
       options: { redirectTo: window.location.href },
     });
-    return error ? error.message : null;
+    if (!error) return null;
+
+    /*
+     * "identity_already_exists" means this Google account is attached to an
+     * account they made before — on another device, or on an earlier visit.
+     * Linking cannot succeed and never will, so the right move is to sign them
+     * INTO that account instead of refusing. They get their real album back;
+     * what they have collected in this browser since was never saved anywhere,
+     * which is the thing signing in is for.
+     */
+    if (error.message.toLowerCase().includes("already")) {
+      const { error: signInError } = await sb.auth.signInWithOAuth({
+        provider: "google",
+        options: { redirectTo: window.location.href },
+      });
+      return signInError ? signInError.message : null;
+    }
+    return error.message;
   } catch (err) {
     return (err as Error).message;
   }
