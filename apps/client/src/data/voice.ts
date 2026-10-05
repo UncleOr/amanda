@@ -110,3 +110,22 @@ export const SEARCHING = [
   "מישהו יבוא. תמיד בא מישהו.",
   "רגע, אני מסדרת לך משחק",
 ] as const;
+
+/**
+ * The tutorial, once, in her voice.
+ *
+ * Five lines, not a manual. Each one is said while the thing it is about is
+ * lit up, which is why none of them has to describe where anything is. She
+ * teaches you properly on purpose — she does not mind you getting better.
+ */
+export const TUTORIAL = {
+  // Says "a monster", and says what to do when you are holding something else.
+  // The step waits for a King to actually be placed, and a new player holding
+  // an action card has no way to do that — being told to drag a card they
+  // cannot drag is a dead end.
+  king: "קודם כול מלך, ילד. הוא לא זז, הוא חזק פי שלושה, ואם הוא נופל — נגמר. גרור מפלצת לאמצע. קלף פעולה ביד? לפח איתו.",
+  guards: "שתי המשבצות האלה שומרות עליו. כל עוד מישהו עומד שם, אי אפשר לגעת בו.",
+  hand: "זה מה שיש לך ביד. לא מוצא חן בעיניך? לפח. אבל רק הקלף העליון חוזר, אז תחשוב.",
+  board: "תמלא את מה שאתה יכול. מה שיישאר ריק — אני אמלא בשבילך, ולא תאהב את זה.",
+  fight: "וכשתחשוב שאתה מוכן, תלחץ. אני כבר מוכנה.",
+} as const;

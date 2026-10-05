@@ -1,6 +1,8 @@
 import { useEffect, useRef, useState } from "react";
 import { Icon } from "./components/Icon";
 import { Album } from "./components/Album";
+import { Tutorial, type Step } from "./components/Tutorial";
+import { markTutorialDone, tutorialSeenLocally } from "./game/account";
 import { PHASES } from "@amanda/shared";
 import type { BattleResult } from "@amanda/engine";
 import { useMatch } from "./game/useMatch";
@@ -122,6 +124,29 @@ function Game() {
   // On a phone the action cards are a drawer, so the board keeps its height.
   const [actionsOpen, setActionsOpen] = useState(false);
   const [albumOpen, setAlbumOpen] = useState(false);
+  /*
+   * Taught once, the first time a board is built. The account is the record
+   * when there is one; localStorage covers guests, who would otherwise be
+   * taught the game on every visit.
+   */
+  const [teaching, setTeaching] = useState(false);
+  const taughtRef = useRef(false);
+  useEffect(() => {
+    if (taughtRef.current || m.phase !== "build") return;
+    const seen = m.account ? m.account.tutorialDone : tutorialSeenLocally();
+    if (seen) return;
+    taughtRef.current = true;
+    setTeaching(true);
+  }, [m.phase, m.account]);
+
+  const TUTORIAL_STEPS: Step[] = [
+    // Waits for the King to actually be placed: being told is not learning.
+    { target: ".side--me .slot--king", text: V.TUTORIAL.king, done: m.hasKing },
+    { target: ".side--me .slot--guard", text: V.TUTORIAL.guards },
+    { target: ".hand__current", text: V.TUTORIAL.hand },
+    { target: ".side--me .board", text: V.TUTORIAL.board },
+    { target: ".hand .btn-fight", text: V.TUTORIAL.fight, cta: "יאללה" },
+  ];
   // Shown next to the build id: a screenshot of a layout problem is only
   // useful if it says what size screen the layout was solving for.
   const [viewport, setViewport] = useState(() => `${window.innerWidth}×${window.innerHeight}`);
@@ -796,6 +821,16 @@ function Game() {
             </div>
           </div>
         </div>
+      )}
+
+      {teaching && (
+        <Tutorial
+          steps={TUTORIAL_STEPS}
+          onDone={() => {
+            setTeaching(false);
+            void markTutorialDone();
+          }}
+        />
       )}
 
       {albumOpen && (

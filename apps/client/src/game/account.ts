@@ -101,6 +101,41 @@ export async function loadAccount(): Promise<Account | null> {
 }
 
 /**
+ * Remember that the tutorial has been seen.
+ *
+ * Written by the player rather than the server, unusually — whether you have
+ * watched it is a preference, not a prize, and the worst you can do by lying
+ * about it is see it twice. Mirrored in localStorage so a guest with no
+ * account is not taught the game every single time they open it.
+ */
+const SEEN_KEY = "amanda.tutorial.done";
+
+export function tutorialSeenLocally(): boolean {
+  try {
+    return localStorage.getItem(SEEN_KEY) === "1";
+  } catch {
+    return false;
+  }
+}
+
+export async function markTutorialDone(): Promise<void> {
+  try {
+    localStorage.setItem(SEEN_KEY, "1");
+  } catch {
+    /* private browsing; the account copy below still covers it */
+  }
+  const sb = db();
+  if (!sb) return;
+  try {
+    const { data } = await sb.auth.getSession();
+    const id = data.session?.user.id;
+    if (id) await sb.from("players").update({ tutorial_done: true }).eq("id", id);
+  } catch (err) {
+    console.warn("[account] could not record the tutorial", err);
+  }
+}
+
+/**
  * Attach a Google account to the anonymous one the player already has.
  *
  * This is LINKING, not signing in. The player has been playing since their
