@@ -29,11 +29,20 @@ export interface OwnedCard {
   level: number;
 }
 
+/** The youngest we let anyone play online. Mirrored by a CHECK on the row. */
+export const MIN_AGE = 7;
+
 export interface Account {
   playerId: string;
   trophies: number;
   diamonds: number;
   tutorialDone: boolean;
+  nickname: string | null;
+  avatar: string | null;
+  /** ISO yyyy-mm-dd, or null when they have not been asked yet. */
+  birthDate: string | null;
+  /** True once a real identity is attached and the album is safe. */
+  linked: boolean;
   /** cardId → what you own of it. */
   album: Map<string, OwnedCard>;
 }
@@ -72,7 +81,11 @@ export async function loadAccount(): Promise<Account | null> {
     // on a brand new account these can race it. One retry covers that.
     for (let attempt = 0; attempt < 2; attempt++) {
       const [{ data: player }, { data: cards }] = await Promise.all([
-        sb.from("players").select("trophies, diamonds, tutorial_done").eq("id", userId).maybeSingle(),
+        sb
+          .from("players")
+          .select("trophies, diamonds, tutorial_done, nickname, avatar, birth_date")
+          .eq("id", userId)
+          .maybeSingle(),
         sb.from("player_cards").select("card_id, copies, level").eq("player_id", userId),
       ]);
       if (player) {
@@ -88,6 +101,10 @@ export async function loadAccount(): Promise<Account | null> {
           trophies: player.trophies ?? 0,
           diamonds: player.diamonds ?? 0,
           tutorialDone: player.tutorial_done ?? false,
+          nickname: player.nickname ?? null,
+          avatar: player.avatar ?? null,
+          birthDate: player.birth_date ?? null,
+          linked: existing.data.session?.user.is_anonymous === false,
           album,
         };
       }
@@ -132,6 +149,70 @@ export async function markTutorialDone(): Promise<void> {
     if (id) await sb.from("players").update({ tutorial_done: true }).eq("id", id);
   } catch (err) {
     console.warn("[account] could not record the tutorial", err);
+  }
+}
+
+/**
+ * Whole years between a yyyy-mm-dd and today.
+ *
+ * The date is split by hand rather than handed to `new Date(string)`, which
+ * reads "2019-10-07" as midnight UTC and would then be compared against a
+ * local today. East of UTC, late in the evening, that is a whole day out —
+ * and a day out on an age gate is a child let in early.
+ */
+export function ageFrom(birthDate: string): number {
+  const [y, m, d] = birthDate.split("-").map(Number);
+  if (!y || !m || !d) return 0;
+  const b = new Date(y, m - 1, d);
+  const now = new Date();
+  let age = now.getFullYear() - b.getFullYear();
+  const beforeBirthday =
+    now.getMonth() < b.getMonth() ||
+    (now.getMonth() === b.getMonth() && now.getDate() < b.getDate());
+  if (beforeBirthday) age -= 1;
+  return age;
+}
+
+/** Save the things a player says about themselves. */
+export async function saveProfile(patch: {
+  nickname?: string;
+  avatar?: string;
+  birthDate?: string;
+}): Promise<string | null> {
+  const sb = db();
+  if (!sb) return "אין חיבור לשרת";
+  if (patch.birthDate && ageFrom(patch.birthDate) < MIN_AGE)
+    return `צריך להיות בן ${MIN_AGE} לפחות`;
+  try {
+    const { data } = await sb.auth.getSession();
+    const id = data.session?.user.id;
+    if (!id) return "אין חשבון";
+    const row: Record<string, string> = {};
+    if (patch.nickname !== undefined) row.nickname = patch.nickname;
+    if (patch.avatar !== undefined) row.avatar = patch.avatar;
+    if (patch.birthDate !== undefined) row.birth_date = patch.birthDate;
+    const { error } = await sb.from("players").update(row).eq("id", id);
+    // The age floor is also a CHECK on the row, so a client that skipped the
+    // test above still cannot write a birthday that is too recent.
+    return error ? error.message : null;
+  } catch (err) {
+    return (err as Error).message;
+  }
+}
+
+/** Sign in with an email and password, keeping the album you already have. */
+export async function linkEmail(email: string, password: string): Promise<string | null> {
+  const sb = db();
+  if (!sb) return "אין חיבור לשרת";
+  try {
+    const { data } = await sb.auth.getSession();
+    if (!data.session?.user) return "צריך להתחיל לשחק קודם";
+    // updateUser on an anonymous account attaches the credentials to it rather
+    // than creating a second, empty one.
+    const { error } = await sb.auth.updateUser({ email, password });
+    return error ? error.message : null;
+  } catch (err) {
+    return (err as Error).message;
   }
 }
 

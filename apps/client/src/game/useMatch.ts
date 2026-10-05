@@ -375,6 +375,8 @@ export interface MatchApi {
   online: boolean;
   /** The player's account, or null when playing without one. */
   account: Account | null;
+  /** Re-read it, after the player changes something about themselves. */
+  reloadAccount: () => void;
   onlineAvailable: boolean;
   mySide: Side;
   oppLeft: boolean;
@@ -1152,6 +1154,7 @@ export function useMatch(): MatchApi {
     mods: { boardPowerAdd, boostedCells },
     online,
     account,
+    reloadAccount: () => void loadAccount().then((a) => a && setAccount(a)),
     onlineAvailable: ONLINE_AVAILABLE,
     netError,
     roomCode,

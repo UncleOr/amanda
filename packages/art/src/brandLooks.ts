@@ -80,8 +80,51 @@ export const PLAYER = [
   "colours, nothing that fixes who they are. Confident and ready.",
 ].join(" ");
 
+/**
+ * Avatars a player can pick for themselves.
+ *
+ * Drawn in the game's own language rather than taken from a stock set — the
+ * same reason the emoji went. Deliberately a crowd with no "default" one at
+ * the front: a child should pick the one they like, not accept the first.
+ */
+export const AVATARS: Record<string, string> = {
+  av_knight:
+    "a young knight in a dented helmet, visor up, grinning, head-and-shoulders, facing forward, centred and symmetrical, " +
+    "filling the middle 70% with clear margin all round so it survives a circular " +
+    "crop, flat deep-blue backdrop with a soft glow, readable at 48 pixels",
+  av_witch:
+    "a small witch in a crooked pointed hat, mischievous smile, head-and-shoulders, facing forward, centred and symmetrical, " +
+    "filling the middle 70% with clear margin all round so it survives a circular " +
+    "crop, flat deep-blue backdrop with a soft glow, readable at 48 pixels",
+  av_goblin:
+    "a cheeky green goblin with big ears and one gold tooth, head-and-shoulders, facing forward, centred and symmetrical, " +
+    "filling the middle 70% with clear margin all round so it survives a circular " +
+    "crop, flat deep-blue backdrop with a soft glow, readable at 48 pixels",
+  av_robot:
+    "a round-headed little robot with one glowing cyan eye-lens, head-and-shoulders, facing forward, centred and symmetrical, " +
+    "filling the middle 70% with clear margin all round so it survives a circular " +
+    "crop, flat deep-blue backdrop with a soft glow, readable at 48 pixels",
+  av_ghost:
+    "a friendly pale ghost with huge dark eyes, slightly cross-eyed, head-and-shoulders, facing forward, centred and symmetrical, " +
+    "filling the middle 70% with clear margin all round so it survives a circular " +
+    "crop, flat deep-blue backdrop with a soft glow, readable at 48 pixels",
+  av_cat:
+    "a fluffy orange monster-cat with two small horns, smug, head-and-shoulders, facing forward, centred and symmetrical, " +
+    "filling the middle 70% with clear margin all round so it survives a circular " +
+    "crop, flat deep-blue backdrop with a soft glow, readable at 48 pixels",
+  av_slime:
+    "a happy translucent green slime blob with a face, head-and-shoulders, facing forward, centred and symmetrical, " +
+    "filling the middle 70% with clear margin all round so it survives a circular " +
+    "crop, flat deep-blue backdrop with a soft glow, readable at 48 pixels",
+  av_dragon:
+    "a baby dragon with oversized wings and a cheerful snaggletooth, head-and-shoulders, facing forward, centred and symmetrical, " +
+    "filling the middle 70% with clear margin all round so it survives a circular " +
+    "crop, flat deep-blue backdrop with a soft glow, readable at 48 pixels",
+};
+
 /** One brief per brand image. */
 export const BRAND_LOOK: Record<string, string> = {
+  ...AVATARS,
   // The face. Everything else is cropped from this, so it is centred and
   // symmetrical with nothing important near the edges.
   amanda_portrait:
@@ -139,11 +182,13 @@ export const BRAND_LOOK: Record<string, string> = {
     "deliberate negative space for text. NO TEXT, NO LETTERS.",
 };
 
+
 /** Shape each brand image is generated at. */
 export const BRAND_ASPECT: Record<string, "1:1" | "16:9" | "3:4"> = {
   amanda_portrait: "1:1",
   chuppy_portrait: "1:1",
   versus_robot: "1:1",
+  ...Object.fromEntries(Object.keys(AVATARS).map((k) => [k, "1:1" as const])),
   versus_player: "1:1",
   chuppy_card: "3:4",
   amanda_logo: "1:1",

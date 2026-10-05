@@ -2169,10 +2169,20 @@ button:disabled {
 .album__series-count { color: var(--muted); font-size: 12px; font-variant-numeric: tabular-nums; }
 .album__grid {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(84px, 1fr));
-  gap: 10px;
+  /* roomy enough that a card's name and numbers are legible rather than
+     merely present */
+  grid-template-columns: repeat(auto-fill, minmax(104px, 1fr));
+  gap: 12px;
 }
-.album__cell { position: relative; }
+/*
+ * A .card is width:100%/height:100%, so it takes the size of whatever holds
+ * it. The album grid gave its cells a width and no height, which collapsed
+ * every card to a 3:1 sliver. The cell carries the card's shape instead.
+ */
+.album__cell {
+  position: relative;
+  aspect-ratio: 3 / 4;
+}
 .album__cell--missing { opacity: 0.4; filter: grayscale(0.8); }
 .album__copies {
   position: absolute;
@@ -2517,4 +2527,59 @@ button:disabled {
 }
 @media (max-height: 460px) {
   .intro__name img { width: min(240px, 46vw); }
+}
+
+/* ---- the player's own corner ---- */
+.profile {
+  position: fixed;
+  inset: 0;
+  z-index: 40;
+  display: flex;
+  flex-direction: column;
+  min-height: 0;
+  background: linear-gradient(180deg, #0c111d, #070a12);
+  padding: env(safe-area-inset-top) env(safe-area-inset-right)
+    env(safe-area-inset-bottom) env(safe-area-inset-left);
+}
+.profile__block { margin: 0 0 22px; }
+.profile__block h3 { margin: 0 0 8px; font-size: 15px; }
+.profile__input {
+  width: min(320px, 100%);
+  padding: 10px 12px;
+  border-radius: 10px;
+  border: 1px solid var(--line);
+  background: rgba(255, 255, 255, 0.05);
+  color: var(--text);
+  font: inherit;
+  font-size: 15px;
+}
+.profile__note { color: var(--muted); font-size: 12px; margin: 6px 0 0; }
+.profile__note--loud { color: var(--accent); font-size: 14px; }
+.profile__avatars {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(72px, 1fr));
+  gap: 10px;
+  max-width: 420px;
+}
+.profile__avatar {
+  padding: 0;
+  border: 2px solid transparent;
+  border-radius: 50%;
+  background: none;
+  cursor: pointer;
+  aspect-ratio: 1;
+  overflow: hidden;
+}
+.profile__avatar img { width: 100%; height: 100%; object-fit: cover; display: block; }
+.profile__avatar.is-picked {
+  border-color: var(--accent);
+  box-shadow: 0 0 0 3px rgba(255, 176, 32, 0.25);
+}
+.profile__email { display: flex; flex-direction: column; gap: 8px; margin-top: 12px; }
+.btn-link__avatar {
+  width: 18px;
+  height: 18px;
+  border-radius: 50%;
+  object-fit: cover;
+  vertical-align: -0.3em;
 }

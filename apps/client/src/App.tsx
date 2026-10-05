@@ -2,6 +2,7 @@ import { useEffect, useRef, useState } from "react";
 import { Icon } from "./components/Icon";
 import { Album } from "./components/Album";
 import { Tutorial, type Step } from "./components/Tutorial";
+import { Profile } from "./components/Profile";
 import { markTutorialDone, tutorialSeenLocally } from "./game/account";
 import { PHASES } from "@amanda/shared";
 import type { BattleResult } from "@amanda/engine";
@@ -124,6 +125,7 @@ function Game() {
   // On a phone the action cards are a drawer, so the board keeps its height.
   const [actionsOpen, setActionsOpen] = useState(false);
   const [albumOpen, setAlbumOpen] = useState(false);
+  const [profileOpen, setProfileOpen] = useState(false);
   /*
    * Taught once, the first time a board is built. The account is the record
    * when there is one; localStorage covers guests, who would otherwise be
@@ -395,6 +397,18 @@ function Game() {
               </button>
               <button className="btn-link" onClick={() => setAlbumOpen(true)}>
                 <Icon name="deck" size={15} /> האלבום שלי
+              </button>
+              <button className="btn-link" onClick={() => setProfileOpen(true)}>
+                {m.account?.avatar ? (
+                  <img
+                    className="btn-link__avatar"
+                    src={`${BASE}brand/${m.account.avatar}.webp`}
+                    alt=""
+                  />
+                ) : (
+                  <Icon name="king" size={15} />
+                )}{" "}
+                {m.account?.linked ? (m.account.nickname ?? "הפרופיל שלי") : "התחברות"}
               </button>
             </div>
             {joining && (
@@ -839,6 +853,14 @@ function Game() {
             setTeaching(false);
             void markTutorialDone();
           }}
+        />
+      )}
+
+      {profileOpen && (
+        <Profile
+          account={m.account}
+          onClose={() => setProfileOpen(false)}
+          onChanged={() => m.reloadAccount()}
         />
       )}
 
