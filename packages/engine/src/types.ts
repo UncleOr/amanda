@@ -99,6 +99,8 @@ export interface BattleEvent {
   lanes?: number[];
   damage?: number;
   targetHp?: number;
+  /** This hit was damage thrown back at an attacker, not a strike of its own. */
+  reflected?: boolean;
   untilTick?: number;
   childUids?: string[];
   revealedCardId?: string;

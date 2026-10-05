@@ -62,6 +62,9 @@ let carriedByOne = 0;
 let kingShare = 0;
 /** Cards that were placed and never landed a single hit. */
 let placed = 0;
+/** Did the side with the tougher King simply win? */
+let tankierKingWon = 0;
+let kingComparisons = 0;
 let silent = 0;
 const silentByStartX = [0, 0, 0, 0];
 const placedByStartX = [0, 0, 0, 0];
@@ -79,6 +82,16 @@ for (let i = 0; i < runs; i++) {
     b: SMART ? smartBoard("B") : board("B"),
   });
   totalTicks += r.ticks;
+  {
+    const kings = r.finalUnits.filter((u) => u.isKing);
+    const ka = kings.find((k) => k.owner === "A");
+    const kb = kings.find((k) => k.owner === "B");
+    if (ka && kb && ka.maxHp !== kb.maxHp && r.winner) {
+      kingComparisons++;
+      const tankier = ka.maxHp > kb.maxHp ? "A" : "B";
+      if (r.winner === tankier) tankierKingWon++;
+    }
+  }
   {
     const rep = buildReport(r, catalog);
     for (const owner of ["A", "B"] as const) {
@@ -123,6 +136,10 @@ console.log(`average length          ${(totalTicks / runs / TPS).toFixed(1)}s of
 console.log(`King deaths under 5s    ${under5} (${kingDown ? Math.round((under5 / kingDown) * 100) : 0}% of them)`);
 console.log(`top damage was a ranged unit in ${rangedKingKills}/${kingDown} King-death matches`);
 const avg = (xs: number[]) => xs.reduce((a, b) => a + b, 0) / Math.max(1, xs.length);
+console.log(
+  `the side with the tougher King won ${tankierKingWon}/${kingComparisons} ` +
+    `(${Math.round((tankierKingWon / Math.max(1, kingComparisons)) * 100)}%)`,
+);
 console.log(`best card did                   ${Math.round(avg(topShare) * 100)}% of its side's damage (average)`);
 console.log(`ONE card did over half the damage in ${carriedByOne}/${topShare.length} boards (${Math.round((carriedByOne / topShare.length) * 100)}%)`);
 console.log(`the King alone did              ${Math.round((kingShare / topShare.length) * 100)}% of its side's damage (average)`);

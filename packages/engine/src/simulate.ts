@@ -211,7 +211,21 @@ export function runBattle(setup: BattleSetup): BattleResult {
       targetHp: Math.max(0, target.hp),
     });
     runOnHit(state, u, target);
-    runOnDamaged(target, u, dmg);
+    // Reflected damage is a real hit and has to be recorded as one. Without
+    // this a King could kill itself on a thorned defender while its own report
+    // showed zero damage taken and no killer — the single most important event
+    // of the match, invisible.
+    const reflected = runOnDamaged(target, u, dmg);
+    if (reflected > 0)
+      state.events.push({
+        tick: state.tick,
+        type: "hit",
+        uid: target.uid,
+        targetUid: u.uid,
+        damage: reflected,
+        targetHp: Math.max(0, u.hp),
+        reflected: true,
+      });
 
     if (target.hp <= 0 && target.alive) {
       killUnit(target, u);

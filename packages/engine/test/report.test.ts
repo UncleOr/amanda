@@ -168,3 +168,39 @@ describe("attack reach", () => {
     expect(r.winReason).toBe("kingDown");
   });
 });
+
+/**
+ * Thorns. A King can kill itself on a reflecting defender without ever being
+ * struck — and before this the report showed zero damage taken and no killer,
+ * leaving the most important moment of the match unexplained.
+ */
+describe("reflected damage", () => {
+  it("is recorded as a hit, so the report can name what killed you", () => {
+    const thorny = testCard({
+      id: "thorny",
+      hp: 2000,
+      power: 1,
+      attackSpeed: 10,
+      moveSpeed: 2,
+      abilities: [{ type: "damageReflect", trigger: "onDamaged", params: { pct: 50 } }],
+    });
+    // A glass cannon: enormous power, barely any health of its own.
+    const glassKing = testCard({ id: "glass_king", hp: 100, power: 900, moveSpeed: 0 });
+    const cat = catalogOf(thorny, glassKing);
+    const r = runBattle({
+      seed: 1,
+      catalog: cat,
+      a: { owner: "A", placements: [{ cardId: "glass_king", x: 3, y: 1, king: true }] },
+      b: { owner: "B", placements: [{ cardId: "thorny", x: 3, y: 1 }] },
+    });
+
+    const rep = buildReport(r, cat);
+    const king = rep.sides.A.units.find((u) => u.isKing)!;
+    expect(king.survived).toBe(false);
+    // It never took a normal hit — every point came back off its own attack.
+    expect(king.damageTaken).toBeGreaterThan(0);
+    const thorns = rep.sides.B.units.find((u) => u.cardId === "thorny")!;
+    expect(thorns.damageDealt).toBeGreaterThan(0);
+    expect(rep.timeline.some((e) => e.kind === "reflected")).toBe(true);
+  });
+});

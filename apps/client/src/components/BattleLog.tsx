@@ -31,6 +31,8 @@ const FINDING_TEXT: Record<Finding["code"], (f: Finding) => string> = {
   overkill: (f) => `בוזבז נזק על ${f.name}: ספג ${f.value}% מהחיים שלו`,
   wipe: (f) => `הצד הזה נמחק לגמרי — ${f.value} קלפים`,
   closeCall: () => `קרב צמוד — הוכרע בהפרש של קלף אחד`,
+  diedToThorns: (f) =>
+    `${f.name} הרג את עצמו — הנזק החוזר מהיעד היה ${f.value}% מהחיים שלו`,
   outnumbered: (f) => `ניצחון סוחף — ${f.value} קלפים הפרש`,
 };
 
@@ -38,6 +40,8 @@ const TIMELINE_TEXT: Record<TimelineEntry["kind"], (e: TimelineEntry) => string>
   firstBlood: (e) => `דם ראשון — ${e.actor ?? "משהו"} הפיל את ${e.target}`,
   kill: (e) => `${e.actor ?? "משהו"} הפיל את ${e.target}`,
   kingDown: (e) => `👑 המלך ${e.target} נפל`,
+  reflected: (e) =>
+    `${e.target} ספג ${e.damage?.toLocaleString("he-IL")} נזק חוזר מ${e.actor} — הוא פגע בקוצים`,
   split: (e) => `${e.actor} התפצל`,
   reveal: (e) => `נחשף קלף קומת קרקע: ${e.target}`,
   freeze: (e) => `${e.actor ?? "משהו"} הקפיא את ${e.target}`,
@@ -48,6 +52,7 @@ const ICON: Record<TimelineEntry["kind"], string> = {
   firstBlood: "🩸",
   kill: "💀",
   kingDown: "👑",
+  reflected: "🌵",
   split: "🧬",
   reveal: "🃏",
   freeze: "❄️",

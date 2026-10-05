@@ -61,7 +61,15 @@ export interface SideReport {
  */
 export interface TimelineEntry {
   tick: number;
-  kind: "firstBlood" | "kill" | "kingDown" | "split" | "reveal" | "freeze" | "end";
+  kind:
+    | "firstBlood"
+    | "kill"
+    | "kingDown"
+    | "reflected"
+    | "split"
+    | "reveal"
+    | "freeze"
+    | "end";
   owner?: Owner;
   /** Acting unit's display name, where there is one. */
   actor?: string;
@@ -83,7 +91,8 @@ export type FindingCode =
   | "wipe"
   | "closeCall"
   | "outnumbered"
-  | "backRowIdle";
+  | "backRowIdle"
+  | "diedToThorns";
 
 export interface Finding {
   code: FindingCode;
@@ -180,6 +189,8 @@ export function buildReport(
     }
   }
 
+  /** Units that took serious damage from their own attacks bouncing back. */
+  const reflectedOnto = new Map<string, number>();
   const timeline: TimelineEntry[] = [];
   /** Who hit each unit last — that is who gets credited with the kill. */
   const lastAttacker = new Map<string, string>();
@@ -189,6 +200,22 @@ export function buildReport(
     switch (ev.type) {
       case "hit": {
         const dmg = ev.damage ?? 0;
+        // Thorns killing the attacker is the kind of thing a player has to be
+        // told about, or the death looks like it came from nowhere.
+        if (ev.reflected && ev.targetUid) {
+          reflectedOnto.set(ev.targetUid, (reflectedOnto.get(ev.targetUid) ?? 0) + dmg);
+          const hurt = byUid.get(ev.targetUid);
+          const thorns = ev.uid ? byUid.get(ev.uid) : undefined;
+          if (hurt && dmg >= hurt.maxHp * 0.25)
+            timeline.push({
+              tick: ev.tick,
+              kind: "reflected",
+              owner: hurt.owner,
+              actor: thorns?.name,
+              target: hurt.name,
+              damage: dmg,
+            });
+        }
         const actor = ev.uid ? byUid.get(ev.uid) : undefined;
         const target = ev.targetUid ? byUid.get(ev.targetUid) : undefined;
         if (actor) {
@@ -279,7 +306,7 @@ export function buildReport(
     totalDeaths: sides.A.losses + sides.B.losses,
     sides,
     timeline,
-    findings: analyse(sides, result, byUid, filler),
+    findings: analyse(sides, result, byUid, filler, reflectedOnto),
   };
 }
 
@@ -289,6 +316,7 @@ function analyse(
   result: BattleResult,
   byUid: Map<string, UnitReport>,
   filler: string,
+  reflectedOnto: Map<string, number>,
 ): Finding[] {
   const findings: Finding[] = [];
   // Measure against the match's FULL allotted time, not how long it actually
@@ -353,6 +381,19 @@ function analyse(
   else if (result.winner) {
     const margin = result.winner === "A" ? survA - survB : survB - survA;
     if (margin >= 5) findings.push({ code: "outnumbered", owner: result.winner, value: margin });
+  }
+
+  // Killed by your own punch coming back at you. Invisible without being told.
+  for (const [uid, dmg] of reflectedOnto) {
+    const u = byUid.get(uid);
+    if (!u || u.survived || dmg < u.maxHp * 0.5) continue;
+    findings.push({
+      code: "diedToThorns",
+      owner: u.owner,
+      uid: u.uid,
+      name: u.name,
+      value: Math.round((dmg / Math.max(1, u.maxHp)) * 100),
+    });
   }
 
   // Damage poured into units that were already dying.

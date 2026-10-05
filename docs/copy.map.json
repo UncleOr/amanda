@@ -3324,37 +3324,27 @@
  {
   "id": "s252",
   "section": "דוח הקרב",
-  "text": "ניצחון סוחף — ${f.value} קלפים הפרש",
+  "text": "${f.name} הרג את עצמו — הנזק החוזר מהיעד היה ${f.value}% מהחיים שלו",
   "where": {
    "kind": "source",
    "file": "apps/client/src/components/BattleLog.tsx",
-   "line": 34
+   "line": 35
   }
  },
  {
   "id": "s253",
   "section": "דוח הקרב",
-  "text": "דם ראשון — ${e.actor ?? \"משהו\"} הפיל את ${e.target}",
+  "text": "ניצחון סוחף — ${f.value} קלפים הפרש",
   "where": {
    "kind": "source",
    "file": "apps/client/src/components/BattleLog.tsx",
-   "line": 38
+   "line": 36
   }
  },
  {
   "id": "s254",
   "section": "דוח הקרב",
-  "text": "${e.actor ?? \"משהו\"} הפיל את ${e.target}",
-  "where": {
-   "kind": "source",
-   "file": "apps/client/src/components/BattleLog.tsx",
-   "line": 39
-  }
- },
- {
-  "id": "s255",
-  "section": "דוח הקרב",
-  "text": "👑 המלך ${e.target} נפל",
+  "text": "דם ראשון — ${e.actor ?? \"משהו\"} הפיל את ${e.target}",
   "where": {
    "kind": "source",
    "file": "apps/client/src/components/BattleLog.tsx",
@@ -3362,9 +3352,9 @@
   }
  },
  {
-  "id": "s256",
+  "id": "s255",
   "section": "דוח הקרב",
-  "text": "${e.actor} התפצל",
+  "text": "${e.actor ?? \"משהו\"} הפיל את ${e.target}",
   "where": {
    "kind": "source",
    "file": "apps/client/src/components/BattleLog.tsx",
@@ -3372,9 +3362,9 @@
   }
  },
  {
-  "id": "s257",
+  "id": "s256",
   "section": "דוח הקרב",
-  "text": "נחשף קלף קומת קרקע: ${e.target}",
+  "text": "👑 המלך ${e.target} נפל",
   "where": {
    "kind": "source",
    "file": "apps/client/src/components/BattleLog.tsx",
@@ -3382,249 +3372,229 @@
   }
  },
  {
-  "id": "s258",
+  "id": "s257",
   "section": "דוח הקרב",
-  "text": "${e.actor ?? \"משהו\"} הקפיא את ${e.target}",
+  "text": "${e.target} ספג ${e.damage?.toLocaleString(\"he-IL\")} נזק חוזר מ${e.actor} — הוא פגע בקוצים",
   "where": {
    "kind": "source",
    "file": "apps/client/src/components/BattleLog.tsx",
-   "line": 43
+   "line": 44
+  }
+ },
+ {
+  "id": "s258",
+  "section": "דוח הקרב",
+  "text": "${e.actor} התפצל",
+  "where": {
+   "kind": "source",
+   "file": "apps/client/src/components/BattleLog.tsx",
+   "line": 45
   }
  },
  {
   "id": "s259",
   "section": "דוח הקרב",
-  "text": "הקרב נגמר",
+  "text": "נחשף קלף קומת קרקע: ${e.target}",
   "where": {
    "kind": "source",
    "file": "apps/client/src/components/BattleLog.tsx",
-   "line": 44
+   "line": 46
   }
  },
  {
   "id": "s260",
   "section": "דוח הקרב",
-  "text": "הקרב נגמר בתיקו",
+  "text": "${e.actor ?? \"משהו\"} הקפיא את ${e.target}",
   "where": {
    "kind": "source",
    "file": "apps/client/src/components/BattleLog.tsx",
-   "line": 44
+   "line": 47
   }
  },
  {
   "id": "s261",
   "section": "דוח הקרב",
-  "text": "אתה",
+  "text": "הקרב נגמר",
   "where": {
    "kind": "source",
    "file": "apps/client/src/components/BattleLog.tsx",
-   "line": 69
+   "line": 48
   }
  },
  {
   "id": "s262",
   "section": "דוח הקרב",
-  "text": "היריב",
+  "text": "הקרב נגמר בתיקו",
   "where": {
    "kind": "source",
    "file": "apps/client/src/components/BattleLog.tsx",
-   "line": 69
+   "line": 48
   }
  },
  {
   "id": "s263",
   "section": "דוח הקרב",
-  "text": "העתקת הדוח המלא כ-JSON",
+  "text": "אתה",
   "where": {
    "kind": "source",
    "file": "apps/client/src/components/BattleLog.tsx",
-   "line": 105
+   "line": 74
   }
  },
  {
   "id": "s264",
   "section": "דוח הקרב",
-  "text": "✔ הועתק",
+  "text": "היריב",
   "where": {
    "kind": "source",
    "file": "apps/client/src/components/BattleLog.tsx",
-   "line": 106
+   "line": 74
   }
  },
  {
   "id": "s265",
   "section": "דוח הקרב",
-  "text": "⧉ העתק JSON",
+  "text": "העתקת הדוח המלא כ-JSON",
   "where": {
    "kind": "source",
    "file": "apps/client/src/components/BattleLog.tsx",
-   "line": 106
+   "line": 110
   }
  },
  {
   "id": "s266",
   "section": "דוח הקרב",
-  "text": "נזק",
+  "text": "✔ הועתק",
   "where": {
    "kind": "source",
    "file": "apps/client/src/components/BattleLog.tsx",
-   "line": 120
+   "line": 111
   }
  },
  {
   "id": "s267",
   "section": "דוח הקרב",
-  "text": "הפלות",
+  "text": "⧉ העתק JSON",
   "where": {
    "kind": "source",
    "file": "apps/client/src/components/BattleLog.tsx",
-   "line": 124
+   "line": 111
   }
  },
  {
   "id": "s268",
   "section": "דוח הקרב",
-  "text": "שרדו",
+  "text": "נזק",
   "where": {
    "kind": "source",
    "file": "apps/client/src/components/BattleLog.tsx",
-   "line": 128
+   "line": 125
   }
  },
  {
   "id": "s269",
   "section": "דוח הקרב",
-  "text": "נפלו",
+  "text": "הפלות",
   "where": {
    "kind": "source",
    "file": "apps/client/src/components/BattleLog.tsx",
-   "line": 132
+   "line": 129
   }
  },
  {
   "id": "s270",
   "section": "דוח הקרב",
-  "text": "אין ממצאים מיוחדים בקרב הזה.",
+  "text": "שרדו",
   "where": {
    "kind": "source",
    "file": "apps/client/src/components/BattleLog.tsx",
-   "line": 142
+   "line": 133
   }
  },
  {
   "id": "s271",
   "section": "דוח הקרב",
-  "text": "הלוחות כפי שנראו בתחילת הקרב — מה כל קלף עשה מהמקום שלו.",
+  "text": "נפלו",
   "where": {
    "kind": "source",
    "file": "apps/client/src/components/BattleLog.tsx",
-   "line": 155
+   "line": 137
   }
  },
  {
   "id": "s272",
   "section": "דוח הקרב",
-  "text": "הכי הרבה נזק",
+  "text": "אין ממצאים מיוחדים בקרב הזה.",
   "where": {
    "kind": "source",
    "file": "apps/client/src/components/BattleLog.tsx",
-   "line": 169
+   "line": 147
   }
  },
  {
   "id": "s273",
   "section": "דוח הקרב",
-  "text": "תרם נזק",
+  "text": "הלוחות כפי שנראו בתחילת הקרב — מה כל קלף עשה מהמקום שלו.",
   "where": {
    "kind": "source",
    "file": "apps/client/src/components/BattleLog.tsx",
-   "line": 170
+   "line": 160
   }
  },
  {
   "id": "s274",
   "section": "דוח הקרב",
-  "text": "לא עשה כלום",
+  "text": "הכי הרבה נזק",
   "where": {
    "kind": "source",
    "file": "apps/client/src/components/BattleLog.tsx",
-   "line": 171
+   "line": 174
   }
  },
  {
   "id": "s275",
   "section": "דוח הקרב",
-  "text": "💀 נפל · ✅ שרד · 🧊 לא זז",
+  "text": "תרם נזק",
   "where": {
    "kind": "source",
    "file": "apps/client/src/components/BattleLog.tsx",
-   "line": 172
+   "line": 175
   }
  },
  {
   "id": "s276",
   "section": "דוח הקרב",
-  "text": "לחצו על קלף לפרטים",
+  "text": "לא עשה כלום",
   "where": {
    "kind": "source",
    "file": "apps/client/src/components/BattleLog.tsx",
-   "line": 173
+   "line": 176
   }
  },
  {
   "id": "s277",
   "section": "דוח הקרב",
-  "text": "קלף",
+  "text": "💀 נפל · ✅ שרד · 🧊 לא זז",
   "where": {
    "kind": "source",
    "file": "apps/client/src/components/BattleLog.tsx",
-   "line": 183
+   "line": 177
   }
  },
  {
   "id": "s278",
   "section": "דוח הקרב",
-  "text": "צד",
+  "text": "לחצו על קלף לפרטים",
   "where": {
    "kind": "source",
    "file": "apps/client/src/components/BattleLog.tsx",
-   "line": 184
+   "line": 178
   }
  },
  {
   "id": "s279",
   "section": "דוח הקרב",
-  "text": "נזק",
-  "where": {
-   "kind": "source",
-   "file": "apps/client/src/components/BattleLog.tsx",
-   "line": 185
-  }
- },
- {
-  "id": "s280",
-  "section": "דוח הקרב",
-  "text": "ספג",
-  "where": {
-   "kind": "source",
-   "file": "apps/client/src/components/BattleLog.tsx",
-   "line": 186
-  }
- },
- {
-  "id": "s281",
-  "section": "דוח הקרב",
-  "text": "הפלות",
-  "where": {
-   "kind": "source",
-   "file": "apps/client/src/components/BattleLog.tsx",
-   "line": 187
-  }
- },
- {
-  "id": "s282",
-  "section": "דוח הקרב",
-  "text": "סוף",
+  "text": "קלף",
   "where": {
    "kind": "source",
    "file": "apps/client/src/components/BattleLog.tsx",
@@ -3632,259 +3602,289 @@
   }
  },
  {
+  "id": "s280",
+  "section": "דוח הקרב",
+  "text": "צד",
+  "where": {
+   "kind": "source",
+   "file": "apps/client/src/components/BattleLog.tsx",
+   "line": 189
+  }
+ },
+ {
+  "id": "s281",
+  "section": "דוח הקרב",
+  "text": "נזק",
+  "where": {
+   "kind": "source",
+   "file": "apps/client/src/components/BattleLog.tsx",
+   "line": 190
+  }
+ },
+ {
+  "id": "s282",
+  "section": "דוח הקרב",
+  "text": "ספג",
+  "where": {
+   "kind": "source",
+   "file": "apps/client/src/components/BattleLog.tsx",
+   "line": 191
+  }
+ },
+ {
   "id": "s283",
-  "section": "דוח הקרב",
-  "text": "${u.name} — מילוי אוטומטי של משבצת ריקה",
-  "where": {
-   "kind": "source",
-   "file": "apps/client/src/components/BattleLog.tsx",
-   "line": 287
-  }
- },
- {
-  "id": "s284",
-  "section": "דוח הקרב",
-  "text": "${u.name} — לחצו לפרטים",
-  "where": {
-   "kind": "source",
-   "file": "apps/client/src/components/BattleLog.tsx",
-   "line": 288
-  }
- },
- {
-  "id": "s285",
-  "section": "דוח הקרב",
-  "text": "${king.name} — לחצו לפרטים",
-  "where": {
-   "kind": "source",
-   "file": "apps/client/src/components/BattleLog.tsx",
-   "line": 311
-  }
- },
- {
-  "id": "s286",
-  "section": "דוח הקרב",
-  "text": "עורף",
-  "where": {
-   "kind": "source",
-   "file": "apps/client/src/components/BattleLog.tsx",
-   "line": 346
-  }
- },
- {
-  "id": "s287",
-  "section": "דוח הקרב",
-  "text": "שלישית",
-  "where": {
-   "kind": "source",
-   "file": "apps/client/src/components/BattleLog.tsx",
-   "line": 346
-  }
- },
- {
-  "id": "s288",
-  "section": "דוח הקרב",
-  "text": "שנייה",
-  "where": {
-   "kind": "source",
-   "file": "apps/client/src/components/BattleLog.tsx",
-   "line": 346
-  }
- },
- {
-  "id": "s289",
-  "section": "דוח הקרב",
-  "text": "חזית",
-  "where": {
-   "kind": "source",
-   "file": "apps/client/src/components/BattleLog.tsx",
-   "line": 346
-  }
- },
- {
-  "id": "s290",
-  "section": "דוח הקרב",
-  "text": "לא נגע בקרב — אף אחד לא הגיע אליו והוא לא הגיע לאף אחד.",
-  "where": {
-   "kind": "source",
-   "file": "apps/client/src/components/BattleLog.tsx",
-   "line": 352
-  }
- },
- {
-  "id": "s291",
-  "section": "דוח הקרב",
-  "text": "ספג מכות אבל לא הספיק להחזיר ולו מכה אחת.",
-  "where": {
-   "kind": "source",
-   "file": "apps/client/src/components/BattleLog.tsx",
-   "line": 353
-  }
- },
- {
-  "id": "s292",
-  "section": "דוח הקרב",
-  "text": "חתך את הדרך — הפיל ${unit.kills} קלפים.",
-  "where": {
-   "kind": "source",
-   "file": "apps/client/src/components/BattleLog.tsx",
-   "line": 354
-  }
- },
- {
-  "id": "s293",
-  "section": "דוח הקרב",
-  "text": "נשא את הצד שלו: ${share}% מכל הנזק.",
-  "where": {
-   "kind": "source",
-   "file": "apps/client/src/components/BattleLog.tsx",
-   "line": 355
-  }
- },
- {
-  "id": "s294",
-  "section": "דוח הקרב",
-  "text": "תרם ${share}% מהנזק של הצד שלו.",
-  "where": {
-   "kind": "source",
-   "file": "apps/client/src/components/BattleLog.tsx",
-   "line": 356
-  }
- },
- {
-  "id": "s295",
-  "section": "דוח הקרב",
-  "text": "סגירה",
-  "where": {
-   "kind": "source",
-   "file": "apps/client/src/components/BattleLog.tsx",
-   "line": 366
-  }
- },
- {
-  "id": "s296",
-  "section": "דוח הקרב",
-  "text": "שלך",
-  "where": {
-   "kind": "source",
-   "file": "apps/client/src/components/BattleLog.tsx",
-   "line": 384
-  }
- },
- {
-  "id": "s297",
-  "section": "דוח הקרב",
-  "text": "של היריב",
-  "where": {
-   "kind": "source",
-   "file": "apps/client/src/components/BattleLog.tsx",
-   "line": 384
-  }
- },
- {
-  "id": "s298",
-  "section": "דוח הקרב",
-  "text": "✅ שרד",
-  "where": {
-   "kind": "source",
-   "file": "apps/client/src/components/BattleLog.tsx",
-   "line": 394
-  }
- },
- {
-  "id": "s299",
-  "section": "דוח הקרב",
-  "text": "💀 נפל ב-${secs(unit.diedAtTick ?? 0)}s",
-  "where": {
-   "kind": "source",
-   "file": "apps/client/src/components/BattleLog.tsx",
-   "line": 394
-  }
- },
- {
-  "id": "s300",
-  "section": "דוח הקרב",
-  "text": "נזק שעשה",
-  "where": {
-   "kind": "source",
-   "file": "apps/client/src/components/BattleLog.tsx",
-   "line": 406
-  }
- },
- {
-  "id": "s301",
-  "section": "דוח הקרב",
-  "text": "נזק שספג",
-  "where": {
-   "kind": "source",
-   "file": "apps/client/src/components/BattleLog.tsx",
-   "line": 410
-  }
- },
- {
-  "id": "s302",
   "section": "דוח הקרב",
   "text": "הפלות",
   "where": {
    "kind": "source",
    "file": "apps/client/src/components/BattleLog.tsx",
-   "line": 414
+   "line": 192
+  }
+ },
+ {
+  "id": "s284",
+  "section": "דוח הקרב",
+  "text": "סוף",
+  "where": {
+   "kind": "source",
+   "file": "apps/client/src/components/BattleLog.tsx",
+   "line": 193
+  }
+ },
+ {
+  "id": "s285",
+  "section": "דוח הקרב",
+  "text": "${u.name} — מילוי אוטומטי של משבצת ריקה",
+  "where": {
+   "kind": "source",
+   "file": "apps/client/src/components/BattleLog.tsx",
+   "line": 292
+  }
+ },
+ {
+  "id": "s286",
+  "section": "דוח הקרב",
+  "text": "${u.name} — לחצו לפרטים",
+  "where": {
+   "kind": "source",
+   "file": "apps/client/src/components/BattleLog.tsx",
+   "line": 293
+  }
+ },
+ {
+  "id": "s287",
+  "section": "דוח הקרב",
+  "text": "${king.name} — לחצו לפרטים",
+  "where": {
+   "kind": "source",
+   "file": "apps/client/src/components/BattleLog.tsx",
+   "line": 316
+  }
+ },
+ {
+  "id": "s288",
+  "section": "דוח הקרב",
+  "text": "עורף",
+  "where": {
+   "kind": "source",
+   "file": "apps/client/src/components/BattleLog.tsx",
+   "line": 351
+  }
+ },
+ {
+  "id": "s289",
+  "section": "דוח הקרב",
+  "text": "שלישית",
+  "where": {
+   "kind": "source",
+   "file": "apps/client/src/components/BattleLog.tsx",
+   "line": 351
+  }
+ },
+ {
+  "id": "s290",
+  "section": "דוח הקרב",
+  "text": "שנייה",
+  "where": {
+   "kind": "source",
+   "file": "apps/client/src/components/BattleLog.tsx",
+   "line": 351
+  }
+ },
+ {
+  "id": "s291",
+  "section": "דוח הקרב",
+  "text": "חזית",
+  "where": {
+   "kind": "source",
+   "file": "apps/client/src/components/BattleLog.tsx",
+   "line": 351
+  }
+ },
+ {
+  "id": "s292",
+  "section": "דוח הקרב",
+  "text": "לא נגע בקרב — אף אחד לא הגיע אליו והוא לא הגיע לאף אחד.",
+  "where": {
+   "kind": "source",
+   "file": "apps/client/src/components/BattleLog.tsx",
+   "line": 357
+  }
+ },
+ {
+  "id": "s293",
+  "section": "דוח הקרב",
+  "text": "ספג מכות אבל לא הספיק להחזיר ולו מכה אחת.",
+  "where": {
+   "kind": "source",
+   "file": "apps/client/src/components/BattleLog.tsx",
+   "line": 358
+  }
+ },
+ {
+  "id": "s294",
+  "section": "דוח הקרב",
+  "text": "חתך את הדרך — הפיל ${unit.kills} קלפים.",
+  "where": {
+   "kind": "source",
+   "file": "apps/client/src/components/BattleLog.tsx",
+   "line": 359
+  }
+ },
+ {
+  "id": "s295",
+  "section": "דוח הקרב",
+  "text": "נשא את הצד שלו: ${share}% מכל הנזק.",
+  "where": {
+   "kind": "source",
+   "file": "apps/client/src/components/BattleLog.tsx",
+   "line": 360
+  }
+ },
+ {
+  "id": "s296",
+  "section": "דוח הקרב",
+  "text": "תרם ${share}% מהנזק של הצד שלו.",
+  "where": {
+   "kind": "source",
+   "file": "apps/client/src/components/BattleLog.tsx",
+   "line": 361
+  }
+ },
+ {
+  "id": "s297",
+  "section": "דוח הקרב",
+  "text": "סגירה",
+  "where": {
+   "kind": "source",
+   "file": "apps/client/src/components/BattleLog.tsx",
+   "line": 371
+  }
+ },
+ {
+  "id": "s298",
+  "section": "דוח הקרב",
+  "text": "שלך",
+  "where": {
+   "kind": "source",
+   "file": "apps/client/src/components/BattleLog.tsx",
+   "line": 389
+  }
+ },
+ {
+  "id": "s299",
+  "section": "דוח הקרב",
+  "text": "של היריב",
+  "where": {
+   "kind": "source",
+   "file": "apps/client/src/components/BattleLog.tsx",
+   "line": 389
+  }
+ },
+ {
+  "id": "s300",
+  "section": "דוח הקרב",
+  "text": "✅ שרד",
+  "where": {
+   "kind": "source",
+   "file": "apps/client/src/components/BattleLog.tsx",
+   "line": 399
+  }
+ },
+ {
+  "id": "s301",
+  "section": "דוח הקרב",
+  "text": "💀 נפל ב-${secs(unit.diedAtTick ?? 0)}s",
+  "where": {
+   "kind": "source",
+   "file": "apps/client/src/components/BattleLog.tsx",
+   "line": 399
+  }
+ },
+ {
+  "id": "s302",
+  "section": "דוח הקרב",
+  "text": "נזק שעשה",
+  "where": {
+   "kind": "source",
+   "file": "apps/client/src/components/BattleLog.tsx",
+   "line": 411
   }
  },
  {
   "id": "s303",
   "section": "דוח הקרב",
-  "text": "מכות",
+  "text": "נזק שספג",
   "where": {
    "kind": "source",
    "file": "apps/client/src/components/BattleLog.tsx",
-   "line": 418
+   "line": 415
   }
  },
  {
   "id": "s304",
   "section": "דוח הקרב",
-  "text": "מהנזק של הצד:",
+  "text": "הפלות",
   "where": {
    "kind": "source",
    "file": "apps/client/src/components/BattleLog.tsx",
-   "line": 427
+   "line": 419
   }
  },
  {
   "id": "s305",
   "section": "דוח הקרב",
-  "text": "חיים:",
+  "text": "מכות",
   "where": {
    "kind": "source",
    "file": "apps/client/src/components/BattleLog.tsx",
-   "line": 430
+   "line": 423
   }
  },
  {
   "id": "s306",
   "section": "דוח הקרב",
-  "text": "(כולל בונוס מלך ×3)",
+  "text": "מהנזק של הצד:",
   "where": {
    "kind": "source",
    "file": "apps/client/src/components/BattleLog.tsx",
-   "line": 431
+   "line": 432
   }
  },
  {
   "id": "s307",
   "section": "דוח הקרב",
-  "text": "תזוזה:",
+  "text": "חיים:",
   "where": {
    "kind": "source",
    "file": "apps/client/src/components/BattleLog.tsx",
-   "line": 434
+   "line": 435
   }
  },
  {
   "id": "s308",
   "section": "דוח הקרב",
-  "text": "נשאר במקום לאורך כל הקרב",
+  "text": "(כולל בונוס מלך ×3)",
   "where": {
    "kind": "source",
    "file": "apps/client/src/components/BattleLog.tsx",
@@ -3894,15 +3894,35 @@
  {
   "id": "s309",
   "section": "דוח הקרב",
-  "text": "התקדם ${unit.colsMoved.toFixed(1)} משבצות",
+  "text": "תזוזה:",
   "where": {
    "kind": "source",
    "file": "apps/client/src/components/BattleLog.tsx",
-   "line": 437
+   "line": 439
   }
  },
  {
   "id": "s310",
+  "section": "דוח הקרב",
+  "text": "נשאר במקום לאורך כל הקרב",
+  "where": {
+   "kind": "source",
+   "file": "apps/client/src/components/BattleLog.tsx",
+   "line": 441
+  }
+ },
+ {
+  "id": "s311",
+  "section": "דוח הקרב",
+  "text": "התקדם ${unit.colsMoved.toFixed(1)} משבצות",
+  "where": {
+   "kind": "source",
+   "file": "apps/client/src/components/BattleLog.tsx",
+   "line": 442
+  }
+ },
+ {
+  "id": "s312",
   "section": "חלון פרטי מפלצת",
   "text": "סגירה",
   "where": {
@@ -3912,7 +3932,7 @@
   }
  },
  {
-  "id": "s311",
+  "id": "s313",
   "section": "חלון פרטי מפלצת",
   "text": "👑 ענק אמצע",
   "where": {
@@ -3922,7 +3942,7 @@
   }
  },
  {
-  "id": "s312",
+  "id": "s314",
   "section": "חלון פרטי מפלצת",
   "text": "חיים",
   "where": {
@@ -3932,7 +3952,7 @@
   }
  },
  {
-  "id": "s313",
+  "id": "s315",
   "section": "חלון פרטי מפלצת",
   "text": "עוצמה",
   "where": {
@@ -3942,7 +3962,7 @@
   }
  },
  {
-  "id": "s314",
+  "id": "s316",
   "section": "חלון פרטי מפלצת",
   "text": "קצב תקיפה",
   "where": {
@@ -3952,7 +3972,7 @@
   }
  },
  {
-  "id": "s315",
+  "id": "s317",
   "section": "חלון פרטי מפלצת",
   "text": "${card.stats.attackSpeed}ש׳",
   "where": {
@@ -3962,7 +3982,7 @@
   }
  },
  {
-  "id": "s316",
+  "id": "s318",
   "section": "חלון פרטי מפלצת",
   "text": "תנועה",
   "where": {
@@ -3972,7 +3992,7 @@
   }
  },
  {
-  "id": "s317",
+  "id": "s319",
   "section": "חלון פרטי מפלצת",
   "text": "${card.stats.moveSpeed}/ש׳",
   "where": {
@@ -3982,7 +4002,7 @@
   }
  },
  {
-  "id": "s318",
+  "id": "s320",
   "section": "חלון פרטי מפלצת",
   "text": "סטטי",
   "where": {
@@ -3992,7 +4012,7 @@
   }
  },
  {
-  "id": "s319",
+  "id": "s321",
   "section": "חלון פרטי מפלצת",
   "text": "טווח",
   "where": {
@@ -4002,7 +4022,7 @@
   }
  },
  {
-  "id": "s320",
+  "id": "s322",
   "section": "חלון פרטי מפלצת",
   "text": "יכולות",
   "where": {
@@ -4012,7 +4032,7 @@
   }
  },
  {
-  "id": "s321",
+  "id": "s323",
   "section": "חלון פרטי מפלצת",
   "text": "תפקיד",
   "where": {
@@ -4022,7 +4042,7 @@
   }
  },
  {
-  "id": "s322",
+  "id": "s324",
   "section": "חלון פרטי קלף פעולה",
   "text": "סגירה",
   "where": {
@@ -4032,7 +4052,7 @@
   }
  },
  {
-  "id": "s323",
+  "id": "s325",
   "section": "חלון פרטי קלף פעולה",
   "text": "♾️ פסיבי",
   "where": {
@@ -4042,7 +4062,7 @@
   }
  },
  {
-  "id": "s324",
+  "id": "s326",
   "section": "חלון פרטי קלף פעולה",
   "text": "▶ בלחיצה",
   "where": {
@@ -4052,7 +4072,7 @@
   }
  },
  {
-  "id": "s325",
+  "id": "s327",
   "section": "חלון פרטי קלף פעולה",
   "text": "מה הוא עושה (אוטומטית)",
   "where": {
@@ -4062,7 +4082,7 @@
   }
  },
  {
-  "id": "s326",
+  "id": "s328",
   "section": "חלון פרטי קלף פעולה",
   "text": "מה הוא עושה בלחיצה",
   "where": {
@@ -4072,7 +4092,7 @@
   }
  },
  {
-  "id": "s327",
+  "id": "s329",
   "section": "חלון פרטי קלף פעולה",
   "text": "✔ כבר נוצל",
   "where": {
@@ -4082,7 +4102,7 @@
   }
  },
  {
-  "id": "s328",
+  "id": "s330",
   "section": "חלון פרטי קלף פעולה",
   "text": "♾️ פועל מעצמו",
   "where": {
@@ -4092,7 +4112,7 @@
   }
  },
  {
-  "id": "s329",
+  "id": "s331",
   "section": "תווית קלף פעולה",
   "text": "פסיבי — פועל כל הזמן",
   "where": {
@@ -4102,7 +4122,7 @@
   }
  },
  {
-  "id": "s330",
+  "id": "s332",
   "section": "תווית קלף פעולה",
   "text": "קלף פעולה",
   "where": {
@@ -4112,7 +4132,7 @@
   }
  },
  {
-  "id": "s331",
+  "id": "s333",
   "section": "תווית קלף פעולה",
   "text": "פרטי הקלף",
   "where": {
@@ -4122,7 +4142,7 @@
   }
  },
  {
-  "id": "s332",
+  "id": "s334",
   "section": "תווית קלף פעולה",
   "text": "פסיבי",
   "where": {
@@ -4132,7 +4152,7 @@
   }
  },
  {
-  "id": "s333",
+  "id": "s335",
   "section": "תווית קלף פעולה",
   "text": "קלף פעולה",
   "where": {
@@ -4142,7 +4162,7 @@
   }
  },
  {
-  "id": "s334",
+  "id": "s336",
   "section": "קלף מפלצת",
   "text": "מסתער",
   "where": {
@@ -4152,7 +4172,7 @@
   }
  },
  {
-  "id": "s335",
+  "id": "s337",
   "section": "קלף מפלצת",
   "text": "מעופף",
   "where": {
@@ -4162,7 +4182,7 @@
   }
  },
  {
-  "id": "s336",
+  "id": "s338",
   "section": "קלף מפלצת",
   "text": "בונוס מלך ×3",
   "where": {
@@ -4172,7 +4192,7 @@
   }
  },
  {
-  "id": "s337",
+  "id": "s339",
   "section": "קלף מפלצת",
   "text": "ענק אמצע (מתאים למלך)",
   "where": {
@@ -4182,7 +4202,7 @@
   }
  },
  {
-  "id": "s338",
+  "id": "s340",
   "section": "קלף מפלצת",
   "text": "פרטי הקלף",
   "where": {
@@ -4192,7 +4212,7 @@
   }
  },
  {
-  "id": "s339",
+  "id": "s341",
   "section": "קלף מפלצת",
   "text": "חיים",
   "where": {
@@ -4202,7 +4222,7 @@
   }
  },
  {
-  "id": "s340",
+  "id": "s342",
   "section": "קלף מפלצת",
   "text": "עוצמה",
   "where": {
@@ -4212,7 +4232,7 @@
   }
  },
  {
-  "id": "s341",
+  "id": "s343",
   "section": "קלף מפלצת",
   "text": "מוסתר בערפל",
   "where": {
@@ -4222,7 +4242,7 @@
   }
  },
  {
-  "id": "s342",
+  "id": "s344",
   "section": "הלוח",
   "text": "👑 המלך",
   "where": {
@@ -4232,7 +4252,7 @@
   }
  },
  {
-  "id": "s343",
+  "id": "s345",
   "section": "הלוח",
   "text": "משמר המלך — כאן עוצרים את מי שבא אליו",
   "where": {
@@ -4242,7 +4262,7 @@
   }
  },
  {
-  "id": "s344",
+  "id": "s346",
   "section": "זירת הקרב",
   "text": "🧑 אתה",
   "where": {
@@ -4252,7 +4272,7 @@
   }
  },
  {
-  "id": "s345",
+  "id": "s347",
   "section": "זירת הקרב",
   "text": "🤖 היריב",
   "where": {
@@ -4262,7 +4282,7 @@
   }
  },
  {
-  "id": "s346",
+  "id": "s348",
   "section": "זירת הקרב",
   "text": "⏱ נגמר הזמן!",
   "where": {
@@ -4272,7 +4292,7 @@
   }
  },
  {
-  "id": "s347",
+  "id": "s349",
   "section": "גלריית קלפים (כלי פיתוח)",
   "text": "גלריית קלפים",
   "where": {
@@ -4282,7 +4302,7 @@
   }
  },
  {
-  "id": "s348",
+  "id": "s350",
   "section": "מעבדת קרב (כלי פיתוח)",
   "text": "מעבדת קרב",
   "where": {
@@ -4292,7 +4312,7 @@
   }
  },
  {
-  "id": "s349",
+  "id": "s351",
   "section": "מעבדת קרב (כלי פיתוח)",
   "text": "מעורב",
   "where": {
@@ -4302,7 +4322,7 @@
   }
  },
  {
-  "id": "s350",
+  "id": "s352",
   "section": "מעבדת קרב (כלי פיתוח)",
   "text": "מעורב",
   "where": {
@@ -4312,7 +4332,7 @@
   }
  },
  {
-  "id": "s351",
+  "id": "s353",
   "section": "מעבדת קרב (כלי פיתוח)",
   "text": "▶ הרץ שוב",
   "where": {
@@ -4322,7 +4342,7 @@
   }
  },
  {
-  "id": "s352",
+  "id": "s354",
   "section": "טבלאות — אלמנטים, נדירות, סדרות, יכולות",
   "text": "אש",
   "where": {
@@ -4332,7 +4352,7 @@
   }
  },
  {
-  "id": "s353",
+  "id": "s355",
   "section": "טבלאות — אלמנטים, נדירות, סדרות, יכולות",
   "text": "מים",
   "where": {
@@ -4342,7 +4362,7 @@
   }
  },
  {
-  "id": "s354",
+  "id": "s356",
   "section": "טבלאות — אלמנטים, נדירות, סדרות, יכולות",
   "text": "אדמה",
   "where": {
@@ -4352,7 +4372,7 @@
   }
  },
  {
-  "id": "s355",
+  "id": "s357",
   "section": "טבלאות — אלמנטים, נדירות, סדרות, יכולות",
   "text": "אוויר",
   "where": {
@@ -4362,7 +4382,7 @@
   }
  },
  {
-  "id": "s356",
+  "id": "s358",
   "section": "טבלאות — אלמנטים, נדירות, סדרות, יכולות",
   "text": "חשמל",
   "where": {
@@ -4372,7 +4392,7 @@
   }
  },
  {
-  "id": "s357",
+  "id": "s359",
   "section": "טבלאות — אלמנטים, נדירות, סדרות, יכולות",
   "text": "מתכת",
   "where": {
@@ -4382,7 +4402,7 @@
   }
  },
  {
-  "id": "s358",
+  "id": "s360",
   "section": "טבלאות — אלמנטים, נדירות, סדרות, יכולות",
   "text": "אור",
   "where": {
@@ -4392,7 +4412,7 @@
   }
  },
  {
-  "id": "s359",
+  "id": "s361",
   "section": "טבלאות — אלמנטים, נדירות, סדרות, יכולות",
   "text": "אופל",
   "where": {
@@ -4402,7 +4422,7 @@
   }
  },
  {
-  "id": "s360",
+  "id": "s362",
   "section": "טבלאות — אלמנטים, נדירות, סדרות, יכולות",
   "text": "רעל",
   "where": {
@@ -4412,7 +4432,7 @@
   }
  },
  {
-  "id": "s361",
+  "id": "s363",
   "section": "טבלאות — אלמנטים, נדירות, סדרות, יכולות",
   "text": "משתנה",
   "where": {
@@ -4422,7 +4442,7 @@
   }
  },
  {
-  "id": "s362",
+  "id": "s364",
   "section": "טבלאות — אלמנטים, נדירות, סדרות, יכולות",
   "text": "קרוב",
   "where": {
@@ -4432,7 +4452,7 @@
   }
  },
  {
-  "id": "s363",
+  "id": "s365",
   "section": "טבלאות — אלמנטים, נדירות, סדרות, יכולות",
   "text": "רחוק",
   "where": {
@@ -4442,7 +4462,7 @@
   }
  },
  {
-  "id": "s364",
+  "id": "s366",
   "section": "טבלאות — אלמנטים, נדירות, סדרות, יכולות",
   "text": "צלף",
   "where": {
@@ -4452,7 +4472,7 @@
   }
  },
  {
-  "id": "s365",
+  "id": "s367",
   "section": "טבלאות — אלמנטים, נדירות, סדרות, יכולות",
   "text": "נפוץ",
   "where": {
@@ -4462,7 +4482,7 @@
   }
  },
  {
-  "id": "s366",
+  "id": "s368",
   "section": "טבלאות — אלמנטים, נדירות, סדרות, יכולות",
   "text": "נדיר",
   "where": {
@@ -4472,7 +4492,7 @@
   }
  },
  {
-  "id": "s367",
+  "id": "s369",
   "section": "טבלאות — אלמנטים, נדירות, סדרות, יכולות",
   "text": "אפי",
   "where": {
@@ -4482,7 +4502,7 @@
   }
  },
  {
-  "id": "s368",
+  "id": "s370",
   "section": "טבלאות — אלמנטים, נדירות, סדרות, יכולות",
   "text": "אגדי",
   "where": {
@@ -4492,7 +4512,7 @@
   }
  },
  {
-  "id": "s369",
+  "id": "s371",
   "section": "טבלאות — אלמנטים, נדירות, סדרות, יכולות",
   "text": "דרקונים",
   "where": {
@@ -4502,7 +4522,7 @@
   }
  },
  {
-  "id": "s370",
+  "id": "s372",
   "section": "טבלאות — אלמנטים, נדירות, סדרות, יכולות",
   "text": "ענקים",
   "where": {
@@ -4512,7 +4532,7 @@
   }
  },
  {
-  "id": "s371",
+  "id": "s373",
   "section": "טבלאות — אלמנטים, נדירות, סדרות, יכולות",
   "text": "חרקים",
   "where": {
@@ -4522,7 +4542,7 @@
   }
  },
  {
-  "id": "s372",
+  "id": "s374",
   "section": "טבלאות — אלמנטים, נדירות, סדרות, יכולות",
   "text": "צמחים",
   "where": {
@@ -4532,7 +4552,7 @@
   }
  },
  {
-  "id": "s373",
+  "id": "s375",
   "section": "טבלאות — אלמנטים, נדירות, סדרות, יכולות",
   "text": "ריריים",
   "where": {
@@ -4542,7 +4562,7 @@
   }
  },
  {
-  "id": "s374",
+  "id": "s376",
   "section": "טבלאות — אלמנטים, נדירות, סדרות, יכולות",
   "text": "הדף אחורה",
   "where": {
@@ -4552,7 +4572,7 @@
   }
  },
  {
-  "id": "s375",
+  "id": "s377",
   "section": "טבלאות — אלמנטים, נדירות, סדרות, יכולות",
   "text": "הדף הצידה",
   "where": {
@@ -4562,7 +4582,7 @@
   }
  },
  {
-  "id": "s376",
+  "id": "s378",
   "section": "טבלאות — אלמנטים, נדירות, סדרות, יכולות",
   "text": "דריסה והמשך",
   "where": {
@@ -4572,7 +4592,7 @@
   }
  },
  {
-  "id": "s377",
+  "id": "s379",
   "section": "טבלאות — אלמנטים, נדירות, סדרות, יכולות",
   "text": "שאיבה למרכז",
   "where": {
@@ -4582,7 +4602,7 @@
   }
  },
  {
-  "id": "s378",
+  "id": "s380",
   "section": "טבלאות — אלמנטים, נדירות, סדרות, יכולות",
   "text": "מלכודת הצמדה",
   "where": {
@@ -4592,7 +4612,7 @@
   }
  },
  {
-  "id": "s379",
+  "id": "s381",
   "section": "טבלאות — אלמנטים, נדירות, סדרות, יכולות",
   "text": "חסין הדיפה",
   "where": {
@@ -4602,7 +4622,7 @@
   }
  },
  {
-  "id": "s380",
+  "id": "s382",
   "section": "טבלאות — אלמנטים, נדירות, סדרות, יכולות",
   "text": "החזרת נזק",
   "where": {
@@ -4612,7 +4632,7 @@
   }
  },
  {
-  "id": "s381",
+  "id": "s383",
   "section": "טבלאות — אלמנטים, נדירות, סדרות, יכולות",
   "text": "צבירת שריון",
   "where": {
@@ -4622,7 +4642,7 @@
   }
  },
  {
-  "id": "s382",
+  "id": "s384",
   "section": "טבלאות — אלמנטים, נדירות, סדרות, יכולות",
   "text": "שבירת שריון",
   "where": {
@@ -4632,7 +4652,7 @@
   }
  },
  {
-  "id": "s383",
+  "id": "s385",
   "section": "טבלאות — אלמנטים, נדירות, סדרות, יכולות",
   "text": "הילת שריון",
   "where": {
@@ -4642,7 +4662,7 @@
   }
  },
  {
-  "id": "s384",
+  "id": "s386",
   "section": "טבלאות — אלמנטים, נדירות, סדרות, יכולות",
   "text": "ספיגה לשכנים",
   "where": {
@@ -4652,7 +4672,7 @@
   }
  },
  {
-  "id": "s385",
+  "id": "s387",
   "section": "טבלאות — אלמנטים, נדירות, סדרות, יכולות",
   "text": "הילת הגנה",
   "where": {
@@ -4662,7 +4682,7 @@
   }
  },
  {
-  "id": "s386",
+  "id": "s388",
   "section": "טבלאות — אלמנטים, נדירות, סדרות, יכולות",
   "text": "התחדשות",
   "where": {
@@ -4672,7 +4692,7 @@
   }
  },
  {
-  "id": "s387",
+  "id": "s389",
   "section": "טבלאות — אלמנטים, נדירות, סדרות, יכולות",
   "text": "הילת ריפוי",
   "where": {
@@ -4682,7 +4702,7 @@
   }
  },
  {
-  "id": "s388",
+  "id": "s390",
   "section": "טבלאות — אלמנטים, נדירות, סדרות, יכולות",
   "text": "מכה אזורית",
   "where": {
@@ -4692,7 +4712,7 @@
   }
  },
  {
-  "id": "s389",
+  "id": "s391",
   "section": "טבלאות — אלמנטים, נדירות, סדרות, יכולות",
   "text": "חסימת נתיב",
   "where": {
@@ -4702,7 +4722,7 @@
   }
  },
  {
-  "id": "s390",
+  "id": "s392",
   "section": "טבלאות — אלמנטים, נדירות, סדרות, יכולות",
   "text": "הקפאה במכה",
   "where": {
@@ -4712,7 +4732,7 @@
   }
  },
  {
-  "id": "s391",
+  "id": "s393",
   "section": "טבלאות — אלמנטים, נדירות, סדרות, יכולות",
   "text": "רעל מצטבר",
   "where": {
@@ -4722,7 +4742,7 @@
   }
  },
  {
-  "id": "s392",
+  "id": "s394",
   "section": "טבלאות — אלמנטים, נדירות, סדרות, יכולות",
   "text": "בליעת יריב",
   "where": {
@@ -4732,7 +4752,7 @@
   }
  },
  {
-  "id": "s393",
+  "id": "s395",
   "section": "טבלאות — אלמנטים, נדירות, סדרות, יכולות",
   "text": "הילת האטה",
   "where": {
@@ -4742,7 +4762,7 @@
   }
  },
  {
-  "id": "s394",
+  "id": "s396",
   "section": "טבלאות — אלמנטים, נדירות, סדרות, יכולות",
   "text": "הילת מהירות",
   "where": {
@@ -4752,7 +4772,7 @@
   }
  },
  {
-  "id": "s395",
+  "id": "s397",
   "section": "טבלאות — אלמנטים, נדירות, סדרות, יכולות",
   "text": "התמרה מושהית",
   "where": {
@@ -4762,7 +4782,7 @@
   }
  },
  {
-  "id": "s396",
+  "id": "s398",
   "section": "טבלאות — אלמנטים, נדירות, סדרות, יכולות",
   "text": "נחיל במוות",
   "where": {
@@ -4772,7 +4792,7 @@
   }
  },
  {
-  "id": "s397",
+  "id": "s399",
   "section": "טבלאות — אלמנטים, נדירות, סדרות, יכולות",
   "text": "פיצול במוות",
   "where": {
@@ -4782,7 +4802,7 @@
   }
  },
  {
-  "id": "s398",
+  "id": "s400",
   "section": "טבלאות — אלמנטים, נדירות, סדרות, יכולות",
   "text": "הקרבת בעל-ברית",
   "where": {
@@ -4792,7 +4812,7 @@
   }
  },
  {
-  "id": "s399",
+  "id": "s401",
   "section": "טבלאות — אלמנטים, נדירות, סדרות, יכולות",
   "text": "גניבת אלמנט",
   "where": {
@@ -4802,7 +4822,7 @@
   }
  },
  {
-  "id": "s400",
+  "id": "s402",
   "section": "נתוני קלפים",
   "text": "מפלץ פירורים",
   "where": {
