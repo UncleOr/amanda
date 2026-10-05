@@ -5,6 +5,7 @@ import { useMatch } from "./game/useMatch";
 import { useDrag } from "./game/useDrag";
 import { sfx } from "./game/sfx";
 import { music } from "./game/music";
+import { hardRefresh } from "./game/refresh";
 import { ACTIONS } from "./data/catalog";
 import { BoardGrid } from "./components/BoardGrid";
 import { CardView } from "./components/CardView";
@@ -213,6 +214,7 @@ function Game() {
           <div className="intro__card">
             <h1>אמנדה</h1>
             <p className="intro__tag">קרב מדבקות מהיר · 4×4</p>
+            <div className="intro__main">
             <div className="versus">
               <div className="who who--me">
                 <div className="who__avatar">🧑</div>
@@ -224,6 +226,7 @@ function Game() {
                 <div className="who__name">היריב</div>
               </div>
             </div>
+            <div className="intro__choices">
             <div className="intro__buttons">
               <button className="btn-fight" onClick={m.startMatch}>
                 🤖 נגד המחשב
@@ -275,6 +278,8 @@ function Game() {
                 </button>
               </form>
             )}
+            </div>
+            </div>
             {m.roomError && (
               <p className="warn">
                 {m.roomError === "notFound"
@@ -284,6 +289,16 @@ function Game() {
                     : "החדר כבר מלא."}
               </p>
             )}
+            <p className="intro__version">
+              גרסה {__BUILD_ID__}
+              <button
+                className="btn-link"
+                title="מוריד מחדש את המשחק ומנקה גרסאות שמורות"
+                onClick={() => void hardRefresh()}
+              >
+                ⟳ רענן
+              </button>
+            </p>
             <p className="intro__hint">
               {PHASES.build.seconds} שניות לבנות את הלוח · {PHASES.panic.seconds} שניות
               פאניקה · {PHASES.battle.seconds} שניות קרב

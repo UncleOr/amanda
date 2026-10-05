@@ -12,6 +12,13 @@ export default defineConfig(({ command }) => ({
   // the Pages workflow passes /amanda/, Vercel passes nothing and gets /.
   base: command === "build" ? (process.env.VITE_BASE_PATH ?? "/amanda/") : "/",
   plugins: [react()],
+  // Stamped into the build so the app can show which version is running —
+  // the difference between "it is broken" and "you are on an old copy".
+  define: {
+    __BUILD_ID__: JSON.stringify(
+      new Date().toISOString().slice(0, 16).replace("T", " ") + " UTC",
+    ),
+  },
   server: {
     // Allow importing the shared card JSON that lives at the repo root /data.
     fs: { allow: [repoRoot] },
