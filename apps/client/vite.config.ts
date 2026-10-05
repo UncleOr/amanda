@@ -7,9 +7,10 @@ const here = dirname(fileURLToPath(import.meta.url));
 const repoRoot = resolve(here, "..", "..");
 
 export default defineConfig(({ command }) => ({
-  // On GitHub Pages the site lives at /amanda/, so built asset URLs need that
-  // prefix. Dev server stays at the root.
-  base: command === "build" ? "/amanda/" : "/",
+  // Where the site is served from. GitHub Pages puts it under /amanda/; Vercel
+  // (and any root domain) serves it at /. Set VITE_BASE_PATH to override —
+  // the Pages workflow passes /amanda/, Vercel passes nothing and gets /.
+  base: command === "build" ? (process.env.VITE_BASE_PATH ?? "/amanda/") : "/",
   plugins: [react()],
   server: {
     // Allow importing the shared card JSON that lives at the repo root /data.

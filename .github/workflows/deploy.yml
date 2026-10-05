@@ -33,6 +33,9 @@ jobs:
           # Variables) to your deployed server, e.g. wss://amanda-server.onrender.com,
           # to enable the "Online" button on the public site.
           VITE_SERVER_URL: ${{ vars.VITE_SERVER_URL }}
+          # GitHub Pages serves this project from a subpath; Vercel and any
+          # root domain serve it from /, which is the config default.
+          VITE_BASE_PATH: /amanda/
       - uses: actions/upload-pages-artifact@v3
         with:
           path: apps/client/dist
