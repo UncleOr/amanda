@@ -3,6 +3,7 @@ import { Icon } from "./components/Icon";
 import { Album } from "./components/Album";
 import { Tutorial, type Step } from "./components/Tutorial";
 import { Profile } from "./components/Profile";
+import { Onboarding } from "./components/Onboarding";
 import { markTutorialDone, tutorialSeenLocally } from "./game/account";
 import { PHASES } from "@amanda/shared";
 import type { BattleResult } from "@amanda/engine";
@@ -141,6 +142,19 @@ function Game() {
   const [profileOpen, setProfileOpen] = useState(false);
   /** "Bring a friend" opens three ways to do it rather than guessing one. */
   const [friendOpen, setFriendOpen] = useState(false);
+  /*
+   * Shown once, when an account exists and has never been set up. Guests have
+   * no account to save it to, so they are not asked — they are asked the
+   * moment they make one.
+   */
+  const [onboarding, setOnboarding] = useState(false);
+  const askedRef = useRef(false);
+  useEffect(() => {
+    if (askedRef.current || !m.account) return;
+    if (m.account.nickname) return;
+    askedRef.current = true;
+    setOnboarding(true);
+  }, [m.account]);
   /*
    * Taught once, the first time a board is built. The account is the record
    * when there is one; localStorage covers guests, who would otherwise be
@@ -868,6 +882,16 @@ function Game() {
             </div>
           </div>
         </div>
+      )}
+
+      {onboarding && m.phase === "intro" && (
+        <Onboarding
+          initialNickname={m.account?.nickname}
+          onDone={() => {
+            setOnboarding(false);
+            m.reloadAccount();
+          }}
+        />
       )}
 
       {teaching && (

@@ -136,3 +136,16 @@ export const TUTORIAL = {
   board: "תמלא את מה שאתה יכול. מה שיישאר ריק — אני אמלא בשבילך, ולא תאהב את זה.",
   fight: "וכשתחשוב שאתה מוכן, תלחץ. אני כבר מוכנה.",
 } as const;
+
+/**
+ * The first minute. One question per screen, asked by her.
+ *
+ * She is welcoming in the way she is welcoming — which is to say she has
+ * already decided how this ends.
+ */
+export const ONBOARDING = {
+  hello: "אז הגעת. יופי. לפני שנתחיל אני רוצה לדעת את מי אני אוכלת.",
+  face: "בחר לך פרצוף. זה מה שאני אזכור.",
+  name: "ואיך קוראים לך? תן שם שאפשר לצעוק.",
+  age: "ומתי נולדת? זה רק בשבילי. אני אוהבת לדעת כמה זמן חיכיתי.",
+} as const;
