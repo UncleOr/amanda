@@ -47,7 +47,7 @@
         "moveSpeed": 1.5,
         "range": "melee"
       },
-      "flying": false,
+      "flying": true,
       "midBoss": false,
       "abilities": [
         {
@@ -148,7 +148,8 @@
         "placeholderColor": "#f2c530",
         "sprite": "cards/dragons_03_thunderwing.webp"
       },
-      "launch": true
+      "launch": true,
+      "targeting": "king"
     },
     {
       "id": "dragons_04_lava",
@@ -380,7 +381,7 @@
         "moveSpeed": 0,
         "range": "ranged"
       },
-      "flying": false,
+      "flying": true,
       "midBoss": false,
       "abilities": [
         {
@@ -403,7 +404,8 @@
         "placeholderColor": "#9fd6e8",
         "sprite": "cards/dragons_09_typhoon_dragon.webp"
       },
-      "launch": true
+      "launch": true,
+      "targeting": "king"
     },
     {
       "id": "dragons_10_sky_king",
@@ -424,7 +426,7 @@
         "moveSpeed": 0,
         "range": "melee"
       },
-      "flying": false,
+      "flying": true,
       "midBoss": true,
       "abilities": [
         {

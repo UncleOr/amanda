@@ -45,6 +45,18 @@ export const CardSchema = z.object({
   stats: StatsSchema,
   /** Aerial/hovering units can pass over ground obstacles. */
   flying: z.boolean().default(false),
+  /**
+   * Who this card goes after.
+   *
+   * "lane"  — the nearest enemy straight ahead, the ordinary soldier.
+   * "king"  — it hunts the enemy King, across lanes if it has to. While the
+   *           King is shielded it works on the guards standing in the way.
+   *
+   * A ranged "king" card shoots over the lanes from where it stands; a walker
+   * crosses toward the King only when its way is clear; a flyer crosses
+   * regardless.
+   */
+  targeting: z.enum(["lane", "king"]).default("lane"),
   /** Designed as a mid-boss for the 2×2 King slot (informational; any card is legal there). */
   midBoss: z.boolean().default(false),
   /**

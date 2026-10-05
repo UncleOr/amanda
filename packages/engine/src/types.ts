@@ -35,6 +35,8 @@ export interface Unit {
   moveSpeed: number;
   range: Range;
   flying: boolean;
+  /** "lane" fights whatever is in front; "king" hunts the enemy King. */
+  targeting: "lane" | "king";
   isKing: boolean;
 
   // --- spatial (arena space: col 0..7, lanes are rows 0..3) ---

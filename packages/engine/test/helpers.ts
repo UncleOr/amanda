@@ -9,6 +9,8 @@ export function testCard(input: {
   attackSpeed?: number;
   moveSpeed?: number;
   range?: Range;
+  flying?: boolean;
+  targeting?: "lane" | "king";
   abilities?: Ability[];
 }): Card {
   return {
@@ -25,7 +27,8 @@ export function testCard(input: {
       moveSpeed: input.moveSpeed ?? 0,
       range: input.range ?? "melee",
     },
-    flying: false,
+    flying: input.flying ?? false,
+    targeting: input.targeting ?? "lane",
     midBoss: false,
     launch: true,
     abilities: input.abilities ?? [],

@@ -224,7 +224,8 @@
         "placeholderColor": "#9aa4ad",
         "sprite": "cards/giants_05_wall_breaker.webp"
       },
-      "launch": true
+      "launch": true,
+      "targeting": "king"
     },
     {
       "id": "giants_06_frost_giant",

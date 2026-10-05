@@ -76,8 +76,18 @@ export function runAuras(state: BattleState): void {
               ally.auraArmor += num(ab.params.armor, 100);
           break;
         case "healAura":
+          // Nearby allies only. Healing the whole board meant 50hp/s reached
+          // every unit everywhere, which simply outran the damage in the game:
+          // a defender under attack could not be killed by arithmetic, and the
+          // battle stalled until the clock ran out. A healer now has to be
+          // placed near what it is keeping alive.
           for (const ally of state.units)
-            if (ally.alive && ally.owner === src.owner && ally.hp < ally.maxHp)
+            if (
+              ally.alive &&
+              ally.owner === src.owner &&
+              ally.hp < ally.maxHp &&
+              nearbyLane(src, ally)
+            )
               ally.hp = Math.min(ally.maxHp, ally.hp + num(ab.params.hpPerSecond, 50) / TPS);
           break;
         default:
@@ -215,6 +225,11 @@ export function runOnHit(state: BattleState, attacker: Unit, target: Unit): void
 }
 
 /** Target-side reaction to taking damage. Returns reflected damage dealt back. */
+/** Within one lane of each other — the reach of an aura that is not global. */
+function nearbyLane(a: Unit, b: Unit): boolean {
+  return a.lanes.some((la) => b.lanes.some((lb) => Math.abs(la - lb) <= 1));
+}
+
 export function runOnDamaged(target: Unit, attacker: Unit, damage: number): number {
   let reflected = 0;
   for (const ab of target.abilities) {

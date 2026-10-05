@@ -248,3 +248,51 @@ describe("match grade", () => {
     expect(rep.grades[winner].parts.outcome).toBeLessThan(1);
   });
 });
+
+/**
+ * Targeting. An ordinary card fights what is in front of it; a King-hunter
+ * crosses the board for the King, and can only reach it once nothing of its
+ * own stands in the way.
+ */
+describe("king hunters", () => {
+  const sniper = testCard({
+    id: "hunter",
+    power: 60,
+    range: "sniper",
+    moveSpeed: 0,
+    hp: 500,
+    targeting: "king",
+  });
+  const guard = testCard({ id: "guard", hp: 200000, power: 1, attackSpeed: 10, moveSpeed: 0 });
+  const king = testCard({ id: "king_card", hp: 60, power: 0, attackSpeed: 10 });
+  const cat = catalogOf(sniper, guard, king);
+
+  it("shoots the King from another lane entirely", () => {
+    const r = runBattle({
+      seed: 1,
+      catalog: cat,
+      // hunter in lane 0; the King sits in the middle two lanes
+      a: { owner: "A", placements: [{ cardId: "hunter", x: 0, y: 0 }] },
+      b: { owner: "B", placements: [{ cardId: "king_card", x: 1, y: 1, king: true }] },
+    });
+    expect(r.winReason).toBe("kingDown");
+  });
+
+  it("has to get through the guards first", () => {
+    const r = runBattle({
+      seed: 1,
+      catalog: cat,
+      a: { owner: "A", placements: [{ cardId: "hunter", x: 0, y: 0 }] },
+      b: {
+        owner: "B",
+        placements: [
+          { cardId: "king_card", x: 1, y: 1, king: true },
+          { cardId: "guard", x: 3, y: 0 },
+        ],
+      },
+    });
+    // the wall outlives the clock, so the King does too
+    expect(r.winReason).not.toBe("kingDown");
+    expect(r.finalUnits.find((u) => u.isKing)!.alive).toBe(true);
+  });
+});

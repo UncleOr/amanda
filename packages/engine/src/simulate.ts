@@ -39,14 +39,50 @@ interface TargetPick {
 }
 
 /**
- * Choose a unit's current target within its lane(s) and facing direction.
- * Melee/ranged hit the nearest enemy in the path; snipers ignore near targets
- * and hit the farthest (the enemy back row).
+ * Who is standing between an attacker and the enemy King — the King's actual
+ * bodyguards, whatever lane they happen to be in.
+ */
+function guardsOf(state: BattleState, u: Unit, king: Unit): Unit[] {
+  const kingGap = gapAhead(u, king);
+  return state.units.filter(
+    (e) => e.alive && e.owner === king.owner && !e.isKing && isAhead(u, e) && gapAhead(u, e) < kingGap,
+  );
+}
+
+/**
+ * Choose what a unit is attacking.
+ *
+ * An ordinary card fights whatever is in front of it, in its own lane. A card
+ * whose targeting is "king" hunts the enemy King instead — across the lanes if
+ * it has to — and while the King is still shielded it works on the guards
+ * standing in the way. Snipers pick the farthest target rather than the
+ * nearest; that is what makes them snipers.
  */
 function pickTarget(state: BattleState, u: Unit): TargetPick | null {
-  let ahead = state.units.filter(
-    (e) => e.alive && e.owner !== u.owner && sharesLane(e, u) && isAhead(u, e),
-  );
+  const enemies = state.units.filter((e) => e.alive && e.owner !== u.owner && isAhead(u, e));
+  if (enemies.length === 0) return null;
+
+  if (u.targeting === "king") {
+    const king = enemies.find((e) => e.isKing);
+    if (king) {
+      const guards = guardsOf(state, u, king);
+      // The King is only reachable once nothing of its own stands in the way.
+      const prey = guards.length ? guards : [king];
+      let best = prey[0]!;
+      let bestGap = gapAhead(u, best);
+      for (const e of prey) {
+        const g = gapAhead(u, e);
+        if (g < bestGap) {
+          best = e;
+          bestGap = g;
+        }
+      }
+      return { unit: best, gap: bestGap };
+    }
+    // No King left to hunt: fall through and fight like anything else.
+  }
+
+  let ahead = enemies.filter((e) => sharesLane(e, u));
   // A King is shielded by its own units STANDING BETWEEN it and the attacker —
   // not by anything that merely shares the lane. Counting the whole lane meant
   // a 1 HP filler monster parked in the back row made a King untouchable, and
@@ -130,6 +166,7 @@ export function runBattle(setup: BattleSetup): BattleResult {
       moveSpeed: proto.moveSpeed,
       range: "melee",
       flying: false,
+      targeting: "lane",
       isKing: false,
       col: proto.col,
       width: 1,
@@ -274,6 +311,44 @@ export function runBattle(setup: BattleSetup): BattleResult {
 
   /** How close a unit will stand behind the ally in front of it. */
   const FOLLOW_GAP = 0.15;
+  /** Lanes crossed per second by a unit moving toward a target beside it. */
+  const LANE_CHANGE_PER_SECOND = 1.2;
+
+  /**
+   * Drift toward the lane its target is in. A King-hunter has to be able to
+   * leave its own lane or it can never reach a King sitting in the middle two.
+   * A flyer crosses over whatever is in the way; anything on the ground only
+   * steps across into a lane it is not blocked out of.
+   */
+  function driftTowardLane(u: Unit, target: Unit): void {
+    if (u.isKing || u.lanes.length > 1) return; // the King holds its 2x2
+    const here = u.lanes[0]!;
+    const there = target.lanes[0] ?? here;
+    if (here === there) return;
+
+    const progress = (u.flags.laneDrift as number | undefined) ?? 0;
+    const next = progress + LANE_CHANGE_PER_SECOND * DT;
+    if (next < 1) {
+      u.flags.laneDrift = next;
+      return;
+    }
+    const step = there > here ? 1 : -1;
+    const want = here + step;
+    // On the ground you cannot walk through your own; in the air you can.
+    if (!u.flying) {
+      const occupied = state.units.some(
+        (o) =>
+          o.alive &&
+          o !== u &&
+          o.owner === u.owner &&
+          o.lanes.includes(want) &&
+          Math.abs(o.col - u.col) < 1,
+      );
+      if (occupied) return;
+    }
+    u.lanes = [want];
+    u.flags.laneDrift = 0;
+  }
 
   function moveUnit(u: Unit, nearest: Unit | null): void {
     const step = effectiveMoveSpeed(u) * DT;
@@ -303,7 +378,10 @@ export function runBattle(setup: BattleSetup): BattleResult {
         );
     }
 
-    u.col = Math.min(ARENA.width, Math.max(0, next));
+    // Columns are 0..width-1. Clamping to `width` let a unit that had cleared
+    // its lane walk one step PAST the last column and stand outside the drawn
+    // arena — it simply vanished from the battle.
+    u.col = Math.min(ARENA.width - 1, Math.max(0, next));
   }
 
   function step(): void {
@@ -320,6 +398,10 @@ export function runBattle(setup: BattleSetup): BattleResult {
       if (state.tick < u.stunnedUntil) continue; // frozen / stunned
 
       const picked = pickTarget(state, u);
+      // A card that hunts the King has to be able to cross to it. Static cards
+      // stay put and shoot; only something that can move changes lane.
+      if (picked && u.targeting === "king" && effectiveMoveSpeed(u) > 0)
+        driftTowardLane(u, picked.unit);
       if (picked && inAttackRange(u, picked.gap)) {
         if (u.attackCooldown <= 0 && u.power > 0) {
           performAttack(u, picked.unit);

@@ -140,7 +140,8 @@
         "placeholderColor": "#6fbf3b",
         "sprite": "cards/insects_03_venom_scorpion.webp"
       },
-      "launch": true
+      "launch": true,
+      "targeting": "king"
     },
     {
       "id": "insects_04_toxic_moth",
@@ -298,7 +299,8 @@
         "placeholderColor": "#9fd6e8",
         "sprite": "cards/insects_07_aggressive_wasp.webp"
       },
-      "launch": true
+      "launch": true,
+      "targeting": "king"
     },
     {
       "id": "insects_08_firefly",
@@ -401,7 +403,7 @@
         "moveSpeed": 0,
         "range": "ranged"
       },
-      "flying": false,
+      "flying": true,
       "midBoss": true,
       "abilities": [
         {
