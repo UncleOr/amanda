@@ -153,7 +153,10 @@ function Game() {
       <header className="topbar">
         <div className="topbar__title">אמנדה — המשחקון</div>
         {PHASE_LABEL[m.phase] && (
-          <div className={`topbar__phase phase--${m.phase}`}>{PHASE_LABEL[m.phase]}</div>
+          <div className={`topbar__phase phase--${m.phase}`}>
+            {/* holding a room is waiting for one person, not hunting for anyone */}
+            {m.phase === "waiting" && m.roomCode ? "מחכים לחבר…" : PHASE_LABEL[m.phase]}
+          </div>
         )}
         {(m.phase === "build" || m.phase === "panic") && (
           <div className="topbar__timer">⏱️ {Math.ceil(m.timeLeft)}s</div>
