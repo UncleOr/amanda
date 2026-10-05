@@ -54,7 +54,13 @@ export type ClientMessage =
   /** Live board (for the opponent's fog-of-war view). */
   | { t: "board"; view: BoardView }
   /** Final locked board, WITH action-card buffs, used for the battle. */
-  | { t: "lock"; board: NetBoard };
+  | { t: "lock"; board: NetBoard }
+  /**
+   * An action card played AT the opponent. The server only passes it along —
+   * what it does is the receiving client's business, so a new card of this kind
+   * needs no server change.
+   */
+  | { t: "hex"; id: string };
 
 // ── server → client ────────────────────────────────────────────────
 export type ServerMessage =
@@ -68,7 +74,9 @@ export type ServerMessage =
   | { t: "opp"; view: BoardView }
   /** Authoritative battle inputs — both clients replay this deterministically. */
   | { t: "result"; seed: number; boardA: NetBoard; boardB: NetBoard; winner: Side | null }
-  | { t: "oppLeft" };
+  | { t: "oppLeft" }
+  /** The opponent played an action card at you. */
+  | { t: "hexed"; id: string };
 
 export function encode(msg: ClientMessage | ServerMessage): string {
   return JSON.stringify(msg);

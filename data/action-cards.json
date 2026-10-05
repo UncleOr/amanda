@@ -1,7 +1,10 @@
 [
   {
     "id": "triple_draw",
-    "name": { "he": "שליפה משולשת", "en": "Triple Draw" },
+    "name": {
+      "he": "שליפה משולשת",
+      "en": "Triple Draw"
+    },
     "rarity": "common",
     "copiesInPack": 15,
     "description": {
@@ -9,12 +12,19 @@
       "en": "Draws 3 cards to hand at once. Great for saving build time."
     },
     "effect": "draw",
-    "params": { "count": 3 },
-    "usableIn": ["build"]
+    "params": {
+      "count": 3
+    },
+    "usableIn": [
+      "build"
+    ]
   },
   {
     "id": "recycle_bin",
-    "name": { "he": "פח מחזור", "en": "Recycle Bin" },
+    "name": {
+      "he": "פח מחזור",
+      "en": "Recycle Bin"
+    },
     "rarity": "common",
     "copiesInPack": 15,
     "description": {
@@ -23,11 +33,16 @@
     },
     "effect": "recycleDiscard",
     "params": {},
-    "usableIn": ["build"]
+    "usableIn": [
+      "build"
+    ]
   },
   {
     "id": "energy_boost",
-    "name": { "he": "בוסט אנרגיה", "en": "Energy Boost" },
+    "name": {
+      "he": "בוסט אנרגיה",
+      "en": "Energy Boost"
+    },
     "rarity": "common",
     "copiesInPack": 14,
     "description": {
@@ -35,12 +50,20 @@
       "en": "Grants +50 power to all cards currently on your board."
     },
     "effect": "boardPowerBuff",
-    "params": { "power": 50 },
-    "usableIn": ["build", "panic"]
+    "params": {
+      "power": 50
+    },
+    "usableIn": [
+      "build",
+      "panic"
+    ]
   },
   {
     "id": "radioactive_eraser",
-    "name": { "he": "מחק רדיואקטיבי", "en": "Radioactive Eraser" },
+    "name": {
+      "he": "מחק רדיואקטיבי",
+      "en": "Radioactive Eraser"
+    },
     "rarity": "rare",
     "copiesInPack": 8,
     "description": {
@@ -48,12 +71,19 @@
       "en": "Erases one enemy card (if used on the King, deals heavy damage instead of erasing)."
     },
     "effect": "eraseEnemyCard",
-    "params": { "kingFlatDamage": 2000 },
-    "usableIn": ["panic"]
+    "params": {
+      "kingFlatDamage": 2000
+    },
+    "usableIn": [
+      "panic"
+    ]
   },
   {
     "id": "time_freeze",
-    "name": { "he": "הקפאת זמן", "en": "Time Freeze" },
+    "name": {
+      "he": "הקפאת זמן",
+      "en": "Time Freeze"
+    },
     "rarity": "rare",
     "copiesInPack": 8,
     "description": {
@@ -61,12 +91,20 @@
       "en": "Completely freezes the opponent's screen for 3 seconds."
     },
     "effect": "freezeEnemy",
-    "params": { "seconds": 3 },
-    "usableIn": ["build", "panic"]
+    "params": {
+      "seconds": 3
+    },
+    "usableIn": [
+      "build",
+      "panic"
+    ]
   },
   {
     "id": "swap_places",
-    "name": { "he": "החלפת מקומות", "en": "Swap Places" },
+    "name": {
+      "he": "החלפת מקומות",
+      "en": "Swap Places"
+    },
     "rarity": "rare",
     "copiesInPack": 8,
     "description": {
@@ -75,11 +113,17 @@
     },
     "effect": "swapOwnCards",
     "params": {},
-    "usableIn": ["build", "panic"]
+    "usableIn": [
+      "build",
+      "panic"
+    ]
   },
   {
     "id": "xray",
-    "name": { "he": "רנטגן", "en": "X-Ray" },
+    "name": {
+      "he": "רנטגן",
+      "en": "X-Ray"
+    },
     "rarity": "rare",
     "copiesInPack": 7,
     "description": {
@@ -87,12 +131,20 @@
       "en": "Reveals the entire enemy board (including the back Surprise Row) for 5 seconds."
     },
     "effect": "revealBoard",
-    "params": { "seconds": 5 },
-    "usableIn": ["build", "panic"]
+    "params": {
+      "seconds": 5
+    },
+    "usableIn": [
+      "build",
+      "panic"
+    ]
   },
   {
     "id": "ground_floor",
-    "name": { "he": "קומת קרקע", "en": "Ground Floor (Stacking)" },
+    "name": {
+      "he": "קומת קרקע",
+      "en": "Ground Floor (Stacking)"
+    },
     "rarity": "epic",
     "copiesInPack": 5,
     "description": {
@@ -100,12 +152,19 @@
       "en": "Lets you pick 4 slots and stack a card on top of another. When the top dies in battle, the bottom is revealed."
     },
     "effect": "enableStacking",
-    "params": { "slots": 4 },
-    "usableIn": ["build"]
+    "params": {
+      "slots": 4
+    },
+    "usableIn": [
+      "build"
+    ]
   },
   {
     "id": "dark_corners",
-    "name": { "he": "פינות אפלות", "en": "Dark Corners" },
+    "name": {
+      "he": "פינות אפלות",
+      "en": "Dark Corners"
+    },
     "rarity": "epic",
     "copiesInPack": 5,
     "description": {
@@ -114,11 +173,16 @@
     },
     "effect": "autoStackCorners",
     "params": {},
-    "usableIn": ["build"]
+    "usableIn": [
+      "build"
+    ]
   },
   {
     "id": "sandstorm",
-    "name": { "he": "סופת חול", "en": "Sandstorm" },
+    "name": {
+      "he": "סופת חול",
+      "en": "Sandstorm"
+    },
     "rarity": "epic",
     "copiesInPack": 5,
     "description": {
@@ -127,11 +191,16 @@
     },
     "effect": "shuffleEnemyFrontRow",
     "params": {},
-    "usableIn": ["panic"]
+    "usableIn": [
+      "panic"
+    ]
   },
   {
     "id": "steel_wall",
-    "name": { "he": "חומת פלדה", "en": "Steel Wall" },
+    "name": {
+      "he": "חומת פלדה",
+      "en": "Steel Wall"
+    },
     "rarity": "epic",
     "copiesInPack": 5,
     "description": {
@@ -140,11 +209,17 @@
     },
     "effect": "blockNextActionCard",
     "params": {},
-    "usableIn": ["build", "panic"]
+    "usableIn": [
+      "build",
+      "panic"
+    ]
   },
   {
     "id": "full_refuel",
-    "name": { "he": "תדלוק מלא", "en": "Full Refuel" },
+    "name": {
+      "he": "תדלוק מלא",
+      "en": "Full Refuel"
+    },
     "rarity": "epic",
     "copiesInPack": 4,
     "description": {
@@ -152,12 +227,20 @@
       "en": "Instantly upgrades a placed card to its stronger version (level 2) for the match."
     },
     "effect": "upgradeCardTemp",
-    "params": { "level": 2 },
-    "usableIn": ["build", "panic"]
+    "params": {
+      "level": 2
+    },
+    "usableIn": [
+      "build",
+      "panic"
+    ]
   },
   {
     "id": "amanda_summon",
-    "name": { "he": "זימון אמנדה", "en": "Amanda's Awakening" },
+    "name": {
+      "he": "זימון אמנדה",
+      "en": "Amanda's Awakening"
+    },
     "rarity": "legendary",
     "copiesInPack": 1,
     "description": {
@@ -166,11 +249,17 @@
     },
     "effect": "summonAmanda",
     "params": {},
-    "usableIn": ["build", "panic"]
+    "usableIn": [
+      "build",
+      "panic"
+    ]
   },
   {
     "id": "recall_card",
-    "name": { "he": "פינוי קלף", "en": "Recall Card" },
+    "name": {
+      "he": "פינוי קלף",
+      "en": "Recall Card"
+    },
     "rarity": "rare",
     "copiesInPack": 6,
     "description": {
@@ -179,11 +268,17 @@
     },
     "effect": "removeCard",
     "params": {},
-    "usableIn": ["build", "panic"]
+    "usableIn": [
+      "build",
+      "panic"
+    ]
   },
   {
     "id": "fill_lava",
-    "name": { "he": "מילוי לאבה", "en": "Lava Fill" },
+    "name": {
+      "he": "מילוי לאבה",
+      "en": "Lava Fill"
+    },
     "rarity": "epic",
     "copiesInPack": 5,
     "description": {
@@ -191,12 +286,20 @@
       "en": "Passive: at the end of building, fills up to 3 empty slots with Lava (instead of Crumb Demons) at random positions."
     },
     "effect": "fillEmpty",
-    "params": { "cardId": "dragons_04_lava", "count": 3 },
-    "usableIn": ["build"]
+    "params": {
+      "cardId": "dragons_04_lava",
+      "count": 3
+    },
+    "usableIn": [
+      "build"
+    ]
   },
   {
     "id": "fill_colossus",
-    "name": { "he": "מילוי גולם אבן", "en": "Colossus Fill" },
+    "name": {
+      "he": "מילוי גולם אבן",
+      "en": "Colossus Fill"
+    },
     "rarity": "epic",
     "copiesInPack": 5,
     "description": {
@@ -204,12 +307,20 @@
       "en": "Passive: at the end of building, fills up to 3 empty slots with Stone Colossus at random positions."
     },
     "effect": "fillEmpty",
-    "params": { "cardId": "giants_01_stone_colossus", "count": 3 },
-    "usableIn": ["build"]
+    "params": {
+      "cardId": "giants_01_stone_colossus",
+      "count": 3
+    },
+    "usableIn": [
+      "build"
+    ]
   },
   {
     "id": "fill_flame",
-    "name": { "he": "מילוי דרקון אש", "en": "Flame Fill" },
+    "name": {
+      "he": "מילוי דרקון אש",
+      "en": "Flame Fill"
+    },
     "rarity": "epic",
     "copiesInPack": 5,
     "description": {
@@ -217,12 +328,20 @@
       "en": "Passive: at the end of building, fills up to 3 empty slots with Flame Dragon at random positions."
     },
     "effect": "fillEmpty",
-    "params": { "cardId": "dragons_01_flame_dragon", "count": 3 },
-    "usableIn": ["build"]
+    "params": {
+      "cardId": "dragons_01_flame_dragon",
+      "count": 3
+    },
+    "usableIn": [
+      "build"
+    ]
   },
   {
     "id": "fill_cube",
-    "name": { "he": "מילוי קוביית ג'לי", "en": "Cube Fill" },
+    "name": {
+      "he": "מילוי קוביית ג'לי",
+      "en": "Cube Fill"
+    },
     "rarity": "epic",
     "copiesInPack": 5,
     "description": {
@@ -230,7 +349,34 @@
       "en": "Passive: at the end of building, fills up to 3 empty slots with Gelatinous Cube at random positions."
     },
     "effect": "fillEmpty",
-    "params": { "cardId": "slimes_02_gelatinous_cube", "count": 3 },
-    "usableIn": ["build"]
+    "params": {
+      "cardId": "slimes_02_gelatinous_cube",
+      "count": 3
+    },
+    "usableIn": [
+      "build"
+    ]
+  },
+  {
+    "id": "frozen_hands",
+    "name": {
+      "he": "ידיים קפואות",
+      "en": "Frozen Hands"
+    },
+    "rarity": "epic",
+    "copiesInPack": 5,
+    "description": {
+      "he": "היריב קופא לחמש שניות. לשלוף ולזרוק הוא עוד יכול — להדביק קלפים באלבום כבר לא. אי אפשר לשחק את זה כשנותרו פחות מעשר שניות בנייה.",
+      "en": "Freezes the opponent for five seconds: they can still draw, discard and play action cards, but they cannot place a card on the board. Unplayable with under ten seconds of building left."
+    },
+    "effect": "freezeOpponentPlacing",
+    "params": {
+      "seconds": 5,
+      "minBuildSecondsLeft": 10,
+      "aiCardsLost": 2
+    },
+    "usableIn": [
+      "build"
+    ]
   }
 ]

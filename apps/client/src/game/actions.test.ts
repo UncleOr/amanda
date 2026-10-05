@@ -28,6 +28,7 @@ describe("action cards", () => {
     "autoStackCorners",
     "swapOwnCards",
     "eraseEnemyCard",
+    "freezeOpponentPlacing",
     "fillBoard",
   ]);
 
@@ -73,7 +74,24 @@ describe("action cards", () => {
     }
   });
 
-  it("holds 13 playable action cards, not 5", () => {
-    expect(ACTIVE_ACTIONS.length).toBe(13);
+  it("holds 14 playable action cards, not 5", () => {
+    expect(ACTIVE_ACTIONS.length).toBe(14);
+  });
+
+  /**
+   * Freezing someone at the buzzer would end their build with nothing they
+   * could do about it, so the card has to go dead before then — and with
+   * enough room left that the freeze cannot run past the final whistle.
+   */
+  it("frozen hands leaves the victim time to recover", () => {
+    const a = ACTIONS.get("frozen_hands")!;
+    const freeze = Number(a.params!.seconds);
+    const window = Number(a.params!.minBuildSecondsLeft);
+    expect(freeze).toBeGreaterThan(0);
+    expect(window).toBeGreaterThan(freeze);
+  });
+
+  it("frozen hands is played at the opponent, not at a cell", () => {
+    expect(isTargetedAction("frozen_hands")).toBe(false);
   });
 });

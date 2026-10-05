@@ -377,8 +377,16 @@ function Game() {
           }`}
         >
           <div className="boards">
-            <section className="side side--me">
+            <section className={`side side--me${m.frozenFor > 0 ? " side--frozen" : ""}`}>
               <div className="side__label">🧑 אתה · חזית ⟶</div>
+              {m.frozenFor > 0 && (
+                <div className="frozen" role="status">
+                  <span className="frozen__icon">🧊</span>
+                  <strong>הידיים שלך קפואות</strong>
+                  <span className="frozen__count">{m.frozenFor.toFixed(1)}</span>
+                  <span className="frozen__note">לשלוף ולזרוק אפשר. להדביק — לא.</span>
+                </div>
+              )}
               <BoardGrid
                 placements={m.placements}
                 king={m.king}
@@ -469,10 +477,17 @@ function Game() {
                   <div className="action-chip__row">
                     <button
                       className="action-chip__main"
-                      disabled={a.passive || a.used}
+                      disabled={a.passive || a.used || !m.canPlayAction(a.id)}
+                      title={!m.canPlayAction(a.id) ? "מאוחר מדי בשביל זה" : undefined}
                       onClick={() => m.activateAction(a.id)}
                     >
-                      {a.passive ? "♾️ פעיל" : a.used ? "✔ נוצל" : "▶ הפעל"}
+                      {a.passive
+                        ? "♾️ פעיל"
+                        : a.used
+                          ? "✔ נוצל"
+                          : !m.canPlayAction(a.id)
+                            ? "⏳ מאוחר מדי"
+                            : "▶ הפעל"}
                     </button>
                     <button
                       className="action-chip__info"

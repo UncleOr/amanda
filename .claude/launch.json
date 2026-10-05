@@ -4,8 +4,25 @@
     {
       "name": "client",
       "runtimeExecutable": "pnpm",
-      "runtimeArgs": ["--filter", "@amanda/client", "dev", "--", "--port", "5173"],
+      "runtimeArgs": [
+        "--filter",
+        "@amanda/client",
+        "dev",
+        "--",
+        "--port",
+        "5173"
+      ],
       "port": 5173
+    },
+    {
+      "name": "server",
+      "runtimeExecutable": "pnpm",
+      "runtimeArgs": [
+        "--filter",
+        "@amanda/server",
+        "dev"
+      ],
+      "port": 2567
     }
   ]
 }

@@ -112,6 +112,7 @@ export const ACTIVE_ACTIONS = [
   "radioactive_eraser", // delete an enemy card (targeted on THEIR board)
   "ground_floor", // stack a second card onto your own slots
   "dark_corners", // the same, applied to the four corners at once
+  "frozen_hands", // freeze the opponent's hands for five seconds
 ] as const;
 export const PASSIVE_ACTIONS = ["fill_lava", "fill_colossus", "fill_flame", "fill_cube"] as const;
 export const SUPPORTED_ACTIONS: string[] = [...ACTIVE_ACTIONS, ...PASSIVE_ACTIONS];

@@ -21,6 +21,9 @@ export const ACTION_LOOK: Record<string, string> = {
   time_freeze:
     "an ornate pocket watch encased in jagged blue ice, its hands frozen mid-tick, " +
     "frost spreading across the glass",
+  frozen_hands:
+    "a pair of outstretched hands sheathed in thick cracked blue ice, a card frozen solid " +
+    "between the fingertips just short of the table, frost crystals spidering outward",
   swap_places:
     "two glowing cards trading places along a pair of curved arrows forming a circle, " +
     "motion trails crossing in the middle",

@@ -35,6 +35,8 @@ export interface NetHandlers {
   onOpp?: (view: BoardView) => void;
   onResult?: (r: { seed: number; boardA: NetBoard; boardB: NetBoard; winner: Side | null }) => void;
   onOppLeft?: () => void;
+  /** The opponent played an action card at you. */
+  onHexed?: (id: string) => void;
   /** The socket closed. `connected` is false when it never opened at all. */
   onClose?: (connected: boolean) => void;
 }
@@ -78,6 +80,9 @@ export class Net {
         case "room":
           this.handlers.onRoom?.(msg.code);
           break;
+        case "hexed":
+          this.handlers.onHexed?.(msg.id);
+          break;
         case "roomError":
           this.handlers.onRoomError?.(msg.reason);
           break;
@@ -106,6 +111,10 @@ export class Net {
 
   sendBoard(view: BoardView): void {
     this.sendMsg({ t: "board", view });
+  }
+  /** Play an action card at the opponent. */
+  hex(id: string): void {
+    this.sendMsg({ t: "hex", id });
   }
   lock(board: NetBoard): void {
     this.sendMsg({ t: "lock", board });

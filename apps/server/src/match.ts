@@ -90,7 +90,7 @@ export class Match {
   /** Handle a message from one of the two clients. */
   handle(ws: WebSocket, raw: string): void {
     const p = ws === this.a.ws ? this.a : this.b;
-    let msg: { t: string; view?: BoardView; board?: NetBoard };
+    let msg: { t: string; view?: BoardView; board?: NetBoard; id?: string };
     try {
       msg = JSON.parse(raw);
     } catch {
@@ -99,6 +99,11 @@ export class Match {
     if (msg.t === "board" && msg.view) {
       p.view = msg.view;
       this.send(this.other(p), { t: "opp", view: fog(p.view, this.phase) });
+    } else if (msg.t === "hex" && typeof msg.id === "string") {
+      // Only the build phases can be interfered with; once boards are locked
+      // there is nothing left to disturb.
+      if (this.phase === "build" || this.phase === "panic")
+        this.send(this.other(p), { t: "hexed", id: msg.id });
     } else if (msg.t === "lock" && msg.board) {
       p.board = { ...msg.board, owner: p.side }; // trust the placements, fix the side
       if (this.a.board && this.b.board) this.computeResult();

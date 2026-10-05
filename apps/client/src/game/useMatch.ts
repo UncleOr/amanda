@@ -106,6 +106,13 @@ function isGuardPost(x: number, y: number): boolean {
  * rather than the single best card — so the opponent has a personality and the
  * same board never turns up twice.
  */
+/** Rough worth of a card, for deciding which placements a freeze costs the AI. */
+function power(cardId: string): number {
+  const c = CATALOG.get(cardId);
+  if (!c) return 0;
+  return c.stats.hp + c.stats.power * 4;
+}
+
 function generateAiPlan(): Placement[] {
   const pool = shuffle(cardPool())
     .slice(0, DECK.size)
@@ -323,6 +330,10 @@ export interface MatchApi {
   /** Cards already drawn ahead, waiting behind the one in your hand. */
   extraHand: string[];
   /** Cells you may still stack a second card onto. */
+  /** Seconds left on a freeze the opponent put on you, 0 when you are free. */
+  frozenFor: number;
+  /** True while an action card cannot be played right now (and why, in the UI). */
+  canPlayAction: (id: string) => boolean;
   stackSlots: number;
   /** True once "dark corners" has opened the four corners for stacking. */
   stackCorners: boolean;
@@ -402,6 +413,11 @@ export function useMatch(): MatchApi {
   const [stackCorners, setStackCorners] = useState(false);
   /** Blocks the next action card the opponent plays against you. */
   const [shielded, setShielded] = useState(false);
+  /**
+   * Seconds left on "frozen hands". While this is above zero you may draw,
+   * discard and play action cards, but not put a card on the board.
+   */
+  const [frozenFor, setFrozenFor] = useState(0);
   /** Cards drawn ahead by "triple draw", offered before the deck is touched. */
   const [extraHand, setExtraHand] = useState<string[]>([]);
   /** First cell picked by a two-step action, waiting for its partner. */
@@ -422,6 +438,14 @@ export function useMatch(): MatchApi {
   stackSlotsRef.current = stackSlots;
   const stackCornersRef = useRef(stackCorners);
   stackCornersRef.current = stackCorners;
+  const frozenRef = useRef(frozenFor);
+  frozenRef.current = frozenFor;
+  const phaseRef = useRef(phase);
+  phaseRef.current = phase;
+  const timeLeftRef = useRef(timeLeft);
+  timeLeftRef.current = timeLeft;
+  const shieldedRef = useRef(shielded);
+  shieldedRef.current = shielded;
   const stackedRef = useRef(stacked);
   stackedRef.current = stacked;
   const mySideRef = useRef(mySide);
@@ -455,6 +479,7 @@ export function useMatch(): MatchApi {
   const placeAt = useCallback(
     (x: number, y: number) => {
       if (isKingCell(x, y)) return;
+      if (frozenRef.current > 0) return; // frozen hands: hold it, do not place it
       const key = cellKey(x, y);
       const s = gsRef.current;
       if (s.hand === null || !isMonsterId(s.hand)) return;
@@ -481,6 +506,7 @@ export function useMatch(): MatchApi {
   );
 
   const placeKing = useCallback(() => {
+    if (frozenRef.current > 0) return;
     let ok = false;
     setGs((s) => {
       if (s.hand === null || !isMonsterId(s.hand) || s.king !== null) return s;
@@ -542,6 +568,70 @@ export function useMatch(): MatchApi {
   );
 
   /**
+   * How much building time is left in the match, across both build phases —
+   * what "the last seconds" actually means to a player.
+   */
+  const buildSecondsLeft = useCallback((): number => {
+    if (phaseRef.current === "build") return timeLeftRef.current + PHASES.panic.seconds;
+    if (phaseRef.current === "panic") return timeLeftRef.current;
+    return 0;
+  }, []);
+
+  /**
+   * Whether an action card can be played at this moment. Only "frozen hands"
+   * has anything to say here: freezing someone at the buzzer would take the
+   * end of their build away entirely with nothing they could do about it, so
+   * the card goes dead while less than its own window plus the freeze remains.
+   */
+  const canPlayAction = useCallback(
+    (id: string): boolean => {
+      const a = ACTIONS.get(id);
+      if (a?.effect !== "freezeOpponentPlacing") return true;
+      return buildSecondsLeft() >= Number(a.params?.minBuildSecondsLeft ?? 10);
+    },
+    [buildSecondsLeft],
+  );
+
+  /**
+   * "Frozen hands", aimed at whoever you are playing.
+   *
+   * Online it is sent across and applied by the other client. Against the
+   * computer there is no clock to steal — it builds its whole board up front —
+   * so it loses the cards those seconds were worth instead, weakest first.
+   */
+  const freezeOpponent = useCallback((id: string) => {
+    const params = ACTIONS.get(id)?.params ?? {};
+    if (onlineRef.current) {
+      netRef.current?.hex(id);
+      return;
+    }
+    const plan = aiPlanRef.current;
+    if (!plan) return;
+    const lose = Math.max(0, Number(params.aiCardsLost ?? 2));
+    const weakest = plan
+      .map((p, i) => ({ i, p }))
+      .filter(({ p }) => !p.king)
+      .sort((x, y) => power(x.p.cardId) - power(y.p.cardId))
+      .slice(0, lose)
+      .map(({ i }) => i);
+    aiPlanRef.current = plan.filter((_, i) => !weakest.includes(i));
+  }, []);
+
+  /** An action card the opponent played at us. */
+  const receiveHex = useCallback((id: string) => {
+    // This is what the steel wall was always for.
+    if (shieldedRef.current) {
+      setShielded(false);
+      return;
+    }
+    const a = ACTIONS.get(id);
+    if (a?.effect === "freezeOpponentPlacing") {
+      setFrozenFor(Number(a.params?.seconds ?? 5));
+      sfx.play("discard");
+    }
+  }, []);
+
+  /**
    * The radioactive eraser, aimed at a cell on the opponent's board. An
    * ordinary card is simply gone; a King is too important to delete, so it
    * takes a heavy wound instead — carried into the battle as a health cut.
@@ -572,6 +662,7 @@ export function useMatch(): MatchApi {
   const activateAction = useCallback(
     (id: string) => {
       if (isPassiveAction(id) || usedRef.current[id]) return;
+      if (!canPlayAction(id)) return;
       if (isTargetedAction(id)) {
         setTargeting(id);
         sfx.play("click");
@@ -609,6 +700,8 @@ export function useMatch(): MatchApi {
         setStackSlots((n) => n + Number(params.slots ?? GROUND_FLOOR_SLOTS));
       } else if (a?.effect === "autoStackCorners") {
         setStackCorners(true);
+      } else if (a?.effect === "freezeOpponentPlacing") {
+        freezeOpponent(id);
       }
       else if (a?.effect === "revealBoard") {
         setXrayActive(true);
@@ -617,7 +710,7 @@ export function useMatch(): MatchApi {
       setUsedActions((u) => ({ ...u, [id]: true }));
       sfx.play("draw");
     },
-    [shuffleEnemyFront],
+    [shuffleEnemyFront, freezeOpponent, canPlayAction],
   );
 
   const applyTargetTo = useCallback((id: string, key: string) => {
@@ -731,6 +824,7 @@ export function useMatch(): MatchApi {
     setStacked({});
     setStackSlots(0);
     setStackCorners(false);
+    setFrozenFor(0);
     setShielded(false);
     setExtraHand([]);
     setFirstPick(null);
@@ -787,6 +881,7 @@ export function useMatch(): MatchApi {
         }
       },
       onOpp: (view) => setNetOpp(view),
+      onHexed: (id) => receiveHex(id),
       onResult: (r) => {
         const res = runBattle({
           seed: r.seed,
@@ -857,6 +952,18 @@ export function useMatch(): MatchApi {
     return () => clearInterval(id);
   }, [phase]);
 
+  /** Tick the freeze down on its own clock, so it lasts five real seconds. */
+  useEffect(() => {
+    if (frozenFor <= 0) return;
+    const id = setInterval(() => setFrozenFor((f) => Math.max(0, +(f - 0.1).toFixed(1))), 100);
+    return () => clearInterval(id);
+  }, [frozenFor > 0]); // eslint-disable-line react-hooks/exhaustive-deps
+
+  /** A freeze cannot outlive the building it interrupts. */
+  useEffect(() => {
+    if (!["build", "panic"].includes(phase)) setFrozenFor(0);
+  }, [phase]);
+
   useEffect(() => {
     if (timeLeft > 0) return;
     // Online: the server drives phase changes; the local timer is display-only.
@@ -924,6 +1031,8 @@ export function useMatch(): MatchApi {
     deckLeft: gs.deck.length,
     discardCount: gs.discard.length,
     extraHand,
+    frozenFor,
+    canPlayAction,
     stackSlots,
     stackCorners,
     stacked,
