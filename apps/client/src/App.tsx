@@ -570,16 +570,32 @@ function Game() {
               </p>
               {!m.hasKing && <p className="warn">⚠️ עדיין אין מלך</p>}
               <button className="btn-fight" onClick={m.toBattle}>
-                ⚔️ התחל קרב!
+                {m.online ? "🔒 נעל את הלוח" : "⚔️ התחל קרב!"}
               </button>
             </aside>
           )}
 
           {m.phase === "prebattle" && (
             <div className="overlay">
-              <div className="overlay__mini">ממלאת לך את החורים…</div>
-              <div className="overlay__count">{Math.ceil(m.timeLeft)}</div>
-              <div className="overlay__label">הקרב מתחיל, ילד</div>
+              {/*
+                Online the server starts the battle, not this countdown — so
+                counting down to zero here promised something that never came
+                and left the screen frozen on "0". Say what is actually
+                happening instead: the board is locked and we are waiting.
+              */}
+              {m.online ? (
+                <>
+                  <div className="overlay__mini">הלוח שלך נעול</div>
+                  <div className="overlay__wait" aria-hidden="true">⏳</div>
+                  <div className="overlay__label">מחכה שהיריב יסיים…</div>
+                </>
+              ) : (
+                <>
+                  <div className="overlay__mini">ממלאת לך את החורים…</div>
+                  <div className="overlay__count">{Math.ceil(m.timeLeft)}</div>
+                  <div className="overlay__label">הקרב מתחיל, ילד</div>
+                </>
+              )}
             </div>
           )}
         </main>

@@ -2050,3 +2050,15 @@ button:disabled {
   border-radius: 50%;
   display: block;
 }
+
+/* waiting for the other player to lock their board */
+.overlay__wait {
+  font-size: 46px;
+  line-height: 1;
+  margin: 6px 0;
+  animation: wait-tip 1.6s ease-in-out infinite;
+}
+@keyframes wait-tip {
+  0%, 100% { transform: rotate(0deg); }
+  50% { transform: rotate(180deg); }
+}
