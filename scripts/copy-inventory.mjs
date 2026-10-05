@@ -1,43 +1,77 @@
 /**
- * Collects every Hebrew string the player can see into one markdown file.
+ * Collects every Hebrew string a player can see into one document Or can edit,
+ * and keeps a sidecar map so his edits can be written straight back.
  *
- * Or writes the microcopy, so the point of this is to get the strings out of
- * the code and in front of him in reading order, with the exact place each one
- * lives. Edit the text in docs/COPY.md, hand it back, and the change can be
- * applied to the source it came from.
+ * Or writes the copy; this exists so he never has to open a source file to do
+ * it. He fills the "טקסט חדש" column in docs/COPY.md and nothing else.
  *
- *   node scripts/copy-inventory.mjs
+ *   node scripts/copy-inventory.mjs    regenerate the document
+ *   node scripts/copy-apply.mjs        write his edits back into the source
+ *
+ * Covered: card and series names, ability and role text, action cards, every
+ * screen string in the client, and the game's name in the page title and the
+ * installed-app manifest.
  */
-import { readdirSync, readFileSync, writeFileSync, mkdirSync, statSync } from "node:fs";
+import { readdirSync, readFileSync, writeFileSync, mkdirSync, statSync, existsSync } from "node:fs";
 import { join, relative } from "node:path";
 import { fileURLToPath } from "node:url";
 
 // fileURLToPath, not .pathname — the repo path can contain non-ASCII characters
 // that a URL percent-encodes.
-const ROOT = fileURLToPath(new URL("..", import.meta.url));
+export const ROOT = fileURLToPath(new URL("..", import.meta.url));
 const SRC = join(ROOT, "apps", "client", "src");
 const OUT = join(ROOT, "docs", "COPY.md");
+export const MAP = join(ROOT, "docs", "copy.map.json");
 
-const HEBREW = /[\u0590-\u05FF]/;
-/** Strings in a quote or a JSX text node — the things a player actually reads. */
-const STRING_LITERAL = /"([^"\n]*[\u0590-\u05FF][^"\n]*)"|'([^'\n]*[\u0590-\u05FF][^'\n]*)'|`([^`\n]*[\u0590-\u05FF][^`\n]*)`|>\s*([^<>{}\n]*[\u0590-\u05FF][^<>{}\n]*?)\s*</g;
+const HEBREW = /[֐-׿]/;
+/** A string in quotes or a JSX text node — the things a player actually reads. */
+const STRING_LITERAL =
+  /"([^"\n]*[֐-׿][^"\n]*)"|'([^'\n]*[֐-׿][^'\n]*)'|`([^`\n]*[֐-׿][^`\n]*)`|>\s*([^<>{}\n]*[֐-׿][^<>{}\n]*?)\s*</g;
 
-/** Which screen each file is responsible for, in the order a player meets it. */
-const SECTIONS = [
-  ["App.tsx", "מסכי המשחק — פתיחה, בנייה, קרב, תוצאה"],
-  ["components/BattleLog.tsx", "דוח הקרב"],
-  ["components/CardDetailModal.tsx", "חלון פרטי מפלצת"],
-  ["components/ActionDetailModal.tsx", "חלון פרטי קלף פעולה"],
-  ["components/ActionCardView.tsx", "קלף פעולה"],
-  ["components/CardView.tsx", "קלף מפלצת"],
-  ["components/BoardGrid.tsx", "הלוח"],
-  ["components/Arena.tsx", "זירת הקרב"],
-  ["components/CardGallery.tsx", "גלריית קלפים (כלי פיתוח)"],
-  ["components/ArenaPreview.tsx", "מעבדת קרב (כלי פיתוח)"],
-  ["data/cardMeta.ts", "טבלאות נתונים — אלמנטים, נדירות, סדרות, יכולות"],
-  ["data/catalog.ts", "נתוני קלפים"],
-];
+/**
+ * One editable string. `where` is enough to find it again, and to verify it has
+ * not moved underneath us before writing anything.
+ */
+function entry(id, section, text, where) {
+  return { id, section, text, where };
+}
 
+// ── the card data ──────────────────────────────────────────────────
+/** Every Hebrew leaf in a JSON file, as a path the apply step can follow. */
+function jsonStrings(value, path, out) {
+  if (Array.isArray(value)) value.forEach((v, i) => jsonStrings(v, [...path, i], out));
+  else if (value && typeof value === "object")
+    for (const [k, v] of Object.entries(value)) jsonStrings(v, [...path, k], out);
+  else if (typeof value === "string" && HEBREW.test(value)) out.push({ path, text: value });
+}
+
+function collectData(entries) {
+  const seriesDir = join(ROOT, "data", "series");
+  const files = [
+    ...readdirSync(seriesDir)
+      .filter((f) => f.endsWith(".json"))
+      .map((f) => join(seriesDir, f)),
+    join(ROOT, "data", "action-cards.json"),
+  ];
+  for (const file of files) {
+    const rel = relative(ROOT, file).replace(/\\/g, "/");
+    const json = JSON.parse(readFileSync(file, "utf8"));
+    const found = [];
+    jsonStrings(json, [], found);
+    const isActions = rel.endsWith("action-cards.json");
+    const section = isActions ? "קלפי פעולה" : `סדרה — ${json.name?.he ?? rel}`;
+    for (const f of found)
+      entries.push(
+        entry(`d${entries.length + 1}`, section, f.text, {
+          kind: "json",
+          file: rel,
+          path: f.path,
+        }),
+      );
+  }
+}
+
+// ── the client screens ─────────────────────────────────────────────
 function walk(dir) {
   const out = [];
   for (const name of readdirSync(dir)) {
@@ -48,52 +82,110 @@ function walk(dir) {
   return out;
 }
 
-function stringsIn(file) {
-  const found = [];
-  const lines = readFileSync(file, "utf8").split(/\r?\n/);
+/** Which screen each file is responsible for, in the order a player meets it. */
+const SECTIONS = [
+  ["App.tsx", "מסכי המשחק — פתיחה, בנייה, קרב, תוצאה"],
+  ["components/BattleLog.tsx", "דוח הקרב"],
+  ["components/CardDetailModal.tsx", "חלון פרטי מפלצת"],
+  ["components/ActionDetailModal.tsx", "חלון פרטי קלף פעולה"],
+  ["components/ActionCardView.tsx", "תווית קלף פעולה"],
+  ["components/CardView.tsx", "קלף מפלצת"],
+  ["components/BoardGrid.tsx", "הלוח"],
+  ["components/Arena.tsx", "זירת הקרב"],
+  ["components/CardGallery.tsx", "גלריית קלפים (כלי פיתוח)"],
+  ["components/ArenaPreview.tsx", "מעבדת קרב (כלי פיתוח)"],
+  ["data/cardMeta.ts", "טבלאות — אלמנטים, נדירות, סדרות, יכולות"],
+  ["data/catalog.ts", "נתוני קלפים"],
+];
+
+function fromLines(entries, relFile, lines, section, prefix) {
   lines.forEach((line, i) => {
     const trimmed = line.trim();
-    // skip comments — they are notes to developers, not copy
+    // comments are notes to developers, not copy
     if (trimmed.startsWith("//") || trimmed.startsWith("*") || trimmed.startsWith("/*")) return;
     if (!HEBREW.test(line)) return;
     for (const m of line.matchAll(STRING_LITERAL)) {
       const text = (m[1] ?? m[2] ?? m[3] ?? m[4] ?? "").trim();
-      if (text && HEBREW.test(text)) found.push({ line: i + 1, text });
+      if (!text || !HEBREW.test(text)) continue;
+      entries.push(
+        entry(`${prefix}${entries.length + 1}`, section, text, {
+          kind: "source",
+          file: relFile,
+          line: i + 1,
+        }),
+      );
     }
   });
-  return found;
 }
 
-const files = walk(SRC);
-const byRel = new Map(files.map((f) => [relative(SRC, f).replace(/\\/g, "/"), f]));
-const ordered = [
-  ...SECTIONS.filter(([rel]) => byRel.has(rel)),
-  ...[...byRel.keys()].filter((rel) => !SECTIONS.some(([s]) => s === rel)).map((rel) => [rel, rel]),
-];
+function collectSource(entries) {
+  const files = walk(SRC);
+  const byRel = new Map(files.map((f) => [relative(SRC, f).replace(/\\/g, "/"), f]));
+  const ordered = [
+    ...SECTIONS.filter(([rel]) => byRel.has(rel)),
+    ...[...byRel.keys()].filter((rel) => !SECTIONS.some(([s]) => s === rel)).map((r) => [r, r]),
+  ];
+  for (const [rel, title] of ordered)
+    fromLines(
+      entries,
+      `apps/client/src/${rel}`,
+      readFileSync(byRel.get(rel), "utf8").split(/\r?\n/),
+      title,
+      "s",
+    );
+}
 
-let total = 0;
+/** The game's name where it lives outside the app itself. */
+function collectChrome(entries) {
+  for (const rel of ["apps/client/index.html", "apps/client/public/manifest.webmanifest"]) {
+    const abs = join(ROOT, rel);
+    if (!existsSync(abs)) continue;
+    fromLines(
+      entries,
+      rel,
+      readFileSync(abs, "utf8").split(/\r?\n/),
+      "שם המשחק וכותרות הדפדפן",
+      "h",
+    );
+  }
+}
+
+const entries = [];
+collectChrome(entries);
+collectData(entries);
+collectSource(entries);
+
+// ── write the document ─────────────────────────────────────────────
+const bySection = new Map();
+for (const e of entries) {
+  if (!bySection.has(e.section)) bySection.set(e.section, []);
+  bySection.get(e.section).push(e);
+}
+
+const esc = (t) => t.replace(/\|/g, "\\|");
 const parts = [
-  "# מילון הטקסטים של אמנדה",
+  "# הטקסטים של אמנדה",
   "",
-  "כל טקסט שהשחקן רואה, לפי סדר המסכים. אפשר לערוך כאן ולהחזיר — הטקסט החדש",
-  "ייכנס בדיוק למקום שממנו נלקח.",
+  `כל טקסט שהשחקן רואה — ${entries.length} במספר.`,
   "",
-  "הקובץ נוצר אוטומטית: `node scripts/copy-inventory.mjs`. אל תערכו אותו בלי",
-  "להעביר את השינויים הלאה — הרצה נוספת תדרוס אותו.",
+  "## איך עורכים",
+  "",
+  "ממלאים **רק את העמודה האחרונה** (`טקסט חדש`). מה שנשאר ריק פשוט לא ישתנה.",
+  "אחר כך אומרים לי, ואני מריץ `pnpm copy:apply` שכותב את השינויים בחזרה לקוד —",
+  "לכל טקסט יש מזהה שיודע בדיוק מאיפה הוא נלקח.",
+  "",
+  "אל תשנו את עמודת המזהה ואל תמחקו שורות. אם טקסט מופיע פעמיים ברשימה, הוא",
+  "באמת מופיע פעמיים במשחק — אפשר לשנות כל אחד בנפרד.",
   "",
 ];
 
-for (const [rel, title] of ordered) {
-  const items = stringsIn(byRel.get(rel));
-  if (!items.length) continue;
-  total += items.length;
-  parts.push(`## ${title}`, "", `\`apps/client/src/${rel}\``, "", "| שורה | טקסט |", "| --- | --- |");
-  for (const it of items) parts.push(`| ${it.line} | ${it.text.replace(/\|/g, "\\|")} |`);
+for (const [section, items] of bySection) {
+  parts.push(`## ${section}`, "", "| מזהה | טקסט נוכחי | טקסט חדש |", "| --- | --- | --- |");
+  for (const e of items) parts.push(`| ${e.id} | ${esc(e.text)} | |`);
   parts.push("");
 }
 
-parts.splice(8, 0, `סה"כ ${total} טקסטים.`, "");
-
 mkdirSync(join(ROOT, "docs"), { recursive: true });
 writeFileSync(OUT, parts.join("\n"), "utf8");
-console.log(`${total} strings -> docs/COPY.md`);
+writeFileSync(MAP, JSON.stringify(entries, null, 1), "utf8");
+console.log(`${entries.length} strings -> docs/COPY.md (+ docs/copy.map.json)`);
