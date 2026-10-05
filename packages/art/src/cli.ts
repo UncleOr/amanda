@@ -16,6 +16,7 @@ import { buildActionPrompt, buildAnchoredPrompt, buildPrompt } from "./prompt.js
 import { STYLE_DIRECTIONS, TEST_MONSTERS } from "./styles.js";
 import { ARENA_LOOKS, buildArenaPrompt } from "./arenaLooks.js";
 import { BRAND_ASPECT, BRAND_LOOK, buildBrandPrompt } from "./brandLooks.js";
+import { ICON_LOOK, buildIconPrompt } from "./iconLooks.js";
 import { download, generate, generateWithReference, uploadFile } from "./fal.js";
 
 const RAW = join(REPO_ROOT, "assets", "raw");
@@ -201,6 +202,30 @@ async function cmdBrand(styleId?: string): Promise<void> {
   console.log("\nDone -> assets/raw/brand/\n");
 }
 
+/** The game's own icon set, one flat icon per id. */
+async function cmdIconSet(styleId?: string, only?: string): Promise<void> {
+  const dir = dirById(styleId ?? "");
+  const ids = Object.keys(ICON_LOOK).filter((id) => !only || id === only);
+  console.log(`\nGenerating ${ids.length} icons (style: ${dir.id})\n`);
+  for (const id of ids) {
+    const dest = join(RAW, "icons", `${id}.png`);
+    if (existsSync(dest)) {
+      console.log(`   skip  ${id} (exists)`);
+      continue;
+    }
+    process.stdout.write(`   ${id.padEnd(12)} ... `);
+    try {
+      const [img] = await generate(buildIconPrompt(id, dir.style), { aspectRatio: "1:1" });
+      if (!img) throw new Error("no image returned");
+      await download(img.url, dest);
+      console.log("OK");
+    } catch (err) {
+      console.log(`FAIL ${(err as Error).message}`);
+    }
+  }
+  console.log("\nDone -> assets/raw/icons/  (run `pnpm art:process` to cut and compress)\n");
+}
+
 const [cmd, ...args] = process.argv.slice(2);
 const run = async () => {
   switch (cmd) {
@@ -216,6 +241,8 @@ const run = async () => {
       return cmdArena(args[0]);
     case "brand":
       return cmdBrand(args[0]);
+    case "icons-set":
+      return cmdIconSet(args[0], args[1]);
     case "card":
       return cmdCard(args[0], args[1], ...args.slice(2));
     default:

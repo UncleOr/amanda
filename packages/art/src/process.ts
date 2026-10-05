@@ -15,6 +15,7 @@ const RAW = join(REPO_ROOT, "assets", "raw");
 const OUT = join(REPO_ROOT, "apps", "client", "public", "cards");
 const ARENA_OUT = join(REPO_ROOT, "apps", "client", "public", "arena");
 const BRAND_OUT = join(REPO_ROOT, "apps", "client", "public", "brand");
+const ICON_OUT = join(REPO_ROOT, "apps", "client", "public", "icons");
 /** Portrait card art (3:4). Hand card is ~124px wide, so 384 covers retina. */
 const W = 384;
 const H = 512;
@@ -135,6 +136,20 @@ async function main(): Promise<void> {
       }
       processed++;
       console.log(`  brand ${id}`);
+    }
+  }
+
+  // The icon set. Every one is generated on a flat backdrop and cut out here,
+  // and they ship small because they are drawn at 128px, not scaled down from
+  // a picture.
+  const iconDir = join(RAW, "icons");
+  if (existsSync(iconDir)) {
+    await mkdir(ICON_OUT, { recursive: true });
+    for (const file of readdirSync(iconDir).filter((f) => f.endsWith(".png"))) {
+      const id = file.replace(/[.]png$/, "");
+      await cutBackdrop(join(iconDir, file), join(ICON_OUT, `${id}.png`), 128);
+      processed++;
+      console.log(`  icon  ${id}`);
     }
   }
 
