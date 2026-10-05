@@ -187,6 +187,74 @@ export async function levelUpCard(cardId: string): Promise<{ error?: string; lev
   }
 }
 
+/** A chest the server has already decided the contents of. */
+export interface Chest {
+  id: string;
+  kind: string;
+  cards: string[];
+  diamonds: number;
+  earnedAt: string;
+}
+
+/**
+ * The newest chest the player has not been SHOWN yet.
+ *
+ * The server opens a chest at the moment it awards one — the cards are in the
+ * album before this is ever called — so opening it on screen is a reveal, not
+ * a transaction. Nothing here can fail, and closing the game half way through
+ * loses nothing.
+ *
+ * Which ones have been seen is kept locally: it is the one part of this worth
+ * nothing to cheat at, and keeping it out of the database means a chest can
+ * never get stuck half-shown.
+ */
+const SEEN_CHESTS = "amanda.chests.seen";
+
+export async function newestUnseenChest(): Promise<Chest | null> {
+  const sb = db();
+  if (!sb) return null;
+  try {
+    const { data: auth } = await sb.auth.getSession();
+    const id = auth.session?.user.id;
+    if (!id) return null;
+    const { data } = await sb
+      .from("chests")
+      .select("id, kind, contents, earned_at")
+      .eq("player_id", id)
+      .order("earned_at", { ascending: false })
+      .limit(1)
+      .maybeSingle();
+    if (!data) return null;
+    let seen: string[] = [];
+    try {
+      seen = JSON.parse(localStorage.getItem(SEEN_CHESTS) ?? "[]") as string[];
+    } catch {
+      /* no storage; the chest simply shows again, which is harmless */
+    }
+    if (seen.includes(data.id)) return null;
+    const contents = (data.contents ?? {}) as { cards?: string[]; diamonds?: number };
+    return {
+      id: data.id,
+      kind: data.kind,
+      cards: contents.cards ?? [],
+      diamonds: contents.diamonds ?? 0,
+      earnedAt: data.earned_at,
+    };
+  } catch (err) {
+    console.warn("[account] could not read the chest", err);
+    return null;
+  }
+}
+
+export function markChestSeen(id: string): void {
+  try {
+    const seen = JSON.parse(localStorage.getItem(SEEN_CHESTS) ?? "[]") as string[];
+    localStorage.setItem(SEEN_CHESTS, JSON.stringify([id, ...seen].slice(0, 30)));
+  } catch {
+    /* ignore */
+  }
+}
+
 /**
  * Whole years between a yyyy-mm-dd and today.
  *

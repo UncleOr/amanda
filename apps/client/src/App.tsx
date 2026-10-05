@@ -4,6 +4,8 @@ import { Album } from "./components/Album";
 import { Tutorial, type Step } from "./components/Tutorial";
 import { Profile } from "./components/Profile";
 import { Onboarding } from "./components/Onboarding";
+import { ChestReveal } from "./components/ChestReveal";
+import { markChestSeen, newestUnseenChest, type Chest } from "./game/account";
 import { markTutorialDone, tutorialSeenLocally } from "./game/account";
 import { PHASES } from "@amanda/shared";
 import type { BattleResult } from "@amanda/engine";
@@ -142,6 +144,26 @@ function Game() {
   const [profileOpen, setProfileOpen] = useState(false);
   /** "Bring a friend" opens three ways to do it rather than guessing one. */
   const [friendOpen, setFriendOpen] = useState(false);
+  /** Turned off for the session the moment the clip fails to load. */
+  const [idleOk, setIdleOk] = useState(true);
+  /*
+   * A chest is already open and already in the album by the time the result
+   * screen appears — the server did both when it decided the match. So this
+   * just looks for one that has not been SHOWN, which is why it can appear a
+   * moment late without anything being wrong.
+   */
+  const [chest, setChest] = useState<Chest | null>(null);
+  useEffect(() => {
+    if (m.phase !== "result" || !m.iWon || !m.account) return;
+    let alive = true;
+    const t = window.setTimeout(() => {
+      void newestUnseenChest().then((c) => alive && c && setChest(c));
+    }, 900);
+    return () => {
+      alive = false;
+      window.clearTimeout(t);
+    };
+  }, [m.phase, m.iWon, m.account]);
   /*
    * Shown once, when an account exists and has never been set up. Guests have
    * no account to save it to, so they are not asked — they are asked the
@@ -367,11 +389,30 @@ function Game() {
             generated with its left half deliberately empty, which is where
             everything below sits.
           */}
+          {/*
+            The still is always there; the clip plays over it if it loads.
+            A hero that needs a video to exist is a hero that is a black
+            rectangle on a slow connection, so the picture never depends on it.
+            `onError` drops the video for good rather than retrying forever.
+          */}
           <div
             className="intro__art"
             style={{ backgroundImage: `url("${BASE}brand/amanda_banner.webp")` }}
             aria-hidden="true"
-          />
+          >
+            {idleOk && (
+              <video
+                className="intro__idle"
+                src={`${BASE}brand/amanda_idle.webm`}
+                autoPlay
+                loop
+                muted
+                playsInline
+                preload="auto"
+                onError={() => setIdleOk(false)}
+              />
+            )}
+          </div>
           <div className="intro__wash" aria-hidden="true" />
           {/* Embers drifting up past her. Spread by hand rather than randomly
               so they never clump, and purely decorative. */}
@@ -389,13 +430,6 @@ function Game() {
             ))}
           </div>
           <div className="intro__card">
-            <img
-              className="intro__logo"
-              src={`${BASE}brand/amanda_logo.png`}
-              alt=""
-              width={512}
-              height={512}
-            />
             {/*
               Drawn, not typeset. A webfont can fail to load — and did, on Or's
               screen, where the name fell back to a plain system face. The
@@ -882,6 +916,17 @@ function Game() {
             </div>
           </div>
         </div>
+      )}
+
+      {chest && (
+        <ChestReveal
+          chest={chest}
+          onClose={() => {
+            markChestSeen(chest.id);
+            setChest(null);
+            m.reloadAccount();
+          }}
+        />
       )}
 
       {onboarding && m.phase === "intro" && (

@@ -18,7 +18,8 @@
     "copy": "node scripts/copy-inventory.mjs",
     "copy:apply": "node scripts/copy-apply.mjs",
     "art:brand": "pnpm --filter @amanda/art brand",
-    "art:icons-set": "pnpm --filter @amanda/art icons-set"
+    "art:icons-set": "pnpm --filter @amanda/art icons-set",
+    "art:animate": "pnpm --filter @amanda/art animate"
   },
   "engines": {
     "node": ">=20"

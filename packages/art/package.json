@@ -15,7 +15,8 @@
     "arena": "tsx src/cli.ts arena",
     "icons": "tsx src/icons.ts",
     "brand": "tsx src/cli.ts brand",
-    "icons-set": "tsx src/cli.ts icons-set"
+    "icons-set": "tsx src/cli.ts icons-set",
+    "animate": "tsx src/animate.ts"
   },
   "dependencies": {
     "@amanda/shared": "workspace:*",

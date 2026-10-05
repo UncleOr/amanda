@@ -72,6 +72,33 @@ export async function generateWithReference(
   return res.data.images ?? [];
 }
 
+/**
+ * Turn a still into a few seconds of very slight movement.
+ *
+ * Or asked for her hair and the hem of her dress to move — which a CSS
+ * transform cannot do, because moving the whole picture is not the same as
+ * moving part of it. This is image-to-video, and the prompt spends most of its
+ * words saying what must NOT happen: the camera must not move, she must not
+ * walk, nothing may zoom. A hero image that drifts is alive; one that performs
+ * is a distraction behind a menu.
+ */
+export async function animate(
+  imageUrl: string,
+  prompt: string,
+  opts: { seconds?: "5" | "10" } = {},
+): Promise<string | null> {
+  const res = (await fal.subscribe("fal-ai/kling-video/v1/standard/image-to-video", {
+    input: {
+      prompt,
+      image_url: imageUrl,
+      duration: opts.seconds ?? "5",
+      // No aspect ratio here: this model takes it from the source image, which
+      // is what we want — the banner's shape IS the shape.
+    },
+  })) as { data?: { video?: { url?: string } } };
+  return res.data?.video?.url ?? null;
+}
+
 /** Download a generated image to disk. */
 export async function download(url: string, destPath: string): Promise<void> {
   const res = await fetch(url);

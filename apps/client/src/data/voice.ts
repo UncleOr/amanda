@@ -149,3 +149,12 @@ export const ONBOARDING = {
   name: "ואיך קוראים לך? תן שם שאפשר לצעוק.",
   age: "ומתי נולדת? זה רק בשבילי. אני אוהבת לדעת כמה זמן חיכיתי.",
 } as const;
+
+/** What she says while you are staring at a closed chest. */
+export const CHEST_LINES = [
+  "משהו בפנים. תפתח כבר.",
+  "זכית. אל תתרגש מדי.",
+  "קח, הרווחת.",
+  "בוא נראה מה יצא לך.",
+  "זה לא יפתח את עצמו.",
+] as const;
