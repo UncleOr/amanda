@@ -35,3 +35,7 @@ soundtracks/
 # raw AI art output (large PNGs) — kept local, back these up!
 # the compressed webp the game actually ships live in apps/client/public/cards
 assets/raw/
+
+# the loose copy of the source deck at the repo root; the filed copy under
+# assets/reference/ is the one that ships
+/קלפי מפלצות עם בליד.pdf
