@@ -105,8 +105,18 @@ export class Match {
       if (this.phase === "build" || this.phase === "panic")
         this.send(this.other(p), { t: "hexed", id: msg.id });
     } else if (msg.t === "lock" && msg.board) {
+      // Ready, with the board as it stands. A player who is ready may keep
+      // building and send this again; the last one received is the one used.
+      const wasReady = p.board !== null;
       p.board = { ...msg.board, owner: p.side }; // trust the placements, fix the side
+      if (!wasReady) this.send(this.other(p), { t: "oppReady", ready: true });
+      // Both ready — start now and skip whatever is left of the clock.
       if (this.a.board && this.b.board) this.computeResult();
+    } else if (msg.t === "unready") {
+      if (p.board !== null) {
+        p.board = null;
+        this.send(this.other(p), { t: "oppReady", ready: false });
+      }
     }
   }
 

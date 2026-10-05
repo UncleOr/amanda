@@ -1546,6 +1546,15 @@ button:disabled {
     padding: 0 8px 4px;
   }
   .actions--open .action-chip { display: flex; }
+  /*
+   * The open drawer floats over the boards, which on a short phone meant it
+   * sat on top of the bottom row of slots — the player could see them and
+   * could not tap them. By the end of a match, when the bar actually has cards
+   * in it, that is the row they still needed. So the boards give up the height
+   * instead: the drawer covers nothing, it just makes the board smaller while
+   * it is open.
+   */
+  .build--drawer .boards { padding-bottom: 104px; }
   .actions--open .action-chip__card { width: 52px; height: 68px; }
   .actions__title,
   .actions__empty { font-size: 10px; }
@@ -2077,3 +2086,10 @@ button:disabled {
 .arena__oops { font-size: 44px; line-height: 1; }
 .arena--failed p { margin: 0; }
 .arena__sub { color: var(--muted); font-size: 14px; margin-bottom: 10px !important; }
+
+/* ready, but still free to build */
+.btn-fight--ready {
+  background: rgba(60, 190, 120, 0.9);
+  border-color: rgba(60, 190, 120, 0.9);
+}
+.hand__hint--ready { color: var(--accent); }

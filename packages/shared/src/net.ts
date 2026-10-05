@@ -53,8 +53,14 @@ export type ClientMessage =
   | { t: "join"; code: string }
   /** Live board (for the opponent's fog-of-war view). */
   | { t: "board"; view: BoardView }
-  /** Final locked board, WITH action-card buffs, used for the battle. */
+  /**
+   * "I am ready", carrying the board as it stands. Being ready does NOT stop
+   * you building: keep placing and this is simply sent again. The battle
+   * starts the moment BOTH players are ready.
+   */
   | { t: "lock"; board: NetBoard }
+  /** Changed my mind — I am not ready after all. */
+  | { t: "unready" }
   /**
    * An action card played AT the opponent. The server only passes it along —
    * what it does is the receiving client's business, so a new card of this kind
@@ -75,6 +81,8 @@ export type ServerMessage =
   /** Authoritative battle inputs — both clients replay this deterministically. */
   | { t: "result"; seed: number; boardA: NetBoard; boardB: NetBoard; winner: Side | null }
   | { t: "oppLeft" }
+  /** Whether the opponent has declared themselves ready. */
+  | { t: "oppReady"; ready: boolean }
   /** The opponent played an action card at you. */
   | { t: "hexed"; id: string };
 

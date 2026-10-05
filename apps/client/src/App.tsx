@@ -431,7 +431,7 @@ function Game() {
         <main
           className={`build${m.phase === "panic" ? " build--panic" : ""}${
             m.targeting ? " build--targeting" : ""
-          }`}
+          }${actionsOpen ? " build--drawer" : ""}`}
         >
           <div className="boards">
             <section className={`side side--me${m.frozenFor > 0 ? " side--frozen" : ""}`}>
@@ -626,9 +626,25 @@ function Game() {
                 מפלצת: הנחה על משבצת (קבוע!) · קלף פעולה: "קח לפעולה" (עד 3) · 👑 = מלך
               </p>
               {!m.hasKing && <p className="warn">{noKing}</p>}
-              <button className="btn-fight" onClick={m.toBattle}>
-                {m.online ? "🔒 נעל את הלוח" : "⚔️ התחל קרב!"}
+              <button
+                className={`btn-fight${m.ready ? " btn-fight--ready" : ""}`}
+                onClick={m.online ? m.toggleReady : m.toBattle}
+              >
+                {!m.online
+                  ? "⚔️ התחל קרב!"
+                  : m.ready
+                    ? "✔ מוכן — לחץ לביטול"
+                    : "⚔️ אני מוכן"}
               </button>
+              {m.online && (m.ready || m.oppReady) && (
+                <p className="hand__hint hand__hint--ready">
+                  {m.ready && m.oppReady
+                    ? "שניכם מוכנים — מתחילים"
+                    : m.ready
+                      ? "אתה מוכן. אפשר להמשיך לבנות עד שגם הוא יהיה."
+                      : "היריב מוכן. אתה עדיין יכול לבנות."}
+                </p>
+              )}
             </aside>
           )}
 

@@ -383,6 +383,10 @@ export interface MatchApi {
   placeAt: (x: number, y: number) => void;
   placeKing: () => void;
   toBattle: () => void;
+  /** Online: "I am ready" — a toggle that does NOT stop you building. */
+  ready: boolean;
+  oppReady: boolean;
+  toggleReady: () => void;
   finishBattle: () => void;
   /** Back to the main menu, abandoning whatever is in progress. */
   reset: () => void;
@@ -418,6 +422,9 @@ export function useMatch(): MatchApi {
    * discard and play action cards, but not put a card on the board.
    */
   const [frozenFor, setFrozenFor] = useState(0);
+  /** Online: we have told the server we are ready. Still free to keep building. */
+  const [ready, setReady] = useState(false);
+  const [oppReady, setOppReady] = useState(false);
   /** Cards drawn ahead by "triple draw", offered before the deck is touched. */
   const [extraHand, setExtraHand] = useState<string[]>([]);
   /** First cell picked by a two-step action, waiting for its partner. */
@@ -776,6 +783,30 @@ export function useMatch(): MatchApi {
   }, [applyTargetTo]);
   const cancelTargeting = useCallback(() => setTargeting(null), []);
 
+  const readyRef = useRef(ready);
+  readyRef.current = ready;
+
+  /**
+   * Declaring yourself ready used to end your build: it locked the board and
+   * dropped you on a waiting screen you could look at and not touch, for as
+   * long as the opponent took. Now it is a flag. You keep your hand, you keep
+   * placing, and the board you have when the other player is ready too is the
+   * board that fights. Pressing it again takes it back.
+   */
+  const toggleReady = useCallback(() => {
+    if (!onlineRef.current) return;
+    setReady((was) => {
+      const now = !was;
+      if (now)
+        netRef.current?.lock(
+          buildPlayerBoard(fillGs(gsRef.current, barRef.current), modsRef.current, stackedRef.current),
+        );
+      else netRef.current?.unready();
+      sfx.play("click");
+      return now;
+    });
+  }, []);
+
   const enterPrebattle = useCallback(() => {
     setTargeting(null);
     const filled = fillGs(gsRef.current, barRef.current);
@@ -825,6 +856,8 @@ export function useMatch(): MatchApi {
     setStackSlots(0);
     setStackCorners(false);
     setFrozenFor(0);
+    setReady(false);
+    setOppReady(false);
     setShielded(false);
     setExtraHand([]);
     setFirstPick(null);
@@ -882,6 +915,7 @@ export function useMatch(): MatchApi {
       },
       onOpp: (view) => setNetOpp(view),
       onHexed: (id) => receiveHex(id),
+      onOppReady: (r) => setOppReady(r),
       onResult: (r) => {
         const res = runBattle({
           seed: r.seed,
@@ -982,6 +1016,17 @@ export function useMatch(): MatchApi {
     }
   }, [timeLeft, phase, online, enterPrebattle, startBattle]);
 
+  /*
+   * A ready player who carries on building must not fight with the board they
+   * had when they pressed the button, so every change is sent again.
+   */
+  useEffect(() => {
+    if (!online || !ready) return;
+    netRef.current?.lock(
+      buildPlayerBoard(fillGs(gs, barRef.current), modsRef.current, stackedRef.current),
+    );
+  }, [online, ready, gs, boardPowerAdd, boostedCells, stacked]);
+
   // Online: send our board to the server for the opponent's fog-of-war view.
   useEffect(() => {
     if (online) netRef.current?.sendBoard({ placements: gs.placements, king: gs.king });
@@ -1071,6 +1116,9 @@ export function useMatch(): MatchApi {
     placeAt,
     placeKing,
     toBattle: enterPrebattle,
+    ready,
+    oppReady,
+    toggleReady,
     finishBattle,
     reset,
     playAgain,
