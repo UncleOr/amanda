@@ -43,16 +43,16 @@ export const KING = {
 } as const;
 
 /**
- * Match phase timeline in seconds (GDD §4). Total ≈ 105s.
+ * Match phase timeline in seconds (GDD §4). Total ≈ 150s.
  *
- * Tuned from playtesting (Or, 2026-10-04): a minute is plenty to build a
- * board, and 15 seconds of battle was too short for the fight to resolve —
- * most matches were timing out with both Kings untouched.
+ * Tuned from playtesting. A minute was not enough to build a board while still
+ * learning the cards, and 30 seconds of battle kept cutting fights off before
+ * they resolved (Or, 2026-10-05).
  */
 export const PHASES = {
-  build: { seconds: 60, label: { he: "טירוף הבנייה", en: "Build Frenzy" } },
+  build: { seconds: 90, label: { he: "טירוף הבנייה", en: "Build Frenzy" } },
   panic: { seconds: 15, label: { he: "שניות הפאניקה", en: "Panic Seconds" } },
-  battle: { seconds: 30, label: { he: "הקרב האוטומטי", en: "Auto-Battle" } },
+  battle: { seconds: 45, label: { he: "הקרב האוטומטי", en: "Auto-Battle" } },
 } as const;
 
 /**

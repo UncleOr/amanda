@@ -1457,6 +1457,7 @@ button:disabled {
     padding: 6px 8px;
     gap: 8px;
     min-height: 0;
+    min-width: 0;
   }
   .side__label { font-size: 10px; }
 
@@ -1477,19 +1478,38 @@ button:disabled {
     justify-content: center;
     align-items: center;
   }
+  /* This is the ONLY way to the action cards on a phone, so it cannot be a
+     whisper of grey text at the bottom edge — it has to read as a control. */
   .actions__handle {
-    display: block;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 7px;
     flex: 1 0 100%;
-    background: transparent;
+    background: rgba(255, 176, 32, 0.1);
     border: none;
+    border-top: 1px solid rgba(255, 176, 32, 0.35);
     border-radius: 0;
-    color: var(--muted);
-    font-size: 11px;
-    font-weight: 700;
-    padding: 4px 8px;
-    text-align: center;
+    color: var(--accent);
+    font-size: 13px;
+    font-weight: 800;
+    padding: 7px 8px;
   }
-  .actions--open .actions__handle { color: var(--accent); }
+  .actions__handle-count {
+    background: var(--accent);
+    color: #101010;
+    border-radius: 999px;
+    padding: 0 7px;
+    font-size: 11px;
+    line-height: 16px;
+  }
+  /* holding cards you have not played yet: pulse until they are looked at */
+  .actions__handle--full { animation: handlepulse 1.6s ease-in-out infinite alternate; }
+  .actions--open .actions__handle--full { animation: none; }
+  @keyframes handlepulse {
+    from { background: rgba(255, 176, 32, 0.08); }
+    to { background: rgba(255, 176, 32, 0.24); }
+  }
   /* the cards themselves stay out of the way until the drawer is opened */
   .actions__title,
   .actions__empty,
@@ -1524,6 +1544,13 @@ button:disabled {
   /* the hand: a fixed-width column on the trailing edge */
   .hand {
     grid-area: hand;
+    /*
+     * Without this the column refuses to shrink below the height of its own
+     * contents — card, counters, buttons, warning, start button — and pushes
+     * the whole grid off the bottom of a short screen, taking the board's last
+     * row and the action drawer with it. Grid items default to min-height:auto.
+     */
+    min-height: 0;
     flex-direction: column;
     flex-wrap: nowrap;
     width: 146px;
@@ -1558,6 +1585,11 @@ button:disabled {
     margin-inline-start: 0;
     font-size: 14px;
     padding: 8px 12px;
+    /* the one button that must never be unreachable: it stays pinned to the
+       bottom of the column even when the rest of the hand has to scroll */
+    position: sticky;
+    bottom: 0;
+    flex-shrink: 0;
   }
 
   /* the arena fills the width it can get */
@@ -1874,4 +1906,19 @@ button:disabled {
   height: 100%;
   border-radius: 3px;
   background: linear-gradient(90deg, var(--accent), #5ad25a);
+}
+
+/* A phone on its side with the browser bars showing — barely 300px of height.
+   Everything in the hand column shrinks so the start button stays on screen. */
+@media (max-height: 370px) and (orientation: landscape) {
+  .hand { width: 128px; padding: 4px 6px; gap: 3px; }
+  .hand__current { width: 72px; height: 94px; }
+  .hand__counts { gap: 4px; }
+  .count { font-size: 10px; padding: 0 6px; }
+  .hand__buttons button { font-size: 10px; padding: 4px 6px; }
+  .warn { font-size: 10px; }
+  .hand .btn-fight { font-size: 12px; padding: 6px 8px; }
+  .topbar { padding: 2px 8px; }
+  .topbar__title { font-size: 12px; }
+  .actions__handle { font-size: 12px; padding: 5px 8px; }
 }

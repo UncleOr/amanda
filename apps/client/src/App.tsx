@@ -92,6 +92,14 @@ function Game() {
   const [copied, setCopied] = useState(false);
   // On a phone the action cards are a drawer, so the board keeps its height.
   const [actionsOpen, setActionsOpen] = useState(false);
+  // Shown next to the build id: a screenshot of a layout problem is only
+  // useful if it says what size screen the layout was solving for.
+  const [viewport, setViewport] = useState(() => `${window.innerWidth}×${window.innerHeight}`);
+  useEffect(() => {
+    const onResize = () => setViewport(`${window.innerWidth}×${window.innerHeight}`);
+    window.addEventListener("resize", onResize);
+    return () => window.removeEventListener("resize", onResize);
+  }, []);
   const [showLog, setShowLog] = useState(false);
   const openInfo = (cardId: string) => setDetail(cardId);
 
@@ -290,7 +298,7 @@ function Game() {
               </p>
             )}
             <p className="intro__version">
-              גרסה {__BUILD_ID__}
+              גרסה {__BUILD_ID__} · מסך {viewport}
               <button
                 className="btn-link"
                 title="מוריד מחדש את המשחק ומנקה גרסאות שמורות"
@@ -422,11 +430,12 @@ function Game() {
           {interactive && (
             <div className={`actions${actionsOpen ? " actions--open" : ""}`}>
               <button
-                className="actions__handle"
+                className={`actions__handle${m.actionBar.length ? " actions__handle--full" : ""}`}
                 onClick={() => setActionsOpen((v) => !v)}
                 aria-expanded={actionsOpen}
               >
-                {actionsOpen ? "▾" : "▴"} קלפי פעולה {m.actionBar.length}/3
+                {actionsOpen ? "▾" : "▴"} קלפי פעולה
+                <b className="actions__handle-count">{m.actionBar.length}/3</b>
               </button>
               <span className="actions__title">
                 קלפי פעולה {m.actionBar.length}/3:
