@@ -171,12 +171,12 @@ export function BoardGrid({
             }}
           >
             {stacked[key] && (
-              <span className="slot__stack-mark" title="יש קלף נוסף מתחת — ייחשף כשהעליון ייפול">
+              <span className="slot__stack-mark" title="יש קלף מתחת. הוא יצוץ כשהעליון ייפול.">
                 🏗️
               </span>
             )}
             {isGuardPost(x, y) && !occ && interactive && (
-              <span className="slot__guard-mark" title="משמר המלך — כאן עוצרים את מי שבא אליו">
+              <span className="slot__guard-mark" title="משמר המלך. כאן עוצרים את מי שבא לאכול אותו.">
                 🛡
               </span>
             )}

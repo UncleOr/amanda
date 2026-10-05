@@ -45,7 +45,7 @@ const TIMELINE_TEXT: Record<TimelineEntry["kind"], (e: TimelineEntry) => string>
   split: (e) => `${e.actor} התפצל`,
   reveal: (e) => `נחשף קלף קומת קרקע: ${e.target}`,
   freeze: (e) => `${e.actor ?? "משהו"} הקפיא את ${e.target}`,
-  end: (e) => (e.owner ? `הקרב נגמר` : `הקרב נגמר בתיקו`),
+  end: (e) => (e.owner ? `הקרב נגמר` : `תיקו. לשנינו טעם רע בפה.`),
 };
 
 const ICON: Record<TimelineEntry["kind"], string> = {
@@ -169,7 +169,7 @@ export function BattleLog({ result, mySide }: { result: BattleResult; mySide: Ow
           </div>
 
           <ul className="log__findings">
-            {report.findings.length === 0 && <li className="log__quiet">אין ממצאים מיוחדים בקרב הזה.</li>}
+            {report.findings.length === 0 && <li className="log__quiet">קרב משעמם. לא קרה כלום ששווה לדבר עליו.</li>}
             {report.findings.map((f, i) => (
               <li key={i} className={`log__finding log__finding--${f.owner === mySide ? "me" : "them"}`}>
                 <span className="log__who">{sideName(f.owner)}</span>
@@ -182,7 +182,7 @@ export function BattleLog({ result, mySide }: { result: BattleResult; mySide: Ow
 
       {tab === "map" && (
         <div className="log__body">
-          <p className="log__quiet">הלוחות כפי שנראו בתחילת הקרב — מה כל קלף עשה מהמקום שלו.</p>
+          <p className="log__quiet">ככה נראו הלוחות כשהתחלנו. עכשיו תראה מה כל קלף עשה מהמקום שלו.</p>
           <div className="log__maps">
             {([mySide, theirSide] as Owner[]).map((o) => (
               <BoardMap
@@ -198,9 +198,9 @@ export function BattleLog({ result, mySide }: { result: BattleResult; mySide: Ow
           <div className="log__legend">
             <span><i className="log__swatch log__swatch--top" /> הכי הרבה נזק</span>
             <span><i className="log__swatch log__swatch--some" /> תרם נזק</span>
-            <span><i className="log__swatch log__swatch--idle" /> לא עשה כלום</span>
+            <span><i className="log__swatch log__swatch--idle" /> ישן</span>
             <span>💀 נפל · ✅ שרד · 🧊 לא זז</span>
-            <span>לחצו על קלף לפרטים</span>
+            <span>לחץ על קלף ואספר לך</span>
           </div>
         </div>
       )}
@@ -384,8 +384,8 @@ function UnitReportModal({
   // read the numbers and work it out.
   const story = (() => {
     if (unit.damageDealt === 0 && unit.damageTaken === 0)
-      return "לא נגע בקרב — אף אחד לא הגיע אליו והוא לא הגיע לאף אחד.";
-    if (unit.damageDealt === 0) return "ספג מכות אבל לא הספיק להחזיר ולו מכה אחת.";
+      return "לא נגע בקרב. אף אחד לא הגיע אליו, והוא לא טרח להגיע לאף אחד.";
+    if (unit.damageDealt === 0) return "חטף ולא הספיק להחזיר אפילו מכה אחת.";
     if (unit.kills >= 2) return `חתך את הדרך — הפיל ${unit.kills} קלפים.`;
     if (share >= 30) return `נשא את הצד שלו: ${share}% מכל הנזק.`;
     return `תרם ${share}% מהנזק של הצד שלו.`;
@@ -468,7 +468,7 @@ function UnitReportModal({
           <li>
             <b>תזוזה:</b>{" "}
             {unit.colsMoved === 0
-              ? "נשאר במקום לאורך כל הקרב"
+              ? "לא זז מילימטר"
               : `התקדם ${unit.colsMoved.toFixed(1)} משבצות`}
           </li>
         </ul>

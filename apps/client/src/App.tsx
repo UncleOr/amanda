@@ -48,13 +48,13 @@ function verdictText(result: BattleResult, iWon: boolean): string {
 }
 
 const PHASE_LABEL: Record<string, string> = {
-  countdown: "מתכוננים…",
-  waiting: "מחפש יריב…",
+  countdown: "מתארגנים…",
+  waiting: "מחפשת לך יריב…",
   build: PHASES.build.label.he,
   panic: PHASES.panic.label.he + "!",
-  prebattle: "נועלים לוחות…",
+  prebattle: "נועלת לוחות…",
   battle: PHASES.battle.label.he,
-  result: "סיום",
+  result: "זהו",
 };
 
 /** Phases where leaving means abandoning a match in progress. */
@@ -158,7 +158,7 @@ function Game() {
   }, [m.timeLeft, m.phase]);
 
   const winnerText =
-    m.oppLeft && !m.result ? "🎉 היריב עזב — ניצחת!" : m.iWon ? "🎉 ניצחת!" : "😢 הפסדת";
+    m.oppLeft && !m.result ? "🎉 היריב ברח. ניצחת בטכני." : m.iWon ? "🎉 ניצחת! הפעם." : "😋 הפסדת. טעים.";
 
   return (
     <div className="app">
@@ -166,15 +166,15 @@ function Game() {
           so on a phone held upright we ask for a turn instead of squashing. */}
       <div className="rotate-hint">
         <div className="rotate-hint__icon">📱</div>
-        <h2>סובבו את המכשיר</h2>
-        <p>אמנדה משוחקת לרוחב — ככה שני הלוחות נכנסים אחד מול השני.</p>
+        <h2>סובב את המכשיר</h2>
+        <p>אני משוחקת לרוחב. ככה שני הלוחות נכנסים אחד מול השני, ואני רואה את שניכם.</p>
       </div>
       <header className="topbar">
         <div className="topbar__title">אמנדה — המשחקון</div>
         {PHASE_LABEL[m.phase] && (
           <div className={`topbar__phase phase--${m.phase}`}>
             {/* holding a room is waiting for one person, not hunting for anyone */}
-            {m.phase === "waiting" && m.roomCode ? "מחכים לחבר…" : PHASE_LABEL[m.phase]}
+            {m.phase === "waiting" && m.roomCode ? "מחכה לחבר שלך…" : PHASE_LABEL[m.phase]}
           </div>
         )}
         {(m.phase === "build" || m.phase === "panic") && (
@@ -221,7 +221,7 @@ function Game() {
         <main className="intro">
           <div className="intro__card">
             <h1>אמנדה</h1>
-            <p className="intro__tag">קרב מדבקות מהיר · 4×4</p>
+            <p className="intro__tag">קרב מדבקות · 4×4 · בוא, יש לי זמן</p>
             <div className="intro__main">
             <div className="versus">
               <div className="who who--me">
@@ -237,15 +237,15 @@ function Game() {
             <div className="intro__choices">
             <div className="intro__buttons">
               <button className="btn-fight" onClick={m.startMatch}>
-                🤖 נגד המחשב
+                🤖 שחק נגדי
               </button>
               <button
                 className="btn-fight btn-online"
                 onClick={() => m.hostRoom()}
                 disabled={!m.onlineAvailable}
-                title={m.onlineAvailable ? "" : "לא זמין בבנייה הזו (צריך שרת)"}
+                title={m.onlineAvailable ? "" : "לא בגרסה הזאת — חסר לי שרת"}
               >
-                👥 שחק עם חבר
+                👥 הביא חבר
               </button>
             </div>
             <div className="intro__secondary">
@@ -254,14 +254,14 @@ function Game() {
                 onClick={() => m.startOnline()}
                 disabled={!m.onlineAvailable}
               >
-                🌐 יריב אקראי
+                🌐 תן לי למצוא לך מישהו
               </button>
               <button
                 className="btn-link"
                 onClick={() => setJoining(true)}
                 disabled={!m.onlineAvailable}
               >
-                🔑 הצטרף לחבר
+                🔑 יש לי קוד
               </button>
             </div>
             {joining && (
@@ -291,17 +291,17 @@ function Game() {
             {m.roomError && (
               <p className="warn">
                 {m.roomError === "notFound"
-                  ? "לא נמצא חדר עם הקוד הזה. אולי הוא נסגר?"
+                  ? "אין לי חדר כזה. אולי הוא נסגר, אולי המצאת אותו."
                   : m.roomError === "self"
-                    ? "זה הקוד שלך — שלח אותו למישהו אחר."
-                    : "החדר כבר מלא."}
+                    ? "זה הקוד שלך. אתה לא יכול לאכול את עצמך."
+                    : "החדר מלא. שניים זה בדיוק מה שאני מספיקה."}
               </p>
             )}
             <p className="intro__version">
               גרסה {__BUILD_ID__} · מסך {viewport}
               <button
                 className="btn-link"
-                title="מוריד מחדש את המשחק ומנקה גרסאות שמורות"
+                title="מוריד אותי מחדש ומנקה גרסאות ישנות"
                 onClick={() => void hardRefresh()}
               >
                 ⟳ רענן
@@ -329,11 +329,11 @@ function Game() {
               {m.netError ? "🔌" : m.roomCode ? "👥" : "🌐"}
             </div>
             <h2>
-              {m.netError ? "אין חיבור לשרת" : m.roomCode ? "מחכים לחבר…" : "מחפש יריב…"}
+              {m.netError ? "השרת לא עונה" : m.roomCode ? "מחכה לחבר שלך…" : "מחפשת לך יריב…"}
             </h2>
             {m.roomCode ? (
               <>
-                <p className="intro__tag">שלחו את הקוד הזה למי שתרצו לשחק נגדו:</p>
+                <p className="intro__tag">שלח את הקוד הזה למי שבא לך לאכול:</p>
                 <div className="room-code">{m.roomCode}</div>
                 <button
                   className="btn-link"
@@ -345,14 +345,14 @@ function Game() {
                     });
                   }}
                 >
-                  {copied ? "✔ הקישור הועתק" : "⧉ העתק קישור הזמנה"}
+                  {copied ? "✔ העתקתי" : "⧉ העתק הזמנה"}
                 </button>
               </>
             ) : (
               <p className="intro__tag">
                 {m.netError
-                  ? "החיבור לשרת המשחק לא נוצר או שנפל. אפשר לשחק נגד המחשב בינתיים."
-                  : "מחברים אתכם לשחקן הראשון שיתפנה"}
+                  ? "השרת לא עונה לי. עד שיתעשת — אני פנויה."
+                  : "אני מחפשת לך מישהו. מישהו מתוק."}
               </p>
             )}
             <div className="intro__buttons">
@@ -436,10 +436,10 @@ function Game() {
               <span className="targeting-bar__text">
                 🎯{" "}
                 {isEnemyTargeted(m.targeting)
-                  ? "בחרו קלף על הלוח של היריב"
+                  ? "בחר קלף אצל היריב"
                   : m.firstPick
-                    ? "ועכשיו את הקלף השני"
-                    : "בחרו קלף על הלוח שלכם"}{" "}
+                    ? "ועכשיו את השני"
+                    : "בחר קלף על הלוח שלך"}{" "}
                 עבור "{ACTIONS.get(m.targeting)?.name.he}"
               </span>
               <button className="targeting-bar__cancel" onClick={m.cancelTargeting}>
@@ -462,7 +462,7 @@ function Game() {
                 קלפי פעולה {m.actionBar.length}/3:
               </span>
               {m.actionBar.length === 0 && (
-                <span className="actions__empty">שלוף קלפי פעולה מהחפיסה וקח אותם לכאן</span>
+                <span className="actions__empty">שלוף קלפי פעולה מהחפיסה. כאן הם מחכים.</span>
               )}
               {m.actionBar.map((a) => (
                 <div key={a.id} className="action-chip">
@@ -478,7 +478,7 @@ function Game() {
                     <button
                       className="action-chip__main"
                       disabled={a.passive || a.used || !m.canPlayAction(a.id)}
-                      title={!m.canPlayAction(a.id) ? "מאוחר מדי בשביל זה" : undefined}
+                      title={!m.canPlayAction(a.id) ? "מאוחר. תכננת גרוע." : undefined}
                       onClick={() => m.activateAction(a.id)}
                     >
                       {a.passive
@@ -520,7 +520,7 @@ function Game() {
                   <div
                     className={`hand__draggable${dragging ? " hand__draggable--dragging" : ""}`}
                     onPointerDown={(e) => startDrag(m.hand!, e)}
-                    title="גררו ללוח או לחצו לפרטים"
+                    title="גרור ללוח. או לחץ, אם אתה רוצה לקרוא עליו קודם."
                   >
                     <CardView
                       cardId={m.hand}
@@ -568,7 +568,7 @@ function Game() {
               <p className="hand__hint">
                 מפלצת: הנחה על משבצת (קבוע!) · קלף פעולה: "קח לפעולה" (עד 3) · 👑 = מלך
               </p>
-              {!m.hasKing && <p className="warn">⚠️ עדיין לא מיניתם מלך!</p>}
+              {!m.hasKing && <p className="warn">⚠️ עוד לא מינית מלך. בלי מלך זאת לא ממלכה, זאת ארוחה.</p>}
               <button className="btn-fight" onClick={m.toBattle}>
                 ⚔️ התחל קרב!
               </button>
@@ -577,7 +577,7 @@ function Game() {
 
           {m.phase === "prebattle" && (
             <div className="overlay">
-              <div className="overlay__mini">ממלאים את המשבצות הריקות…</div>
+              <div className="overlay__mini">ממלאת לך את החורים…</div>
               <div className="overlay__count">{Math.ceil(m.timeLeft)}</div>
               <div className="overlay__label">הקרב מתחיל!</div>
             </div>
@@ -590,7 +590,7 @@ function Game() {
         <main className="build">
           <div className="overlay">
             <div className="overlay__count">{Math.ceil(m.timeLeft)}</div>
-            <div className="overlay__label">מתכוננים לבנייה…</div>
+            <div className="overlay__label">תכף מתחילים…</div>
           </div>
         </main>
       )}
@@ -642,7 +642,7 @@ function Game() {
               </button>
               {m.result && (
                 <button className="btn-fight btn-online" onClick={() => setShowLog((v) => !v)}>
-                  {showLog ? "הסתר דוח" : "📋 מה קרה בקרב?"}
+                  {showLog ? "מספיק, הבנתי" : "📋 שנסביר לך מה קרה?"}
                 </button>
               )}
             </div>
@@ -661,8 +661,10 @@ function Game() {
       {confirmExit && (
         <div className="modal-overlay" onClick={() => setConfirmExit(false)}>
           <div className="modal modal--confirm" onClick={(e) => e.stopPropagation()}>
-            <h2>לצאת מהמשחק?</h2>
-            <p className="modal__role">הלוח שבנית יימחק והקרב לא יתקיים.</p>
+            <h2>כבר הולך?</h2>
+            <p className="modal__role">
+              הלוח שבנית נמחק והקרב לא יקרה. אשמור לך מקום בתפריט — בתפריט שלי.
+            </p>
             <div className="modal__actions">
               <button
                 className="btn-fight btn-danger"
@@ -671,10 +673,10 @@ function Game() {
                   m.reset();
                 }}
               >
-                צא מהמשחק
+                כן, אני בורח
               </button>
               <button className="btn-fight btn-online" onClick={() => setConfirmExit(false)}>
-                המשך לשחק
+                לא, אני נשאר
               </button>
             </div>
           </div>
