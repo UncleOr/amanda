@@ -2197,3 +2197,14 @@ button:disabled {
   font-size: 10px;
   font-weight: 800;
 }
+
+/* linking the album to a real account */
+.album__link {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  flex-wrap: wrap;
+  padding: 10px 16px;
+  border-bottom: 1px solid var(--line);
+}
+.album__link-note { color: var(--muted); font-size: 12px; }

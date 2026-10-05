@@ -101,6 +101,42 @@ export async function loadAccount(): Promise<Account | null> {
 }
 
 /**
+ * Attach a Google account to the anonymous one the player already has.
+ *
+ * This is LINKING, not signing in. The player has been playing since their
+ * first tap and already owns cards; Google is how that album survives a new
+ * phone. `linkIdentity` keeps the same user id, so trophies, copies and levels
+ * all stay exactly where they are — signing in afresh would have stranded them
+ * under a second account.
+ *
+ * Returns an error message to show, or null when the redirect is on its way.
+ */
+export async function linkGoogle(): Promise<string | null> {
+  const sb = db();
+  if (!sb) return "אין חיבור לשרת";
+  try {
+    const { data: session } = await sb.auth.getSession();
+    const user = session.session?.user;
+    if (!user) return "צריך להתחיל לשחק קודם";
+    if (!user.is_anonymous) return "כבר מחובר";
+    const { error } = await sb.auth.linkIdentity({
+      provider: "google",
+      options: { redirectTo: window.location.href },
+    });
+    return error ? error.message : null;
+  } catch (err) {
+    return (err as Error).message;
+  }
+}
+
+/** True once the account is a real one and the album is safe. */
+export function isLinked(): Promise<boolean> {
+  const sb = db();
+  if (!sb) return Promise.resolve(false);
+  return sb.auth.getSession().then(({ data }) => data.session?.user.is_anonymous === false);
+}
+
+/**
  * The cards a match deck is built from, with duplicates for duplicate copies —
  * so holding three of something really does mean three on the board.
  *

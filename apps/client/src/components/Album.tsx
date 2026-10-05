@@ -8,7 +8,8 @@
 import { CATALOG, SERIES } from "../data/catalog";
 import { CardView, CardBack } from "./CardView";
 import { Icon } from "./Icon";
-import type { Account } from "../game/account";
+import { linkGoogle, type Account } from "../game/account";
+import { useState } from "react";
 
 interface Props {
   account: Account | null;
@@ -17,6 +18,7 @@ interface Props {
 }
 
 export function Album({ account, onClose, onCardInfo }: Props) {
+  const [linkError, setLinkError] = useState<string | null>(null);
   const album = account?.album;
   // Only cards that belong to a series are collectable, and only those are
   // shown below. The Crumb Demon fills empty cells and is in the catalog but
@@ -47,6 +49,20 @@ export function Album({ account, onClose, onCardInfo }: Props) {
           )}
         </div>
       </header>
+
+      {account && (
+        <div className="album__link">
+          <button
+            className="btn-fight btn-online"
+            onClick={() => void linkGoogle().then(setLinkError)}
+          >
+            שמור את האלבום עם גוגל
+          </button>
+          <span className="album__link-note">
+            {linkError ?? "בלי זה האלבום קיים רק בדפדפן הזה."}
+          </span>
+        </div>
+      )}
 
       {!account && (
         <p className="album__none">
