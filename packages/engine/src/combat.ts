@@ -1,4 +1,4 @@
-import { ELEMENT_COMBAT } from "@amanda/shared";
+import { COMBAT, ELEMENT_COMBAT } from "@amanda/shared";
 import type { Element } from "@amanda/shared";
 import type { Unit } from "./types.js";
 
@@ -47,7 +47,8 @@ export function computeDamage(
   attackerElement: Element,
   target: Unit,
 ): number {
-  const withElement = rawPower * elementMultiplier(attackerElement, target.activeElement);
+  const withElement =
+    rawPower * COMBAT.damageMultiplier * elementMultiplier(attackerElement, target.activeElement);
   const afterReduction = withElement * target.damageTakenMult;
   return Math.max(0, Math.floor(afterReduction) - target.armor - target.auraArmor);
 }

@@ -12,6 +12,31 @@ const launch = [...CARDS.values()].filter((c) => c.launch);
 const pool = launch.map((c) => c.id);
 const rnd = (n: number) => Math.floor(Math.random() * n);
 
+/**
+ * A board built the way the game rewards: movers lead the charge, the static
+ * tanks hold the two posts in front of the King, and the shooters sit behind.
+ * Random boards measure randomness; this measures the game.
+ */
+function smartBoard(owner: "A" | "B"): { owner: "A" | "B"; placements: Placement[] } {
+  const cards = [...CARDS.values()].filter((c) => c.launch);
+  const pick = <T,>(xs: T[]) => xs[rnd(xs.length)]!;
+  const movers = cards.filter((c) => c.stats.moveSpeed > 0);
+  const tanks = cards.filter((c) => c.stats.moveSpeed === 0).sort((a, b) => b.stats.hp - a.stats.hp);
+  const shooters = cards.filter((c) => c.stats.range !== "melee");
+  const beefy = tanks.slice(0, 8);
+
+  const ps: Placement[] = [{ cardId: pick(cards).id, x: 1, y: 1, king: true }];
+  for (let x = 0; x < 4; x++)
+    for (let y = 0; y < 4; y++) {
+      if (x >= 1 && x <= 2 && y >= 1 && y <= 2) continue;
+      // the two posts directly in front of the King get the biggest walls
+      const guardPost = x === 3 && (y === 1 || y === 2);
+      const from = guardPost ? beefy : x === 3 ? movers : x === 0 ? shooters : movers;
+      ps.push({ cardId: pick(from.length ? from : cards).id, x, y });
+    }
+  return { owner, placements: ps };
+}
+
 function board(owner: "A" | "B"): { owner: "A" | "B"; placements: Placement[] } {
   const ps: Placement[] = [{ cardId: pool[rnd(pool.length)]!, x: 1, y: 1, king: true }];
   for (let x = 0; x < 4; x++)
@@ -23,6 +48,8 @@ function board(owner: "A" | "B"): { owner: "A" | "B"; placements: Placement[] } 
 }
 
 const runs = Number(process.argv[2] ?? 300);
+/** `smart` builds boards the way the game rewards, instead of at random. */
+const SMART = process.argv.includes("smart");
 const catalog = new Map(CARDS);
 let kingDown = 0;
 let timeout = 0;
@@ -48,8 +75,8 @@ for (let i = 0; i < runs; i++) {
       threshold: s.synergy.threshold,
       ability: s.synergy.ability,
     })),
-    a: board("A"),
-    b: board("B"),
+    a: SMART ? smartBoard("A") : board("A"),
+    b: SMART ? smartBoard("B") : board("B"),
   });
   totalTicks += r.ticks;
   {
@@ -88,6 +115,7 @@ for (let i = 0; i < runs; i++) {
 
 const TPS = SIMULATION.ticksPerSecond;
 const under5 = quick.filter((t) => t < TPS * 5).length;
+console.log(`boards                  ${SMART ? "built sensibly" : "random"}`);
 console.log(`runs                    ${runs}`);
 console.log(`decided by a King dying ${kingDown} (${Math.round((kingDown / runs) * 100)}%)`);
 console.log(`ran out of time         ${timeout} (${Math.round((timeout / runs) * 100)}%)`);

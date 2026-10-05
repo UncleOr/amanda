@@ -76,6 +76,20 @@ export const RANGE_REACH = {
 } as const;
 
 /**
+ * Global pace of combat. Raising this shortens every battle without touching a
+ * single card's numbers, which is the one dial that changes how long a match
+ * FEELS without changing what any card IS.
+ */
+export const COMBAT = {
+  /**
+   * Tuned to 1.5 by measuring, not by feel: with well-built boards it lands
+   * the average match at ~20s of the 30s clock, with 4% decided inside five
+   * seconds. Raise it to shorten matches, lower it to draw them out.
+   */
+  damageMultiplier: 1.5,
+} as const;
+
+/**
  * Deterministic simulation cadence. The battle is computed as a fixed number of
  * integer ticks so both server and clients reproduce it identically.
  */

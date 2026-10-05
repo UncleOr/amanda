@@ -44,9 +44,13 @@ interface TargetPick {
  * and hit the farthest (the enemy back row).
  */
 function pickTarget(state: BattleState, u: Unit): TargetPick | null {
-  const ahead = state.units.filter(
+  let ahead = state.units.filter(
     (e) => e.alive && e.owner !== u.owner && sharesLane(e, u) && isAhead(u, e),
   );
+  // A King is shielded while any of its own still stands in that lane: you
+  // have to break the lane before you can touch the King behind it. The two
+  // cells directly in front of the King are therefore the posts that matter.
+  if (ahead.some((e) => !e.isKing)) ahead = ahead.filter((e) => !e.isKing);
   if (ahead.length === 0) return null;
 
   let best = ahead[0]!;
@@ -216,18 +220,57 @@ export function runBattle(setup: BattleSetup): BattleResult {
     if (u.hp <= 0 && u.alive) killUnit(u, target); // died to reflected damage
   }
 
+  /**
+   * The closest ally standing between this unit and the enemy, if any.
+   * Ground units queue up behind their own front line instead of walking
+   * through it; flyers pass over and ignore this entirely.
+   */
+  function blockingAlly(u: Unit): Unit | null {
+    let best: Unit | null = null;
+    let bestGap = Infinity;
+    for (const o of state.units) {
+      if (!o.alive || o === u || o.owner !== u.owner) continue;
+      if (!sharesLane(o, u) || !isAhead(u, o)) continue;
+      const gap = gapAhead(u, o);
+      if (gap < bestGap) {
+        best = o;
+        bestGap = gap;
+      }
+    }
+    return best;
+  }
+
+  /** How close a unit will stand behind the ally in front of it. */
+  const FOLLOW_GAP = 0.15;
+
   function moveUnit(u: Unit, nearest: Unit | null): void {
     const step = effectiveMoveSpeed(u) * DT;
     let next = u.col + u.facing * step;
-    if (nearest) {
-      if (u.facing > 0) {
-        const limit = leftEdge(nearest) - MELEE_REACH - u.width / 2;
-        if (next > limit) next = Math.max(u.col, limit);
-      } else {
-        const limit = rightEdge(nearest) + MELEE_REACH + u.width / 2;
-        if (next < limit) next = Math.min(u.col, limit);
-      }
+
+    const clampTo = (limit: number) => {
+      if (u.facing > 0) next = next > limit ? Math.max(u.col, limit) : next;
+      else next = next < limit ? Math.min(u.col, limit) : next;
+    };
+
+    // Stop at reach of whatever it is attacking.
+    if (nearest)
+      clampTo(
+        u.facing > 0
+          ? leftEdge(nearest) - MELEE_REACH - u.width / 2
+          : rightEdge(nearest) + MELEE_REACH + u.width / 2,
+      );
+
+    // And stop behind its own front line, unless it can fly over it.
+    if (!u.flying) {
+      const ally = blockingAlly(u);
+      if (ally)
+        clampTo(
+          u.facing > 0
+            ? leftEdge(ally) - FOLLOW_GAP - u.width / 2
+            : rightEdge(ally) + FOLLOW_GAP + u.width / 2,
+        );
     }
+
     u.col = Math.min(ARENA.width, Math.max(0, next));
   }
 
@@ -271,7 +314,6 @@ export function runBattle(setup: BattleSetup): BattleResult {
     const tiebreaks: Array<[WinReason, (o: Owner) => number]> = [
       ["kingHp", kingFrac],
       ["totalHp", totalHp],
-      ["aliveCount", aliveCount],
     ];
     for (const [reason, metric] of tiebreaks) {
       const a = metric("A");

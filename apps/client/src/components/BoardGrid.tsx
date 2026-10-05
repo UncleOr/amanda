@@ -33,6 +33,16 @@ interface Props {
 
 const KING_KEY = "king";
 
+/**
+ * The two cells directly in front of the King, in its own lanes. The King
+ * cannot be attacked while an ally still stands in its lane, so whatever holds
+ * these two posts is what keeps it alive — they are the most valuable squares
+ * on the board and should look like it.
+ */
+function isGuardPost(x: number, y: number): boolean {
+  return x === 3 && (y === 1 || y === 2);
+}
+
 export function BoardGrid({
   placements,
   king,
@@ -119,6 +129,7 @@ export function BoardGrid({
             key={key}
             className={
               `slot${occ && shown ? " slot--filled slot--readable" : ""}` +
+              `${isGuardPost(x, y) ? " slot--guard" : ""}` +
               `${targeting && occ ? " slot--target" : ""}` +
               `${interactive && dragging && !occ ? " slot--droppable" : ""}` +
               `${dragOver === key && !occ ? " slot--dragover" : ""}`
@@ -134,6 +145,11 @@ export function BoardGrid({
               else if (interactive && !occ) onCellClick?.(x, y);
             }}
           >
+            {isGuardPost(x, y) && !occ && interactive && (
+              <span className="slot__guard-mark" title="משמר המלך — כאן עוצרים את מי שבא אליו">
+                🛡
+              </span>
+            )}
             {!shown ? (
               <CardBack size={size} />
             ) : occ ? (

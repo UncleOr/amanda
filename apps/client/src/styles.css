@@ -213,6 +213,7 @@ body {
 }
 
 .slot {
+  position: relative; /* the guard-post mark is pinned inside the cell */
   border: 1.5px dashed var(--line);
   border-radius: 9px;
   display: flex;
@@ -1800,3 +1801,24 @@ button:disabled {
   border-style: dotted;
 }
 .log__cell--filler .log__cell-dmg { display: none; }
+
+/* ---- the King's guard posts ---- */
+/* The King cannot be reached while an ally holds its lane, so these two cells
+   decide whether it lives. They get their own colour so that is discoverable
+   by looking at the board rather than by losing. */
+.slot--guard {
+  border-color: rgba(255, 176, 32, 0.55);
+  background: rgba(255, 176, 32, 0.07);
+}
+.slot--guard.slot--filled {
+  border-color: transparent;
+  background: none;
+}
+.slot__guard-mark {
+  position: absolute;
+  inset-block-start: 4px;
+  inset-inline-end: 5px;
+  font-size: 13px;
+  opacity: 0.6;
+  pointer-events: none;
+}
