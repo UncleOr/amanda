@@ -23,6 +23,7 @@ CATALOG.set("crumb_demon", {
   rarity: "common",
   stats: { hp: CRUMB_DEMON.hp, power: CRUMB_DEMON.power, attackSpeed: CRUMB_DEMON.attackSpeed, moveSpeed: 0, range: "melee" },
   flying: false,
+  targeting: "lane",
   midBoss: false,
   launch: false,
   abilities: [],
