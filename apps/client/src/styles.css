@@ -2471,3 +2471,50 @@ button:disabled {
   .tut__bubble { width: min(380px, calc(100vw - 24px)); padding: 10px 12px; }
   .tut__text { font-size: 13px; margin-bottom: 8px; }
 }
+
+/* ── the name, as a monster ──
+ * Or: big and beautiful on the home screen, in a monstrous font, sitting in
+ * the artwork — and NOWHERE during a match, because it is a game, not an app.
+ */
+.intro__name {
+  font-family: "Rubik Beastly", "Segoe UI", system-ui, sans-serif;
+  font-size: clamp(54px, 11vw, 128px);
+  line-height: 0.92;
+  margin: 0;
+  color: #fff;
+  /* glows in Amanda's own teal so it belongs to the picture behind it rather
+     than sitting on top of it */
+  text-shadow:
+    0 0 26px rgba(90, 230, 220, 0.55),
+    0 0 70px rgba(90, 230, 220, 0.3),
+    0 8px 34px rgba(0, 0, 0, 0.85);
+}
+.intro__sub {
+  font-family: "Rubik Beastly", "Segoe UI", system-ui, sans-serif;
+  font-size: clamp(16px, 2.4vw, 26px);
+  margin: 2px 0 20px;
+  color: var(--accent);
+  text-shadow: 0 4px 18px rgba(0, 0, 0, 0.8);
+  letter-spacing: 0.5px;
+}
+/* the badge becomes a small mark above the name rather than the headline */
+.intro--hero .intro__logo { width: min(88px, 13vh); margin: 0 0 4px; opacity: 0.95; }
+
+@media (max-height: 460px) {
+  .intro__name { font-size: clamp(40px, 9vw, 70px); }
+  .intro__sub { font-size: 14px; margin-bottom: 12px; }
+  .intro--hero .intro__logo { width: 54px; }
+}
+
+/* the name is an image now; the glow stays in CSS so it scales crisply */
+.intro__name { margin: 0; line-height: 0; }
+.intro__name img {
+  display: block;
+  width: min(360px, 62vw);
+  height: auto;
+  filter: drop-shadow(0 0 22px rgba(90, 230, 220, 0.5))
+          drop-shadow(0 6px 26px rgba(0, 0, 0, 0.85));
+}
+@media (max-height: 460px) {
+  .intro__name img { width: min(240px, 46vw); }
+}

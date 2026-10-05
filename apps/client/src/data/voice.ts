@@ -87,6 +87,13 @@ export const COUNTDOWN_LABEL = [
   "קדימה, ילד",
 ] as const;
 
+/** The announcement that fills the screen when the fighting starts. */
+export const BATTLE_PHASE = [
+  "קדימה לקרב!",
+  "ועכשיו: לקרב!",
+  "בואו נלחם!",
+] as const;
+
 /** The moment the boards lock and the battle begins. */
 export const BATTLE_START = [
   "הקרב מתחיל, ילד",

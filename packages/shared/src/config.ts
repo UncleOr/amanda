@@ -52,7 +52,7 @@ export const KING = {
 export const PHASES = {
   build: { seconds: 90, label: { he: "בונים את שדה הקרב", en: "Build Frenzy" } },
   panic: { seconds: 15, label: { he: "פאניקה", en: "Panic Seconds" } },
-  battle: { seconds: 45, label: { he: "הקרב האוטומטי", en: "Auto-Battle" } },
+  battle: { seconds: 45, label: { he: "קדימה לקרב!", en: "Auto-Battle" } },
 } as const;
 
 /**

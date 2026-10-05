@@ -243,7 +243,9 @@ function Game() {
   const [phaseCard, setPhaseCard] = useState<string | null>(null);
   useEffect(() => {
     if (!["build", "panic", "battle"].includes(m.phase)) return;
-    setPhaseCard(PHASE_LABEL[m.phase] ?? null);
+    // The battle announcement is a moment, so it gets the variants treatment
+    // the other moments have; build and panic keep their one name.
+    setPhaseCard(m.phase === "battle" ? V.pick(V.BATTLE_PHASE) : (PHASE_LABEL[m.phase] ?? null));
     const t = window.setTimeout(() => setPhaseCard(null), 1700);
     return () => window.clearTimeout(t);
   }, [m.phase]);
@@ -263,10 +265,8 @@ function Game() {
         </div>
       )}
       <header className={`topbar${m.phase === "intro" ? " topbar--ghost" : ""}`}>
-        <div className="topbar__title">
-          <img className="topbar__mark" src={`${BASE}brand/amanda_logo.png`} alt="" />
-          אמנדה | משחק קלפים מפלצתי
-        </div>
+        {/* No name across the top while playing. It is a game, not an app —
+            the title belongs on the home screen and nowhere else. */}
         {/* While waiting there is no match yet, so this is the only thing to
             say and it stays put. Once a match is running the phase announces
             itself across the screen and leaves (see .phase-card below). */}
@@ -333,12 +333,21 @@ function Game() {
             <img
               className="intro__logo"
               src={`${BASE}brand/amanda_logo.png`}
-              alt="אמנדה"
+              alt=""
               width={512}
               height={512}
             />
-            <h1 className="sr-only">אמנדה</h1>
-            <p className="intro__tag">קרב מדבקות · 4×4</p>
+            {/*
+              Drawn, not typeset. A webfont can fail to load — and did, on Or's
+              screen, where the name fell back to a plain system face. The
+              letterforms are baked into an image so the name always looks like
+              the name. Rendered FROM the real font rather than generated, so
+              the Hebrew is correct by construction instead of by luck.
+            */}
+            <h1 className="intro__name">
+              <img src={`${BASE}brand/wordmark.png`} alt="אמנדה" width={720} height={197} />
+            </h1>
+            <p className="intro__sub">משחק קלפים מפלצתי</p>
             <div className="intro__main">
             <div className="versus">
               <div className="who who--me">
