@@ -7,6 +7,7 @@ import { sfx } from "./game/sfx";
 import { music } from "./game/music";
 import { hardRefresh } from "./game/refresh";
 import { ACTIONS, isEnemyTargeted } from "./data/catalog";
+import * as V from "./data/voice";
 import { BoardGrid } from "./components/BoardGrid";
 import { CardView } from "./components/CardView";
 import { CardDetailModal } from "./components/CardDetailModal";
@@ -45,6 +46,19 @@ function verdictText(result: BattleResult, iWon: boolean): string {
     case "coinFlip":
       return "נגמר הזמן והכול יצא שווה לחלוטין — הוכרע בהטלת מטבע.";
   }
+}
+
+/** Vite serves the app under /amanda/ on Pages and / in dev. */
+const BASE = import.meta.env.BASE_URL;
+
+/**
+ * One line out of each set, chosen when the screen appears and held still
+ * while it is on screen. Re-rolling on every render would change the words
+ * under the player's eyes mid-sentence.
+ */
+function useLine(lines: readonly string[]): string {
+  const [line] = useState(() => V.pick(lines));
+  return line;
 }
 
 const PHASE_LABEL: Record<string, string> = {
@@ -119,6 +133,16 @@ function Game() {
   const showBoards = m.phase === "build" || m.phase === "panic" || m.phase === "prebattle";
   const interactive = m.phase === "build" || m.phase === "panic";
 
+  // One line per moment, settled when the screen appears (see useLine).
+  const exitTitle = useLine(V.EXIT_TITLE);
+  const exitBody = useLine(V.EXIT_BODY);
+  const exitConfirm = useLine(V.EXIT_CONFIRM);
+  const exitCancel = useLine(V.EXIT_CANCEL);
+  const countdownLabel = useLine(V.COUNTDOWN_LABEL);
+  const battleStart = useLine(V.BATTLE_START);
+  const noKing = useLine(V.NO_KING);
+  const searching = useLine(V.SEARCHING);
+
   // Drag a card from the hand onto a board slot (mouse + touch).
   const { drag, start: startDrag, dragging } = useDrag((_cardId, target) => {
     if (target === "king") m.placeKing();
@@ -170,8 +194,18 @@ function Game() {
     secRef.current = -1;
   }, [m.timeLeft, m.phase]);
 
-  const winnerText =
-    m.oppLeft && !m.result ? "🎉 היריב ברח. ניצחת בטכני." : m.iWon ? "🎉 ניצחת! הפעם." : "😋 הפסדת. טעים.";
+  // Settled when the result arrives, not on every render — the headline must
+  // not reshuffle itself while the player is reading it.
+  const [winTitle, setWinTitle] = useState("");
+  const [loseTitle, setLoseTitle] = useState("");
+  const [leftTitle, setLeftTitle] = useState("");
+  useEffect(() => {
+    if (m.phase !== "result") return;
+    setWinTitle(V.pick(V.WIN_TITLE));
+    setLoseTitle(V.pick(V.LOSE_TITLE));
+    setLeftTitle(V.pick(V.OPPONENT_LEFT));
+  }, [m.phase]);
+  const winnerText = m.oppLeft && !m.result ? leftTitle : m.iWon ? winTitle : loseTitle;
 
   return (
     <div className="app">
@@ -183,7 +217,10 @@ function Game() {
         <p>אני משוחקת לרוחב, ילד. ככה אני רואה את שניכם.</p>
       </div>
       <header className="topbar">
-        <div className="topbar__title">אמנדה | משחק קלפים מפלצתי</div>
+        <div className="topbar__title">
+          <img className="topbar__mark" src={`${BASE}brand/amanda_logo.png`} alt="" />
+          אמנדה | משחק קלפים מפלצתי
+        </div>
         {PHASE_LABEL[m.phase] && (
           <div className={`topbar__phase phase--${m.phase}`}>
             {/* holding a room is waiting for one person, not hunting for anyone */}
@@ -233,7 +270,14 @@ function Game() {
       {m.phase === "intro" && (
         <main className="intro">
           <div className="intro__card">
-            <h1>אמנדה</h1>
+            <img
+              className="intro__logo"
+              src={`${BASE}brand/amanda_logo.png`}
+              alt="אמנדה"
+              width={512}
+              height={512}
+            />
+            <h1 className="sr-only">אמנדה</h1>
             <p className="intro__tag">קרב מדבקות · 4×4 · בוא, ילד</p>
             <div className="intro__main">
             <div className="versus">
@@ -365,7 +409,7 @@ function Game() {
               <p className="intro__tag">
                 {m.netError
                   ? "השרת לא עונה. אני פנויה."
-                  : "מחפשת לך מישהו מתוק"}
+                  : searching}
               </p>
             )}
             <div className="intro__buttons">
@@ -581,7 +625,7 @@ function Game() {
               <p className="hand__hint">
                 מפלצת: הנחה על משבצת (קבוע!) · קלף פעולה: "קח לפעולה" (עד 3) · 👑 = מלך
               </p>
-              {!m.hasKing && <p className="warn">⚠️ עדיין אין מלך</p>}
+              {!m.hasKing && <p className="warn">{noKing}</p>}
               <button className="btn-fight" onClick={m.toBattle}>
                 {m.online ? "🔒 נעל את הלוח" : "⚔️ התחל קרב!"}
               </button>
@@ -606,7 +650,7 @@ function Game() {
                 <>
                   <div className="overlay__mini">ממלאת לך את החורים…</div>
                   <div className="overlay__count">{Math.ceil(m.timeLeft)}</div>
-                  <div className="overlay__label">הקרב מתחיל, ילד</div>
+                  <div className="overlay__label">{battleStart}</div>
                 </>
               )}
             </div>
@@ -619,7 +663,7 @@ function Game() {
         <main className="build">
           <div className="overlay">
             <div className="overlay__count">{Math.ceil(m.timeLeft)}</div>
-            <div className="overlay__label">התכונן לקרב, ילד</div>
+            <div className="overlay__label">{countdownLabel}</div>
           </div>
         </main>
       )}
@@ -690,10 +734,8 @@ function Game() {
       {confirmExit && (
         <div className="modal-overlay" onClick={() => setConfirmExit(false)}>
           <div className="modal modal--confirm" onClick={(e) => e.stopPropagation()}>
-            <h2>כבר הולך?</h2>
-            <p className="modal__role">
-              הלוח שבנית נמחק. אשמור לך מקום בתפריט שלי, ילד.
-            </p>
+            <h2>{exitTitle}</h2>
+            <p className="modal__role">{exitBody}</p>
             <div className="modal__actions">
               <button
                 className="btn-fight btn-danger"
@@ -702,10 +744,10 @@ function Game() {
                   m.reset();
                 }}
               >
-                כן, אני בורח
+                {exitConfirm}
               </button>
               <button className="btn-fight btn-online" onClick={() => setConfirmExit(false)}>
-                לא, אני נשאר
+                {exitCancel}
               </button>
             </div>
           </div>

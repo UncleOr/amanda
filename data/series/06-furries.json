@@ -1,0 +1,72 @@
+{
+  "id": "furries",
+  "seriesNumber": 6,
+  "name": {
+    "he": "הפרוותיים",
+    "en": "The Furries"
+  },
+  "specialty": {
+    "he": "מכות חשמל מהירות — מעט חיים, הרבה כוח",
+    "en": "Fast electric strikes — little health, a lot of power"
+  },
+  "synergy": {
+    "threshold": 3,
+    "name": {
+      "he": "פרווה טעונה",
+      "en": "Charged Fur"
+    },
+    "description": {
+      "he": "כל הפרוותיים שלכם תוקפים מהר יותר ב-20%.",
+      "en": "All your Furries attack 20% faster."
+    },
+    "ability": {
+      "type": "attackSpeedAura",
+      "trigger": "aura",
+      "params": {
+        "pct": 20
+      }
+    }
+  },
+  "cards": [
+    {
+      "id": "furries_01_chuppy",
+      "seriesId": "furries",
+      "numberInSeries": 1,
+      "name": {
+        "he": "צ'ופי",
+        "en": "Chuppy"
+      },
+      "elements": [
+        "electric"
+      ],
+      "rarity": "rare",
+      "stats": {
+        "hp": 610,
+        "power": 1100,
+        "attackSpeed": 1.2,
+        "moveSpeed": 1.5,
+        "range": "ranged"
+      },
+      "flying": false,
+      "midBoss": false,
+      "abilities": [
+        {
+          "type": "armorBreak",
+          "trigger": "onHit",
+          "params": {
+            "pct": 20
+          }
+        }
+      ],
+      "role": {
+        "he": "החבר שלך מההתחלה. מכה חזק מרחוק ושובר שריון — אבל סופג כמעט כלום, אז הוא לא עומד בחזית.",
+        "en": "Your friend from the start. Hits hard at range and breaks armour, but takes almost nothing, so he does not belong in the front row."
+      },
+      "art": {
+        "placeholderColor": "#f5c21b",
+        "sprite": "cards/furries_01_chuppy.webp"
+      },
+      "launch": true
+    }
+  ]
+}

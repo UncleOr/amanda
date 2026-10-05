@@ -84,6 +84,9 @@ function walk(dir) {
 
 /** Which screen each file is responsible for, in the order a player meets it. */
 const SECTIONS = [
+  // Put the variant lines first: they are the ones worth most attention, and
+  // each row there is one of several things Amanda might say at that moment.
+  ["data/voice.ts", "הקול של אמנדה — שורות מתחלפות (כמה גרסאות לכל רגע)"],
   ["App.tsx", "מסכי המשחק — פתיחה, בנייה, קרב, תוצאה"],
   ["components/BattleLog.tsx", "דוח הקרב"],
   ["components/CardDetailModal.tsx", "חלון פרטי מפלצת"],

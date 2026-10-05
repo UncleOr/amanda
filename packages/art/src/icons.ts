@@ -16,10 +16,11 @@ const RAW = join(REPO_ROOT, "assets", "raw");
 const OUT = join(REPO_ROOT, "apps", "client", "public");
 
 /**
- * The face of the game. Flame Dragon is the first card of the first series.
- * Amanda's own portrait will take this over once her design is approved.
+ * The face of the game is Amanda's own. Her portrait is generated centred and
+ * symmetrical with clear margins precisely so it survives being cropped to a
+ * circle on a home screen.
  */
-const DEFAULT_SOURCE = join(RAW, "dragons", "dragons_01_flame_dragon.png");
+const DEFAULT_SOURCE = join(RAW, "brand", "amanda_portrait.png");
 
 /** Square icons a browser or an installed web app asks for. */
 const SIZES = [
