@@ -13,7 +13,10 @@ import {
   ACTION_SLOTS,
   CATALOG,
   KING_CANDIDATES,
-  SUPPORTED_ACTIONS,
+  ACTIVE_ACTIONS,
+  FILL_CARDS_PER_DECK,
+  FILL_CARD_CHANCE,
+  PASSIVE_ACTIONS,
   SYNERGIES,
   cardPool,
   isPassiveAction,
@@ -64,8 +67,14 @@ function shuffle<T>(items: T[]): T[] {
 /** 18 monster cards + 4 action cards (GDD), all shuffled together. */
 function matchDeck(): string[] {
   const monsters = shuffle(cardPool()).slice(0, DECK.size);
-  const actions = shuffle(SUPPORTED_ACTIONS).slice(0, ACTION_DECK_COUNT);
-  return shuffle([...monsters, ...actions]);
+  // Fill cards are the dramatic ones — at most one per deck, and not every
+  // deck. The rest of the action slots go to the active cards.
+  const fills =
+    Math.random() < FILL_CARD_CHANCE
+      ? shuffle([...PASSIVE_ACTIONS]).slice(0, FILL_CARDS_PER_DECK)
+      : [];
+  const actives = shuffle([...ACTIVE_ACTIONS]).slice(0, ACTION_DECK_COUNT - fills.length);
+  return shuffle([...monsters, ...actives, ...fills]);
 }
 
 function perimeterCells(): Array<{ x: number; y: number }> {
@@ -733,4 +742,5 @@ export function useMatch(): MatchApi {
 }
 
 /** Internals exposed for unit tests. */
-export const __testing = { fillGs, cellKey, resolveKing, rotateFrontLanes, generateAiPlan };
+export const __testing = {
+  matchDeck, fillGs, cellKey, resolveKing, rotateFrontLanes, generateAiPlan };

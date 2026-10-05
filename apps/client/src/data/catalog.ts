@@ -112,6 +112,18 @@ export const TARGETED_ACTIONS = ["full_refuel", "recall_card"];
 
 /** How many action cards get shuffled into a match deck (GDD: 4). */
 export const ACTION_DECK_COUNT = 4;
+/**
+ * How often a match deck contains a Fill card at all.
+ *
+ * A Fill card drops a whole formation onto the board in one go, so drawing one
+ * should feel like luck. Picking the action cards at random from the whole list
+ * put an average of 1.8 of them in every deck — and sometimes four — which made
+ * the most dramatic card in the game routine.
+ */
+export const FILL_CARD_CHANCE = 0.5;
+/** At most this many Fill cards in a single deck. */
+export const FILL_CARDS_PER_DECK = 1;
+
 /** Max action cards a player can hold in the bar at once. */
 export const ACTION_SLOTS = 3;
 
