@@ -298,6 +298,8 @@ export function useMatch(): MatchApi {
   const [targeting, setTargeting] = useState<string | null>(null);
   const [online, setOnline] = useState(false);
   const [netError, setNetError] = useState(false);
+  /** True once the server has paired us with an opponent. */
+  const matchStartedRef = useRef(false);
   const [mySide, setMySide] = useState<Side>("A");
   const [oppLeft, setOppLeft] = useState(false);
   const [netOpp, setNetOpp] = useState<BoardView>({ placements: {}, king: null });
@@ -488,11 +490,15 @@ export function useMatch(): MatchApi {
     setOnline(true);
     setOppLeft(false);
     setNetError(false);
+    matchStartedRef.current = false;
     setPhase("waiting");
     const net = new Net();
     netRef.current = net;
     net.connect({
-      onStart: (side) => setMySide(side),
+      onStart: (side) => {
+        matchStartedRef.current = true;
+        setMySide(side);
+      },
       onPhase: (p, timeLeft) => {
         if (p === "locking") {
           enterPrebattle();
@@ -522,9 +528,11 @@ export function useMatch(): MatchApi {
         setPhase((prev) => (prev === "battle" || prev === "result" ? prev : "result"));
       },
       onClose: (connected) => {
-        // Never opened (or dropped before the match began) = no server to play
-        // against; say so instead of leaving "searching…" spinning forever.
-        if (!connected) setNetError(true);
+        // A socket that dies before the match is paired leaves the player
+        // staring at "searching…" with nothing to tell them it is over —
+        // whether it never opened at all, or opened and then dropped while
+        // queuing. Either way, say so.
+        if (!connected || !matchStartedRef.current) setNetError(true);
         else setOppLeft(true);
       },
     });
