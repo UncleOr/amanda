@@ -1,5 +1,6 @@
 import { useEffect, useRef, useState } from "react";
 import { Icon } from "./components/Icon";
+import { Album } from "./components/Album";
 import { PHASES } from "@amanda/shared";
 import type { BattleResult } from "@amanda/engine";
 import { useMatch } from "./game/useMatch";
@@ -120,6 +121,7 @@ function Game() {
   const [copied, setCopied] = useState(false);
   // On a phone the action cards are a drawer, so the board keeps its height.
   const [actionsOpen, setActionsOpen] = useState(false);
+  const [albumOpen, setAlbumOpen] = useState(false);
   // Shown next to the build id: a screenshot of a layout problem is only
   // useful if it says what size screen the layout was solving for.
   const [viewport, setViewport] = useState(() => `${window.innerWidth}×${window.innerHeight}`);
@@ -326,6 +328,9 @@ function Game() {
                 disabled={!m.onlineAvailable}
               >
                 🔑 יש לי קוד
+              </button>
+              <button className="btn-link" onClick={() => setAlbumOpen(true)}>
+                <Icon name="deck" size={15} /> האלבום שלי
               </button>
             </div>
             {joining && (
@@ -775,6 +780,14 @@ function Game() {
             </div>
           </div>
         </div>
+      )}
+
+      {albumOpen && (
+        <Album
+          account={m.account}
+          onClose={() => setAlbumOpen(false)}
+          onCardInfo={(id) => setDetail(id)}
+        />
       )}
 
       {detail && <CardDetailModal cardId={detail} onClose={() => setDetail(null)} />}

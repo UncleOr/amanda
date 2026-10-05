@@ -25,6 +25,7 @@ import {
   isTargetedAction,
 } from "../data/catalog";
 import { sfx } from "./sfx";
+import { albumToPool, loadAccount, type Account, type OwnedCard } from "./account";
 import { Net, ONLINE_AVAILABLE, type Intent } from "./net";
 
 export type Phase =
@@ -73,8 +74,23 @@ function shuffle<T>(items: T[]): T[] {
 }
 
 /** 18 monster cards + 4 action cards (GDD), all shuffled together. */
-function matchDeck(): string[] {
-  const monsters = shuffle(cardPool()).slice(0, DECK.size);
+/**
+ * The monsters a match deck is drawn from.
+ *
+ * With an album, it is YOUR album, duplicates and all — holding three of
+ * something means three of them can reach the board. Without one (no account,
+ * no network, no keys) it stays what it always was: the whole catalog. The
+ * game has to start either way.
+ */
+function monsterPool(album?: Map<string, OwnedCard> | null): string[] {
+  if (album && album.size) return albumToPool(album);
+  return cardPool();
+}
+
+function matchDeck(album?: Map<string, OwnedCard> | null): string[] {
+  // An album smaller than a full deck is not padded. Running thin IS the game:
+  // the gaps become Crumb Demons, and that is the reason to collect.
+  const monsters = shuffle(monsterPool(album)).slice(0, DECK.size);
   // Fill cards are the dramatic ones — at most one per deck, and not every
   // deck. The rest of the action slots go to the active cards.
   const fills =
@@ -298,8 +314,8 @@ function fillGs(s: GameState, bar: string[]): GameState {
   return { ...s, king, placements, hand: null };
 }
 
-function initialGameState(): GameState {
-  return { deck: matchDeck(), hand: null, discard: [], placements: {}, king: null };
+function initialGameState(album?: Map<string, OwnedCard> | null): GameState {
+  return { deck: matchDeck(album), hand: null, discard: [], placements: {}, king: null };
 }
 
 function drawIfEmpty(s: GameState): GameState {
@@ -357,6 +373,8 @@ export interface MatchApi {
   mods: BattleMods;
   /** Multiplayer state. */
   online: boolean;
+  /** The player's account, or null when playing without one. */
+  account: Account | null;
   onlineAvailable: boolean;
   mySide: Side;
   oppLeft: boolean;
@@ -397,7 +415,9 @@ export interface MatchApi {
 export function useMatch(): MatchApi {
   const [phase, setPhase] = useState<Phase>("intro");
   const [timeLeft, setTimeLeft] = useState<number>(COUNTDOWN_SECONDS);
-  const [gs, setGs] = useState<GameState>(initialGameState);
+  const [gs, setGs] = useState<GameState>(() => initialGameState(null));
+  /** Loaded once, in the background; the game never waits for it. */
+  const [account, setAccount] = useState<Account | null>(null);
   const [result, setResult] = useState<BattleResult | null>(null);
   const [actionBar, setActionBar] = useState<string[]>([]);
   const [usedActions, setUsedActions] = useState<Record<string, boolean>>({});
@@ -434,6 +454,32 @@ export function useMatch(): MatchApi {
   const [mySide, setMySide] = useState<Side>("A");
   const [oppLeft, setOppLeft] = useState(false);
   const [netOpp, setNetOpp] = useState<BoardView>({ placements: {}, king: null });
+
+  const accountRef = useRef(account);
+  accountRef.current = account;
+
+  /*
+   * The account is fetched in the background and the game does not wait for
+   * it. If it arrives before a match starts, the next deal uses the album; if
+   * it never arrives, every deal stays as it is today. Nothing blocks on a
+   * network call between a child and a game.
+   */
+  useEffect(() => {
+    let alive = true;
+    void loadAccount().then((a) => {
+      if (!alive || !a) return;
+      setAccount(a);
+      setGs((cur) =>
+        // only re-deal an untouched deck; never pull cards out of a live match
+        cur.hand === null && cur.king === null && Object.keys(cur.placements).length === 0
+          ? initialGameState(a.album)
+          : cur,
+      );
+    });
+    return () => {
+      alive = false;
+    };
+  }, []);
 
   const onlineRef = useRef(online);
   onlineRef.current = online;
@@ -839,7 +885,7 @@ export function useMatch(): MatchApi {
     netRef.current?.close();
     netRef.current = null;
     aiPlanRef.current = generateAiPlan();
-    setGs(initialGameState());
+    setGs(initialGameState(accountRef.current?.album));
     setResult(null);
     setActionBar([]);
     setUsedActions({});
@@ -1095,6 +1141,7 @@ export function useMatch(): MatchApi {
     targeting,
     mods: { boardPowerAdd, boostedCells },
     online,
+    account,
     onlineAvailable: ONLINE_AVAILABLE,
     netError,
     roomCode,

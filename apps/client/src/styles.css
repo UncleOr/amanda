@@ -2118,3 +2118,82 @@ button:disabled {
   border-radius: 50%;
   display: block;
 }
+
+/* ---- the album ---- */
+.album {
+  position: fixed;
+  inset: 0;
+  z-index: 40;
+  display: flex;
+  flex-direction: column;
+  min-height: 0;
+  background: linear-gradient(180deg, #0c111d, #070a12);
+  padding: env(safe-area-inset-top) env(safe-area-inset-right)
+    env(safe-area-inset-bottom) env(safe-area-inset-left);
+}
+.album__bar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  padding: 10px 14px;
+  border-bottom: 1px solid var(--line);
+  flex: none;
+}
+.album__counts { display: flex; gap: 14px; align-items: center; }
+.album__count {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  font-weight: 800;
+  font-variant-numeric: tabular-nums;
+}
+.album__count--gem { color: #9fe6ff; }
+.album__none {
+  margin: 0;
+  padding: 10px 16px;
+  color: var(--muted);
+  font-size: 13px;
+  text-align: center;
+}
+/* min-height:0 so this scrolls instead of pushing the bar off the screen */
+.album__scroll { flex: 1; min-height: 0; overflow-y: auto; padding: 10px 14px 24px; }
+.album__series { margin-bottom: 18px; }
+.album__series-name {
+  display: flex;
+  align-items: baseline;
+  gap: 8px;
+  margin: 0 0 8px;
+  font-size: 15px;
+}
+.album__series-count { color: var(--muted); font-size: 12px; font-variant-numeric: tabular-nums; }
+.album__grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(84px, 1fr));
+  gap: 10px;
+}
+.album__cell { position: relative; }
+.album__cell--missing { opacity: 0.4; filter: grayscale(0.8); }
+.album__copies {
+  position: absolute;
+  inset-block-end: 4px;
+  inset-inline-start: 4px;
+  background: rgba(8, 12, 22, 0.92);
+  border: 1px solid var(--accent);
+  color: var(--accent);
+  border-radius: 999px;
+  padding: 0 6px;
+  font-size: 11px;
+  font-weight: 800;
+}
+.album__level {
+  position: absolute;
+  inset-block-start: 4px;
+  inset-inline-end: 4px;
+  background: rgba(60, 190, 120, 0.92);
+  color: #052;
+  border-radius: 999px;
+  padding: 0 6px;
+  font-size: 10px;
+  font-weight: 800;
+}
