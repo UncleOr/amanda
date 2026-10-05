@@ -579,14 +579,23 @@ export function useMatch(): MatchApi {
     if (ok) sfx.play("discard");
   }, [refill]);
 
+  /**
+   * Take the top card out of the bin.
+   *
+   * The card you were holding goes to the BOTTOM of the pile, not back on top.
+   * It used to swap, which meant whatever you had just thrown away was always
+   * one tap from returning — so throwing cost nothing and the bin was an undo
+   * button. Or's rule: only the top card, and only the top card. You get one
+   * change of heart, and then what you gave up is buried.
+   */
   const takeDiscard = useCallback(() => {
     let ok = false;
     setGs((s) => {
       if (s.discard.length === 0) return s;
       ok = true;
       const top = s.discard[s.discard.length - 1]!;
-      const discard = s.discard.slice(0, -1);
-      if (s.hand !== null) discard.push(s.hand);
+      const rest = s.discard.slice(0, -1);
+      const discard = s.hand !== null ? [s.hand, ...rest] : rest;
       return { ...s, hand: top, discard };
     });
     if (ok) sfx.play("draw");

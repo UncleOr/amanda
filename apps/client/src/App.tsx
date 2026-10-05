@@ -219,7 +219,7 @@ function Game() {
         <h2>סובב את המכשיר</h2>
         <p>אני משוחקת לרוחב, ילד. ככה אני רואה את שניכם.</p>
       </div>
-      <header className="topbar">
+      <header className={`topbar${m.phase === "intro" ? " topbar--ghost" : ""}`}>
         <div className="topbar__title">
           <img className="topbar__mark" src={`${BASE}brand/amanda_logo.png`} alt="" />
           אמנדה | משחק קלפים מפלצתי
@@ -273,7 +273,17 @@ function Game() {
 
       {/* ---- intro / start screen ---- */}
       {m.phase === "intro" && (
-        <main className="intro">
+        <main className="intro intro--hero">
+          {/*
+            She is the background, not a picture inside a box. The banner was
+            generated with its left half deliberately empty, which is where
+            everything below sits.
+          */}
+          <div
+            className="intro__art"
+            style={{ backgroundImage: `url("${BASE}brand/amanda_banner.webp")` }}
+            aria-hidden="true"
+          />
           <div className="intro__card">
             <img
               className="intro__logo"
@@ -283,7 +293,7 @@ function Game() {
               height={512}
             />
             <h1 className="sr-only">אמנדה</h1>
-            <p className="intro__tag">קרב מדבקות · 4×4 · בוא, ילד</p>
+            <p className="intro__tag">קרב מדבקות · 4×4</p>
             <div className="intro__main">
             <div className="versus">
               <div className="who who--me">
@@ -376,16 +386,9 @@ function Game() {
                 ⟳ רענן
               </button>
             </p>
-            <p className="intro__hint">
-              {PHASES.build.seconds} שניות לבנות את הלוח · {PHASES.panic.seconds} שניות
-              פאניקה · {PHASES.battle.seconds} שניות קרב
-              {!m.onlineAvailable && (
-                <>
-                  <br />
-                  (מצב אונליין דורש שרת פעיל)
-                </>
-              )}
-            </p>
+            {!m.onlineAvailable && (
+              <p className="intro__hint">(מצב אונליין דורש שרת פעיל)</p>
+            )}
           </div>
         </main>
       )}
@@ -527,12 +530,6 @@ function Game() {
                 {actionsOpen ? "▾" : "▴"} קלפי פעולה
                 <b className="actions__handle-count">{m.actionBar.length}/3</b>
               </button>
-              <span className="actions__title">
-                קלפי פעולה {m.actionBar.length}/3:
-              </span>
-              {m.actionBar.length === 0 && (
-                <span className="actions__empty">קלפי פעולה מחכים כאן</span>
-              )}
               {m.actionBar.map((a) => (
                 <div key={a.id} className="action-chip">
                   <div className="action-chip__card">
@@ -589,7 +586,7 @@ function Game() {
                   <div
                     className={`hand__draggable${dragging ? " hand__draggable--dragging" : ""}`}
                     onPointerDown={(e) => startDrag(m.hand!, e)}
-                    title="גרור ללוח. לחץ כדי לקרוא."
+                    title=""
                   >
                     <CardView
                       cardId={m.hand}
@@ -634,9 +631,6 @@ function Game() {
                   🏗️ ארבע הפינות פתוחות להנחה כפולה
                 </p>
               )}
-              <p className="hand__hint">
-                מפלצת: הנחה על משבצת (קבוע!) · קלף פעולה: "קח לפעולה" (עד 3) · 👑 = מלך
-              </p>
               {!m.hasKing && <p className="warn">{noKing}</p>}
               <button
                 className={`btn-fight${m.ready ? " btn-fight--ready" : ""}`}

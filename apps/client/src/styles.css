@@ -2208,3 +2208,142 @@ button:disabled {
   border-bottom: 1px solid var(--line);
 }
 .album__link-note { color: var(--muted); font-size: 12px; }
+
+/* ════════ the menu, as a game rather than an app ════════
+ * Was: a rounded card centred in an empty void, with the game's name set as a
+ * title bar at the top. That reads as a settings screen. Now Amanda fills the
+ * screen and the menu sits in the space she was drawn to leave.
+ */
+.topbar--ghost {
+  position: absolute;
+  inset-inline: 0;
+  top: 0;
+  z-index: 3;
+  background: none;
+  border: none;
+}
+/* on the menu the logo IS the title, so the words are redundant furniture */
+.topbar--ghost .topbar__title { display: none; }
+
+.intro--hero {
+  position: relative;
+  overflow: hidden;
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  padding: 0 clamp(16px, 6vw, 92px);
+}
+.intro__art {
+  position: absolute;
+  inset: 0;
+  background-size: cover;
+  background-position: right center;
+  background-repeat: no-repeat;
+  z-index: 0;
+  /*
+   * She was drawn leaning in from the right with the left half left empty for
+   * text — which is backwards for a Hebrew page, where the menu starts on the
+   * right. Mirroring her puts the empty half under the menu instead of her
+   * face under it. The wash below is inside this element, so it mirrors too
+   * and ends up darkening the correct side.
+   */
+  transform: scaleX(-1);
+}
+/* a wash so text over her stays readable without hiding her */
+.intro__art::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    to left,
+    rgba(7, 10, 18, 0) 38%,
+    rgba(7, 10, 18, 0.82) 72%,
+    rgba(7, 10, 18, 0.97) 100%
+  );
+}
+.intro--hero .intro__card {
+  position: relative;
+  z-index: 1;
+  background: none;
+  border: none;
+  box-shadow: none;
+  padding: 0;
+  max-width: 420px;
+  text-align: start;
+  animation: hero-in 420ms cubic-bezier(0.2, 0.9, 0.3, 1.2);
+}
+@keyframes hero-in {
+  from { opacity: 0; transform: translateY(14px); }
+  to { opacity: 1; transform: none; }
+}
+.intro--hero .intro__logo { margin: 0 0 2px; width: min(200px, 26vh); }
+.intro--hero .intro__tag { text-align: start; margin-bottom: 14px; }
+/* the primary action should look like a button in a game, not a form */
+.intro--hero .intro__buttons { justify-content: flex-start; }
+.intro--hero .btn-fight {
+  font-size: 19px;
+  padding: 14px 26px;
+  border-radius: 14px;
+  letter-spacing: 0.2px;
+  box-shadow: 0 10px 26px rgba(0, 0, 0, 0.45);
+}
+.intro--hero .intro__secondary { justify-content: flex-start; }
+.intro--hero .versus { justify-content: flex-start; gap: 14px; }
+
+/* Landscape phones have almost no height, so she moves behind the menu
+   instead of beside it and the wash goes bottom-up. */
+@media (max-height: 460px), (max-width: 560px) {
+  .intro--hero { padding: 0 18px; }
+  .intro__art { background-position: 70% center; }
+  .intro__art::after {
+    background: linear-gradient(
+      to left,
+      rgba(7, 10, 18, 0.35) 0%,
+      rgba(7, 10, 18, 0.88) 60%,
+      rgba(7, 10, 18, 0.97) 100%
+    );
+  }
+  .intro--hero .intro__logo { width: min(130px, 22vh); }
+  .intro--hero .btn-fight { font-size: 16px; padding: 11px 18px; }
+}
+
+/* Build ids and phase lengths are developer furniture. They stay — the refresh
+   button has rescued us more than once — but they stop competing with the
+   game for attention. */
+.intro--hero .intro__version,
+.intro--hero .intro__hint {
+  font-size: 10px;
+  opacity: 0.45;
+  margin-top: 10px;
+  text-align: start;
+}
+.intro--hero .intro__version:hover,
+.intro--hero .intro__hint:hover { opacity: 0.9; }
+@media (max-height: 460px), (max-width: 560px) {
+  /* no room at all on a phone in landscape; the version line is still one tap
+     away in .intro__version once the hint is gone */
+  .intro--hero .intro__hint { display: none; }
+}
+
+/* ── the name, big, at the top ──
+ * Or: the heading and its subtitle belong at the top, large — not set as a
+ * caption under a logo the way an app titles a settings page.
+ */
+.intro--hero .intro__card { max-width: 480px; }
+.intro--hero .intro__logo { width: min(168px, 22vh); margin: 0 0 6px; }
+.intro--hero .intro__tag {
+  font-size: clamp(17px, 2.4vw, 23px);
+  font-weight: 800;
+  letter-spacing: 0.4px;
+  color: var(--text);
+  opacity: 0.9;
+  margin: 0 0 18px;
+}
+
+/* The phase is the one line that matters while a match is running, so it reads
+   as a headline rather than a status chip in a toolbar. */
+.topbar__phase {
+  font-size: clamp(15px, 2vw, 20px);
+  font-weight: 800;
+  letter-spacing: 0.3px;
+}
