@@ -128,6 +128,8 @@ export function Arena({
     let initialized = false;
     let finaleStarted = false;
     let timeUp = false;
+    /** Last whole second announced by the battle clock, so each ticks once. */
+    let lastTick = -1;
     let clock = 0; // replay time in ms, shared by every effect
     const timers: number[] = [];
     const app = new Application();
@@ -703,6 +705,11 @@ export function Arena({
           const shown = Math.ceil(leftSec);
           if (clockText.text !== `${shown}s`) clockText.text = `${shown}s`;
           const warning = leftSec <= WARN_AT && leftSec > 0;
+          // Count the last seconds out loud, the same way the build phase does.
+          if (shown !== lastTick && leftSec > 0 && shown <= WARN_AT) {
+            lastTick = shown;
+            sfx.play(shown <= 3 ? "tickUrgent" : "tick");
+          }
           clockText.style.fill = warning ? 0xff6b6b : 0xffffff;
           const beat = warning ? 1 + Math.sin(clock / 90) * 0.12 : 1;
           clockText.scale.set(beat);
@@ -862,7 +869,7 @@ export function Arena({
           timers.push(
             window.setTimeout(() => {
               timeUp = true;
-              sfx.play("beep");
+              sfx.play("timeUp");
             }, playbackMs),
           );
         timers.push(window.setTimeout(() => triggerFinale(lastUnits), playbackMs + holdMs));

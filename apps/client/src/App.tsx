@@ -89,6 +89,8 @@ function Game() {
   const [joining, setJoining] = useState(false);
   const [codeInput, setCodeInput] = useState("");
   const [copied, setCopied] = useState(false);
+  // On a phone the action cards are a drawer, so the board keeps its height.
+  const [actionsOpen, setActionsOpen] = useState(false);
   const [showLog, setShowLog] = useState(false);
   const openInfo = (cardId: string) => setDetail(cardId);
 
@@ -124,18 +126,26 @@ function Game() {
       music.play(m.result?.winner === "A" ? "win" : "lose", { loop: false });
   }, [m.phase, m.result]);
 
-  // Countdown beeps for the timed overlays.
+  // The clock, out loud. Building is a race against a timer you cannot see
+  // while you are looking at your board, so the last seconds have to be heard.
   const secRef = useRef(-1);
   useEffect(() => {
+    const s = Math.ceil(m.timeLeft);
+    if (s === secRef.current || s <= 0) return;
+
     if (m.phase === "countdown" || m.phase === "prebattle") {
-      const s = Math.ceil(m.timeLeft);
-      if (s !== secRef.current && s > 0) {
-        secRef.current = s;
-        sfx.play("beep");
-      }
-    } else {
-      secRef.current = -1;
+      secRef.current = s;
+      sfx.play("beep");
+      return;
     }
+    // Running out of build time: a quiet tick from ten seconds, urgent at three.
+    if (m.phase === "build" || m.phase === "panic") {
+      secRef.current = s;
+      if (s <= 3) sfx.play("tickUrgent");
+      else if (s <= 10) sfx.play("tick");
+      return;
+    }
+    secRef.current = -1;
   }, [m.timeLeft, m.phase]);
 
   const winnerText =
@@ -395,7 +405,14 @@ function Game() {
           )}
 
           {interactive && (
-            <div className="actions">
+            <div className={`actions${actionsOpen ? " actions--open" : ""}`}>
+              <button
+                className="actions__handle"
+                onClick={() => setActionsOpen((v) => !v)}
+                aria-expanded={actionsOpen}
+              >
+                {actionsOpen ? "▾" : "▴"} קלפי פעולה {m.actionBar.length}/3
+              </button>
               <span className="actions__title">
                 קלפי פעולה {m.actionBar.length}/3:
               </span>

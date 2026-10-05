@@ -10,6 +10,9 @@ type SoundName =
   | "place"
   | "discard"
   | "beep"
+  | "tick"
+  | "tickUrgent"
+  | "timeUp"
   | "go"
   | "crumbs"
   | "explode"
@@ -75,6 +78,19 @@ const RECIPES: Record<SoundName, () => void> = {
   place: () => tone(360, 100, { type: "triangle", slideTo: 150, gain: 0.16 }),
   discard: () => tone(420, 110, { type: "sawtooth", slideTo: 120, gain: 0.1 }),
   beep: () => tone(880, 120, { type: "sine", gain: 0.14 }),
+  // A clock, not an alarm: quiet and low while there is still time…
+  tick: () => tone(520, 55, { type: "square", gain: 0.05 }),
+  // …then higher and harder once seconds actually matter.
+  tickUrgent: () => {
+    tone(1040, 85, { type: "square", gain: 0.12 });
+    tone(520, 85, { type: "triangle", gain: 0.06 });
+  },
+  // The buzzer: two falling notes under a short burst of noise.
+  timeUp: () => {
+    tone(700, 420, { type: "sawtooth", slideTo: 180, gain: 0.16 });
+    tone(350, 420, { type: "square", slideTo: 90, gain: 0.08, delayMs: 30 });
+    noise(260, 0.16);
+  },
   go: () => {
     tone(440, 260, { type: "sine", slideTo: 900, gain: 0.18 });
     tone(660, 260, { type: "triangle", slideTo: 1200, gain: 0.08, delayMs: 40 });

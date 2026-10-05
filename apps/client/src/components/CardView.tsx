@@ -104,11 +104,15 @@ export function CardView({ cardId, onClick, onInfo, size = "medium", king = fals
   );
 }
 
-/** A face-down card (fog of war). */
+/**
+ * A card hidden by fog of war. The cloud is drawn in CSS; the mark underneath
+ * is deliberately almost invisible — enough to feel a shape in there, not
+ * enough to read as a label.
+ */
 export function CardBack({ size = "small" }: { size?: "small" | "medium" }) {
   return (
-    <div className={`card card--back card--${size}`}>
-      <span className="card-back__mark">❓</span>
+    <div className={`card card--back card--${size}`} aria-label="מוסתר בערפל">
+      <span className="card-back__mark">👁</span>
     </div>
   );
 }

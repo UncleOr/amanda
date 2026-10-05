@@ -539,15 +539,57 @@ body {
   box-shadow: inset 0 0 0 1px rgba(125, 255, 125, 0.55);
 }
 
+/*
+ * Fog of war. A question mark says "no data"; drifting cloud says "there is
+ * something there you cannot see yet", which is the actual feeling. Built from
+ * overlapping soft radial blobs that creep at different speeds, so no two
+ * covered cells ever look alike.
+ */
 .card--back {
-  background: repeating-linear-gradient(45deg, #141d33 0 7px, #1c2743 7px 14px);
+  position: relative;
+  background: linear-gradient(160deg, #141d33, #0d1424);
   border-color: var(--line);
   cursor: default;
+  overflow: hidden;
   display: flex;
   align-items: center;
   justify-content: center;
 }
-.card-back__mark { font-size: 20px; opacity: 0.5; }
+.card--back::before,
+.card--back::after {
+  content: "";
+  position: absolute;
+  inset: -40%;
+  background:
+    radial-gradient(42% 38% at 30% 42%, rgba(176, 198, 236, 0.22), transparent 70%),
+    radial-gradient(34% 30% at 68% 32%, rgba(146, 170, 214, 0.18), transparent 72%),
+    radial-gradient(46% 40% at 52% 72%, rgba(120, 146, 196, 0.16), transparent 74%);
+  filter: blur(5px);
+  animation: fogdrift 17s ease-in-out infinite alternate;
+}
+/* the second layer runs the other way and slower, so the two never line up */
+.card--back::after {
+  background:
+    radial-gradient(38% 34% at 72% 62%, rgba(158, 182, 226, 0.16), transparent 72%),
+    radial-gradient(30% 28% at 24% 70%, rgba(132, 158, 206, 0.14), transparent 74%);
+  animation-duration: 26s;
+  animation-direction: alternate-reverse;
+}
+@keyframes fogdrift {
+  from { transform: translate3d(-7%, -4%, 0) scale(1.05); }
+  to { transform: translate3d(7%, 5%, 0) scale(1.18); }
+}
+/* a faint, barely-there mark under the cloud — presence, not a label */
+.card-back__mark {
+  position: relative;
+  font-size: 18px;
+  opacity: 0.18;
+  filter: blur(0.4px);
+}
+@media (prefers-reduced-motion: reduce) {
+  .card--back::before,
+  .card--back::after { animation: none; }
+}
 
 /* ---- action-card bar ---- */
 .actions {
@@ -560,6 +602,8 @@ body {
   background: rgba(20, 26, 41, 0.6);
   border-top: 1px solid var(--line);
 }
+/* The drawer handle only exists on a phone; on a desktop the bar is always open. */
+.actions__handle { display: none; }
 .actions__title {
   font-size: 12px;
   font-weight: 700;
@@ -1410,14 +1454,61 @@ button:disabled {
   }
   .side__label { font-size: 10px; }
 
+  /*
+   * On a phone the action cards are a DRAWER. Closed they cost one 24px
+   * handle and the boards get all the rest; open, they slide up over the board
+   * for as long as you are choosing one. A permanent strip was eating a fifth
+   * of the screen to show three cards you look at twice a game.
+   */
   .actions {
     grid-area: actions;
     position: static;
-    padding: 3px 8px;
-    background: rgba(12, 17, 29, 0.9);
+    padding: 0;
+    background: rgba(12, 17, 29, 0.92);
     border-top: 1px solid var(--line);
-    gap: 5px;
+    gap: 4px;
+    flex-wrap: wrap;
+    justify-content: center;
+    align-items: center;
   }
+  .actions__handle {
+    display: block;
+    flex: 1 0 100%;
+    background: transparent;
+    border: none;
+    border-radius: 0;
+    color: var(--muted);
+    font-size: 11px;
+    font-weight: 700;
+    padding: 4px 8px;
+    text-align: center;
+  }
+  .actions--open .actions__handle { color: var(--accent); }
+  /* the cards themselves stay out of the way until the drawer is opened */
+  .actions__title,
+  .actions__empty,
+  .action-chip {
+    display: none;
+  }
+  .actions--open {
+    position: absolute;
+    /* over the boards only — the hand column keeps its "start battle" button */
+    inset-inline-start: 0;
+    inset-inline-end: 146px;
+    bottom: 0;
+    z-index: 15;
+    padding-bottom: 6px;
+    box-shadow: 0 -10px 30px rgba(0, 0, 0, 0.55);
+  }
+  .actions--open .actions__empty {
+    display: block;
+    flex: 1 0 100%;
+    font-size: 11px;
+    text-align: center;
+    padding: 0 8px 4px;
+  }
+  .actions--open .action-chip { display: flex; }
+  .actions--open .action-chip__card { width: 52px; height: 68px; }
   .actions__title,
   .actions__empty { font-size: 10px; }
   .action-chip__card { width: 40px; height: 52px; }
@@ -1581,10 +1672,8 @@ button:disabled {
 
 /* ---- action bar on a phone: bigger targets, scrollable, never clipped ---- */
 @media (max-height: 560px) and (orientation: landscape) {
-  .actions {
+  .actions--open {
     flex-wrap: nowrap;
-    overflow-x: auto;
-    justify-content: center;
     scrollbar-width: none;
   }
   .actions::-webkit-scrollbar { display: none; }

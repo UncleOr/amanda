@@ -6,7 +6,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/index.html",
-   "line": 9
+   "line": 25
   }
  },
  {
@@ -16,7 +16,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/index.html",
-   "line": 10
+   "line": 26
   }
  },
  {
@@ -26,7 +26,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/index.html",
-   "line": 22
+   "line": 38
   }
  },
  {
@@ -2678,7 +2678,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/App.tsx",
-   "line": 142
+   "line": 152
   }
  },
  {
@@ -2688,7 +2688,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/App.tsx",
-   "line": 142
+   "line": 152
   }
  },
  {
@@ -2698,7 +2698,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/App.tsx",
-   "line": 142
+   "line": 152
   }
  },
  {
@@ -2708,7 +2708,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/App.tsx",
-   "line": 150
+   "line": 160
   }
  },
  {
@@ -2718,7 +2718,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/App.tsx",
-   "line": 151
+   "line": 161
   }
  },
  {
@@ -2728,7 +2728,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/App.tsx",
-   "line": 154
+   "line": 164
   }
  },
  {
@@ -2738,7 +2738,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/App.tsx",
-   "line": 158
+   "line": 168
   }
  },
  {
@@ -2748,7 +2748,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/App.tsx",
-   "line": 168
+   "line": 178
   }
  },
  {
@@ -2758,7 +2758,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/App.tsx",
-   "line": 181
+   "line": 191
   }
  },
  {
@@ -2768,7 +2768,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/App.tsx",
-   "line": 181
+   "line": 191
   }
  },
  {
@@ -2778,7 +2778,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/App.tsx",
-   "line": 188
+   "line": 198
   }
  },
  {
@@ -2788,7 +2788,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/App.tsx",
-   "line": 188
+   "line": 198
   }
  },
  {
@@ -2798,7 +2798,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/App.tsx",
-   "line": 204
+   "line": 214
   }
  },
  {
@@ -2808,7 +2808,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/App.tsx",
-   "line": 205
+   "line": 215
   }
  },
  {
@@ -2818,7 +2818,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/App.tsx",
-   "line": 209
+   "line": 219
   }
  },
  {
@@ -2828,7 +2828,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/App.tsx",
-   "line": 214
+   "line": 224
   }
  },
  {
@@ -2838,7 +2838,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/App.tsx",
-   "line": 225
+   "line": 235
   }
  },
  {
@@ -2848,7 +2848,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/App.tsx",
-   "line": 258
+   "line": 268
   }
  },
  {
@@ -2858,7 +2858,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/App.tsx",
-   "line": 271
+   "line": 281
   }
  },
  {
@@ -2868,7 +2868,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/App.tsx",
-   "line": 273
+   "line": 283
   }
  },
  {
@@ -2878,7 +2878,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/App.tsx",
-   "line": 274
+   "line": 284
   }
  },
  {
@@ -2888,7 +2888,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/App.tsx",
-   "line": 299
+   "line": 309
   }
  },
  {
@@ -2898,7 +2898,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/App.tsx",
-   "line": 299
+   "line": 309
   }
  },
  {
@@ -2908,7 +2908,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/App.tsx",
-   "line": 299
+   "line": 309
   }
  },
  {
@@ -2918,7 +2918,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/App.tsx",
-   "line": 303
+   "line": 313
   }
  },
  {
@@ -2928,7 +2928,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/App.tsx",
-   "line": 315
+   "line": 325
   }
  },
  {
@@ -2938,7 +2938,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/App.tsx",
-   "line": 315
+   "line": 325
   }
  },
  {
@@ -2948,7 +2948,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/App.tsx",
-   "line": 321
+   "line": 331
   }
  },
  {
@@ -2958,7 +2958,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/App.tsx",
-   "line": 322
+   "line": 332
   }
  },
  {
@@ -2968,7 +2968,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/App.tsx",
-   "line": 332
+   "line": 342
   }
  },
  {
@@ -2978,7 +2978,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/App.tsx",
-   "line": 332
+   "line": 342
   }
  },
  {
@@ -2988,7 +2988,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/App.tsx",
-   "line": 348
+   "line": 358
   }
  },
  {
@@ -2998,7 +2998,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/App.tsx",
-   "line": 373
+   "line": 383
   }
  },
  {
@@ -3008,7 +3008,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/App.tsx",
-   "line": 373
+   "line": 383
   }
  },
  {
@@ -3018,7 +3018,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/App.tsx",
-   "line": 403
+   "line": 420
   }
  },
  {
@@ -3028,7 +3028,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/App.tsx",
-   "line": 421
+   "line": 438
   }
  },
  {
@@ -3038,7 +3038,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/App.tsx",
-   "line": 421
+   "line": 438
   }
  },
  {
@@ -3048,7 +3048,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/App.tsx",
-   "line": 421
+   "line": 438
   }
  },
  {
@@ -3058,7 +3058,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/App.tsx",
-   "line": 425
+   "line": 442
   }
  },
  {
@@ -3068,7 +3068,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/App.tsx",
-   "line": 440
+   "line": 457
   }
  },
  {
@@ -3078,7 +3078,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/App.tsx",
-   "line": 454
+   "line": 471
   }
  },
  {
@@ -3088,7 +3088,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/App.tsx",
-   "line": 468
+   "line": 485
   }
  },
  {
@@ -3098,7 +3098,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/App.tsx",
-   "line": 472
+   "line": 489
   }
  },
  {
@@ -3108,7 +3108,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/App.tsx",
-   "line": 479
+   "line": 496
   }
  },
  {
@@ -3118,7 +3118,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/App.tsx",
-   "line": 479
+   "line": 496
   }
  },
  {
@@ -3128,7 +3128,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/App.tsx",
-   "line": 490
+   "line": 507
   }
  },
  {
@@ -3138,7 +3138,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/App.tsx",
-   "line": 492
+   "line": 509
   }
  },
  {
@@ -3148,7 +3148,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/App.tsx",
-   "line": 501
+   "line": 518
   }
  },
  {
@@ -3158,7 +3158,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/App.tsx",
-   "line": 503
+   "line": 520
   }
  },
  {
@@ -3168,7 +3168,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/App.tsx",
-   "line": 514
+   "line": 531
   }
  },
  {
@@ -3178,7 +3178,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/App.tsx",
-   "line": 526
+   "line": 543
   }
  },
  {
@@ -3188,7 +3188,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/App.tsx",
-   "line": 566
+   "line": 583
   }
  },
  {
@@ -3198,7 +3198,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/App.tsx",
-   "line": 566
+   "line": 583
   }
  },
  {
@@ -3208,7 +3208,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/App.tsx",
-   "line": 585
+   "line": 602
   }
  },
  {
@@ -3218,7 +3218,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/App.tsx",
-   "line": 586
+   "line": 603
   }
  },
  {
@@ -4193,6 +4193,16 @@
  },
  {
   "id": "s339",
+  "section": "קלף מפלצת",
+  "text": "מוסתר בערפל",
+  "where": {
+   "kind": "source",
+   "file": "apps/client/src/components/CardView.tsx",
+   "line": 114
+  }
+ },
+ {
+  "id": "s340",
   "section": "הלוח",
   "text": "👑 המלך",
   "where": {
@@ -4202,37 +4212,37 @@
   }
  },
  {
-  "id": "s340",
+  "id": "s341",
   "section": "זירת הקרב",
   "text": "🧑 אתה",
   "where": {
    "kind": "source",
    "file": "apps/client/src/components/Arena.tsx",
-   "line": 533
-  }
- },
- {
-  "id": "s341",
-  "section": "זירת הקרב",
-  "text": "🤖 היריב",
-  "where": {
-   "kind": "source",
-   "file": "apps/client/src/components/Arena.tsx",
-   "line": 534
+   "line": 535
   }
  },
  {
   "id": "s342",
   "section": "זירת הקרב",
-  "text": "⏱ נגמר הזמן!",
+  "text": "🤖 היריב",
   "where": {
    "kind": "source",
    "file": "apps/client/src/components/Arena.tsx",
-   "line": 562
+   "line": 536
   }
  },
  {
   "id": "s343",
+  "section": "זירת הקרב",
+  "text": "⏱ נגמר הזמן!",
+  "where": {
+   "kind": "source",
+   "file": "apps/client/src/components/Arena.tsx",
+   "line": 564
+  }
+ },
+ {
+  "id": "s344",
   "section": "גלריית קלפים (כלי פיתוח)",
   "text": "גלריית קלפים",
   "where": {
@@ -4242,7 +4252,7 @@
   }
  },
  {
-  "id": "s344",
+  "id": "s345",
   "section": "מעבדת קרב (כלי פיתוח)",
   "text": "מעבדת קרב",
   "where": {
@@ -4252,7 +4262,7 @@
   }
  },
  {
-  "id": "s345",
+  "id": "s346",
   "section": "מעבדת קרב (כלי פיתוח)",
   "text": "מעורב",
   "where": {
@@ -4262,7 +4272,7 @@
   }
  },
  {
-  "id": "s346",
+  "id": "s347",
   "section": "מעבדת קרב (כלי פיתוח)",
   "text": "מעורב",
   "where": {
@@ -4272,7 +4282,7 @@
   }
  },
  {
-  "id": "s347",
+  "id": "s348",
   "section": "מעבדת קרב (כלי פיתוח)",
   "text": "▶ הרץ שוב",
   "where": {
@@ -4282,7 +4292,7 @@
   }
  },
  {
-  "id": "s348",
+  "id": "s349",
   "section": "טבלאות — אלמנטים, נדירות, סדרות, יכולות",
   "text": "אש",
   "where": {
@@ -4292,7 +4302,7 @@
   }
  },
  {
-  "id": "s349",
+  "id": "s350",
   "section": "טבלאות — אלמנטים, נדירות, סדרות, יכולות",
   "text": "מים",
   "where": {
@@ -4302,7 +4312,7 @@
   }
  },
  {
-  "id": "s350",
+  "id": "s351",
   "section": "טבלאות — אלמנטים, נדירות, סדרות, יכולות",
   "text": "אדמה",
   "where": {
@@ -4312,7 +4322,7 @@
   }
  },
  {
-  "id": "s351",
+  "id": "s352",
   "section": "טבלאות — אלמנטים, נדירות, סדרות, יכולות",
   "text": "אוויר",
   "where": {
@@ -4322,7 +4332,7 @@
   }
  },
  {
-  "id": "s352",
+  "id": "s353",
   "section": "טבלאות — אלמנטים, נדירות, סדרות, יכולות",
   "text": "חשמל",
   "where": {
@@ -4332,7 +4342,7 @@
   }
  },
  {
-  "id": "s353",
+  "id": "s354",
   "section": "טבלאות — אלמנטים, נדירות, סדרות, יכולות",
   "text": "מתכת",
   "where": {
@@ -4342,7 +4352,7 @@
   }
  },
  {
-  "id": "s354",
+  "id": "s355",
   "section": "טבלאות — אלמנטים, נדירות, סדרות, יכולות",
   "text": "אור",
   "where": {
@@ -4352,7 +4362,7 @@
   }
  },
  {
-  "id": "s355",
+  "id": "s356",
   "section": "טבלאות — אלמנטים, נדירות, סדרות, יכולות",
   "text": "אופל",
   "where": {
@@ -4362,7 +4372,7 @@
   }
  },
  {
-  "id": "s356",
+  "id": "s357",
   "section": "טבלאות — אלמנטים, נדירות, סדרות, יכולות",
   "text": "רעל",
   "where": {
@@ -4372,7 +4382,7 @@
   }
  },
  {
-  "id": "s357",
+  "id": "s358",
   "section": "טבלאות — אלמנטים, נדירות, סדרות, יכולות",
   "text": "משתנה",
   "where": {
@@ -4382,7 +4392,7 @@
   }
  },
  {
-  "id": "s358",
+  "id": "s359",
   "section": "טבלאות — אלמנטים, נדירות, סדרות, יכולות",
   "text": "קרוב",
   "where": {
@@ -4392,7 +4402,7 @@
   }
  },
  {
-  "id": "s359",
+  "id": "s360",
   "section": "טבלאות — אלמנטים, נדירות, סדרות, יכולות",
   "text": "רחוק",
   "where": {
@@ -4402,7 +4412,7 @@
   }
  },
  {
-  "id": "s360",
+  "id": "s361",
   "section": "טבלאות — אלמנטים, נדירות, סדרות, יכולות",
   "text": "צלף",
   "where": {
@@ -4412,7 +4422,7 @@
   }
  },
  {
-  "id": "s361",
+  "id": "s362",
   "section": "טבלאות — אלמנטים, נדירות, סדרות, יכולות",
   "text": "נפוץ",
   "where": {
@@ -4422,7 +4432,7 @@
   }
  },
  {
-  "id": "s362",
+  "id": "s363",
   "section": "טבלאות — אלמנטים, נדירות, סדרות, יכולות",
   "text": "נדיר",
   "where": {
@@ -4432,7 +4442,7 @@
   }
  },
  {
-  "id": "s363",
+  "id": "s364",
   "section": "טבלאות — אלמנטים, נדירות, סדרות, יכולות",
   "text": "אפי",
   "where": {
@@ -4442,7 +4452,7 @@
   }
  },
  {
-  "id": "s364",
+  "id": "s365",
   "section": "טבלאות — אלמנטים, נדירות, סדרות, יכולות",
   "text": "אגדי",
   "where": {
@@ -4452,7 +4462,7 @@
   }
  },
  {
-  "id": "s365",
+  "id": "s366",
   "section": "טבלאות — אלמנטים, נדירות, סדרות, יכולות",
   "text": "דרקונים",
   "where": {
@@ -4462,7 +4472,7 @@
   }
  },
  {
-  "id": "s366",
+  "id": "s367",
   "section": "טבלאות — אלמנטים, נדירות, סדרות, יכולות",
   "text": "ענקים",
   "where": {
@@ -4472,7 +4482,7 @@
   }
  },
  {
-  "id": "s367",
+  "id": "s368",
   "section": "טבלאות — אלמנטים, נדירות, סדרות, יכולות",
   "text": "חרקים",
   "where": {
@@ -4482,7 +4492,7 @@
   }
  },
  {
-  "id": "s368",
+  "id": "s369",
   "section": "טבלאות — אלמנטים, נדירות, סדרות, יכולות",
   "text": "צמחים",
   "where": {
@@ -4492,7 +4502,7 @@
   }
  },
  {
-  "id": "s369",
+  "id": "s370",
   "section": "טבלאות — אלמנטים, נדירות, סדרות, יכולות",
   "text": "ריריים",
   "where": {
@@ -4502,7 +4512,7 @@
   }
  },
  {
-  "id": "s370",
+  "id": "s371",
   "section": "טבלאות — אלמנטים, נדירות, סדרות, יכולות",
   "text": "הדף אחורה",
   "where": {
@@ -4512,7 +4522,7 @@
   }
  },
  {
-  "id": "s371",
+  "id": "s372",
   "section": "טבלאות — אלמנטים, נדירות, סדרות, יכולות",
   "text": "הדף הצידה",
   "where": {
@@ -4522,7 +4532,7 @@
   }
  },
  {
-  "id": "s372",
+  "id": "s373",
   "section": "טבלאות — אלמנטים, נדירות, סדרות, יכולות",
   "text": "דריסה והמשך",
   "where": {
@@ -4532,7 +4542,7 @@
   }
  },
  {
-  "id": "s373",
+  "id": "s374",
   "section": "טבלאות — אלמנטים, נדירות, סדרות, יכולות",
   "text": "שאיבה למרכז",
   "where": {
@@ -4542,7 +4552,7 @@
   }
  },
  {
-  "id": "s374",
+  "id": "s375",
   "section": "טבלאות — אלמנטים, נדירות, סדרות, יכולות",
   "text": "מלכודת הצמדה",
   "where": {
@@ -4552,7 +4562,7 @@
   }
  },
  {
-  "id": "s375",
+  "id": "s376",
   "section": "טבלאות — אלמנטים, נדירות, סדרות, יכולות",
   "text": "חסין הדיפה",
   "where": {
@@ -4562,7 +4572,7 @@
   }
  },
  {
-  "id": "s376",
+  "id": "s377",
   "section": "טבלאות — אלמנטים, נדירות, סדרות, יכולות",
   "text": "החזרת נזק",
   "where": {
@@ -4572,7 +4582,7 @@
   }
  },
  {
-  "id": "s377",
+  "id": "s378",
   "section": "טבלאות — אלמנטים, נדירות, סדרות, יכולות",
   "text": "צבירת שריון",
   "where": {
@@ -4582,7 +4592,7 @@
   }
  },
  {
-  "id": "s378",
+  "id": "s379",
   "section": "טבלאות — אלמנטים, נדירות, סדרות, יכולות",
   "text": "שבירת שריון",
   "where": {
@@ -4592,7 +4602,7 @@
   }
  },
  {
-  "id": "s379",
+  "id": "s380",
   "section": "טבלאות — אלמנטים, נדירות, סדרות, יכולות",
   "text": "הילת שריון",
   "where": {
@@ -4602,7 +4612,7 @@
   }
  },
  {
-  "id": "s380",
+  "id": "s381",
   "section": "טבלאות — אלמנטים, נדירות, סדרות, יכולות",
   "text": "ספיגה לשכנים",
   "where": {
@@ -4612,7 +4622,7 @@
   }
  },
  {
-  "id": "s381",
+  "id": "s382",
   "section": "טבלאות — אלמנטים, נדירות, סדרות, יכולות",
   "text": "הילת הגנה",
   "where": {
@@ -4622,7 +4632,7 @@
   }
  },
  {
-  "id": "s382",
+  "id": "s383",
   "section": "טבלאות — אלמנטים, נדירות, סדרות, יכולות",
   "text": "התחדשות",
   "where": {
@@ -4632,7 +4642,7 @@
   }
  },
  {
-  "id": "s383",
+  "id": "s384",
   "section": "טבלאות — אלמנטים, נדירות, סדרות, יכולות",
   "text": "הילת ריפוי",
   "where": {
@@ -4642,7 +4652,7 @@
   }
  },
  {
-  "id": "s384",
+  "id": "s385",
   "section": "טבלאות — אלמנטים, נדירות, סדרות, יכולות",
   "text": "מכה אזורית",
   "where": {
@@ -4652,7 +4662,7 @@
   }
  },
  {
-  "id": "s385",
+  "id": "s386",
   "section": "טבלאות — אלמנטים, נדירות, סדרות, יכולות",
   "text": "חסימת נתיב",
   "where": {
@@ -4662,7 +4672,7 @@
   }
  },
  {
-  "id": "s386",
+  "id": "s387",
   "section": "טבלאות — אלמנטים, נדירות, סדרות, יכולות",
   "text": "הקפאה במכה",
   "where": {
@@ -4672,7 +4682,7 @@
   }
  },
  {
-  "id": "s387",
+  "id": "s388",
   "section": "טבלאות — אלמנטים, נדירות, סדרות, יכולות",
   "text": "רעל מצטבר",
   "where": {
@@ -4682,7 +4692,7 @@
   }
  },
  {
-  "id": "s388",
+  "id": "s389",
   "section": "טבלאות — אלמנטים, נדירות, סדרות, יכולות",
   "text": "בליעת יריב",
   "where": {
@@ -4692,7 +4702,7 @@
   }
  },
  {
-  "id": "s389",
+  "id": "s390",
   "section": "טבלאות — אלמנטים, נדירות, סדרות, יכולות",
   "text": "הילת האטה",
   "where": {
@@ -4702,7 +4712,7 @@
   }
  },
  {
-  "id": "s390",
+  "id": "s391",
   "section": "טבלאות — אלמנטים, נדירות, סדרות, יכולות",
   "text": "הילת מהירות",
   "where": {
@@ -4712,7 +4722,7 @@
   }
  },
  {
-  "id": "s391",
+  "id": "s392",
   "section": "טבלאות — אלמנטים, נדירות, סדרות, יכולות",
   "text": "התמרה מושהית",
   "where": {
@@ -4722,7 +4732,7 @@
   }
  },
  {
-  "id": "s392",
+  "id": "s393",
   "section": "טבלאות — אלמנטים, נדירות, סדרות, יכולות",
   "text": "נחיל במוות",
   "where": {
@@ -4732,7 +4742,7 @@
   }
  },
  {
-  "id": "s393",
+  "id": "s394",
   "section": "טבלאות — אלמנטים, נדירות, סדרות, יכולות",
   "text": "פיצול במוות",
   "where": {
@@ -4742,7 +4752,7 @@
   }
  },
  {
-  "id": "s394",
+  "id": "s395",
   "section": "טבלאות — אלמנטים, נדירות, סדרות, יכולות",
   "text": "הקרבת בעל-ברית",
   "where": {
@@ -4752,7 +4762,7 @@
   }
  },
  {
-  "id": "s395",
+  "id": "s396",
   "section": "טבלאות — אלמנטים, נדירות, סדרות, יכולות",
   "text": "גניבת אלמנט",
   "where": {
@@ -4762,7 +4772,7 @@
   }
  },
  {
-  "id": "s396",
+  "id": "s397",
   "section": "נתוני קלפים",
   "text": "מפלץ פירורים",
   "where": {
