@@ -34,8 +34,19 @@ export const ICON_LOOK: Record<string, string> = {
   power: "a clenched armoured fist striking, hot orange and gold",
 
   // ── how a match ends ──
-  win: "a golden laurel wreath crown bursting with light, triumphant",
-  lose: "a cracked grey skull-less stone marker split down the middle, dull and defeated",
+  //
+  // These two are the exception to the rule above. They are never inline —
+  // they carry the result screen at 96px and larger — so they may be rich.
+  // The first pass obeyed the small-icon brief and made a thin laurel ring and
+  // a grey slab: correct for 24px, and lifeless blown up. Closed, bold shapes
+  // with a subject, not a symbol.
+  win:
+    "a fat golden trophy cup overflowing with light, a burst of rays behind it " +
+    "and gold confetti flecks, rich and celebratory, deep warm golds and cream",
+  lose:
+    "a monster card lying face up and cracked clean across the middle, a bite " +
+    "taken out of one corner, dim violet and cold grey, glum but funny rather " +
+    "than grim",
 
   // ── what kind of card this is ──
   monster: "a simple fanged monster silhouette head, violet, friendly-menacing",

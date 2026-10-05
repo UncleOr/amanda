@@ -2866,37 +2866,7 @@
  {
   "id": "s203",
   "section": "הקול של אמנדה — שורות מתחלפות (כמה גרסאות לכל רגע)",
-  "text": "🎉 ניצחת! הפעם.",
-  "where": {
-   "kind": "source",
-   "file": "apps/client/src/data/voice.ts",
-   "line": 56
-  }
- },
- {
-  "id": "s204",
-  "section": "הקול של אמנדה — שורות מתחלפות (כמה גרסאות לכל רגע)",
-  "text": "🎉 ניצחת. נתתי לך.",
-  "where": {
-   "kind": "source",
-   "file": "apps/client/src/data/voice.ts",
-   "line": 57
-  }
- },
- {
-  "id": "s205",
-  "section": "הקול של אמנדה — שורות מתחלפות (כמה גרסאות לכל רגע)",
-  "text": "🎉 יפה, ילד.",
-  "where": {
-   "kind": "source",
-   "file": "apps/client/src/data/voice.ts",
-   "line": 58
-  }
- },
- {
-  "id": "s206",
-  "section": "הקול של אמנדה — שורות מתחלפות (כמה גרסאות לכל רגע)",
-  "text": "🎉 ניצחת. אל תתרגל.",
+  "text": "ניצחת! הפעם.",
   "where": {
    "kind": "source",
    "file": "apps/client/src/data/voice.ts",
@@ -2904,9 +2874,9 @@
   }
  },
  {
-  "id": "s207",
+  "id": "s204",
   "section": "הקול של אמנדה — שורות מתחלפות (כמה גרסאות לכל רגע)",
-  "text": "🎉 טוב. באמת טוב.",
+  "text": "ניצחת. נתתי לך.",
   "where": {
    "kind": "source",
    "file": "apps/client/src/data/voice.ts",
@@ -2914,39 +2884,39 @@
   }
  },
  {
+  "id": "s205",
+  "section": "הקול של אמנדה — שורות מתחלפות (כמה גרסאות לכל רגע)",
+  "text": "יפה, ילד.",
+  "where": {
+   "kind": "source",
+   "file": "apps/client/src/data/voice.ts",
+   "line": 61
+  }
+ },
+ {
+  "id": "s206",
+  "section": "הקול של אמנדה — שורות מתחלפות (כמה גרסאות לכל רגע)",
+  "text": "ניצחת. אל תתרגל.",
+  "where": {
+   "kind": "source",
+   "file": "apps/client/src/data/voice.ts",
+   "line": 62
+  }
+ },
+ {
+  "id": "s207",
+  "section": "הקול של אמנדה — שורות מתחלפות (כמה גרסאות לכל רגע)",
+  "text": "טוב. באמת טוב.",
+  "where": {
+   "kind": "source",
+   "file": "apps/client/src/data/voice.ts",
+   "line": 63
+  }
+ },
+ {
   "id": "s208",
   "section": "הקול של אמנדה — שורות מתחלפות (כמה גרסאות לכל רגע)",
-  "text": "😋 הפסדת. טעים.",
-  "where": {
-   "kind": "source",
-   "file": "apps/client/src/data/voice.ts",
-   "line": 64
-  }
- },
- {
-  "id": "s209",
-  "section": "הקול של אמנדה — שורות מתחלפות (כמה גרסאות לכל רגע)",
-  "text": "😋 הפסדת. היה נחמד.",
-  "where": {
-   "kind": "source",
-   "file": "apps/client/src/data/voice.ts",
-   "line": 65
-  }
- },
- {
-  "id": "s210",
-  "section": "הקול של אמנדה — שורות מתחלפות (כמה גרסאות לכל רגע)",
-  "text": "😋 זהו. תודה על הארוחה.",
-  "where": {
-   "kind": "source",
-   "file": "apps/client/src/data/voice.ts",
-   "line": 66
-  }
- },
- {
-  "id": "s211",
-  "section": "הקול של אמנדה — שורות מתחלפות (כמה גרסאות לכל רגע)",
-  "text": "😋 הפסדת, וידעת שזה יקרה.",
+  "text": "הפסדת. טעים.",
   "where": {
    "kind": "source",
    "file": "apps/client/src/data/voice.ts",
@@ -2954,9 +2924,9 @@
   }
  },
  {
-  "id": "s212",
+  "id": "s209",
   "section": "הקול של אמנדה — שורות מתחלפות (כמה גרסאות לכל רגע)",
-  "text": "😋 אוי. כמעט.",
+  "text": "הפסדת. היה נחמד.",
   "where": {
    "kind": "source",
    "file": "apps/client/src/data/voice.ts",
@@ -2964,43 +2934,73 @@
   }
  },
  {
-  "id": "s213",
+  "id": "s210",
   "section": "הקול של אמנדה — שורות מתחלפות (כמה גרסאות לכל רגע)",
-  "text": "🎉 היריב ברח. ניצחת בטכני.",
+  "text": "זהו. תודה על הארוחה.",
   "where": {
    "kind": "source",
    "file": "apps/client/src/data/voice.ts",
-   "line": 73
+   "line": 69
+  }
+ },
+ {
+  "id": "s211",
+  "section": "הקול של אמנדה — שורות מתחלפות (כמה גרסאות לכל רגע)",
+  "text": "הפסדת, וידעת שזה יקרה.",
+  "where": {
+   "kind": "source",
+   "file": "apps/client/src/data/voice.ts",
+   "line": 70
+  }
+ },
+ {
+  "id": "s212",
+  "section": "הקול של אמנדה — שורות מתחלפות (כמה גרסאות לכל רגע)",
+  "text": "אוי. כמעט.",
+  "where": {
+   "kind": "source",
+   "file": "apps/client/src/data/voice.ts",
+   "line": 71
+  }
+ },
+ {
+  "id": "s213",
+  "section": "הקול של אמנדה — שורות מתחלפות (כמה גרסאות לכל רגע)",
+  "text": "היריב ברח. ניצחת בטכני.",
+  "where": {
+   "kind": "source",
+   "file": "apps/client/src/data/voice.ts",
+   "line": 76
   }
  },
  {
   "id": "s214",
   "section": "הקול של אמנדה — שורות מתחלפות (כמה גרסאות לכל רגע)",
-  "text": "🎉 הוא ברח. אני לא מאשימה אותו.",
+  "text": "הוא ברח. אני לא מאשימה אותו.",
   "where": {
    "kind": "source",
    "file": "apps/client/src/data/voice.ts",
-   "line": 74
+   "line": 77
   }
  },
  {
   "id": "s215",
   "section": "הקול של אמנדה — שורות מתחלפות (כמה גרסאות לכל רגע)",
-  "text": "🎉 נשארת לבד. זה נחשב ניצחון.",
+  "text": "נשארת לבד. זה נחשב ניצחון.",
   "where": {
    "kind": "source",
    "file": "apps/client/src/data/voice.ts",
-   "line": 75
+   "line": 78
   }
  },
  {
   "id": "s216",
   "section": "הקול של אמנדה — שורות מתחלפות (כמה גרסאות לכל רגע)",
-  "text": "🎉 היריב נעלם. אכלתי אותו בדרך.",
+  "text": "היריב נעלם. אכלתי אותו בדרך.",
   "where": {
    "kind": "source",
    "file": "apps/client/src/data/voice.ts",
-   "line": 76
+   "line": 79
   }
  },
  {
@@ -3010,7 +3010,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/data/voice.ts",
-   "line": 81
+   "line": 84
   }
  },
  {
@@ -3020,7 +3020,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/data/voice.ts",
-   "line": 82
+   "line": 85
   }
  },
  {
@@ -3030,7 +3030,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/data/voice.ts",
-   "line": 83
+   "line": 86
   }
  },
  {
@@ -3040,7 +3040,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/data/voice.ts",
-   "line": 84
+   "line": 87
   }
  },
  {
@@ -3050,7 +3050,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/data/voice.ts",
-   "line": 89
+   "line": 92
   }
  },
  {
@@ -3060,7 +3060,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/data/voice.ts",
-   "line": 90
+   "line": 93
   }
  },
  {
@@ -3070,7 +3070,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/data/voice.ts",
-   "line": 91
+   "line": 94
   }
  },
  {
@@ -3080,7 +3080,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/data/voice.ts",
-   "line": 92
+   "line": 95
   }
  },
  {
@@ -3090,7 +3090,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/data/voice.ts",
-   "line": 97
+   "line": 100
   }
  },
  {
@@ -3100,7 +3100,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/data/voice.ts",
-   "line": 98
+   "line": 101
   }
  },
  {
@@ -3110,7 +3110,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/data/voice.ts",
-   "line": 99
+   "line": 102
   }
  },
  {
@@ -3120,7 +3120,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/data/voice.ts",
-   "line": 100
+   "line": 103
   }
  },
  {
@@ -3130,7 +3130,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/data/voice.ts",
-   "line": 105
+   "line": 108
   }
  },
  {
@@ -3140,7 +3140,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/data/voice.ts",
-   "line": 106
+   "line": 109
   }
  },
  {
@@ -3150,7 +3150,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/data/voice.ts",
-   "line": 107
+   "line": 110
   }
  },
  {
@@ -3160,7 +3160,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/data/voice.ts",
-   "line": 108
+   "line": 111
   }
  },
  {
@@ -3270,7 +3270,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/App.tsx",
-   "line": 219
+   "line": 232
   }
  },
  {
@@ -3280,7 +3280,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/App.tsx",
-   "line": 220
+   "line": 233
   }
  },
  {
@@ -3290,7 +3290,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/App.tsx",
-   "line": 230
+   "line": 250
   }
  },
  {
@@ -3300,7 +3300,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/App.tsx",
-   "line": 242
+   "line": 262
   }
  },
  {
@@ -3310,7 +3310,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/App.tsx",
-   "line": 255
+   "line": 275
   }
  },
  {
@@ -3320,7 +3320,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/App.tsx",
-   "line": 255
+   "line": 275
   }
  },
  {
@@ -3330,7 +3330,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/App.tsx",
-   "line": 262
+   "line": 282
   }
  },
  {
@@ -3340,7 +3340,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/App.tsx",
-   "line": 262
+   "line": 282
   }
  },
  {
@@ -3350,7 +3350,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/App.tsx",
-   "line": 291
+   "line": 311
   }
  },
  {
@@ -3360,7 +3360,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/App.tsx",
-   "line": 295
+   "line": 315
   }
  },
  {
@@ -3370,7 +3370,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/App.tsx",
-   "line": 296
+   "line": 316
   }
  },
  {
@@ -3380,7 +3380,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/App.tsx",
-   "line": 303
+   "line": 323
   }
  },
  {
@@ -3390,7 +3390,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/App.tsx",
-   "line": 310
+   "line": 330
   }
  },
  {
@@ -3400,7 +3400,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/App.tsx",
-   "line": 322
+   "line": 342
   }
  },
  {
@@ -3410,7 +3410,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/App.tsx",
-   "line": 358
+   "line": 378
   }
  },
  {
@@ -3420,7 +3420,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/App.tsx",
-   "line": 373
+   "line": 393
   }
  },
  {
@@ -3430,7 +3430,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/App.tsx",
-   "line": 375
+   "line": 395
   }
  },
  {
@@ -3440,7 +3440,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/App.tsx",
-   "line": 376
+   "line": 396
   }
  },
  {
@@ -3450,7 +3450,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/App.tsx",
-   "line": 383
+   "line": 403
   }
  },
  {
@@ -3460,7 +3460,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/App.tsx",
-   "line": 390
+   "line": 410
   }
  },
  {
@@ -3470,7 +3470,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/App.tsx",
-   "line": 404
+   "line": 424
   }
  },
  {
@@ -3480,7 +3480,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/App.tsx",
-   "line": 404
+   "line": 424
   }
  },
  {
@@ -3490,7 +3490,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/App.tsx",
-   "line": 404
+   "line": 424
   }
  },
  {
@@ -3500,7 +3500,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/App.tsx",
-   "line": 408
+   "line": 428
   }
  },
  {
@@ -3510,7 +3510,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/App.tsx",
-   "line": 420
+   "line": 440
   }
  },
  {
@@ -3520,7 +3520,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/App.tsx",
-   "line": 420
+   "line": 440
   }
  },
  {
@@ -3530,7 +3530,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/App.tsx",
-   "line": 426
+   "line": 446
   }
  },
  {
@@ -3540,7 +3540,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/App.tsx",
-   "line": 437
+   "line": 457
   }
  },
  {
@@ -3550,17 +3550,17 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/App.tsx",
-   "line": 437
+   "line": 457
   }
  },
  {
   "id": "s272",
   "section": "מסכי המשחק — פתיחה, בנייה, קרב, תוצאה",
-  "text": "🧑 אתה · חזית ⟶",
+  "text": ">אתה <span className=",
   "where": {
    "kind": "source",
    "file": "apps/client/src/App.tsx",
-   "line": 453
+   "line": 473
   }
  },
  {
@@ -3570,7 +3570,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/App.tsx",
-   "line": 457
+   "line": 477
   }
  },
  {
@@ -3580,233 +3580,203 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/App.tsx",
-   "line": 459
+   "line": 479
   }
  },
  {
   "id": "s275",
   "section": "מסכי המשחק — פתיחה, בנייה, קרב, תוצאה",
-  "text": "· נחשף!",
+  "text": ">⟶</span> היריב{",
   "where": {
    "kind": "source",
    "file": "apps/client/src/App.tsx",
-   "line": 489
+   "line": 509
   }
  },
  {
   "id": "s276",
   "section": "מסכי המשחק — פתיחה, בנייה, קרב, תוצאה",
-  "text": "בחר קלף אצל היריב",
+  "text": "נחשף!",
   "where": {
    "kind": "source",
    "file": "apps/client/src/App.tsx",
-   "line": 511
+   "line": 510
   }
  },
  {
   "id": "s277",
   "section": "מסכי המשחק — פתיחה, בנייה, קרב, תוצאה",
-  "text": "ועכשיו את השני",
+  "text": "בחר קלף אצל היריב",
   "where": {
    "kind": "source",
    "file": "apps/client/src/App.tsx",
-   "line": 513
+   "line": 532
   }
  },
  {
   "id": "s278",
   "section": "מסכי המשחק — פתיחה, בנייה, קרב, תוצאה",
-  "text": "בחר קלף על הלוח שלך",
+  "text": "ועכשיו את השני",
   "where": {
    "kind": "source",
    "file": "apps/client/src/App.tsx",
-   "line": 514
+   "line": 534
   }
  },
  {
   "id": "s279",
   "section": "מסכי המשחק — פתיחה, בנייה, קרב, תוצאה",
-  "text": "מאוחר. תכננת גרוע.",
+  "text": "בחר קלף על הלוח שלך",
   "where": {
    "kind": "source",
    "file": "apps/client/src/App.tsx",
-   "line": 547
+   "line": 535
   }
  },
  {
   "id": "s280",
   "section": "מסכי המשחק — פתיחה, בנייה, קרב, תוצאה",
-  "text": "♾️ פעיל",
+  "text": "מאוחר. תכננת גרוע.",
   "where": {
    "kind": "source",
    "file": "apps/client/src/App.tsx",
-   "line": 551
+   "line": 568
   }
  },
  {
   "id": "s281",
   "section": "מסכי המשחק — פתיחה, בנייה, קרב, תוצאה",
-  "text": "✔ נוצל",
+  "text": "♾️ פעיל",
   "where": {
    "kind": "source",
    "file": "apps/client/src/App.tsx",
-   "line": 553
+   "line": 572
   }
  },
  {
   "id": "s282",
   "section": "מסכי המשחק — פתיחה, בנייה, קרב, תוצאה",
-  "text": "⏳ מאוחר מדי",
+  "text": "✔ נוצל",
   "where": {
    "kind": "source",
    "file": "apps/client/src/App.tsx",
-   "line": 555
+   "line": 574
   }
  },
  {
   "id": "s283",
   "section": "מסכי המשחק — פתיחה, בנייה, קרב, תוצאה",
-  "text": "▶ הפעל",
+  "text": "⏳ מאוחר מדי",
   "where": {
    "kind": "source",
    "file": "apps/client/src/App.tsx",
-   "line": 556
+   "line": 576
   }
  },
  {
   "id": "s284",
   "section": "מסכי המשחק — פתיחה, בנייה, קרב, תוצאה",
-  "text": "הסבר",
+  "text": "▶ הפעל",
   "where": {
    "kind": "source",
    "file": "apps/client/src/App.tsx",
-   "line": 560
+   "line": 577
   }
  },
  {
   "id": "s285",
   "section": "מסכי המשחק — פתיחה, בנייה, קרב, תוצאה",
-  "text": "אין קלף",
+  "text": "הסבר",
   "where": {
    "kind": "source",
    "file": "apps/client/src/App.tsx",
-   "line": 575
+   "line": 581
   }
  },
  {
   "id": "s286",
   "section": "מסכי המשחק — פתיחה, בנייה, קרב, תוצאה",
-  "text": "קלפים שנשארו בחפיסה",
+  "text": "אין קלף",
   "where": {
    "kind": "source",
    "file": "apps/client/src/App.tsx",
-   "line": 603
+   "line": 596
   }
  },
  {
   "id": "s287",
   "section": "מסכי המשחק — פתיחה, בנייה, קרב, תוצאה",
-  "text": "קלפים בפח",
+  "text": "קלפים שנשארו בחפיסה",
   "where": {
    "kind": "source",
    "file": "apps/client/src/App.tsx",
-   "line": 607
+   "line": 624
   }
  },
  {
   "id": "s288",
   "section": "מסכי המשחק — פתיחה, בנייה, קרב, תוצאה",
-  "text": "הבר מלא",
+  "text": "קלפים בפח",
   "where": {
    "kind": "source",
    "file": "apps/client/src/App.tsx",
-   "line": 614
+   "line": 628
   }
  },
  {
   "id": "s289",
   "section": "מסכי המשחק — פתיחה, בנייה, קרב, תוצאה",
-  "text": "➕ קח לפעולה",
+  "text": "הבר מלא",
   "where": {
    "kind": "source",
    "file": "apps/client/src/App.tsx",
-   "line": 614
+   "line": 635
   }
  },
  {
   "id": "s290",
   "section": "מסכי המשחק — פתיחה, בנייה, קרב, תוצאה",
-  "text": "⚔️ התחל קרב!",
+  "text": "➕ קח לפעולה",
   "where": {
    "kind": "source",
    "file": "apps/client/src/App.tsx",
-   "line": 640
+   "line": 635
   }
  },
  {
   "id": "s291",
   "section": "מסכי המשחק — פתיחה, בנייה, קרב, תוצאה",
-  "text": "✔ מוכן — לחץ לביטול",
+  "text": "⚔️ התחל קרב!",
   "where": {
    "kind": "source",
    "file": "apps/client/src/App.tsx",
-   "line": 642
+   "line": 661
   }
  },
  {
   "id": "s292",
   "section": "מסכי המשחק — פתיחה, בנייה, קרב, תוצאה",
-  "text": "⚔️ אני מוכן",
+  "text": "✔ מוכן — לחץ לביטול",
   "where": {
    "kind": "source",
    "file": "apps/client/src/App.tsx",
-   "line": 643
+   "line": 663
   }
  },
  {
   "id": "s293",
   "section": "מסכי המשחק — פתיחה, בנייה, קרב, תוצאה",
-  "text": "שניכם מוכנים — מתחילים",
+  "text": "⚔️ אני מוכן",
   "where": {
    "kind": "source",
    "file": "apps/client/src/App.tsx",
-   "line": 648
+   "line": 664
   }
  },
  {
   "id": "s294",
   "section": "מסכי המשחק — פתיחה, בנייה, קרב, תוצאה",
-  "text": "אתה מוכן. אפשר להמשיך לבנות עד שגם הוא יהיה.",
-  "where": {
-   "kind": "source",
-   "file": "apps/client/src/App.tsx",
-   "line": 650
-  }
- },
- {
-  "id": "s295",
-  "section": "מסכי המשחק — פתיחה, בנייה, קרב, תוצאה",
-  "text": "היריב מוכן. אתה עדיין יכול לבנות.",
-  "where": {
-   "kind": "source",
-   "file": "apps/client/src/App.tsx",
-   "line": 651
-  }
- },
- {
-  "id": "s296",
-  "section": "מסכי המשחק — פתיחה, בנייה, קרב, תוצאה",
-  "text": "הלוח שלך נעול",
-  "where": {
-   "kind": "source",
-   "file": "apps/client/src/App.tsx",
-   "line": 667
-  }
- },
- {
-  "id": "s297",
-  "section": "מסכי המשחק — פתיחה, בנייה, קרב, תוצאה",
-  "text": "מחכה שהיריב יסיים…",
+  "text": "שניכם מוכנים — מתחילים",
   "where": {
    "kind": "source",
    "file": "apps/client/src/App.tsx",
@@ -3814,47 +3784,87 @@
   }
  },
  {
-  "id": "s298",
+  "id": "s295",
   "section": "מסכי המשחק — פתיחה, בנייה, קרב, תוצאה",
-  "text": "ממלאת לך את החורים…",
+  "text": "אתה מוכן. אפשר להמשיך לבנות עד שגם הוא יהיה.",
   "where": {
    "kind": "source",
    "file": "apps/client/src/App.tsx",
-   "line": 673
+   "line": 671
+  }
+ },
+ {
+  "id": "s296",
+  "section": "מסכי המשחק — פתיחה, בנייה, קרב, תוצאה",
+  "text": "היריב מוכן. אתה עדיין יכול לבנות.",
+  "where": {
+   "kind": "source",
+   "file": "apps/client/src/App.tsx",
+   "line": 672
+  }
+ },
+ {
+  "id": "s297",
+  "section": "מסכי המשחק — פתיחה, בנייה, קרב, תוצאה",
+  "text": "הלוח שלך נעול",
+  "where": {
+   "kind": "source",
+   "file": "apps/client/src/App.tsx",
+   "line": 688
+  }
+ },
+ {
+  "id": "s298",
+  "section": "מסכי המשחק — פתיחה, בנייה, קרב, תוצאה",
+  "text": "מחכה שהיריב יסיים…",
+  "where": {
+   "kind": "source",
+   "file": "apps/client/src/App.tsx",
+   "line": 690
   }
  },
  {
   "id": "s299",
   "section": "מסכי המשחק — פתיחה, בנייה, קרב, תוצאה",
-  "text": "שגיאה בהצגת הקרב",
+  "text": "ממלאת לך את החורים…",
   "where": {
    "kind": "source",
    "file": "apps/client/src/App.tsx",
-   "line": 700
+   "line": 694
   }
  },
  {
   "id": "s300",
   "section": "מסכי המשחק — פתיחה, בנייה, קרב, תוצאה",
-  "text": "מספיק, הבנתי",
+  "text": "שגיאה בהצגת הקרב",
   "where": {
    "kind": "source",
    "file": "apps/client/src/App.tsx",
-   "line": 740
+   "line": 721
   }
  },
  {
   "id": "s301",
   "section": "מסכי המשחק — פתיחה, בנייה, קרב, תוצאה",
-  "text": "📋 שאסביר לך מה קרה?",
+  "text": "מספיק, הבנתי",
   "where": {
    "kind": "source",
    "file": "apps/client/src/App.tsx",
-   "line": 740
+   "line": 762
   }
  },
  {
   "id": "s302",
+  "section": "מסכי המשחק — פתיחה, בנייה, קרב, תוצאה",
+  "text": "📋 שאסביר לך מה קרה?",
+  "where": {
+   "kind": "source",
+   "file": "apps/client/src/App.tsx",
+   "line": 762
+  }
+ },
+ {
+  "id": "s303",
   "section": "דוח הקרב",
   "text": "${f.name} עשה ${f.value}% מהנזק של הצד הזה",
   "where": {
@@ -3864,7 +3874,7 @@
   }
  },
  {
-  "id": "s303",
+  "id": "s304",
   "section": "דוח הקרב",
   "text": "המלך ${f.name} נשא את הקרב — ${f.value}% מהנזק",
   "where": {
@@ -3874,7 +3884,7 @@
   }
  },
  {
-  "id": "s304",
+  "id": "s305",
   "section": "דוח הקרב",
   "text": "${f.value} קלפים לא נגעו בקרב בכלל — לא תקפו ולא ספגו",
   "where": {
@@ -3884,7 +3894,7 @@
   }
  },
  {
-  "id": "s305",
+  "id": "s306",
   "section": "דוח הקרב",
   "text": "${f.value} קלפים בעורף שרדו בלי לתקוף אף פעם — הלוח עמוק מדי",
   "where": {
@@ -3894,7 +3904,7 @@
   }
  },
  {
-  "id": "s306",
+  "id": "s307",
   "section": "דוח הקרב",
   "text": "המלך ${f.name} נפל כבר בשנייה ${secs(f.value ?? 0)}",
   "where": {
@@ -3904,7 +3914,7 @@
   }
  },
  {
-  "id": "s307",
+  "id": "s308",
   "section": "דוח הקרב",
   "text": "כל הקלפים במסלול ${(f.lane ?? 0) + 1} נפלו — שם נפרצה החזית",
   "where": {
@@ -3914,7 +3924,7 @@
   }
  },
  {
-  "id": "s308",
+  "id": "s309",
   "section": "דוח הקרב",
   "text": "בוזבז נזק על ${f.name}: ספג ${f.value}% מהחיים שלו",
   "where": {
@@ -3924,7 +3934,7 @@
   }
  },
  {
-  "id": "s309",
+  "id": "s310",
   "section": "דוח הקרב",
   "text": "הצד הזה נמחק לגמרי — ${f.value} קלפים",
   "where": {
@@ -3934,7 +3944,7 @@
   }
  },
  {
-  "id": "s310",
+  "id": "s311",
   "section": "דוח הקרב",
   "text": "קרב צמוד — הוכרע בהפרש של קלף אחד",
   "where": {
@@ -3944,7 +3954,7 @@
   }
  },
  {
-  "id": "s311",
+  "id": "s312",
   "section": "דוח הקרב",
   "text": "${f.name} הרג את עצמו — הנזק החוזר מהיעד היה ${f.value}% מהחיים שלו",
   "where": {
@@ -3954,7 +3964,7 @@
   }
  },
  {
-  "id": "s312",
+  "id": "s313",
   "section": "דוח הקרב",
   "text": "ניצחון סוחף — ${f.value} קלפים הפרש",
   "where": {
@@ -3964,7 +3974,7 @@
   }
  },
  {
-  "id": "s313",
+  "id": "s314",
   "section": "דוח הקרב",
   "text": "דם ראשון — ${e.actor ?? \"משהו\"} הפיל את ${e.target}",
   "where": {
@@ -3974,7 +3984,7 @@
   }
  },
  {
-  "id": "s314",
+  "id": "s315",
   "section": "דוח הקרב",
   "text": "${e.actor ?? \"משהו\"} הפיל את ${e.target}",
   "where": {
@@ -3984,7 +3994,7 @@
   }
  },
  {
-  "id": "s315",
+  "id": "s316",
   "section": "דוח הקרב",
   "text": "👑 המלך ${e.target} נפל",
   "where": {
@@ -3994,7 +4004,7 @@
   }
  },
  {
-  "id": "s316",
+  "id": "s317",
   "section": "דוח הקרב",
   "text": "${e.target} ספג ${e.damage?.toLocaleString(\"he-IL\")} נזק חוזר מ${e.actor} — הוא פגע בקוצים",
   "where": {
@@ -4004,7 +4014,7 @@
   }
  },
  {
-  "id": "s317",
+  "id": "s318",
   "section": "דוח הקרב",
   "text": "${e.actor} התפצל",
   "where": {
@@ -4014,7 +4024,7 @@
   }
  },
  {
-  "id": "s318",
+  "id": "s319",
   "section": "דוח הקרב",
   "text": "נחשף קלף קומת קרקע: ${e.target}",
   "where": {
@@ -4024,7 +4034,7 @@
   }
  },
  {
-  "id": "s319",
+  "id": "s320",
   "section": "דוח הקרב",
   "text": "${e.actor ?? \"משהו\"} הקפיא את ${e.target}",
   "where": {
@@ -4034,7 +4044,7 @@
   }
  },
  {
-  "id": "s320",
+  "id": "s321",
   "section": "דוח הקרב",
   "text": "הקרב נגמר",
   "where": {
@@ -4044,7 +4054,7 @@
   }
  },
  {
-  "id": "s321",
+  "id": "s322",
   "section": "דוח הקרב",
   "text": "תיקו. לשנינו טעם רע בפה.",
   "where": {
@@ -4054,7 +4064,7 @@
   }
  },
  {
-  "id": "s322",
+  "id": "s323",
   "section": "דוח הקרב",
   "text": "אתה",
   "where": {
@@ -4064,7 +4074,7 @@
   }
  },
  {
-  "id": "s323",
+  "id": "s324",
   "section": "דוח הקרב",
   "text": "היריב",
   "where": {
@@ -4074,7 +4084,7 @@
   }
  },
  {
-  "id": "s324",
+  "id": "s325",
   "section": "דוח הקרב",
   "text": "העתקת הדוח המלא כ-JSON",
   "where": {
@@ -4084,7 +4094,7 @@
   }
  },
  {
-  "id": "s325",
+  "id": "s326",
   "section": "דוח הקרב",
   "text": "✔ הועתק",
   "where": {
@@ -4094,7 +4104,7 @@
   }
  },
  {
-  "id": "s326",
+  "id": "s327",
   "section": "דוח הקרב",
   "text": "⧉ העתק JSON",
   "where": {
@@ -4104,7 +4114,7 @@
   }
  },
  {
-  "id": "s327",
+  "id": "s328",
   "section": "דוח הקרב",
   "text": "תוצאה",
   "where": {
@@ -4114,7 +4124,7 @@
   }
  },
  {
-  "id": "s328",
+  "id": "s329",
   "section": "דוח הקרב",
   "text": "מהירות",
   "where": {
@@ -4124,7 +4134,7 @@
   }
  },
  {
-  "id": "s329",
+  "id": "s330",
   "section": "דוח הקרב",
   "text": "יחס נזק",
   "where": {
@@ -4134,7 +4144,7 @@
   }
  },
  {
-  "id": "s330",
+  "id": "s331",
   "section": "דוח הקרב",
   "text": "השתתפות הלוח",
   "where": {
@@ -4144,7 +4154,7 @@
   }
  },
  {
-  "id": "s331",
+  "id": "s332",
   "section": "דוח הקרב",
   "text": "שרידות",
   "where": {
@@ -4154,7 +4164,7 @@
   }
  },
  {
-  "id": "s332",
+  "id": "s333",
   "section": "דוח הקרב",
   "text": "נזק",
   "where": {
@@ -4164,7 +4174,7 @@
   }
  },
  {
-  "id": "s333",
+  "id": "s334",
   "section": "דוח הקרב",
   "text": "הפלות",
   "where": {
@@ -4174,7 +4184,7 @@
   }
  },
  {
-  "id": "s334",
+  "id": "s335",
   "section": "דוח הקרב",
   "text": "שרדו",
   "where": {
@@ -4184,7 +4194,7 @@
   }
  },
  {
-  "id": "s335",
+  "id": "s336",
   "section": "דוח הקרב",
   "text": "נפלו",
   "where": {
@@ -4194,7 +4204,7 @@
   }
  },
  {
-  "id": "s336",
+  "id": "s337",
   "section": "דוח הקרב",
   "text": "קרב משעמם. לא קרה כלום.",
   "where": {
@@ -4204,7 +4214,7 @@
   }
  },
  {
-  "id": "s337",
+  "id": "s338",
   "section": "דוח הקרב",
   "text": "ככה נראו הלוחות בהתחלה. תראה מה כל קלף עשה.",
   "where": {
@@ -4214,7 +4224,7 @@
   }
  },
  {
-  "id": "s338",
+  "id": "s339",
   "section": "דוח הקרב",
   "text": "הכי הרבה נזק",
   "where": {
@@ -4224,7 +4234,7 @@
   }
  },
  {
-  "id": "s339",
+  "id": "s340",
   "section": "דוח הקרב",
   "text": "תרם נזק",
   "where": {
@@ -4234,7 +4244,7 @@
   }
  },
  {
-  "id": "s340",
+  "id": "s341",
   "section": "דוח הקרב",
   "text": "ישן",
   "where": {
@@ -4244,7 +4254,7 @@
   }
  },
  {
-  "id": "s341",
+  "id": "s342",
   "section": "דוח הקרב",
   "text": "💀 נפל · ✅ שרד · 🧊 לא זז",
   "where": {
@@ -4254,7 +4264,7 @@
   }
  },
  {
-  "id": "s342",
+  "id": "s343",
   "section": "דוח הקרב",
   "text": "לחץ על קלף ואספר לך",
   "where": {
@@ -4264,7 +4274,7 @@
   }
  },
  {
-  "id": "s343",
+  "id": "s344",
   "section": "דוח הקרב",
   "text": "קלף",
   "where": {
@@ -4274,7 +4284,7 @@
   }
  },
  {
-  "id": "s344",
+  "id": "s345",
   "section": "דוח הקרב",
   "text": "צד",
   "where": {
@@ -4284,7 +4294,7 @@
   }
  },
  {
-  "id": "s345",
+  "id": "s346",
   "section": "דוח הקרב",
   "text": "נזק",
   "where": {
@@ -4294,7 +4304,7 @@
   }
  },
  {
-  "id": "s346",
+  "id": "s347",
   "section": "דוח הקרב",
   "text": "ספג",
   "where": {
@@ -4304,7 +4314,7 @@
   }
  },
  {
-  "id": "s347",
+  "id": "s348",
   "section": "דוח הקרב",
   "text": "הפלות",
   "where": {
@@ -4314,7 +4324,7 @@
   }
  },
  {
-  "id": "s348",
+  "id": "s349",
   "section": "דוח הקרב",
   "text": "סוף",
   "where": {
@@ -4324,7 +4334,7 @@
   }
  },
  {
-  "id": "s349",
+  "id": "s350",
   "section": "דוח הקרב",
   "text": "${u.name} — מילוי אוטומטי של משבצת ריקה",
   "where": {
@@ -4334,7 +4344,7 @@
   }
  },
  {
-  "id": "s350",
+  "id": "s351",
   "section": "דוח הקרב",
   "text": "${u.name} — לחצו לפרטים",
   "where": {
@@ -4344,7 +4354,7 @@
   }
  },
  {
-  "id": "s351",
+  "id": "s352",
   "section": "דוח הקרב",
   "text": "${king.name} — לחצו לפרטים",
   "where": {
@@ -4354,7 +4364,7 @@
   }
  },
  {
-  "id": "s352",
+  "id": "s353",
   "section": "דוח הקרב",
   "text": "עורף",
   "where": {
@@ -4364,7 +4374,7 @@
   }
  },
  {
-  "id": "s353",
+  "id": "s354",
   "section": "דוח הקרב",
   "text": "שלישית",
   "where": {
@@ -4374,7 +4384,7 @@
   }
  },
  {
-  "id": "s354",
+  "id": "s355",
   "section": "דוח הקרב",
   "text": "שנייה",
   "where": {
@@ -4384,7 +4394,7 @@
   }
  },
  {
-  "id": "s355",
+  "id": "s356",
   "section": "דוח הקרב",
   "text": "חזית",
   "where": {
@@ -4394,7 +4404,7 @@
   }
  },
  {
-  "id": "s356",
+  "id": "s357",
   "section": "דוח הקרב",
   "text": "לא נגע בקרב. לא הגיע לאף אחד, ואף אחד לא הגיע אליו.",
   "where": {
@@ -4404,7 +4414,7 @@
   }
  },
  {
-  "id": "s357",
+  "id": "s358",
   "section": "דוח הקרב",
   "text": "חטף ולא הספיק להחזיר אפילו מכה אחת.",
   "where": {
@@ -4414,7 +4424,7 @@
   }
  },
  {
-  "id": "s358",
+  "id": "s359",
   "section": "דוח הקרב",
   "text": "חתך את הדרך — הפיל ${unit.kills} קלפים.",
   "where": {
@@ -4424,7 +4434,7 @@
   }
  },
  {
-  "id": "s359",
+  "id": "s360",
   "section": "דוח הקרב",
   "text": "נשא את הצד שלו: ${share}% מכל הנזק.",
   "where": {
@@ -4434,7 +4444,7 @@
   }
  },
  {
-  "id": "s360",
+  "id": "s361",
   "section": "דוח הקרב",
   "text": "תרם ${share}% מהנזק של הצד שלו.",
   "where": {
@@ -4444,7 +4454,7 @@
   }
  },
  {
-  "id": "s361",
+  "id": "s362",
   "section": "דוח הקרב",
   "text": "סגירה",
   "where": {
@@ -4454,7 +4464,7 @@
   }
  },
  {
-  "id": "s362",
+  "id": "s363",
   "section": "דוח הקרב",
   "text": "שלך",
   "where": {
@@ -4464,7 +4474,7 @@
   }
  },
  {
-  "id": "s363",
+  "id": "s364",
   "section": "דוח הקרב",
   "text": "של היריב",
   "where": {
@@ -4474,7 +4484,7 @@
   }
  },
  {
-  "id": "s364",
+  "id": "s365",
   "section": "דוח הקרב",
   "text": "✅ שרד",
   "where": {
@@ -4484,7 +4494,7 @@
   }
  },
  {
-  "id": "s365",
+  "id": "s366",
   "section": "דוח הקרב",
   "text": "💀 נפל ב-${secs(unit.diedAtTick ?? 0)}s",
   "where": {
@@ -4494,7 +4504,7 @@
   }
  },
  {
-  "id": "s366",
+  "id": "s367",
   "section": "דוח הקרב",
   "text": "נזק שעשה",
   "where": {
@@ -4504,7 +4514,7 @@
   }
  },
  {
-  "id": "s367",
+  "id": "s368",
   "section": "דוח הקרב",
   "text": "נזק שספג",
   "where": {
@@ -4514,7 +4524,7 @@
   }
  },
  {
-  "id": "s368",
+  "id": "s369",
   "section": "דוח הקרב",
   "text": "הפלות",
   "where": {
@@ -4524,7 +4534,7 @@
   }
  },
  {
-  "id": "s369",
+  "id": "s370",
   "section": "דוח הקרב",
   "text": "מכות",
   "where": {
@@ -4534,7 +4544,7 @@
   }
  },
  {
-  "id": "s370",
+  "id": "s371",
   "section": "דוח הקרב",
   "text": "מהנזק של הצד:",
   "where": {
@@ -4544,7 +4554,7 @@
   }
  },
  {
-  "id": "s371",
+  "id": "s372",
   "section": "דוח הקרב",
   "text": "חיים:",
   "where": {
@@ -4554,7 +4564,7 @@
   }
  },
  {
-  "id": "s372",
+  "id": "s373",
   "section": "דוח הקרב",
   "text": "(כולל בונוס מלך ×3)",
   "where": {
@@ -4564,7 +4574,7 @@
   }
  },
  {
-  "id": "s373",
+  "id": "s374",
   "section": "דוח הקרב",
   "text": "תזוזה:",
   "where": {
@@ -4574,7 +4584,7 @@
   }
  },
  {
-  "id": "s374",
+  "id": "s375",
   "section": "דוח הקרב",
   "text": "לא זז מילימטר",
   "where": {
@@ -4584,7 +4594,7 @@
   }
  },
  {
-  "id": "s375",
+  "id": "s376",
   "section": "דוח הקרב",
   "text": "התקדם ${unit.colsMoved.toFixed(1)} משבצות",
   "where": {
@@ -4594,7 +4604,7 @@
   }
  },
  {
-  "id": "s376",
+  "id": "s377",
   "section": "חלון פרטי מפלצת",
   "text": "סגירה",
   "where": {
@@ -4604,7 +4614,7 @@
   }
  },
  {
-  "id": "s377",
+  "id": "s378",
   "section": "חלון פרטי מפלצת",
   "text": "👑 ענק אמצע",
   "where": {
@@ -4614,7 +4624,7 @@
   }
  },
  {
-  "id": "s378",
+  "id": "s379",
   "section": "חלון פרטי מפלצת",
   "text": "חיים",
   "where": {
@@ -4624,7 +4634,7 @@
   }
  },
  {
-  "id": "s379",
+  "id": "s380",
   "section": "חלון פרטי מפלצת",
   "text": "עוצמה",
   "where": {
@@ -4634,7 +4644,7 @@
   }
  },
  {
-  "id": "s380",
+  "id": "s381",
   "section": "חלון פרטי מפלצת",
   "text": "קצב תקיפה",
   "where": {
@@ -4644,7 +4654,7 @@
   }
  },
  {
-  "id": "s381",
+  "id": "s382",
   "section": "חלון פרטי מפלצת",
   "text": "${card.stats.attackSpeed}ש׳",
   "where": {
@@ -4654,7 +4664,7 @@
   }
  },
  {
-  "id": "s382",
+  "id": "s383",
   "section": "חלון פרטי מפלצת",
   "text": "תנועה",
   "where": {
@@ -4664,7 +4674,7 @@
   }
  },
  {
-  "id": "s383",
+  "id": "s384",
   "section": "חלון פרטי מפלצת",
   "text": "${card.stats.moveSpeed}/ש׳",
   "where": {
@@ -4674,7 +4684,7 @@
   }
  },
  {
-  "id": "s384",
+  "id": "s385",
   "section": "חלון פרטי מפלצת",
   "text": "סטטי",
   "where": {
@@ -4684,7 +4694,7 @@
   }
  },
  {
-  "id": "s385",
+  "id": "s386",
   "section": "חלון פרטי מפלצת",
   "text": "טווח",
   "where": {
@@ -4694,7 +4704,7 @@
   }
  },
  {
-  "id": "s386",
+  "id": "s387",
   "section": "חלון פרטי מפלצת",
   "text": "יכולות",
   "where": {
@@ -4704,7 +4714,7 @@
   }
  },
  {
-  "id": "s387",
+  "id": "s388",
   "section": "חלון פרטי מפלצת",
   "text": "תפקיד",
   "where": {
@@ -4714,7 +4724,7 @@
   }
  },
  {
-  "id": "s388",
+  "id": "s389",
   "section": "חלון פרטי קלף פעולה",
   "text": "סגירה",
   "where": {
@@ -4724,7 +4734,7 @@
   }
  },
  {
-  "id": "s389",
+  "id": "s390",
   "section": "חלון פרטי קלף פעולה",
   "text": "♾️ פסיבי",
   "where": {
@@ -4734,7 +4744,7 @@
   }
  },
  {
-  "id": "s390",
+  "id": "s391",
   "section": "חלון פרטי קלף פעולה",
   "text": "▶ בלחיצה",
   "where": {
@@ -4744,7 +4754,7 @@
   }
  },
  {
-  "id": "s391",
+  "id": "s392",
   "section": "חלון פרטי קלף פעולה",
   "text": "מה הוא עושה (אוטומטית)",
   "where": {
@@ -4754,7 +4764,7 @@
   }
  },
  {
-  "id": "s392",
+  "id": "s393",
   "section": "חלון פרטי קלף פעולה",
   "text": "מה הוא עושה בלחיצה",
   "where": {
@@ -4764,7 +4774,7 @@
   }
  },
  {
-  "id": "s393",
+  "id": "s394",
   "section": "חלון פרטי קלף פעולה",
   "text": "✔ כבר נוצל",
   "where": {
@@ -4774,7 +4784,7 @@
   }
  },
  {
-  "id": "s394",
+  "id": "s395",
   "section": "חלון פרטי קלף פעולה",
   "text": "♾️ פועל מעצמו",
   "where": {
@@ -4784,7 +4794,7 @@
   }
  },
  {
-  "id": "s395",
+  "id": "s396",
   "section": "תווית קלף פעולה",
   "text": "פסיבי — פועל כל הזמן",
   "where": {
@@ -4794,7 +4804,7 @@
   }
  },
  {
-  "id": "s396",
+  "id": "s397",
   "section": "תווית קלף פעולה",
   "text": "קלף פעולה",
   "where": {
@@ -4804,7 +4814,7 @@
   }
  },
  {
-  "id": "s397",
+  "id": "s398",
   "section": "תווית קלף פעולה",
   "text": "פרטי הקלף",
   "where": {
@@ -4814,7 +4824,7 @@
   }
  },
  {
-  "id": "s398",
+  "id": "s399",
   "section": "תווית קלף פעולה",
   "text": "פסיבי",
   "where": {
@@ -4824,7 +4834,7 @@
   }
  },
  {
-  "id": "s399",
+  "id": "s400",
   "section": "תווית קלף פעולה",
   "text": "קלף פעולה",
   "where": {
@@ -4834,7 +4844,7 @@
   }
  },
  {
-  "id": "s400",
+  "id": "s401",
   "section": "קלף מפלצת",
   "text": "מסתער",
   "where": {
@@ -4844,7 +4854,7 @@
   }
  },
  {
-  "id": "s401",
+  "id": "s402",
   "section": "קלף מפלצת",
   "text": "מעופף",
   "where": {
@@ -4854,7 +4864,7 @@
   }
  },
  {
-  "id": "s402",
+  "id": "s403",
   "section": "קלף מפלצת",
   "text": "בונוס מלך ×3",
   "where": {
@@ -4864,7 +4874,7 @@
   }
  },
  {
-  "id": "s403",
+  "id": "s404",
   "section": "קלף מפלצת",
   "text": "ענק אמצע (מתאים למלך)",
   "where": {
@@ -4874,7 +4884,7 @@
   }
  },
  {
-  "id": "s404",
+  "id": "s405",
   "section": "קלף מפלצת",
   "text": "פרטי הקלף",
   "where": {
@@ -4884,7 +4894,7 @@
   }
  },
  {
-  "id": "s405",
+  "id": "s406",
   "section": "קלף מפלצת",
   "text": "חיים",
   "where": {
@@ -4894,7 +4904,7 @@
   }
  },
  {
-  "id": "s406",
+  "id": "s407",
   "section": "קלף מפלצת",
   "text": "עוצמה",
   "where": {
@@ -4904,7 +4914,7 @@
   }
  },
  {
-  "id": "s407",
+  "id": "s408",
   "section": "קלף מפלצת",
   "text": "מוסתר בערפל",
   "where": {
@@ -4914,7 +4924,7 @@
   }
  },
  {
-  "id": "s408",
+  "id": "s409",
   "section": "הלוח",
   "text": "יש קלף מתחת. הוא יצוץ כשהעליון ייפול.",
   "where": {
@@ -4924,7 +4934,7 @@
   }
  },
  {
-  "id": "s409",
+  "id": "s410",
   "section": "הלוח",
   "text": "משמר המלך. כאן עוצרים את מי שבא לאכול אותו.",
   "where": {
@@ -4934,7 +4944,7 @@
   }
  },
  {
-  "id": "s410",
+  "id": "s411",
   "section": "זירת הקרב",
   "text": "🧑 אתה",
   "where": {
@@ -4944,7 +4954,7 @@
   }
  },
  {
-  "id": "s411",
+  "id": "s412",
   "section": "זירת הקרב",
   "text": "🤖 היריב",
   "where": {
@@ -4954,7 +4964,7 @@
   }
  },
  {
-  "id": "s412",
+  "id": "s413",
   "section": "זירת הקרב",
   "text": "⏱ נגמר הזמן!",
   "where": {
@@ -4964,7 +4974,7 @@
   }
  },
  {
-  "id": "s413",
+  "id": "s414",
   "section": "זירת הקרב",
   "text": "לא הצלחתי להראות לך את הקרב.",
   "where": {
@@ -4974,7 +4984,7 @@
   }
  },
  {
-  "id": "s414",
+  "id": "s415",
   "section": "זירת הקרב",
   "text": "הוא כבר הוכרע — אני לוקחת אותך לתוצאה.",
   "where": {
@@ -4984,7 +4994,7 @@
   }
  },
  {
-  "id": "s415",
+  "id": "s416",
   "section": "גלריית קלפים (כלי פיתוח)",
   "text": "גלריית קלפים",
   "where": {
@@ -4994,7 +5004,7 @@
   }
  },
  {
-  "id": "s416",
+  "id": "s417",
   "section": "מעבדת קרב (כלי פיתוח)",
   "text": "מעבדת קרב",
   "where": {
@@ -5004,7 +5014,7 @@
   }
  },
  {
-  "id": "s417",
+  "id": "s418",
   "section": "מעבדת קרב (כלי פיתוח)",
   "text": "מעורב",
   "where": {
@@ -5014,7 +5024,7 @@
   }
  },
  {
-  "id": "s418",
+  "id": "s419",
   "section": "מעבדת קרב (כלי פיתוח)",
   "text": "מעורב",
   "where": {
@@ -5024,7 +5034,7 @@
   }
  },
  {
-  "id": "s419",
+  "id": "s420",
   "section": "מעבדת קרב (כלי פיתוח)",
   "text": "▶ הרץ שוב",
   "where": {
@@ -5034,7 +5044,7 @@
   }
  },
  {
-  "id": "s420",
+  "id": "s421",
   "section": "טבלאות — אלמנטים, נדירות, סדרות, יכולות",
   "text": "אש",
   "where": {
@@ -5044,7 +5054,7 @@
   }
  },
  {
-  "id": "s421",
+  "id": "s422",
   "section": "טבלאות — אלמנטים, נדירות, סדרות, יכולות",
   "text": "מים",
   "where": {
@@ -5054,7 +5064,7 @@
   }
  },
  {
-  "id": "s422",
+  "id": "s423",
   "section": "טבלאות — אלמנטים, נדירות, סדרות, יכולות",
   "text": "אדמה",
   "where": {
@@ -5064,7 +5074,7 @@
   }
  },
  {
-  "id": "s423",
+  "id": "s424",
   "section": "טבלאות — אלמנטים, נדירות, סדרות, יכולות",
   "text": "אוויר",
   "where": {
@@ -5074,7 +5084,7 @@
   }
  },
  {
-  "id": "s424",
+  "id": "s425",
   "section": "טבלאות — אלמנטים, נדירות, סדרות, יכולות",
   "text": "חשמל",
   "where": {
@@ -5084,7 +5094,7 @@
   }
  },
  {
-  "id": "s425",
+  "id": "s426",
   "section": "טבלאות — אלמנטים, נדירות, סדרות, יכולות",
   "text": "מתכת",
   "where": {
@@ -5094,7 +5104,7 @@
   }
  },
  {
-  "id": "s426",
+  "id": "s427",
   "section": "טבלאות — אלמנטים, נדירות, סדרות, יכולות",
   "text": "אור",
   "where": {
@@ -5104,7 +5114,7 @@
   }
  },
  {
-  "id": "s427",
+  "id": "s428",
   "section": "טבלאות — אלמנטים, נדירות, סדרות, יכולות",
   "text": "אופל",
   "where": {
@@ -5114,7 +5124,7 @@
   }
  },
  {
-  "id": "s428",
+  "id": "s429",
   "section": "טבלאות — אלמנטים, נדירות, סדרות, יכולות",
   "text": "רעל",
   "where": {
@@ -5124,7 +5134,7 @@
   }
  },
  {
-  "id": "s429",
+  "id": "s430",
   "section": "טבלאות — אלמנטים, נדירות, סדרות, יכולות",
   "text": "משתנה",
   "where": {
@@ -5134,7 +5144,7 @@
   }
  },
  {
-  "id": "s430",
+  "id": "s431",
   "section": "טבלאות — אלמנטים, נדירות, סדרות, יכולות",
   "text": "קרוב",
   "where": {
@@ -5144,7 +5154,7 @@
   }
  },
  {
-  "id": "s431",
+  "id": "s432",
   "section": "טבלאות — אלמנטים, נדירות, סדרות, יכולות",
   "text": "רחוק",
   "where": {
@@ -5154,7 +5164,7 @@
   }
  },
  {
-  "id": "s432",
+  "id": "s433",
   "section": "טבלאות — אלמנטים, נדירות, סדרות, יכולות",
   "text": "צלף",
   "where": {
@@ -5164,7 +5174,7 @@
   }
  },
  {
-  "id": "s433",
+  "id": "s434",
   "section": "טבלאות — אלמנטים, נדירות, סדרות, יכולות",
   "text": "נפוץ",
   "where": {
@@ -5174,7 +5184,7 @@
   }
  },
  {
-  "id": "s434",
+  "id": "s435",
   "section": "טבלאות — אלמנטים, נדירות, סדרות, יכולות",
   "text": "נדיר",
   "where": {
@@ -5184,7 +5194,7 @@
   }
  },
  {
-  "id": "s435",
+  "id": "s436",
   "section": "טבלאות — אלמנטים, נדירות, סדרות, יכולות",
   "text": "אפי",
   "where": {
@@ -5194,7 +5204,7 @@
   }
  },
  {
-  "id": "s436",
+  "id": "s437",
   "section": "טבלאות — אלמנטים, נדירות, סדרות, יכולות",
   "text": "אגדי",
   "where": {
@@ -5204,7 +5214,7 @@
   }
  },
  {
-  "id": "s437",
+  "id": "s438",
   "section": "טבלאות — אלמנטים, נדירות, סדרות, יכולות",
   "text": "דרקונים",
   "where": {
@@ -5214,7 +5224,7 @@
   }
  },
  {
-  "id": "s438",
+  "id": "s439",
   "section": "טבלאות — אלמנטים, נדירות, סדרות, יכולות",
   "text": "ענקים",
   "where": {
@@ -5224,7 +5234,7 @@
   }
  },
  {
-  "id": "s439",
+  "id": "s440",
   "section": "טבלאות — אלמנטים, נדירות, סדרות, יכולות",
   "text": "חרקים",
   "where": {
@@ -5234,7 +5244,7 @@
   }
  },
  {
-  "id": "s440",
+  "id": "s441",
   "section": "טבלאות — אלמנטים, נדירות, סדרות, יכולות",
   "text": "צמחים",
   "where": {
@@ -5244,7 +5254,7 @@
   }
  },
  {
-  "id": "s441",
+  "id": "s442",
   "section": "טבלאות — אלמנטים, נדירות, סדרות, יכולות",
   "text": "ריריים",
   "where": {
@@ -5254,7 +5264,7 @@
   }
  },
  {
-  "id": "s442",
+  "id": "s443",
   "section": "טבלאות — אלמנטים, נדירות, סדרות, יכולות",
   "text": "הדף אחורה",
   "where": {
@@ -5264,7 +5274,7 @@
   }
  },
  {
-  "id": "s443",
+  "id": "s444",
   "section": "טבלאות — אלמנטים, נדירות, סדרות, יכולות",
   "text": "הדף הצידה",
   "where": {
@@ -5274,7 +5284,7 @@
   }
  },
  {
-  "id": "s444",
+  "id": "s445",
   "section": "טבלאות — אלמנטים, נדירות, סדרות, יכולות",
   "text": "דריסה והמשך",
   "where": {
@@ -5284,7 +5294,7 @@
   }
  },
  {
-  "id": "s445",
+  "id": "s446",
   "section": "טבלאות — אלמנטים, נדירות, סדרות, יכולות",
   "text": "שאיבה למרכז",
   "where": {
@@ -5294,7 +5304,7 @@
   }
  },
  {
-  "id": "s446",
+  "id": "s447",
   "section": "טבלאות — אלמנטים, נדירות, סדרות, יכולות",
   "text": "מלכודת הצמדה",
   "where": {
@@ -5304,7 +5314,7 @@
   }
  },
  {
-  "id": "s447",
+  "id": "s448",
   "section": "טבלאות — אלמנטים, נדירות, סדרות, יכולות",
   "text": "חסין הדיפה",
   "where": {
@@ -5314,7 +5324,7 @@
   }
  },
  {
-  "id": "s448",
+  "id": "s449",
   "section": "טבלאות — אלמנטים, נדירות, סדרות, יכולות",
   "text": "החזרת נזק",
   "where": {
@@ -5324,7 +5334,7 @@
   }
  },
  {
-  "id": "s449",
+  "id": "s450",
   "section": "טבלאות — אלמנטים, נדירות, סדרות, יכולות",
   "text": "צבירת שריון",
   "where": {
@@ -5334,7 +5344,7 @@
   }
  },
  {
-  "id": "s450",
+  "id": "s451",
   "section": "טבלאות — אלמנטים, נדירות, סדרות, יכולות",
   "text": "שבירת שריון",
   "where": {
@@ -5344,7 +5354,7 @@
   }
  },
  {
-  "id": "s451",
+  "id": "s452",
   "section": "טבלאות — אלמנטים, נדירות, סדרות, יכולות",
   "text": "הילת שריון",
   "where": {
@@ -5354,7 +5364,7 @@
   }
  },
  {
-  "id": "s452",
+  "id": "s453",
   "section": "טבלאות — אלמנטים, נדירות, סדרות, יכולות",
   "text": "ספיגה לשכנים",
   "where": {
@@ -5364,7 +5374,7 @@
   }
  },
  {
-  "id": "s453",
+  "id": "s454",
   "section": "טבלאות — אלמנטים, נדירות, סדרות, יכולות",
   "text": "הילת הגנה",
   "where": {
@@ -5374,7 +5384,7 @@
   }
  },
  {
-  "id": "s454",
+  "id": "s455",
   "section": "טבלאות — אלמנטים, נדירות, סדרות, יכולות",
   "text": "התחדשות",
   "where": {
@@ -5384,7 +5394,7 @@
   }
  },
  {
-  "id": "s455",
+  "id": "s456",
   "section": "טבלאות — אלמנטים, נדירות, סדרות, יכולות",
   "text": "הילת ריפוי",
   "where": {
@@ -5394,7 +5404,7 @@
   }
  },
  {
-  "id": "s456",
+  "id": "s457",
   "section": "טבלאות — אלמנטים, נדירות, סדרות, יכולות",
   "text": "מכה אזורית",
   "where": {
@@ -5404,7 +5414,7 @@
   }
  },
  {
-  "id": "s457",
+  "id": "s458",
   "section": "טבלאות — אלמנטים, נדירות, סדרות, יכולות",
   "text": "חסימת נתיב",
   "where": {
@@ -5414,7 +5424,7 @@
   }
  },
  {
-  "id": "s458",
+  "id": "s459",
   "section": "טבלאות — אלמנטים, נדירות, סדרות, יכולות",
   "text": "הקפאה במכה",
   "where": {
@@ -5424,7 +5434,7 @@
   }
  },
  {
-  "id": "s459",
+  "id": "s460",
   "section": "טבלאות — אלמנטים, נדירות, סדרות, יכולות",
   "text": "רעל מצטבר",
   "where": {
@@ -5434,7 +5444,7 @@
   }
  },
  {
-  "id": "s460",
+  "id": "s461",
   "section": "טבלאות — אלמנטים, נדירות, סדרות, יכולות",
   "text": "בליעת יריב",
   "where": {
@@ -5444,7 +5454,7 @@
   }
  },
  {
-  "id": "s461",
+  "id": "s462",
   "section": "טבלאות — אלמנטים, נדירות, סדרות, יכולות",
   "text": "הילת האטה",
   "where": {
@@ -5454,7 +5464,7 @@
   }
  },
  {
-  "id": "s462",
+  "id": "s463",
   "section": "טבלאות — אלמנטים, נדירות, סדרות, יכולות",
   "text": "הילת מהירות",
   "where": {
@@ -5464,7 +5474,7 @@
   }
  },
  {
-  "id": "s463",
+  "id": "s464",
   "section": "טבלאות — אלמנטים, נדירות, סדרות, יכולות",
   "text": "התמרה מושהית",
   "where": {
@@ -5474,7 +5484,7 @@
   }
  },
  {
-  "id": "s464",
+  "id": "s465",
   "section": "טבלאות — אלמנטים, נדירות, סדרות, יכולות",
   "text": "נחיל במוות",
   "where": {
@@ -5484,7 +5494,7 @@
   }
  },
  {
-  "id": "s465",
+  "id": "s466",
   "section": "טבלאות — אלמנטים, נדירות, סדרות, יכולות",
   "text": "פיצול במוות",
   "where": {
@@ -5494,7 +5504,7 @@
   }
  },
  {
-  "id": "s466",
+  "id": "s467",
   "section": "טבלאות — אלמנטים, נדירות, סדרות, יכולות",
   "text": "הקרבת בעל-ברית",
   "where": {
@@ -5504,7 +5514,7 @@
   }
  },
  {
-  "id": "s467",
+  "id": "s468",
   "section": "טבלאות — אלמנטים, נדירות, סדרות, יכולות",
   "text": "גניבת אלמנט",
   "where": {
@@ -5514,7 +5524,7 @@
   }
  },
  {
-  "id": "s468",
+  "id": "s469",
   "section": "נתוני קלפים",
   "text": "מפלץ פירורים",
   "where": {
@@ -5524,7 +5534,7 @@
   }
  },
  {
-  "id": "s469",
+  "id": "s470",
   "section": "components/Album.tsx",
   "text": "בלי זה האלבום קיים רק בדפדפן הזה.",
   "where": {
@@ -5534,7 +5544,7 @@
   }
  },
  {
-  "id": "s470",
+  "id": "s471",
   "section": "components/Album.tsx",
   "text": "עותקים — כמה פעמים אפשר להניח אותו",
   "where": {
@@ -5544,7 +5554,7 @@
   }
  },
  {
-  "id": "s471",
+  "id": "s472",
   "section": "game/account.ts",
   "text": "אין חיבור לשרת",
   "where": {
@@ -5554,7 +5564,7 @@
   }
  },
  {
-  "id": "s472",
+  "id": "s473",
   "section": "game/account.ts",
   "text": "צריך להתחיל לשחק קודם",
   "where": {
@@ -5564,7 +5574,7 @@
   }
  },
  {
-  "id": "s473",
+  "id": "s474",
   "section": "game/account.ts",
   "text": "כבר מחובר",
   "where": {

@@ -51,29 +51,32 @@ export const EXIT_CANCEL = [
   "עוד לא סיימתי",
 ] as const;
 
-/** The result screen. */
+/**
+ * The result screen. No emoji here — the crest above the headline is the
+ * drawn one, and an emoji beside it is the borrowed art Or wanted gone.
+ */
 export const WIN_TITLE = [
-  "🎉 ניצחת! הפעם.",
-  "🎉 ניצחת. נתתי לך.",
-  "🎉 יפה, ילד.",
-  "🎉 ניצחת. אל תתרגל.",
-  "🎉 טוב. באמת טוב.",
+  "ניצחת! הפעם.",
+  "ניצחת. נתתי לך.",
+  "יפה, ילד.",
+  "ניצחת. אל תתרגל.",
+  "טוב. באמת טוב.",
 ] as const;
 
 export const LOSE_TITLE = [
-  "😋 הפסדת. טעים.",
-  "😋 הפסדת. היה נחמד.",
-  "😋 זהו. תודה על הארוחה.",
-  "😋 הפסדת, וידעת שזה יקרה.",
-  "😋 אוי. כמעט.",
+  "הפסדת. טעים.",
+  "הפסדת. היה נחמד.",
+  "זהו. תודה על הארוחה.",
+  "הפסדת, וידעת שזה יקרה.",
+  "אוי. כמעט.",
 ] as const;
 
 /** The opponent walked out mid-match. */
 export const OPPONENT_LEFT = [
-  "🎉 היריב ברח. ניצחת בטכני.",
-  "🎉 הוא ברח. אני לא מאשימה אותו.",
-  "🎉 נשארת לבד. זה נחשב ניצחון.",
-  "🎉 היריב נעלם. אכלתי אותו בדרך.",
+  "היריב ברח. ניצחת בטכני.",
+  "הוא ברח. אני לא מאשימה אותו.",
+  "נשארת לבד. זה נחשב ניצחון.",
+  "היריב נעלם. אכלתי אותו בדרך.",
 ] as const;
 
 /** The three seconds before the build phase. */

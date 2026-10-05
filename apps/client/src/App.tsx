@@ -210,6 +210,19 @@ function Game() {
   }, [m.phase]);
   const winnerText = m.oppLeft && !m.result ? leftTitle : m.iWon ? winTitle : loseTitle;
 
+  /*
+   * The phase announces itself across the middle of the screen and goes away,
+   * the way a game does it — rather than sitting in the corner as a status
+   * line nobody reads twice.
+   */
+  const [phaseCard, setPhaseCard] = useState<string | null>(null);
+  useEffect(() => {
+    if (!["build", "panic", "battle"].includes(m.phase)) return;
+    setPhaseCard(PHASE_LABEL[m.phase] ?? null);
+    const t = window.setTimeout(() => setPhaseCard(null), 1700);
+    return () => window.clearTimeout(t);
+  }, [m.phase]);
+
   return (
     <div className="app">
       {/* Two 4x4 boards of portrait cards only fit side by side in landscape,
@@ -219,15 +232,22 @@ function Game() {
         <h2>סובב את המכשיר</h2>
         <p>אני משוחקת לרוחב, ילד. ככה אני רואה את שניכם.</p>
       </div>
+      {phaseCard && (
+        <div className="phase-card" role="status" key={phaseCard}>
+          <span>{phaseCard}</span>
+        </div>
+      )}
       <header className={`topbar${m.phase === "intro" ? " topbar--ghost" : ""}`}>
         <div className="topbar__title">
           <img className="topbar__mark" src={`${BASE}brand/amanda_logo.png`} alt="" />
           אמנדה | משחק קלפים מפלצתי
         </div>
-        {PHASE_LABEL[m.phase] && (
+        {/* While waiting there is no match yet, so this is the only thing to
+            say and it stays put. Once a match is running the phase announces
+            itself across the screen and leaves (see .phase-card below). */}
+        {m.phase === "waiting" && (
           <div className={`topbar__phase phase--${m.phase}`}>
-            {/* holding a room is waiting for one person, not hunting for anyone */}
-            {m.phase === "waiting" && m.roomCode ? "מחכה לחבר שלך…" : PHASE_LABEL[m.phase]}
+            {m.roomCode ? "מחכה לחבר שלך…" : PHASE_LABEL[m.phase]}
           </div>
         )}
         {(m.phase === "build" || m.phase === "panic") && (
@@ -450,7 +470,7 @@ function Game() {
         >
           <div className="boards">
             <section className={`side side--me${m.frozenFor > 0 ? " side--frozen" : ""}`}>
-              <div className="side__label">🧑 אתה · חזית ⟶</div>
+              <div className="side__label">אתה <span className="side__way">⟵</span></div>
               {m.frozenFor > 0 && (
                 <div className="frozen" role="status">
                   <span className="frozen__icon">🧊</span>
@@ -486,7 +506,8 @@ function Game() {
 
             <section className="side side--enemy">
               <div className="side__label">
-                🤖 היריב {m.phase === "build" ? "" : "· נחשף!"} ⟵ חזית
+                <span className="side__way">⟶</span> היריב{" "}
+                {m.phase !== "build" && <span className="side__revealed">נחשף!</span>}
               </div>
               <BoardGrid
                 placements={m.opponent.placements}
@@ -717,7 +738,8 @@ function Game() {
       {/* ---- result ---- */}
       {m.phase === "result" && (
         <main className="result">
-          <div className="result__card">
+          <div className={`result__card result__card--${m.iWon ? "win" : "lose"}`}>
+            <Icon name={m.iWon ? "win" : "lose"} size={96} className="result__crest" />
             <h1>{winnerText}</h1>
             {m.result && (
               <>
