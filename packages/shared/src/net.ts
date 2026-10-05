@@ -45,6 +45,11 @@ export type RoomError = "notFound" | "full" | "self";
 
 // ── client → server ────────────────────────────────────────────────
 export type ClientMessage =
+  /**
+   * Which account is playing, sent once on connect. Optional on purpose: a
+   * player with no account still gets a match, they just earn nothing from it.
+   */
+  | { t: "me"; playerId: string }
   /** Join the open queue and play whoever turns up next. */
   | { t: "hello" }
   /** Open a private room and wait for a specific person to join it. */

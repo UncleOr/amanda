@@ -990,6 +990,7 @@ export function useMatch(): MatchApi {
       },
       },
       intent,
+      accountRef.current?.playerId ?? null,
     );
   }, [enterPrebattle]);
 

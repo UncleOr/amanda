@@ -8,6 +8,7 @@ import {
   type RoomError,
 } from "@amanda/shared";
 import { Match } from "./match.js";
+import { PROGRESS_ENABLED } from "./progress.js";
 import "./content.js"; // eager-load the card catalog at boot
 
 const PORT = Number(process.env.PORT ?? 2567);
@@ -22,6 +23,12 @@ const http = createServer((req, res) => {
 });
 
 const wss = new WebSocketServer({ server: http });
+
+/**
+ * Which account each socket belongs to, when it told us. A player without one
+ * plays perfectly normally and simply earns nothing.
+ */
+const playerIdOf = new WeakMap<WebSocket, string>();
 
 /** The player in the open queue, waiting for whoever turns up next. */
 let waiting: WebSocket | null = null;
@@ -57,7 +64,7 @@ function newRoomCode(): string {
 }
 
 function beginMatch(a: WebSocket, b: WebSocket, how: string): void {
-  const m = new Match(a, b);
+  const m = new Match(a, b, playerIdOf.get(a) ?? null, playerIdOf.get(b) ?? null);
   matchOf.set(a, m);
   matchOf.set(b, m);
   console.log(`[server] match started (${how})`);
@@ -82,6 +89,11 @@ setInterval(() => {
 
 function handleLobby(ws: WebSocket, msg: ClientMessage): void {
   switch (msg.t) {
+    case "me": {
+      if (typeof msg.playerId === "string" && msg.playerId) playerIdOf.set(ws, msg.playerId);
+      return;
+    }
+
     case "hello": {
       // Open queue: pair with whoever is already waiting.
       if (isOpen(waiting) && waiting !== ws) {
@@ -163,4 +175,9 @@ wss.on("connection", (ws) => {
 
 http.listen(PORT, () => {
   console.log(`[server] Amanda multiplayer listening on :${PORT}`);
+  console.log(
+    PROGRESS_ENABLED
+      ? "[server] progress is being recorded"
+      : "[server] no SUPABASE_SERVICE_KEY — matches are played but nothing is saved",
+  );
 });

@@ -49,18 +49,23 @@ export class Net {
   /** True once the socket actually opened — tells a dead server from a drop. */
   private connected = false;
   private intent: Intent = { kind: "quick" };
+  private playerId: string | null = null;
 
   /**
    * Open the socket. `intent` decides what to ask for once it is up: join the
    * open queue, open a private room, or join someone else's by code.
    */
-  connect(handlers: NetHandlers, intent: Intent = { kind: "quick" }): void {
+  connect(handlers: NetHandlers, intent: Intent = { kind: "quick" }, playerId?: string | null): void {
     this.handlers = handlers;
     this.intent = intent;
+    this.playerId = playerId ?? null;
     const ws = new WebSocket(SERVER_URL);
     this.ws = ws;
     ws.onopen = () => {
       this.connected = true;
+      // Say who we are before asking for a match, so the server knows who to
+      // credit. A guest simply skips this and earns nothing.
+      if (this.playerId) this.sendMsg({ t: "me", playerId: this.playerId });
       const i = this.intent;
       this.sendMsg(
         i.kind === "host" ? { t: "host" } : i.kind === "join" ? { t: "join", code: i.code } : { t: "hello" },

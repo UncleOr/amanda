@@ -56,6 +56,9 @@ importers:
       '@amanda/shared':
         specifier: workspace:*
         version: link:../../packages/shared
+      '@supabase/supabase-js':
+        specifier: ^2.117.2
+        version: 2.117.2
       tsx:
         specifier: ^4.19.2
         version: 4.23.0
@@ -72,6 +75,9 @@ importers:
       typescript:
         specifier: ^5.7.2
         version: 5.9.3
+      vitest:
+        specifier: ^2.1.9
+        version: 2.1.9(@types/node@22.20.0)
 
   packages/art:
     dependencies:

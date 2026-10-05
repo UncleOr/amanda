@@ -2,6 +2,7 @@ import type { WebSocket } from "ws";
 import { PHASES, encode, type BoardView, type NetBoard, type ServerMessage, type Side } from "@amanda/shared";
 import { runBattle } from "@amanda/engine";
 import { CATALOG, SYNERGIES } from "./content.js";
+import { recordMatch } from "./progress.js";
 
 const COUNTDOWN = 3;
 const PANIC_LOCK_WINDOW = 8; // seconds after Panic to gather both locked boards
@@ -11,6 +12,8 @@ interface PlayerConn {
   side: Side;
   view: BoardView;
   board: NetBoard | null;
+  /** The account this socket belongs to, or null for a guest. */
+  playerId: string | null;
 }
 
 const emptyView = (): BoardView => ({ placements: {}, king: null });
@@ -42,9 +45,9 @@ export class Match {
   private resultSent = false;
   private over = false;
 
-  constructor(wsA: WebSocket, wsB: WebSocket) {
-    this.a = { ws: wsA, side: "A", view: emptyView(), board: null };
-    this.b = { ws: wsB, side: "B", view: emptyView(), board: null };
+  constructor(wsA: WebSocket, wsB: WebSocket, idA: string | null, idB: string | null) {
+    this.a = { ws: wsA, side: "A", view: emptyView(), board: null, playerId: idA };
+    this.b = { ws: wsB, side: "B", view: emptyView(), board: null, playerId: idB };
     this.send(this.a, { t: "start", side: "A" });
     this.send(this.b, { t: "start", side: "B" });
     this.runTimeline();
@@ -140,6 +143,9 @@ export class Match {
       console.error("[match] battle error", err);
     }
     this.both({ t: "result", seed: this.seed, boardA, boardB, winner });
+    // Trophies and the winner's chest. Deliberately not awaited: the players
+    // have their result, and a slow database must not hold up the match.
+    void recordMatch({ a: this.a.playerId, b: this.b.playerId, winner });
   }
 
   /** A client disconnected — tell the other and shut the match down. */
