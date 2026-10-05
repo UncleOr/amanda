@@ -1,4 +1,4 @@
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 import { Application, Assets, Container, Graphics, Sprite, Text, Texture } from "pixi.js";
 import { ARENA, SIMULATION } from "@amanda/shared";
 import type { BattleResult, FrameUnit, Owner } from "@amanda/engine";
@@ -28,6 +28,15 @@ function artUrlOf(cardId: string): string | null {
   return sprite ? `${import.meta.env.BASE_URL}${sprite}` : null;
 }
 const FINALE_MS = 1700;
+/**
+ * How long the battle gets to put something on screen before we give up on it.
+ * Generous on purpose: every card texture is downloaded before the canvas is
+ * attached, which on a bad phone connection is genuinely slow, and a false
+ * alarm costs the player their replay. The battle itself lasts 45 seconds.
+ */
+const STARTUP_GRACE_MS = 15000;
+/** How long the "could not draw it" message stays before moving on by itself. */
+const SKIP_AFTER_MS = 3500;
 /** Seconds left at which the clock starts warning. */
 const WARN_AT = 5;
 /** How long "time's up" and the verdict stay on screen before the result. */
@@ -121,6 +130,17 @@ export function Arena({
 }) {
   const hostRef = useRef<HTMLDivElement>(null);
   const finishedRef = useRef(false);
+  /**
+   * True when the battle could not be drawn at all.
+   *
+   * Everything below runs inside a promise. If WebGL refuses to start, that
+   * promise rejects, the canvas is never attached and — the part that actually
+   * hurt — none of the timers that end the battle are ever scheduled. The
+   * player was left on an empty screen, in a match that could not finish, with
+   * nothing to press. An ErrorBoundary does not help: it catches errors thrown
+   * while rendering, not a rejected promise.
+   */
+  const [failed, setFailed] = useState(false);
 
   useEffect(() => {
     finishedRef.current = false;
@@ -881,7 +901,27 @@ export function Arena({
             }
           }, playbackMs + holdMs + FINALE_MS),
         );
+      })
+      .catch(() => {
+        // WebGL refused, a texture blew up, anything. Do not leave the player
+        // on a blank screen in a match that can never end.
+        if (!disposed) setFailed(true);
       });
+
+    /*
+     * A watchdog for every way this can fail that we have not thought of.
+     *
+     * It asks the only question that matters to the player: is there anything
+     * on the screen? Testing an `initialized` flag instead was not enough —
+     * in a browser with WebGL switched off, init resolved and the flag went
+     * true, but no canvas was ever attached and the arena stayed empty.
+     */
+    timers.push(
+      window.setTimeout(() => {
+        if (disposed) return;
+        if (!hostRef.current?.querySelector("canvas")) setFailed(true);
+      }, STARTUP_GRACE_MS),
+    );
 
     return () => {
       disposed = true;
@@ -889,6 +929,40 @@ export function Arena({
       if (initialized) app.destroy(true, { children: true });
     };
   }, [result, onFinish, verdict]);
+
+  // The result was already computed before this component mounted, so skipping
+  // the animation costs the replay and nothing else. Offer the way out, and
+  // take it automatically for anyone who does not know to press it.
+  useEffect(() => {
+    if (!failed) return;
+    const t = window.setTimeout(() => {
+      if (!finishedRef.current) {
+        finishedRef.current = true;
+        onFinish();
+      }
+    }, SKIP_AFTER_MS);
+    return () => window.clearTimeout(t);
+  }, [failed, onFinish]);
+
+  if (failed) {
+    return (
+      <div className="arena arena--failed" role="alert">
+        <div className="arena__oops">🙈</div>
+        <p>לא הצלחתי להראות לך את הקרב.</p>
+        <p className="arena__sub">הוא כבר הוכרע — אני לוקחת אותך לתוצאה.</p>
+        <button
+          className="btn-fight"
+          onClick={() => {
+            if (finishedRef.current) return;
+            finishedRef.current = true;
+            onFinish();
+          }}
+        >
+          קדימה לתוצאה
+        </button>
+      </div>
+    );
+  }
 
   return <div className="arena" ref={hostRef} />;
 }

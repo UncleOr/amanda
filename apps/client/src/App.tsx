@@ -67,6 +67,19 @@ const IN_MATCH = ["countdown", "build", "panic", "prebattle", "battle"];
  */
 /** A room code from an invite link (?join=XXXX), used once on first load. */
 const INVITE_CODE = new URLSearchParams(location.search).get("join");
+/*
+ * Take it out of the address bar the moment it is read.
+ *
+ * It used to stay there for good, so every reload silently rejoined a room
+ * that had long since closed: the game started a match nobody asked for, and
+ * the in-app ⟳ button reloaded the same address and did it again. "Used once
+ * on first load" is only true if the address stops saying it.
+ */
+if (INVITE_CODE) {
+  const url = new URL(location.href);
+  url.searchParams.delete("join");
+  history.replaceState(null, "", `${url.pathname}${url.search}${url.hash}`);
+}
 
 const REVIEW = new URLSearchParams(location.search).has("gallery")
   ? "gallery"
