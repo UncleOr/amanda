@@ -6,6 +6,22 @@
       name="viewport"
       content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover"
     />
+    <script>
+      /*
+       * The game used to live on a work account, and phones that bookmarked it
+       * or installed it to a home screen still open that address — where the
+       * build has no server URL, so online play is dead. Send them to the
+       * current home, keeping whatever path or invite code they arrived with.
+       * Remove this once the old Pages site is taken down.
+       */
+      (function () {
+        if (location.hostname === "or-42creative.github.io") {
+          location.replace(
+            "https://uncleor.github.io" + location.pathname + location.search + location.hash
+          );
+        }
+      })();
+    </script>
     <title>Amanda — המשחקון</title>
     <meta name="description" content="קרב מדבקות מהיר — בונים לוח 4×4 של מפלצות ונלחמים אוטומטית." />
 
