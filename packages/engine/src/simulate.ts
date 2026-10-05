@@ -1,4 +1,4 @@
-import { ARENA, RANGE_REACH, SIMULATION } from "@amanda/shared";
+import { ARENA, RANGE_REACH, SIMULATION, SUDDEN_DEATH } from "@amanda/shared";
 import {
   runAuras,
   runDelayed,
@@ -47,10 +47,16 @@ function pickTarget(state: BattleState, u: Unit): TargetPick | null {
   let ahead = state.units.filter(
     (e) => e.alive && e.owner !== u.owner && sharesLane(e, u) && isAhead(u, e),
   );
-  // A King is shielded while any of its own still stands in that lane: you
-  // have to break the lane before you can touch the King behind it. The two
-  // cells directly in front of the King are therefore the posts that matter.
-  if (ahead.some((e) => !e.isKing)) ahead = ahead.filter((e) => !e.isKing);
+  // A King is shielded by its own units STANDING BETWEEN it and the attacker —
+  // not by anything that merely shares the lane. Counting the whole lane meant
+  // a 1 HP filler monster parked in the back row made a King untouchable, and
+  // sent attackers walking straight past that King to go and kill it.
+  const theirKing = ahead.find((e) => e.isKing);
+  if (theirKing) {
+    const kingGap = gapAhead(u, theirKing);
+    const shielded = ahead.some((e) => !e.isKing && gapAhead(u, e) < kingGap);
+    if (shielded) ahead = ahead.filter((e) => !e.isKing);
+  }
   if (ahead.length === 0) return null;
 
   let best = ahead[0]!;
@@ -198,9 +204,21 @@ export function runBattle(setup: BattleSetup): BattleResult {
 
   const ops: BattleOps = { killUnit, spawnChild };
 
+  /**
+   * How much harder hits land right now. 1 for the first half of the battle,
+   * then climbing to SUDDEN_DEATH.peak by the final tick — the clock itself
+   * breaking a deadlock that neither board can.
+   */
+  function escalation(): number {
+    const from = totalTicks * SUDDEN_DEATH.startsAt;
+    if (state.tick <= from) return 1;
+    const through = (state.tick - from) / Math.max(1, totalTicks - from);
+    return 1 + (SUDDEN_DEATH.peak - 1) * Math.min(1, through);
+  }
+
   function performAttack(u: Unit, target: Unit): void {
     state.events.push({ tick: state.tick, type: "attack", uid: u.uid, targetUid: target.uid });
-    const dmg = computeDamage(u.power, u.activeElement, target);
+    const dmg = computeDamage(u.power * escalation(), u.activeElement, target);
     target.hp -= dmg;
     state.events.push({
       tick: state.tick,

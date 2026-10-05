@@ -1,5 +1,5 @@
 import { useCallback, useEffect, useRef, useState } from "react";
-import { DECK, PHASES, type RoomError, type Side } from "@amanda/shared";
+import { DECK, PHASES, type Card, type RoomError, type Side } from "@amanda/shared";
 import {
   runBattle,
   type BattleResult,
@@ -37,7 +37,13 @@ export type Phase =
 
 const BATTLE_SEED = 20260707;
 const COUNTDOWN_SECONDS = 3;
-const PREBATTLE_SECONDS = 4;
+/**
+ * The pause between locking the boards and the first blow. It has to exist —
+ * both players lock at the same moment, and the empty slots fill — but it is
+ * four seconds of a blocked screen when you are still placing cards, so it is
+ * kept to the shortest beat that still reads.
+ */
+const PREBATTLE_SECONDS = 2;
 const XRAY_MS = 6000;
 const KING_KEY = "king";
 
@@ -84,19 +90,65 @@ function perimeterCells(): Array<{ x: number; y: number }> {
   return cells;
 }
 
+/** The two cells directly in front of the King — the posts that keep it alive. */
+function isGuardPost(x: number, y: number): boolean {
+  return x === 3 && (y === 1 || y === 2);
+}
+
+/**
+ * Build the computer's board the way the game actually rewards, instead of
+ * scattering cards at random: a fat King, static walls on the two guard posts,
+ * the hardest hitters leading the flanks, and shooters and movers behind.
+ *
+ * It is deliberately not optimal — it picks from the top handful of each role
+ * rather than the single best card — so the opponent has a personality and the
+ * same board never turns up twice.
+ */
 function generateAiPlan(): Placement[] {
-  const kingPool = KING_CANDIDATES.length ? KING_CANDIDATES : [...CATALOG.values()];
-  const king = kingPool[Math.floor(Math.random() * kingPool.length)]!.id;
-  const pool = shuffle(shuffle(cardPool()).slice(0, DECK.size).filter((id) => id !== king));
-  // Fill the front row first (an opponent that leaves its front open is both
-  // unrealistic and makes fog-of-war / Sandstorm meaningless), then the rest.
-  const cells = perimeterCells();
-  const front = shuffle(cells.filter((c) => c.x === 3));
-  const back = shuffle(cells.filter((c) => c.x !== 3));
-  const chosen = [...front, ...back].slice(0, 7);
-  const reals: Placement[] = chosen.map((c, i) => ({ cardId: pool[i % pool.length]!, x: c.x, y: c.y }));
-  reals.sort((a, b) => b.x - a.x);
-  return [...reals, { cardId: king, x: 1, y: 1, king: true }];
+  const pool = shuffle(cardPool())
+    .slice(0, DECK.size)
+    .map((id) => CATALOG.get(id)!)
+    .filter(Boolean);
+  if (pool.length === 0) return [];
+
+  const pick = <T,>(xs: T[], fallback: T): T =>
+    xs.length ? xs[Math.floor(Math.random() * Math.min(4, xs.length))]! : fallback;
+  const dps = (c: Card) => (c.stats.attackSpeed > 0 ? c.stats.power / c.stats.attackSpeed : 0);
+
+  const used = new Set<string>();
+  const take = (ranked: Card[]): Card => {
+    const free = ranked.filter((c) => !used.has(c.id));
+    const chosen = pick(free, free[0] ?? ranked[0] ?? pool[0]!);
+    used.add(chosen.id);
+    return chosen;
+  };
+
+  // A King is chosen for health first — it is pinned in place and shielded, so
+  // what it mostly has to do is survive.
+  const kingCard = take([...pool].sort((a, b) => b.stats.hp - a.stats.hp));
+  // Walls hold the posts: the toughest things that will not wander off them.
+  const walls = pool.filter((c) => c.stats.moveSpeed === 0).sort((a, b) => b.stats.hp - a.stats.hp);
+  // The flanks are a straight trade, so they get the damage.
+  const hitters = [...pool].sort((a, b) => dps(b) - dps(a));
+  // Behind the line, only shooters and movers can ever do anything.
+  const useful = pool.filter((c) => c.stats.range !== "melee" || c.stats.moveSpeed > 0);
+
+  const placements: Placement[] = [{ cardId: kingCard.id, x: 1, y: 1, king: true }];
+  for (const cell of perimeterCells()) {
+    const ranked = isGuardPost(cell.x, cell.y)
+      ? walls.length
+        ? walls
+        : hitters
+      : cell.x === 3
+        ? hitters
+        : useful.length
+          ? useful
+          : hitters;
+    placements.push({ cardId: take(ranked).id, x: cell.x, y: cell.y });
+  }
+  // Front row first keeps the battle readable when the boards are revealed.
+  placements.sort((a, b) => (b.x ?? 0) - (a.x ?? 0));
+  return placements;
 }
 
 function fillCrumbs(placements: Placement[]): Placement[] {

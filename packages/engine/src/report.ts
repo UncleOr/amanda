@@ -105,12 +105,41 @@ export interface Finding {
   value?: number;
 }
 
+/**
+ * How well a side played, 1 to 10, and what went into it.
+ *
+ * A win is not a win is not a win: taking a board apart in eight seconds
+ * without losing anything is a different performance from scraping through on
+ * the clock, and the score should say so. Losing caps the score, because the
+ * board did not do its job — but a close, hard-fought loss still scores well
+ * above a collapse.
+ */
+export interface Grade {
+  /** 1 (dismal) to 10 (flawless). */
+  score: number;
+  /** The parts it is made of, each 0..1, for showing the player why. */
+  parts: {
+    /** Did you win, and how decisively. */
+    outcome: number;
+    /** How quickly it was settled. */
+    speed: number;
+    /** Damage you dealt against damage you took. */
+    trade: number;
+    /** How much of your board actually fought. */
+    participation: number;
+    /** How much of your board was still standing. */
+    survival: number;
+  };
+}
+
 export interface BattleReport {
   winner: Owner | null;
   ticks: number;
   totalDamage: number;
   totalDeaths: number;
   sides: Record<Owner, SideReport>;
+  /** A 1-10 mark for each side's performance. */
+  grades: Record<Owner, Grade>;
   timeline: TimelineEntry[];
   findings: Finding[];
 }
@@ -306,7 +335,49 @@ export function buildReport(
     totalDeaths: sides.A.losses + sides.B.losses,
     sides,
     timeline,
+    grades: {
+      A: grade(sides, "A", result, filler),
+      B: grade(sides, "B", result, filler),
+    },
     findings: analyse(sides, result, byUid, filler, reflectedOnto),
+  };
+}
+
+const clamp01 = (n: number): number => Math.max(0, Math.min(1, n));
+
+/** Mark one side's performance out of ten. */
+function grade(
+  sides: Record<Owner, SideReport>,
+  owner: Owner,
+  result: BattleResult,
+  filler: string,
+): Grade {
+  const mine = sides[owner];
+  const theirs = sides[owner === "A" ? "B" : "A"];
+  const won = result.winner === owner;
+  const real = mine.units.filter((u) => u.cardId !== filler);
+  const total = Math.max(1, real.length);
+
+  // Winning on a King is the whole point; winning on the clock is scraping it.
+  const outcome = won ? (result.winReason === "kingDown" ? 1 : 0.7) : 0;
+  // A fast win is a good win; a fast loss is the worst kind.
+  const through = result.ticks / Math.max(1, SIMULATION.totalBattleTicks);
+  const speed = won ? clamp01(1 - through) : clamp01(through);
+  // Did you out-trade them?
+  const bothDealt = mine.damageDealt + theirs.damageDealt;
+  const trade = bothDealt > 0 ? clamp01(mine.damageDealt / bothDealt) : 0.5;
+  // Did the board you built actually fight?
+  const participation = clamp01(real.filter((u) => u.hits > 0).length / total);
+  // And how much of it came home.
+  const survival = clamp01(real.filter((u) => u.survived).length / total);
+
+  const weighted =
+    outcome * 0.4 + speed * 0.15 + trade * 0.2 + participation * 0.15 + survival * 0.1;
+  // 1..10, and a loss can never reach the top of the scale.
+  const capped = won ? weighted : Math.min(weighted, 0.55);
+  return {
+    score: Math.max(1, Math.min(10, Math.round(capped * 9 + 1))),
+    parts: { outcome, speed, trade, participation, survival },
   };
 }
 

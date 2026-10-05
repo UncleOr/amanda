@@ -204,3 +204,47 @@ describe("reflected damage", () => {
     expect(rep.timeline.some((e) => e.kind === "reflected")).toBe(true);
   });
 });
+
+/** The 1-10 mark has to separate performances a win/lose flag cannot. */
+describe("match grade", () => {
+  const brick = testCard({ id: "brick", hp: 400, power: 1, attackSpeed: 10, moveSpeed: 0 });
+  const killer = testCard({ id: "killer", power: 80, moveSpeed: 2, hp: 900 });
+  const paperKing = testCard({ id: "paper_king", hp: 20, power: 1, attackSpeed: 10 });
+  const cat = catalogOf(brick, killer, paperKing);
+
+  const crush = runBattle({
+    seed: 1,
+    catalog: cat,
+    a: { owner: "A", placements: [{ cardId: "killer", x: 3, y: 1 }] },
+    b: { owner: "B", placements: [{ cardId: "paper_king", x: 1, y: 1, king: true }] },
+  });
+
+  it("scores the winner above the loser", () => {
+    const rep = buildReport(crush, cat);
+    expect(rep.grades.A.score).toBeGreaterThan(rep.grades.B.score);
+  });
+
+  it("rates a fast, clean King kill highly", () => {
+    const rep = buildReport(crush, cat);
+    expect(rep.grades.A.score).toBeGreaterThanOrEqual(8);
+    expect(rep.grades.A.parts.outcome).toBe(1);
+  });
+
+  it("never lets a loss reach the top of the scale", () => {
+    const rep = buildReport(crush, cat);
+    expect(rep.grades.B.score).toBeLessThanOrEqual(6);
+    expect(rep.grades.B.parts.outcome).toBe(0);
+  });
+
+  it("marks a win on the clock below a win on a King", () => {
+    const stall = runBattle({
+      seed: 1,
+      catalog: cat,
+      a: { owner: "A", placements: [{ cardId: "brick", x: 1, y: 1, king: true }] },
+      b: { owner: "B", placements: [{ cardId: "paper_king", x: 1, y: 1, king: true }] },
+    });
+    const rep = buildReport(stall, cat);
+    const winner = stall.winner!;
+    expect(rep.grades[winner].parts.outcome).toBeLessThan(1);
+  });
+});

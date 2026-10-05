@@ -82,11 +82,29 @@ export const RANGE_REACH = {
  */
 export const COMBAT = {
   /**
-   * Tuned to 1.5 by measuring, not by feel: with well-built boards it lands
-   * the average match at ~20s of the 30s clock, with 4% decided inside five
-   * seconds. Raise it to shorten matches, lower it to draw them out.
+   * Left at 1: sudden death does the work of keeping matches short, which is
+   * better than a blanket multiplier because it leaves every card's numbers
+   * exactly as designed for the part of the battle people actually watch.
    */
-  damageMultiplier: 1.5,
+  damageMultiplier: 1,
+} as const;
+
+/**
+ * Sudden death. Two well-built boards can wall each other off completely —
+ * neither King reachable, nothing decided, 30 seconds of nothing. From the
+ * halfway mark every hit lands harder, rising to `peak` by the final second,
+ * so a stalemate is broken by the clock instead of surviving it.
+ */
+export const SUDDEN_DEATH = {
+  /**
+   * Fraction of the battle after which damage starts climbing. Measured over
+   * 250 well-built boards, 0.6 rising to 2.5 lands the average match at 18.8s
+   * of the 30s clock with a third going to time — against 41% and a flat
+   * stalemate before it existed.
+   */
+  startsAt: 0.6,
+  /** Damage multiplier at the very last tick. */
+  peak: 2.5,
 } as const;
 
 /**

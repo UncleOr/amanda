@@ -819,8 +819,10 @@ button:disabled {
   align-items: center;
   justify-content: center;
   gap: 6px;
-  background: rgba(5, 8, 16, 0.55);
-  backdrop-filter: blur(2px);
+  /* Light enough to keep watching your own board fill up behind it — this
+     sits over the last beat before the battle, and a blacked-out screen there
+     reads as the game taking the board away from you. */
+  background: rgba(5, 8, 16, 0.3);
   z-index: 30;
   pointer-events: none;
 }
@@ -1821,4 +1823,55 @@ button:disabled {
   font-size: 13px;
   opacity: 0.6;
   pointer-events: none;
+}
+
+/* ---- match grade ---- */
+.log__grade {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  background: var(--panel-2);
+  border: 1px solid var(--line);
+  border-radius: 12px;
+  padding: 10px 14px;
+  margin-bottom: 10px;
+}
+.log__grade-score {
+  font-size: 40px;
+  font-weight: 800;
+  line-height: 1;
+  font-variant-numeric: tabular-nums;
+  flex-shrink: 0;
+}
+.log__grade-score small { font-size: 15px; opacity: 0.5; font-weight: 700; }
+.log__grade-score--good { color: #5ad25a; }
+.log__grade-score--ok { color: var(--accent); }
+.log__grade-score--bad { color: var(--danger); }
+.log__grade-bars {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+  min-width: 0;
+}
+.log__grade-bar {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 10px;
+  color: var(--muted);
+}
+.log__grade-bar span { width: 86px; flex-shrink: 0; text-align: start; }
+.log__grade-bar i {
+  flex: 1;
+  height: 6px;
+  border-radius: 3px;
+  background: rgba(255, 255, 255, 0.07);
+  overflow: hidden;
+}
+.log__grade-bar b {
+  display: block;
+  height: 100%;
+  border-radius: 3px;
+  background: linear-gradient(90deg, var(--accent), #5ad25a);
 }

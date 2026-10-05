@@ -114,6 +114,31 @@ export function BattleLog({ result, mySide }: { result: BattleResult; mySide: Ow
 
       {tab === "analysis" && (
         <div className="log__body">
+          <div className="log__grade">
+            <div className={`log__grade-score log__grade-score--${gradeBand(report.grades[mySide].score)}`}>
+              {report.grades[mySide].score}
+              <small>/10</small>
+            </div>
+            <div className="log__grade-bars">
+              {(
+                [
+                  ["תוצאה", "outcome"],
+                  ["מהירות", "speed"],
+                  ["יחס נזק", "trade"],
+                  ["השתתפות הלוח", "participation"],
+                  ["שרידות", "survival"],
+                ] as const
+              ).map(([label, key]) => (
+                <div key={key} className="log__grade-bar">
+                  <span>{label}</span>
+                  <i>
+                    <b style={{ width: `${Math.round(report.grades[mySide].parts[key] * 100)}%` }} />
+                  </i>
+                </div>
+              ))}
+            </div>
+          </div>
+
           <div className="log__scores">
             {([mySide, theirSide] as Owner[]).map((o) => {
               const s = report.sides[o];
@@ -244,6 +269,11 @@ export function BattleLog({ result, mySide }: { result: BattleResult; mySide: Ow
       )}
     </div>
   );
+}
+
+/** Colour band for a match grade. */
+function gradeBand(score: number): "bad" | "ok" | "good" {
+  return score >= 8 ? "good" : score >= 5 ? "ok" : "bad";
 }
 
 /** Which bucket a card falls into, for the heat colouring. */
