@@ -29,10 +29,19 @@ function artUrlOf(cardId: string): string | null {
 }
 const FINALE_MS = 1700;
 /**
+ * How long we wait for card artwork before starting the battle without it.
+ *
+ * Every texture used to be downloaded BEFORE the canvas was attached, so on a
+ * slow phone the screen stayed empty — and, far worse, the timers that END a
+ * battle are scheduled after that load, so a slow connection produced a battle
+ * that could never finish. A unit with no texture already falls back to a
+ * coloured box, so waiting was never worth a match.
+ */
+const ART_WAIT_MS = 7000;
+/**
  * How long the battle gets to put something on screen before we give up on it.
- * Generous on purpose: every card texture is downloaded before the canvas is
- * attached, which on a bad phone connection is genuinely slow, and a false
- * alarm costs the player their replay. The battle itself lasts 45 seconds.
+ * Comfortably more than ART_WAIT_MS, so a slow download is never mistaken for
+ * a failure: a false alarm costs the player their replay.
  */
 const STARTUP_GRACE_MS = 15000;
 /** How long the "could not draw it" message stays before moving on by itself. */
@@ -466,21 +475,21 @@ export function Arena({
               .filter((u): u is string => u !== null),
           ),
         ];
-        let bgTexture: Texture | null = null;
-        try {
-          bgTexture = (await Assets.load(
-            `${import.meta.env.BASE_URL}arena/${BACKDROP}.webp`,
-          )) as Texture;
-        } catch {
-          /* no backdrop yet — the painted floor below still stands on its own */
-        }
-        if (urls.length) {
-          try {
-            await Assets.load(urls);
-          } catch {
-            /* missing art just falls back to the colour box */
-          }
-        }
+        // One shared budget, and the backdrop and the cards race it together
+        // rather than one after the other. Whatever has arrived by then is
+        // used; the rest fall back to their colour box and the match runs.
+        const give_up = new Promise<null>((resolve) => {
+          timers.push(window.setTimeout(() => resolve(null), ART_WAIT_MS));
+        });
+        const inTime = <T,>(p: Promise<T>): Promise<T | null> =>
+          Promise.race([p.catch(() => null), give_up]);
+
+        const [bgTexture] = await Promise.all([
+          inTime(
+            Assets.load(`${import.meta.env.BASE_URL}arena/${BACKDROP}.webp`) as Promise<Texture>,
+          ),
+          urls.length ? inTime(Assets.load(urls)) : Promise.resolve(null),
+        ]);
         initialized = true;
         if (disposed) {
           app.destroy(true, { children: true });
