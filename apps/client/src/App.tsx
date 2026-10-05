@@ -56,6 +56,19 @@ function verdictText(result: BattleResult, iWon: boolean): string {
 /** Vite serves the app under /amanda/ on Pages and / in dev. */
 const BASE = import.meta.env.BASE_URL;
 
+/** Drifting embers on the home screen. Fixed, so they never bunch up. */
+const MOTES = [
+  { x: 6, dur: 17, delay: 0, o: 0.5 },
+  { x: 14, dur: 22, delay: 3.5, o: 0.35 },
+  { x: 23, dur: 19, delay: 7, o: 0.45 },
+  { x: 34, dur: 25, delay: 1.5, o: 0.3 },
+  { x: 46, dur: 20, delay: 9, o: 0.4 },
+  { x: 58, dur: 24, delay: 5, o: 0.3 },
+  { x: 69, dur: 18, delay: 12, o: 0.45 },
+  { x: 81, dur: 23, delay: 2.5, o: 0.35 },
+  { x: 92, dur: 21, delay: 8, o: 0.4 },
+];
+
 /**
  * One line out of each set, chosen when the screen appears and held still
  * while it is on screen. Re-rolling on every render would change the words
@@ -126,6 +139,8 @@ function Game() {
   const [actionsOpen, setActionsOpen] = useState(false);
   const [albumOpen, setAlbumOpen] = useState(false);
   const [profileOpen, setProfileOpen] = useState(false);
+  /** "Bring a friend" opens three ways to do it rather than guessing one. */
+  const [friendOpen, setFriendOpen] = useState(false);
   /*
    * Taught once, the first time a board is built. The account is the record
    * when there is one; localStorage covers guests, who would otherwise be
@@ -321,6 +336,18 @@ function Game() {
       {/* ---- intro / start screen ---- */}
       {m.phase === "intro" && (
         <main className="intro intro--hero">
+          {/* Who you are sits in the corner, the way a game does it, rather
+              than in a row of text links with the game modes. */}
+          <button className="me" onClick={() => setProfileOpen(true)}>
+            {m.account?.avatar ? (
+              <img src={`${BASE}brand/${m.account.avatar}.webp`} alt="" />
+            ) : (
+              <Icon name="king" size={20} />
+            )}
+            <span className="me__name">
+              {m.account?.nickname ?? (m.account?.linked ? "הפרופיל שלי" : "התחברות")}
+            </span>
+          </button>
           {/*
             She is the background, not a picture inside a box. The banner was
             generated with its left half deliberately empty, which is where
@@ -331,6 +358,22 @@ function Game() {
             style={{ backgroundImage: `url("${BASE}brand/amanda_banner.webp")` }}
             aria-hidden="true"
           />
+          <div className="intro__wash" aria-hidden="true" />
+          {/* Embers drifting up past her. Spread by hand rather than randomly
+              so they never clump, and purely decorative. */}
+          <div className="intro__motes" aria-hidden="true">
+            {MOTES.map((mote, n) => (
+              <i
+                key={n}
+                style={{
+                  insetInlineStart: `${mote.x}%`,
+                  animationDuration: `${mote.dur}s`,
+                  animationDelay: `${mote.delay}s`,
+                  opacity: mote.o,
+                }}
+              />
+            ))}
+          </div>
           <div className="intro__card">
             <img
               className="intro__logo"
@@ -351,66 +394,47 @@ function Game() {
             </h1>
             <p className="intro__sub">משחק קלפים מפלצתי</p>
             <div className="intro__main">
-            <div className="versus">
-              <div className="who who--me">
-                <div className="who__avatar who__avatar--art">
-                  <img src={`${BASE}brand/versus_player.webp`} alt="" />
-                </div>
-                <div className="who__name">אתה</div>
-              </div>
-              <div className="versus__x">VS</div>
-              <div className="who who--enemy">
-                <div className="who__avatar who__avatar--art">
-                  <img src={`${BASE}brand/versus_robot.webp`} alt="" />
-                </div>
-                <div className="who__name">היריב</div>
-              </div>
-            </div>
             <div className="intro__choices">
-            <div className="intro__buttons">
-              <button className="btn-fight" onClick={m.startMatch}>
-                🤖 שחק נגדי
-              </button>
-              <button
-                className="btn-fight btn-online"
-                onClick={() => m.hostRoom()}
-                disabled={!m.onlineAvailable}
-                title={m.onlineAvailable ? "" : "לא בגרסה הזאת"}
-              >
-                👥 תביא חבר
-              </button>
-            </div>
-            <div className="intro__secondary">
-              <button
-                className="btn-link"
-                onClick={() => m.startOnline()}
-                disabled={!m.onlineAvailable}
-              >
-                🌐 אמצא לך מישהו
-              </button>
-              <button
-                className="btn-link"
-                onClick={() => setJoining(true)}
-                disabled={!m.onlineAvailable}
-              >
-                🔑 יש לי קוד
-              </button>
-              <button className="btn-link" onClick={() => setAlbumOpen(true)}>
-                <Icon name="deck" size={15} /> האלבום שלי
-              </button>
-              <button className="btn-link" onClick={() => setProfileOpen(true)}>
-                {m.account?.avatar ? (
-                  <img
-                    className="btn-link__avatar"
-                    src={`${BASE}brand/${m.account.avatar}.webp`}
-                    alt=""
-                  />
-                ) : (
-                  <Icon name="king" size={15} />
-                )}{" "}
-                {m.account?.linked ? (m.account.nickname ?? "הפרופיל שלי") : "התחברות"}
-              </button>
-            </div>
+            {/*
+              The "you VS the opponent" portrait was describing a match that
+              has not been chosen yet. The same two pictures do more work as
+              the choice itself: one is who you would be fighting.
+            */}
+            {!friendOpen ? (
+              <div className="pick">
+                <button className="pick__card" onClick={m.startMatch}>
+                  <img src={`${BASE}brand/versus_robot.webp`} alt="" />
+                  <span>שחק עם בוט</span>
+                </button>
+                <button
+                  className="pick__card"
+                  onClick={() => setFriendOpen(true)}
+                  disabled={!m.onlineAvailable}
+                  title={m.onlineAvailable ? "" : "לא בגרסה הזאת"}
+                >
+                  <img src={`${BASE}brand/versus_player.webp`} alt="" />
+                  <span>תביא חבר</span>
+                </button>
+              </div>
+            ) : (
+              <div className="pick pick--ways">
+                <button className="btn-fight btn-online" onClick={() => m.hostRoom()}>
+                  תביא קוד
+                </button>
+                <button className="btn-fight btn-online" onClick={() => setJoining(true)}>
+                  יש לי קוד
+                </button>
+                <button className="btn-fight btn-online" onClick={() => m.startOnline()}>
+                  מישהו רנדומלי
+                </button>
+                <button className="btn-link" onClick={() => setFriendOpen(false)}>
+                  ← חזרה
+                </button>
+              </div>
+            )}
+            <button className="btn-album" onClick={() => setAlbumOpen(true)}>
+              <Icon name="deck" size={20} /> האלבום שלי
+            </button>
             {joining && (
               <form
                 className="join"
@@ -869,6 +893,7 @@ function Game() {
           account={m.account}
           onClose={() => setAlbumOpen(false)}
           onCardInfo={(id) => setDetail(id)}
+          onChanged={() => m.reloadAccount()}
         />
       )}
 

@@ -8,15 +8,30 @@
 import { CATALOG, SERIES } from "../data/catalog";
 import { CardView, CardBack } from "./CardView";
 import { Icon } from "./Icon";
-import type { Account } from "../game/account";
+import { useState } from "react";
+import { LEVELS, levelCost } from "@amanda/shared";
+import { levelUpCard, type Account } from "../game/account";
 
 interface Props {
   account: Account | null;
   onClose: () => void;
   onCardInfo?: (cardId: string) => void;
+  /** Re-read the album after a level is bought. */
+  onChanged?: () => void;
 }
 
-export function Album({ account, onClose, onCardInfo }: Props) {
+export function Album({ account, onClose, onCardInfo, onChanged }: Props) {
+  const [busy, setBusy] = useState<string | null>(null);
+  const [note, setNote] = useState<string | null>(null);
+
+  async function buyLevel(cardId: string) {
+    setBusy(cardId);
+    const out = await levelUpCard(cardId);
+    setBusy(null);
+    setNote(out.error ?? null);
+    if (!out.error) onChanged?.();
+  }
+
   const album = account?.album;
   // Only cards that belong to a series are collectable, and only those are
   // shown below. The Crumb Demon fills empty cells and is in the catalog but
@@ -55,6 +70,8 @@ export function Album({ account, onClose, onCardInfo }: Props) {
         </p>
       )}
 
+      {note && <p className="album__none album__none--warn">{note}</p>}
+
       <div className="album__scroll">
         {SERIES.map((series) => {
           const cards = [...CATALOG.values()].filter((c) => c.seriesId === series.id);
@@ -85,6 +102,23 @@ export function Album({ account, onClose, onCardInfo }: Props) {
                           </span>
                           {mine.level > 1 && (
                             <span className="album__level">רמה {mine.level}</span>
+                          )}
+                          {/* Width or height: keep the copies to put more of it
+                              on the board, or spend them to make one stronger. */}
+                          {mine.level < LEVELS.max && (
+                            <button
+                              className="album__up"
+                              disabled={
+                                busy === card.id || mine.copies < levelCost(card.rarity, mine.level)
+                              }
+                              title={`שדרוג לרמה ${mine.level + 1} — עולה ${levelCost(card.rarity, mine.level)} עותקים`}
+                              onClick={(e) => {
+                                e.stopPropagation();
+                                void buyLevel(card.id);
+                              }}
+                            >
+                              ▲ {levelCost(card.rarity, mine.level)}
+                            </button>
                           )}
                         </>
                       ) : (

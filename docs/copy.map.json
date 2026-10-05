@@ -3310,7 +3310,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/App.tsx",
-   "line": 70
+   "line": 83
   }
  },
  {
@@ -3320,7 +3320,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/App.tsx",
-   "line": 71
+   "line": 84
   }
  },
  {
@@ -3330,7 +3330,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/App.tsx",
-   "line": 74
+   "line": 87
   }
  },
  {
@@ -3340,7 +3340,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/App.tsx",
-   "line": 76
+   "line": 89
   }
  },
  {
@@ -3350,7 +3350,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/App.tsx",
-   "line": 150
+   "line": 165
   }
  },
  {
@@ -3360,7 +3360,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/App.tsx",
-   "line": 261
+   "line": 276
   }
  },
  {
@@ -3370,7 +3370,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/App.tsx",
-   "line": 262
+   "line": 277
   }
  },
  {
@@ -3380,7 +3380,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/App.tsx",
-   "line": 277
+   "line": 292
   }
  },
  {
@@ -3390,7 +3390,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/App.tsx",
-   "line": 289
+   "line": 304
   }
  },
  {
@@ -3400,7 +3400,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/App.tsx",
-   "line": 302
+   "line": 317
   }
  },
  {
@@ -3410,7 +3410,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/App.tsx",
-   "line": 302
+   "line": 317
   }
  },
  {
@@ -3420,7 +3420,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/App.tsx",
-   "line": 309
+   "line": 324
   }
  },
  {
@@ -3430,77 +3430,77 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/App.tsx",
-   "line": 309
+   "line": 324
   }
  },
  {
   "id": "s260",
   "section": "מסכי המשחק — פתיחה, בנייה, קרב, תוצאה",
-  "text": "אמנדה",
+  "text": "הפרופיל שלי",
   "where": {
    "kind": "source",
    "file": "apps/client/src/App.tsx",
-   "line": 350
+   "line": 348
   }
  },
  {
   "id": "s261",
   "section": "מסכי המשחק — פתיחה, בנייה, קרב, תוצאה",
-  "text": "משחק קלפים מפלצתי",
+  "text": "התחברות",
   "where": {
    "kind": "source",
    "file": "apps/client/src/App.tsx",
-   "line": 352
+   "line": 348
   }
  },
  {
   "id": "s262",
   "section": "מסכי המשחק — פתיחה, בנייה, קרב, תוצאה",
-  "text": "אתה",
+  "text": "אמנדה",
   "where": {
    "kind": "source",
    "file": "apps/client/src/App.tsx",
-   "line": 359
+   "line": 393
   }
  },
  {
   "id": "s263",
   "section": "מסכי המשחק — פתיחה, בנייה, קרב, תוצאה",
-  "text": "היריב",
+  "text": "משחק קלפים מפלצתי",
   "where": {
    "kind": "source",
    "file": "apps/client/src/App.tsx",
-   "line": 366
+   "line": 395
   }
  },
  {
   "id": "s264",
   "section": "מסכי המשחק — פתיחה, בנייה, קרב, תוצאה",
-  "text": "לא בגרסה הזאת",
+  "text": "שחק עם בוט",
   "where": {
    "kind": "source",
    "file": "apps/client/src/App.tsx",
-   "line": 378
+   "line": 407
   }
  },
  {
   "id": "s265",
   "section": "מסכי המשחק — פתיחה, בנייה, קרב, תוצאה",
-  "text": "הפרופיל שלי",
+  "text": "לא בגרסה הזאת",
   "where": {
    "kind": "source",
    "file": "apps/client/src/App.tsx",
-   "line": 411
+   "line": 413
   }
  },
  {
   "id": "s266",
   "section": "מסכי המשחק — פתיחה, בנייה, קרב, תוצאה",
-  "text": "התחברות",
+  "text": "תביא חבר",
   "where": {
    "kind": "source",
    "file": "apps/client/src/App.tsx",
-   "line": 411
+   "line": 416
   }
  },
  {
@@ -3510,7 +3510,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/App.tsx",
-   "line": 426
+   "line": 450
   }
  },
  {
@@ -3520,7 +3520,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/App.tsx",
-   "line": 441
+   "line": 465
   }
  },
  {
@@ -3530,7 +3530,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/App.tsx",
-   "line": 443
+   "line": 467
   }
  },
  {
@@ -3540,7 +3540,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/App.tsx",
-   "line": 444
+   "line": 468
   }
  },
  {
@@ -3550,7 +3550,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/App.tsx",
-   "line": 451
+   "line": 475
   }
  },
  {
@@ -3560,7 +3560,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/App.tsx",
-   "line": 458
+   "line": 482
   }
  },
  {
@@ -3570,7 +3570,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/App.tsx",
-   "line": 472
+   "line": 496
   }
  },
  {
@@ -3580,7 +3580,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/App.tsx",
-   "line": 472
+   "line": 496
   }
  },
  {
@@ -3590,7 +3590,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/App.tsx",
-   "line": 472
+   "line": 496
   }
  },
  {
@@ -3600,7 +3600,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/App.tsx",
-   "line": 476
+   "line": 500
   }
  },
  {
@@ -3610,7 +3610,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/App.tsx",
-   "line": 488
+   "line": 512
   }
  },
  {
@@ -3620,7 +3620,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/App.tsx",
-   "line": 488
+   "line": 512
   }
  },
  {
@@ -3630,7 +3630,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/App.tsx",
-   "line": 494
+   "line": 518
   }
  },
  {
@@ -3640,7 +3640,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/App.tsx",
-   "line": 505
+   "line": 529
   }
  },
  {
@@ -3650,7 +3650,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/App.tsx",
-   "line": 505
+   "line": 529
   }
  },
  {
@@ -3660,7 +3660,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/App.tsx",
-   "line": 521
+   "line": 545
   }
  },
  {
@@ -3670,7 +3670,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/App.tsx",
-   "line": 525
+   "line": 549
   }
  },
  {
@@ -3680,7 +3680,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/App.tsx",
-   "line": 527
+   "line": 551
   }
  },
  {
@@ -3690,7 +3690,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/App.tsx",
-   "line": 557
+   "line": 581
   }
  },
  {
@@ -3700,7 +3700,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/App.tsx",
-   "line": 558
+   "line": 582
   }
  },
  {
@@ -3710,7 +3710,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/App.tsx",
-   "line": 580
+   "line": 604
   }
  },
  {
@@ -3720,7 +3720,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/App.tsx",
-   "line": 582
+   "line": 606
   }
  },
  {
@@ -3730,7 +3730,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/App.tsx",
-   "line": 583
+   "line": 607
   }
  },
  {
@@ -3740,7 +3740,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/App.tsx",
-   "line": 616
+   "line": 640
   }
  },
  {
@@ -3750,7 +3750,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/App.tsx",
-   "line": 620
+   "line": 644
   }
  },
  {
@@ -3760,7 +3760,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/App.tsx",
-   "line": 622
+   "line": 646
   }
  },
  {
@@ -3770,7 +3770,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/App.tsx",
-   "line": 624
+   "line": 648
   }
  },
  {
@@ -3780,7 +3780,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/App.tsx",
-   "line": 625
+   "line": 649
   }
  },
  {
@@ -3790,7 +3790,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/App.tsx",
-   "line": 629
+   "line": 653
   }
  },
  {
@@ -3800,7 +3800,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/App.tsx",
-   "line": 644
+   "line": 668
   }
  },
  {
@@ -3810,7 +3810,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/App.tsx",
-   "line": 672
+   "line": 696
   }
  },
  {
@@ -3820,7 +3820,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/App.tsx",
-   "line": 676
+   "line": 700
   }
  },
  {
@@ -3830,7 +3830,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/App.tsx",
-   "line": 683
+   "line": 707
   }
  },
  {
@@ -3840,7 +3840,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/App.tsx",
-   "line": 683
+   "line": 707
   }
  },
  {
@@ -3850,7 +3850,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/App.tsx",
-   "line": 709
+   "line": 733
   }
  },
  {
@@ -3860,7 +3860,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/App.tsx",
-   "line": 711
+   "line": 735
   }
  },
  {
@@ -3870,7 +3870,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/App.tsx",
-   "line": 712
+   "line": 736
   }
  },
  {
@@ -3880,7 +3880,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/App.tsx",
-   "line": 717
+   "line": 741
   }
  },
  {
@@ -3890,7 +3890,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/App.tsx",
-   "line": 719
+   "line": 743
   }
  },
  {
@@ -3900,7 +3900,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/App.tsx",
-   "line": 720
+   "line": 744
   }
  },
  {
@@ -3910,7 +3910,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/App.tsx",
-   "line": 736
+   "line": 760
   }
  },
  {
@@ -3920,7 +3920,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/App.tsx",
-   "line": 738
+   "line": 762
   }
  },
  {
@@ -3930,7 +3930,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/App.tsx",
-   "line": 742
+   "line": 766
   }
  },
  {
@@ -3940,7 +3940,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/App.tsx",
-   "line": 769
+   "line": 793
   }
  },
  {
@@ -3950,7 +3950,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/App.tsx",
-   "line": 810
+   "line": 834
   }
  },
  {
@@ -3960,7 +3960,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/App.tsx",
-   "line": 810
+   "line": 834
   }
  },
  {
@@ -5640,93 +5640,73 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/components/Album.tsx",
-   "line": 83
+   "line": 100
   }
  },
  {
   "id": "s481",
-  "section": "components/Profile.tsx",
-  "text": "נשמר",
+  "section": "components/Album.tsx",
+  "text": "שדרוג לרמה ${mine.level + 1} — עולה ${levelCost(card.rarity, mine.level)} עותקים",
   "where": {
    "kind": "source",
-   "file": "apps/client/src/components/Profile.tsx",
-   "line": 61
+   "file": "apps/client/src/components/Album.tsx",
+   "line": 114
   }
  },
  {
   "id": "s482",
   "section": "components/Profile.tsx",
-  "text": "איך קוראים לך",
+  "text": "נשמר",
   "where": {
    "kind": "source",
    "file": "apps/client/src/components/Profile.tsx",
-   "line": 85
+   "line": 74
   }
  },
  {
   "id": "s483",
   "section": "components/Profile.tsx",
-  "text": "הכינוי שלך",
+  "text": "איך קוראים לך",
   "where": {
    "kind": "source",
    "file": "apps/client/src/components/Profile.tsx",
-   "line": 90
+   "line": 98
   }
  },
  {
   "id": "s484",
   "section": "components/Profile.tsx",
-  "text": "הפרצוף שלך",
+  "text": "הכינוי שלך",
   "where": {
    "kind": "source",
    "file": "apps/client/src/components/Profile.tsx",
-   "line": 96
+   "line": 103
   }
  },
  {
   "id": "s485",
   "section": "components/Profile.tsx",
-  "text": "מתי נולדת",
+  "text": "הפרצוף שלך",
   "where": {
    "kind": "source",
    "file": "apps/client/src/components/Profile.tsx",
-   "line": 113
+   "line": 109
   }
  },
  {
   "id": "s486",
   "section": "components/Profile.tsx",
-  "text": "צריך להיות בן ${MIN_AGE} לפחות כדי לשחק נגד אנשים אחרים.",
+  "text": "מתי נולדת",
   "where": {
    "kind": "source",
    "file": "apps/client/src/components/Profile.tsx",
-   "line": 122
+   "line": 126
   }
  },
  {
   "id": "s487",
   "section": "components/Profile.tsx",
-  "text": "זה רק בשביל הגיל. לא נספר לאף אחד.",
-  "where": {
-   "kind": "source",
-   "file": "apps/client/src/components/Profile.tsx",
-   "line": 123
-  }
- },
- {
-  "id": "s488",
-  "section": "components/Profile.tsx",
-  "text": "שמירת האלבום",
-  "where": {
-   "kind": "source",
-   "file": "apps/client/src/components/Profile.tsx",
-   "line": 133
-  }
- },
- {
-  "id": "s489",
-  "section": "components/Profile.tsx",
-  "text": "החשבון שלך מחובר. האלבום שמור.",
+  "text": "צריך להיות בן ${MIN_AGE} לפחות כדי לשחק נגד אנשים אחרים.",
   "where": {
    "kind": "source",
    "file": "apps/client/src/components/Profile.tsx",
@@ -5734,37 +5714,67 @@
   }
  },
  {
-  "id": "s490",
+  "id": "s488",
   "section": "components/Profile.tsx",
-  "text": "אימייל",
+  "text": "זה רק בשביל הגיל. לא נספר לאף אחד.",
   "where": {
    "kind": "source",
    "file": "apps/client/src/components/Profile.tsx",
-   "line": 151
+   "line": 136
+  }
+ },
+ {
+  "id": "s489",
+  "section": "components/Profile.tsx",
+  "text": "שמירת האלבום",
+  "where": {
+   "kind": "source",
+   "file": "apps/client/src/components/Profile.tsx",
+   "line": 146
+  }
+ },
+ {
+  "id": "s490",
+  "section": "components/Profile.tsx",
+  "text": "החשבון שלך מחובר. האלבום שמור.",
+  "where": {
+   "kind": "source",
+   "file": "apps/client/src/components/Profile.tsx",
+   "line": 148
   }
  },
  {
   "id": "s491",
   "section": "components/Profile.tsx",
-  "text": "סיסמה",
+  "text": "אימייל",
   "where": {
    "kind": "source",
    "file": "apps/client/src/components/Profile.tsx",
-   "line": 158
+   "line": 164
   }
  },
  {
   "id": "s492",
   "section": "components/Profile.tsx",
-  "text": "מחובר",
+  "text": "סיסמה",
   "where": {
    "kind": "source",
    "file": "apps/client/src/components/Profile.tsx",
-   "line": 165
+   "line": 171
   }
  },
  {
   "id": "s493",
+  "section": "components/Profile.tsx",
+  "text": "מחובר",
+  "where": {
+   "kind": "source",
+   "file": "apps/client/src/components/Profile.tsx",
+   "line": 178
+  }
+ },
+ {
+  "id": "s494",
   "section": "components/Tutorial.tsx",
   "text": "הבנתי",
   "where": {
@@ -5774,23 +5784,13 @@
   }
  },
  {
-  "id": "s494",
+  "id": "s495",
   "section": "game/account.ts",
   "text": "אין חיבור לשרת",
   "where": {
    "kind": "source",
    "file": "apps/client/src/game/account.ts",
-   "line": 183
-  }
- },
- {
-  "id": "s495",
-  "section": "game/account.ts",
-  "text": "צריך להיות בן ${MIN_AGE} לפחות",
-  "where": {
-   "kind": "source",
-   "file": "apps/client/src/game/account.ts",
-   "line": 185
+   "line": 173
   }
  },
  {
@@ -5800,57 +5800,97 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/game/account.ts",
-   "line": 189
+   "line": 177
   }
  },
  {
   "id": "s497",
   "section": "game/account.ts",
-  "text": "אין חיבור לשרת",
+  "text": "לא הצליח",
   "where": {
    "kind": "source",
    "file": "apps/client/src/game/account.ts",
-   "line": 206
+   "line": 184
   }
  },
  {
   "id": "s498",
   "section": "game/account.ts",
-  "text": "צריך להתחיל לשחק קודם",
+  "text": "אין חיבור לשרת",
   "where": {
    "kind": "source",
    "file": "apps/client/src/game/account.ts",
-   "line": 209
+   "line": 218
   }
  },
  {
   "id": "s499",
   "section": "game/account.ts",
-  "text": "אין חיבור לשרת",
+  "text": "צריך להיות בן ${MIN_AGE} לפחות",
   "where": {
    "kind": "source",
    "file": "apps/client/src/game/account.ts",
-   "line": 232
+   "line": 220
   }
  },
  {
   "id": "s500",
   "section": "game/account.ts",
-  "text": "צריך להתחיל לשחק קודם",
+  "text": "אין חשבון",
   "where": {
    "kind": "source",
    "file": "apps/client/src/game/account.ts",
-   "line": 236
+   "line": 224
   }
  },
  {
   "id": "s501",
   "section": "game/account.ts",
+  "text": "אין חיבור לשרת",
+  "where": {
+   "kind": "source",
+   "file": "apps/client/src/game/account.ts",
+   "line": 241
+  }
+ },
+ {
+  "id": "s502",
+  "section": "game/account.ts",
+  "text": "צריך להתחיל לשחק קודם",
+  "where": {
+   "kind": "source",
+   "file": "apps/client/src/game/account.ts",
+   "line": 244
+  }
+ },
+ {
+  "id": "s503",
+  "section": "game/account.ts",
+  "text": "אין חיבור לשרת",
+  "where": {
+   "kind": "source",
+   "file": "apps/client/src/game/account.ts",
+   "line": 267
+  }
+ },
+ {
+  "id": "s504",
+  "section": "game/account.ts",
+  "text": "צריך להתחיל לשחק קודם",
+  "where": {
+   "kind": "source",
+   "file": "apps/client/src/game/account.ts",
+   "line": 271
+  }
+ },
+ {
+  "id": "s505",
+  "section": "game/account.ts",
   "text": "כבר מחובר",
   "where": {
    "kind": "source",
    "file": "apps/client/src/game/account.ts",
-   "line": 237
+   "line": 272
   }
  }
 ]

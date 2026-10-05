@@ -18,16 +18,29 @@ import {
 } from "../game/account";
 import { Icon } from "./Icon";
 
-/** The avatars drawn for this, matching packages/art/src/brandLooks.ts. */
+/**
+ * The avatars drawn for this, matching packages/art/src/brandLooks.ts.
+ * Interleaved on purpose so the grid does not read as "the boys, then the
+ * girls, then the monsters" — the first row alone is a knight, a sorceress,
+ * a robot and a warrior.
+ */
 export const AVATAR_IDS = [
   "av_knight",
-  "av_witch",
-  "av_goblin",
+  "av_sorceress",
   "av_robot",
+  "av_warrior",
+  "av_witch",
+  "av_pirate",
+  "av_goblin",
+  "av_fairy",
   "av_ghost",
+  "av_vampire",
   "av_cat",
+  "av_alien",
   "av_slime",
+  "av_mummy",
   "av_dragon",
+  "av_wolf",
 ] as const;
 
 const BASE = import.meta.env.BASE_URL;

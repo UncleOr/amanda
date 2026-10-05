@@ -9,6 +9,7 @@ import {
 } from "@amanda/shared";
 import { Match } from "./match.js";
 import { PROGRESS_ENABLED } from "./progress.js";
+import { handleApi } from "./api.js";
 import "./content.js"; // eager-load the card catalog at boot
 
 const PORT = Number(process.env.PORT ?? 2567);
@@ -18,8 +19,13 @@ const ROOM_TTL_MS = 15 * 60 * 1000;
 
 // A tiny HTTP server for health checks (hosts like Render probe GET /).
 const http = createServer((req, res) => {
-  res.writeHead(200, { "content-type": "text/plain" });
-  res.end("Amanda multiplayer server — OK");
+  // The small API (levelling) shares this server; anything it does not claim
+  // falls through to the health check a host probes.
+  void handleApi(req, res).then((handled) => {
+    if (handled) return;
+    res.writeHead(200, { "content-type": "text/plain" });
+    res.end("Amanda multiplayer server — OK");
+  });
 });
 
 const wss = new WebSocketServer({ server: http });

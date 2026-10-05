@@ -1,5 +1,13 @@
 import { useCallback, useEffect, useRef, useState } from "react";
-import { DECK, KING, PHASES, type Card, type RoomError, type Side } from "@amanda/shared";
+import {
+  DECK,
+  KING,
+  PHASES,
+  levelMultiplier,
+  type Card,
+  type RoomError,
+  type Side,
+} from "@amanda/shared";
 import {
   runBattle,
   type BattleResult,
@@ -220,13 +228,22 @@ export function cellBuff(
   mods: BattleMods,
   key: string,
   isCrumb: boolean,
+  /** The level of the card in this cell, from the player's album. */
+  level = 1,
 ): PlacementBuff | undefined {
   const buff: PlacementBuff = {};
   if (mods.boardPowerAdd > 0 && !isCrumb) buff.powerAdd = mods.boardPowerAdd;
+  // Levels ride the same multipliers an action card uses, so the engine needs
+  // to know nothing about albums — a levelled card is simply a buffed one.
+  const lvl = isCrumb ? 1 : levelMultiplier(level);
+  let powerMult = lvl;
+  let hpMult = lvl;
   if (mods.boostedCells[key]) {
-    buff.powerMult = 1.5;
-    buff.hpMult = 1.5;
+    powerMult *= 1.5;
+    hpMult *= 1.5;
   }
+  if (powerMult !== 1) buff.powerMult = powerMult;
+  if (hpMult !== 1) buff.hpMult = hpMult;
   return Object.keys(buff).length ? buff : undefined;
 }
 
@@ -234,10 +251,18 @@ function buildPlayerBoard(
   state: GameState,
   mods: BattleMods,
   stacked: Record<string, string> = {},
+  album?: Map<string, OwnedCard> | null,
 ): BoardInput {
+  const levelOf = (id: string) => album?.get(id)?.level ?? 1;
   const resolved = resolveKing(state.king, state.placements);
   const ps: Placement[] = [
-    { cardId: resolved.king, x: 1, y: 1, king: true, buff: cellBuff(mods, KING_KEY, false) },
+    {
+      cardId: resolved.king,
+      x: 1,
+      y: 1,
+      king: true,
+      buff: cellBuff(mods, KING_KEY, false, levelOf(resolved.king)),
+    },
   ];
   for (const [key, cardId] of Object.entries(resolved.placements)) {
     const [x, y] = key.split("-").map(Number) as [number, number];
@@ -245,7 +270,7 @@ function buildPlayerBoard(
       cardId,
       x,
       y,
-      buff: cellBuff(mods, key, cardId === "crumb_demon"),
+      buff: cellBuff(mods, key, cardId === "crumb_demon", levelOf(cardId)),
       // Ground Floor: when the card on top dies, this one is revealed.
       ...(stacked[key] ? { below: stacked[key] } : {}),
     });
@@ -856,7 +881,7 @@ export function useMatch(): MatchApi {
       const now = !was;
       if (now)
         netRef.current?.lock(
-          buildPlayerBoard(fillGs(gsRef.current, barRef.current), modsRef.current, stackedRef.current),
+          buildPlayerBoard(fillGs(gsRef.current, barRef.current), modsRef.current, stackedRef.current, accountRef.current?.album),
         );
       else netRef.current?.unready();
       sfx.play("click");
@@ -873,7 +898,7 @@ export function useMatch(): MatchApi {
     setTimeLeft(PREBATTLE_SECONDS);
     // In an online match, submit the locked board to the server now.
     if (onlineRef.current)
-      netRef.current?.lock(buildPlayerBoard(filled, modsRef.current, stackedRef.current));
+      netRef.current?.lock(buildPlayerBoard(filled, modsRef.current, stackedRef.current, accountRef.current?.album));
   }, []);
 
   const startBattle = useCallback(() => {
@@ -882,7 +907,7 @@ export function useMatch(): MatchApi {
       seed: BATTLE_SEED,
       catalog: CATALOG,
       synergies: SYNERGIES,
-      a: buildPlayerBoard(gsRef.current, modsRef.current, stackedRef.current),
+      a: buildPlayerBoard(gsRef.current, modsRef.current, stackedRef.current, accountRef.current?.album),
       b: aiFull,
       recordFrames: true,
     });
@@ -1081,7 +1106,7 @@ export function useMatch(): MatchApi {
   useEffect(() => {
     if (!online || !ready) return;
     netRef.current?.lock(
-      buildPlayerBoard(fillGs(gs, barRef.current), modsRef.current, stackedRef.current),
+      buildPlayerBoard(fillGs(gs, barRef.current), modsRef.current, stackedRef.current, accountRef.current?.album),
     );
   }, [online, ready, gs, boardPowerAdd, boostedCells, stacked]);
 

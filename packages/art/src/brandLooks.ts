@@ -83,11 +83,47 @@ export const PLAYER = [
 /**
  * Avatars a player can pick for themselves.
  *
+ * Or: "important to add girls too" — the first eight were knights, goblins and
+ * robots, which is a boy's shelf by accident rather than by choice. The set is
+ * mixed now, and several are neither.
+ *
  * Drawn in the game's own language rather than taken from a stock set — the
  * same reason the emoji went. Deliberately a crowd with no "default" one at
  * the front: a child should pick the one they like, not accept the first.
  */
 export const AVATARS: Record<string, string> = {
+  av_sorceress:
+    "a young sorceress girl with long braided hair and a star-flecked hood, confident, head-and-shoulders, facing forward, centred and symmetrical, " +
+    "filling the middle 70% with clear margin all round so it survives a circular " +
+    "crop, flat deep-blue backdrop with a soft glow, readable at 48 pixels",
+  av_warrior:
+    "a girl warrior with a bandana, a small scar on one cheek and a determined grin, head-and-shoulders, facing forward, centred and symmetrical, " +
+    "filling the middle 70% with clear margin all round so it survives a circular " +
+    "crop, flat deep-blue backdrop with a soft glow, readable at 48 pixels",
+  av_fairy:
+    "a small fairy girl with iridescent insect wings and a messy bob, cheeky, head-and-shoulders, facing forward, centred and symmetrical, " +
+    "filling the middle 70% with clear margin all round so it survives a circular " +
+    "crop, flat deep-blue backdrop with a soft glow, readable at 48 pixels",
+  av_vampire:
+    "a friendly young vampire girl with a dark bob and two small fangs, amused, head-and-shoulders, facing forward, centred and symmetrical, " +
+    "filling the middle 70% with clear margin all round so it survives a circular " +
+    "crop, flat deep-blue backdrop with a soft glow, readable at 48 pixels",
+  av_alien:
+    "a cheerful little green alien with huge black eyes and antennae, head-and-shoulders, facing forward, centred and symmetrical, " +
+    "filling the middle 70% with clear margin all round so it survives a circular " +
+    "crop, flat deep-blue backdrop with a soft glow, readable at 48 pixels",
+  av_mummy:
+    "a small mummy wrapped in loose bandages with one bright eye peeking out, head-and-shoulders, facing forward, centred and symmetrical, " +
+    "filling the middle 70% with clear margin all round so it survives a circular " +
+    "crop, flat deep-blue backdrop with a soft glow, readable at 48 pixels",
+  av_pirate:
+    "a girl pirate with a tricorn hat and a gold earring, winking, head-and-shoulders, facing forward, centred and symmetrical, " +
+    "filling the middle 70% with clear margin all round so it survives a circular " +
+    "crop, flat deep-blue backdrop with a soft glow, readable at 48 pixels",
+  av_wolf:
+    "a shaggy young werewolf pup with floppy ears, tongue out, friendly, head-and-shoulders, facing forward, centred and symmetrical, " +
+    "filling the middle 70% with clear margin all round so it survives a circular " +
+    "crop, flat deep-blue backdrop with a soft glow, readable at 48 pixels",
   av_knight:
     "a young knight in a dented helmet, visor up, grinning, head-and-shoulders, facing forward, centred and symmetrical, " +
     "filling the middle 70% with clear margin all round so it survives a circular " +

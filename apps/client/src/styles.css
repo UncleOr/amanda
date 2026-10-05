@@ -2245,9 +2245,12 @@ button:disabled {
 }
 .intro__art {
   position: absolute;
-  inset: 0;
+  /* Overflows the screen deliberately. The banner has an empty half drawn into
+     it for text, and its outer edge otherwise sits at the screen edge as a
+     flat dark band. Bleeding past the frame crops that away. */
+  inset: -10% -18%;
   background-size: cover;
-  background-position: right center;
+  background-position: 62% center;
   background-repeat: no-repeat;
   z-index: 0;
   /*
@@ -2259,21 +2262,29 @@ button:disabled {
    */
   transform: scaleX(-1);
 }
-/* a wash so text over her stays readable without hiding her */
-.intro__art::after {
-  content: "";
+/*
+ * The wash that keeps text readable over her.
+ *
+ * It is a SIBLING of the artwork, not a child of it. As a child it inherited
+ * the scaleX(-1) that mirrors her, so the gradient flipped too and darkened
+ * the side she is on instead of the side the menu is on. Out here, "to right"
+ * means to the right, and it stays that way.
+ */
+.intro__wash {
   position: absolute;
   inset: 0;
+  z-index: 1;
+  pointer-events: none;
   background: linear-gradient(
-    to left,
-    rgba(7, 10, 18, 0) 38%,
-    rgba(7, 10, 18, 0.82) 72%,
-    rgba(7, 10, 18, 0.97) 100%
+    to right,
+    rgba(7, 10, 18, 0) 34%,
+    rgba(7, 10, 18, 0.78) 68%,
+    rgba(7, 10, 18, 0.95) 100%
   );
 }
 .intro--hero .intro__card {
   position: relative;
-  z-index: 1;
+  z-index: 3;
   background: none;
   border: none;
   box-shadow: none;
@@ -2305,12 +2316,12 @@ button:disabled {
 @media (max-height: 460px), (max-width: 560px) {
   .intro--hero { padding: 0 18px; }
   .intro__art { background-position: 70% center; }
-  .intro__art::after {
+  .intro__wash {
     background: linear-gradient(
-      to left,
-      rgba(7, 10, 18, 0.35) 0%,
-      rgba(7, 10, 18, 0.88) 60%,
-      rgba(7, 10, 18, 0.97) 100%
+      to right,
+      rgba(7, 10, 18, 0.28) 0%,
+      rgba(7, 10, 18, 0.84) 55%,
+      rgba(7, 10, 18, 0.96) 100%
     );
   }
   .intro--hero .intro__logo { width: min(130px, 22vh); }
@@ -2582,4 +2593,158 @@ button:disabled {
   border-radius: 50%;
   object-fit: cover;
   vertical-align: -0.3em;
+}
+
+/* spend copies to raise a card a level */
+.album__up {
+  position: absolute;
+  inset-block-end: 4px;
+  inset-inline-end: 4px;
+  background: rgba(60, 190, 120, 0.95);
+  color: #042;
+  border: none;
+  border-radius: 999px;
+  padding: 1px 7px;
+  font-size: 11px;
+  font-weight: 800;
+  cursor: pointer;
+}
+.album__up:disabled { background: rgba(120, 140, 160, 0.4); color: rgba(255,255,255,0.5); cursor: default; }
+.album__none--warn { color: var(--accent); }
+
+/* ════════ the home screen, as a choice rather than a form ════════ */
+
+/* The two ways to play, as pictures. One of them is who you would fight. */
+.pick { display: flex; gap: 14px; flex-wrap: wrap; }
+.pick__card {
+  position: relative;
+  flex: 1 1 140px;
+  min-width: 132px;
+  padding: 0;
+  border: 2px solid rgba(255, 255, 255, 0.14);
+  border-radius: 18px;
+  background: rgba(10, 16, 28, 0.72);
+  cursor: pointer;
+  overflow: hidden;
+  transition: transform 140ms ease, border-color 140ms ease, box-shadow 140ms ease;
+}
+.pick__card img {
+  display: block;
+  width: 100%;
+  aspect-ratio: 1;
+  object-fit: cover;
+}
+.pick__card span {
+  display: block;
+  padding: 9px 6px;
+  font-weight: 800;
+  font-size: 15px;
+  color: var(--text);
+}
+.pick__card:hover:not(:disabled),
+.pick__card:focus-visible {
+  transform: translateY(-4px) scale(1.02);
+  border-color: var(--accent);
+  box-shadow: 0 14px 34px rgba(0, 0, 0, 0.5), 0 0 24px rgba(255, 176, 32, 0.22);
+}
+.pick__card:disabled { opacity: 0.45; cursor: default; }
+.pick--ways { flex-direction: column; align-items: stretch; max-width: 280px; }
+.pick--ways .btn-fight { width: 100%; }
+
+/* The album gets its own weight, away from the two match buttons. */
+.btn-album {
+  display: inline-flex;
+  align-items: center;
+  gap: 9px;
+  margin-top: 16px;
+  padding: 11px 22px;
+  border-radius: 14px;
+  border: 1px solid rgba(255, 176, 32, 0.5);
+  background: rgba(255, 176, 32, 0.12);
+  color: var(--accent);
+  font-weight: 800;
+  font-size: 16px;
+  cursor: pointer;
+}
+.btn-album:hover { background: rgba(255, 176, 32, 0.2); }
+
+/* Who you are, in the corner. */
+.me {
+  position: absolute;
+  top: 10px;
+  inset-inline-start: 12px;
+  z-index: 4;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 5px 12px 5px 5px;
+  border-radius: 999px;
+  border: 1px solid rgba(255, 255, 255, 0.16);
+  background: rgba(8, 12, 22, 0.72);
+  color: var(--text);
+  cursor: pointer;
+  font-weight: 700;
+}
+.me img { width: 30px; height: 30px; border-radius: 50%; object-fit: cover; display: block; }
+.me__name { font-size: 13px; }
+.me:hover { border-color: var(--accent); }
+
+/* ════════ ambient motion ════════
+ * Or: she has to move a little, and the screens generally need some constant
+ * movement — the atmosphere of a game you want to walk into. All of it is
+ * slow and small on purpose: this should read as alive, not as busy.
+ */
+.intro__art {
+  animation: breathe 13s ease-in-out infinite alternate;
+  transform-origin: 70% 60%;
+  will-change: transform;
+}
+@keyframes breathe {
+  /*
+   * Starts well above 1. The banner has a deliberately empty half for text,
+   * and once it is mirrored that half's outer edge sits at the screen edge as
+   * a flat dark band. Scaling past the frame crops it away, and the drift is
+   * what Or asked for: she should move a little.
+   */
+  from { transform: scaleX(-1) scale(1.14) translate3d(0, 0, 0); }
+  to   { transform: scaleX(-1) scale(1.19) translate3d(-1%, -1.6%, 0); }
+}
+
+/* embers drifting up over the artwork */
+.intro__motes {
+  position: absolute;
+  inset: 0;
+  z-index: 2;
+  pointer-events: none;
+  overflow: hidden;
+}
+.intro__motes i {
+  position: absolute;
+  bottom: -14px;
+  width: 5px;
+  height: 5px;
+  border-radius: 50%;
+  background: rgba(120, 240, 230, 0.85);
+  box-shadow: 0 0 10px rgba(120, 240, 230, 0.8);
+  animation: mote linear infinite;
+}
+@keyframes mote {
+  from { transform: translate3d(0, 0, 0) scale(0.6); opacity: 0; }
+  12%  { opacity: 0.95; }
+  80%  { opacity: 0.6; }
+  to   { transform: translate3d(22px, -105vh, 0) scale(1.1); opacity: 0; }
+}
+
+/* the title has a slow pulse of its own so the eye lands there */
+.intro__name img { animation: wordglow 5.5s ease-in-out infinite alternate; }
+@keyframes wordglow {
+  from { filter: drop-shadow(0 0 16px rgba(90,230,220,0.38)) drop-shadow(0 6px 26px rgba(0,0,0,0.85)); }
+  to   { filter: drop-shadow(0 0 30px rgba(90,230,220,0.72)) drop-shadow(0 6px 26px rgba(0,0,0,0.85)); }
+}
+
+/* Nothing here is information, so when motion is unwelcome it simply stops. */
+@media (prefers-reduced-motion: reduce) {
+  .intro__art { animation: none; transform: scaleX(-1) scale(1.14); }
+  .intro__motes { display: none; }
+  .intro__name img { animation: none; }
 }

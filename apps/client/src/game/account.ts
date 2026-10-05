@@ -58,6 +58,14 @@ function db(): SupabaseClient | null {
 export const ACCOUNTS_AVAILABLE = Boolean(URL && KEY);
 
 /**
+ * The match server over plain HTTP, for the small API beside the socket.
+ * Derived from the websocket URL so there is only one address to configure.
+ */
+const SERVER_HTTP = (import.meta.env.VITE_SERVER_URL ?? (import.meta.env.DEV ? "ws://localhost:2567" : ""))
+  .replace(/^ws:/, "http:")
+  .replace(/^wss:/, "https:");
+
+/**
  * Sign in (silently, anonymously) and read the album back.
  *
  * Returns null on any failure at all, which the caller treats as "play without
@@ -149,6 +157,33 @@ export async function markTutorialDone(): Promise<void> {
     if (id) await sb.from("players").update({ tutorial_done: true }).eq("id", id);
   } catch (err) {
     console.warn("[account] could not record the tutorial", err);
+  }
+}
+
+/**
+ * Ask the match server to spend copies and raise a card a level.
+ *
+ * It goes to the server rather than straight to the database because the price
+ * depends on the card's RARITY, and only the server has both the catalog and
+ * the right to write. The player's own token goes with it, and the server
+ * reads who they are from that token rather than from anything we send.
+ */
+export async function levelUpCard(cardId: string): Promise<{ error?: string; level?: number }> {
+  const sb = db();
+  if (!sb || !SERVER_HTTP) return { error: "אין חיבור לשרת" };
+  try {
+    const { data } = await sb.auth.getSession();
+    const token = data.session?.access_token;
+    if (!token) return { error: "אין חשבון" };
+    const res = await fetch(`${SERVER_HTTP}/api/level-up`, {
+      method: "POST",
+      headers: { "content-type": "application/json", authorization: `Bearer ${token}` },
+      body: JSON.stringify({ cardId }),
+    });
+    const out = (await res.json()) as { error?: string; level?: number };
+    return res.ok ? { level: out.level } : { error: out.error ?? "לא הצליח" };
+  } catch (err) {
+    return { error: (err as Error).message };
   }
 }
 

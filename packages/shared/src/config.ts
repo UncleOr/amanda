@@ -206,3 +206,39 @@ export const GameConfig = {
   ELEMENT_COMBAT,
 } as const;
 export type GameConfig = typeof GameConfig;
+
+/**
+ * Levels: spending copies to make one card stronger instead of keeping them to
+ * put more of it on the board. See docs/META.md — width or height.
+ */
+export const LEVELS = {
+  /** Nobody goes past this, so a long-played card cannot run away forever. */
+  max: 10,
+  /**
+   * What each level adds to health and power, as a fraction of the base card.
+   * Ten percent a level: level 10 is a card and a half, which is worth
+   * chasing and is not a different card.
+   */
+  gainPerLevel: 0.1,
+  /**
+   * Copies spent to go from level N to N+1, by rarity.
+   *
+   * A common card costs the most copies because commons are what a chest is
+   * mostly full of; an epic costs few because you will almost never see a
+   * second one. The multiplier makes each level dearer than the last.
+   */
+  costAtLevelOne: { common: 4, rare: 3, epic: 2, legendary: 2 } as Record<string, number>,
+  /** Each level multiplies the previous cost by this, rounded up. */
+  costGrowth: 1.6,
+} as const;
+
+/** Copies needed to take a card of this rarity from `level` to the next. */
+export function levelCost(rarity: string, level: number): number {
+  const base = LEVELS.costAtLevelOne[rarity] ?? LEVELS.costAtLevelOne.common!;
+  return Math.ceil(base * Math.pow(LEVELS.costGrowth, Math.max(0, level - 1)));
+}
+
+/** The multiplier a card's stats get at this level. Level 1 is 1.0. */
+export function levelMultiplier(level: number): number {
+  return 1 + LEVELS.gainPerLevel * (Math.max(1, level) - 1);
+}
