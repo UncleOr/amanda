@@ -26,11 +26,6 @@ jobs:
         with:
           node-version: 20
           cache: pnpm
-      # Turns Pages on for the repo if it is not already, so a fresh clone of
-      # this project deploys without anyone visiting the settings page.
-      - uses: actions/configure-pages@v5
-        with:
-          enablement: true
       - run: pnpm install
       - run: pnpm --filter @amanda/client build
         env:
