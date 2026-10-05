@@ -2,6 +2,7 @@ import { useEffect, useRef, useState } from "react";
 import { Icon } from "./components/Icon";
 import { Album } from "./components/Album";
 import { Tutorial, type Step } from "./components/Tutorial";
+import { nextCue } from "./game/coach";
 import { Profile } from "./components/Profile";
 import { Onboarding } from "./components/Onboarding";
 import { ChestReveal } from "./components/ChestReveal";
@@ -192,14 +193,40 @@ function Game() {
     setTeaching(true);
   }, [m.phase, m.account]);
 
-  const TUTORIAL_STEPS: Step[] = [
-    // Waits for the King to actually be placed: being told is not learning.
-    { target: ".side--me .slot--king", text: V.TUTORIAL.king, done: m.hasKing },
-    { target: ".side--me .slot--guard", text: V.TUTORIAL.guards },
-    { target: ".hand__current", text: V.TUTORIAL.hand },
-    { target: ".side--me .board", text: V.TUTORIAL.board },
-    { target: ".hand .btn-fight", text: V.TUTORIAL.fight, cta: "יאללה" },
-  ];
+  /*
+   * She comments on the card you actually drew, not on a script. Each line is
+   * said at most once per match, and the set resets when a new match starts so
+   * the second example match can teach the things the first did not reach.
+   */
+  const saidRef = useRef<Set<string>>(new Set());
+  const [cue, setCue] = useState<Step | null>(null);
+  useEffect(() => {
+    if (!teaching) return;
+    const next = nextCue(
+      {
+        phase: m.phase,
+        hand: m.hand,
+        handIsAction: m.handIsAction,
+        placements: m.placements,
+        king: m.king,
+        discardCount: m.discardCount,
+        actionBarCount: m.actionBar.length,
+      },
+      saidRef.current,
+    );
+    if (!next) return;
+    saidRef.current.add(next.id);
+    setCue({ target: next.target ?? ".side--me .board", text: next.text });
+  }, [
+    teaching,
+    m.phase,
+    m.hand,
+    m.handIsAction,
+    m.placements,
+    m.king,
+    m.discardCount,
+    m.actionBar.length,
+  ]);
   // Shown next to the build id: a screenshot of a layout problem is only
   // useful if it says what size screen the layout was solving for.
   const [viewport, setViewport] = useState(() => `${window.innerWidth}×${window.innerHeight}`);
@@ -939,11 +966,13 @@ function Game() {
         />
       )}
 
-      {teaching && (
+      {teaching && cue && (
         <Tutorial
-          steps={TUTORIAL_STEPS}
-          onDone={() => {
+          steps={[cue]}
+          onDone={() => setCue(null)}
+          onQuit={() => {
             setTeaching(false);
+            setCue(null);
             void markTutorialDone();
           }}
         />

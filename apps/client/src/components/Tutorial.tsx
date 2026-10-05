@@ -29,7 +29,10 @@ export interface Step {
 
 interface Props {
   steps: Step[];
+  /** This line has been read — show the next one when there is one. */
   onDone: () => void;
+  /** Stop teaching altogether. */
+  onQuit?: () => void;
 }
 
 interface Spot {
@@ -39,7 +42,7 @@ interface Spot {
   height: number;
 }
 
-export function Tutorial({ steps, onDone }: Props) {
+export function Tutorial({ steps, onDone, onQuit }: Props) {
   const [i, setI] = useState(0);
   const [spot, setSpot] = useState<Spot | null>(null);
   const bubbleRef = useRef<HTMLDivElement>(null);
@@ -113,17 +116,19 @@ export function Tutorial({ steps, onDone }: Props) {
       <div className="tut__bubble" ref={bubbleRef} style={bubbleStyle}>
         <p className="tut__text">{step.text}</p>
         <div className="tut__row">
-          <span className="tut__dots">
-            {steps.map((_, n) => (
-              <i key={n} className={n === i ? "is-now" : undefined} />
-            ))}
-          </span>
+          {steps.length > 1 && (
+            <span className="tut__dots">
+              {steps.map((_, n) => (
+                <i key={n} className={n === i ? "is-now" : undefined} />
+              ))}
+            </span>
+          )}
           {step.done === undefined && (
             <button className="btn-fight" onClick={next}>
               {step.cta ?? "הבנתי"}
             </button>
           )}
-          <button className="btn-link tut__skip" onClick={onDone}>
+          <button className="btn-link tut__skip" onClick={onQuit ?? onDone}>
             אני יודע לשחק
           </button>
         </div>
