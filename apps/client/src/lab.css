@@ -795,3 +795,181 @@
   color: var(--accent);
   background: rgba(255, 176, 32, 0.12);
 }
+
+/* ════════ the playground on a phone ════════
+ *
+ * Or: "in playground mode you can't see the cards you can add at all."
+ * Measured: the rack was ZERO pixels wide and each card was 9×10.
+ *
+ * The cause is the phone layout in styles.css, which turns .build into a grid
+ * of named areas — "boards hand" over "actions hand" — with the hand column
+ * pinned at 146px. The lab panel has no grid-area of its own, so it was
+ * auto-placed into that 146px column and the rack inside it collapsed.
+ *
+ * The lab IS the hand here, so it takes that area and is rebuilt as a narrow
+ * column: the held card and its buttons on top, the rack filling everything
+ * below it, two cards to a row. That keeps the boards as tall as they are in
+ * an ordinary match rather than halving them to make room.
+ */
+@media (max-height: 560px) and (orientation: landscape) {
+  .lab {
+    grid-area: hand;
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+    height: auto;
+    min-height: 0;
+    padding: 5px 6px;
+    border-top: none;
+    border-inline-start: 1px solid var(--line);
+  }
+  .lab__hold {
+    flex: none;
+    flex-direction: row;
+    align-items: center;
+    gap: 5px;
+  }
+  .lab__held {
+    width: 46px;
+    height: 60px;
+  }
+  .lab__buttons {
+    width: auto;
+    flex: 1;
+    min-width: 0;
+  }
+  .lab__buttons .btn-fight,
+  .lab__buttons .take-action {
+    padding: 5px 4px;
+    font-size: 11px;
+  }
+  .lab__eraser {
+    font-size: 15px;
+    padding: 2px;
+  }
+
+  .rack {
+    flex: 1;
+    min-height: 0;
+  }
+  /* The search box alone; the eraser already has a home in the row above. */
+  .rack__bar .rack__erase {
+    display: none;
+  }
+  .rack__search {
+    padding: 3px 8px;
+    font-size: 11px;
+  }
+  .rack__tabs {
+    gap: 3px;
+  }
+  .rack__tab {
+    padding: 2px 7px;
+    font-size: 10px;
+  }
+  .rack__group h4 {
+    margin: 4px 0 2px;
+    font-size: 9.5px;
+  }
+  .rack__row {
+    gap: 4px;
+  }
+  /* Two to a row inside 146px, and still big enough to tell apart. */
+  .rack__card {
+    width: calc(50% - 4px);
+  }
+}
+
+/* ════════ the home screen on a short phone ════════
+ *
+ * Or: "on mobile not everything fits on one screen now." Measured at 844×390
+ * (a phone held sideways): the menu column wanted 429px of a 390px screen, so
+ * the playground button sat below the fold. It scrolled, but a home screen you
+ * have to scroll is a home screen with a hidden button.
+ *
+ * Everything the arenas, the chests and the two new links added has to come
+ * back out of the same screen. The biggest saving by far is the two character
+ * cards: they are square, which is 190px of height each on a wide phone, and
+ * a landscape crop says exactly as much.
+ */
+@media (max-height: 460px) and (orientation: landscape) {
+  .intro {
+    padding: 8px 14px;
+  }
+  .intro__name img {
+    max-height: 34px;
+    width: auto;
+  }
+  .intro__sub {
+    font-size: 11px;
+    margin: 2px 0 0;
+  }
+  /* Landscape instead of square — the face still reads, the height halves.
+     2:1 rather than 16:9 because the last few pixels were still over. */
+  .pick__card img {
+    aspect-ratio: 2 / 1;
+  }
+  .pick__card span {
+    padding: 5px 4px;
+    font-size: 13px;
+  }
+  .pick {
+    gap: 8px;
+  }
+  .track {
+    margin-top: 7px;
+    padding: 4px 8px 4px 4px;
+  }
+  .track__art {
+    width: 42px;
+    height: 30px;
+  }
+  .track__text b {
+    font-size: 12px;
+  }
+  .track__text small {
+    font-size: 10px;
+  }
+  .shelf {
+    margin-top: 7px;
+    gap: 4px;
+  }
+  .shelf__chest {
+    width: 42px;
+    height: 42px;
+  }
+  .btn-album {
+    margin-top: 8px;
+    padding: 7px 18px;
+    font-size: 14px;
+  }
+  .extras {
+    margin-top: 7px;
+    gap: 5px;
+  }
+  .btn-modes {
+    padding: 6px 16px;
+    font-size: 13px;
+  }
+  .btn-lab {
+    padding: 4px 12px;
+    font-size: 11.5px;
+  }
+  /*
+   * The two footer links share a line instead of taking one each. They are
+   * one idea — "the small print" — and they were two rows of it.
+   */
+  .about__open {
+    display: inline-block;
+    margin: 6px 5px 0;
+    font-size: 11px;
+  }
+  .intro__version {
+    margin-top: 4px;
+    font-size: 10px;
+  }
+  /* The column is already tight; stop the flex gaps adding another row. */
+  .intro__choices {
+    gap: 0;
+  }
+}
