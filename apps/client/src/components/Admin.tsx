@@ -76,7 +76,7 @@ async function call(path: string, body: unknown = {}): Promise<Record<string, un
 export function Admin() {
   const [state, setState] = useState<"checking" | "out" | "denied" | "in" | "down">("checking");
   const [why, setWhy] = useState<string>("");
-  const [tab, setTab] = useState<"cards" | "copy" | "users">("cards");
+  const [tab, setTab] = useState<"cards" | "copy" | "users" | "reports">("cards");
   const [note, setNote] = useState<string | null>(null);
 
   const check = useCallback(async () => {
@@ -170,6 +170,9 @@ export function Admin() {
           <button className={tab === "users" ? "on" : ""} onClick={() => setTab("users")}>
             משתמשים
           </button>
+          <button className={tab === "reports" ? "on" : ""} onClick={() => setTab("reports")}>
+            דיווחים
+          </button>
         </nav>
         <a className="btn-link" href={window.location.pathname}>
           ← למשחק
@@ -184,6 +187,8 @@ export function Admin() {
         <CardEditor call={call} say={setNote} />
       ) : tab === "copy" ? (
         <CopyTab say={setNote} />
+      ) : tab === "reports" ? (
+        <ReportsTab call={call} say={setNote} />
       ) : (
         <UsersTab say={setNote} />
       )}
@@ -352,6 +357,138 @@ function CopyTab({ say }: { say: (s: string) => void }) {
       {rows.length > 300 && (
         <p className="admin__hint">מוצגות 300 שורות ראשונות מתוך {rows.length}. צמצם בחיפוש.</p>
       )}
+    </div>
+  );
+}
+
+/* ──────────────────────────── reports ──────────────────────────── */
+
+interface ReportRow {
+  id: string;
+  kind: "bug" | "player";
+  reporter_id: string;
+  reported_id: string | null;
+  message: string;
+  created_at: string;
+  status: "open" | "done";
+  reporterName: string | null;
+  reportedName: string | null;
+  reportedSuspendedUntil: string | null;
+}
+
+/**
+ * The inbox.
+ *
+ * Suspending is right here, on the report, because the alternative is reading
+ * a complaint in one tab and hunting for the name in another — which is how
+ * a report goes unanswered. Marking it handled and suspending are SEPARATE
+ * buttons on purpose: most reports do not deserve a suspension, and a single
+ * "deal with it" button would quietly make them all deserve one.
+ */
+function ReportsTab({
+  call,
+  say,
+}: {
+  call: (path: string, body?: unknown) => Promise<Record<string, unknown>>;
+  say: (s: string) => void;
+}) {
+  const [status, setStatus] = useState<"open" | "done" | "all">("open");
+  const [rows, setRows] = useState<ReportRow[] | null>(null);
+
+  const load = useCallback(
+    async (which: "open" | "done" | "all") => {
+      const r = await call("/api/admin/reports", { status: which });
+      if (r.error) return say(String(r.error));
+      setRows((r.reports as ReportRow[]) ?? []);
+    },
+    [call, say],
+  );
+
+  useEffect(() => {
+    void load(status);
+  }, [load, status]);
+
+  const act = async (path: string, body: unknown, done: string) => {
+    const r = await call(path, body);
+    if (r.error) return say(String(r.error));
+    say(done);
+    void load(status);
+  };
+
+  if (!rows) return <div className="admin__body">טוען…</div>;
+
+  return (
+    <div className="admin__body">
+      <div className="admin__tools">
+        {(["open", "done", "all"] as const).map((k) => (
+          <button
+            key={k}
+            className={`rack__tab${status === k ? " rack__tab--on" : ""}`}
+            onClick={() => setStatus(k)}
+          >
+            {k === "open" ? "פתוחים" : k === "done" ? "טופלו" : "הכול"}
+          </button>
+        ))}
+      </div>
+
+      {rows.length === 0 && <p className="admin__hint">אין כאן כלום. זה טוב.</p>}
+
+      <div className="rep__list">
+        {rows.map((r) => (
+          <div key={r.id} className={`rep rep--${r.kind}`}>
+            <div className="rep__head">
+              <span className={`admin__where admin__where--${r.kind === "bug" ? "deploy" : "banned"}`}>
+                {r.kind === "bug" ? "באג" : "שחקן"}
+              </span>
+              <b>{r.reporterName ?? "בלי שם"}</b>
+              {r.reported_id && (
+                <>
+                  <span className="rep__arrow">←</span>
+                  <b>{r.reportedName ?? "בלי שם"}</b>
+                </>
+              )}
+              <small>{new Date(r.created_at).toLocaleString("he-IL")}</small>
+              {r.reportedSuspendedUntil && (
+                <span className="admin__where admin__where--banned">
+                  מושעה עד {new Date(r.reportedSuspendedUntil).toLocaleDateString("he-IL")}
+                </span>
+              )}
+            </div>
+            <p className="rep__msg">{r.message || "— בלי טקסט —"}</p>
+            <div className="admin__actions">
+              {r.status === "open" && (
+                <button onClick={() => void act("/api/admin/report/handle", { id: r.id }, "סומן כטופל")}>
+                  סמן כטופל
+                </button>
+              )}
+              {r.reported_id &&
+                [
+                  { label: "השעה ליום", hours: 24 },
+                  { label: "לשבוע", hours: 24 * 7 },
+                  { label: "לתמיד", hours: undefined },
+                ].map((o) => (
+                  <button
+                    key={o.label}
+                    className="admin__danger"
+                    onClick={() =>
+                      void act(
+                        "/api/admin/user/suspend",
+                        {
+                          userId: r.reported_id,
+                          reason: r.message.slice(0, 200),
+                          ...(o.hours !== undefined ? { hours: o.hours } : {}),
+                        },
+                        "הושעה.",
+                      )
+                    }
+                  >
+                    {o.label}
+                  </button>
+                ))}
+            </div>
+          </div>
+        ))}
+      </div>
     </div>
   );
 }

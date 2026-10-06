@@ -471,6 +471,65 @@ export async function linkEmail(email: string, password: string): Promise<string
  *
  * Returns an error message to show, or null when the redirect is on its way.
  */
+/** Somebody you have actually played, and when. */
+export interface Opponent {
+  id: string;
+  nickname: string | null;
+  matchId: string;
+  at: string;
+}
+
+/**
+ * Who there is to report.
+ *
+ * The SERVER decides this list, from the matches table — a report can only
+ * name somebody you have really met, and that rule cannot live in the browser
+ * because the browser is where it would be edited out.
+ */
+export async function recentOpponents(): Promise<Opponent[]> {
+  const sb = db();
+  if (!sb || !SERVER_HTTP) return [];
+  try {
+    const { data } = await sb.auth.getSession();
+    const token = data.session?.access_token;
+    if (!token) return [];
+    const res = await fetch(`${SERVER_HTTP}/api/report/opponents`, {
+      method: "POST",
+      headers: { authorization: `Bearer ${token}`, "content-type": "application/json" },
+      body: "{}",
+    });
+    if (!res.ok) return [];
+    return ((await res.json()) as { opponents?: Opponent[] }).opponents ?? [];
+  } catch {
+    return [];
+  }
+}
+
+/** File a report. Returns a message to show the player, or null when it went. */
+export async function fileReport(input: {
+  kind: "bug" | "player";
+  reportedId?: string | null;
+  aboutMatch?: string | null;
+  message: string;
+}): Promise<string | null> {
+  const sb = db();
+  if (!sb || !SERVER_HTTP) return "אין חיבור לשרת";
+  try {
+    const { data } = await sb.auth.getSession();
+    const token = data.session?.access_token;
+    if (!token) return "צריך חשבון כדי לדווח";
+    const res = await fetch(`${SERVER_HTTP}/api/report`, {
+      method: "POST",
+      headers: { authorization: `Bearer ${token}`, "content-type": "application/json" },
+      body: JSON.stringify(input),
+    });
+    const body = (await res.json()) as { ok?: boolean; error?: string };
+    return body.ok ? null : (body.error ?? "לא הצליח");
+  } catch (err) {
+    return (err as Error).message;
+  }
+}
+
 /**
  * Sign out, and come back as somebody else.
  *

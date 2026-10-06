@@ -22,6 +22,7 @@ import type { IncomingMessage, ServerResponse } from "node:http";
 import type { SupabaseClient } from "@supabase/supabase-js";
 import { CardSchema } from "@amanda/shared";
 import { cardState, refreshCards } from "./cards.js";
+import { listReports } from "./reports.js";
 
 /** The cards a brand new player starts with, as the database grants them. */
 const STARTER = [
@@ -212,6 +213,34 @@ async function adminRoutes(
      * Absolute values, not deltas. "Put this account in the alley" is a thing
      * you want to be able to do twice and get the same answer; "+900" is not.
      */
+    /** The inbox. */
+    case "/api/admin/reports": {
+      const want = str("status");
+      const status = want === "done" || want === "all" ? want : "open";
+      deps.send(res, 200, { reports: await listReports(sb, status) });
+      return true;
+    }
+
+    /** Mark one dealt with. Suspending is a separate, deliberate second act. */
+    case "/api/admin/report/handle": {
+      const id = str("id");
+      if (!id) {
+        deps.send(res, 400, { error: "which report" });
+        return true;
+      }
+      const { error } = await sb
+        .from("reports")
+        .update({
+          status: "done",
+          handled_by: userId,
+          handled_at: new Date().toISOString(),
+          handled_note: str("note") || null,
+        })
+        .eq("id", id);
+      deps.send(res, error ? 500 : 200, error ? { error: error.message } : { ok: true });
+      return true;
+    }
+
     case "/api/admin/user/grant": {
       const id = str("userId");
       if (!id) {

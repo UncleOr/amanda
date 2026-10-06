@@ -15,6 +15,7 @@ import type { IncomingMessage, ServerResponse } from "node:http";
 import { LEVELS, levelCost } from "@amanda/shared";
 import { CATALOG } from "./content.js";
 import { grantChest, saves } from "./progress.js";
+import { fileReport, recentOpponents } from "./reports.js";
 import { handleAdmin, handleCopy } from "./admin.js";
 
 import { SUPABASE_URL as URL, db, keyHasWhitespace, keyLength, keyStartsWith } from "./supabase.js";
@@ -199,6 +200,28 @@ async function deleteSelf(req: IncomingMessage, res: ServerResponse): Promise<vo
   send(res, 200, { ok: true });
 }
 
+/** File a report, or ask who there is to report. */
+async function handleReports(req: IncomingMessage, res: ServerResponse, path: string): Promise<void> {
+  const sb = db();
+  if (!sb) return send(res, 503, { error: "no database" });
+  const playerId = await playerFrom(req);
+  if (!playerId) return send(res, 401, { error: "who are you" });
+
+  if (path === "/api/report/opponents") {
+    return send(res, 200, { opponents: await recentOpponents(sb, playerId) });
+  }
+
+  const body = (await readBody(req)) as Record<string, unknown>;
+  const kind = body.kind === "player" ? "player" : "bug";
+  const error = await fileReport(sb, playerId, {
+    kind,
+    reportedId: typeof body.reportedId === "string" ? body.reportedId : null,
+    aboutMatch: typeof body.aboutMatch === "string" ? body.aboutMatch : null,
+    message: typeof body.message === "string" ? body.message : "",
+  });
+  send(res, error ? 400 : 200, error ? { error } : { ok: true });
+}
+
 const adminDeps = { db, send, readBody, userFrom: playerFrom };
 
 /**
@@ -271,7 +294,9 @@ async function health(res: ServerResponse): Promise<void> {
 }
 
 export async function handleApi(req: IncomingMessage, res: ServerResponse): Promise<boolean> {
-  const path = (req.url ?? "").split("?")[0];
+  // Defaulted twice: `split` is typed as possibly returning undefined, and the
+  // routes below call string methods on this.
+  const path = (req.url ?? "").split("?")[0] ?? "";
   if (path === "/api/health") {
     await health(res);
     return true;
@@ -298,6 +323,18 @@ export async function handleApi(req: IncomingMessage, res: ServerResponse): Prom
   if (await handleCopy(req, res, adminDeps)) return true;
   // Everything behind the admin panel. It checks the admins table itself.
   if (await handleAdmin(req, res, adminDeps)) return true;
+  if (path.startsWith("/api/report")) {
+    if (req.method === "OPTIONS") {
+      send(res, 204, {});
+      return true;
+    }
+    try {
+      await handleReports(req, res, path);
+    } catch (err) {
+      send(res, 500, { error: (err as Error).message });
+    }
+    return true;
+  }
   if (path === "/api/account/delete") {
     if (req.method === "OPTIONS") {
       send(res, 204, {});

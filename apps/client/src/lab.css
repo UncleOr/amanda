@@ -718,3 +718,62 @@
   border: none !important;
   color: #fff !important;
 }
+
+/* ════════ reporting ════════ */
+.modal--report { max-width: 520px; }
+.report__title { margin: 0 0 14px; font-size: 21px; padding-inline-end: 34px; }
+.report__kinds { display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 12px; }
+.report__kinds button {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  padding: 8px 15px;
+  border-radius: 11px;
+  border: 1px solid var(--line);
+  background: transparent;
+  color: var(--muted);
+  font: inherit;
+  font-weight: 700;
+  font-size: 13px;
+  cursor: pointer;
+}
+.report__kinds button.is-on {
+  border-color: var(--accent);
+  color: var(--accent);
+  background: rgba(255, 176, 32, 0.12);
+}
+.report__hint { color: var(--muted); font-size: 12.5px; line-height: 1.5; margin: 0 0 10px; }
+.report__who { display: flex; flex-wrap: wrap; gap: 6px; margin-bottom: 12px; }
+.report__who button {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1px;
+  padding: 7px 13px;
+  border-radius: 10px;
+  border: 1px solid var(--line);
+  background: transparent;
+  color: var(--text);
+  font: inherit;
+  font-size: 13px;
+  font-weight: 700;
+  cursor: pointer;
+}
+.report__who button small { color: var(--muted); font-weight: 600; font-size: 10.5px; }
+.report__who button.is-on { border-color: var(--accent); color: var(--accent); background: rgba(255, 176, 32, 0.12); }
+.report__text {
+  width: 100%;
+  padding: 10px 12px;
+  border-radius: 11px;
+  border: 1px solid var(--line);
+  background: rgba(8, 12, 22, 0.8);
+  color: var(--text);
+  font: inherit;
+  line-height: 1.5;
+  resize: vertical;
+  margin-bottom: 10px;
+}
+.report__note { color: var(--accent); font-size: 13px; margin: 0 0 10px; }
+.report__done { text-align: center; display: flex; flex-direction: column; align-items: center; gap: 8px; }
+.report__done h2 { margin: 2px 0 0; }
+.report__done p { color: var(--muted); margin: 0 0 8px; }

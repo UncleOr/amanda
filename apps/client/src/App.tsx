@@ -30,6 +30,7 @@ import { CardPicker } from "./components/CardPicker";
 import { ArenaTrack } from "./components/ArenaTrack";
 import { ChestShelf } from "./components/ChestShelf";
 import { About } from "./components/About";
+import { Report } from "./components/Report";
 const Admin = lazy(() => import("./components/Admin").then((m) => ({ default: m.Admin })));
 import { MoreModes } from "./components/MoreModes";
 import { ArenaPreview } from "./components/ArenaPreview";
@@ -213,6 +214,7 @@ function Game() {
   const [friendOpen, setFriendOpen] = useState(false);
   const [modesOpen, setModesOpen] = useState(false);
   const [aboutOpen, setAboutOpen] = useState(false);
+  const [reportOpen, setReportOpen] = useState<"bug" | "player" | null>(null);
   /** Turned off for the session the moment the clip fails to load. */
   const [idleOk, setIdleOk] = useState(true);
   /*
@@ -810,6 +812,9 @@ function Game() {
             <button className="btn-link about__open" onClick={() => setAboutOpen(true)}>
               אודות · פרטיות · נגישות
             </button>
+            <button className="btn-link about__open" onClick={() => setReportOpen("bug")}>
+              משהו לא עובד?
+            </button>
             <p className="intro__version">
               גרסה {__BUILD_ID__} · מסך {viewport}
               <button
@@ -1310,6 +1315,13 @@ function Game() {
               <button className="btn-fight btn-ghost" onClick={m.reset}>
                 <Icon name="menu" size={16} /> תפריט
               </button>
+              {/* Where a complaint about a person actually occurs to somebody:
+                  right after playing them, not buried in a settings page. */}
+              {m.online && !m.playground && (
+                <button className="btn-fight btn-ghost" onClick={() => setReportOpen("player")}>
+                  <Icon name="warning" size={15} /> דיווח על היריב
+                </button>
+              )}
               {m.result && (
                 <button className="btn-fight btn-online" onClick={() => setShowLog((v) => !v)}>
                   {showLog ? (
@@ -1461,6 +1473,10 @@ function Game() {
       )}
 
       {aboutOpen && <About onClose={() => setAboutOpen(false)} />}
+
+      {reportOpen && (
+        <Report initialKind={reportOpen} onClose={() => setReportOpen(null)} />
+      )}
 
       {modesOpen && (
         <MoreModes
