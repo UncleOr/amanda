@@ -110,9 +110,13 @@ export function Shop({
                       const tooDear = item.price_diamonds > diamonds;
                       return (
                         <div className={`good${mine ? " is-mine" : ""}`} key={item.id}>
+                          {/* The picture is not lazy-loaded: the shop is a
+                              thing you deliberately open, every tile is on
+                              screen at once, and they are 66 pixels across.
+                              Deferring them only buys a row of empty circles. */}
                           <div className="good__art">
                             {art ? (
-                              <img src={art} alt="" loading="lazy" />
+                              <img src={art} alt="" />
                             ) : (
                               <Icon name="gem" size={30} />
                             )}

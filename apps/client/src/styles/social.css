@@ -296,7 +296,14 @@
  * last arena you climb to IS the petrol station, which is the joke — you are
  * shopping inside the final boss's shop.
  */
-.modal--shop { max-width: 620px; }
+/*
+ * `width`, not `max-width`.
+ *
+ * `.modal` sets `width: min(440px, 100%)`, and a max-width can only ever
+ * narrow that — so the wider shop was silently staying at 440 and the shelves
+ * were scrolling sideways with two items visible.
+ */
+.modal--shop { width: min(620px, 100%); }
 .shop__sign {
   position: relative;
   display: flex;
