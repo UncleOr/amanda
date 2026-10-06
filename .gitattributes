@@ -1,0 +1,31 @@
+# Line endings, settled once.
+#
+# Every commit was printing a wall of "LF will be replaced by CRLF" warnings,
+# because this machine has core.autocrlf=true while the files are written with
+# LF. The warnings were harmless and the mixture was not: a file that lands in
+# the repo with CRLF shows up as entirely rewritten the next time anything
+# touches it, which buries a one-line change in a thousand-line diff.
+#
+# So: text files are LF IN THE REPOSITORY, whatever the working copy does.
+* text=auto eol=lf
+
+# Things that are not text, and must never have anything substituted in them.
+*.png   binary
+*.jpg   binary
+*.jpeg  binary
+*.webp  binary
+*.gif   binary
+*.ico   binary
+*.mp3   binary
+*.wav   binary
+*.ogg   binary
+*.mp4   binary
+*.webm  binary
+*.woff  binary
+*.woff2 binary
+*.ttf   binary
+*.otf   binary
+*.pdf   binary
+
+# Shell scripts break if they are given CRLF, whatever the platform.
+*.sh    text eol=lf
