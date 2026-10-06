@@ -115,8 +115,42 @@ async function levelUp(req: IncomingMessage, res: ServerResponse): Promise<void>
 /** Returns true when it handled the request. */
 const adminDeps = { db, send, readBody, userFrom: playerFrom };
 
+/**
+ * Is this process actually able to write to the database?
+ *
+ * Worth an endpoint, because the answer was NO for an unknown length of time
+ * and nothing said so. Nineteen accounts existed with zero trophies and zero
+ * chests between them: the service key was never reaching the process, every
+ * save silently did nothing, and the game carried on looking fine because it
+ * is built to survive exactly that.
+ *
+ * NAMES AND BOOLEANS ONLY. The key itself never appears here, in a log, or in
+ * any response — it bypasses row-level security completely, and anything that
+ * can print it is a way to leak it.
+ */
+function health(res: ServerResponse): void {
+  const names = Object.keys(process.env).filter(
+    (k) => k.includes("SUPABASE") || k.includes("SERVICE"),
+  );
+  const key = process.env.SUPABASE_SERVICE_KEY ?? "";
+  send(res, 200, {
+    ok: true,
+    /** True when a key is present AND looks like one, rather than a stray word. */
+    canSave: key.length > 40,
+    keyPresent: key.length > 0,
+    keyLength: key.length,
+    /** Which Supabase-ish variables this process can see, by name only. */
+    sees: names,
+    url: URL,
+  });
+}
+
 export async function handleApi(req: IncomingMessage, res: ServerResponse): Promise<boolean> {
   const path = (req.url ?? "").split("?")[0];
+  if (path === "/api/health") {
+    health(res);
+    return true;
+  }
   // The words on the screen, for anyone, signed in or not.
   if (await handleCopy(req, res, adminDeps)) return true;
   // Everything behind the admin panel. It checks the admins table itself.
