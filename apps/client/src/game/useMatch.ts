@@ -3,6 +3,8 @@ import {
   DECK,
   KING,
   PHASES,
+  COOP_LANES,
+  buildAmandaBoard,
   levelMultiplier,
   type Card,
   type RoomError,
@@ -401,6 +403,8 @@ export interface MatchApi {
   /** Amanda mode: you share a side with the other player against her. */
   coop: boolean;
   startAmanda: () => void;
+  /** Developer preview of Amanda mode, alone and unwinnable. */
+  startAmandaSolo: () => void;
   /** The player's account, or null when playing without one. */
   account: Account | null;
   /** Re-read it, after the player changes something about themselves. */
@@ -477,6 +481,8 @@ export function useMatch(): MatchApi {
   const [oppReady, setOppReady] = useState(false);
   /** Amanda mode: you and the other player share a side against her. */
   const [coop, setCoop] = useState(false);
+  /** True for the developer's solo Amanda preview (see startAmandaSolo). */
+  const soloAmandaRef = useRef(false);
   /** Cards drawn ahead by "triple draw", offered before the deck is touched. */
   const [extraHand, setExtraHand] = useState<string[]>([]);
   /** First cell picked by a two-step action, waiting for its partner. */
@@ -907,7 +913,9 @@ export function useMatch(): MatchApi {
   }, []);
 
   const startBattle = useCallback(() => {
-    const aiFull: BoardInput = { owner: "B", placements: fillCrumbs(aiPlanRef.current!) };
+    const aiFull: BoardInput = soloAmandaRef.current
+      ? { owner: "B", placements: buildAmandaBoard(CATALOG.values()) as Placement[] }
+      : { owner: "B", placements: fillCrumbs(aiPlanRef.current!) };
     const r = runBattle({
       seed: BATTLE_SEED,
       catalog: CATALOG,
@@ -915,6 +923,7 @@ export function useMatch(): MatchApi {
       a: buildPlayerBoard(gsRef.current, modsRef.current, stackedRef.current, accountRef.current?.album),
       b: aiFull,
       recordFrames: true,
+      ...(soloAmandaRef.current ? { lanes: COOP_LANES } : {}),
     });
     setResult(r);
     sfx.play("go");
@@ -944,6 +953,7 @@ export function useMatch(): MatchApi {
     setStackCorners(false);
     setFrozenFor(0);
     setCoop(false);
+    soloAmandaRef.current = false;
     setReady(false);
     setOppReady(false);
     setShielded(false);
@@ -1043,6 +1053,23 @@ export function useMatch(): MatchApi {
   const hostRoom = useCallback(() => startOnline({ kind: "host" }), [startOnline]);
   /** Queue to face Amanda with a partner. It needs two — one board cannot win. */
   const startAmanda = useCallback(() => startOnline({ kind: "amanda" }), [startOnline]);
+
+  /**
+   * Amanda mode on your own, for development.
+   *
+   * No server and no partner: your 4×4 sits in the top half of the eight-lane
+   * side, the bottom half is empty, and she holds the other side. It is NOT
+   * winnable — one board against her measures 0% — and that is the point: it
+   * exists so the mode can be looked at without waiting for a second person.
+   */
+  const startAmandaSolo = useCallback(() => {
+    clearMatch();
+    setCoop(true);
+    sfx.play("click");
+    setPhase("countdown");
+    setTimeLeft(COUNTDOWN_SECONDS);
+    soloAmandaRef.current = true;
+  }, [clearMatch]);
   const joinRoom = useCallback(
     (code: string) => startOnline({ kind: "join", code: code.toUpperCase().trim() }),
     [startOnline],
@@ -1207,6 +1234,7 @@ export function useMatch(): MatchApi {
     startMatch,
     startOnline: () => startOnline(),
     startAmanda,
+    startAmandaSolo,
     coop,
     hostRoom,
     joinRoom,

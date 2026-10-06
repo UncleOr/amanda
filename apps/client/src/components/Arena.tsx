@@ -1,4 +1,5 @@
 import { useEffect, useRef, useState } from "react";
+import { spriteFor } from "../game/skins";
 import { Application, Assets, Container, Graphics, Sprite, Text, Texture } from "pixi.js";
 import { ARENA, SIMULATION } from "@amanda/shared";
 import type { BattleResult, FrameUnit, Owner } from "@amanda/engine";
@@ -26,7 +27,8 @@ function seriesTint(cardId: string): number {
 
 /** Public URL of a card's artwork, or null when it has none yet. */
 function artUrlOf(cardId: string): string | null {
-  const sprite = CATALOG.get(cardId)?.art.sprite;
+  const base = CATALOG.get(cardId)?.art.sprite;
+  const sprite = base ? spriteFor(cardId, base) : undefined;
   return sprite ? `${import.meta.env.BASE_URL}${sprite}` : null;
 }
 const FINALE_MS = 1700;

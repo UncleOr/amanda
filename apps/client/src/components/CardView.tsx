@@ -1,4 +1,5 @@
 import type { CSSProperties } from "react";
+import { spriteFor } from "../game/skins";
 import { Icon } from "./Icon";
 import { KING } from "@amanda/shared";
 import { CATALOG } from "../data/catalog";
@@ -11,6 +12,8 @@ interface StatBuff {
 }
 
 interface Props {
+  /** An owned skin to draw instead of the card's own art. */
+  skin?: string | null;
   cardId: string;
   onClick?: () => void;
   onInfo?: () => void;
@@ -27,7 +30,15 @@ interface Props {
  * on every single card. Stats are rendered live, so King ×3 and action-card
  * buffs always show the true battle numbers.
  */
-export function CardView({ cardId, onClick, onInfo, size = "medium", king = false, buff }: Props) {
+export function CardView({
+  cardId,
+  onClick,
+  onInfo,
+  size = "medium",
+  king = false,
+  buff,
+  skin,
+}: Props) {
   const card = CATALOG.get(cardId);
   if (!card) return null;
 
@@ -39,7 +50,8 @@ export function CardView({ cardId, onClick, onInfo, size = "medium", king = fals
   const hp = Math.round(baseHp * (king ? KING.hpMultiplier : 1));
   const power = Math.round(basePower * (king ? KING.powerMultiplier : 1));
   const buffed = !!(b.powerAdd || b.powerMult || b.hpMult);
-  const art = card.art.sprite ? `${import.meta.env.BASE_URL}${card.art.sprite}` : null;
+  const sprite = card.art.sprite ? spriteFor(card.id, card.art.sprite, skin) : null;
+  const art = sprite ? `${import.meta.env.BASE_URL}${sprite}` : null;
 
   const style: CSSProperties = {
     "--card-color": card.art.placeholderColor,

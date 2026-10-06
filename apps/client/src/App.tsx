@@ -117,6 +117,15 @@ if (INVITE_CODE) {
   history.replaceState(null, "", `${url.pathname}${url.search}${url.hash}`);
 }
 
+/**
+ * Developer entrances to Amanda mode, so it can be looked at without waiting
+ * for it to come round in normal play.
+ *
+ *   ?amanda        queue for it immediately — open on two devices and they pair
+ *   ?amanda=solo   play it alone, no server and no partner (and unwinnable)
+ */
+const AMANDA_DEV = new URLSearchParams(location.search).get("amanda");
+
 const REVIEW = new URLSearchParams(location.search).has("gallery")
   ? "gallery"
   : new URLSearchParams(location.search).has("arena")
@@ -259,6 +268,15 @@ function Game() {
       if (x !== undefined && y !== undefined) m.placeAt(x, y);
     }
   });
+
+  // The developer entrances above, taken once on load.
+  const devRef = useRef(false);
+  useEffect(() => {
+    if (devRef.current || AMANDA_DEV === null) return;
+    devRef.current = true;
+    if (AMANDA_DEV === "solo") m.startAmandaSolo();
+    else if (m.onlineAvailable) m.startAmanda();
+  }, [m]);
 
   // An invite link (?join=XXXX) joins that room on its own, so the person you
   // sent it to only has to open it.
@@ -1014,7 +1032,13 @@ function Game() {
         />
       )}
 
-      {detail && <CardDetailModal cardId={detail} onClose={() => setDetail(null)} />}
+      {detail && (
+        <CardDetailModal
+          cardId={detail}
+          onClose={() => setDetail(null)}
+          owned={m.account?.album.get(detail) ?? null}
+        />
+      )}
       {actionDetail &&
         (() => {
           const inBar = m.actionBar.find((a) => a.id === actionDetail);

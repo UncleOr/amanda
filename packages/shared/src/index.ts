@@ -18,5 +18,8 @@ export * from "./loader.js";
 // Central tunable configuration
 export * from "./config.js";
 
+// Amanda mode
+export * from "./amandaBoard.js";
+
 // Multiplayer wire protocol
 export * from "./net.js";

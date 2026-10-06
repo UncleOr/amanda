@@ -1,4 +1,5 @@
 import { useMemo, useState } from "react";
+import { spriteFor } from "../game/skins";
 import { Icon } from "./Icon";
 import { SIMULATION } from "@amanda/shared";
 import {
@@ -376,7 +377,9 @@ function UnitReportModal({
   onClose: () => void;
 }) {
   const card = CATALOG.get(unit.cardId);
-  const art = card?.art.sprite ? `${import.meta.env.BASE_URL}${card.art.sprite}` : null;
+  const art = card?.art.sprite
+    ? `${import.meta.env.BASE_URL}${spriteFor(card.id, card.art.sprite)}`
+    : null;
   const sideTotal = Math.max(1, report.sides[unit.owner].damageDealt);
   const share = Math.round((unit.damageDealt / sideTotal) * 100);
   const col = ["עורף", "שלישית", "שנייה", "חזית"][unit.startX] ?? "";

@@ -3081,7 +3081,11 @@ button:disabled {
 /* Very short — a small phone in landscape with browser chrome. */
 @media (max-height: 400px) {
   .intro__name img { width: min(150px, 34vw); }
-  .intro__sub { display: none; }
+  /*
+   * NOT hidden. Hiding it is what Or saw as the line under "אמנדה" being cut
+   * off on a phone — it was simply gone. It shrinks instead; the room is there.
+   */
+  .intro__sub { font-size: 11px; margin: 0 0 7px; letter-spacing: 0; }
   .pick__card img { height: 62px; }
   .me { top: 6px; padding: 3px 9px 3px 3px; }
   .me img { width: 24px; height: 24px; }
@@ -3206,3 +3210,30 @@ button:disabled {
 }
 .btn-amanda::before { background: #78f0e6 !important; box-shadow: 0 0 14px rgba(120,240,230,0.9) !important; }
 .btn-amanda:hover { border-color: #78f0e6; }
+
+/* ---- a card's level, when you own it ---- */
+.badge--level { border-color: rgba(60, 190, 120, 0.8); color: rgb(90, 220, 150); }
+.modal__level {
+  margin: 0 0 12px;
+  padding: 10px 12px;
+  border-radius: 12px;
+  background: rgba(60, 190, 120, 0.1);
+  border: 1px solid rgba(60, 190, 120, 0.3);
+}
+.modal__level-n { font-weight: 900; font-size: 16px; }
+.modal__level-next { color: var(--muted); font-weight: 700; font-size: 13px; }
+.modal__level-bar {
+  display: block;
+  height: 6px;
+  margin: 7px 0 6px;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.1);
+  overflow: hidden;
+}
+.modal__level-bar i {
+  display: block;
+  height: 100%;
+  border-radius: 999px;
+  background: linear-gradient(90deg, rgba(60, 190, 120, 0.7), rgb(90, 230, 150));
+}
+.modal__level-note { font-size: 12px; color: var(--muted); }

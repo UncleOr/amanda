@@ -2,18 +2,28 @@ import type { CSSProperties } from "react";
 import { Icon } from "./Icon";
 import { CATALOG, SERIES_BY_ID } from "../data/catalog";
 import { ABILITY_LABEL, ELEMENT_META, RANGE_META, RARITY_META } from "../data/cardMeta";
+import { LEVELS, levelCost, levelMultiplier } from "@amanda/shared";
 
 export function CardDetailModal({
   cardId,
   onClose,
+  owned,
 }: {
   cardId: string;
   onClose: () => void;
+  /** What the player has of this card, when they have an album. */
+  owned?: { copies: number; level: number } | null;
 }) {
   const card = CATALOG.get(cardId);
   if (!card) return null;
   const series = SERIES_BY_ID.get(card.seriesId);
   const rarity = RARITY_META[card.rarity];
+  const level = owned?.level ?? 1;
+  const mult = levelMultiplier(level);
+  // Shown at the level the player actually has it at, not at the base — the
+  // numbers on an upgraded card should be the numbers it fights with.
+  const hp = Math.round(card.stats.hp * mult);
+  const power = Math.round(card.stats.power * mult);
 
   return (
     <div className="modal-overlay" onClick={onClose}>
@@ -42,13 +52,32 @@ export function CardDetailModal({
               ))}
               {series && <span className="badge">{series.name.he}</span>}
               {card.midBoss && <span className="badge badge--king">👑 ענק אמצע</span>}
+              {owned && <span className="badge badge--level">רמה {level}</span>}
             </div>
           </div>
         </div>
 
+        {owned && (
+          <div className="modal__level">
+            <span className="modal__level-n">
+              רמה {level}
+              {level < LEVELS.max && <span className="modal__level-next"> / {LEVELS.max}</span>}
+            </span>
+            <span className="modal__level-bar" aria-hidden="true">
+              <i style={{ width: `${(level / LEVELS.max) * 100}%` }} />
+            </span>
+            <span className="modal__level-note">
+              {owned.copies} עותקים
+              {level < LEVELS.max
+                ? ` · הרמה הבאה עולה ${levelCost(card.rarity, level)}`
+                : " · הגעת למקסימום"}
+            </span>
+          </div>
+        )}
+
         <div className="modal__stats">
-          <Stat icon="❤️" label="חיים" value={card.stats.hp} />
-          <Stat icon="⚔️" label="עוצמה" value={card.stats.power} />
+          <Stat icon="❤️" label="חיים" value={hp} />
+          <Stat icon="⚔️" label="עוצמה" value={power} />
           <Stat icon="⏱️" label="קצב תקיפה" value={`${card.stats.attackSpeed}ש׳`} />
           <Stat
             icon="🏃"
