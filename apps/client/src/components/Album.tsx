@@ -100,14 +100,22 @@ export function Album({ account, onClose, onCardInfo, onChanged }: Props) {
             <div className="record__grid">
               {(
                 [
-                  { icon: "win", n: stats.wins, k: "ניצחונות", tone: "good" },
-                  { icon: "lose", n: stats.losses, k: "הפסדים", tone: "bad" },
+                  /*
+                   * Or: "no need to say 'win percentage' — put ניצחונות under
+                   * the 42% and people will get it." He is right, and taking
+                   * the label literally would have left TWO plaques saying
+                   * ניצחונות, so the count and the percentage are one plaque
+                   * now: the percentage is the number, the count is the small
+                   * line under it, and nothing is lost.
+                   */
                   {
-                    icon: "flag",
+                    icon: "win",
                     n: `${stats.played ? Math.round((stats.wins / stats.played) * 100) : 0}%`,
-                    k: "אחוז ניצחון",
-                    tone: "gold",
+                    k: "ניצחונות",
+                    sub: stats.played ? `${stats.wins} מתוך ${stats.played}` : null,
+                    tone: "good",
                   },
+                  { icon: "lose", n: stats.losses, k: "הפסדים", tone: "bad" },
                   { icon: "king", n: stats.bestTrophies, k: "שיא גביעים", tone: "gold" },
                   { icon: "chest", n: stats.chestsOpened, k: "תיבות", tone: "" },
                   { icon: "deck", n: stats.copiesOwned, k: "עותקים", tone: "" },
@@ -119,6 +127,7 @@ export function Album({ account, onClose, onCardInfo, onChanged }: Props) {
                   </span>
                   <span className="record__n">{cell.n}</span>
                   <span className="record__k">{cell.k}</span>
+                  {"sub" in cell && cell.sub && <span className="record__sub">{cell.sub}</span>}
                 </div>
               ))}
             </div>

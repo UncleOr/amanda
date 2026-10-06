@@ -3363,6 +3363,14 @@ button:disabled {
   font-size: 11.5px;
   color: var(--muted);
 }
+/* The raw count under the percentage — there if you want it, quiet if not. */
+.record__sub {
+  display: block;
+  margin-top: 2px;
+  font-size: 10.5px;
+  color: rgba(147, 160, 189, 0.72);
+  font-variant-numeric: tabular-nums;
+}
 
 /* The last few matches, newest first — stamped, not plotted. */
 .record__streak {
