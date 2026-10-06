@@ -294,18 +294,42 @@ interface GameState {
  * displayed board and the battle board match exactly (the shuffle runs once).
  */
 /**
- * Sandstorm: rotate the lanes of the opponent's front-row cards.
- * A rotation by a random non-zero offset guarantees every card actually moves —
- * a plain shuffle of two or three cards often returned the original order, so
- * the card looked like it did nothing. Returns how many cards moved.
+ * Sandstorm: swap the opponent's front row WITHIN its pairs.
+ *
+ * It used to rotate all four lanes by a random offset, and Or caught what that
+ * really did: it took whatever was guarding the King and dumped it on the
+ * outside, so a bodyguard meant nothing against one epic card. His fix, and
+ * this is it — the two guard posts trade with each other, the two outer lanes
+ * trade with each other, and nothing crosses between them.
+ *
+ *   lane 0  ⟷  lane 3     the outside
+ *   lane 1  ⟷  lane 2     the King's guard
+ *
+ * So the card still does what it is for — it wrecks the matchups you lined up,
+ * your sniper now faces the wrong thing — without undoing the one decision the
+ * whole board is built around. Returns how many cards actually moved.
  */
+export const SANDSTORM_PAIRS: ReadonlyArray<readonly [number, number]> = [
+  [1, 2], // the two guard posts, in front of the King
+  [0, 3], // the two outer lanes
+];
+
 export function rotateFrontLanes(plan: Placement[]): number {
   const fronts = plan.filter((p) => !p.king && p.x === 3);
   if (fronts.length < 2) return 0;
-  const ys = fronts.map((p) => p.y);
-  const shift = 1 + Math.floor(Math.random() * (ys.length - 1));
-  fronts.forEach((p, i) => (p.y = ys[(i + shift) % ys.length]!));
-  return fronts.length;
+  const at = (y: number) => fronts.find((p) => p.y === y);
+  let moved = 0;
+  for (const [a, b] of SANDSTORM_PAIRS) {
+    const first = at(a);
+    const second = at(b);
+    // Nothing in either lane is nothing to swap. One card alone still slides
+    // across to its partner lane — it stays a guard, or stays on the outside.
+    if (!first && !second) continue;
+    if (first) first.y = b;
+    if (second) second.y = a;
+    moved += (first ? 1 : 0) + (second ? 1 : 0);
+  }
+  return moved;
 }
 
 function fillGs(s: GameState, bar: string[]): GameState {
@@ -353,6 +377,29 @@ function drawIfEmpty(s: GameState): GameState {
 export interface BoardView {
   placements: Record<string, string>;
   king: string | null;
+}
+
+/** Which of the two boards the playground is currently writing into. */
+export type EditSide = "me" | "enemy";
+
+/**
+ * Turn a hand-built board into something the engine can fight with.
+ *
+ * Deliberately given no album: in the playground both sides are level 1, so a
+ * comparison measures the cards and not whose copy happens to be upgraded.
+ */
+function buildBenchBoard(view: BoardView, owner: Side): BoardInput {
+  const state: GameState = {
+    deck: [],
+    hand: null,
+    discard: [],
+    placements: view.placements,
+    king: view.king,
+  };
+  return {
+    ...buildPlayerBoard(state, { boardPowerAdd: 0, boostedCells: {} }),
+    owner,
+  };
 }
 export interface ActionState {
   id: string;
@@ -419,6 +466,18 @@ export interface MatchApi {
   /** Why joining a room failed, if it did. */
   roomError: RoomError | null;
   iWon: boolean;
+  /** The sandbox: no clock, both boards yours, every card available. */
+  playground: boolean;
+  /** Which board the picker is writing into. */
+  editSide: EditSide;
+  setEditSide: (side: EditSide) => void;
+  startPlayground: () => void;
+  /** Put any card straight into your hand, or null for the eraser. */
+  pickCard: (cardId: string | null) => void;
+  /** Empty one of the two boards. */
+  clearSide: (side: EditSide) => void;
+  /** Back from a playground battle to the boards that fought it, to tweak. */
+  backToPlayground: () => void;
   takeAction: () => void;
   activateAction: (id: string) => void;
   applyTargetCell: (x: number, y: number) => void;
@@ -483,6 +542,14 @@ export function useMatch(): MatchApi {
   const [coop, setCoop] = useState(false);
   /** True for the developer's solo Amanda preview (see startAmandaSolo). */
   const soloAmandaRef = useRef(false);
+  /**
+   * The playground: no clock, both boards yours, every card in the game on tap.
+   * It is a workbench, not a match — nothing here is saved, rated or rewarded.
+   */
+  const [playground, setPlayground] = useState(false);
+  const [editSide, setEditSide] = useState<EditSide>("me");
+  /** The board on the other half, built by hand instead of by the AI. */
+  const [foe, setFoe] = useState<BoardView>({ placements: {}, king: null });
   /** Cards drawn ahead by "triple draw", offered before the deck is touched. */
   const [extraHand, setExtraHand] = useState<string[]>([]);
   /** First cell picked by a two-step action, waiting for its partner. */
@@ -541,6 +608,19 @@ export function useMatch(): MatchApi {
   stackedRef.current = stacked;
   const mySideRef = useRef(mySide);
   mySideRef.current = mySide;
+  const playgroundRef = useRef(playground);
+  playgroundRef.current = playground;
+  const editSideRef = useRef(editSide);
+  editSideRef.current = editSide;
+  const foeRef = useRef(foe);
+  foeRef.current = foe;
+  /**
+   * The two boards as they were before the battle filled their holes.
+   * Coming back from a playground battle has to return the boards you BUILT,
+   * not the boards that fought — otherwise every run leaves another layer of
+   * Crumb Demons behind and the next test measures something else.
+   */
+  const benchRef = useRef<{ mine: GameState; foe: BoardView } | null>(null);
   const netRef = useRef<Net | null>(null);
 
   const gsRef = useRef(gs);
@@ -573,6 +653,30 @@ export function useMatch(): MatchApi {
       if (frozenRef.current > 0) return; // frozen hands: hold it, do not place it
       const key = cellKey(x, y);
       const s = gsRef.current;
+
+      /*
+       * In the playground a cell is a slot you edit, not a card you spend.
+       * The picked card STAYS in hand so a board can be filled by tapping,
+       * and tapping a filled cell with nothing picked clears it — which is
+       * the only sensible "undo" when there is no deck to put it back into.
+       */
+      if (playgroundRef.current) {
+        const enemy = editSideRef.current === "enemy";
+        const held = s.hand !== null && isMonsterId(s.hand) ? s.hand : null;
+        const occupied = enemy ? foeRef.current.placements[key] : s.placements[key];
+        if (!held && !occupied) return;
+        const write = (places: Record<string, string>) => {
+          const next = { ...places };
+          if (held) next[key] = held;
+          else delete next[key];
+          return next;
+        };
+        if (enemy) setFoe((f) => ({ ...f, placements: write(f.placements) }));
+        else setGs((cur) => ({ ...cur, placements: write(cur.placements) }));
+        sfx.play(held ? "place" : "discard");
+        return;
+      }
+
       if (s.hand === null || !isMonsterId(s.hand)) return;
 
       // Stacking: "ground floor" lets a card go on TOP of one already placed,
@@ -598,6 +702,21 @@ export function useMatch(): MatchApi {
 
   const placeKing = useCallback(() => {
     if (frozenRef.current > 0) return;
+
+    // Playground: the crown is editable too, and re-crowning replaces rather
+    // than refusing — there is no "you already chose" when you are testing.
+    if (playgroundRef.current) {
+      const held = gsRef.current.hand;
+      const monster = held !== null && isMonsterId(held) ? held : null;
+      const enemy = editSideRef.current === "enemy";
+      const current = enemy ? foeRef.current.king : gsRef.current.king;
+      if (!monster && !current) return;
+      if (enemy) setFoe((f) => ({ ...f, king: monster }));
+      else setGs((s) => ({ ...s, king: monster }));
+      sfx.play(monster ? "place" : "discard");
+      return;
+    }
+
     let ok = false;
     setGs((s) => {
       if (s.hand === null || !isMonsterId(s.hand) || s.king !== null) return s;
@@ -954,6 +1073,10 @@ export function useMatch(): MatchApi {
     setFrozenFor(0);
     setCoop(false);
     soloAmandaRef.current = false;
+    setPlayground(false);
+    setEditSide("me");
+    setFoe({ placements: {}, king: null });
+    benchRef.current = null;
     setReady(false);
     setOppReady(false);
     setShielded(false);
@@ -1075,6 +1198,78 @@ export function useMatch(): MatchApi {
     [startOnline],
   );
 
+  /**
+   * The playground.
+   *
+   * Or's ask, plainly: a game with no clock where you build BOTH sides out of
+   * the whole catalogue and watch what it does. So there is no countdown, no
+   * panic, no fog and no opponent — the second board is simply the one you are
+   * not editing right now. Straight into "build", because waiting three
+   * seconds to start a sandbox is three seconds of nothing.
+   */
+  const startPlayground = useCallback(() => {
+    sfx.unlock();
+    sfx.play("click");
+    clearMatch();
+    setPlayground(true);
+    setEditSide("me");
+    setFoe({ placements: {}, king: null });
+    benchRef.current = null;
+    setPhase("build");
+  }, [clearMatch]);
+
+  /** Any card, straight into the hand. It stays there until it is swapped. */
+  const pickCard = useCallback((cardId: string | null) => {
+    if (!playgroundRef.current) return;
+    // null is the eraser: an empty hand is what makes a tap remove a card.
+    if (cardId !== null && !isMonsterId(cardId) && !isActionId(cardId)) return;
+    setGs((s) => ({ ...s, hand: cardId }));
+    sfx.play(cardId === null ? "click" : "draw");
+  }, []);
+
+  const clearSide = useCallback((side: EditSide) => {
+    if (side === "enemy") setFoe({ placements: {}, king: null });
+    else setGs((s) => ({ ...s, placements: {}, king: null }));
+    sfx.play("discard");
+  }, []);
+
+  /**
+   * Fight the two boards as built.
+   *
+   * Both halves go through the same filling the real game does — empty slots
+   * become Crumb Demons, a board with no crown promotes its best card — so
+   * what you see here is what those cards would really do to each other.
+   */
+  const startBenchBattle = useCallback(() => {
+    const mine = fillGs(gsRef.current, barRef.current);
+    benchRef.current = { mine: gsRef.current, foe: foeRef.current };
+    setGs(mine);
+    setTargeting(null);
+    const r = runBattle({
+      seed: BATTLE_SEED,
+      catalog: CATALOG,
+      synergies: SYNERGIES,
+      a: buildPlayerBoard(mine, modsRef.current, stackedRef.current),
+      b: buildBenchBoard(foeRef.current, "B"),
+      recordFrames: true,
+    });
+    setResult(r);
+    sfx.play("go");
+    setPhase("battle");
+  }, []);
+
+  /** Back to the bench, with the boards you built — not the ones that fought. */
+  const backToPlayground = useCallback(() => {
+    const kept = benchRef.current;
+    if (kept) {
+      setGs(kept.mine);
+      setFoe(kept.foe);
+    }
+    setResult(null);
+    sfx.play("click");
+    setPhase("build");
+  }, []);
+
   const finishBattle = useCallback(() => {
     const w = result?.winner;
     sfx.play(w === mySideRef.current ? "win" : "lose");
@@ -1103,10 +1298,13 @@ export function useMatch(): MatchApi {
   }, [clearMatch, startOnline]);
 
   useEffect(() => {
+    // "בלי הגבלת זמן" means the clock does not run at all, not that it runs
+    // and is hidden — a timer ticking to zero would end the sandbox.
+    if (playground) return;
     if (!["countdown", "build", "panic", "prebattle"].includes(phase)) return;
     const id = setInterval(() => setTimeLeft((t) => Math.max(0, t - 0.1)), 100);
     return () => clearInterval(id);
-  }, [phase]);
+  }, [phase, playground]);
 
   /** Tick the freeze down on its own clock, so it lasts five real seconds. */
   useEffect(() => {
@@ -1123,7 +1321,7 @@ export function useMatch(): MatchApi {
   useEffect(() => {
     if (timeLeft > 0) return;
     // Online: the server drives phase changes; the local timer is display-only.
-    if (online) return;
+    if (online || playground) return;
     if (phase === "countdown") {
       setPhase("build");
       setTimeLeft(PHASES.build.seconds);
@@ -1136,7 +1334,7 @@ export function useMatch(): MatchApi {
     } else if (phase === "prebattle") {
       startBattle();
     }
-  }, [timeLeft, phase, online, enterPrebattle, startBattle]);
+  }, [timeLeft, phase, online, playground, enterPrebattle, startBattle]);
 
   /*
    * A ready player who carries on building must not fight with the board they
@@ -1160,7 +1358,8 @@ export function useMatch(): MatchApi {
   const revealOpponentCell = useCallback(
     (x: number, _y: number): boolean => {
       // Online: the server already fogs the opponent view, so show all it sent.
-      if (online) return true;
+      // Playground: you built that board, so hiding it from you is absurd.
+      if (online || playgroundRef.current) return true;
       if (xrayActive) return true;
       if (phase === "build") return x === 3;
       if (phase === "panic" || phase === "prebattle") return x >= 1;
@@ -1169,9 +1368,12 @@ export function useMatch(): MatchApi {
     [phase, xrayActive, online],
   );
 
-  // Opponent board: online → server-sent fogged view; vs-AI → the AI plan built over time.
+  // Opponent board: online → server-sent fogged view; vs-AI → the AI plan built
+  // over time; playground → the board you built yourself on the other half.
   let opponentView: BoardView;
-  if (online) {
+  if (playground) {
+    opponentView = foe;
+  } else if (online) {
     opponentView = netOpp;
   } else {
     const plan = aiPlanRef.current;
@@ -1211,7 +1413,7 @@ export function useMatch(): MatchApi {
     hasKing: gs.king !== null,
     opponent: opponentView,
     revealOpponentCell,
-    revealOpponentKing: xrayActive || phase === "panic" || phase === "prebattle",
+    revealOpponentKing: playground || xrayActive || phase === "panic" || phase === "prebattle",
     actionBar: actionBar.map((id) => ({ id, used: !!usedActions[id], passive: isPassiveAction(id) })),
     barFull: actionBar.length >= ACTION_SLOTS,
     targeting,
@@ -1226,6 +1428,13 @@ export function useMatch(): MatchApi {
     mySide,
     oppLeft,
     iWon: result != null && result.winner === mySide,
+    playground,
+    editSide,
+    setEditSide,
+    startPlayground,
+    pickCard,
+    clearSide,
+    backToPlayground,
     takeAction,
     activateAction,
     applyTargetCell,
@@ -1242,7 +1451,9 @@ export function useMatch(): MatchApi {
     takeDiscard,
     placeAt,
     placeKing,
-    toBattle: enterPrebattle,
+    // The playground skips the lock-and-count-down ceremony: you press fight,
+    // it fights, and you can stop it again a second later.
+    toBattle: playground ? startBenchBattle : enterPrebattle,
     ready,
     oppReady,
     toggleReady,

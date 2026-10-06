@@ -25,6 +25,8 @@ import { ActionDetailModal } from "./components/ActionDetailModal";
 import { Arena } from "./components/Arena";
 import { ErrorBoundary } from "./components/ErrorBoundary";
 import { CardGallery } from "./components/CardGallery";
+import { CardPicker } from "./components/CardPicker";
+import { MoreModes } from "./components/MoreModes";
 import { ArenaPreview } from "./components/ArenaPreview";
 import { BattleLog } from "./components/BattleLog";
 
@@ -55,6 +57,35 @@ function verdictText(result: BattleResult, iWon: boolean): string {
     case "coinFlip":
       return "נגמר הזמן והכול יצא שווה לחלוטין — הוכרע בהטלת מטבע.";
   }
+}
+
+/**
+ * A board's header in the playground: which half you are editing, and a way
+ * to empty it. Both boards are yours there, so the label has to be a control
+ * rather than a caption.
+ */
+function LabSideLabel({
+  name,
+  on,
+  onPick,
+  onClear,
+}: {
+  name: string;
+  on: boolean;
+  onPick: () => void;
+  onClear: () => void;
+}) {
+  return (
+    <span className="lab-side">
+      <button className={`lab-side__pick${on ? " lab-side__pick--on" : ""}`} onClick={onPick}>
+        {on ? "✎ " : ""}
+        {name}
+      </button>
+      <button className="lab-side__clear" onClick={onClear} title={`לרוקן את ${name}`}>
+        נקה
+      </button>
+    </span>
+  );
 }
 
 /** Vite serves the app under /amanda/ on Pages and / in dev. */
@@ -154,6 +185,7 @@ function Game() {
   const [profileOpen, setProfileOpen] = useState(false);
   /** "Bring a friend" opens three ways to do it rather than guessing one. */
   const [friendOpen, setFriendOpen] = useState(false);
+  const [modesOpen, setModesOpen] = useState(false);
   /** Turned off for the session the moment the clip fails to load. */
   const [idleOk, setIdleOk] = useState(true);
   /*
@@ -195,12 +227,12 @@ function Game() {
   const [teaching, setTeaching] = useState(false);
   const taughtRef = useRef(false);
   useEffect(() => {
-    if (taughtRef.current || m.phase !== "build") return;
+    if (taughtRef.current || m.phase !== "build" || m.playground) return;
     const seen = m.account ? m.account.tutorialDone : tutorialSeenLocally();
     if (seen) return;
     taughtRef.current = true;
     setTeaching(true);
-  }, [m.phase, m.account]);
+  }, [m.phase, m.account, m.playground]);
 
   /*
    * She comments on the card you actually drew, not on a script. Each line is
@@ -340,13 +372,13 @@ function Game() {
    */
   const [phaseCard, setPhaseCard] = useState<string | null>(null);
   useEffect(() => {
-    if (!["build", "panic", "battle"].includes(m.phase)) return;
+    if (m.playground || !["build", "panic", "battle"].includes(m.phase)) return;
     // The battle announcement is a moment, so it gets the variants treatment
     // the other moments have; build and panic keep their one name.
     setPhaseCard(m.phase === "battle" ? V.pick(V.BATTLE_PHASE) : (PHASE_LABEL[m.phase] ?? null));
     const t = window.setTimeout(() => setPhaseCard(null), 1700);
     return () => window.clearTimeout(t);
-  }, [m.phase]);
+  }, [m.phase, m.playground]);
 
   return (
     <div className="app">
@@ -373,11 +405,16 @@ function Game() {
             {m.roomCode ? "מחכה לחבר שלך…" : PHASE_LABEL[m.phase]}
           </div>
         )}
-        {(m.phase === "build" || m.phase === "panic") && (
-          <div className="topbar__timer">
-            <Icon name="timer" size={15} /> {Math.ceil(m.timeLeft)}s
-          </div>
-        )}
+        {(m.phase === "build" || m.phase === "panic") &&
+          (m.playground ? (
+            <div className="topbar__timer topbar__timer--free">
+              <Icon name="stacked" size={15} /> מעבדה · בלי שעון
+            </div>
+          ) : (
+            <div className="topbar__timer">
+              <Icon name="timer" size={15} /> {Math.ceil(m.timeLeft)}s
+            </div>
+          ))}
         <div className="topbar__right">
           {m.phase !== "intro" && (
             <button
@@ -545,6 +582,17 @@ function Game() {
             <button className="btn-album" onClick={() => setAlbumOpen(true)}>
               <Icon name="deck" size={20} /> האלבום שלי
             </button>
+            {/* The two side doors: a workbench, and a shelf of what is coming.
+                Deliberately smaller than the two ways to actually play — they
+                sit beside the game, not in front of it. */}
+            <div className="extras">
+              <button className="btn-modes" onClick={() => setModesOpen(true)}>
+                <Icon name="monster" size={18} /> עוד מודים
+              </button>
+              <button className="btn-lab" onClick={m.startPlayground} title="בלי שעון, שני הצדדים שלך">
+                <Icon name="stacked" size={15} /> מגרש המשחקים
+              </button>
+            </div>
             {joining && (
               <form
                 className="join"
@@ -648,12 +696,27 @@ function Game() {
         <main
           className={`build${m.phase === "panic" ? " build--panic" : ""}${
             m.targeting ? " build--targeting" : ""
-          }${actionsOpen ? " build--drawer" : ""}`}
+          }${actionsOpen ? " build--drawer" : ""}${m.playground ? " build--lab" : ""}`}
         >
           <div className="boards">
-            <section className={`side side--me${m.frozenFor > 0 ? " side--frozen" : ""}`}>
+            <section
+              className={`side side--me${m.frozenFor > 0 ? " side--frozen" : ""}${
+                m.playground && m.editSide === "me" ? " side--editing" : ""
+              }`}
+            >
               <div className="side__label">
-                {m.coop ? "החצי שלך" : "אתה"} <span className="side__way">⟵</span>
+                {m.playground ? (
+                  <LabSideLabel
+                    name="הצד שלך"
+                    on={m.editSide === "me"}
+                    onPick={() => m.setEditSide("me")}
+                    onClear={() => m.clearSide("me")}
+                  />
+                ) : (
+                  <>
+                    {m.coop ? "החצי שלך" : "אתה"} <span className="side__way">⟵</span>
+                  </>
+                )}
               </div>
               {m.frozenFor > 0 && (
                 <div className="frozen" role="status">
@@ -667,7 +730,9 @@ function Game() {
                 placements={m.placements}
                 king={m.king}
                 side="left"
-                interactive={interactive}
+                // In the lab the board you are not editing is still a picture.
+                interactive={interactive && (!m.playground || m.editSide === "me")}
+                editing={m.playground && m.editSide === "me"}
                 handActive={m.hand !== null}
                 mods={m.mods}
                 targeting={m.targeting !== null && !isEnemyTargeted(m.targeting)}
@@ -688,10 +753,25 @@ function Game() {
               <Icon name="power" size={22} />
             </div>
 
-            <section className="side side--enemy">
+            <section
+              className={`side side--enemy${
+                m.playground && m.editSide === "enemy" ? " side--editing" : ""
+              }`}
+            >
               <div className="side__label">
-                <span className="side__way">⟶</span> {m.coop ? "אמנדה" : "היריב"}{" "}
-                {m.phase !== "build" && <span className="side__revealed">נחשף!</span>}
+                {m.playground ? (
+                  <LabSideLabel
+                    name="הצד שמולך"
+                    on={m.editSide === "enemy"}
+                    onPick={() => m.setEditSide("enemy")}
+                    onClear={() => m.clearSide("enemy")}
+                  />
+                ) : (
+                  <>
+                    <span className="side__way">⟶</span> {m.coop ? "אמנדה" : "היריב"}{" "}
+                    {m.phase !== "build" && <span className="side__revealed">נחשף!</span>}
+                  </>
+                )}
               </div>
               <BoardGrid
                 placements={m.opponent.placements}
@@ -701,9 +781,18 @@ function Game() {
                 revealKing={m.revealOpponentKing}
                 onCardInfo={openInfo}
                 targeting={m.targeting !== null && isEnemyTargeted(m.targeting)}
-                interactive={m.targeting !== null && isEnemyTargeted(m.targeting)}
+                interactive={
+                  (m.playground && m.editSide === "enemy") ||
+                  (m.targeting !== null && isEnemyTargeted(m.targeting))
+                }
+                handActive={m.playground && m.hand !== null}
+                editing={m.playground && m.editSide === "enemy"}
                 onTarget={m.applyTargetCell}
                 onTargetKing={m.applyTargetKing}
+                // The lab writes into whichever board is being edited, so the
+                // same two calls serve both halves (see placeAt).
+                onCellClick={m.playground ? (x, y) => m.placeAt(x, y) : undefined}
+                onKingClick={m.playground ? m.placeKing : undefined}
               />
             </section>
           </div>
@@ -773,7 +862,59 @@ function Game() {
             </div>
           )}
 
-          {interactive && (
+          {interactive && m.playground && (
+            <aside className="lab">
+              <div className="lab__head">
+                <strong>מעבדת ניסויים</strong>
+                <span className="lab__note">
+                  בלי שעון. שני הצדדים שלך, הכול ברמה 1, שום דבר לא נשמר.
+                </span>
+              </div>
+              <div className="lab__hold">
+              <div className="lab__held">
+                {m.hand ? (
+                  m.handIsAction ? (
+                    <ActionCardView
+                      actionId={m.hand}
+                      size="large"
+                      onClick={() => setActionDetail(m.hand!)}
+                      onInfo={() => setActionDetail(m.hand!)}
+                    />
+                  ) : (
+                    <CardView
+                      cardId={m.hand}
+                      size="large"
+                      onClick={() => openInfo(m.hand!)}
+                      onInfo={() => openInfo(m.hand!)}
+                    />
+                  )
+                ) : (
+                  <div className="lab__eraser">
+                    🧽
+                    <span>מצב מחיקה — גע בקלף על הלוח כדי להוריד אותו</span>
+                  </div>
+                )}
+              </div>
+              <div className="lab__buttons">
+                {m.handIsAction && (
+                  <button className="take-action" onClick={m.takeAction} disabled={m.barFull}>
+                    {m.barFull ? "הבר מלא" : "➕ קח לפעולה"}
+                  </button>
+                )}
+                <button className="btn-fight" onClick={m.toBattle}>
+                  ▶ הרץ קרב
+                </button>
+              </div>
+              </div>
+              <CardPicker
+                picked={m.hand}
+                onPick={m.pickCard}
+                onInfo={(id) => (ACTIONS.has(id) ? setActionDetail(id) : openInfo(id))}
+              />
+            </aside>
+          )}
+
+          {interactive && !m.playground && (
             <aside className="hand">
               <div className="hand__current">
                 {!m.hand ? (
@@ -916,6 +1057,14 @@ function Game() {
               verdict={verdictText(m.result, m.iWon)}
             />
           </ErrorBoundary>
+          {/* "ולעצור את הקרב בכל רגע נתון" — straight back to the boards you
+              built, mid-blow if you like. A lab you cannot interrupt is just a
+              slow match. */}
+          {m.playground && (
+            <button className="lab__stop" onClick={m.backToPlayground}>
+              ⏹ עצור וחזור ללוח
+            </button>
+          )}
         </main>
       )}
 
@@ -924,7 +1073,10 @@ function Game() {
         <main className="result">
           <div className={`result__card result__card--${m.iWon ? "win" : "lose"}`}>
             <Icon name={m.iWon ? "win" : "lose"} size={96} className="result__crest" />
-            <h1>{winnerText}</h1>
+            {/* In the lab there is no winner, only a reading. Crowning the
+                player for a board they also built for the other side would be
+                nonsense, and the taunts are aimed at an opponent who is them. */}
+            <h1>{m.playground ? (m.iWon ? "הצד שלך החזיק" : "הצד שמולך החזיק") : winnerText}</h1>
             {m.result && (
               <>
                 <p className="result__verdict">{verdictText(m.result, m.iWon)}</p>
@@ -935,9 +1087,15 @@ function Game() {
               </>
             )}
             <div className="result__buttons">
-              <button className="btn-fight" onClick={m.playAgain}>
-                🔄 משחק חדש
-              </button>
+              {m.playground ? (
+                <button className="btn-fight" onClick={m.backToPlayground}>
+                  ← חזרה ללוח
+                </button>
+              ) : (
+                <button className="btn-fight" onClick={m.playAgain}>
+                  🔄 משחק חדש
+                </button>
+              )}
               <button className="btn-fight btn-ghost" onClick={m.reset}>
                 ☰ תפריט
               </button>
@@ -1020,6 +1178,14 @@ function Game() {
           account={m.account}
           onClose={() => setProfileOpen(false)}
           onChanged={() => m.reloadAccount()}
+        />
+      )}
+
+      {modesOpen && (
+        <MoreModes
+          onClose={() => setModesOpen(false)}
+          onPlayground={m.startPlayground}
+          onAmandaSolo={m.startAmandaSolo}
         />
       )}
 

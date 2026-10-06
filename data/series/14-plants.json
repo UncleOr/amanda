@@ -64,7 +64,7 @@
       },
       "art": {
         "placeholderColor": "#6fbf3b",
-        "sprite": null
+        "sprite": "cards/plants_01_thorn_sprout.webp"
       },
       "launch": false
     },

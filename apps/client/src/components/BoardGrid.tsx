@@ -31,6 +31,14 @@ interface Props {
   dragOver?: string | null;
   /** True while a card is being dragged — marks legal empty slots. */
   dragging?: boolean;
+  /**
+   * Playground: a tap on a FILLED cell edits it — replaces it with the card in
+   * hand, or clears it when the hand is empty — instead of opening the card.
+   * In a real match a placed card is final, so a tap there can only mean "let
+   * me look at it"; on the bench nothing is final and the opposite is true.
+   * The ℹ corner still opens the card either way.
+   */
+  editing?: boolean;
   /** Cells with a second card hidden underneath (Ground Floor). */
   stacked?: Record<string, string>;
   /** How many more cells may still be stacked onto. */
@@ -69,6 +77,7 @@ export function BoardGrid({
   onTargetKing,
   dragOver = null,
   dragging = false,
+  editing = false,
   stacked = {},
   stackSlots = 0,
   stackCorners = false,
@@ -117,7 +126,8 @@ export function BoardGrid({
           }
           // Looking at a card is always allowed — including the opponent's,
           // once it has been revealed. Only placing one needs an active turn.
-          if (king && revealKing) onCardInfo?.(king);
+          if (editing && interactive) onKingClick?.();
+          else if (king && revealKing) onCardInfo?.(king);
           else if (interactive && !king) onKingClick?.();
         }}
       >
@@ -165,7 +175,7 @@ export function BoardGrid({
               // you already placed stacks onto it rather than opening it — the
               // ℹ button is still there for a closer look.
               const canStack = interactive && handActive && stackableHere(key, occ);
-              if (canStack) {
+              if (canStack || (editing && interactive)) {
                 onCellClick?.(x, y);
                 return;
               }

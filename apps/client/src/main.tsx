@@ -2,6 +2,9 @@ import { StrictMode } from "react";
 import { createRoot } from "react-dom/client";
 import App from "./App";
 import "./styles.css";
+// The playground has its own sheet — it is a workbench bolted to the side of
+// the game, and keeping it separate keeps that visible.
+import "./lab.css";
 
 createRoot(document.getElementById("root")!).render(
   <StrictMode>

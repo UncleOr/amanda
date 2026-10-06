@@ -19,7 +19,9 @@
     "copy:apply": "node scripts/copy-apply.mjs",
     "art:brand": "pnpm --filter @amanda/art brand",
     "art:icons-set": "pnpm --filter @amanda/art icons-set",
-    "art:animate": "pnpm --filter @amanda/art animate"
+    "art:animate": "pnpm --filter @amanda/art animate",
+    "art:sounds": "pnpm --filter @amanda/art sounds",
+    "art:sounds-process": "pnpm --filter @amanda/art sounds-process"
   },
   "engines": {
     "node": ">=20"

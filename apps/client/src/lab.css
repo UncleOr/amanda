@@ -1,0 +1,432 @@
+/*
+ * The playground, and the two side doors on the home screen that lead to it.
+ *
+ * Kept out of styles.css on purpose: this is a workbench, not part of the
+ * game's look, and it should be possible to see at a glance how much of the
+ * stylesheet exists only to serve it.
+ *
+ * Deliberately cooler and flatter than the battle screens. Nothing here is
+ * scored, so nothing here glows gold — the accent is spent on one thing only,
+ * the board currently being edited.
+ */
+
+.build--lab .boards {
+  padding-bottom: 2px;
+}
+
+.topbar__timer--free {
+  color: #8fd3ff;
+  border-color: rgba(143, 211, 255, 0.4);
+  background: rgba(143, 211, 255, 0.1);
+}
+
+/* ---- each board's header becomes a switch ---- */
+.lab-side {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+}
+.lab-side__pick {
+  padding: 3px 11px;
+  border-radius: 999px;
+  border: 1px solid rgba(255, 255, 255, 0.16);
+  background: rgba(10, 16, 28, 0.7);
+  color: inherit;
+  font: inherit;
+  font-weight: 800;
+  cursor: pointer;
+}
+.lab-side__pick--on {
+  border-color: var(--accent);
+  background: rgba(255, 176, 32, 0.16);
+  color: var(--accent);
+}
+.lab-side__clear {
+  padding: 3px 9px;
+  border-radius: 999px;
+  border: 1px solid var(--line);
+  background: transparent;
+  color: var(--muted);
+  font: inherit;
+  font-size: 11px;
+  cursor: pointer;
+}
+.lab-side__clear:hover {
+  color: var(--danger);
+  border-color: var(--danger);
+}
+
+/* The half being edited is the one that is lit. */
+.side--editing .board {
+  outline: 2px solid rgba(255, 176, 32, 0.55);
+  outline-offset: 3px;
+  border-radius: 12px;
+}
+
+/* ---- the bench ---- */
+.lab {
+  flex-shrink: 0;
+  display: grid;
+  grid-template-columns: auto 1fr;
+  grid-template-rows: auto minmax(0, 1fr);
+  grid-template-areas:
+    "head head"
+    "hold rack";
+  gap: 8px 14px;
+  padding: 8px 14px 10px;
+  background: var(--panel);
+  border-top: 1px solid var(--line);
+  height: 46dvh;
+  min-height: 0;
+}
+/* The card in hand and the two buttons under it, as one column. They used to
+   be two grid rows beside a rack that is much taller, so the grid stretched
+   them apart and the fight button drifted to the floor. */
+.lab__hold {
+  grid-area: hold;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  min-height: 0;
+}
+.lab__head {
+  grid-area: head;
+  display: flex;
+  align-items: baseline;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+.lab__head strong {
+  color: #8fd3ff;
+  font-size: 14px;
+}
+.lab__note {
+  color: var(--muted);
+  font-size: 12px;
+}
+.lab__held {
+  flex: none;
+  width: 104px;
+  height: 135px;
+}
+.lab__eraser {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  padding: 8px;
+  text-align: center;
+  font-size: 22px;
+  color: var(--muted);
+  border: 1.5px dashed var(--line);
+  border-radius: 10px;
+}
+.lab__eraser span {
+  font-size: 10px;
+  line-height: 1.3;
+}
+.lab__buttons {
+  flex: none;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  width: 104px;
+}
+.lab__buttons .btn-fight,
+.lab__buttons .take-action {
+  width: 100%;
+  padding: 8px 6px;
+  font-size: 13px;
+}
+
+/* ---- the card rack: every card in the game, always ---- */
+.rack {
+  grid-area: rack;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  min-width: 0;
+  min-height: 0;
+  max-height: 100%;
+}
+.rack__bar {
+  flex: none;
+  display: flex;
+  gap: 8px;
+  align-items: center;
+}
+.rack__erase {
+  padding: 5px 12px;
+  border-radius: 999px;
+  border: 1px solid var(--line);
+  background: transparent;
+  color: var(--muted);
+  font: inherit;
+  font-size: 12px;
+  font-weight: 700;
+  cursor: pointer;
+  white-space: nowrap;
+}
+.rack__erase--on {
+  border-color: #8fd3ff;
+  background: rgba(143, 211, 255, 0.14);
+  color: #8fd3ff;
+}
+.rack__search {
+  flex: 1;
+  min-width: 0;
+  padding: 5px 12px;
+  border-radius: 999px;
+  border: 1px solid var(--line);
+  background: rgba(8, 12, 22, 0.8);
+  color: var(--text);
+  font: inherit;
+  font-size: 13px;
+}
+.rack__tabs {
+  flex: none;
+  display: flex;
+  gap: 5px;
+  overflow-x: auto;
+  scrollbar-width: none;
+  padding-bottom: 2px;
+}
+.rack__tabs::-webkit-scrollbar {
+  display: none;
+}
+.rack__tab {
+  flex: none;
+  padding: 4px 11px;
+  border-radius: 999px;
+  border: 1px solid var(--line);
+  background: transparent;
+  color: var(--muted);
+  font: inherit;
+  font-size: 12px;
+  cursor: pointer;
+  white-space: nowrap;
+}
+.rack__tab--on {
+  border-color: var(--accent);
+  color: var(--accent);
+  background: rgba(255, 176, 32, 0.12);
+}
+.rack__scroll {
+  flex: 1;
+  min-height: 0;
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  padding-inline-end: 4px;
+}
+.rack__group h4 {
+  margin: 6px 0 4px;
+  font-size: 11px;
+  font-weight: 800;
+  color: var(--muted);
+  letter-spacing: 0.04em;
+}
+.rack__row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+.rack__card {
+  width: 58px;
+  padding: 2px;
+  border-radius: 9px;
+  border: 1.5px solid transparent;
+  background: transparent;
+  cursor: pointer;
+  transition:
+    transform 110ms ease,
+    border-color 110ms ease;
+}
+.rack__card:hover {
+  transform: translateY(-2px);
+  border-color: rgba(255, 255, 255, 0.2);
+}
+.rack__card--on {
+  border-color: var(--accent);
+  background: rgba(255, 176, 32, 0.14);
+}
+.rack__card .card {
+  width: 100%;
+  height: auto;
+  aspect-ratio: 1 / 1.3;
+}
+.rack__none {
+  color: var(--muted);
+  font-size: 13px;
+  padding: 12px 2px;
+}
+
+/* Stop a battle mid-blow and go straight back to the boards. */
+.lab__stop {
+  position: absolute;
+  top: 10px;
+  inset-inline-start: 50%;
+  transform: translateX(50%);
+  z-index: 30;
+  padding: 7px 18px;
+  border-radius: 999px;
+  border: 1px solid rgba(143, 211, 255, 0.55);
+  background: rgba(8, 14, 26, 0.88);
+  color: #8fd3ff;
+  font: inherit;
+  font-weight: 800;
+  font-size: 14px;
+  cursor: pointer;
+}
+.lab__stop:hover {
+  background: rgba(143, 211, 255, 0.18);
+}
+
+/* ---- the two side doors on the home screen ---- */
+.extras {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+  margin-top: 12px;
+}
+/* Medium: a real door, just not the front one. */
+.btn-modes {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 9px 20px;
+  border-radius: 13px;
+  border: 1px solid rgba(143, 211, 255, 0.45);
+  background: linear-gradient(180deg, rgba(143, 211, 255, 0.16), rgba(143, 211, 255, 0.06));
+  color: #bfe4ff;
+  font-weight: 800;
+  font-size: 15px;
+  cursor: pointer;
+  transition:
+    transform 140ms ease,
+    box-shadow 140ms ease;
+}
+.btn-modes:hover {
+  transform: translateY(-2px);
+  box-shadow:
+    0 10px 24px rgba(0, 0, 0, 0.45),
+    0 0 18px rgba(143, 211, 255, 0.22);
+}
+/* Small: a workbench in the corner of the room. */
+.btn-lab {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 5px 14px;
+  border-radius: 999px;
+  border: 1px dashed rgba(255, 255, 255, 0.24);
+  background: transparent;
+  color: var(--muted);
+  font-weight: 700;
+  font-size: 12.5px;
+  cursor: pointer;
+}
+.btn-lab:hover {
+  color: var(--text);
+  border-color: rgba(255, 255, 255, 0.45);
+}
+
+/* ---- the shelf of modes that do not exist yet ---- */
+.modal--modes {
+  max-width: 560px;
+}
+.modes__title {
+  margin: 0 0 2px;
+  font-size: 24px;
+}
+.modes__lead {
+  margin: 0 0 14px;
+  color: var(--muted);
+  font-size: 13px;
+}
+.modes__list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 9px;
+}
+.modes__row {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 10px 12px;
+  border-radius: 13px;
+  border: 1px solid var(--line);
+  background: rgba(10, 16, 28, 0.55);
+}
+.modes__row--soon {
+  opacity: 0.6;
+  border-style: dashed;
+}
+.modes__icon {
+  flex: none;
+  color: var(--accent);
+  display: flex;
+}
+.modes__text {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+.modes__text b {
+  font-size: 15px;
+}
+.modes__text small {
+  color: var(--muted);
+  font-size: 12px;
+  line-height: 1.35;
+}
+.modes__go {
+  flex: none;
+  padding: 7px 16px;
+  font-size: 13px;
+}
+.modes__soon {
+  flex: none;
+  padding: 4px 11px;
+  border-radius: 999px;
+  border: 1px dashed var(--line);
+  color: var(--muted);
+  font-size: 11px;
+  font-weight: 800;
+}
+
+/*
+ * On a phone the bench puts the held card and its buttons side by side next
+ * to the rack, so the rack keeps a height worth scrolling.
+ */
+@media (max-height: 560px), (max-width: 720px) {
+  .lab {
+    height: 52dvh;
+    padding: 6px 10px 8px;
+  }
+  .lab__hold {
+    flex-direction: row;
+    align-items: flex-start;
+  }
+  .lab__held {
+    width: 68px;
+    height: 88px;
+  }
+  .lab__buttons {
+    width: 84px;
+  }
+  .lab__note {
+    display: none;
+  }
+  .rack__card {
+    width: 48px;
+  }
+}

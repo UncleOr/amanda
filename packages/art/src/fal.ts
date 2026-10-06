@@ -99,6 +99,30 @@ export async function animate(
   return res.data?.video?.url ?? null;
 }
 
+/**
+ * A single sound effect, from a sentence describing it.
+ *
+ * Or's note on the old sounds: "a 386 could make these out of the CPU with no
+ * speakers". They were literally square and sawtooth oscillators, so he was
+ * right. These are recorded-sounding instead, which no amount of Web Audio
+ * will ever be.
+ */
+export async function sound(
+  prompt: string,
+  opts: { seconds?: number; influence?: number } = {},
+): Promise<string | null> {
+  const res = (await fal.subscribe("fal-ai/elevenlabs/sound-effects", {
+    input: {
+      text: prompt,
+      duration_seconds: opts.seconds ?? 1.5,
+      // How literally to take the words. High, because these are specific
+      // requests ("a card slapped on wood"), not moods.
+      prompt_influence: opts.influence ?? 0.75,
+    },
+  })) as { data?: { audio?: { url?: string } } };
+  return res.data?.audio?.url ?? null;
+}
+
 /** Download a generated image to disk. */
 export async function download(url: string, destPath: string): Promise<void> {
   const res = await fetch(url);

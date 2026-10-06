@@ -4,7 +4,11 @@
  *   pnpm art:style          bake-off: 4 style directions × 3 test monsters (12 images)
  *   pnpm art:anchor <dir>   generate the style anchor for the chosen direction
  *   pnpm art:cards [series] generate every monster, anchored to the style anchor
+ *                           pass "all" instead of a series to include cards
+ *                           that have not launched (the playground shows them)
  *   pnpm art:card <cardId>  regenerate a single monster (for revision rounds)
+ *   pnpm art:sounds         generate the game's sound effects
+ *   pnpm art:sounds-process trim and level them into the client
  *
  * Output goes to assets/raw/… ; run `pnpm art:process` afterwards to compress
  * the approved images into the client.
@@ -17,6 +21,7 @@ import { STYLE_DIRECTIONS, TEST_MONSTERS } from "./styles.js";
 import { ARENA_LOOKS, buildArenaPrompt } from "./arenaLooks.js";
 import { BRAND_ASPECT, BRAND_LOOK, buildBrandPrompt } from "./brandLooks.js";
 import { ICON_LOOK, buildIconPrompt } from "./iconLooks.js";
+import { generateSounds, processSounds } from "./sounds.js";
 import { download, generate, generateWithReference, uploadFile } from "./fal.js";
 
 const RAW = join(REPO_ROOT, "assets", "raw");
@@ -74,12 +79,18 @@ async function cmdCards(styleId?: string, seriesFilter?: string): Promise<void> 
   console.log("\n⬆️  Uploading style anchor …");
   const anchorUrl = await uploadFile(ANCHOR_PATH);
 
-  const list = SERIES.filter((s) => !seriesFilter || s.id === seriesFilter);
+  /*
+   * "all" means every card in the data, launched or not. The playground shows
+   * the whole catalogue, so a card held back from launch is still a card a
+   * player can look at — and an empty frame there reads as a bug.
+   */
+  const everything = seriesFilter === "all";
+  const list = SERIES.filter((s) => everything || !seriesFilter || s.id === seriesFilter);
   console.log(`🖼️  Generating ${list.reduce((n, s) => n + s.cards.length, 0)} cards (style: ${dir.id})\n`);
 
   for (const series of list) {
     console.log(`── ${series.name.he} (${series.id})`);
-    for (const card of launchCards(series)) {
+    for (const card of everything ? series.cards : launchCards(series)) {
       const dest = join(RAW, series.id, `${card.id}.png`);
       if (existsSync(dest)) {
         console.log(`   ⏭  ${card.name.en} (exists)`);
@@ -245,9 +256,13 @@ const run = async () => {
       return cmdIconSet(args[0], args[1]);
     case "card":
       return cmdCard(args[0], args[1], ...args.slice(2));
+    case "sounds":
+      return generateSounds(args);
+    case "sounds-process":
+      return processSounds();
     default:
       console.log(
-        "Usage: style | anchor <style> | cards <style> [series] | card <cardId> <style> [notes…] | actions <style> | arena <style> | brand <style>",
+        "Usage: style | anchor <style> | cards <style> [series|all] | card <cardId> <style> [notes…] | actions <style> | arena <style> | brand <style> | sounds [ids…] | sounds-process",
       );
   }
 };

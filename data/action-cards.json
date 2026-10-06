@@ -186,8 +186,8 @@
     "rarity": "epic",
     "copiesInPack": 5,
     "description": {
-      "he": "מערבב רנדומלית את המיקומים של כל הקלפים שהיריב הניח בשורה הקדמית שלו.",
-      "en": "Randomly shuffles the positions of all cards in the enemy's front row."
+      "he": "מחליפה בין שני שומרי המלך של היריב, ובין שני הקלפים שבקצוות — השורה הקדמית נשארת, הסדר שלה לא.",
+      "en": "Swaps the enemy's two King guards with each other, and its two outer front cards with each other."
     },
     "effect": "shuffleEnemyFrontRow",
     "params": {},

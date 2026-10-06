@@ -1,8 +1,20 @@
 /**
- * Tiny self-contained sound engine. All sounds are synthesised with the Web
- * Audio API (oscillators + a noise buffer), so there are zero asset files to
- * ship and nothing to load. Must be unlocked from a user gesture (browser
- * autoplay policy) — call sfx.unlock() from the first click.
+ * The game's sounds.
+ *
+ * Recorded clips first, synthesis second. Or's verdict on the synthesis-only
+ * version: "they sound like a 386 making noise out of the CPU with no
+ * speakers — it could have been cool if that was our thing, but it isn't."
+ * The clips in `public/sfx` are generated (see `pnpm art:sounds`) and decoded
+ * into memory once, so playing one costs nothing and never lags behind the tap
+ * that caused it.
+ *
+ * THE OSCILLATORS ARE STILL HERE ON PURPOSE. They are what plays before the
+ * clips have finished loading, if a clip is missing, and on a connection too
+ * slow to have fetched them yet. A thin sound is a disappointment; silence
+ * where you expected a sound reads as a broken game.
+ *
+ * Must be unlocked from a user gesture (browser autoplay policy) — call
+ * sfx.unlock() from the first click.
  */
 type SoundName =
   | "click"
@@ -106,16 +118,60 @@ const RECIPES: Record<SoundName, () => void> = {
   lose: () => [392, 330, 262, 196].forEach((f, i) => tone(f, 260, { type: "sine", gain: 0.14, delayMs: i * 130 })),
 };
 
+/* ───────────── the recorded clips ───────────── */
+
+const BASE = import.meta.env.BASE_URL;
+/** Decoded and ready. A name missing from here falls back to the oscillators. */
+const buffers = new Map<SoundName, AudioBuffer>();
+let loading = false;
+
+/**
+ * Fetch and decode every clip, once.
+ *
+ * Deliberately fire-and-forget: nothing waits for it, nothing reports it, and
+ * every failure is swallowed per-sound rather than per-batch — one missing
+ * file must not cost the other twelve. Called from unlock(), because decoding
+ * needs an AudioContext and an AudioContext needs a gesture.
+ */
+function loadClips(): void {
+  if (loading) return;
+  loading = true;
+  const c = ac();
+  if (!c) return;
+  for (const name of Object.keys(RECIPES) as SoundName[]) {
+    void fetch(`${BASE}sfx/${name}.mp3`)
+      .then((r) => (r.ok ? r.arrayBuffer() : Promise.reject(new Error(String(r.status)))))
+      .then((buf) => c.decodeAudioData(buf))
+      .then((decoded) => buffers.set(name, decoded))
+      .catch(() => {
+        /* this one stays synthesised; see the note at the top */
+      });
+  }
+}
+
+function playClip(name: SoundName): boolean {
+  const c = ac();
+  const buf = c && buffers.get(name);
+  if (!c || !buf) return false;
+  const src = c.createBufferSource();
+  src.buffer = buf;
+  src.connect(c.destination);
+  src.start();
+  return true;
+}
+
 export const sfx = {
   unlock(): void {
     const c = ac();
     if (c && c.state === "suspended") void c.resume();
+    loadClips();
   },
   play(name: SoundName): void {
     if (muted) return;
     const c = ac();
     if (c && c.state === "suspended") void c.resume();
     try {
+      if (playClip(name)) return;
       RECIPES[name]();
     } catch {
       /* audio is best-effort */
