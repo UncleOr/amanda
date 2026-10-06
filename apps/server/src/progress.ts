@@ -14,25 +14,17 @@
  * do nothing at all and matches play exactly as they do today. A missing
  * database must never stop a game.
  */
-import { createClient, type SupabaseClient } from "@supabase/supabase-js";
+import type { SupabaseClient } from "@supabase/supabase-js";
 import type { Card } from "@amanda/shared";
 import { CATALOG } from "./content.js";
+/*
+ * One client for the whole process. This module used to build its own, which
+ * is how the admin endpoints came back to life while every match carried on
+ * saving nothing — see supabase.ts.
+ */
+import { CAN_SAVE, db } from "./supabase.js";
 
-const URL = process.env.SUPABASE_URL ?? "https://iiviygfltyrsonioyqxm.supabase.co";
-/** Secret. Set in the host's environment, never in the repo. */
-const SERVICE_KEY = process.env.SUPABASE_SERVICE_KEY ?? "";
-
-export const PROGRESS_ENABLED = Boolean(URL && SERVICE_KEY);
-
-let client: SupabaseClient | null = null;
-function db(): SupabaseClient | null {
-  if (!PROGRESS_ENABLED) return null;
-  if (!client)
-    client = createClient(URL, SERVICE_KEY, {
-      auth: { persistSession: false, autoRefreshToken: false },
-    });
-  return client;
-}
+export const PROGRESS_ENABLED = CAN_SAVE;
 
 /** Trophies moved by a single match. */
 export const TROPHIES_PER_WIN = 30;

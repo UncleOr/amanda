@@ -12,39 +12,13 @@
  * anyone could level anyone's cards, or their own for free.
  */
 import type { IncomingMessage, ServerResponse } from "node:http";
-import { createClient, type SupabaseClient } from "@supabase/supabase-js";
-import WebSocket from "ws";
 import { LEVELS, levelCost } from "@amanda/shared";
 import { CATALOG } from "./content.js";
 import { handleAdmin, handleCopy } from "./admin.js";
 
-const URL = process.env.SUPABASE_URL ?? "https://iiviygfltyrsonioyqxm.supabase.co";
-const SERVICE_KEY = process.env.SUPABASE_SERVICE_KEY ?? "";
+import { SUPABASE_URL as URL, db, keyHasWhitespace, keyLength, keyStartsWith } from "./supabase.js";
 
-let admin: SupabaseClient | null = null;
-export function db(): SupabaseClient | null {
-  if (!SERVICE_KEY) return null;
-  if (!admin)
-    admin = createClient(URL, SERVICE_KEY, {
-      auth: { persistSession: false, autoRefreshToken: false },
-      /*
-       * A WebSocket, handed over explicitly.
-       *
-       * supabase-js builds a realtime client whether or not anything
-       * subscribes, and it wants a global WebSocket for it. Node only has one
-       * from 22, and the Railway container is older — so with the key finally
-       * set, EVERY query failed with "Node.js detected but native WebSocket
-       * not found" and the first thing that worked was a diagnostic that
-       * asked the database what was wrong.
-       *
-       * This server never subscribes to anything. It is passed the `ws`
-       * implementation it already depends on purely so the realtime client
-       * can exist quietly and never be used.
-       */
-      realtime: { transport: WebSocket as unknown as never },
-    });
-  return admin;
-}
+export { db };
 
 export function send(res: ServerResponse, code: number, body: unknown): void {
   const text = JSON.stringify(body);
@@ -158,7 +132,6 @@ async function health(res: ServerResponse): Promise<void> {
   const names = Object.keys(process.env).filter(
     (k) => k.includes("SUPABASE") || k.includes("SERVICE"),
   );
-  const key = process.env.SUPABASE_SERVICE_KEY ?? "";
   /*
    * Actually try it, rather than reporting that a variable exists.
    *
@@ -184,12 +157,12 @@ async function health(res: ServerResponse): Promise<void> {
   send(res, 200, {
     ok: true,
     /** True when a key is present AND looks like one, rather than a stray word. */
-    canSave: key.length > 40,
-    keyPresent: key.length > 0,
-    keyLength: key.length,
+    canSave: keyLength > 40,
+    keyPresent: keyLength > 0,
+    keyLength,
     /** Shape only — enough to tell a JWT from a publishable key from junk. */
-    keyStartsWith: key.slice(0, 3),
-    keyHasWhitespace: /\s/.test(key),
+    keyStartsWith,
+    keyHasWhitespace,
     /** Did a real query work, and if not, why. */
     dbError,
     copyRows: rows,
