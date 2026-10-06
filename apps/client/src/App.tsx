@@ -1146,7 +1146,16 @@ function Game() {
       {m.phase === "result" && (
         <main className="result">
           <div className={`result__card result__card--${m.iWon ? "win" : "lose"}`}>
-            <Icon name={m.iWon ? "win" : "lose"} size={96} className="result__crest" />
+            {/*
+              The picture first, and it is the whole top of the screen.
+              Or: "gaming. Fun. Illustrations." This used to be a 96px icon
+              over a flat panel — a dialog box reporting an outcome. A child
+              who just won should be looking at something, not reading a
+              notice. The headline and buttons sit over the lower third,
+              which the illustration leaves quiet for them.
+            */}
+            <div className="result__scene" aria-hidden="true" />
+            <div className="result__body">
             {/* In the lab there is no winner, only a reading. Crowning the
                 player for a board they also built for the other side would be
                 nonsense, and the taunts are aimed at an opponent who is them. */}
@@ -1154,9 +1163,14 @@ function Game() {
             {m.result && (
               <>
                 <p className="result__verdict">{verdictText(m.result, m.iWon)}</p>
-                <p>
-                  הקרב נמשך {(m.result.ticks / 30).toFixed(1)} שניות ·{" "}
-                  {m.result.events.filter((e) => e.type === "death").length} מפלצות נפלו
+                <p className="result__tally">
+                  <span>
+                    <Icon name="timer" size={15} /> {(m.result.ticks / 30).toFixed(1)}ש׳
+                  </span>
+                  <span>
+                    <Icon name="skull" size={15} />{" "}
+                    {m.result.events.filter((e) => e.type === "death").length} נפלו
+                  </span>
                 </p>
               </>
             )}
@@ -1186,6 +1200,7 @@ function Game() {
               )}
             </div>
             {showLog && m.result && <BattleLog result={m.result} mySide={m.mySide} />}
+            </div>
           </div>
         </main>
       )}

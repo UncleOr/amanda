@@ -29,6 +29,10 @@ const SURFACES: Array<[string, string]> = [
   ["--surface-desk", "surfaces/desk.webp"],
   ["--surface-menu", "surfaces/menu_backdrop.webp"],
   ["--surface-battle", "surfaces/battle_strip.webp"],
+  ["--scene-win", "scenes/scene_win.webp"],
+  ["--scene-lose", "scenes/scene_lose.webp"],
+  ["--scene-profile", "scenes/scene_profile.webp"],
+  ["--scene-album", "scenes/scene_album.webp"],
 ];
 for (const [name, file] of SURFACES) {
   document.documentElement.style.setProperty(name, `url("${import.meta.env.BASE_URL}${file}")`);

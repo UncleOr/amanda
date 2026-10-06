@@ -66,6 +66,86 @@ export const SURFACE_LOOK: Record<string, string> = {
     "scorch marks and scattered grit, deep grey-blue, very dim",
 };
 
+/*
+ * ── the painted scenes ──
+ *
+ * Or: "the same goes for how the results are shown in the personal area. Very
+ * app-like. Gaming. Fun. Illustrations."
+ *
+ * These are NOT backgrounds and they do not obey the rules above. They are the
+ * picture a child actually looks at when a match ends and when they open their
+ * own page — so each one has a subject, a joke, and somewhere for the eye to
+ * land. The rules they do obey:
+ *
+ *   SHE IS THE HOST, NOT THE VILLAIN. Losing is her being delighted, not the
+ *   player being punished. Nothing grim, no gore, no real fear — the game is
+ *   for a seven-year-old and the loss screen is the one that has to be kindest.
+ *
+ *   ROOM ALONG THE BOTTOM. A headline and three buttons sit over the lower
+ *   third of every one of these, so the composition keeps that part quiet.
+ */
+export const SCENE_LOOK: Record<string, string> = {
+  /** You won. */
+  scene_win:
+    "A joyful victory scene: a small triumphant cartoon monster hoisted on the " +
+    "shoulders of two other goofy monsters, holding up a huge golden trophy, " +
+    "gold confetti and sparks raining down, a banner of light behind them. " +
+    "Warm golds and cream against deep teal. Celebratory, funny, loud. " +
+    "EMPTY DARKER AREA ACROSS THE BOTTOM THIRD of the frame",
+
+  /** You lost — and she is thrilled about it. */
+  scene_lose:
+    "A funny defeat scene: a towering teal three-headed spirit queen looming " +
+    "with a wide delighted grin, licking her lips, while three small cartoon " +
+    "monsters lie comically flattened and dizzy at the bottom with X eyes and " +
+    "little stars spinning over them. Playful and silly, absolutely NOT " +
+    "frightening, NO blood, NO gore, NO real injury. Cool teals and violets. " +
+    "EMPTY DARKER AREA ACROSS THE BOTTOM THIRD of the frame",
+
+  /** The top of the player's own page. */
+  scene_profile:
+    "A wide heraldic banner for a player card: an ornate dark wooden plaque " +
+    "with brass corners and rivets, two small cartoon monster heads peering " +
+    "over the top edge from behind it, trailing ribbons, a hanging chain. " +
+    "A LARGE EMPTY FLAT PANEL IN THE CENTRE with nothing on it. " +
+    "Deep navy and brass, warm and inviting",
+
+  /**
+   * The top of the album.
+   *
+   * The first version came back a PHOTOGRAPH of a real album on a table, and
+   * it was both out of key with everything else and impossible to crop into a
+   * wide strip — a slice through it is a slice of floor. This asks for a flat
+   * drawn band instead, composed as the shape it has to fill.
+   */
+  scene_album:
+    "A WIDE FLAT DRAWN BANNER, not a photograph: a row of monster trading " +
+    "cards fanned out side by side across the whole width, seen straight on, " +
+    "their backs patterned and their corners overlapping, with a few gold " +
+    "stars and sparks between them. Deep indigo and brass over a dark " +
+    "background. The composition fills the whole wide strip evenly with no " +
+    "empty corners and no single focal point",
+};
+
+export const SCENE_ASPECT: Record<string, "16:9" | "21:9" | "4:3"> = {
+  scene_win: "4:3",
+  scene_lose: "4:3",
+  scene_profile: "21:9",
+  scene_album: "21:9",
+};
+
+const SCENE_RULES = [
+  "A rich, finished ILLUSTRATION for a children's monster card game.",
+  "NO text, NO letters, NO numbers, NO words anywhere in the image.",
+  "NO user interface, NO buttons, NO frame around the picture.",
+  "Appealing and readable to a seven-year-old: nothing frightening, no gore,",
+  "no blood, no real menace. Bold shapes, strong silhouettes, poster-quality.",
+].join(" ");
+
+export function buildScenePrompt(id: string, styleBrief: string): string {
+  return [SCENE_LOOK[id], SCENE_RULES, `Art style: ${styleBrief}`].join(" ");
+}
+
 export const SURFACE_ASPECT: Record<string, "1:1" | "16:9" | "3:4" | "4:3"> = {
   album_page: "3:4",
   desk: "16:9",

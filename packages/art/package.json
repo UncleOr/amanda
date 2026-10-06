@@ -19,7 +19,8 @@
     "animate": "tsx src/animate.ts",
     "sounds": "tsx src/cli.ts sounds",
     "sounds-process": "tsx src/cli.ts sounds-process",
-    "surfaces": "tsx src/cli.ts surfaces"
+    "surfaces": "tsx src/cli.ts surfaces",
+    "scenes": "tsx src/cli.ts scenes"
   },
   "dependencies": {
     "@amanda/shared": "workspace:*",

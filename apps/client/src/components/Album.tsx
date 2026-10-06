@@ -88,6 +88,8 @@ export function Album({ account, onClose, onCardInfo, onChanged }: Props) {
       {note && <p className="album__none album__none--warn">{note}</p>}
 
       <div className="album__scroll">
+        {/* The album looks like an album now: a drawn cover above the shelf. */}
+        <div className="album__cover" aria-hidden="true" />
         {stats && (
           <section className="record">
             {/*

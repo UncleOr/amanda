@@ -99,7 +99,10 @@ export function Profile({ account, onClose, onChanged }: Props) {
             title="החלף פרצוף"
           >
             <img src={`${BASE}brand/${avatar}.webp`} alt="" />
-            <span className="profile__face-edit">✎</span>
+            {/* A corner badge, not a stamp across the face. */}
+            <span className="profile__face-edit">
+              <Icon name="plus" size={11} />
+            </span>
           </button>
           <div className="profile__who">
             <input

@@ -893,15 +893,92 @@ button:disabled {
   padding: 16px 0;
   scroll-padding-top: 16px;
 }
+/*
+ * The end of a match, as a picture.
+ *
+ * Or: "gaming. Fun. Illustrations." This was a 96px icon on a flat panel —
+ * a dialog box reporting an outcome. A child who has just won should be
+ * looking at something. The illustration is the top two thirds and the words
+ * live over the bottom, which is the part each painting leaves quiet.
+ */
 .result__card {
+  position: relative;
+  width: min(560px, 92vw);
   text-align: center;
   background: var(--panel);
   border: 1px solid var(--line);
-  border-radius: 18px;
-  padding: 40px 56px;
+  border-radius: 20px;
+  overflow: hidden;
+  box-shadow: 0 24px 60px rgba(0, 0, 0, 0.55);
 }
-.result__card h1 { font-size: 44px; margin: 0 0 8px; }
-.result__card p { color: var(--muted); margin: 0 0 24px; }
+.result__scene {
+  width: 100%;
+  aspect-ratio: 4 / 3;
+  background-size: cover;
+  background-position: center top;
+  /* Fades into the panel instead of stopping at an edge, so the words look
+     like they are ON the picture rather than under a photograph of one. */
+  -webkit-mask-image: linear-gradient(180deg, #000 58%, transparent 97%);
+  mask-image: linear-gradient(180deg, #000 58%, transparent 97%);
+}
+.result__card--win .result__scene {
+  background-image: var(--scene-win);
+}
+.result__card--lose .result__scene {
+  background-image: var(--scene-lose);
+}
+/*
+ * The words sit over the bottom of the picture, not under it. Pulled up by
+ * more than the fade is tall so there is never a dead band between them.
+ */
+.result__body {
+  position: relative;
+  margin-top: -22%;
+  padding: 0 clamp(16px, 5vw, 40px) 28px;
+}
+.result__card h1 {
+  font-size: clamp(30px, 7vw, 46px);
+  margin: 0 0 6px;
+  text-shadow: 0 3px 14px rgba(0, 0, 0, 0.85);
+}
+.result__card p { color: var(--muted); margin: 0 0 18px; }
+.result__verdict { text-shadow: 0 2px 8px rgba(0, 0, 0, 0.8); }
+
+/* How long it took and how many fell, as two marks rather than a sentence. */
+.result__tally {
+  display: flex;
+  justify-content: center;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+.result__tally span {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 4px 13px;
+  border-radius: 999px;
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  background: rgba(8, 12, 22, 0.6);
+  font-size: 13px;
+  font-weight: 700;
+  font-variant-numeric: tabular-nums;
+}
+
+/* A short window puts the picture behind the words instead of above them. */
+@media (max-height: 560px) {
+  .result__scene {
+    aspect-ratio: auto;
+    position: absolute;
+    inset: 0;
+    opacity: 0.42;
+    -webkit-mask-image: none;
+    mask-image: none;
+  }
+  .result__body {
+    margin-top: 0;
+    padding-top: 22px;
+  }
+}
 
 /* ---- mute button ---- */
 .mute {
@@ -1310,11 +1387,35 @@ button:disabled {
 }
 
 /* ---- battle report on the result screen ---- */
+/*
+ * Two decisions on one line, and the explanation under them.
+ *
+ * As a wrapping flex row the three buttons fell 2 + 1 and the orphan sat off
+ * to one side — a layout that looks like a mistake. The grid keeps the two
+ * real choices beside each other and gives the third its own full-width row,
+ * which is also the right hierarchy: play again or leave, and then, if you
+ * want it, the explanation.
+ */
 .result__buttons {
-  display: flex;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
   gap: 10px;
+  justify-items: stretch;
+}
+.result__buttons > :nth-child(3) {
+  grid-column: 1 / -1;
+}
+.result__buttons .btn-fight {
+  width: 100%;
   justify-content: center;
-  flex-wrap: wrap;
+}
+@media (max-width: 420px) {
+  .result__buttons {
+    grid-template-columns: 1fr;
+  }
+  .result__buttons > :nth-child(3) {
+    grid-column: auto;
+  }
 }
 .log {
   margin-top: 16px;
@@ -1581,9 +1682,14 @@ button:disabled {
 
 /* a secondary action next to the primary one */
 .btn-ghost {
-  background: transparent;
-  border-color: var(--line);
-  color: var(--muted);
+  /*
+   * `.btn-fight` sets `border: none`, so a ghost version of it had a border
+   * colour and no border to put it on — over an illustration that left it
+   * looking like a line of floating text rather than the way out.
+   */
+  background: rgba(8, 12, 22, 0.55);
+  border: 1px solid rgba(255, 255, 255, 0.22);
+  color: var(--text);
 }
 .btn-ghost:hover {
   border-color: var(--accent);
@@ -3056,15 +3162,50 @@ button:disabled {
 /* ════════ the personal area ════════ */
 .profile__top { padding: 10px 14px; flex: none; }
 .profile__scroll { flex: 1; min-height: 0; overflow-y: auto; padding: 0 16px 28px; }
+/*
+ * Your own page, as a painted plaque rather than a settings row.
+ *
+ * Or: "very app-like. Gaming. Fun. Illustrations." It was a face, a text
+ * field and three chips on a flat gradient — the account screen of any app.
+ * The plaque behind it is drawn (scene_profile), with a deliberately empty
+ * panel in the middle for exactly this content to sit in.
+ */
 .profile__hero {
+  position: relative;
   display: flex;
   align-items: center;
+  /* Tall enough for the plaque behind it to read as a plaque, not a sliver. */
+  min-height: clamp(118px, 22vw, 156px);
   gap: 16px;
-  padding: 16px;
+  padding: clamp(16px, 4vw, 26px) clamp(16px, 5vw, 34px);
   border-radius: 18px;
   border: 1px solid rgba(255, 176, 32, 0.3);
-  background: linear-gradient(180deg, rgba(26, 36, 60, 0.85), rgba(12, 18, 32, 0.85));
+  background:
+    /*
+     * Dark enough to be a plaque and not a picture frame. At a lighter wash
+     * the painted woodwork and its cream centre panel fought the name and the
+     * numbers that have to sit on top of them, and the eye went to the brass
+     * rivets instead of to who you are.
+     */
+    linear-gradient(180deg, rgba(8, 12, 22, 0.72), rgba(8, 12, 22, 0.88)),
+    var(--scene-profile) center / cover no-repeat,
+    linear-gradient(180deg, rgba(26, 36, 60, 0.85), rgba(12, 18, 32, 0.85));
+  box-shadow:
+    0 12px 30px rgba(0, 0, 0, 0.45),
+    inset 0 1px 0 rgba(255, 255, 255, 0.07);
   margin-bottom: 16px;
+}
+/* The numbers read as struck plates on the plaque, not as text beside a name. */
+.profile__stats span {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 4px 12px;
+  border-radius: 999px;
+  border: 1px solid rgba(255, 255, 255, 0.14);
+  background: rgba(6, 10, 18, 0.62);
+  font-weight: 800;
+  font-variant-numeric: tabular-nums;
 }
 .profile__face {
   position: relative;
@@ -3078,30 +3219,52 @@ button:disabled {
   cursor: pointer;
   overflow: hidden;
 }
-.profile__face img { width: 100%; height: 100%; object-fit: cover; display: block; }
+/*
+ * The avatar only — note the `>`.
+ *
+ * Without it this also caught the little edit icon nested in the badge, which
+ * is an <img> too, and blew a 11px plus up to fill the whole face.
+ */
+.profile__face > img { width: 100%; height: 100%; object-fit: cover; display: block; }
 .profile__face-edit {
   position: absolute;
   inset-block-end: 0;
   inset-inline: 0;
-  background: rgba(0, 0, 0, 0.6);
-  font-size: 13px;
-  padding: 1px 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(0, 0, 0, 0.72);
+  padding: 2px 0 3px;
 }
 .profile__who { flex: 1; min-width: 0; }
 .profile__name {
+  text-shadow: 0 2px 10px rgba(0, 0, 0, 0.9);
   width: 100%;
   background: none;
   border: none;
   border-bottom: 1px dashed rgba(255, 255, 255, 0.25);
   color: var(--text);
   font: inherit;
-  font-size: 22px;
-  font-weight: 800;
-  padding: 2px 0 6px;
+  /* Centred and big: the painted plaque behind this has a deliberately empty
+     panel across its middle, and this is what belongs in it. */
+  font-size: clamp(20px, 5vw, 28px);
+  font-weight: 900;
+  text-align: center;
+  padding: 2px 0 7px;
+}
+.profile__name::placeholder {
+  font-weight: 700;
+  opacity: 0.55;
 }
 .profile__name:focus { outline: none; border-bottom-color: var(--accent); }
-.profile__stats { display: flex; gap: 16px; margin-top: 10px; font-weight: 800; }
-.profile__stats span { display: inline-flex; align-items: center; gap: 5px; }
+.profile__stats {
+  display: flex;
+  gap: 8px;
+  margin-top: 12px;
+  justify-content: center;
+  flex-wrap: wrap;
+  font-weight: 800;
+}
 .profile__stats .is-gem { color: #9fe6ff; }
 .profile__faces {
   display: grid;
@@ -3301,6 +3464,17 @@ button:disabled {
  * plaque with an illustration on it, and the good ones and the bad ones do
  * not look the same.
  */
+.album__cover {
+  height: clamp(74px, 16vw, 128px);
+  margin-bottom: 14px;
+  border-radius: 16px;
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  background:
+    linear-gradient(180deg, rgba(10, 15, 27, 0.35), rgba(10, 15, 27, 0.7)),
+    var(--scene-album) center / cover no-repeat;
+  box-shadow: 0 10px 26px rgba(0, 0, 0, 0.45);
+}
+
 .record {
   margin-bottom: 20px;
   padding: 16px 14px 14px;

@@ -17,6 +17,7 @@ const ARENA_OUT = join(REPO_ROOT, "apps", "client", "public", "arena");
 const BRAND_OUT = join(REPO_ROOT, "apps", "client", "public", "brand");
 const ICON_OUT = join(REPO_ROOT, "apps", "client", "public", "icons");
 const SURFACE_OUT = join(REPO_ROOT, "apps", "client", "public", "surfaces");
+const SCENE_OUT = join(REPO_ROOT, "apps", "client", "public", "scenes");
 /** Portrait card art (3:4). Hand card is ~124px wide, so 384 covers retina. */
 const W = 384;
 const H = 512;
@@ -136,6 +137,33 @@ async function main(): Promise<void> {
         .toFile(join(SURFACE_OUT, `${id}.webp`));
       processed++;
       console.log(`  surface ${id}`);
+    }
+  }
+
+  /*
+   * The painted scenes: the win, the loss, the banners. Bigger and sharper
+   * than the surfaces, because these are the picture the player is actually
+   * looking at rather than the thing behind it.
+   */
+  const sceneDir = join(RAW, "scenes");
+  if (existsSync(sceneDir)) {
+    await mkdir(SCENE_OUT, { recursive: true });
+    for (const file of readdirSync(sceneDir).filter((f) => f.endsWith(".png"))) {
+      const id = file.replace(/\.png$/, "");
+      /*
+       * Trimmed first. The model likes to leave a plain border around a
+       * banner — the profile plaque came back with white down both sides —
+       * and a background-image stretched to cover shows every pixel of it.
+       * The threshold is loose enough to take a near-white margin and tight
+       * enough to leave a painting that happens to be pale at one edge.
+       */
+      await sharp(join(sceneDir, file))
+        .trim({ threshold: 12 })
+        .resize(1400, 1400, { fit: "inside", withoutEnlargement: true })
+        .webp({ quality: 82 })
+        .toFile(join(SCENE_OUT, `${id}.webp`));
+      processed++;
+      console.log(`  scene ${id}`);
     }
   }
 

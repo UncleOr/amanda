@@ -22,7 +22,14 @@ import { ARENA_LOOKS, buildArenaPrompt } from "./arenaLooks.js";
 import { BRAND_ASPECT, BRAND_LOOK, buildBrandPrompt } from "./brandLooks.js";
 import { ICON_LOOK, buildIconPrompt } from "./iconLooks.js";
 import { generateSounds, processSounds } from "./sounds.js";
-import { SURFACE_ASPECT, SURFACE_LOOK, buildSurfacePrompt } from "./surfaceLooks.js";
+import {
+  SCENE_ASPECT,
+  SCENE_LOOK,
+  SURFACE_ASPECT,
+  SURFACE_LOOK,
+  buildScenePrompt,
+  buildSurfacePrompt,
+} from "./surfaceLooks.js";
 import { download, generate, generateWithReference, uploadFile } from "./fal.js";
 
 const RAW = join(REPO_ROOT, "assets", "raw");
@@ -264,6 +271,32 @@ async function cmdSurfaces(styleId?: string): Promise<void> {
   console.log("\nDone -> assets/raw/surfaces/  (run `pnpm art:process`)\n");
 }
 
+/** The painted moments: winning, losing, your own page, the album cover. */
+async function cmdScenes(styleId?: string): Promise<void> {
+  const dir = dirById(styleId ?? "");
+  const ids = Object.keys(SCENE_LOOK);
+  console.log(`\nGenerating ${ids.length} scenes (style: ${dir.id})\n`);
+  for (const id of ids) {
+    const dest = join(RAW, "scenes", `${id}.png`);
+    if (existsSync(dest)) {
+      console.log(`   skip  ${id} (exists)`);
+      continue;
+    }
+    process.stdout.write(`   ${id.padEnd(16)} ... `);
+    try {
+      const [img] = await generate(buildScenePrompt(id, dir.style), {
+        aspectRatio: SCENE_ASPECT[id] ?? "4:3",
+      });
+      if (!img) throw new Error("no image returned");
+      await download(img.url, dest);
+      console.log("OK");
+    } catch (err) {
+      console.log(`FAIL ${(err as Error).message}`);
+    }
+  }
+  console.log("\nDone -> assets/raw/scenes/  (run `pnpm art:process`)\n");
+}
+
 const [cmd, ...args] = process.argv.slice(2);
 const run = async () => {
   switch (cmd) {
@@ -285,6 +318,8 @@ const run = async () => {
       return cmdCard(args[0], args[1], ...args.slice(2));
     case "surfaces":
       return cmdSurfaces(args[0]);
+    case "scenes":
+      return cmdScenes(args[0]);
     case "sounds":
       return generateSounds(args);
     case "sounds-process":
