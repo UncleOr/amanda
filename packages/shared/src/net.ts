@@ -76,7 +76,13 @@ export type ClientMessage =
    * what it does is the receiving client's business, so a new card of this kind
    * needs no server change.
    */
-  | { t: "hex"; id: string };
+  | { t: "hex"; id: string }
+  /**
+   * Say one of the ready-made lines to the other player (see taunts.ts).
+   * Only the id travels: the words live in the catalogue on both sides, so
+   * nothing a client sends can become text on somebody else's screen.
+   */
+  | { t: "say"; id: string };
 
 // ── server → client ────────────────────────────────────────────────
 export type ServerMessage =
@@ -130,7 +136,9 @@ export type ServerMessage =
   /** Whether the opponent has declared themselves ready. */
   | { t: "oppReady"; ready: boolean }
   /** The opponent played an action card at you. */
-  | { t: "hexed"; id: string };
+  | { t: "hexed"; id: string }
+  /** The other player said one of the ready-made lines. Id only — see "say". */
+  | { t: "said"; id: string };
 
 export function encode(msg: ClientMessage | ServerMessage): string {
   return JSON.stringify(msg);

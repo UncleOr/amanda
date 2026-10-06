@@ -52,6 +52,8 @@ export interface NetHandlers {
   onHexed?: (id: string) => void;
   /** The opponent is (or is no longer) ready to fight. */
   onOppReady?: (ready: boolean) => void;
+  /** The other player said one of the ready-made lines. */
+  onSaid?: (id: string) => void;
   /** The socket closed. `connected` is false when it never opened at all. */
   onClose?: (connected: boolean) => void;
 }
@@ -109,6 +111,9 @@ export class Net {
         case "hexed":
           this.handlers.onHexed?.(msg.id);
           break;
+        case "said":
+          this.handlers.onSaid?.(msg.id);
+          break;
         case "oppReady":
           this.handlers.onOppReady?.(msg.ready);
           break;
@@ -150,6 +155,10 @@ export class Net {
   /** Play an action card at the opponent. */
   hex(id: string): void {
     this.sendMsg({ t: "hex", id });
+  }
+  /** Say one of the ready-made lines (see taunts.ts). Id only. */
+  say(id: string): void {
+    this.sendMsg({ t: "say", id });
   }
   unready(): void {
     this.sendMsg({ t: "unready" });

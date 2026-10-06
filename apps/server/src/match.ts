@@ -1,5 +1,14 @@
 import type { WebSocket } from "ws";
-import { PHASES, encode, type BoardView, type NetBoard, type ServerMessage, type Side } from "@amanda/shared";
+import {
+  PHASES,
+  TAUNT_LIMITS,
+  encode,
+  tauntById,
+  type BoardView,
+  type NetBoard,
+  type ServerMessage,
+  type Side,
+} from "@amanda/shared";
 import { runBattle } from "@amanda/engine";
 import { CATALOG, SYNERGIES } from "./content.js";
 import { recordMatch } from "./progress.js";
@@ -17,6 +26,9 @@ interface PlayerConn {
   board: NetBoard | null;
   /** The account this socket belongs to, or null for a guest. */
   playerId: string | null;
+  /** When this player last said something, and how much they have said. */
+  lastSaid: number;
+  saidCount: number;
 }
 
 const emptyView = (): BoardView => ({ placements: {}, king: null });
@@ -70,8 +82,8 @@ export class Match {
   ) {
     this.coop = coop;
     this.amanda = coop ? amandaBoard() : null;
-    this.a = { ws: wsA, side: "A", view: emptyView(), board: null, playerId: idA };
-    this.b = { ws: wsB, side: "B", view: emptyView(), board: null, playerId: idB };
+    this.a = { ws: wsA, side: "A", view: emptyView(), board: null, playerId: idA, lastSaid: 0, saidCount: 0 };
+    this.b = { ws: wsB, side: "B", view: emptyView(), board: null, playerId: idB, lastSaid: 0, saidCount: 0 };
     // In Amanda mode both are side A; `lane` tells each which half is theirs.
     this.send(this.a, { t: "start", side: "A", coop, ...(coop ? { lane: 0 } : {}) });
     this.send(this.b, { t: "start", side: coop ? "A" : "B", coop, ...(coop ? { lane: LANE_B } : {}) });
@@ -158,6 +170,22 @@ export class Match {
       if (!wasReady) this.send(this.other(p), { t: "oppReady", ready: true });
       // Both ready — start now and skip whatever is left of the clock.
       if (this.a.board && this.b.board) this.computeResult();
+    } else if (msg.t === "say" && typeof msg.id === "string") {
+      /*
+       * One of the ready-made lines, passed to the other player.
+       *
+       * Checked here and not in the picker, because a picker that greys
+       * itself out stops an honest player and nobody else. An unknown id is
+       * dropped in silence: the only ids that exist are the ones in
+       * taunts.ts, so anything else is somebody poking at the socket.
+       */
+      if (!tauntById(msg.id)) return;
+      const now = Date.now();
+      if (now - p.lastSaid < TAUNT_LIMITS.gapSeconds * 1000) return;
+      if (p.saidCount >= TAUNT_LIMITS.perMatch) return;
+      p.lastSaid = now;
+      p.saidCount++;
+      this.send(this.other(p), { t: "said", id: msg.id });
     } else if (msg.t === "unready") {
       if (p.board !== null) {
         p.board = null;

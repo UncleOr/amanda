@@ -27,5 +27,8 @@ export * from "./arenas.js";
 // The handful of numbers the admin panel may turn, and why only those.
 export * from "./tunables.js";
 
+// The closed set of things one player may say to the other
+export * from "./taunts.js";
+
 // Multiplayer wire protocol
 export * from "./net.js";

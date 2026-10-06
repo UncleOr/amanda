@@ -6,6 +6,7 @@ import {
   COOP_LANES,
   buildAmandaBoard,
   levelMultiplier,
+  tauntById,
   type Card,
   type RoomError,
   type Side,
@@ -511,6 +512,20 @@ export interface MatchApi {
    * order or the screen disagrees with the battle about who is where.
    */
   myLane: number;
+  /**
+   * The last thing the other player said, or null.
+   *
+   * One at a time on purpose: this is a bubble over their board, not a chat
+   * log. A new one replaces the old, and it clears itself after a few seconds.
+   */
+  heard: { id: string; at: number } | null;
+  /** The last thing YOU said, shown over your own board so you can see it landed. */
+  spoke: { id: string; at: number } | null;
+  /** Say one of the ready-made lines to the other player. */
+  say: (id: string) => void;
+  /** Whether the other player's messages are shown at all. Per browser. */
+  hearing: boolean;
+  toggleHearing: () => void;
   startAmanda: () => void;
   /** Developer preview of Amanda mode, alone and unwinnable. */
   startAmandaSolo: () => void;
@@ -620,6 +635,23 @@ export function useMatch(): MatchApi {
   /** Amanda mode: you and the other player share a side against her. */
   const [coop, setCoop] = useState(false);
   const [mate, setMate] = useState<BoardView | null>(null);
+  const [heard, setHeard] = useState<{ id: string; at: number } | null>(null);
+  const [spoke, setSpoke] = useState<{ id: string; at: number } | null>(null);
+  /*
+   * Being able to switch the other player off entirely.
+   *
+   * The lines are a closed, friendly list, so this should rarely be needed —
+   * but "I do not want to see it" must not require reporting somebody, and a
+   * child who is upset needs the thing to stop NOW, not after an adult has
+   * looked at a form.
+   */
+  const [hearing, setHearing] = useState(() => {
+    try {
+      return localStorage.getItem("amanda.hearing") !== "off";
+    } catch {
+      return true;
+    }
+  });
   const [myLane, setMyLane] = useState(0);
   /** True for the developer's solo Amanda preview (see startAmandaSolo). */
   const soloAmandaRef = useRef(false);
@@ -943,6 +975,43 @@ export function useMatch(): MatchApi {
   }, []);
 
   /** An action card the opponent played at us. */
+  /*
+   * The socket handler is created once, so it cannot read `hearing` from
+   * state — it would close over whatever the value was when the match started.
+   */
+  const hearingRef = useRef(hearing);
+  hearingRef.current = hearing;
+
+  const toggleHearing = useCallback(() => {
+    setHearing((on) => {
+      const next = !on;
+      try {
+        localStorage.setItem("amanda.hearing", next ? "on" : "off");
+      } catch {
+        /* not being able to remember it is not worth failing over */
+      }
+      if (!next) setHeard(null);
+      return next;
+    });
+  }, []);
+
+  /**
+   * Say one of the ready-made lines.
+   *
+   * Shown over your own board straight away rather than waiting for the
+   * server to confirm: you pressed it, you should see it. The server is still
+   * the one that decides whether the other player gets it (rate limits live
+   * there — see match.ts), so the worst case is that you see your own line and
+   * they do not, which is the right way round for a limit nobody should be
+   * hitting in the first place.
+   */
+  const say = useCallback((id: string) => {
+    if (!tauntById(id)) return;
+    setSpoke({ id, at: Date.now() });
+    sfx.play("click");
+    netRef.current?.say(id);
+  }, []);
+
   const receiveHex = useCallback((id: string) => {
     // This is what the steel wall was always for.
     if (shieldedRef.current) {
@@ -1209,6 +1278,8 @@ export function useMatch(): MatchApi {
     setCoop(false);
     setMate(null);
     setMyLane(0);
+    setHeard(null);
+    setSpoke(null);
     soloAmandaRef.current = false;
     setPlayground(false);
     setMirrorSeed(null);
@@ -1281,6 +1352,14 @@ export function useMatch(): MatchApi {
       onMate: (view) => setMate(view),
       onHexed: (id) => receiveHex(id),
       onOppReady: (r) => setOppReady(r),
+      onSaid: (id) => {
+        // Dropped on the floor when the player has switched them off — and
+        // dropped HERE rather than at the bubble, so nothing is stored.
+        if (!hearingRef.current) return;
+        if (!tauntById(id)) return;
+        setHeard({ id, at: Date.now() });
+        sfx.play("beep");
+      },
       onResult: (r) => {
         const res = runBattle({
           seed: r.seed,
@@ -1682,6 +1761,11 @@ export function useMatch(): MatchApi {
     coop,
     mate,
     myLane,
+    heard,
+    spoke,
+    say,
+    hearing,
+    toggleHearing,
     hostRoom,
     joinRoom,
     discardHand,

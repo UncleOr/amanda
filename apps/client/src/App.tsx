@@ -31,6 +31,7 @@ import { ArenaTrack } from "./components/ArenaTrack";
 import { ChestShelf } from "./components/ChestShelf";
 import { About } from "./components/About";
 import { Report } from "./components/Report";
+import { SayButton, SaidBubble } from "./components/Say";
 const Admin = lazy(() => import("./components/Admin").then((m) => ({ default: m.Admin })));
 import { MoreModes } from "./components/MoreModes";
 import { ArenaPreview } from "./components/ArenaPreview";
@@ -922,6 +923,9 @@ function Game() {
                   <span className="frozen__note">לשלוף ולזרוק אפשר. להדביק — לא.</span>
                 </div>
               )}
+              {/* What you just said, over your own board, so you can see it
+                  went out. The other player's sits over theirs. */}
+              <SaidBubble said={m.spoke} mine />
               {m.coop && (
                 <div className="mate__label mate__label--mine">
                   <Icon name="king" size={13} /> החצי שלך
@@ -1001,6 +1005,7 @@ function Game() {
                   </>
                 )}
               </div>
+              <SaidBubble said={m.heard} />
               <BoardGrid
                 placements={m.opponent.placements}
                 king={m.opponent.king}
@@ -1028,6 +1033,12 @@ function Game() {
                 onKingClick={m.playground ? m.placeKing : undefined}
               />
             </section>
+
+            {/* Only against a person. Saying "nice move" to a bot, or to
+                Amanda, is a button that does nothing. */}
+            {m.online && !m.playground && (
+              <SayButton onSay={m.say} hearing={m.hearing} onToggleHearing={m.toggleHearing} />
+            )}
           </div>
 
           {m.targeting && (
@@ -1310,6 +1321,15 @@ function Game() {
               <Icon name="stop" size={14} /> עצור וחזור ללוח
             </button>
           )}
+          {/* The battle is forty-five seconds of the two of you watching the
+              same thing happen. That is the moment people want to say "whoa". */}
+          {m.online && !m.playground && (
+            <>
+              <SaidBubble said={m.heard} />
+              <SaidBubble said={m.spoke} mine />
+              <SayButton onSay={m.say} hearing={m.hearing} onToggleHearing={m.toggleHearing} />
+            </>
+          )}
         </main>
       )}
 
@@ -1344,6 +1364,20 @@ function Game() {
                   </span>
                 </p>
               </>
+            )}
+            {/* The two of you, after the fact. The end-of-match lines unlock
+                here — "good game" means nothing during the build phase. */}
+            {m.online && !m.playground && (
+              <div className="result__say">
+                <SaidBubble said={m.heard} />
+                <SaidBubble said={m.spoke} mine />
+                <SayButton
+                  onSay={m.say}
+                  atEnd
+                  hearing={m.hearing}
+                  onToggleHearing={m.toggleHearing}
+                />
+              </div>
             )}
             <div className="result__buttons">
               {m.playground ? (
