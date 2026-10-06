@@ -241,6 +241,18 @@ function Game() {
    */
   const saidRef = useRef<Set<string>>(new Set());
   const [cue, setCue] = useState<Step | null>(null);
+  /*
+   * Which lesson this is. Or asked for "a match or two" against a light bot,
+   * and for the second one to be about the opponent rather than the buttons:
+   * which card of theirs you answer with which card of yours. The coach needs
+   * to know which match it is to know which of the two it is giving.
+   */
+  const [lesson, setLesson] = useState(1);
+  useEffect(() => {
+    if (!teaching || m.phase !== "countdown") return;
+    setLesson((n) => n + 1);
+    saidRef.current = new Set();
+  }, [teaching, m.phase]);
   useEffect(() => {
     if (!teaching) return;
     const next = nextCue(
@@ -252,6 +264,10 @@ function Game() {
         king: m.king,
         discardCount: m.discardCount,
         actionBarCount: m.actionBar.length,
+        matchNo: lesson,
+        // What she is allowed to point at. Fogged until panic, which is
+        // exactly when the counter lesson can happen at all.
+        opponent: m.opponent,
       },
       saidRef.current,
     );
@@ -267,6 +283,8 @@ function Game() {
     m.king,
     m.discardCount,
     m.actionBar.length,
+    m.opponent,
+    lesson,
   ]);
   // Shown next to the build id: a screenshot of a layout problem is only
   // useful if it says what size screen the layout was solving for.
@@ -405,16 +423,11 @@ function Game() {
             {m.roomCode ? "מחכה לחבר שלך…" : PHASE_LABEL[m.phase]}
           </div>
         )}
-        {(m.phase === "build" || m.phase === "panic") &&
-          (m.playground ? (
-            <div className="topbar__timer topbar__timer--free">
-              <Icon name="stacked" size={15} /> מעבדה · בלי שעון
-            </div>
-          ) : (
-            <div className="topbar__timer">
-              <Icon name="timer" size={15} /> {Math.ceil(m.timeLeft)}s
-            </div>
-          ))}
+        {(m.phase === "build" || m.phase === "panic") && !m.playground && (
+          <div className="topbar__timer">
+            <Icon name="timer" size={15} /> {Math.ceil(m.timeLeft)}s
+          </div>
+        )}
         <div className="topbar__right">
           {m.phase !== "intro" && (
             <button
@@ -864,12 +877,6 @@ function Game() {
 
           {interactive && m.playground && (
             <aside className="lab">
-              <div className="lab__head">
-                <strong>מעבדת ניסויים</strong>
-                <span className="lab__note">
-                  בלי שעון. שני הצדדים שלך, הכול ברמה 1, שום דבר לא נשמר.
-                </span>
-              </div>
               <div className="lab__hold">
               <div className="lab__held">
                 {m.hand ? (
@@ -889,9 +896,8 @@ function Game() {
                     />
                   )
                 ) : (
-                  <div className="lab__eraser">
+                  <div className="lab__eraser" title="גע בקלף על הלוח כדי להוריד אותו">
                     🧽
-                    <span>מצב מחיקה — גע בקלף על הלוח כדי להוריד אותו</span>
                   </div>
                 )}
               </div>

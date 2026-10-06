@@ -1,7 +1,11 @@
 import { ARENA, RANGE_REACH, SIMULATION, SUDDEN_DEATH } from "@amanda/shared";
 import {
+  damageSharer,
+  rowAttackTargets,
   runAuras,
+  runDamageOverTime,
   runDelayed,
+  runOnAttack,
   runOnDamaged,
   runOnDeath,
   runOnHit,
@@ -255,7 +259,33 @@ export function runBattle(setup: BattleSetup): BattleResult {
 
   function performAttack(u: Unit, target: Unit): void {
     state.events.push({ tick: state.tick, type: "attack", uid: u.uid, targetUid: target.uid });
-    const dmg = computeDamage(u.power * escalation(), u.activeElement, target);
+    // Fires as the swing starts, before anything lands: a vacuum drags the
+    // line in, a gelatinous cube swallows what walked into it.
+    runOnAttack(state, u, target);
+    let dmg = computeDamage(u.power * escalation(), u.activeElement, target);
+
+    /*
+     * A neighbour can step in front of part of the blow (Pudding Shield).
+     * Taken off the top, before the target's own armor has done its work on
+     * the rest — a bodyguard throwing itself in the way does not get to use
+     * the protected card's armor to do it.
+     */
+    const share = damageSharer(state, target);
+    if (share && dmg > 0) {
+      const moved = Math.floor((dmg * share.pct) / 100);
+      dmg -= moved;
+      share.ally.hp -= moved;
+      state.events.push({
+        tick: state.tick,
+        type: "hit",
+        uid: u.uid,
+        targetUid: share.ally.uid,
+        damage: moved,
+        targetHp: Math.max(0, share.ally.hp),
+      });
+      if (share.ally.hp <= 0 && share.ally.alive) killUnit(share.ally, u);
+    }
+
     target.hp -= dmg;
     state.events.push({
       tick: state.tick,
@@ -265,6 +295,26 @@ export function runBattle(setup: BattleSetup): BattleResult {
       damage: dmg,
       targetHp: Math.max(0, target.hp),
     });
+
+    /*
+     * A swing wide enough to catch the lanes either side. This is what beats
+     * anything that multiplies: swarms and splitters fan out sideways when
+     * they die, straight into the arc of the next swing.
+     */
+    for (const splash of rowAttackTargets(state, u, target)) {
+      const extra = computeDamage(u.power * escalation(), u.activeElement, splash);
+      splash.hp -= extra;
+      state.events.push({
+        tick: state.tick,
+        type: "hit",
+        uid: u.uid,
+        targetUid: splash.uid,
+        damage: extra,
+        targetHp: Math.max(0, splash.hp),
+      });
+      if (splash.hp <= 0 && splash.alive) killUnit(splash, u);
+    }
+
     runOnHit(state, u, target);
     // Reflected damage is a real hit and has to be recorded as one. Without
     // this a King could kill itself on a thorned defender while its own report
@@ -387,6 +437,10 @@ export function runBattle(setup: BattleSetup): BattleResult {
   function step(): void {
     state.tick++;
     runAuras(state);
+    // Poison and burning lanes, after the auras that could have healed through
+    // them and before anybody acts. Both can kill, so this runs with the
+    // simulation's own death bookkeeping available to it.
+    runDamageOverTime(state, ops);
     // Stable iteration order (array order) keeps the simulation deterministic.
     const acting = state.units.filter((u) => u.alive);
     for (const u of acting) {

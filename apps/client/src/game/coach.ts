@@ -30,6 +30,14 @@ export interface CoachView {
   king: string | null;
   discardCount: number;
   actionBarCount: number;
+  /**
+   * Which lesson this is. 1 is the walkthrough — King, guard, flyer, action
+   * card, bin, series, fog — in Or's order. 2 is the match where she stops
+   * explaining the buttons and starts explaining the opponent.
+   */
+  matchNo?: number;
+  /** The opponent's board as it is currently shown. Fogged until panic. */
+  opponent?: { placements: Record<string, string>; king: string | null };
 }
 
 const card = (id: string | null): Card | null => (id ? (CATALOG.get(id) ?? null) : null);
@@ -73,6 +81,135 @@ function activeSynergy(view: CoachView): string | null {
     if (s?.synergy && n >= s.synergy.threshold) return seriesId;
   }
   return null;
+}
+
+/* ═══════════════ the second lesson: what the opponent put down ═══════════════
+ *
+ * Or's ask: "if I see the opponent played X it pays me to play Y to defend
+ * against him or to hurt him. We need a few strategies like that, maybe for
+ * the second tutorial match."
+ *
+ * Two things make this work, and both are constraints rather than choices:
+ *
+ *   1. YOU CAN ONLY COUNTER WHAT YOU CAN SEE, and the opponent's board is
+ *      fogged until the panic seconds. So every line below waits for panic.
+ *      That is also the honest lesson: panic is not spare time, it is the
+ *      moment you answer what you have just been shown.
+ *
+ *   2. SHE ONLY SAYS IT WHEN IT IS TRUE. Each rule checks the card actually
+ *      in your hand against the cards actually on their board. Telling a
+ *      child "poison beats a wall" while they hold neither teaches nothing
+ *      and costs trust.
+ *
+ * The matchups themselves are measured, not invented — see docs/COUNTERS.md
+ * and packages/engine/src/counters.test.ts.
+ */
+
+/** Does this card carry that ability? */
+function has(c: Card | null, ability: string): boolean {
+  return !!c?.abilities.some((a) => a.type === ability);
+}
+
+/** Every card the opponent is currently showing, King included. */
+function enemyCards(view: CoachView): Card[] {
+  const ids = [
+    ...Object.values(view.opponent?.placements ?? {}),
+    ...(view.opponent?.king ? [view.opponent.king] : []),
+  ];
+  return ids.map((id) => card(id)).filter((c): c is Card => c !== null);
+}
+
+/** The lane a cell key sits in, for "are these queued up behind each other". */
+function laneOf(key: string): number {
+  return Number(key.split("-")[1]);
+}
+
+/** The most cards the opponent has queued in any single lane. */
+function deepestLane(view: CoachView): number {
+  const byLane = new Map<number, number>();
+  for (const key of Object.keys(view.opponent?.placements ?? {})) {
+    const lane = laneOf(key);
+    byLane.set(lane, (byLane.get(lane) ?? 0) + 1);
+  }
+  return Math.max(0, ...byLane.values());
+}
+
+/** A card of yours that hits far harder than it can take. */
+function glassCannon(view: CoachView): Card | null {
+  const mine = [...Object.values(view.placements), ...(view.king ? [view.king] : [])]
+    .map((id) => card(id))
+    .filter((c): c is Card => c !== null);
+  return mine.find((c) => c.stats.power >= c.stats.hp) ?? null;
+}
+
+function counterCues(view: CoachView, inHand: Card | null): Array<() => Cue | null> {
+  const theirs = enemyCards(view);
+  const board = ".side--enemy";
+  return [
+    // Poison vs a wall. Measured: a 300hp poisoner kills a 3,000hp wall that
+    // the same card without poison cannot scratch, and armor does not help.
+    () => {
+      const wall = theirs.find((c) => c.stats.hp >= 1200);
+      return has(inHand, "stackingDot") && wall
+        ? {
+            id: "x-poison",
+            text: `ל${wall.name.he} יש ערימת חיים. ${inHand!.name.he} לא מנסה לנצח אותו במכות — הארס שלו מצטבר בכל פגיעה וממשיך לשרוף גם אחרי שהוא מת. שים אותו מולו.`,
+            target: board,
+          }
+        : null;
+    },
+
+    // A wide swing vs anything that multiplies.
+    () => {
+      const multiplies = theirs.some(
+        (c) => has(c, "splitOnDeath") || has(c, "swarmOnDeath"),
+      );
+      return has(inHand, "aoeRowAttack") && multiplies
+        ? {
+            id: "x-wide",
+            text: `הוא שם משהו שמתפצל כשהוא מת — תהרוג אחד ויהיו שניים. ${inHand!.name.he} מכה כמה נתיבים בבת אחת, וזה בדיוק מה שמבטל את זה. רק אל תשים אותו בקצה, שם חצי מהמכה הולכת לאוויר.`,
+            target: board,
+          }
+        : null;
+    },
+
+    // A burning lane vs a queue. One lane only, so it needs a real queue.
+    () => {
+      return has(inHand, "lineDenialDot") && deepestLane(view) >= 2
+        ? {
+            id: "x-lane",
+            text: `הוא ערם קלפים בטור אחד. ${inHand!.name.he} מבעיר את הנתיב שלפניו — כולם שם משלמים כל שנייה, ושריון לא עוזר. שים אותו מול הטור הזה.`,
+            target: board,
+          }
+        : null;
+    },
+
+    // The vacuum vs a board that wants to stay far away.
+    () => {
+      const keepsDistance = theirs.some(
+        (c) => c.flying || c.stats.range === "sniper",
+      );
+      return has(inHand, "pullVacuum") && keepsDistance
+        ? {
+            id: "x-pull",
+            text: `הוא בנה משהו שיורה מרחוק ולא מתקרב. ${inHand!.name.he} גורר את כל הקו שלו אליך — ישר לתוך הטווח של השומרים שלך.`,
+            target: board,
+          }
+        : null;
+    },
+
+    // The protector half: not "what beats what", but "what sits beside what".
+    () => {
+      const fragile = glassCannon(view);
+      return has(inHand, "damageShareAdjacent") && fragile
+        ? {
+            id: "x-shield",
+            text: `${fragile.name.he} מכה חזק ושובר בקלות. ${inHand!.name.he} סופג חצי מכל מכה שמכוונת לשכן שלו — שים אותו ממש לידו ותן לו לחיות קצת.`,
+            target: ".side--me .board",
+          }
+        : null;
+    },
+  ];
 }
 
 /**
@@ -182,6 +319,22 @@ export function nextCue(view: CoachView, said: Set<string>): Cue | null {
   ];
 
   if (view.phase !== "build" && view.phase !== "panic") return null;
+
+  /*
+   * The second lesson jumps the queue, and only in panic.
+   *
+   * By then the walkthrough has already been given once, and the thing on
+   * screen that actually needs explaining is the board that has just been
+   * uncovered — not where the bin is. It is tried BEFORE the ordered steps so
+   * a leftover "you could take from the bin" cannot talk over it.
+   */
+  if ((view.matchNo ?? 1) >= 2 && view.phase === "panic") {
+    for (const step of counterCues(view, inHand)) {
+      const cue = step();
+      if (cue && !said.has(cue.id)) return cue;
+    }
+  }
+
   for (const step of steps) {
     const cue = step();
     if (cue && !said.has(cue.id)) return cue;

@@ -14,12 +14,6 @@
   padding-bottom: 2px;
 }
 
-.topbar__timer--free {
-  color: #8fd3ff;
-  border-color: rgba(143, 211, 255, 0.4);
-  background: rgba(143, 211, 255, 0.1);
-}
-
 /* ---- each board's header becomes a switch ---- */
 .lab-side {
   display: inline-flex;
@@ -68,10 +62,8 @@
   flex-shrink: 0;
   display: grid;
   grid-template-columns: auto 1fr;
-  grid-template-rows: auto minmax(0, 1fr);
-  grid-template-areas:
-    "head head"
-    "hold rack";
+  grid-template-rows: minmax(0, 1fr);
+  grid-template-areas: "hold rack";
   gap: 8px 14px;
   padding: 8px 14px 10px;
   background: var(--panel);
@@ -88,21 +80,6 @@
   flex-direction: column;
   gap: 6px;
   min-height: 0;
-}
-.lab__head {
-  grid-area: head;
-  display: flex;
-  align-items: baseline;
-  gap: 10px;
-  flex-wrap: wrap;
-}
-.lab__head strong {
-  color: #8fd3ff;
-  font-size: 14px;
-}
-.lab__note {
-  color: var(--muted);
-  font-size: 12px;
 }
 .lab__held {
   flex: none;
@@ -123,10 +100,6 @@
   color: var(--muted);
   border: 1.5px dashed var(--line);
   border-radius: 10px;
-}
-.lab__eraser span {
-  font-size: 10px;
-  line-height: 1.3;
 }
 .lab__buttons {
   flex: none;
@@ -422,9 +395,6 @@
   }
   .lab__buttons {
     width: 84px;
-  }
-  .lab__note {
-    display: none;
   }
   .rack__card {
     width: 48px;

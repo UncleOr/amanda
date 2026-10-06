@@ -1,6 +1,6 @@
 import { ARENA, SIMULATION } from "@amanda/shared";
 import type { Element, LocalizedString } from "@amanda/shared";
-import { sharesLane } from "./combat.js";
+import { isAhead, sharesLane } from "./combat.js";
 import type { BattleState, Owner, Unit } from "./types.js";
 
 const TPS = SIMULATION.ticksPerSecond;
@@ -149,6 +149,172 @@ export function runAuras(state: BattleState): void {
   }
 }
 
+/**
+ * Damage over time, and the lanes that burn.
+ *
+ * ═══ WHY THIS EXISTS ═══
+ *
+ * Six abilities were in the card data with no handler in the engine — they
+ * were printed on thirteen cards and did nothing. Or asked for cards that beat
+ * each other ("if I see the opponent played X it pays me to play Y"), and the
+ * answers were already written on the cards; they just were not wired up.
+ *
+ * Poison is the answer to a wall. It ignores armor and it ignores how much
+ * health something has, because it ramps: every hit adds a stack, and the
+ * stacks keep burning whether or not the poisoner is still alive. A Venom
+ * Scorpion with 400hp loses a straight fight to a 2500hp Titan King and still
+ * kills it, which is exactly the shape a counter should have.
+ *
+ * Lane denial is the answer to a column. Stack a lane with cheap bodies and
+ * the lava dragon ahead of it bills every one of them per second.
+ *
+ * Both are applied here rather than in an aura pass because both can kill, and
+ * killing needs the simulation's own bookkeeping (death events, the King's
+ * loss condition, what drops out of a stack).
+ */
+export function runDamageOverTime(state: BattleState, ops: BattleOps): void {
+  // A lane that burns: anything of the other side standing ahead of the source
+  // in its lane pays per second, armor or no armor.
+  for (const src of state.units) {
+    if (!src.alive) continue;
+    for (const ab of src.abilities) {
+      if (ab.type !== "lineDenialDot") continue;
+      const dps = num(ab.params.dps, 100);
+      for (const enemy of state.units) {
+        if (!enemy.alive || enemy.owner === src.owner) continue;
+        if (!sharesLane(enemy, src) || !isAhead(src, enemy)) continue;
+        enemy.hp -= dps / TPS;
+      }
+    }
+  }
+
+  // Stacks already on a unit keep burning; the poisoner does not have to live.
+  for (const u of state.units) {
+    if (!u.alive) continue;
+    const dps = num(u.flags.dotDps, 0);
+    if (dps > 0) u.hp -= dps / TPS;
+  }
+
+  for (const u of state.units) {
+    if (u.alive && u.hp <= 0) ops.killUnit(u, null);
+  }
+}
+
+/** The most stacks one unit can be carrying. Enough to kill a King, not instantly. */
+const MAX_DOT_STACKS = 8;
+
+/**
+ * Add one poison stack to the target.
+ *
+ * Stacks from different poisoners add together, which is the combo half of
+ * Or's ask: two cheap insects do what neither of them can do alone.
+ */
+function addDotStack(target: Unit, perStack: number): void {
+  const stacks = num(target.flags.dotStacks, 0);
+  if (stacks >= MAX_DOT_STACKS) return;
+  target.flags.dotStacks = stacks + 1;
+  target.flags.dotDps = num(target.flags.dotDps, 0) + perStack;
+}
+
+/**
+ * Effects that fire as a unit swings, before the blow lands.
+ *
+ * `onCollision` is folded in here on purpose: the engine has no separate
+ * collision event, and a melee unit's first swing at something IS the moment
+ * it met it in the lane. Pretending otherwise would mean a new event type that
+ * fires at exactly the same instant.
+ */
+export function runOnAttack(state: BattleState, u: Unit, target: Unit): void {
+  for (const ab of u.abilities) {
+    if (ab.trigger !== "onAttack" && ab.trigger !== "onCollision") continue;
+    switch (ab.type) {
+      case "pullVacuum": {
+        // Every few seconds, drag the enemy line one step closer. The answer
+        // to a board that wants to keep its distance and shoot.
+        const every = num(ab.params.everySeconds, 6);
+        const last = num(u.flags.lastPullTick, -Infinity);
+        if (state.tick - last < every * TPS) break;
+        u.flags.lastPullTick = state.tick;
+        const slots = num(ab.params.slots, 1);
+        let pulled = 0;
+        for (const enemy of state.units) {
+          if (!enemy.alive || enemy.owner === u.owner || enemy.isKing) continue;
+          if (enemy.knockbackImmune || enemy.moveSpeed <= 0) continue;
+          // Toward the thing doing the pulling, worked out from where it
+          // actually is. Deriving it from the victim's facing was wrong, and
+          // wrong in the most embarrassing direction: it pushed them away.
+          const toward = Math.sign(u.col - enemy.col) || 1;
+          enemy.col = clampCol(enemy.col + toward * slots);
+          pulled++;
+        }
+        if (pulled > 0)
+          state.events.push({ tick: state.tick, type: "knockback", uid: u.uid, targetUid: target.uid, col: target.col });
+        break;
+      }
+      case "absorbOnCollision": {
+        // Swallowed: held and unable to act. Once per victim, so a slow blob
+        // cannot keep one card stunned for the whole battle.
+        const key = `absorbed:${target.uid}`;
+        if (u.flags[key]) break;
+        u.flags[key] = true;
+        const until = state.tick + Math.round(num(ab.params.stunSeconds, 3) * TPS);
+        target.stunnedUntil = Math.max(target.stunnedUntil, until);
+        target.flags.rooted = true;
+        state.events.push({ tick: state.tick, type: "stun", uid: u.uid, targetUid: target.uid, untilTick: until });
+        break;
+      }
+      default:
+        break;
+    }
+  }
+}
+
+/**
+ * Which other enemies a wide attack also catches.
+ *
+ * The counter to anything that multiplies. Swarms and splitters fan out into
+ * NEIGHBOURING lanes when they die, so the one thing that undoes them is a
+ * swing that covers lanes rather than one that hits hard.
+ */
+export function rowAttackTargets(state: BattleState, u: Unit, target: Unit): Unit[] {
+  const ab = u.abilities.find((a) => a.type === "aoeRowAttack");
+  if (!ab) return [];
+  // `lanes` is the total width of the swing, so a 3 reaches one lane each way.
+  const reach = Math.floor((num(ab.params.lanes, 2) - 1) / 2) || 1;
+  const hit: Unit[] = [];
+  for (const other of state.units) {
+    if (!other.alive || other === target || other.owner === u.owner) continue;
+    // Beside the real target, not merely somewhere on the board.
+    const beside = other.lanes.some((l) => target.lanes.some((tl) => Math.abs(tl - l) <= reach));
+    if (!beside) continue;
+    if (Math.abs(other.col - target.col) > 1.5) continue;
+    hit.push(other);
+  }
+  return hit;
+}
+
+/**
+ * The ally that takes part of a blow aimed at this one.
+ *
+ * The protector half of Or's ask: a Pudding Shield next to something fragile
+ * and expensive turns it from a card that dies first into a card that fights.
+ * Returns the sharer and the fraction it absorbs.
+ */
+export function damageSharer(
+  state: BattleState,
+  target: Unit,
+): { ally: Unit; pct: number } | null {
+  for (const ally of state.units) {
+    if (!ally.alive || ally === target || ally.owner !== target.owner) continue;
+    if (!nearbyLane(ally, target)) continue;
+    if (Math.abs(ally.col - target.col) > 1.5) continue;
+    const ab = ally.abilities.find((a) => a.type === "damageShareAdjacent");
+    if (!ab) continue;
+    return { ally, pct: num(ab.params.pct, 50) };
+  }
+  return null;
+}
+
 /** One-time effects that fire when the battle begins. */
 export function runOnSpawn(state: BattleState, ops: BattleOps): void {
   for (const u of state.units) {
@@ -216,6 +382,11 @@ export function runOnHit(state: BattleState, attacker: Unit, target: Unit): void
       }
       case "armorBreak":
         target.armor = 0;
+        break;
+      case "stackingDot":
+        // The point of poison: it does not care about armor, and it does not
+        // care how much health the thing in front of it has.
+        addDotStack(target, num(ab.params.dotPerStack, 40));
         break;
       case "elementSteal":
         if (!attacker.flags.elementStolen) {

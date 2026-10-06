@@ -139,3 +139,101 @@ describe("the walkthrough order", () => {
     expect(cue?.id).toBe("bin");
   });
 });
+
+/*
+ * The second lesson: what to play against what they played.
+ *
+ * Two promises, and the second matters more than the first. She may only say
+ * these in the panic seconds, because until then their board is fogged and a
+ * tip about a card you cannot see is noise. And she may only say them when
+ * the counter is really in your hand and the thing it beats is really on
+ * their board — a tutorial that teaches a rule you cannot act on is worse
+ * than silence.
+ */
+describe("the second lesson — countering what the opponent played", () => {
+  const withAbility = (ability: string) =>
+    [...CATALOG.values()].find((c) => c.abilities.some((a) => a.type === ability))?.id;
+
+  const poisoner = withAbility("stackingDot")!;
+  const wide = withAbility("aoeRowAttack")!;
+  const wall = [...CATALOG.values()].find((c) => c.stats.hp >= 1200)!.id;
+  const splitter = withAbility("splitOnDeath")!;
+
+  const panic = (over: Partial<CoachView>): CoachView => ({
+    ...base,
+    phase: "panic",
+    matchNo: 2,
+    king: flyer,
+    ...over,
+  });
+
+  it("says nothing about counters during the first match", () => {
+    const cue = nextCue(
+      panic({ matchNo: 1, hand: poisoner, opponent: { placements: { "3-1": wall }, king: null } }),
+      new Set(),
+    );
+    expect(cue?.id).not.toBe("x-poison");
+  });
+
+  it("says nothing while their board is still fogged", () => {
+    const cue = nextCue(
+      { ...panic({ hand: poisoner, opponent: { placements: { "3-1": wall }, king: null } }), phase: "build" },
+      new Set(),
+    );
+    expect(cue?.id).not.toBe("x-poison");
+  });
+
+  it("offers poison when they have a wall and you are holding poison", () => {
+    const cue = nextCue(
+      panic({ hand: poisoner, opponent: { placements: { "3-1": wall }, king: null } }),
+      new Set(),
+    );
+    expect(cue?.id).toBe("x-poison");
+  });
+
+  it("does not offer poison when you are not holding any", () => {
+    const cue = nextCue(
+      panic({ hand: flyer, opponent: { placements: { "3-1": wall }, king: null } }),
+      new Set(),
+    );
+    expect(cue?.id).not.toBe("x-poison");
+  });
+
+  it("does not offer poison when there is no wall to use it on", () => {
+    const weakest = [...CATALOG.values()].sort((a, b) => a.stats.hp - b.stats.hp)[0]!.id;
+    const cue = nextCue(
+      panic({ hand: poisoner, opponent: { placements: { "3-1": weakest }, king: null } }),
+      new Set(),
+    );
+    expect(cue?.id).not.toBe("x-poison");
+  });
+
+  it("offers a wide swing against something that multiplies", () => {
+    const cue = nextCue(
+      panic({ hand: wide, opponent: { placements: { "3-1": splitter }, king: null } }),
+      new Set(),
+    );
+    expect(cue?.id).toBe("x-wide");
+  });
+
+  it("offers the burning lane only when they have actually queued a lane up", () => {
+    const lava = withAbility("lineDenialDot")!;
+    const ant = [...CATALOG.values()].find((c) => c.launch)!.id;
+    const spread = nextCue(
+      panic({ hand: lava, opponent: { placements: { "3-0": ant, "3-1": ant }, king: null } }),
+      new Set(),
+    );
+    expect(spread?.id).not.toBe("x-lane");
+    const queued = nextCue(
+      panic({ hand: lava, opponent: { placements: { "3-1": ant, "2-1": ant }, king: null } }),
+      new Set(),
+    );
+    expect(queued?.id).toBe("x-lane");
+  });
+
+  it("each counter line is said at most once", () => {
+    const view = panic({ hand: poisoner, opponent: { placements: { "3-1": wall }, king: null } });
+    const cue = nextCue(view, new Set(["x-poison"]));
+    expect(cue?.id).not.toBe("x-poison");
+  });
+});
