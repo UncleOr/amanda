@@ -514,6 +514,11 @@ function Game() {
                 <button className="btn-fight btn-online" onClick={() => m.startOnline()}>
                   מישהו רנדומלי
                 </button>
+                {/* The event, not the everyday opponent. It takes two people
+                    on purpose: one board cannot beat her. */}
+                <button className="btn-fight btn-amanda" onClick={() => m.startAmanda()}>
+                  נגד אמנדה — שניים נגדה
+                </button>
                 <button className="btn-link" onClick={() => setFriendOpen(false)}>
                   ← חזרה
                 </button>
@@ -629,7 +634,9 @@ function Game() {
         >
           <div className="boards">
             <section className={`side side--me${m.frozenFor > 0 ? " side--frozen" : ""}`}>
-              <div className="side__label">אתה <span className="side__way">⟵</span></div>
+              <div className="side__label">
+                {m.coop ? "החצי שלך" : "אתה"} <span className="side__way">⟵</span>
+              </div>
               {m.frozenFor > 0 && (
                 <div className="frozen" role="status">
                   <span className="frozen__icon">🧊</span>
@@ -665,7 +672,7 @@ function Game() {
 
             <section className="side side--enemy">
               <div className="side__label">
-                <span className="side__way">⟶</span> היריב{" "}
+                <span className="side__way">⟶</span> {m.coop ? "אמנדה" : "היריב"}{" "}
                 {m.phase !== "build" && <span className="side__revealed">נחשף!</span>}
               </div>
               <BoardGrid

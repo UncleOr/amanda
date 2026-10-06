@@ -398,6 +398,9 @@ export interface MatchApi {
   mods: BattleMods;
   /** Multiplayer state. */
   online: boolean;
+  /** Amanda mode: you share a side with the other player against her. */
+  coop: boolean;
+  startAmanda: () => void;
   /** The player's account, or null when playing without one. */
   account: Account | null;
   /** Re-read it, after the player changes something about themselves. */
@@ -472,6 +475,8 @@ export function useMatch(): MatchApi {
   /** Online: we have told the server we are ready. Still free to keep building. */
   const [ready, setReady] = useState(false);
   const [oppReady, setOppReady] = useState(false);
+  /** Amanda mode: you and the other player share a side against her. */
+  const [coop, setCoop] = useState(false);
   /** Cards drawn ahead by "triple draw", offered before the deck is touched. */
   const [extraHand, setExtraHand] = useState<string[]>([]);
   /** First cell picked by a two-step action, waiting for its partner. */
@@ -938,6 +943,7 @@ export function useMatch(): MatchApi {
     setStackSlots(0);
     setStackCorners(false);
     setFrozenFor(0);
+    setCoop(false);
     setReady(false);
     setOppReady(false);
     setShielded(false);
@@ -982,9 +988,10 @@ export function useMatch(): MatchApi {
         netRef.current?.close();
         netRef.current = null;
       },
-      onStart: (side) => {
+      onStart: (side, isCoop) => {
         matchStartedRef.current = true;
         setMySide(side);
+        setCoop(isCoop);
       },
       onPhase: (p, timeLeft) => {
         if (p === "locking") {
@@ -1006,6 +1013,9 @@ export function useMatch(): MatchApi {
           a: r.boardA as BoardInput,
           b: r.boardB as BoardInput,
           recordFrames: true,
+          // Amanda mode is eight lanes. Replaying it in four would not merely
+          // look wrong, it would disagree with the server about who won.
+          ...(r.lanes ? { lanes: r.lanes } : {}),
         });
         setResult(res);
         sfx.play("go");
@@ -1031,6 +1041,8 @@ export function useMatch(): MatchApi {
   }, [enterPrebattle]);
 
   const hostRoom = useCallback(() => startOnline({ kind: "host" }), [startOnline]);
+  /** Queue to face Amanda with a partner. It needs two — one board cannot win. */
+  const startAmanda = useCallback(() => startOnline({ kind: "amanda" }), [startOnline]);
   const joinRoom = useCallback(
     (code: string) => startOnline({ kind: "join", code: code.toUpperCase().trim() }),
     [startOnline],
@@ -1194,6 +1206,8 @@ export function useMatch(): MatchApi {
     cancelTargeting,
     startMatch,
     startOnline: () => startOnline(),
+    startAmanda,
+    coop,
     hostRoom,
     joinRoom,
     discardHand,

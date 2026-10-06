@@ -468,5 +468,6 @@ export function runBattle(setup: BattleSetup): BattleResult {
     events: state.events,
     finalUnits: state.units,
     frames,
+    lanes: state.lanes,
   };
 }

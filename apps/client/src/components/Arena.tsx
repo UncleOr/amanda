@@ -11,7 +11,9 @@ const CELL = 72;
 /** Header band above the lanes, so the identity banners never cover a unit. */
 const HEAD = 26;
 const W = ARENA.width * CELL;
-const H = ARENA.lanes * CELL + HEAD;
+/** Four lanes is the ordinary arena; Amanda mode is eight. Per battle. */
+const laneCount = (result: { lanes?: number }) => result.lanes ?? ARENA.lanes;
+const heightFor = (lanes: number) => lanes * CELL + HEAD;
 const OWNER_TINT = { A: 0x4aa3ff, B: 0xff5a5a } as const;
 /** Which generated battlefield backdrop to fight on (assets/raw/arena/<id>). */
 const BACKDROP = "rift";
@@ -150,6 +152,8 @@ export function Arena({
    * while rendering, not a rejected promise.
    */
   const [failed, setFailed] = useState(false);
+  const LANES = laneCount(result);
+  const H = heightFor(LANES);
 
   useEffect(() => {
     finishedRef.current = false;
@@ -528,13 +532,13 @@ export function Arena({
         bg.rect(0, HEAD, W / 2, FIELD).fill({ color: localTint, alpha: terr });
         bg.rect(W / 2, HEAD, W / 2, FIELD).fill({ color: oppTint, alpha: terr });
         // alternating lane bands make the four lanes readable at a glance
-        for (let l = 0; l < ARENA.lanes; l++)
+        for (let l = 0; l < LANES; l++)
           if (l % 2 === 1)
             bg.rect(0, HEAD + l * CELL, W, CELL).fill({ color: 0xffffff, alpha: bgTexture ? 0.02 : 0.03 });
         // column guides (faint) and lane separators (stronger)
         for (let c = 0; c <= ARENA.width; c++) bg.moveTo(c * CELL, HEAD).lineTo(c * CELL, H);
         bg.stroke({ width: 1, color: 0x2a3550, alpha: bgTexture ? 0.3 : 0.5 });
-        for (let l = 0; l <= ARENA.lanes; l++)
+        for (let l = 0; l <= LANES; l++)
           bg.moveTo(0, HEAD + l * CELL).lineTo(W, HEAD + l * CELL);
         bg.stroke({ width: 1, color: 0x3a4a63, alpha: bgTexture ? 0.45 : 1 });
         // the front line where the two boards meet

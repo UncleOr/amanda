@@ -52,6 +52,11 @@ export type ClientMessage =
   | { t: "me"; playerId: string }
   /** Join the open queue and play whoever turns up next. */
   | { t: "hello" }
+  /**
+   * Queue for Amanda mode: the two of you share one side against her.
+   * It needs two people by design — one board cannot beat her.
+   */
+  | { t: "helloAmanda" }
   /** Open a private room and wait for a specific person to join it. */
   | { t: "host" }
   /** Join a private room by its code. */
@@ -79,12 +84,29 @@ export type ServerMessage =
   /** A private room was opened; share this code to be joined. */
   | { t: "room"; code: string }
   | { t: "roomError"; reason: RoomError }
-  | { t: "start"; side: Side }
+  /**
+   * `coop` means Amanda mode: both players build on side A, each in their own
+   * half of an eight-lane board, and `lane` says which half is yours.
+   */
+  | { t: "start"; side: Side; coop?: boolean; lane?: number }
   | { t: "phase"; phase: string; timeLeft: number }
   /** Fogged view of the opponent's board for the current phase. */
   | { t: "opp"; view: BoardView }
   /** Authoritative battle inputs — both clients replay this deterministically. */
-  | { t: "result"; seed: number; boardA: NetBoard; boardB: NetBoard; winner: Side | null }
+  /**
+   * `lanes` is not optional detail: the client replays this battle itself, and
+   * a replay run in four lanes against boards built for eight would diverge
+   * from the server's answer rather than merely look wrong.
+   */
+  | {
+      t: "result";
+      seed: number;
+      boardA: NetBoard;
+      boardB: NetBoard;
+      winner: Side | null;
+      lanes?: number;
+      coop?: boolean;
+    }
   | { t: "oppLeft" }
   /** Whether the opponent has declared themselves ready. */
   | { t: "oppReady"; ready: boolean }

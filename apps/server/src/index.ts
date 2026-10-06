@@ -38,6 +38,10 @@ const playerIdOf = new WeakMap<WebSocket, string>();
 
 /** The player in the open queue, waiting for whoever turns up next. */
 let waiting: WebSocket | null = null;
+/** The player waiting for a partner to face Amanda with. A separate queue:
+ *  pairing someone who asked for her with someone who asked for a duel would
+ *  give both of them the wrong game. */
+let waitingCoop: WebSocket | null = null;
 const matchOf = new WeakMap<WebSocket, Match>();
 
 /** Open private rooms, by code. */
@@ -69,8 +73,8 @@ function newRoomCode(): string {
   return `${Date.now().toString(36).toUpperCase().slice(-ROOM_CODE_LENGTH)}`;
 }
 
-function beginMatch(a: WebSocket, b: WebSocket, how: string): void {
-  const m = new Match(a, b, playerIdOf.get(a) ?? null, playerIdOf.get(b) ?? null);
+function beginMatch(a: WebSocket, b: WebSocket, how: string, coop = false): void {
+  const m = new Match(a, b, playerIdOf.get(a) ?? null, playerIdOf.get(b) ?? null, coop);
   matchOf.set(a, m);
   matchOf.set(b, m);
   console.log(`[server] match started (${how})`);
@@ -110,6 +114,19 @@ function handleLobby(ws: WebSocket, msg: ClientMessage): void {
         waiting = ws;
         send(ws, { t: "waiting" });
         console.log("[server] player waiting");
+      }
+      return;
+    }
+
+    case "helloAmanda": {
+      if (isOpen(waitingCoop) && waitingCoop !== ws) {
+        const partner = waitingCoop;
+        waitingCoop = null;
+        beginMatch(partner, ws, "Amanda mode", true);
+      } else {
+        waitingCoop = ws;
+        send(ws, { t: "waiting" });
+        console.log("[server] player waiting for Amanda mode");
       }
       return;
     }
@@ -166,6 +183,7 @@ wss.on("connection", (ws) => {
 
   ws.on("close", () => {
     if (waiting === ws) waiting = null;
+    if (waitingCoop === ws) waitingCoop = null;
     closeRoomOf(ws);
     const match = matchOf.get(ws);
     if (match) {

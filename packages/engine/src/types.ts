@@ -170,4 +170,10 @@ export interface BattleResult {
   finalUnits: Unit[];
   /** Per-tick snapshots for animated replay (only when setup.recordFrames). */
   frames: BattleFrame[];
+  /**
+   * How many lanes this battle was fought in — four normally, eight in Amanda
+   * mode. The replay has to be told, because it cannot infer an empty lane
+   * from a snapshot of units.
+   */
+  lanes: number;
 }

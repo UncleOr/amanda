@@ -3,6 +3,7 @@ import { PHASES, encode, type BoardView, type NetBoard, type ServerMessage, type
 import { runBattle } from "@amanda/engine";
 import { CATALOG, SYNERGIES } from "./content.js";
 import { recordMatch } from "./progress.js";
+import { COOP_LANES, amandaBoard, joinBoards } from "./amanda.js";
 
 const COUNTDOWN = 3;
 const PANIC_LOCK_WINDOW = 8; // seconds after Panic to gather both locked boards
@@ -45,11 +46,22 @@ export class Match {
   private resultSent = false;
   private over = false;
 
-  constructor(wsA: WebSocket, wsB: WebSocket, idA: string | null, idB: string | null) {
+  /** Amanda mode: both players share side A and fight her instead of each other. */
+  private readonly coop: boolean;
+
+  constructor(
+    wsA: WebSocket,
+    wsB: WebSocket,
+    idA: string | null,
+    idB: string | null,
+    coop = false,
+  ) {
+    this.coop = coop;
     this.a = { ws: wsA, side: "A", view: emptyView(), board: null, playerId: idA };
     this.b = { ws: wsB, side: "B", view: emptyView(), board: null, playerId: idB };
-    this.send(this.a, { t: "start", side: "A" });
-    this.send(this.b, { t: "start", side: "B" });
+    // In Amanda mode both are side A; `lane` tells each which half is theirs.
+    this.send(this.a, { t: "start", side: "A", coop, ...(coop ? { lane: 0 } : {}) });
+    this.send(this.b, { t: "start", side: coop ? "A" : "B", coop, ...(coop ? { lane: 4 } : {}) });
     this.runTimeline();
   }
 
@@ -127,8 +139,11 @@ export class Match {
     if (this.resultSent || this.over) return;
     this.resultSent = true;
     const fallback = (side: Side): NetBoard => ({ owner: side, placements: [] });
-    const boardA = this.a.board ?? fallback("A");
-    const boardB = this.b.board ?? fallback("B");
+    // Amanda mode: the two players become ONE side, and she is the other.
+    const boardA = this.coop
+      ? joinBoards(this.a.board, this.b.board)
+      : (this.a.board ?? fallback("A"));
+    const boardB = this.coop ? amandaBoard() : (this.b.board ?? fallback("B"));
     let winner: Side | null = null;
     try {
       const result = runBattle({
@@ -137,15 +152,32 @@ export class Match {
         synergies: SYNERGIES,
         a: boardA,
         b: boardB,
+        ...(this.coop ? { lanes: COOP_LANES } : {}),
       });
       winner = result.winner;
     } catch (err) {
       console.error("[match] battle error", err);
     }
-    this.both({ t: "result", seed: this.seed, boardA, boardB, winner });
+    this.both({
+      t: "result",
+      seed: this.seed,
+      boardA,
+      boardB,
+      winner,
+      ...(this.coop ? { lanes: COOP_LANES, coop: true } : {}),
+    });
     // Trophies and the winner's chest. Deliberately not awaited: the players
     // have their result, and a slow database must not hold up the match.
-    void recordMatch({ a: this.a.playerId, b: this.b.playerId, winner });
+    // In Amanda mode nobody beat anybody: both players share the result, so
+    // they are recorded as two matches against her rather than one against
+    // each other — otherwise one of them would be credited with a loss.
+    if (this.coop) {
+      const beatHer = winner === "A";
+      void recordMatch({ a: this.a.playerId, b: null, winner: beatHer ? "A" : "B" });
+      void recordMatch({ a: this.b.playerId, b: null, winner: beatHer ? "A" : "B" });
+    } else {
+      void recordMatch({ a: this.a.playerId, b: this.b.playerId, winner });
+    }
   }
 
   /** A client disconnected — tell the other and shut the match down. */

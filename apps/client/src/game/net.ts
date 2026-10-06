@@ -22,6 +22,8 @@ export const ONLINE_AVAILABLE = SERVER_URL !== "";
 /** What to ask the lobby for once the socket opens. */
 export type Intent =
   | { kind: "quick" }
+  /** Queue for Amanda mode — it pairs you with someone to face her with. */
+  | { kind: "amanda" }
   | { kind: "host" }
   | { kind: "join"; code: string };
 
@@ -30,10 +32,17 @@ export interface NetHandlers {
   /** A private room was opened — share this code. */
   onRoom?: (code: string) => void;
   onRoomError?: (reason: RoomError) => void;
-  onStart?: (side: Side) => void;
+  onStart?: (side: Side, coop: boolean, lane: number) => void;
   onPhase?: (phase: string, timeLeft: number) => void;
   onOpp?: (view: BoardView) => void;
-  onResult?: (r: { seed: number; boardA: NetBoard; boardB: NetBoard; winner: Side | null }) => void;
+  onResult?: (r: {
+    seed: number;
+    boardA: NetBoard;
+    boardB: NetBoard;
+    winner: Side | null;
+    lanes?: number;
+    coop?: boolean;
+  }) => void;
   onOppLeft?: () => void;
   /** The opponent played an action card at you. */
   onHexed?: (id: string) => void;
@@ -68,7 +77,13 @@ export class Net {
       if (this.playerId) this.sendMsg({ t: "me", playerId: this.playerId });
       const i = this.intent;
       this.sendMsg(
-        i.kind === "host" ? { t: "host" } : i.kind === "join" ? { t: "join", code: i.code } : { t: "hello" },
+        i.kind === "host"
+          ? { t: "host" }
+          : i.kind === "join"
+            ? { t: "join", code: i.code }
+            : i.kind === "amanda"
+              ? { t: "helloAmanda" }
+              : { t: "hello" },
       );
     };
     ws.onclose = () => this.handlers.onClose?.(this.connected);
@@ -97,7 +112,7 @@ export class Net {
           this.handlers.onRoomError?.(msg.reason);
           break;
         case "start":
-          this.handlers.onStart?.(msg.side);
+          this.handlers.onStart?.(msg.side, msg.coop ?? false, msg.lane ?? 0);
           break;
         case "phase":
           this.handlers.onPhase?.(msg.phase, msg.timeLeft);
