@@ -31,6 +31,7 @@ import { ArenaTrack } from "./components/ArenaTrack";
 import { ChestShelf } from "./components/ChestShelf";
 import { About } from "./components/About";
 import { Report } from "./components/Report";
+import { Friends } from "./components/Friends";
 import { SayButton, SaidBubble } from "./components/Say";
 const Admin = lazy(() => import("./components/Admin").then((m) => ({ default: m.Admin })));
 import { MoreModes } from "./components/MoreModes";
@@ -214,6 +215,7 @@ function Game() {
   /** "Bring a friend" opens three ways to do it rather than guessing one. */
   const [friendOpen, setFriendOpen] = useState(false);
   const [modesOpen, setModesOpen] = useState(false);
+  const [friendsOpen, setFriendsOpen] = useState(false);
   const [aboutOpen, setAboutOpen] = useState(false);
   const [reportOpen, setReportOpen] = useState<"bug" | "player" | null>(null);
   /** Turned off for the session the moment the clip fails to load. */
@@ -763,6 +765,18 @@ function Game() {
               <button className="btn-lab" onClick={m.startPlayground} title="בלי שעון, שני הצדדים שלך">
                 <Icon name="stacked" size={15} /> מגרש המשחקים
               </button>
+              {/* Only with an account: a friendship is between two real
+                  accounts, and an anonymous one is thrown away on the next
+                  browser clear (see apps/server/src/friends.ts). */}
+              {m.account && (
+                <button
+                  className="btn-lab"
+                  onClick={() => setFriendsOpen(true)}
+                  title="מי מחובר, ולהזמין למשחק"
+                >
+                  <Icon name="friend" size={15} /> חברים
+                </button>
+              )}
             </div>
             {joining && (
               <form
@@ -1580,6 +1594,40 @@ function Game() {
 
       {reportOpen && (
         <Report initialKind={reportOpen} onClose={() => setReportOpen(null)} />
+      )}
+
+      {friendsOpen && (
+        <Friends
+          onClose={() => setFriendsOpen(false)}
+          onInvite={(id) => {
+            setFriendsOpen(false);
+            m.inviteFriend(id);
+          }}
+          // An invitation opens a room, so it can only be sent from the
+          // home screen — not from inside a match that is already running.
+          canInvite={m.phase === "intro"}
+        />
+      )}
+
+      {/*
+       * Somebody is calling you in. Shown over whatever is on screen,
+       * because the room is open and waiting while this sits there.
+       */}
+      {m.invitation && (
+        <div className="modal-overlay" onClick={m.declineInvitation}>
+          <div className="modal modal--invite" onClick={(e) => e.stopPropagation()}>
+            <Icon name="friend" size={44} />
+            <h2>{m.invitation.nickname ?? "חבר"} מזמין אותך למשחק</h2>
+            <div className="result__buttons">
+              <button className="btn-fight" onClick={m.acceptInvitation}>
+                <Icon name="play" size={16} /> קדימה
+              </button>
+              <button className="btn-fight btn-ghost" onClick={m.declineInvitation}>
+                אולי אחר כך
+              </button>
+            </div>
+          </div>
+        </div>
       )}
 
       {modesOpen && (

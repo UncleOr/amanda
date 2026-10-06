@@ -16,6 +16,8 @@ import { LEVELS, levelCost } from "@amanda/shared";
 import { CATALOG } from "./content.js";
 import { grantChest, saves } from "./progress.js";
 import { fileReport, recentOpponents } from "./reports.js";
+import { acceptFriend, addableOpponents, askFriend, listFriends, removeFriend } from "./friends.js";
+import { isOnline } from "./presence.js";
 import { handleAdmin, handleCopy } from "./admin.js";
 
 import { SUPABASE_URL as URL, db, keyHasWhitespace, keyLength, keyStartsWith } from "./supabase.js";
@@ -222,6 +224,35 @@ async function handleReports(req: IncomingMessage, res: ServerResponse, path: st
   send(res, error ? 400 : 200, error ? { error } : { ok: true });
 }
 
+/** Friends: the list, who there is to add, and the three things you can do. */
+async function handleFriends(req: IncomingMessage, res: ServerResponse, path: string): Promise<void> {
+  const sb = db();
+  if (!sb) return send(res, 503, { error: "no database" });
+  const playerId = await playerFrom(req);
+  if (!playerId) return send(res, 401, { error: "who are you" });
+
+  if (path === "/api/friends") {
+    return send(res, 200, { friends: await listFriends(sb, playerId, isOnline) });
+  }
+  if (path === "/api/friends/addable") {
+    return send(res, 200, { opponents: await addableOpponents(sb, playerId) });
+  }
+
+  const body = (await readBody(req)) as Record<string, unknown>;
+  const other = typeof body.playerId === "string" ? body.playerId : "";
+  if (!other) return send(res, 400, { error: "מי?" });
+
+  const error =
+    path === "/api/friends/ask"
+      ? await askFriend(sb, playerId, other)
+      : path === "/api/friends/accept"
+        ? await acceptFriend(sb, playerId, other)
+        : path === "/api/friends/remove"
+          ? await removeFriend(sb, playerId, other)
+          : "לא ידוע";
+  send(res, error ? 400 : 200, error ? { error } : { ok: true });
+}
+
 const adminDeps = { db, send, readBody, userFrom: playerFrom };
 
 /**
@@ -323,6 +354,18 @@ export async function handleApi(req: IncomingMessage, res: ServerResponse): Prom
   if (await handleCopy(req, res, adminDeps)) return true;
   // Everything behind the admin panel. It checks the admins table itself.
   if (await handleAdmin(req, res, adminDeps)) return true;
+  if (path.startsWith("/api/friends")) {
+    if (req.method === "OPTIONS") {
+      send(res, 204, {});
+      return true;
+    }
+    try {
+      await handleFriends(req, res, path);
+    } catch (err) {
+      send(res, 500, { error: (err as Error).message });
+    }
+    return true;
+  }
   if (path.startsWith("/api/report")) {
     if (req.method === "OPTIONS") {
       send(res, 204, {});

@@ -90,7 +90,9 @@ export type ClientMessage =
    * the queue instead would be a different feature with the same button: they
    * would each be paired with whoever happened to be waiting.
    */
-  | { t: "rematch" };
+  | { t: "rematch" }
+  /** Ask a friend to come and play. Checked against the friends table. */
+  | { t: "invite"; to: string };
 
 // ── server → client ────────────────────────────────────────────────
 export type ServerMessage =
@@ -148,7 +150,9 @@ export type ServerMessage =
   /** The other player said one of the ready-made lines. Id only — see "say". */
   | { t: "said"; id: string }
   /** The other player would like to play you again. */
-  | { t: "rematchWanted" };
+  | { t: "rematchWanted" }
+  /** A friend has opened a room and would like you in it. */
+  | { t: "invited"; from: string; nickname: string | null; code: string };
 
 export function encode(msg: ClientMessage | ServerMessage): string {
   return JSON.stringify(msg);

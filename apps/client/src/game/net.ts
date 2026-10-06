@@ -25,7 +25,13 @@ export type Intent =
   /** Queue for Amanda mode — it pairs you with someone to face her with. */
   | { kind: "amanda" }
   | { kind: "host" }
-  | { kind: "join"; code: string };
+  | { kind: "join"; code: string }
+  /**
+   * Call a friend in. The SERVER opens the room as part of handling this,
+   * after checking they really are your friend — so this is not "host and
+   * then tell them", which would open two rooms and leave one of them empty.
+   */
+  | { kind: "invite"; to: string };
 
 export interface NetHandlers {
   onWaiting?: () => void;
@@ -56,6 +62,8 @@ export interface NetHandlers {
   onSaid?: (id: string) => void;
   /** The other player would like to play you again. */
   onRematchWanted?: () => void;
+  /** A friend has opened a room and wants you in it. */
+  onInvited?: (from: { id: string; nickname: string | null; code: string }) => void;
   /** The socket closed. `connected` is false when it never opened at all. */
   onClose?: (connected: boolean) => void;
 }
@@ -89,9 +97,11 @@ export class Net {
           ? { t: "host" }
           : i.kind === "join"
             ? { t: "join", code: i.code }
-            : i.kind === "amanda"
-              ? { t: "helloAmanda" }
-              : { t: "hello" },
+            : i.kind === "invite"
+              ? { t: "invite", to: i.to }
+              : i.kind === "amanda"
+                ? { t: "helloAmanda" }
+                : { t: "hello" },
       );
     };
     ws.onclose = () => this.handlers.onClose?.(this.connected);
@@ -118,6 +128,9 @@ export class Net {
           break;
         case "rematchWanted":
           this.handlers.onRematchWanted?.();
+          break;
+        case "invited":
+          this.handlers.onInvited?.({ id: msg.from, nickname: msg.nickname, code: msg.code });
           break;
         case "oppReady":
           this.handlers.onOppReady?.(msg.ready);

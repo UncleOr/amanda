@@ -528,6 +528,16 @@ export interface MatchApi {
   /** They have asked you. */
   rematchOffered: boolean;
   askRematch: () => void;
+  /**
+   * Call a friend into a game: opens a private room and sends them its code.
+   * Null while nothing is connected — the invitation has to come from a
+   * socket, and from the home screen rather than mid-match.
+   */
+  inviteFriend: (playerId: string) => void;
+  /** A friend is calling you into their room, or null. */
+  invitation: { id: string; nickname: string | null; code: string } | null;
+  acceptInvitation: () => void;
+  declineInvitation: () => void;
   /** Whether the other player's messages are shown at all. Per browser. */
   hearing: boolean;
   toggleHearing: () => void;
@@ -643,6 +653,11 @@ export function useMatch(): MatchApi {
   const [heard, setHeard] = useState<{ id: string; at: number } | null>(null);
   const [rematchAsked, setRematchAsked] = useState(false);
   const [rematchOffered, setRematchOffered] = useState(false);
+  const [invitation, setInvitation] = useState<{
+    id: string;
+    nickname: string | null;
+    code: string;
+  } | null>(null);
   const [spoke, setSpoke] = useState<{ id: string; at: number } | null>(null);
   /*
    * Being able to switch the other player off entirely.
@@ -1394,6 +1409,10 @@ export function useMatch(): MatchApi {
       onMate: (view) => setMate(view),
       onHexed: (id) => receiveHex(id),
       onOppReady: (r) => setOppReady(r),
+      onInvited: (from) => {
+        setInvitation(from);
+        sfx.play("beep");
+      },
       onRematchWanted: () => {
         setRematchOffered(true);
         sfx.play("beep");
@@ -1486,6 +1505,28 @@ export function useMatch(): MatchApi {
     (code: string) => startOnline({ kind: "join", code: code.toUpperCase().trim() }),
     [startOnline],
   );
+
+  /**
+   * Call a friend in.
+   *
+   * This opens a private room the ordinary way — the server does it when the
+   * invitation is sent, after checking they really are your friend — so the
+   * person invited joins by code like anybody else. One way into a match, not
+   * two.
+   */
+  const inviteFriend = useCallback(
+    (playerId: string) => startOnline({ kind: "invite", to: playerId }),
+    [startOnline],
+  );
+
+  const acceptInvitation = useCallback(() => {
+    setInvitation((inv) => {
+      if (inv) joinRoom(inv.code);
+      return null;
+    });
+  }, [joinRoom]);
+
+  const declineInvitation = useCallback(() => setInvitation(null), []);
 
   /**
    * A tutorial match, with both sides written down in advance.
@@ -1813,6 +1854,10 @@ export function useMatch(): MatchApi {
     rematchAsked,
     rematchOffered,
     askRematch,
+    inviteFriend,
+    invitation,
+    acceptInvitation,
+    declineInvitation,
     hearing,
     toggleHearing,
     hostRoom,

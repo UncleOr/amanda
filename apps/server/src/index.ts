@@ -8,6 +8,8 @@ import {
   type RoomError,
 } from "@amanda/shared";
 import { Match } from "./match.js";
+import { arrived, deliver, left as presenceLeft } from "./presence.js";
+import { areFriends } from "./friends.js";
 import { PROGRESS_ENABLED } from "./progress.js";
 import { handleApi } from "./api.js";
 import { refreshCards } from "./cards.js";
@@ -190,8 +192,51 @@ function handleLobby(ws: WebSocket, msg: ClientMessage): void {
     case "me": {
       if (typeof msg.playerId === "string" && msg.playerId) {
         playerIdOf.set(ws, msg.playerId);
+        // From here on this socket counts as that player being online, which
+        // is what their friends' lists are reading (see presence.ts).
+        arrived(msg.playerId, ws);
         void checkSuspended(ws, msg.playerId);
       }
+      return;
+    }
+
+    case "invite": {
+      /*
+       * "Come and play" — to a friend, and only to a friend.
+       *
+       * The friendship is checked against the database rather than trusted
+       * from the message: otherwise this is a way to make any child's screen
+       * light up with an invitation from a stranger.
+       *
+       * It reuses the private-room machinery exactly as it stands. The
+       * inviter opens a room, the friend is handed its code, and accepting is
+       * an ordinary join — so there is no second way into a match to keep
+       * working.
+       */
+      if (refuseIfSuspended(ws)) return;
+      const me = playerIdOf.get(ws);
+      const to = typeof msg.to === "string" ? msg.to : "";
+      if (!me || !to || me === to) return;
+      void (async () => {
+        const sb = db();
+        if (!sb || !(await areFriends(sb, me, to))) return;
+        // Open the room first, so the code in the invitation is real.
+        closeRoomOf(ws);
+        const code = newRoomCode();
+        rooms.set(code, { host: ws, openedAt: Date.now() });
+        roomOf.set(ws, code);
+        send(ws, { t: "room", code });
+        const { data } = await sb.from("players").select("nickname").eq("id", me).maybeSingle();
+        const sent = deliver(
+          to,
+          encode({ t: "invited", from: me, nickname: data?.nickname ?? null, code }),
+        );
+        if (sent === 0) {
+          // They went offline between the list being drawn and this arriving.
+          closeRoomOf(ws);
+          send(ws, { t: "roomError", reason: "notFound" });
+        }
+      })();
       return;
     }
 
@@ -277,6 +322,7 @@ wss.on("connection", (ws) => {
   });
 
   ws.on("close", () => {
+    presenceLeft(ws, playerIdOf.get(ws));
     if (waiting === ws) waiting = null;
     if (waitingCoop === ws) waitingCoop = null;
     closeRoomOf(ws);

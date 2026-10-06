@@ -530,6 +530,66 @@ export async function fileReport(input: {
   }
 }
 
+export interface Friend {
+  id: string;
+  nickname: string | null;
+  /** "friend" · "asked" (you asked them) · "asking" (they asked you). */
+  state: "friend" | "asked" | "asking";
+  online: boolean;
+}
+
+/**
+ * One call for everything about friends.
+ *
+ * All of it goes through the server, because every rule that makes this safe
+ * for a seven-year-old is checked there: you may only ask somebody you have
+ * actually played, and they have to say yes. See apps/server/src/friends.ts.
+ */
+async function friendsCall<T>(path: string, body: unknown, fallback: T): Promise<T> {
+  const sb = db();
+  if (!sb || !SERVER_HTTP) return fallback;
+  try {
+    const { data } = await sb.auth.getSession();
+    const token = data.session?.access_token;
+    if (!token) return fallback;
+    const res = await fetch(`${SERVER_HTTP}${path}`, {
+      method: "POST",
+      headers: { authorization: `Bearer ${token}`, "content-type": "application/json" },
+      body: JSON.stringify(body ?? {}),
+    });
+    return (await res.json()) as T;
+  } catch {
+    return fallback;
+  }
+}
+
+export async function listFriends(): Promise<Friend[]> {
+  return (await friendsCall<{ friends?: Friend[] }>("/api/friends", {}, {})).friends ?? [];
+}
+
+/** People you have played who are not on your list yet — the only candidates. */
+export async function addableOpponents(): Promise<Array<{ id: string; nickname: string | null }>> {
+  const r = await friendsCall<{ opponents?: Array<{ id: string; nickname: string | null }> }>(
+    "/api/friends/addable",
+    {},
+    {},
+  );
+  return r.opponents ?? [];
+}
+
+/** Ask / accept / remove. Returns a message for the player, or null. */
+export async function friendAction(
+  action: "ask" | "accept" | "remove",
+  playerId: string,
+): Promise<string | null> {
+  const r = await friendsCall<{ ok?: boolean; error?: string }>(
+    `/api/friends/${action}`,
+    { playerId },
+    { error: "אין חיבור לשרת" },
+  );
+  return r.ok ? null : (r.error ?? "לא הצליח");
+}
+
 /**
  * Sign out, and come back as somebody else.
  *
