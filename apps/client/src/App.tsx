@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import { Icon } from "./components/Icon";
 import { Album } from "./components/Album";
 import { Tutorial, type Step } from "./components/Tutorial";
@@ -241,6 +241,15 @@ function Game() {
    */
   const saidRef = useRef<Set<string>>(new Set());
   const [cue, setCue] = useState<Step | null>(null);
+  /** The opponent's board, cut down to what is actually showing right now. */
+  const revealedOpponent = useMemo(() => {
+    const placements: Record<string, string> = {};
+    for (const [key, id] of Object.entries(m.opponent.placements)) {
+      const [x, y] = key.split("-").map(Number);
+      if (x !== undefined && y !== undefined && m.revealOpponentCell(x, y)) placements[key] = id;
+    }
+    return { placements, king: m.revealOpponentKing ? m.opponent.king : null };
+  }, [m.opponent, m.revealOpponentCell, m.revealOpponentKing]);
   /*
    * Which lesson this is. Or asked for "a match or two" against a light bot,
    * and for the second one to be about the opponent rather than the buttons:
@@ -265,9 +274,17 @@ function Game() {
         discardCount: m.discardCount,
         actionBarCount: m.actionBar.length,
         matchNo: lesson,
-        // What she is allowed to point at. Fogged until panic, which is
-        // exactly when the counter lesson can happen at all.
-        opponent: m.opponent,
+        /*
+         * What she is allowed to point at: the revealed cells only.
+         *
+         * Not `m.opponent` straight through. Against the computer that object
+         * holds the opponent's WHOLE board from the first second and the fog
+         * is applied when it is drawn — so handing it over unfiltered would
+         * have had her talking about cards the player is looking at the back
+         * of. Same filter the board itself uses, so what she sees is exactly
+         * what the player sees.
+         */
+        opponent: revealedOpponent,
       },
       saidRef.current,
     );
@@ -283,7 +300,7 @@ function Game() {
     m.king,
     m.discardCount,
     m.actionBar.length,
-    m.opponent,
+    revealedOpponent,
     lesson,
   ]);
   // Shown next to the build id: a screenshot of a layout problem is only

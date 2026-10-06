@@ -175,9 +175,24 @@ describe("the second lesson — countering what the opponent played", () => {
     expect(cue?.id).not.toBe("x-poison");
   });
 
-  it("says nothing while their board is still fogged", () => {
+  /*
+   * It used to wait for panic, on a belief that turned out to be wrong: the
+   * opponent's FRONT ROW is visible for the whole ninety seconds of building,
+   * and that is the row with the walls and the swarms in it. The caller hands
+   * over only the revealed cells, so "can she see it" is settled before this
+   * code runs — and an empty board is an empty board.
+   */
+  it("counters during the build too, where their front row is already showing", () => {
     const cue = nextCue(
       { ...panic({ hand: poisoner, opponent: { placements: { "3-1": wall }, king: null } }), phase: "build" },
+      new Set(["king", "tank", "flyer"]),
+    );
+    expect(cue?.id).toBe("x-poison");
+  });
+
+  it("says nothing when the caller has shown her nothing", () => {
+    const cue = nextCue(
+      panic({ hand: poisoner, opponent: { placements: {}, king: null } }),
       new Set(),
     );
     expect(cue?.id).not.toBe("x-poison");

@@ -91,10 +91,17 @@ function activeSynergy(view: CoachView): string | null {
  *
  * Two things make this work, and both are constraints rather than choices:
  *
- *   1. YOU CAN ONLY COUNTER WHAT YOU CAN SEE, and the opponent's board is
- *      fogged until the panic seconds. So every line below waits for panic.
- *      That is also the honest lesson: panic is not spare time, it is the
- *      moment you answer what you have just been shown.
+ *   1. YOU CAN ONLY COUNTER WHAT YOU CAN SEE. The caller passes in only the
+ *      cells that are actually revealed, so these rules cannot point at a
+ *      card the player is looking at the back of. That matters more than it
+ *      sounds: against the computer the opponent's whole board exists from
+ *      the first second and is merely hidden, so reading it directly would
+ *      have had her name cards nobody could see.
+ *
+ *      This happens during BUILD, not only in the panic seconds. Their front
+ *      row — where the guards, the walls and the swarms sit — is visible for
+ *      all ninety seconds, which is the row worth answering and the time to
+ *      answer it in.
  *
  *   2. SHE ONLY SAYS IT WHEN IT IS TRUE. Each rule checks the card actually
  *      in your hand against the cards actually on their board. Telling a
@@ -321,14 +328,14 @@ export function nextCue(view: CoachView, said: Set<string>): Cue | null {
   if (view.phase !== "build" && view.phase !== "panic") return null;
 
   /*
-   * The second lesson jumps the queue, and only in panic.
+   * The second lesson jumps the queue.
    *
-   * By then the walkthrough has already been given once, and the thing on
-   * screen that actually needs explaining is the board that has just been
-   * uncovered — not where the bin is. It is tried BEFORE the ordered steps so
-   * a leftover "you could take from the bin" cannot talk over it.
+   * The walkthrough has already been given once by now, and the thing on
+   * screen that actually needs explaining is the board opposite — not where
+   * the bin is. It is tried BEFORE the ordered steps so a leftover "you could
+   * take from the bin" cannot talk over it.
    */
-  if ((view.matchNo ?? 1) >= 2 && view.phase === "panic") {
+  if ((view.matchNo ?? 1) >= 2) {
     for (const step of counterCues(view, inHand)) {
       const cue = step();
       if (cue && !said.has(cue.id)) return cue;
