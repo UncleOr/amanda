@@ -20,11 +20,12 @@ interface Props {
   onDone: () => void;
 }
 
-type Stage = "hello" | "face" | "name" | "age";
+type Stage = "hello" | "who" | "face" | "name" | "age";
 
 export function Onboarding({ initialNickname, onDone }: Props) {
   const [stage, setStage] = useState<Stage>("hello");
   const [avatar, setAvatar] = useState<string>(AVATAR_IDS[0]);
+  const [gender, setGender] = useState<V.Gender>(null);
   const [nickname, setNickname] = useState(initialNickname ?? "");
   const [birthDate, setBirthDate] = useState("");
   const [saving, setSaving] = useState(false);
@@ -35,6 +36,7 @@ export function Onboarding({ initialNickname, onDone }: Props) {
     setSaving(true);
     await saveProfile({
       avatar,
+      ...(gender ? { gender } : {}),
       nickname: nickname.trim() || "שחקן",
       ...(birthDate && !tooYoung ? { birthDate } : {}),
     });
@@ -56,11 +58,46 @@ export function Onboarding({ initialNickname, onDone }: Props) {
 
         {stage === "hello" && (
           <div className="ob__row">
-            <button className="btn-fight" onClick={() => setStage("face")}>
+            <button className="btn-fight" onClick={() => setStage("who")}>
               יאללה
             </button>
             <button className="btn-link" onClick={onDone}>
               אחר כך
+            </button>
+          </div>
+        )}
+
+        {/*
+          Who she is talking to. First, because everything after it is
+          addressed to somebody — and skippable, because a child who does not
+          want to answer should not be stuck on a question to play a game.
+          Unanswered falls back to the masculine, which is the Hebrew default
+          and what every line said before anyone was asked.
+        */}
+        {stage === "who" && (
+          <div className="ob__row ob__who">
+            <button
+              className="btn-fight"
+              onClick={() => {
+                setGender("boy");
+                V.setGender("boy");
+                setStage("face");
+              }}
+            >
+              ילד
+            </button>
+            <button
+              className="btn-fight"
+              onClick={() => {
+                setGender("girl");
+                V.setGender("girl");
+                setStage("face");
+              }}
+            >
+              ילדה
+            </button>
+            <button className="btn-link" onClick={() => setStage("face")}>
+              לא אומר
             </button>
           </div>
         )}

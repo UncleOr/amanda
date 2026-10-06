@@ -1098,11 +1098,40 @@ export function useMatch(): MatchApi {
     const aiFull: BoardInput = soloAmandaRef.current
       ? { owner: "B", placements: buildAmandaBoard(CATALOG.values()) as Placement[] }
       : { owner: "B", placements: fillCrumbs(aiPlanRef.current!) };
+
+    let mine = buildPlayerBoard(
+      gsRef.current,
+      modsRef.current,
+      stackedRef.current,
+      accountRef.current?.album,
+    );
+    /*
+     * In the solo preview, somebody stands in the other half.
+     *
+     * Or, after playing it: "the Amanda fight was a bit rubbish. There was no
+     * other player with me. We weren't lined up with each other." Both true —
+     * the mode is four lanes each of an eight-lane side, and with one player
+     * the bottom four were simply empty, which looks like a broken screen
+     * rather than like a missing partner.
+     *
+     * The preview now fills the partner's half with a board the computer
+     * builds, so it SHOWS the mode. It is still unwinnable and still not the
+     * real thing; it is a picture of the real thing, which is what a preview
+     * is for.
+     */
+    if (soloAmandaRef.current) {
+      const partner = fillCrumbs(generateAiPlan()).map((p) => ({
+        ...p,
+        y: (p.y ?? 0) + BOARD_SIZE,
+      }));
+      mine = { ...mine, placements: [...mine.placements, ...partner] };
+    }
+
     const r = runBattle({
       seed: BATTLE_SEED,
       catalog: CATALOG,
       synergies: SYNERGIES,
-      a: buildPlayerBoard(gsRef.current, modsRef.current, stackedRef.current, accountRef.current?.album),
+      a: mine,
       b: aiFull,
       recordFrames: true,
       ...(soloAmandaRef.current ? { lanes: COOP_LANES } : {}),
@@ -1254,6 +1283,16 @@ export function useMatch(): MatchApi {
     clearMatch();
     setCoop(true);
     sfx.play("click");
+    /*
+     * HER board, not a generated one.
+     *
+     * Or, after playing it: "when the fog lifted, Amanda's King was the Insect
+     * Empress or something — and then in the battle itself it changed to
+     * Amanda." Exactly right, and a real bug: the battle used buildAmandaBoard
+     * while the board you LOOKED AT during the build was still the ordinary AI
+     * plan from clearMatch. Two different opponents, one match.
+     */
+    aiPlanRef.current = buildAmandaBoard(CATALOG.values()) as Placement[];
     setPhase("countdown");
     setTimeLeft(COUNTDOWN_SECONDS);
     soloAmandaRef.current = true;
@@ -1507,7 +1546,9 @@ export function useMatch(): MatchApi {
   } else {
     const plan = aiPlanRef.current;
     let visible = plan.length;
-    if (phase === "build") {
+    // Amanda does not "build" — she is already standing there. Revealing her
+    // board card by card over ninety seconds would be a lie about what she is.
+    if (phase === "build" && !soloAmandaRef.current) {
       const frac = 1 - timeLeft / PHASES.build.seconds;
       visible = Math.max(0, Math.min(plan.length, Math.ceil(frac * plan.length)));
     } else if (phase === "intro" || phase === "countdown") {

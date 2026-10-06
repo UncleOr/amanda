@@ -41,6 +41,11 @@ export interface Account {
   avatar: string | null;
   /** ISO yyyy-mm-dd, or null when they have not been asked yet. */
   birthDate: string | null;
+  /**
+   * Who Amanda is talking to. Null is a real answer — "did not say" — and
+   * falls back to the masculine, which is the Hebrew default.
+   */
+  gender: "boy" | "girl" | null;
   /** True once a real identity is attached and the album is safe. */
   linked: boolean;
   /** cardId → what you own of it. */
@@ -91,7 +96,7 @@ export async function loadAccount(): Promise<Account | null> {
       const [{ data: player }, { data: cards }] = await Promise.all([
         sb
           .from("players")
-          .select("trophies, diamonds, tutorial_done, nickname, avatar, birth_date")
+          .select("trophies, diamonds, tutorial_done, nickname, avatar, birth_date, gender")
           .eq("id", userId)
           .maybeSingle(),
         sb.from("player_cards").select("card_id, copies, level").eq("player_id", userId),
@@ -112,6 +117,7 @@ export async function loadAccount(): Promise<Account | null> {
           nickname: player.nickname ?? null,
           avatar: player.avatar ?? null,
           birthDate: player.birth_date ?? null,
+          gender: (player.gender as "boy" | "girl" | null) ?? null,
           linked: existing.data.session?.user.is_anonymous === false,
           album,
         };
@@ -339,6 +345,7 @@ export async function saveProfile(patch: {
   nickname?: string;
   avatar?: string;
   birthDate?: string;
+  gender?: "boy" | "girl";
 }): Promise<string | null> {
   const sb = db();
   if (!sb) return "אין חיבור לשרת";
@@ -352,6 +359,7 @@ export async function saveProfile(patch: {
     if (patch.nickname !== undefined) row.nickname = patch.nickname;
     if (patch.avatar !== undefined) row.avatar = patch.avatar;
     if (patch.birthDate !== undefined) row.birth_date = patch.birthDate;
+    if (patch.gender !== undefined) row.gender = patch.gender;
     const { error } = await sb.from("players").update(row).eq("id", id);
     // The age floor is also a CHECK on the row, so a client that skipped the
     // test above still cannot write a birthday that is too recent.

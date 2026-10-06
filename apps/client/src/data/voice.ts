@@ -12,12 +12,56 @@
  * in the game needs to know.
  */
 
+/*
+ * ═══ HEBREW HAS A GENDER AND THE PLAYER HAS ONE TOO ═══
+ *
+ * Or: "let the player choose at the start whether they are a boy or a girl and
+ * fit all the microcopy to it. In most cases give something unisex — 'לשחק עם
+ * חברים' instead of 'תביא חבר' — but say 'בוא ילד' should become 'בואי ילדה'."
+ *
+ * Both halves of that, and the first half matters more. A line written so it
+ * does not need to know is better than a line written twice: fewer strings for
+ * Or to write, nothing to keep in sync, and nothing to get wrong for a player
+ * who has not said. So most of this file is now unisex, and only the lines
+ * where Amanda is TALKING TO YOU — where the Hebrew genuinely cannot sit on
+ * the fence — carry two forms.
+ *
+ * A line with two forms is written `{ m, f }`. Unknown gender falls back to
+ * the masculine, which is the Hebrew default and what every string here said
+ * before anyone was asked.
+ */
+
+export type Gender = "boy" | "girl" | null;
+
+/** A line that has to know who it is talking to. */
+export interface Gendered {
+  m: string;
+  f: string;
+}
+
+export type Line = string | Gendered;
+
+/** Who the game is currently talking to. Set once the account is known. */
+let gender: Gender = null;
+export function setGender(g: Gender): void {
+  gender = g;
+}
+export function getGender(): Gender {
+  return gender;
+}
+
+/** One line, resolved for whoever is playing. */
+export function say(line: Line): string {
+  if (typeof line === "string") return line;
+  return gender === "girl" ? line.f : line.m;
+}
+
 /**
  * Picked once per mount, not per render, so the words do not change while the
  * player is reading them. Every caller holds the result in state or a ref.
  */
-export function pick(lines: readonly string[]): string {
-  return lines[Math.floor(Math.random() * lines.length)] ?? "";
+export function pick(lines: readonly Line[]): string {
+  return say(lines[Math.floor(Math.random() * lines.length)] ?? "");
 }
 
 /** Leaving a match in progress — the question, and the two answers. */
@@ -30,11 +74,11 @@ export const EXIT_TITLE = [
 ] as const;
 
 export const EXIT_BODY = [
-  "הלוח שבנית נמחק. אשמור לך מקום בתפריט שלי, ילד.",
+  { m: "הלוח שבנית נמחק. אשמור לך מקום בתפריט שלי, ילד.", f: "הלוח שבנית נמחק. אשמור לך מקום בתפריט שלי, ילדה." },
   "כל מה שבנית הולך לפח. אני אשרוד איכשהו.",
   "הלוח נמחק והקרב לא יקרה. אף אחד לא ידע שהיית כאן.",
   "אני מוחקת את הלוח. אל תדאג, אני זוכרת אותך.",
-  "זה נמחק והולך. אתה תחזור, כולם חוזרים.",
+  "זה נמחק והולך. כולם חוזרים.",
 ] as const;
 
 export const EXIT_CONFIRM = [
@@ -46,7 +90,7 @@ export const EXIT_CONFIRM = [
 
 export const EXIT_CANCEL = [
   "לא, אני נשאר",
-  "לא, בוא נשחק",
+  { m: "לא, בוא נשחק", f: "לא, בואי נשחק" },
   "התבלבלתי",
   "עוד לא סיימתי",
 ] as const;
@@ -58,7 +102,7 @@ export const EXIT_CANCEL = [
 export const WIN_TITLE = [
   "ניצחת! הפעם.",
   "ניצחת. נתתי לך.",
-  "יפה, ילד.",
+  { m: "יפה, ילד.", f: "יפה, ילדה." },
   "ניצחת. אל תתרגל.",
   "טוב. באמת טוב.",
 ] as const;
@@ -81,10 +125,10 @@ export const OPPONENT_LEFT = [
 
 /** The three seconds before the build phase. */
 export const COUNTDOWN_LABEL = [
-  "התכונן לקרב, ילד",
-  "תתארגן, ילד",
+  { m: "התכונן לקרב, ילד", f: "התכונני לקרב, ילדה" },
+  { m: "תתארגן, ילד", f: "תתארגני, ילדה" },
   "מתחילים. תנשום.",
-  "קדימה, ילד",
+  { m: "קדימה, ילד", f: "קדימה, ילדה" },
 ] as const;
 
 /** The announcement that fills the screen when the fighting starts. */
@@ -96,10 +140,10 @@ export const BATTLE_PHASE = [
 
 /** The moment the boards lock and the battle begins. */
 export const BATTLE_START = [
-  "הקרב מתחיל, ילד",
+  { m: "הקרב מתחיל, ילד", f: "הקרב מתחיל, ילדה" },
   "ועכשיו נראה מה בנית",
   "מאוחר מדי לשנות",
-  "בוא נראה אותך",
+  { m: "בוא נראה אותך", f: "בואי נראה אותך" },
 ] as const;
 
 /** Nothing on the board yet and no King chosen. */
@@ -134,11 +178,12 @@ export const TUTORIAL = {
   // The step waits for a King to actually be placed, and a new player holding
   // an action card has no way to do that — being told to drag a card they
   // cannot drag is a dead end.
-  king: "קודם כול מלך, ילד. הוא לא זז, הוא חזק פי שלושה, ואם הוא נופל — נגמר. גרור מפלצת לאמצע. קלף פעולה ביד? לפח איתו.",
+  king:
+    "קודם כול מלך. הוא לא זז, הוא חזק פי שלושה, ואם הוא נופל — נגמר. גרור מפלצת לאמצע. קלף פעולה ביד? לפח איתו.",
   guards: "שתי המשבצות האלה שומרות עליו. כל עוד מישהו עומד שם, אי אפשר לגעת בו.",
   hand: "זה מה שיש לך ביד. לא מוצא חן בעיניך? לפח. אבל רק הקלף העליון חוזר, אז תחשוב.",
-  board: "תמלא את מה שאתה יכול. מה שיישאר ריק — אני אמלא בשבילך, ולא תאהב את זה.",
-  fight: "וכשתחשוב שאתה מוכן, תלחץ. אני כבר מוכנה.",
+  board: "כל מה שאפשר למלא — למלא. מה שיישאר ריק אני אמלא, וזה לא יהיה נעים.",
+  fight: "וכשזה נראה מוכן — ללחוץ. אני כבר מוכנה.",
 } as const;
 
 /**
@@ -148,6 +193,12 @@ export const TUTORIAL = {
  * already decided how this ends.
  */
 export const ONBOARDING = {
+  /*
+   * Asked FIRST, before anything else, because every line after it is
+   * addressed to somebody and Hebrew makes you choose. Deliberately phrased
+   * as her being nosy rather than as a form field.
+   */
+  who: "רגע. לפני הכול — אני מדברת אל ילד או אל ילדה?",
   hello: "אז הגעת. יופי. לפני שנתחיל אני רוצה לדעת את מי אני אוכלת.",
   face: "בחר לך פרצוף. זה מה שאני אזכור.",
   name: "ואיך קוראים לך? תן שם שאפשר לצעוק.",
@@ -159,6 +210,6 @@ export const CHEST_LINES = [
   "משהו בפנים. תפתח כבר.",
   "זכית. אל תתרגש מדי.",
   "קח, הרווחת.",
-  "בוא נראה מה יצא לך.",
+  { m: "בוא נראה מה יצא לך.", f: "בואי נראה מה יצא לך." },
   "זה לא יפתח את עצמו.",
 ] as const;

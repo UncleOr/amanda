@@ -575,4 +575,6 @@
 .lesson-end p {
   margin: 0 0 6px;
   color: var(--muted);
+  max-width: 34ch;
+  text-wrap: balance;
 }

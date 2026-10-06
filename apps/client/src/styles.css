@@ -949,7 +949,23 @@ button:disabled {
   text-shadow: 0 3px 14px rgba(0, 0, 0, 0.85);
 }
 .result__card p { color: var(--muted); margin: 0 0 18px; }
-.result__verdict { text-shadow: 0 2px 8px rgba(0, 0, 0, 0.8); }
+/*
+ * The line under the headline, centred UNDER the headline.
+ *
+ * Or: "on these screens the text under the title should be centred under the
+ * title." It inherits text-align from the card, so each line was centred — but
+ * the paragraph ran the full width of the card while the headline sat in the
+ * middle of it, so a two-line verdict read as if it had slipped sideways. A
+ * narrower measure centred in the same column fixes the shape, and is easier
+ * to read besides.
+ */
+.result__verdict {
+  text-shadow: 0 2px 8px rgba(0, 0, 0, 0.8);
+  max-width: 34ch;
+  margin-inline: auto;
+  line-height: 1.5;
+  text-wrap: balance;
+}
 
 /* How long it took and how many fell, as two marks rather than a sentence. */
 .result__tally {

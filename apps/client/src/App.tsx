@@ -112,7 +112,7 @@ const MOTES = [
  * while it is on screen. Re-rolling on every render would change the words
  * under the player's eyes mid-sentence.
  */
-function useLine(lines: readonly string[]): string {
+function useLine(lines: readonly V.Line[]): string {
   const [line] = useState(() => V.pick(lines));
   return line;
 }
@@ -247,6 +247,17 @@ function Game() {
    * moment they make one.
    */
   const [onboarding, setOnboarding] = useState(false);
+  /*
+   * Tell the copy who it is talking to, as soon as the account says.
+   *
+   * Set globally rather than threaded through every component, because the
+   * lines that need it are picked inside voice.ts and nothing in between has
+   * any business knowing.
+   */
+  useEffect(() => {
+    V.setGender(m.account?.gender ?? null);
+  }, [m.account?.gender]);
+
   const askedRef = useRef(false);
   useEffect(() => {
     if (askedRef.current || !m.account) return;
@@ -691,7 +702,7 @@ function Game() {
               <div className="pick">
                 <button className="pick__card" onClick={m.startMatch}>
                   <img src={`${BASE}brand/versus_robot.webp`} alt="" />
-                  <span>שחק עם בוט</span>
+                  <span>לשחק עם בוט</span>
                 </button>
                 <button
                   className="pick__card"
@@ -700,19 +711,19 @@ function Game() {
                   title={m.onlineAvailable ? "" : "לא בגרסה הזאת"}
                 >
                   <img src={`${BASE}brand/versus_player.webp`} alt="" />
-                  <span>תביא חבר</span>
+                  <span>לשחק עם חברים</span>
                 </button>
               </div>
             ) : (
               <div className="pick pick--ways">
                 <button className="btn-fight btn-online" onClick={() => m.hostRoom()}>
-                  תביא קוד
+                  לפתוח חדר
                 </button>
                 <button className="btn-fight btn-online" onClick={() => setJoining(true)}>
                   יש לי קוד
                 </button>
                 <button className="btn-fight btn-online" onClick={() => m.startOnline()}>
-                  מישהו רנדומלי
+                  מישהו אקראי
                 </button>
                 {/* The event, not the everyday opponent. It takes two people
                     on purpose: one board cannot beat her. */}
