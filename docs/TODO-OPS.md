@@ -9,10 +9,12 @@
       דורש admin על ריפו העבודה — Claude מחובר שם, אז זו פקודה שלו:
       `gh api -X DELETE repos/or-42creative/amanda/pages`
 
-- [ ] **לבדוק את ה-service השני ב-Railway.** הדומיין
-      `amanda-server-production-372b.up.railway.app` מחזיר 502. אם זה service
-      נפרד מניסיון פריסה ראשון — הוא צורך כסף על כלום וצריך למחוק אותו.
-      אם זה רק דומיין נוסף על אותו service — למחוק אותו ב-Networking.
+- [x] **הדומיין השני ב-Railway — נבדק, ואין שם service.**
+      `amanda-server-production-372b.up.railway.app` לא מחזיר 502 אלא **404
+      עם `x-railway-fallback: true`** ו-`{"message":"Application not found"}`.
+      זה ה-edge של Railway עונה לדומיין שלא מחובר לכלום — כלומר **אין service
+      שני ואף אחד לא משלם על זה.** למחוק את הדומיין זה סדר, לא חיסכון:
+      Settings → Networking → להסיר את הדומיין.
 
 ## חיסכון בעלויות
 

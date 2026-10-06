@@ -15,12 +15,13 @@ import type { IncomingMessage, ServerResponse } from "node:http";
 import { createClient, type SupabaseClient } from "@supabase/supabase-js";
 import { LEVELS, levelCost } from "@amanda/shared";
 import { CATALOG } from "./content.js";
+import { handleAdmin, handleCopy } from "./admin.js";
 
 const URL = process.env.SUPABASE_URL ?? "https://iiviygfltyrsonioyqxm.supabase.co";
 const SERVICE_KEY = process.env.SUPABASE_SERVICE_KEY ?? "";
 
 let admin: SupabaseClient | null = null;
-function db(): SupabaseClient | null {
+export function db(): SupabaseClient | null {
   if (!SERVICE_KEY) return null;
   if (!admin)
     admin = createClient(URL, SERVICE_KEY, {
@@ -29,25 +30,27 @@ function db(): SupabaseClient | null {
   return admin;
 }
 
-function send(res: ServerResponse, code: number, body: unknown): void {
+export function send(res: ServerResponse, code: number, body: unknown): void {
   const text = JSON.stringify(body);
   res.writeHead(code, {
     "content-type": "application/json; charset=utf-8",
     // The game is served from a different origin to this server.
     "access-control-allow-origin": "*",
     "access-control-allow-headers": "authorization, content-type",
-    "access-control-allow-methods": "POST, OPTIONS",
+    "access-control-allow-methods": "GET, POST, OPTIONS",
   });
   res.end(text);
 }
 
-function readBody(req: IncomingMessage): Promise<unknown> {
+export function readBody(req: IncomingMessage): Promise<unknown> {
   return new Promise((resolve) => {
     let raw = "";
     req.on("data", (c) => {
       raw += c;
       // Nothing here needs a large body; refuse to buffer one.
-      if (raw.length > 4096) raw = raw.slice(0, 4096);
+      // Big enough for a screenful of edited copy, small enough that nobody
+      // can make us buffer anything interesting.
+      if (raw.length > 262144) raw = raw.slice(0, 262144);
     });
     req.on("end", () => {
       try {
@@ -60,7 +63,7 @@ function readBody(req: IncomingMessage): Promise<unknown> {
 }
 
 /** Who is calling, according to their own token — not according to the body. */
-async function playerFrom(req: IncomingMessage): Promise<string | null> {
+export async function playerFrom(req: IncomingMessage): Promise<string | null> {
   const sb = db();
   const auth = req.headers.authorization;
   if (!sb || !auth?.startsWith("Bearer ")) return null;
@@ -110,8 +113,14 @@ async function levelUp(req: IncomingMessage, res: ServerResponse): Promise<void>
 }
 
 /** Returns true when it handled the request. */
+const adminDeps = { db, send, readBody, userFrom: playerFrom };
+
 export async function handleApi(req: IncomingMessage, res: ServerResponse): Promise<boolean> {
   const path = (req.url ?? "").split("?")[0];
+  // The words on the screen, for anyone, signed in or not.
+  if (await handleCopy(req, res, adminDeps)) return true;
+  // Everything behind the admin panel. It checks the admins table itself.
+  if (await handleAdmin(req, res, adminDeps)) return true;
   if (path !== "/api/level-up") return false;
   if (req.method === "OPTIONS") {
     send(res, 204, {});
