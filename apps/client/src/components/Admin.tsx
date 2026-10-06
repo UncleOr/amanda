@@ -1,6 +1,7 @@
 import { useCallback, useEffect, useMemo, useState } from "react";
 import { createClient } from "@supabase/supabase-js";
 import { ARENAS } from "@amanda/shared";
+import { CardEditor } from "./CardEditor";
 
 /**
  * The admin panel. Opened with ?admin.
@@ -73,7 +74,7 @@ async function call(path: string, body: unknown = {}): Promise<Record<string, un
 export function Admin() {
   const [state, setState] = useState<"checking" | "out" | "denied" | "in" | "down">("checking");
   const [why, setWhy] = useState<string>("");
-  const [tab, setTab] = useState<"copy" | "users">("copy");
+  const [tab, setTab] = useState<"cards" | "copy" | "users">("cards");
   const [note, setNote] = useState<string | null>(null);
 
   const check = useCallback(async () => {
@@ -158,6 +159,9 @@ export function Admin() {
       <header className="admin__bar">
         <h1>ניהול אמנדה</h1>
         <nav>
+          <button className={tab === "cards" ? "on" : ""} onClick={() => setTab("cards")}>
+            קלפים
+          </button>
           <button className={tab === "copy" ? "on" : ""} onClick={() => setTab("copy")}>
             טקסטים
           </button>
@@ -174,7 +178,13 @@ export function Admin() {
           {note}
         </p>
       )}
-      {tab === "copy" ? <CopyTab say={setNote} /> : <UsersTab say={setNote} />}
+      {tab === "cards" ? (
+        <CardEditor call={call} say={setNote} />
+      ) : tab === "copy" ? (
+        <CopyTab say={setNote} />
+      ) : (
+        <UsersTab say={setNote} />
+      )}
     </div>
   );
 }

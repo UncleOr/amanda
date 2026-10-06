@@ -301,3 +301,162 @@
   font-variant-numeric: tabular-nums;
   text-align: center;
 }
+
+/* ════════ the card editor ════════
+ *
+ * A list on one side and the card on the other, both scrolling on their own.
+ * Dense and plain: Or is going to sit in here tuning numbers, and anything
+ * decorative is in the way by the third card.
+ */
+.ed {
+  display: grid;
+  grid-template-columns: 240px 1fr;
+  gap: 18px;
+  align-items: start;
+  overflow: hidden;
+}
+.ed__list {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  min-height: 0;
+  position: sticky;
+  top: 0;
+}
+.ed__search {
+  padding: 7px 12px;
+  border-radius: 9px;
+  border: 1px solid var(--line);
+  background: #161c2b;
+  color: var(--text);
+  font: inherit;
+}
+.ed__scroll {
+  max-height: calc(100dvh - 190px);
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  padding-inline-end: 4px;
+}
+.ed__row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  padding: 7px 10px;
+  border-radius: 8px;
+  border: 1px solid transparent;
+  background: transparent;
+  color: var(--text);
+  font: inherit;
+  font-size: 13px;
+  text-align: start;
+  cursor: pointer;
+}
+.ed__row:hover { background: #161c2b; }
+.ed__row.is-picked { border-color: var(--accent); background: rgba(255, 176, 32, 0.12); }
+.ed__row.is-hidden { opacity: 0.5; }
+.ed__row-name { flex: 1; min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.ed__row-tags { display: inline-flex; gap: 5px; align-items: center; }
+.ed__row-tags b { color: var(--accent); font-size: 10px; }
+.ed__row-tags i { color: var(--danger); font-style: normal; font-size: 10px; }
+
+.ed__empty { padding-top: 40px; }
+.ed__form { min-width: 0; padding-bottom: 60px; }
+.ed__head { display: flex; gap: 18px; align-items: flex-start; flex-wrap: wrap; }
+.ed__preview { width: 150px; flex: none; }
+.ed__headfields { flex: 1; min-width: 220px; display: flex; flex-direction: column; gap: 8px; }
+
+.ed__h {
+  margin: 22px 0 10px;
+  font-size: 13px;
+  font-weight: 900;
+  color: var(--accent);
+  letter-spacing: 0.03em;
+}
+.ed__h small {
+  display: block;
+  margin-top: 3px;
+  color: var(--muted);
+  font-weight: 600;
+  font-size: 11.5px;
+  letter-spacing: 0;
+}
+
+.ed__f { display: flex; flex-direction: column; gap: 4px; font-size: 12px; color: var(--muted); }
+.ed__f input,
+.ed__f select {
+  padding: 7px 11px;
+  border-radius: 9px;
+  border: 1px solid var(--line);
+  background: #161c2b;
+  color: var(--text);
+  font: inherit;
+  font-size: 13px;
+}
+.ed__f--check { flex-direction: row; align-items: center; gap: 7px; }
+.ed__f--check input { width: auto; }
+.ed__grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(130px, 1fr)); gap: 10px; }
+
+.ed__elements { display: flex; flex-wrap: wrap; gap: 6px; }
+.ed__elements button {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  padding: 5px 11px;
+  border-radius: 999px;
+  border: 1px solid var(--line);
+  background: transparent;
+  color: var(--muted);
+  font: inherit;
+  font-size: 12px;
+  cursor: pointer;
+}
+.ed__elements button.is-on { border-color: var(--accent); color: var(--accent); background: rgba(255, 176, 32, 0.12); }
+
+.ed__ability {
+  display: grid;
+  grid-template-columns: 1fr 1.2fr 1.4fr auto;
+  gap: 6px;
+  margin-bottom: 6px;
+}
+.ed__ability select,
+.ed__ability input,
+.ed__ability button {
+  padding: 6px 9px;
+  border-radius: 8px;
+  border: 1px solid var(--line);
+  background: #161c2b;
+  color: var(--text);
+  font: inherit;
+  font-size: 12px;
+}
+.ed__ability button { cursor: pointer; }
+.ed__params { font-family: ui-monospace, monospace; }
+
+.ed__sprite {
+  display: block;
+  width: 120px;
+  margin-top: 8px;
+  border-radius: 10px;
+  border: 1px solid var(--line);
+}
+.ed__actions { display: flex; gap: 8px; margin-top: 24px; flex-wrap: wrap; }
+.ed__actions button {
+  padding: 9px 20px;
+  border-radius: 10px;
+  border: 1px solid var(--line);
+  background: #161c2b;
+  color: var(--text);
+  font: inherit;
+  font-weight: 700;
+  cursor: pointer;
+}
+.ed__actions .btn-fight { border: none; }
+
+@media (max-width: 760px) {
+  .ed { grid-template-columns: 1fr; }
+  .ed__list { position: static; }
+  .ed__scroll { max-height: 220px; }
+}
