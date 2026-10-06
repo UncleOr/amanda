@@ -29,12 +29,11 @@ const FILM = "https://www.youtube.com/watch?v=Z0h80PW_YJA";
 /**
  * The theme song, where people can go and hear it in full.
  *
- * Empty until Or gives me the two addresses — and an empty one simply does
- * not render, because a link that goes nowhere is worse than no link, and
- * guessing a URL for somebody's own song is not something I get to do.
+ * Either one may be emptied and simply will not render — a link that goes
+ * nowhere is worse than no link.
  */
-const SONG_YOUTUBE: string = "";
-const SONG_SPOTIFY: string = "";
+const SONG_YOUTUBE: string = "https://www.youtube.com/watch?v=yDtnLcs_A0M";
+const SONG_SPOTIFY: string = "https://open.spotify.com/track/2KSPWKqyXFhPXlE7knXuCt";
 
 type Page = "about" | "privacy" | "a11y" | "terms";
 

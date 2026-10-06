@@ -19,6 +19,7 @@ import {
   linkEmail,
   linkGoogle,
   loadShop,
+  takeAuthError,
   saveProfile,
   switchAccount,
   type Account,
@@ -116,6 +117,18 @@ export function Profile({ account, onClose, onChanged }: Props) {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [note, setNote] = useState<string | null>(null);
+  /*
+   * Whatever went wrong on the way back from Google.
+   *
+   * The sign-in happens across a page load, so by the time the player is
+   * looking at this screen again the thing that failed is long over. Without
+   * this they simply find themselves signed out with no explanation — which
+   * is exactly what Or reported.
+   */
+  useEffect(() => {
+    const failed = takeAuthError();
+    if (failed) setNote(failed);
+  }, []);
   const [busy, setBusy] = useState(false);
 
   const tooYoung = birthDate !== "" && ageFrom(birthDate) < MIN_AGE;

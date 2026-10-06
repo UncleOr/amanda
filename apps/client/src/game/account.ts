@@ -71,6 +71,44 @@ const SERVER_HTTP = (import.meta.env.VITE_SERVER_URL ?? (import.meta.env.DEV ? "
   .replace(/^wss:/, "https:");
 
 /**
+ * Whatever went wrong with the last sign-in, for the profile screen to show.
+ *
+ * Kept rather than thrown because the game must start regardless — but
+ * silently starting it as a different person is what the bug was.
+ */
+let lastAuthError: string | null = null;
+export function takeAuthError(): string | null {
+  const e = lastAuthError;
+  lastAuthError = null;
+  return e;
+}
+
+/** Is this page load a return from an OAuth provider, and did it go well? */
+function oauthReturn(): { code: string | null; error: string | null } {
+  if (typeof window === "undefined") return { code: null, error: null };
+  const q = new URLSearchParams(window.location.search);
+  // Implicit-flow providers put it in the hash instead.
+  const h = new URLSearchParams(window.location.hash.replace(/^#/, ""));
+  const err = q.get("error_description") ?? q.get("error") ?? h.get("error_description") ?? h.get("error");
+  return { code: q.get("code"), error: err };
+}
+
+/**
+ * Take the sign-in debris out of the address bar.
+ *
+ * Not cosmetic: a `?code=` left in the URL is a code that gets re-submitted on
+ * every reload and on every share of that link, and it is already spent.
+ */
+function cleanOAuthFromUrl(): void {
+  if (typeof window === "undefined") return;
+  const url = new URL(window.location.href);
+  for (const k of ["code", "error", "error_description", "error_code", "state"])
+    url.searchParams.delete(k);
+  if (url.hash.includes("access_token") || url.hash.includes("error")) url.hash = "";
+  window.history.replaceState({}, "", url.toString());
+}
+
+/**
  * Sign in (silently, anonymously) and read the album back.
  *
  * Returns null on any failure at all, which the caller treats as "play without
@@ -81,8 +119,45 @@ export async function loadAccount(): Promise<Account | null> {
   const sb = db();
   if (!sb) return null;
   try {
+    /*
+     * ═══ COMING BACK FROM GOOGLE IS NOT THE SAME AS ARRIVING ═══
+     *
+     * Or: "it doesn't connect me to Google after I pick a Google account."
+     *
+     * This function used to do one thing when there was no session: create a
+     * brand new anonymous one. On an ordinary first visit that is exactly
+     * right. On the way back from Google it is a disaster — the sign-in is
+     * still in flight, and making a new guest account throws away the one the
+     * player was being signed into and leaves them looking at an empty album,
+     * which reads as "it didn't work" because it didn't.
+     *
+     * A return from Google carries `?code=` (or `?error=`). While one is in
+     * the URL, nothing here will create an account: either the exchange
+     * succeeds and that is the session, or it fails and the failure is
+     * REPORTED rather than papered over with a new guest.
+     */
+    const returning = oauthReturn();
+    if (returning.error) {
+      cleanOAuthFromUrl();
+      lastAuthError = returning.error;
+      // Fall through: the player still gets to play, as a guest, and the
+      // profile screen can tell them what happened.
+    }
+
     const existing = await sb.auth.getSession();
     let userId = existing.data.session?.user.id;
+
+    if (!userId && returning.code) {
+      // supabase-js exchanges the code itself when it can. If we are here it
+      // did not — most often because the verifier it stored is not in this
+      // browsing context, which is what an in-app browser on a phone does.
+      lastAuthError =
+        "ההתחברות לגוגל לא הושלמה. נסה שוב מהדפדפן הרגיל ולא מתוך אפליקציה אחרת.";
+      cleanOAuthFromUrl();
+      return null;
+    }
+    if (returning.code) cleanOAuthFromUrl();
+
     if (!userId) {
       const { data, error } = await sb.auth.signInAnonymously();
       if (error) throw error;
