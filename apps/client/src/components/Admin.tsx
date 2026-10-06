@@ -38,6 +38,8 @@ interface AdminUser {
   tutorialDone: boolean;
   cards: number;
   isAdmin: boolean;
+  isYou: boolean;
+  suspendedUntil: string | null;
 }
 
 interface CopyEntry {
@@ -427,6 +429,7 @@ function UsersTab({ say }: { say: (s: string) => void }) {
   const [confirmDelete, setConfirmDelete] = useState<AdminUser | null>(null);
   /** Which account the "put them somewhere" panel is open for. */
   const [granting, setGranting] = useState<AdminUser | null>(null);
+  const [suspending, setSuspending] = useState<AdminUser | null>(null);
 
   const [hidden, setHidden] = useState(0);
   const load = useCallback(async () => {
@@ -483,7 +486,15 @@ function UsersTab({ say }: { say: (s: string) => void }) {
                 <b>{u.nickname ?? "— בלי שם —"}</b>
                 <br />
                 <small>{u.email ?? (u.providers.length ? u.providers.join(", ") : "אורח")}</small>
-                {u.isAdmin && <span className="admin__where admin__where--live">אתה</span>}
+                {u.isYou && <span className="admin__where admin__where--live">אתה</span>}
+                {u.isAdmin && !u.isYou && (
+                  <span className="admin__where admin__where--deploy">מנהל</span>
+                )}
+                {u.suspendedUntil && (
+                  <span className="admin__where admin__where--banned">
+                    מושעה עד {new Date(u.suspendedUntil).toLocaleDateString("he-IL")}
+                  </span>
+                )}
               </td>
               <td>
                 <small>{u.lastSeen ? new Date(u.lastSeen).toLocaleDateString("he-IL") : "—"}</small>
@@ -508,9 +519,43 @@ function UsersTab({ say }: { say: (s: string) => void }) {
                 <button disabled={busy === u.id} onClick={() => setGranting(u)}>
                   גביעים / יהלומים
                 </button>
+                {u.suspendedUntil ? (
+                  <button
+                    disabled={busy === u.id}
+                    onClick={() =>
+                      void act("/api/admin/user/suspend", u, { userId: u.id, hours: 0 })
+                    }
+                  >
+                    בטל השעיה
+                  </button>
+                ) : (
+                  <button
+                    className="admin__danger"
+                    disabled={busy === u.id || u.isYou}
+                    onClick={() => setSuspending(u)}
+                  >
+                    השעיה
+                  </button>
+                )}
+                <button
+                  disabled={busy === u.id || u.isYou}
+                  title={u.isAdmin ? "הורד מניהול" : "הפוך למנהל"}
+                  onClick={() => {
+                    if (
+                      !u.isAdmin &&
+                      !window.confirm(
+                        `להפוך את ${u.nickname ?? u.email ?? "המשתמש הזה"} למנהל? יהיו לו כל ההרשאות שלך.`,
+                      )
+                    )
+                      return;
+                    void act("/api/admin/user/admin", u, { userId: u.id, make: !u.isAdmin });
+                  }}
+                >
+                  {u.isAdmin ? "הורד מניהול" : "הפוך למנהל"}
+                </button>
                 <button
                   className="admin__danger"
-                  disabled={busy === u.id || u.isAdmin}
+                  disabled={busy === u.id || u.isYou}
                   onClick={() => setConfirmDelete(u)}
                 >
                   מחיקה
@@ -531,6 +576,46 @@ function UsersTab({ say }: { say: (s: string) => void }) {
             void act("/api/admin/user/grant", u, { userId: u.id, ...body });
           }}
         />
+      )}
+
+      {suspending && (
+        <div className="modal-overlay" onClick={() => setSuspending(null)}>
+          <div className="modal modal--confirm" onClick={(e) => e.stopPropagation()}>
+            <h2>להשעות את {suspending.nickname ?? suspending.email ?? "החשבון"}?</h2>
+            <p>
+              הוא לא יוכל להתחיל משחק מול שחקנים אחרים. מול המחשב כן — השעיה היא
+              לא נעילה של המשחק, היא הוצאה מהחברה.
+            </p>
+            <div className="admin__arenas">
+              {[
+                { label: "שעה", hours: 1 },
+                { label: "יום", hours: 24 },
+                { label: "שבוע", hours: 24 * 7 },
+                { label: "חודש", hours: 24 * 30 },
+                { label: "ללא הגבלה", hours: undefined },
+              ].map((o) => (
+                <button
+                  key={o.label}
+                  onClick={() => {
+                    const u = suspending;
+                    setSuspending(null);
+                    void act("/api/admin/user/suspend", u, {
+                      userId: u.id,
+                      ...(o.hours !== undefined ? { hours: o.hours } : {}),
+                    });
+                  }}
+                >
+                  {o.label}
+                </button>
+              ))}
+            </div>
+            <div className="result__buttons">
+              <button className="btn-fight btn-ghost" onClick={() => setSuspending(null)}>
+                ביטול
+              </button>
+            </div>
+          </div>
+        </div>
       )}
 
       {confirmDelete && (

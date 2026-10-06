@@ -460,3 +460,8 @@
   .ed__list { position: static; }
   .ed__scroll { max-height: 220px; }
 }
+
+.admin__where--banned {
+  background: rgba(255, 90, 90, 0.18);
+  color: #ff9a9a;
+}

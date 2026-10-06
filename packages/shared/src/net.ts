@@ -108,6 +108,13 @@ export type ServerMessage =
       coop?: boolean;
     }
   | { t: "oppLeft" }
+  /**
+   * You are suspended and no match will start. Carries the date it lifts, so
+   * the game can say when rather than just refusing — being told you are
+   * suspended and until when is the difference between a punishment and a
+   * game that is mysteriously broken.
+   */
+  | { t: "suspended"; until: string }
   /** Whether the opponent has declared themselves ready. */
   | { t: "oppReady"; ready: boolean }
   /** The opponent played an action card at you. */

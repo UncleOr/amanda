@@ -44,6 +44,8 @@ export interface NetHandlers {
     coop?: boolean;
   }) => void;
   onOppLeft?: () => void;
+  /** The server will not start a match: this account is suspended until then. */
+  onSuspended?: (until: string) => void;
   /** The opponent played an action card at you. */
   onHexed?: (id: string) => void;
   /** The opponent is (or is no longer) ready to fight. */
@@ -125,6 +127,9 @@ export class Net {
           break;
         case "oppLeft":
           this.handlers.onOppLeft?.();
+          break;
+        case "suspended":
+          this.handlers.onSuspended?.(msg.until);
           break;
       }
     };

@@ -635,3 +635,11 @@
   font-weight: 800;
   font-size: 13px;
 }
+
+/* Suspended: said plainly, with a date, on the home screen. */
+.warn--suspended {
+  max-width: 34ch;
+  margin-inline: auto;
+  line-height: 1.5;
+  text-wrap: balance;
+}

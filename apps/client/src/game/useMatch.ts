@@ -486,6 +486,8 @@ export interface MatchApi {
   oppLeft: boolean;
   /** Set when the server could not be reached, so "searching" never hangs. */
   netError: boolean;
+  /** When this account's suspension lifts, or null when it is not suspended. */
+  suspendedUntil: string | null;
   /** Code of the private room you opened, once the server has given one. */
   roomCode: string | null;
   /** Why joining a room failed, if it did. */
@@ -558,6 +560,8 @@ export function useMatch(): MatchApi {
   const [targeting, setTargeting] = useState<string | null>(null);
   const [online, setOnline] = useState(false);
   const [netError, setNetError] = useState(false);
+  /** Set when the server refuses to start a match for this account. */
+  const [suspendedUntil, setSuspendedUntil] = useState<string | null>(null);
   const [roomCode, setRoomCode] = useState<string | null>(null);
   const [roomError, setRoomError] = useState<RoomError | null>(null);
   /** Cards stacked underneath a placed card, revealed when the top one dies. */
@@ -1248,6 +1252,17 @@ export function useMatch(): MatchApi {
         sfx.play("go");
         setPhase("battle");
       },
+      onSuspended: (until) => {
+        /*
+         * Told, not merely refused. A game that silently will not start is a
+         * broken game; a game that says "you are suspended until Tuesday" is
+         * a consequence, which is the entire point of having one.
+         */
+        setSuspendedUntil(until);
+        netRef.current?.close();
+        netRef.current = null;
+        setPhase("intro");
+      },
       onOppLeft: () => {
         setOppLeft(true);
         // If the match hadn't resolved, you win by forfeit.
@@ -1593,6 +1608,7 @@ export function useMatch(): MatchApi {
     reloadAccount: () => void loadAccount().then((a) => a && setAccount(a)),
     onlineAvailable: ONLINE_AVAILABLE,
     netError,
+    suspendedUntil,
     roomCode,
     roomError,
     mySide,

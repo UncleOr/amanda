@@ -11,6 +11,7 @@ import { Match } from "./match.js";
 import { PROGRESS_ENABLED } from "./progress.js";
 import { handleApi } from "./api.js";
 import { refreshCards } from "./cards.js";
+import { db } from "./supabase.js";
 import "./content.js"; // eager-load the card catalog at boot
 
 const PORT = Number(process.env.PORT ?? 2567);
@@ -138,14 +139,52 @@ setInterval(() => {
     }
 }, 60_000).unref();
 
+/**
+ * Players a suspension applies to, and when it runs out.
+ *
+ * Checked when somebody says who they are rather than on every message: one
+ * read per connection instead of one per keystroke, and a suspension handed
+ * out mid-match does not yank somebody out of a game already in progress — it
+ * stops the next one. That is the right moment for it.
+ */
+const suspendedUntil = new WeakMap<WebSocket, number>();
+
+async function checkSuspended(ws: WebSocket, playerId: string): Promise<void> {
+  const sb = db();
+  if (!sb) return;
+  try {
+    const { data } = await sb
+      .from("players")
+      .select("suspended_until")
+      .eq("id", playerId)
+      .maybeSingle();
+    const until = data?.suspended_until ? Date.parse(data.suspended_until) : 0;
+    if (until > Date.now()) suspendedUntil.set(ws, until);
+  } catch {
+    /* a database that cannot be reached must not stop anybody playing */
+  }
+}
+
+/** True when this socket may not start a match, and told so. */
+function refuseIfSuspended(ws: WebSocket): boolean {
+  const until = suspendedUntil.get(ws) ?? 0;
+  if (until <= Date.now()) return false;
+  send(ws, { t: "suspended", until: new Date(until).toISOString() });
+  return true;
+}
+
 function handleLobby(ws: WebSocket, msg: ClientMessage): void {
   switch (msg.t) {
     case "me": {
-      if (typeof msg.playerId === "string" && msg.playerId) playerIdOf.set(ws, msg.playerId);
+      if (typeof msg.playerId === "string" && msg.playerId) {
+        playerIdOf.set(ws, msg.playerId);
+        void checkSuspended(ws, msg.playerId);
+      }
       return;
     }
 
     case "hello": {
+      if (refuseIfSuspended(ws)) return;
       // Open queue: pair with whoever is already waiting.
       if (isOpen(waiting) && waiting !== ws) {
         const opponent = waiting;
@@ -160,6 +199,7 @@ function handleLobby(ws: WebSocket, msg: ClientMessage): void {
     }
 
     case "helloAmanda": {
+      if (refuseIfSuspended(ws)) return;
       if (isOpen(waitingCoop) && waitingCoop !== ws) {
         const partner = waitingCoop;
         waitingCoop = null;
@@ -173,6 +213,7 @@ function handleLobby(ws: WebSocket, msg: ClientMessage): void {
     }
 
     case "host": {
+      if (refuseIfSuspended(ws)) return;
       // One room per connection — opening a second replaces the first.
       closeRoomOf(ws);
       const code = newRoomCode();
@@ -184,6 +225,7 @@ function handleLobby(ws: WebSocket, msg: ClientMessage): void {
     }
 
     case "join": {
+      if (refuseIfSuspended(ws)) return;
       const code = String(msg.code ?? "").toUpperCase().trim();
       const room = rooms.get(code);
       const fail = (reason: RoomError) => send(ws, { t: "roomError", reason });

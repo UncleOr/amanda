@@ -780,6 +780,18 @@ function Game() {
             )}
             </div>
             </div>
+            {/* Told, and told until when. */}
+            {m.suspendedUntil && (
+              <p className="warn warn--suspended">
+                החשבון הזה מושעה עד{" "}
+                {new Date(m.suspendedUntil).toLocaleDateString("he-IL", {
+                  day: "numeric",
+                  month: "long",
+                  year: "numeric",
+                })}
+                . אפשר לשחק נגד המחשב בינתיים.
+              </p>
+            )}
             {m.roomError && (
               <p className="warn">
                 {m.roomError === "notFound"

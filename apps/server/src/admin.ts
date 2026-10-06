@@ -141,7 +141,9 @@ async function adminRoutes(
       }
       const { data: players } = await sb
         .from("players")
-        .select("id, nickname, trophies, diamonds, tutorial_done, birth_date");
+        .select("id, nickname, trophies, diamonds, tutorial_done, birth_date, suspended_until");
+      const { data: adminRows } = await sb.from("admins").select("user_id");
+      const adminIds = new Set((adminRows ?? []).map((r) => r.user_id));
       const byId = new Map((players ?? []).map((p) => [p.id, p]));
       const { data: cards } = await sb.from("player_cards").select("player_id");
       const cardCount = new Map<string, number>();
@@ -179,7 +181,9 @@ async function adminRoutes(
             diamonds: p?.diamonds ?? 0,
             tutorialDone: p?.tutorial_done ?? false,
             cards: cardCount.get(u.id) ?? 0,
-            isAdmin: u.id === userId,
+            isYou: u.id === userId,
+            isAdmin: adminIds.has(u.id),
+            suspendedUntil: p?.suspended_until ?? null,
           };
         }),
       });
@@ -228,6 +232,77 @@ async function adminRoutes(
       }
       const { error } = await sb.from("players").update(patch).eq("id", id);
       deps.send(res, error ? 500 : 200, error ? { error: error.message } : { ok: true, ...patch });
+      return true;
+    }
+
+    /*
+     * Suspend a player, for a while or for good.
+     *
+     * TWO LOCKS, because they stop different things. Supabase's own ban stops
+     * them getting a new token — the right lock on the front door, and no use
+     * at all against a session already open in a browser, because tokens live
+     * an hour. The column on `players` is what the match server checks before
+     * it will queue anybody, so a suspension bites on the next match instead
+     * of within the hour.
+     *
+     * `hours: 0` lifts it. No hours at all means indefinitely, written as a
+     * date far enough away that there is one shape to read everywhere.
+     */
+    case "/api/admin/user/suspend": {
+      const id = str("userId");
+      if (!id) {
+        deps.send(res, 400, { error: "which user" });
+        return true;
+      }
+      if (id === userId) {
+        deps.send(res, 400, { error: "that is you" });
+        return true;
+      }
+      const hours = typeof body.hours === "number" ? body.hours : null;
+      const lift = hours === 0;
+      const until = lift
+        ? null
+        : new Date(Date.now() + (hours ?? 24 * 365 * 50) * 3600_000).toISOString();
+
+      const { error } = await sb
+        .from("players")
+        .update({ suspended_until: until, suspended_reason: lift ? null : str("reason") || null })
+        .eq("id", id);
+      if (error) {
+        deps.send(res, 500, { error: error.message });
+        return true;
+      }
+      // The front door. "none" is Supabase's way of lifting a ban.
+      await sb.auth.admin.updateUserById(id, {
+        ban_duration: lift ? "none" : `${hours ?? 24 * 365 * 50}h`,
+      });
+      deps.send(res, 200, { ok: true, suspendedUntil: until });
+      return true;
+    }
+
+    /*
+     * Make somebody an admin, or stop them being one.
+     *
+     * Or: "at this stage I will not make Hod an admin, it is frightening." So
+     * it asks for a real confirmation in the UI, and an admin can never remove
+     * themselves — locking yourself out of the only panel that can let you
+     * back in is a mistake with no undo.
+     */
+    case "/api/admin/user/admin": {
+      const id = str("userId");
+      const make = body.make !== false;
+      if (!id) {
+        deps.send(res, 400, { error: "which user" });
+        return true;
+      }
+      if (id === userId && !make) {
+        deps.send(res, 400, { error: "אי אפשר להוריד את עצמך" });
+        return true;
+      }
+      const { error } = make
+        ? await sb.from("admins").upsert({ user_id: id }, { onConflict: "user_id" })
+        : await sb.from("admins").delete().eq("user_id", id);
+      deps.send(res, error ? 500 : 200, error ? { error: error.message } : { ok: true, admin: make });
       return true;
     }
 
