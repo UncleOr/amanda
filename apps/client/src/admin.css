@@ -1,0 +1,242 @@
+/*
+ * The admin panel.
+ *
+ * Deliberately a tool and not a game: a plain, dense, scrollable table on a
+ * flat background. Or is going to sit in here for an hour with 547 strings,
+ * and anything atmospheric would be in the way by the third row.
+ */
+
+.admin {
+  position: fixed;
+  inset: 0;
+  display: flex;
+  flex-direction: column;
+  background: #0d1119;
+  color: var(--text);
+  font-size: 14px;
+  overflow: hidden;
+}
+
+.admin--msg {
+  align-items: center;
+  justify-content: center;
+  gap: 14px;
+  text-align: center;
+}
+.admin--msg h1 {
+  margin: 0;
+  font-size: 22px;
+}
+.admin--msg p {
+  margin: 0;
+  color: var(--muted);
+}
+
+.admin__bar {
+  flex: none;
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  padding: 10px 18px;
+  border-bottom: 1px solid var(--line);
+  background: #121724;
+}
+.admin__bar h1 {
+  margin: 0;
+  font-size: 17px;
+}
+.admin__bar nav {
+  display: flex;
+  gap: 6px;
+  flex: 1;
+}
+.admin__bar nav button {
+  padding: 6px 16px;
+  border-radius: 999px;
+  border: 1px solid var(--line);
+  background: transparent;
+  color: var(--muted);
+  font: inherit;
+  font-weight: 700;
+  cursor: pointer;
+}
+.admin__bar nav button.on {
+  border-color: var(--accent);
+  color: var(--accent);
+  background: rgba(255, 176, 32, 0.12);
+}
+
+.admin__note {
+  flex: none;
+  margin: 0;
+  padding: 9px 18px;
+  background: rgba(110, 231, 140, 0.12);
+  border-bottom: 1px solid rgba(110, 231, 140, 0.3);
+  color: #9ff0bb;
+  cursor: pointer;
+}
+
+.admin__body {
+  flex: 1;
+  min-height: 0;
+  overflow-y: auto;
+  padding: 14px 18px 60px;
+}
+
+.admin__tools {
+  position: sticky;
+  top: 0;
+  z-index: 2;
+  display: flex;
+  gap: 10px;
+  align-items: center;
+  flex-wrap: wrap;
+  padding: 10px 0;
+  margin-bottom: 4px;
+  background: #0d1119;
+}
+.admin__tools select,
+.admin__tools input[type="text"],
+.admin__tools input:not([type]) {
+  padding: 7px 12px;
+  border-radius: 9px;
+  border: 1px solid var(--line);
+  background: #161c2b;
+  color: var(--text);
+  font: inherit;
+}
+.admin__tools label {
+  color: var(--muted);
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+}
+.admin__tools .btn-fight {
+  margin-inline-start: auto;
+  padding: 8px 20px;
+  font-size: 14px;
+}
+
+.admin__hint {
+  color: var(--muted);
+  font-size: 12.5px;
+  line-height: 1.5;
+  margin: 4px 0 12px;
+  max-width: 78ch;
+}
+
+.admin__table {
+  width: 100%;
+  border-collapse: collapse;
+}
+.admin__table th {
+  position: sticky;
+  top: 54px;
+  z-index: 1;
+  text-align: start;
+  padding: 7px 10px;
+  font-size: 12px;
+  color: var(--muted);
+  background: #121724;
+  border-bottom: 1px solid var(--line);
+}
+.admin__table td {
+  padding: 8px 10px;
+  border-bottom: 1px solid #1c2435;
+  vertical-align: top;
+}
+.admin__row--dirty td {
+  background: rgba(255, 176, 32, 0.07);
+}
+
+.admin__id {
+  white-space: nowrap;
+}
+.admin__id code {
+  color: var(--muted);
+  font-size: 12px;
+}
+.admin__was {
+  color: var(--muted);
+  max-width: 38ch;
+  line-height: 1.5;
+}
+
+/* Whether a change shows up now or on the next deploy. Said per row, because
+   the alternative is Or editing a line and wondering why nothing happened. */
+.admin__where {
+  display: inline-block;
+  margin-inline-start: 7px;
+  padding: 1px 7px;
+  border-radius: 999px;
+  font-size: 10px;
+  font-weight: 800;
+}
+.admin__where--live {
+  background: rgba(110, 231, 140, 0.16);
+  color: #8fe3a6;
+}
+.admin__where--deploy {
+  background: rgba(143, 211, 255, 0.14);
+  color: #8fd3ff;
+}
+
+.admin__input {
+  display: block;
+  width: 100%;
+  min-width: 26ch;
+  margin-bottom: 5px;
+  padding: 7px 10px;
+  border-radius: 8px;
+  border: 1px solid var(--line);
+  background: #161c2b;
+  color: var(--text);
+  font: inherit;
+  line-height: 1.45;
+  resize: vertical;
+}
+.admin__input:focus {
+  outline: none;
+  border-color: var(--accent);
+}
+.admin__add {
+  padding: 3px 10px;
+  border-radius: 999px;
+  border: 1px dashed var(--line);
+  background: transparent;
+  color: var(--muted);
+  font: inherit;
+  font-size: 11px;
+  cursor: pointer;
+}
+.admin__add:hover {
+  color: var(--accent);
+  border-color: var(--accent);
+}
+
+.admin__actions {
+  display: flex;
+  gap: 6px;
+  flex-wrap: wrap;
+}
+.admin__actions button {
+  padding: 5px 12px;
+  border-radius: 8px;
+  border: 1px solid var(--line);
+  background: #161c2b;
+  color: var(--text);
+  font: inherit;
+  font-size: 12px;
+  cursor: pointer;
+}
+.admin__actions button:disabled {
+  opacity: 0.4;
+  cursor: default;
+}
+.admin__danger {
+  border-color: rgba(255, 90, 90, 0.5) !important;
+  color: var(--danger) !important;
+}
+.admin__danger:hover:not(:disabled) {
+  background: rgba(255, 90, 90, 0.14) !important;
+}

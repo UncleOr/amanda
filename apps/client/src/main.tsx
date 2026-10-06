@@ -5,6 +5,17 @@ import "./styles.css";
 // The playground has its own sheet — it is a workbench bolted to the side of
 // the game, and keeping it separate keeps that visible.
 import "./lab.css";
+import "./admin.css";
+import { loadCopy } from "./game/copy";
+
+/*
+ * Anything Or has rewritten, fetched in the background.
+ *
+ * Nothing waits for this. The game ships with all 547 of its own strings, so
+ * a slow or missing server costs nothing — the words are already there, and
+ * the card text simply updates in place if an override arrives.
+ */
+void loadCopy();
 
 createRoot(document.getElementById("root")!).render(
   <StrictMode>

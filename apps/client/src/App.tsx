@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useRef, useState } from "react";
+import { lazy, Suspense, useEffect, useMemo, useRef, useState } from "react";
 import { Icon } from "./components/Icon";
 import { Album } from "./components/Album";
 import { Tutorial, type Step } from "./components/Tutorial";
@@ -26,6 +26,7 @@ import { Arena } from "./components/Arena";
 import { ErrorBoundary } from "./components/ErrorBoundary";
 import { CardGallery } from "./components/CardGallery";
 import { CardPicker } from "./components/CardPicker";
+const Admin = lazy(() => import("./components/Admin").then((m) => ({ default: m.Admin })));
 import { MoreModes } from "./components/MoreModes";
 import { ArenaPreview } from "./components/ArenaPreview";
 import { BattleLog } from "./components/BattleLog";
@@ -161,11 +162,21 @@ const REVIEW = new URLSearchParams(location.search).has("gallery")
   ? "gallery"
   : new URLSearchParams(location.search).has("arena")
     ? "arena"
-    : null;
+    : new URLSearchParams(location.search).has("admin")
+      ? "admin"
+      : null;
 
 export default function App() {
   if (REVIEW === "gallery") return <CardGallery />;
   if (REVIEW === "arena") return <ArenaPreview />;
+  // Loaded only when asked for: the panel pulls in the whole copy map and the
+  // Supabase client, and nobody playing the game needs either.
+  if (REVIEW === "admin")
+    return (
+      <Suspense fallback={<div className="admin admin--msg">רגע…</div>}>
+        <Admin />
+      </Suspense>
+    );
   return <Game />;
 }
 
