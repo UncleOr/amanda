@@ -337,7 +337,15 @@ function Game() {
     );
     if (!next) return;
     saidRef.current.add(next.id);
-    setCue({ target: next.target ?? ".side--me .board", text: next.text });
+    setCue({
+      target: next.target ?? ".side--me .board",
+      text: next.text,
+      // `awaits` is turned into a live boolean BELOW, on every render — not
+      // captured here. A gate frozen at the moment the step appeared would
+      // answer "has a King been placed?" with whatever was true back then,
+      // forever, which is a bug this file has had once already.
+      awaits: next.awaits,
+    });
   }, [
     teaching,
     m.phase,
@@ -1282,7 +1290,18 @@ function Game() {
 
       {teaching && cue && (
         <Tutorial
-          steps={[cue]}
+          steps={[
+            {
+              ...cue,
+              // Recomputed here, every render, from the match as it is now.
+              done:
+                cue.awaits === "king"
+                  ? m.hasKing
+                  : cue.awaits === "placed"
+                    ? Object.keys(m.placements).length > 0
+                    : undefined,
+            },
+          ]}
           onDone={() => setCue(null)}
           onQuit={() => {
             setTeaching(false);

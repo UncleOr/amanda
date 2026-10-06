@@ -350,10 +350,12 @@ function UsersTab({ say }: { say: (s: string) => void }) {
   const [busy, setBusy] = useState<string | null>(null);
   const [confirmDelete, setConfirmDelete] = useState<AdminUser | null>(null);
 
+  const [hidden, setHidden] = useState(0);
   const load = useCallback(async () => {
     const r = await call("/api/admin/users");
     if (r.error) return say(String(r.error));
     setUsers((r.users as AdminUser[]) ?? []);
+    setHidden(typeof r.hiddenAnonymous === "number" ? r.hiddenAnonymous : 0);
   }, [say]);
 
   useEffect(() => {
@@ -374,6 +376,13 @@ function UsersTab({ say }: { say: (s: string) => void }) {
   return (
     <div className="admin__body">
       <p className="admin__hint">
+        {hidden > 0 && (
+          <>
+            <b>{hidden}</b> חשבונות אורח לא מוצגים כאן — מי שפתח את המשחק ולא
+            התחבר. הם לא נמחקו: אלבום של ילד הופך לחשבון מלא ברגע שהוא מתחבר.
+            <br />
+          </>
+        )}
         <b>איפוס</b> מחזיר שחקן לדקה הראשונה שלו — אלבום, גביעים, יהלומים
         והטוטריאל מתאפסים והוא מקבל שוב את קלפי ההתחלה. החשבון עצמו נשאר: אותה
         התחברות, אותו מזהה. <b>מחיקה</b> מוחקת את החשבון לגמרי ואי אפשר לבטל.

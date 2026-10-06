@@ -19,6 +19,19 @@ export interface Cue {
   text: string;
   /** What to spotlight, if anything. */
   target?: string;
+  /**
+   * What the player has to actually DO before this step will move on.
+   *
+   * Without this every step was "read it, press continue" — which is a
+   * slideshow with a hole cut in it, not a walkthrough. Tutorial.tsx has
+   * always supported waiting (its `done` prop); nothing ever used it.
+   *
+   * Only the steps where doing the thing is the lesson carry one. "This card
+   * is weak, bin it" is advice; "put a King down" is the game refusing to
+   * start without one, and a tutorial that lets you skip past it has taught
+   * nothing.
+   */
+  awaits?: "king" | "placed";
 }
 
 /** Everything the coach is allowed to look at. */
@@ -240,6 +253,8 @@ export function nextCue(view: CoachView, said: Set<string>): Cue | null {
             id: "king",
             text: "קודם כול מלך. הוא לא זז, הוא חזק פי שלושה, ואם הוא נופל — נגמר.",
             target: ".side--me .slot--king",
+            // She waits. The board cannot do anything without one.
+            awaits: "king",
           }
         : null,
 
@@ -250,6 +265,8 @@ export function nextCue(view: CoachView, said: Set<string>): Cue | null {
             id: "tank",
             text: `${inHand.name.he}? סטטי, הרבה חיים. הוא לא ילך לשום מקום — שים אותו מול המלך, שם עוצרים את מי שבא אליו.`,
             target: ".side--me .slot--guard",
+            // Put something down. Anywhere — the point is the hands move.
+            awaits: "placed",
           }
         : null,
 

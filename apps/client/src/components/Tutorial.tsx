@@ -24,6 +24,12 @@ export interface Step {
    * true when the tutorial started, forever.
    */
   done?: boolean;
+  /**
+   * What the player has to do, as the coach named it. Carried here only so the
+   * caller can turn it into `done` on every render; this component never reads
+   * it — a gate frozen at the moment a step appeared is the bug it replaced.
+   */
+  awaits?: "king" | "placed";
   cta?: string;
 }
 

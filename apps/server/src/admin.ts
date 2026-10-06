@@ -146,13 +146,29 @@ async function adminRoutes(
       for (const row of cards ?? [])
         cardCount.set(row.player_id, (cardCount.get(row.player_id) ?? 0) + 1);
 
+      /*
+       * Or: "in the user interface, anonymous users should not be kept."
+       *
+       * Every visitor gets an anonymous account from their first second, so
+       * the list fills up with people who opened the game once and never came
+       * back — and the ones who actually play are buried. Only accounts with
+       * a real identity are listed.
+       *
+       * They are NOT deleted. An anonymous account is a child's album, and it
+       * becomes a named one the moment they sign in; throwing it away would
+       * throw away everything they collected before they got round to that.
+       * This is about what the list shows, not about what exists.
+       */
+      const real = list.users.filter((u) => !!u.email || (u.identities?.length ?? 0) > 0);
+
       deps.send(res, 200, {
-        users: list.users.map((u) => {
+        hiddenAnonymous: list.users.length - real.length,
+        users: real.map((u) => {
           const p = byId.get(u.id);
           return {
             id: u.id,
             email: u.email ?? null,
-            anonymous: !u.email && u.identities?.length === 0,
+            anonymous: false,
             providers: (u.identities ?? []).map((i) => i.provider),
             createdAt: u.created_at,
             lastSeen: u.last_sign_in_at ?? null,
