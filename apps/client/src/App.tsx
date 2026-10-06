@@ -23,9 +23,20 @@ import { CardView } from "./components/CardView";
 import { CardDetailModal } from "./components/CardDetailModal";
 import { ActionCardView } from "./components/ActionCardView";
 import { ActionDetailModal } from "./components/ActionDetailModal";
-import { Arena } from "./components/Arena";
+/*
+ * The arena, and PixiJS with it, fetched only when there is a battle.
+ *
+ * It was in the main bundle, so every child downloaded a WebGL renderer
+ * before the home screen could draw — a quarter of a megabyte for a screen
+ * with four buttons on it. Nothing needs it until a battle starts, and a
+ * battle is at least ninety seconds of building away.
+ *
+ * Prefetched the moment that building begins (see below), so the chunk is on
+ * the device long before it is wanted and the lazy boundary never shows.
+ */
+const Arena = lazy(() => import("./components/Arena").then((m) => ({ default: m.Arena })));
+const prefetchArena = () => void import("./components/Arena");
 import { ErrorBoundary } from "./components/ErrorBoundary";
-import { CardGallery } from "./components/CardGallery";
 import { CardPicker } from "./components/CardPicker";
 import { ArenaTrack } from "./components/ArenaTrack";
 import { ChestShelf } from "./components/ChestShelf";
@@ -36,8 +47,21 @@ import { Shop } from "./components/Shop";
 import { Inbox } from "./components/Inbox";
 import { SayButton, SaidBubble } from "./components/Say";
 const Admin = lazy(() => import("./components/Admin").then((m) => ({ default: m.Admin })));
+/*
+ * The two review workbenches, behind `?gallery` and `?arena`.
+ *
+ * Lazy for the same reason as the panel — nobody playing the game opens them
+ * — and, in the arena workbench's case, for a second one: it imports the
+ * Arena statically, so while IT was in the main bundle the Arena's own lazy
+ * import did nothing at all. Vite said so and it was right.
+ */
+const CardGallery = lazy(() =>
+  import("./components/CardGallery").then((m) => ({ default: m.CardGallery })),
+);
+const ArenaPreview = lazy(() =>
+  import("./components/ArenaPreview").then((m) => ({ default: m.ArenaPreview })),
+);
 import { MoreModes } from "./components/MoreModes";
-import { ArenaPreview } from "./components/ArenaPreview";
 import { BattleLog } from "./components/BattleLog";
 
 
@@ -187,8 +211,12 @@ const REVIEW = new URLSearchParams(location.search).has("gallery")
       : null;
 
 export default function App() {
-  if (REVIEW === "gallery") return <CardGallery />;
-  if (REVIEW === "arena") return <ArenaPreview />;
+  if (REVIEW === "gallery" || REVIEW === "arena")
+    return (
+      <Suspense fallback={<div className="admin admin--msg">רגע…</div>}>
+        {REVIEW === "gallery" ? <CardGallery /> : <ArenaPreview />}
+      </Suspense>
+    );
   // Loaded only when asked for: the panel pulls in the whole copy map and the
   // Supabase client, and nobody playing the game needs either.
   if (REVIEW === "admin")
@@ -477,6 +505,18 @@ function Game() {
     invitedRef.current = true;
     m.joinRoom(INVITE_CODE);
   }, [m]);
+
+  /*
+   * Fetch the arena while the player is building.
+   *
+   * The chunk carries PixiJS, which is the single biggest thing this game
+   * downloads — and there is a minute and a half of board-building before
+   * anybody needs it. Asking for it here means the lazy boundary above
+   * effectively never renders.
+   */
+  useEffect(() => {
+    if (m.phase === "build" || m.phase === "panic") prefetchArena();
+  }, [m.phase]);
 
   /*
    * How many unread notices there are.
@@ -1370,15 +1410,24 @@ function Game() {
               </div>
             }
           >
-            <Arena
-              result={m.result}
-              onFinish={m.finishBattle}
-              flip={m.mySide === "B"}
-              verdict={verdictText(m.result, m.iWon)}
-              // Where you fight is where you have climbed to. A guest with no
-              // account fights in the first one, which is the right answer.
-              backdrop={arena.id}
-            />
+            {/*
+              The fallback is a line of text, not a spinner, and it should
+              almost never be seen: the chunk is prefetched the moment the
+              build phase starts. If it IS seen, the battle is already decided
+              — the result was computed before this screen mounted — so the
+              only thing waiting costs is the animation.
+            */}
+            <Suspense fallback={<div className="arena arena--loading">רגע…</div>}>
+              <Arena
+                result={m.result}
+                onFinish={m.finishBattle}
+                flip={m.mySide === "B"}
+                verdict={verdictText(m.result, m.iWon)}
+                // Where you fight is where you have climbed to. A guest with
+                // no account fights in the first one, which is right.
+                backdrop={arena.id}
+              />
+            </Suspense>
           </ErrorBoundary>
           {/* "ולעצור את הקרב בכל רגע נתון" — straight back to the boards you
               built, mid-blow if you like. A lab you cannot interrupt is just a

@@ -1,0 +1,79 @@
+/*
+ * The palette, the type, and the resets everything else assumes.
+ *
+ * One of fifteen files split out of a single 4,405-line styles.css.
+ * THE ORDER THEY ARE IMPORTED IN IS THE ORDER THEY WERE WRITTEN IN,
+ * and it matters: where two rules have the same specificity the later
+ * one wins, so re-ordering these imports would silently change the
+ * page. styles.css is now the index that keeps that order.
+ */
+:root {
+  --bg: #0b0e17;
+  --panel: #141a29;
+  --panel-2: #1b2436;
+  --line: #2a3550;
+  --text: #e7ecf5;
+  --muted: #93a0bd;
+  --accent: #ffb020;
+  --danger: #ff5a5a;
+  color-scheme: dark;
+}
+
+* {
+  box-sizing: border-box;
+}
+html,
+body,
+#root {
+  height: 100%;
+  margin: 0;
+}
+/*
+ * Mobile browsers hide and show their own chrome as you scroll, so `100%`
+ * (and `100vh`) is the height of the page WITHOUT the chrome — the app ends up
+ * taller than the visible area and the bottom gets cut off. `dvh` is the live
+ * visible height, which is what we actually want.
+ */
+@supports (height: 100dvh) {
+  html,
+  body,
+  #root {
+    height: 100dvh;
+  }
+}
+body {
+  overflow: hidden;
+  overscroll-behavior: none; /* no rubber-banding the whole game around */
+}
+body {
+  color: var(--text);
+  font-family: "Segoe UI", "Assistant", system-ui, sans-serif;
+  background:
+    radial-gradient(900px 500px at 15% 0%, rgba(74, 163, 255, 0.14), transparent 60%),
+    radial-gradient(900px 500px at 85% 100%, rgba(255, 90, 90, 0.14), transparent 60%),
+    radial-gradient(1400px 700px at 50% -20%, #1a2747 0%, transparent 65%),
+    linear-gradient(180deg, #0c111d, #070a12);
+  background-attachment: fixed;
+}
+/* faint moving glow behind everything */
+.app::before {
+  content: "";
+  position: fixed;
+  inset: -20%;
+  z-index: -1;
+  background: radial-gradient(500px 500px at 50% 50%, rgba(255, 176, 32, 0.05), transparent 70%);
+  animation: drift 18s ease-in-out infinite alternate;
+}
+@keyframes drift {
+  from { transform: translate(-6%, -4%); }
+  to { transform: translate(6%, 4%); }
+}
+.app {
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  /* keep clear of notches and home indicators (viewport-fit=cover) */
+  padding: env(safe-area-inset-top) env(safe-area-inset-right)
+    env(safe-area-inset-bottom) env(safe-area-inset-left);
+}

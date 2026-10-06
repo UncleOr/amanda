@@ -5,7 +5,7 @@ import "./styles.css";
 // The playground has its own sheet — it is a workbench bolted to the side of
 // the game, and keeping it separate keeps that visible.
 import "./lab.css";
-import "./admin.css";
+
 import { loadCopy } from "./game/copy";
 import { loadCardOverrides } from "./game/cardOverrides";
 

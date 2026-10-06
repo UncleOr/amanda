@@ -4,6 +4,9 @@ import { ARENAS } from "@amanda/shared";
 import { GiftsTab } from "./AdminGifts";
 import { ShopTab } from "./AdminShop";
 import { CardEditor } from "./CardEditor";
+// The panel's own sheet, loaded with the panel. It used to be in the entry
+// file, so every child downloaded the admin styles to play a card game.
+import "../admin.css";
 
 /**
  * The admin panel. Opened with ?admin.

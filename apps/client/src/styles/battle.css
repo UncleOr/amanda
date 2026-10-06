@@ -1,0 +1,176 @@
+/*
+ * The arena, and the result card that follows it.
+ *
+ * One of fifteen files split out of a single 4,405-line styles.css.
+ * THE ORDER THEY ARE IMPORTED IN IS THE ORDER THEY WERE WRITTEN IN,
+ * and it matters: where two rules have the same specificity the later
+ * one wins, so re-ordering these imports would silently change the
+ * page. styles.css is now the index that keeps that order.
+ */
+/* ---- battle / arena ---- */
+.battle {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 16px;
+  /* without this the arena inside sets the height and the screen scrolls,
+     which in eight-lane Amanda mode hid one of the two players entirely */
+  min-height: 0;
+  overflow: hidden;
+}
+.arena {
+  border: 1px solid var(--line);
+  border-radius: 12px;
+  overflow: hidden;
+  box-shadow: 0 12px 40px rgba(0, 0, 0, 0.5);
+  max-width: 100%;
+  /* a flex item will not shrink below its content without this, and then the
+     canvas pushes the battle screen taller than the window instead */
+  min-height: 0;
+  max-height: 100%;
+  display: flex;
+}
+.arena canvas {
+  display: block;
+  /*
+   * Fit BOTH axes, not just the width.
+   *
+   * Or, on the co-op battle: "I only saw my side of the fight." Amanda mode
+   * is eight lanes, so the canvas is twice as tall as a normal battle — and
+   * this rule only ever capped the width, so the bottom half (which is one of
+   * the two players) ran off the screen. Capping the height as well makes the
+   * whole arena fit, and the intrinsic size of the canvas keeps it in
+   * proportion while it shrinks.
+   */
+  max-width: 100%;
+  max-height: 100%;
+  width: auto;
+  height: auto;
+  object-fit: contain;
+}
+
+/* ---- result ---- */
+.result {
+  flex: 1;
+  /* a flex item will not shrink below its content without this, and then the
+     screen scrolls instead of this box */
+  min-height: 0;
+  display: flex;
+  /*
+   * `safe` is what stops the top of the card being cut off. Plain centring
+   * overflows a scroll container in BOTH directions, and the half that goes
+   * past the top edge cannot be scrolled back — which is exactly what the
+   * battle report did once it made the card taller than the window.
+   */
+  align-items: safe center;
+  justify-content: safe center;
+  /* the battle report makes this card tall, so the screen has to give */
+  overflow-y: auto;
+  /* Never let the card come to rest tucked under the bar: on a short screen
+     its top is the first thing to go, and the top is the headline. */
+  padding: 16px 0;
+  scroll-padding-top: 16px;
+}
+/*
+ * The end of a match, as a picture.
+ *
+ * Or: "gaming. Fun. Illustrations." This was a 96px icon on a flat panel —
+ * a dialog box reporting an outcome. A child who has just won should be
+ * looking at something. The illustration is the top two thirds and the words
+ * live over the bottom, which is the part each painting leaves quiet.
+ */
+.result__card {
+  position: relative;
+  width: min(560px, 92vw);
+  text-align: center;
+  background: var(--panel);
+  border: 1px solid var(--line);
+  border-radius: 20px;
+  overflow: hidden;
+  box-shadow: 0 24px 60px rgba(0, 0, 0, 0.55);
+}
+.result__scene {
+  width: 100%;
+  aspect-ratio: 4 / 3;
+  background-size: cover;
+  background-position: center top;
+  /* Fades into the panel instead of stopping at an edge, so the words look
+     like they are ON the picture rather than under a photograph of one. */
+  -webkit-mask-image: linear-gradient(180deg, #000 58%, transparent 97%);
+  mask-image: linear-gradient(180deg, #000 58%, transparent 97%);
+}
+.result__card--win .result__scene {
+  background-image: var(--scene-win);
+}
+.result__card--lose .result__scene {
+  background-image: var(--scene-lose);
+}
+/*
+ * The words sit over the bottom of the picture, not under it. Pulled up by
+ * more than the fade is tall so there is never a dead band between them.
+ */
+.result__body {
+  position: relative;
+  margin-top: -22%;
+  padding: 0 clamp(16px, 5vw, 40px) 28px;
+}
+.result__card h1 {
+  font-size: clamp(30px, 7vw, 46px);
+  margin: 0 0 6px;
+  text-shadow: 0 3px 14px rgba(0, 0, 0, 0.85);
+}
+.result__card p { color: var(--muted); margin: 0 0 18px; }
+/*
+ * The line under the headline, centred UNDER the headline.
+ *
+ * Or: "on these screens the text under the title should be centred under the
+ * title." It inherits text-align from the card, so each line was centred — but
+ * the paragraph ran the full width of the card while the headline sat in the
+ * middle of it, so a two-line verdict read as if it had slipped sideways. A
+ * narrower measure centred in the same column fixes the shape, and is easier
+ * to read besides.
+ */
+.result__verdict {
+  text-shadow: 0 2px 8px rgba(0, 0, 0, 0.8);
+  max-width: 34ch;
+  margin-inline: auto;
+  line-height: 1.5;
+  text-wrap: balance;
+}
+
+/* How long it took and how many fell, as two marks rather than a sentence. */
+.result__tally {
+  display: flex;
+  justify-content: center;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+.result__tally span {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 4px 13px;
+  border-radius: 999px;
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  background: rgba(8, 12, 22, 0.6);
+  font-size: 13px;
+  font-weight: 700;
+  font-variant-numeric: tabular-nums;
+}
+
+/* A short window puts the picture behind the words instead of above them. */
+@media (max-height: 560px) {
+  .result__scene {
+    aspect-ratio: auto;
+    position: absolute;
+    inset: 0;
+    opacity: 0.42;
+    -webkit-mask-image: none;
+    mask-image: none;
+  }
+  .result__body {
+    margin-top: 0;
+    padding-top: 22px;
+  }
+}

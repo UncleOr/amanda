@@ -1,0 +1,69 @@
+/*
+ * The bar across the top: phase, clock, mute, the player.
+ *
+ * One of fifteen files split out of a single 4,405-line styles.css.
+ * THE ORDER THEY ARE IMPORTED IN IS THE ORDER THEY WERE WRITTEN IN,
+ * and it matters: where two rules have the same specificity the later
+ * one wins, so re-ordering these imports would silently change the
+ * page. styles.css is now the index that keeps that order.
+ */
+/* ---- top bar ---- */
+.topbar {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  padding: 8px 18px;
+  background: var(--panel);
+  border-bottom: 1px solid var(--line);
+  flex-shrink: 0;
+  /*
+   * Above whatever is below it.
+   *
+   * The result card scrolls, and on a short screen (a phone held sideways)
+   * scrolling slid it up over the sound and music buttons — it comes after
+   * the bar in the DOM, so with no z-index at all it simply painted on top.
+   * Or: "on mobile the results bar hides the sound."
+   */
+  position: relative;
+  z-index: 60;
+}
+.topbar__title {
+  font-weight: 800;
+  font-size: 18px;
+}
+.topbar__phase {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 0;
+  background: none;
+  border: none;
+  color: var(--muted);
+  font-weight: 700;
+  font-size: 14px;
+  letter-spacing: 0.2px;
+  cursor: default;
+  user-select: none;
+}
+/* a small dot marks it as a live status read-out rather than a control */
+.topbar__phase::before {
+  content: "";
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: currentColor;
+  box-shadow: 0 0 6px currentColor;
+}
+.phase--panic {
+  color: var(--accent);
+  animation: pulse 0.7s ease-in-out infinite alternate;
+}
+@keyframes pulse {
+  from { filter: brightness(0.9); }
+  to { filter: brightness(1.25); }
+}
+.topbar__timer {
+  font-variant-numeric: tabular-nums;
+  font-weight: 800;
+  font-size: 22px;
+}

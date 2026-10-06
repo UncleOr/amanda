@@ -1,0 +1,131 @@
+/*
+ * The card detail modal, small-screen handling, and the ?gallery review tool.
+ *
+ * One of fifteen files split out of a single 4,405-line styles.css.
+ * THE ORDER THEY ARE IMPORTED IN IS THE ORDER THEY WERE WRITTEN IN,
+ * and it matters: where two rules have the same specificity the later
+ * one wins, so re-ordering these imports would silently change the
+ * page. styles.css is now the index that keeps that order.
+ */
+/* ---- card detail modal ---- */
+.modal-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(3, 6, 14, 0.72);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+  z-index: 50;
+  animation: fade 0.15s ease-out;
+}
+@keyframes fade { from { opacity: 0; } to { opacity: 1; } }
+.modal {
+  --card-color: #888;
+  position: relative;
+  width: min(440px, 100%);
+  max-height: 90vh;
+  overflow-y: auto;
+  background: var(--panel);
+  border: 1px solid var(--line);
+  border-radius: 16px;
+  padding: 0 20px 20px;
+  animation: rise 0.18s ease-out;
+}
+@keyframes rise { from { transform: translateY(14px); opacity: 0.4; } to { transform: none; opacity: 1; } }
+.modal__close {
+  position: absolute;
+  top: 10px;
+  inset-inline-end: 10px;
+  width: 30px;
+  height: 30px;
+  border-radius: 50%;
+  padding: 0;
+  z-index: 2;
+}
+.modal__banner {
+  display: flex;
+  gap: 14px;
+  align-items: center;
+  padding: 18px 0 14px;
+}
+.modal__portrait {
+  width: 64px;
+  height: 64px;
+  border-radius: 12px;
+  flex-shrink: 0;
+  background: linear-gradient(160deg, var(--card-color), color-mix(in srgb, var(--card-color) 60%, #000));
+  box-shadow: inset 0 0 0 2px rgba(255, 255, 255, 0.2);
+}
+.modal__title h2 { margin: 0; font-size: 22px; }
+.modal__subtitle { margin: 2px 0 8px; color: var(--muted); font-size: 13px; }
+.modal__badges { display: flex; flex-wrap: wrap; gap: 6px; }
+.badge {
+  font-size: 11px;
+  padding: 2px 8px;
+  border-radius: 999px;
+  border: 1px solid var(--line);
+  background: var(--panel-2);
+}
+.badge--king { border-color: var(--accent); color: var(--accent); }
+.modal__stats {
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+  gap: 6px;
+  margin-bottom: 6px;
+}
+/* scoped to the detail modal so they never clash with the card template */
+.modal__stats .stat {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 2px;
+  padding: 8px 4px;
+  background: var(--panel-2);
+  border-radius: 10px;
+}
+.modal__stats .stat__icon { font-size: 16px; }
+.modal__stats .stat__value { font-weight: 800; font-size: 14px; }
+.modal__stats .stat__label { font-size: 10px; color: var(--muted); }
+.modal__section { margin-top: 14px; }
+.modal__section h3 { margin: 0 0 6px; font-size: 15px; }
+.ability-list { margin: 0; padding-inline-start: 18px; display: flex; flex-direction: column; gap: 4px; }
+.ability-list li { font-size: 13px; line-height: 1.4; }
+.modal__role { margin: 0; color: var(--muted); font-size: 13px; line-height: 1.5; }
+.modal__synergy {
+  background: var(--panel-2);
+  border-radius: 10px;
+  padding: 10px 12px;
+}
+.modal__synergy h3 { font-size: 13px; color: var(--accent); }
+.modal__synergy p { margin: 0; font-size: 13px; color: var(--muted); }
+
+/* ---- portrait / small screens ---- */
+@media (max-width: 760px) {
+  .board { width: max(120px, min(43vw, 40vh)); }
+  .hand__current { width: 104px; height: 135px; }
+  .midline { font-size: 16px; }
+  .modal__stats { grid-template-columns: repeat(3, 1fr); }
+  .hand { gap: 10px; padding: 8px 12px; }
+  .intro__card { padding: 28px 24px; }
+}
+
+/* ---- card gallery (art review, ?gallery) ---- */
+.gallery { padding: 16px 20px 40px; overflow-y: auto; height: 100%; }
+.gallery__bar {
+  display: flex; align-items: center; gap: 20px;
+  position: sticky; top: 0; z-index: 5;
+  background: rgba(11, 14, 23, 0.95);
+  padding: 8px 0 12px; border-bottom: 1px solid var(--line); margin-bottom: 14px;
+}
+.gallery__bar h2 { margin: 0; font-size: 20px; }
+.gallery__bar label { color: var(--muted); font-size: 13px; cursor: pointer; }
+.gallery__series { margin-bottom: 26px; }
+.gallery__series h3 { margin: 0 0 10px; font-size: 16px; color: var(--accent); }
+.gallery__series small { color: var(--muted); font-weight: 400; }
+.gallery__row { display: flex; flex-wrap: wrap; gap: 18px; }
+.gallery__item { display: flex; flex-direction: column; align-items: center; gap: 6px; }
+.gallery__slot { flex: none; }
+.gallery__slot--board { width: 74px; height: 96px; }
+.gallery__slot--hand { width: 124px; height: 161px; }
+.gallery__cap { font-size: 12px; color: var(--muted); }

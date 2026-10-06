@@ -1,0 +1,138 @@
+/*
+ * The action bar on a phone, private rooms, and the King’s guard posts.
+ *
+ * One of fifteen files split out of a single 4,405-line styles.css.
+ * THE ORDER THEY ARE IMPORTED IN IS THE ORDER THEY WERE WRITTEN IN,
+ * and it matters: where two rules have the same specificity the later
+ * one wins, so re-ordering these imports would silently change the
+ * page. styles.css is now the index that keeps that order.
+ */
+/* ---- action bar on a phone: bigger targets, scrollable, never clipped ---- */
+@media (max-height: 560px) and (orientation: landscape) {
+  .actions--open {
+    flex-wrap: nowrap;
+    scrollbar-width: none;
+  }
+  .actions::-webkit-scrollbar { display: none; }
+  .actions__title,
+  .actions__empty { flex-shrink: 0; }
+  .action-chip { flex-shrink: 0; }
+  /* The whole mini-card is the tap target — it opens the card, where a
+     full-size "הפעל" button lives. The inline row would be 9px here. */
+  .action-chip__card { width: 46px; height: 60px; }
+  .action-chip__row { display: none; }
+
+  .targeting-bar {
+    top: 4px;
+    inset-inline: 6px;
+    padding: 6px 10px;
+    gap: 8px;
+  }
+  .targeting-bar__text { font-size: 12px; }
+  .targeting-bar__cancel { padding: 6px 12px; font-size: 12px; }
+}
+
+/* end of stylesheet */
+
+/* ---- private rooms ---- */
+.intro__secondary {
+  display: flex;
+  gap: 14px;
+  justify-content: center;
+  margin-top: 10px;
+}
+.btn-link {
+  background: none;
+  border: none;
+  color: var(--muted);
+  font-size: 13px;
+  font-weight: 700;
+  padding: 4px 6px;
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+.btn-link:hover:not(:disabled) {
+  color: var(--accent);
+  border-color: transparent;
+}
+.join {
+  display: flex;
+  gap: 8px;
+  justify-content: center;
+  margin-top: 12px;
+}
+.join__input {
+  font-family: inherit;
+  font-size: 20px;
+  font-weight: 800;
+  letter-spacing: 6px;
+  text-align: center;
+  text-transform: uppercase;
+  width: 150px;
+  padding: 8px 10px;
+  border-radius: 10px;
+  border: 1px solid var(--line);
+  background: var(--panel-2);
+  color: var(--text);
+}
+.join__input:focus {
+  outline: none;
+  border-color: var(--accent);
+}
+/* the code gets read aloud across a room, so it is the biggest thing on screen */
+.room-code {
+  font-size: 44px;
+  font-weight: 800;
+  letter-spacing: 10px;
+  text-indent: 10px; /* balance the trailing letter-spacing */
+  color: var(--accent);
+  background: var(--panel-2);
+  border: 1px dashed var(--accent);
+  border-radius: 12px;
+  padding: 10px 18px;
+  margin: 10px auto;
+  font-variant-numeric: tabular-nums;
+  user-select: all;
+}
+
+/* which build this is, and a way out of a stale one */
+.intro__version {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  margin: 12px 0 0;
+  font-size: 11px;
+  color: var(--muted);
+  font-variant-numeric: tabular-nums;
+}
+.intro__version .btn-link { font-size: 11px; padding: 2px 4px; }
+
+/* Auto-filler monsters on the report map: present, but clearly not a choice
+   the player made — otherwise a locked board reads as half empty. */
+.log__cell--filler {
+  opacity: 0.4;
+  border-style: dotted;
+}
+.log__cell--filler .log__cell-dmg { display: none; }
+
+/* ---- the King's guard posts ---- */
+/* The King cannot be reached while an ally holds its lane, so these two cells
+   decide whether it lives. They get their own colour so that is discoverable
+   by looking at the board rather than by losing. */
+.slot--guard {
+  border-color: rgba(255, 176, 32, 0.55);
+  background: rgba(255, 176, 32, 0.07);
+}
+.slot--guard.slot--filled {
+  border-color: transparent;
+  background: none;
+}
+.slot__guard-mark {
+  position: absolute;
+  inset-block-start: 4px;
+  inset-inline-end: 5px;
+  font-size: 13px;
+  opacity: 0.6;
+  pointer-events: none;
+}

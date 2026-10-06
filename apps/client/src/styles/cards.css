@@ -1,0 +1,356 @@
+/*
+ * A card itself, wherever it is drawn, plus the hand and the action bar.
+ *
+ * One of fifteen files split out of a single 4,405-line styles.css.
+ * THE ORDER THEY ARE IMPORTED IN IS THE ORDER THEY WERE WRITTEN IN,
+ * and it matters: where two rules have the same specificity the later
+ * one wins, so re-ordering these imports would silently change the
+ * page. styles.css is now the index that keeps that order.
+ */
+/* ---- cards ---- */
+/* ─────────────── CARD TEMPLATE ───────────────
+   Every card is the same template: art fills the face, furniture sits at
+   fixed coordinates — element top-left, flags top-right, and a bottom plate
+   carrying traits · name · ❤️HP (left) ⚔️Power (right). */
+.card {
+  --card-color: #888;
+  --rarity-color: #9aa4ad;
+  position: relative;
+  width: 100%;
+  height: 100%;
+  min-width: 0;
+  min-height: 0;
+  overflow: hidden;
+  border-radius: 10px;
+  cursor: pointer;
+  display: block;
+  color: #fff;
+  text-align: center;
+  border: 2px solid var(--series-color, var(--rarity-color));
+  background: linear-gradient(
+    160deg,
+    color-mix(in srgb, var(--card-color) 90%, #fff 10%),
+    color-mix(in srgb, var(--card-color) 72%, #000 28%)
+  );
+  background-size: cover;
+  background-position: center top;
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.8);
+  box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.14),
+    0 0 8px -1px color-mix(in srgb, var(--series-color, var(--rarity-color)) 65%, transparent);
+  animation: pop 0.14s ease-out;
+}
+/* artwork cards: dark scrim at the bottom so the plate text stays readable */
+.card--art::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(to top, rgba(4, 7, 14, 0.96) 0%, rgba(4, 7, 14, 0.9) 26%, rgba(4, 7, 14, 0) 46%),
+    linear-gradient(to bottom, rgba(4, 7, 14, 0.5) 0%, rgba(4, 7, 14, 0) 26%);
+  pointer-events: none;
+}
+@keyframes pop {
+  from { transform: scale(0.85); opacity: 0.4; }
+  to { transform: scale(1); opacity: 1; }
+}
+.card--large { animation: none; }
+
+/* top row */
+.card__top {
+  position: absolute;
+  top: 3px;
+  inset-inline: 4px;
+  z-index: 2;
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  font-size: 13px;
+}
+.card__element { line-height: 1; }
+.card__traits {
+  display: flex;
+  align-items: center;
+  gap: 2px;
+  font-size: 11px;
+  line-height: 1;
+  padding: 2px 4px;
+  border-radius: 999px;
+  background: rgba(0, 0, 0, 0.5);
+}
+.card--large .card__traits { font-size: 13px; gap: 3px; }
+.card__flags { display: flex; align-items: center; gap: 3px; }
+.card__boss {
+  font-size: 10px;
+  font-weight: 800;
+  background: rgba(0, 0, 0, 0.55);
+  border-radius: 999px;
+  padding: 1px 5px;
+  white-space: nowrap;
+}
+.card__info {
+  position: relative;
+  border: none;
+  background: rgba(0, 0, 0, 0.55);
+  color: #fff;
+  width: 18px;
+  height: 18px;
+  border-radius: 50%;
+  font-size: 11px;
+  font-weight: 800;
+  padding: 0;
+  cursor: pointer;
+  line-height: 18px;
+}
+/* The glyph stays small so it does not crowd the art, but the tappable area
+   is padded out to a finger-sized target. */
+.card__info::after {
+  content: "";
+  position: absolute;
+  inset: -11px;
+}
+.card--large .card__info { width: 22px; height: 22px; font-size: 13px; line-height: 22px; }
+.card__info:hover { background: var(--accent); color: #101010; }
+/* rarity moved off the frame (that now shows the series) into a small gem */
+.card__rarity {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: var(--rarity-color);
+  box-shadow: 0 0 5px var(--rarity-color), inset 0 0 0 1px rgba(0, 0, 0, 0.45);
+}
+.card--large .card__rarity { width: 10px; height: 10px; }
+
+/* bottom plate — the fixed information block */
+.card__plate {
+  position: absolute;
+  inset-inline: 0;
+  bottom: 0;
+  z-index: 2;
+  padding: 2px 3px 3px;
+  border-top: 2px solid color-mix(in srgb, var(--series-color, #888) 85%, transparent);
+  background: linear-gradient(
+    to top,
+    color-mix(in srgb, var(--series-color, #888) 26%, rgba(4, 7, 14, 0.95)),
+    rgba(4, 7, 14, 0.55)
+  );
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 2px;
+}
+.card__name {
+  font-weight: 800;
+  font-size: 11px;
+  line-height: 1.15;
+  max-width: 100%;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  letter-spacing: -0.2px;
+  text-shadow: 0 1px 3px #000, 0 0 6px rgba(0, 0, 0, 0.9);
+}
+.card--small .card__name { font-size: 9px; }
+/* the big card has room for two lines, so long names are not chopped */
+.card--large .card__name {
+  font-size: 13px;
+  white-space: normal;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  text-overflow: clip;
+}
+
+.card__stats {
+  display: flex;
+  gap: 3px;
+  width: 100%;
+  direction: ltr; /* fixed order: ❤ HP left, ⚔ Power right */
+}
+.card__stats .stat {
+  flex: 1 1 0;
+  min-width: 0;
+  overflow: hidden;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 2px;
+  line-height: 1;
+  padding: 2px 1px;
+  border-radius: 4px;
+  background: rgba(0, 0, 0, 0.62);
+  box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.1);
+}
+.card__stats .stat b {
+  font-size: 10px;
+  font-weight: 800;
+  font-variant-numeric: tabular-nums;
+  white-space: nowrap;
+}
+.stat__icon { font-style: normal; line-height: 1; }
+/* A board cell is only ~75px wide: an icon plus a 4-digit number collide there,
+   so small/medium cards drop the icon and colour-code the number instead
+   (position already says which is which: HP left, Power right). */
+.card--small .stat__icon,
+.card--medium .stat__icon { display: none; }
+.card--small .stat--hp b,
+.card--medium .stat--hp b { color: #ff8d98; }
+.card--small .stat--pw b,
+.card--medium .stat--pw b { color: #ffd98a; }
+.card--small .card__stats .stat b { font-size: 9px; }
+.card--large .card__stats { gap: 4px; }
+.card--large .card__stats .stat b { font-size: 12px; }
+.card--large .stat__icon { font-size: 10px; }
+.card--large .stat--hp .stat__icon { color: #ff6b7a; }
+.card--large .stat--pw .stat__icon { color: #ffd36b; }
+.card__stats--buffed .stat {
+  color: #8dff8d;
+  box-shadow: inset 0 0 0 1px rgba(125, 255, 125, 0.55);
+}
+
+/*
+ * Fog of war. A question mark says "no data"; drifting cloud says "there is
+ * something there you cannot see yet", which is the actual feeling. Built from
+ * overlapping soft radial blobs that creep at different speeds, so no two
+ * covered cells ever look alike.
+ */
+.card--back {
+  position: relative;
+  background: linear-gradient(160deg, #141d33, #0d1424);
+  border-color: var(--line);
+  cursor: default;
+  overflow: hidden;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.card--back::before,
+.card--back::after {
+  content: "";
+  position: absolute;
+  inset: -40%;
+  background:
+    radial-gradient(42% 38% at 30% 42%, rgba(176, 198, 236, 0.22), transparent 70%),
+    radial-gradient(34% 30% at 68% 32%, rgba(146, 170, 214, 0.18), transparent 72%),
+    radial-gradient(46% 40% at 52% 72%, rgba(120, 146, 196, 0.16), transparent 74%);
+  filter: blur(5px);
+  animation: fogdrift 17s ease-in-out infinite alternate;
+}
+/* the second layer runs the other way and slower, so the two never line up */
+.card--back::after {
+  background:
+    radial-gradient(38% 34% at 72% 62%, rgba(158, 182, 226, 0.16), transparent 72%),
+    radial-gradient(30% 28% at 24% 70%, rgba(132, 158, 206, 0.14), transparent 74%);
+  animation-duration: 26s;
+  animation-direction: alternate-reverse;
+}
+@keyframes fogdrift {
+  from { transform: translate3d(-7%, -4%, 0) scale(1.05); }
+  to { transform: translate3d(7%, 5%, 0) scale(1.18); }
+}
+/* a faint, barely-there mark under the cloud — presence, not a label */
+.card-back__mark {
+  position: relative;
+  font-size: 18px;
+  opacity: 0.18;
+  filter: blur(0.4px);
+}
+@media (prefers-reduced-motion: reduce) {
+  .card--back::before,
+  .card--back::after { animation: none; }
+}
+
+/* ---- action-card bar ---- */
+.actions {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-wrap: wrap;
+  justify-content: center;
+  padding: 6px 14px;
+  background: rgba(20, 26, 41, 0.6);
+  border-top: 1px solid var(--line);
+}
+/* The drawer handle only exists on a phone; on a desktop the bar is always open. */
+.actions__handle { display: none; }
+.actions__title {
+  font-size: 12px;
+  font-weight: 700;
+  color: var(--muted);
+}
+.actions__empty { font-size: 12px; color: var(--muted); font-style: italic; }
+.take-action {
+  border-color: var(--accent);
+  color: var(--accent);
+}
+
+/* ---- hand bottom bar ---- */
+.hand {
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  padding: 10px 18px;
+  background: var(--panel);
+  border-top: 1px solid var(--line);
+  flex-wrap: wrap;
+}
+.hand__current {
+  width: 124px;
+  height: 161px; /* 1 : 1.3 — same card shape as on the board */
+  flex-shrink: 0;
+}
+.hand__empty {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  color: var(--muted);
+  border: 1.5px dashed var(--line);
+  border-radius: 10px;
+  font-size: 13px;
+}
+.hand__buttons {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+.hand__hint {
+  color: var(--muted);
+  font-size: 12px;
+  margin: 0;
+  flex: 1;
+  min-width: 160px;
+}
+.warn {
+  color: var(--accent);
+  font-weight: 700;
+  margin: 0;
+}
+
+button {
+  font-family: inherit;
+  font-size: 14px;
+  font-weight: 700;
+  padding: 9px 13px;
+  border-radius: 10px;
+  border: 1px solid var(--line);
+  background: var(--panel-2);
+  color: var(--text);
+  cursor: pointer;
+}
+button:hover:not(:disabled) {
+  border-color: var(--accent);
+}
+button:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+}
+.btn-fight {
+  margin-inline-start: auto;
+  background: linear-gradient(160deg, #ff7a2f, #e23f3f);
+  border: none;
+  color: #fff;
+  font-size: 17px;
+  padding: 12px 20px;
+}

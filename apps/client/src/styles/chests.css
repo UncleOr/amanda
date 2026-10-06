@@ -1,0 +1,573 @@
+/*
+ * Opening a chest, and a card’s level once you own it.
+ *
+ * One of fifteen files split out of a single 4,405-line styles.css.
+ * THE ORDER THEY ARE IMPORTED IN IS THE ORDER THEY WERE WRITTEN IN,
+ * and it matters: where two rules have the same specificity the later
+ * one wins, so re-ordering these imports would silently change the
+ * page. styles.css is now the index that keeps that order.
+ */
+/* ---- what was in the chest ---- */
+.chest {
+  position: fixed;
+  inset: 0;
+  z-index: 58;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(4, 7, 14, 0.82);
+  animation: hero-in 220ms ease-out;
+}
+.chest__panel {
+  width: min(520px, calc(100vw - 32px));
+  max-height: calc(100dvh - 40px);
+  overflow-y: auto;
+  padding: 22px;
+  border-radius: 20px;
+  border: 2px solid var(--accent);
+  background: rgba(10, 15, 26, 0.96);
+  box-shadow: 0 24px 70px rgba(0, 0, 0, 0.7);
+  text-align: center;
+}
+.chest__title { margin: 0 0 14px; font-size: 20px; font-weight: 900; }
+/*
+ * The chest itself, and it is the button.
+ *
+ * A painting with a separate "open" control underneath makes the picture into
+ * scenery; the thing you want to touch is the chest. The text button stays
+ * below it for anyone who does not realise that, and for a keyboard.
+ */
+.chest__lid {
+  position: relative;
+  display: block;
+  width: min(240px, 58vw);
+  aspect-ratio: 1;
+  margin: 0 auto;
+  border: none;
+  padding: 0;
+  background-color: transparent;
+  background-size: contain;
+  background-position: center;
+  background-repeat: no-repeat;
+  cursor: pointer;
+  filter: drop-shadow(0 12px 26px rgba(0, 0, 0, 0.6));
+  animation: chest-wobble 1.6s ease-in-out infinite;
+}
+.chest__lid:hover { animation-duration: 0.5s; }
+@keyframes chest-wobble {
+  0%, 100% { transform: rotate(-3deg) scale(1); }
+  50% { transform: rotate(3deg) scale(1.04); }
+}
+/*
+ * The flash at the moment it opens.
+ *
+ * Deliberately outlives the chest by a beat and sits UNDER the cards, so the
+ * light and the prize overlap — one event rather than two screens.
+ */
+.chest__burst {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+  background: var(--chest-burst) center / contain no-repeat;
+  animation: chest-flash 1.1s ease-out forwards;
+}
+@keyframes chest-flash {
+  0% { opacity: 0; transform: scale(0.25) rotate(-20deg); }
+  22% { opacity: 1; transform: scale(1.15) rotate(0deg); }
+  100% { opacity: 0; transform: scale(1.6) rotate(18deg); }
+}
+.chest__panel { position: relative; }
+.chest__cards,
+.chest__gems,
+.chest__panel .btn-fight { position: relative; z-index: 1; }
+
+/* Each chest's own border, so the panel tells you which one it is too. */
+.chest__panel--wood { border-color: #b07a3c; }
+.chest__panel--silver { border-color: #c3cdd8; }
+.chest__panel--gold {
+  border-color: #f0b429;
+  box-shadow:
+    0 24px 70px rgba(0, 0, 0, 0.7),
+    0 0 50px rgba(240, 180, 41, 0.28);
+}
+
+.chest__open { margin-inline: auto; }
+.chest__says { color: var(--muted); margin: 10px 0 16px; font-size: 14px; }
+.chest__cards {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(76px, 86px));
+  justify-content: center;
+  gap: 10px;
+  margin-bottom: 14px;
+}
+.chest__card { aspect-ratio: 3 / 4; }
+/* each one lands as it is turned over */
+.chest__card.is-up { animation: card-land 320ms cubic-bezier(0.2, 0.9, 0.3, 1.5); }
+@keyframes card-land {
+  from { opacity: 0; transform: translateY(-14px) rotate(-6deg) scale(0.8); }
+  to { opacity: 1; transform: none; }
+}
+.chest__gems {
+  color: #9fe6ff;
+  font-size: 19px;
+  font-weight: 900;
+  margin: 0 0 14px;
+  animation: card-land 320ms ease-out;
+}
+
+/*
+ * The idle clip sits exactly where the still is and is the same picture, so a
+ * failure to load it is invisible rather than a hole. Her movement lives in
+ * the video now, which is why the element it sits in no longer drifts: moving
+ * the whole picture and moving her hair are not the same thing, and doing both
+ * reads as a camera wobble.
+ */
+.intro__idle {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: 62% center;
+  display: block;
+}
+.intro--hero:has(.intro__idle) .intro__art { animation: none; }
+@media (prefers-reduced-motion: reduce) {
+  .intro__idle { display: none; }
+}
+
+/* ════════ the home screen on a phone ════════
+ * At 844×390 the menu column measured −38 to 428 against a 390px screen: it
+ * overflowed off BOTH ends, so the name was above the top edge and the album
+ * button below the bottom one, with nothing to scroll because the hero clips.
+ * The two picture buttons were simply too tall.
+ */
+@media (max-height: 520px) {
+  .intro--hero {
+    padding: 0 14px;
+    align-items: center;
+  }
+  .intro--hero .intro__card {
+    /* a safety net: if it still does not fit, it scrolls rather than hides */
+    max-height: 100dvh;
+    overflow-y: auto;
+    scrollbar-width: none;
+    padding: 10px 0;
+  }
+  .intro--hero .intro__card::-webkit-scrollbar { display: none; }
+
+  .intro__name img { width: min(190px, 40vw); }
+  .intro__sub { font-size: 13px; margin: 0 0 10px; }
+
+  /* the picture is still the button, just not half the screen tall */
+  .pick { gap: 10px; }
+  .pick__card { min-width: 104px; }
+  .pick__card img { aspect-ratio: auto; height: 74px; }
+  .pick__card span { padding: 6px 4px; font-size: 13px; }
+
+  .btn-album { margin-top: 10px; padding: 9px 16px; font-size: 14px; }
+  .pick--ways { max-width: none; }
+  .intro--hero .intro__version { margin-top: 6px; }
+}
+
+/* Very short — a small phone in landscape with browser chrome. */
+@media (max-height: 400px) {
+  .intro__name img { width: min(150px, 34vw); }
+  /*
+   * NOT hidden. Hiding it is what Or saw as the line under "אמנדה" being cut
+   * off on a phone — it was simply gone. It shrinks instead; the room is there.
+   */
+  .intro__sub { font-size: 11px; margin: 0 0 7px; letter-spacing: 0; }
+  .pick__card img { height: 62px; }
+  .me { top: 6px; padding: 3px 9px 3px 3px; }
+  .me img { width: 24px; height: 24px; }
+  .me__name { font-size: 12px; }
+}
+
+/* The rotate hint was overflowing its own screen: the heading ran off both
+   edges because nothing wrapped it. */
+@media (max-width: 560px) and (orientation: portrait) {
+  .rotate-hint h2 {
+    font-size: clamp(20px, 7vw, 30px);
+    margin: 0;
+    max-width: 100%;
+    overflow-wrap: anywhere;
+  }
+  .rotate-hint p {
+    max-width: 320px;
+    overflow-wrap: anywhere;
+  }
+}
+
+/* ════════ what you have, on the home screen ════════ */
+/*
+ * What you have, below the bar rather than on top of it.
+ *
+ * It used to sit at top: 10px on the same side as the sound and music
+ * buttons, directly over both of them — and because `.topbar--ghost` drops to
+ * z-index 3 on this screen while the purse is 4, the purse was also EATING
+ * THE TAPS. Measured: elementFromPoint at the centre of the music button
+ * returned the diamond counter. Or reported it twice, which it deserved.
+ *
+ * Moving it down is the fix rather than raising the bar's z-index: two things
+ * stacked in one corner are wrong even when the right one is in front.
+ */
+.purse {
+  position: absolute;
+  top: 54px;
+  inset-inline-end: 12px;
+  z-index: 4;
+  display: flex;
+  gap: 12px;
+  padding: 6px 12px;
+  border-radius: 999px;
+  border: 1px solid rgba(255, 255, 255, 0.14);
+  background: rgba(8, 12, 22, 0.72);
+  font-weight: 800;
+  font-variant-numeric: tabular-nums;
+}
+.purse__item { display: inline-flex; align-items: center; gap: 5px; font-size: 14px; }
+.purse__item--gem { color: #9fe6ff; }
+/* the corner profile moves out from under it */
+.me { inset-inline-start: 12px; inset-inline-end: auto; }
+
+/* ════════ your record, in the album ════════ */
+/*
+ * Your record, as a trophy shelf rather than a settings page.
+ *
+ * Or on the version this replaced: "very app-like. Gaming. Fun.
+ * Illustrations." It was six numbers in a grid with grey captions, which is
+ * what a phone app shows you and not what a game does. Each one is now a
+ * plaque with an illustration on it, and the good ones and the bad ones do
+ * not look the same.
+ */
+.album__cover {
+  height: clamp(74px, 16vw, 128px);
+  margin-bottom: 14px;
+  border-radius: 16px;
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  background:
+    linear-gradient(180deg, rgba(10, 15, 27, 0.35), rgba(10, 15, 27, 0.7)),
+    var(--scene-album) center / cover no-repeat;
+  box-shadow: 0 10px 26px rgba(0, 0, 0, 0.45);
+}
+
+.record {
+  margin-bottom: 20px;
+  padding: 16px 14px 14px;
+  border-radius: 18px;
+  border: 1px solid rgba(255, 176, 32, 0.3);
+  background:
+    linear-gradient(180deg, rgba(20, 28, 48, 0.86), rgba(10, 15, 27, 0.9)),
+    var(--paper-album) center / cover no-repeat;
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.05);
+}
+.record__title {
+  margin: 0 0 12px;
+  font-size: 15px;
+  font-weight: 900;
+  color: var(--accent);
+  letter-spacing: 0.02em;
+}
+.record__grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(96px, 1fr));
+  gap: 10px;
+}
+.record__cell {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 2px;
+  padding: 12px 6px 10px;
+  border-radius: 14px;
+  border: 1px solid rgba(255, 255, 255, 0.09);
+  background: linear-gradient(180deg, rgba(255, 255, 255, 0.05), rgba(0, 0, 0, 0.25));
+  text-align: center;
+}
+/* The ones worth being pleased about look like it. */
+.record__cell--good {
+  border-color: rgba(110, 231, 140, 0.4);
+  background: linear-gradient(180deg, rgba(110, 231, 140, 0.16), rgba(0, 0, 0, 0.3));
+}
+.record__cell--bad {
+  border-color: rgba(255, 110, 110, 0.3);
+  background: linear-gradient(180deg, rgba(255, 110, 110, 0.12), rgba(0, 0, 0, 0.3));
+}
+.record__cell--gold {
+  border-color: rgba(255, 176, 32, 0.42);
+  background: linear-gradient(180deg, rgba(255, 176, 32, 0.16), rgba(0, 0, 0, 0.3));
+}
+.record__icon {
+  display: flex;
+  filter: drop-shadow(0 3px 5px rgba(0, 0, 0, 0.55));
+}
+.record__n {
+  display: block;
+  font-size: 25px;
+  font-weight: 900;
+  font-variant-numeric: tabular-nums;
+  line-height: 1.1;
+}
+.record__k {
+  display: block;
+  font-size: 11.5px;
+  color: var(--muted);
+}
+/* The raw count under the percentage — there if you want it, quiet if not. */
+.record__sub {
+  display: block;
+  margin-top: 2px;
+  font-size: 10.5px;
+  color: rgba(147, 160, 189, 0.72);
+  font-variant-numeric: tabular-nums;
+}
+
+/* The last few matches, newest first — stamped, not plotted. */
+.record__streak {
+  display: flex;
+  gap: 5px;
+  justify-content: center;
+  margin-top: 14px;
+  flex-wrap: wrap;
+}
+.record__mark {
+  display: inline-flex;
+  padding: 4px;
+  border-radius: 8px;
+  border: 1px solid transparent;
+}
+.record__mark.is-win {
+  border-color: rgba(110, 231, 140, 0.45);
+  background: rgba(110, 231, 140, 0.14);
+}
+.record__mark.is-loss {
+  border-color: rgba(255, 110, 110, 0.3);
+  background: rgba(255, 110, 110, 0.1);
+  opacity: 0.75;
+}
+
+/* ════════ things that ask to be pressed, move ════════
+ * Or: the buttons should move or pulse, especially the ones asking you to act.
+ * Slow and small — an invitation, not a flashing sign.
+ */
+.pick__card {
+  animation: card-breathe 4.6s ease-in-out infinite;
+}
+.pick__card:nth-child(2) { animation-delay: 2.3s; }
+@keyframes card-breathe {
+  0%, 100% { transform: translateY(0) scale(1); }
+  50% { transform: translateY(-3px) scale(1.008); }
+}
+/*
+ * A shine sweeping across them.
+ *
+ * Or: "the buttons we want people to press need some animation like they had
+ * before — blinking, or some rotating sparkle." The breathe above is three
+ * pixels over four and a half seconds, which is true to "an invitation, not a
+ * flashing sign" and also close to invisible. This is the part you actually
+ * see: a bright diagonal band that travels across the picture every few
+ * seconds, the way a glossy card catches the light when you tilt it.
+ *
+ * The two cards are offset so they catch it in turn and the eye walks from
+ * one to the other instead of being shouted at by both.
+ */
+.pick__card::after {
+  content: "";
+  position: absolute;
+  /* Taller and wider than the card so the band is fully off-screen at rest. */
+  top: -60%;
+  bottom: -60%;
+  width: 55%;
+  left: -75%;
+  pointer-events: none;
+  background: linear-gradient(
+    to right,
+    rgba(255, 255, 255, 0) 0%,
+    rgba(255, 255, 255, 0.07) 35%,
+    rgba(255, 255, 255, 0.34) 50%,
+    rgba(255, 255, 255, 0.07) 65%,
+    rgba(255, 255, 255, 0) 100%
+  );
+  transform: rotate(18deg);
+  animation: card-shine 4.6s ease-in-out infinite;
+}
+.pick__card:nth-child(2)::after { animation-delay: 2.3s; }
+@keyframes card-shine {
+  /* Most of the cycle is spent waiting: the sweep is an event, not a strobe. */
+  0%, 62% { left: -75%; }
+  88%, 100% { left: 125%; }
+}
+
+/* hover still wins, so it never fights the pointer */
+.pick__card:hover:not(:disabled) { animation: none; }
+
+/* A thin ring that brightens with it, so the whole card reads as live. */
+.pick__card {
+  box-shadow: 0 0 0 rgba(255, 176, 32, 0);
+  animation:
+    card-breathe 4.6s ease-in-out infinite,
+    card-invite 4.6s ease-in-out infinite;
+}
+.pick__card:nth-child(2) {
+  animation-delay: 2.3s, 2.3s;
+}
+@keyframes card-invite {
+  0%, 55%, 100% {
+    box-shadow: 0 0 0 rgba(255, 176, 32, 0);
+    border-color: rgba(255, 255, 255, 0.14);
+  }
+  78% {
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5), 0 0 26px rgba(255, 176, 32, 0.3);
+    border-color: rgba(255, 176, 32, 0.6);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .pick__card,
+  .pick__card::after,
+  .btn-album {
+    animation: none;
+  }
+}
+
+/* the album is the second thing you might want, so it glows rather than moves */
+.btn-album { animation: album-glow 3.4s ease-in-out infinite alternate; }
+@keyframes album-glow {
+  from { box-shadow: 0 0 0 rgba(255, 176, 32, 0); }
+  to { box-shadow: 0 0 22px rgba(255, 176, 32, 0.28); }
+}
+
+/* the three ways to bring a friend pulse in turn, so the eye walks down them */
+.pick--ways .btn-fight::before { animation: edge-pulse 2.6s ease-in-out infinite; }
+.pick--ways .btn-fight:nth-child(2)::before { animation-delay: 0.3s; }
+.pick--ways .btn-fight:nth-child(3)::before { animation-delay: 0.6s; }
+@keyframes edge-pulse {
+  0%, 100% { opacity: 0.55; }
+  50% { opacity: 1; }
+}
+
+/* ════════ the name, centred as a block ════════
+ * Or: "משחק קלפים מפלצתי" should sit centred UNDER אמנדה, not ranged beside it.
+ */
+.intro__name { display: flex; justify-content: center; }
+.intro--hero .intro__sub { text-align: center; }
+.intro--hero .intro__card { text-align: center; }
+.intro--hero .intro__buttons,
+.intro--hero .intro__secondary { justify-content: center; }
+.intro--hero .intro__version,
+.intro--hero .intro__hint { text-align: center; }
+
+@media (prefers-reduced-motion: reduce) {
+  .pick__card,
+  .btn-album,
+  .pick--ways .btn-fight::before { animation: none; }
+}
+
+/* Amanda mode is the event, so its button does not look like the others. */
+.btn-amanda {
+  background: linear-gradient(180deg, rgba(58, 180, 196, 0.95), rgba(26, 92, 128, 0.95));
+  border-color: rgba(120, 240, 230, 0.6);
+  color: #061018;
+  font-weight: 900;
+}
+.btn-amanda::before { background: #78f0e6 !important; box-shadow: 0 0 14px rgba(120,240,230,0.9) !important; }
+.btn-amanda:hover { border-color: #78f0e6; }
+
+/* ---- a card's level, when you own it ---- */
+.badge--level { border-color: rgba(60, 190, 120, 0.8); color: rgb(90, 220, 150); }
+.modal__level {
+  margin: 0 0 12px;
+  padding: 10px 12px;
+  border-radius: 12px;
+  background: rgba(60, 190, 120, 0.1);
+  border: 1px solid rgba(60, 190, 120, 0.3);
+}
+.modal__level-n { font-weight: 900; font-size: 16px; }
+.modal__level-next { color: var(--muted); font-weight: 700; font-size: 13px; }
+.modal__level-bar {
+  display: block;
+  height: 6px;
+  margin: 7px 0 6px;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.1);
+  overflow: hidden;
+}
+.modal__level-bar i {
+  display: block;
+  height: 100%;
+  border-radius: 999px;
+  background: linear-gradient(90deg, rgba(60, 190, 120, 0.7), rgb(90, 230, 150));
+}
+.modal__level-note { font-size: 12px; color: var(--muted); }
+
+/*
+ * Three of a family, touching. Lit on the board WHILE you arrange it, because
+ * a bonus you only find out about after the battle is not a bonus you can
+ * play for. Green rather than the gold the game spends on the King and on
+ * what you are editing — it is a reward, not a warning.
+ */
+.slot--synergy::after {
+  content: "";
+  position: absolute;
+  /* Inside the cell, not around it: .slot clips its overflow, so a ring drawn
+     on the outside simply would not be there. */
+  inset: 1px;
+  border-radius: 8px;
+  /* Thin and faint did not read against the card art underneath — at 1.6px
+     and half opacity it was there and invisible, which is the same as not
+     being there. */
+  border: 3px solid rgba(110, 231, 140, 0.95);
+  box-shadow:
+    0 0 14px rgba(110, 231, 140, 0.65),
+    inset 0 0 20px rgba(110, 231, 140, 0.35);
+  pointer-events: none;
+  animation: synergy-pulse 2.2s ease-in-out infinite;
+  z-index: 3;
+}
+@keyframes synergy-pulse {
+  0%, 100% { opacity: 0.8; }
+  50% { opacity: 1; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .slot--synergy::after { animation: none; opacity: 0.9; }
+}
+
+/*
+ * The empty crown, asking for a King.
+ *
+ * This carries the whole message now: the sentence that used to sit under
+ * your hand ("בלי מלך אין ממלכה" and its variants) is gone, because it said
+ * in words what the board was already showing. An empty slot that pulses is
+ * a thing you look at once; a line of text is a thing you read every time.
+ */
+.slot--king-empty {
+  border-style: solid;
+  border-color: rgba(255, 176, 32, 0.6);
+  animation: king-wanted 1.8s ease-in-out infinite;
+}
+.slot__hint--king {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+  color: var(--accent);
+}
+.slot__hint--king b {
+  font-size: 13px;
+  font-weight: 800;
+}
+@keyframes king-wanted {
+  0%, 100% {
+    box-shadow: inset 0 0 0 rgba(255, 176, 32, 0);
+    border-color: rgba(255, 176, 32, 0.4);
+  }
+  50% {
+    box-shadow: inset 0 0 26px rgba(255, 176, 32, 0.3);
+    border-color: rgba(255, 176, 32, 0.95);
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .slot--king-empty { animation: none; border-color: rgba(255, 176, 32, 0.8); }
+}

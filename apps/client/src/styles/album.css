@@ -1,0 +1,465 @@
+/*
+ * The album.
+ *
+ * One of fifteen files split out of a single 4,405-line styles.css.
+ * THE ORDER THEY ARE IMPORTED IN IS THE ORDER THEY WERE WRITTEN IN,
+ * and it matters: where two rules have the same specificity the later
+ * one wins, so re-ordering these imports would silently change the
+ * page. styles.css is now the index that keeps that order.
+ */
+/* ---- the album ---- */
+.album {
+  position: fixed;
+  inset: 0;
+  z-index: 40;
+  display: flex;
+  flex-direction: column;
+  min-height: 0;
+  background: linear-gradient(180deg, #0c111d, #070a12);
+  padding: env(safe-area-inset-top) env(safe-area-inset-right)
+    env(safe-area-inset-bottom) env(safe-area-inset-left);
+}
+.album__bar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  padding: 10px 14px;
+  border-bottom: 1px solid var(--line);
+  flex: none;
+}
+.album__counts { display: flex; gap: 14px; align-items: center; }
+.album__count {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  font-weight: 800;
+  font-variant-numeric: tabular-nums;
+}
+.album__count--gem { color: #9fe6ff; }
+.album__none {
+  margin: 0;
+  padding: 10px 16px;
+  color: var(--muted);
+  font-size: 13px;
+  text-align: center;
+}
+/* min-height:0 so this scrolls instead of pushing the bar off the screen */
+.album__scroll { flex: 1; min-height: 0; overflow-y: auto; padding: 10px 14px 24px; }
+.album__series { margin-bottom: 18px; }
+.album__series-name {
+  display: flex;
+  align-items: baseline;
+  gap: 8px;
+  margin: 0 0 8px;
+  font-size: 15px;
+}
+.album__series-count { color: var(--muted); font-size: 12px; font-variant-numeric: tabular-nums; }
+.album__grid {
+  display: grid;
+  /* roomy enough that a card's name and numbers are legible rather than
+     merely present */
+  grid-template-columns: repeat(auto-fill, minmax(104px, 1fr));
+  gap: 12px;
+}
+/*
+ * A .card is width:100%/height:100%, so it takes the size of whatever holds
+ * it. The album grid gave its cells a width and no height, which collapsed
+ * every card to a 3:1 sliver. The cell carries the card's shape instead.
+ */
+.album__cell {
+  position: relative;
+  aspect-ratio: 3 / 4;
+}
+.album__cell--missing { opacity: 0.4; filter: grayscale(0.8); }
+.album__copies {
+  position: absolute;
+  inset-block-end: 4px;
+  inset-inline-start: 4px;
+  background: rgba(8, 12, 22, 0.92);
+  border: 1px solid var(--accent);
+  color: var(--accent);
+  border-radius: 999px;
+  padding: 0 6px;
+  font-size: 11px;
+  font-weight: 800;
+}
+.album__level {
+  position: absolute;
+  inset-block-start: 4px;
+  inset-inline-end: 4px;
+  background: rgba(60, 190, 120, 0.92);
+  color: #052;
+  border-radius: 999px;
+  padding: 0 6px;
+  font-size: 10px;
+  font-weight: 800;
+}
+
+/* linking the album to a real account */
+.album__link {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  flex-wrap: wrap;
+  padding: 10px 16px;
+  border-bottom: 1px solid var(--line);
+}
+.album__link-note { color: var(--muted); font-size: 12px; }
+
+/* ════════ the menu, as a game rather than an app ════════
+ * Was: a rounded card centred in an empty void, with the game's name set as a
+ * title bar at the top. That reads as a settings screen. Now Amanda fills the
+ * screen and the menu sits in the space she was drawn to leave.
+ */
+.topbar--ghost {
+  position: absolute;
+  inset-inline: 0;
+  top: 0;
+  /*
+   * Above the menu's own corner widgets, so its buttons are always reachable
+   * — but TRANSPARENT TO CLICKS everywhere it has no button.
+   *
+   * z-index alone was half a fix and half a new bug. Raising it stopped the
+   * purse swallowing the music button, and immediately made this full-width
+   * invisible bar swallow the profile button at the other end, which Or found
+   * within the hour. A bar that is not there should not be in the way: the
+   * strip ignores the pointer and its children take it back.
+   */
+  z-index: 6;
+  pointer-events: none;
+  background: none;
+  border: none;
+}
+/* on the menu the logo IS the title, so the words are redundant furniture */
+.topbar--ghost .topbar__title { display: none; }
+/* …and everything in it is still a button. */
+.topbar--ghost > * {
+  pointer-events: auto;
+}
+
+.intro--hero {
+  position: relative;
+  overflow: hidden;
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  padding: 0 clamp(16px, 6vw, 92px);
+}
+.intro__art {
+  position: absolute;
+  /* Overflows the screen deliberately. The banner has an empty half drawn into
+     it for text, and its outer edge otherwise sits at the screen edge as a
+     flat dark band. Bleeding past the frame crops that away. */
+  inset: -10% -18%;
+  background-size: cover;
+  background-position: 62% center;
+  background-repeat: no-repeat;
+  z-index: 0;
+  /*
+   * She was drawn leaning in from the right with the left half left empty for
+   * text — which is backwards for a Hebrew page, where the menu starts on the
+   * right. Mirroring her puts the empty half under the menu instead of her
+   * face under it. The wash below is inside this element, so it mirrors too
+   * and ends up darkening the correct side.
+   */
+  transform: scaleX(-1);
+}
+/*
+ * The wash that keeps text readable over her.
+ *
+ * It is a SIBLING of the artwork, not a child of it. As a child it inherited
+ * the scaleX(-1) that mirrors her, so the gradient flipped too and darkened
+ * the side she is on instead of the side the menu is on. Out here, "to right"
+ * means to the right, and it stays that way.
+ */
+/*
+ * The side the menu sits on, as a room rather than a gradient.
+ *
+ * Amanda is drawn leaning in from one side with the other half left dark for
+ * the title and the buttons — and that half was a flat black wash. It is now
+ * a dim attic with albums stacked in the corners, fading out before it
+ * reaches her so she is still standing in front of it rather than beside it.
+ *
+ * Two layers, in this order: the room, then the wash that darkens it enough
+ * for white type. The mask is what keeps the room on the menu side only.
+ */
+.intro__room {
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  pointer-events: none;
+  background: var(--surface-menu) center / cover no-repeat;
+  opacity: 0.55;
+  -webkit-mask-image: linear-gradient(to right, transparent 30%, #000 72%);
+  mask-image: linear-gradient(to right, transparent 30%, #000 72%);
+}
+.intro__wash {
+  position: absolute;
+  inset: 0;
+  z-index: 2;
+  pointer-events: none;
+  background: linear-gradient(
+    to right,
+    rgba(7, 10, 18, 0) 34%,
+    rgba(7, 10, 18, 0.72) 68%,
+    rgba(7, 10, 18, 0.92) 100%
+  );
+}
+.intro--hero .intro__card {
+  position: relative;
+  z-index: 3;
+  background: none;
+  border: none;
+  box-shadow: none;
+  padding: 0;
+  max-width: 420px;
+  text-align: start;
+  animation: hero-in 420ms cubic-bezier(0.2, 0.9, 0.3, 1.2);
+}
+@keyframes hero-in {
+  from { opacity: 0; transform: translateY(14px); }
+  to { opacity: 1; transform: none; }
+}
+.intro--hero .intro__logo { margin: 0 0 2px; width: min(200px, 26vh); }
+.intro--hero .intro__tag { text-align: start; margin-bottom: 14px; }
+/* the primary action should look like a button in a game, not a form */
+.intro--hero .intro__buttons { justify-content: flex-start; }
+.intro--hero .btn-fight {
+  font-size: 19px;
+  padding: 14px 26px;
+  border-radius: 14px;
+  letter-spacing: 0.2px;
+  box-shadow: 0 10px 26px rgba(0, 0, 0, 0.45);
+}
+.intro--hero .intro__secondary { justify-content: flex-start; }
+.intro--hero .versus { justify-content: flex-start; gap: 14px; }
+
+/* Landscape phones have almost no height, so she moves behind the menu
+   instead of beside it and the wash goes bottom-up. */
+@media (max-height: 460px), (max-width: 560px) {
+  .intro--hero { padding: 0 18px; }
+  .intro__art { background-position: 70% center; }
+  .intro__wash {
+    background: linear-gradient(
+      to right,
+      rgba(7, 10, 18, 0.28) 0%,
+      rgba(7, 10, 18, 0.84) 55%,
+      rgba(7, 10, 18, 0.96) 100%
+    );
+  }
+  .intro--hero .intro__logo { width: min(130px, 22vh); }
+  .intro--hero .btn-fight { font-size: 16px; padding: 11px 18px; }
+}
+
+/* Build ids and phase lengths are developer furniture. They stay — the refresh
+   button has rescued us more than once — but they stop competing with the
+   game for attention. */
+.intro--hero .intro__version,
+.intro--hero .intro__hint {
+  font-size: 10px;
+  opacity: 0.45;
+  margin-top: 10px;
+  text-align: start;
+}
+.intro--hero .intro__version:hover,
+.intro--hero .intro__hint:hover { opacity: 0.9; }
+@media (max-height: 460px), (max-width: 560px) {
+  /* no room at all on a phone in landscape; the version line is still one tap
+     away in .intro__version once the hint is gone */
+  .intro--hero .intro__hint { display: none; }
+}
+
+/* ── the name, big, at the top ──
+ * Or: the heading and its subtitle belong at the top, large — not set as a
+ * caption under a logo the way an app titles a settings page.
+ */
+.intro--hero .intro__card { max-width: 480px; }
+.intro--hero .intro__logo { width: min(168px, 22vh); margin: 0 0 6px; }
+.intro--hero .intro__tag {
+  font-size: clamp(17px, 2.4vw, 23px);
+  font-weight: 800;
+  letter-spacing: 0.4px;
+  color: var(--text);
+  opacity: 0.9;
+  margin: 0 0 18px;
+}
+
+/* The phase is the one line that matters while a match is running, so it reads
+   as a headline rather than a status chip in a toolbar. */
+.topbar__phase {
+  font-size: clamp(15px, 2vw, 20px);
+  font-weight: 800;
+  letter-spacing: 0.3px;
+}
+
+/* ── the phase announces itself, then gets out of the way ──
+ * Or: lines like "שלב בנייה" should land big and vanish, not sit at the top
+ * like a status. It is a moment, not a readout.
+ */
+.phase-card {
+  position: fixed;
+  inset: 0;
+  z-index: 25;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  pointer-events: none;
+  animation: phase-card 1.7s cubic-bezier(0.2, 0.8, 0.2, 1) forwards;
+}
+.phase-card span {
+  font-size: clamp(30px, 7vw, 68px);
+  font-weight: 900;
+  letter-spacing: 1px;
+  color: #fff;
+  text-shadow:
+    0 0 24px rgba(255, 176, 32, 0.55),
+    0 6px 30px rgba(0, 0, 0, 0.8);
+  padding: 0 24px;
+  text-align: center;
+}
+@keyframes phase-card {
+  0% { opacity: 0; transform: scale(1.22); }
+  14% { opacity: 1; transform: scale(1); }
+  72% { opacity: 1; transform: scale(1); }
+  100% { opacity: 0; transform: scale(0.97); }
+}
+@media (prefers-reduced-motion: reduce) {
+  .phase-card { animation: phase-card-plain 1.7s linear forwards; }
+  @keyframes phase-card-plain { 0%,100% { opacity: 0 } 14%,72% { opacity: 1 } }
+}
+
+/* "חזית" was a leftover from when the boards faced up and down. You attack
+   towards the other player; an arrow is all that needs saying. */
+.side__way { opacity: 0.5; font-size: 0.9em; }
+.side__revealed { color: var(--accent); font-weight: 800; }
+
+/* ── win and lose, with the art we drew ── */
+.result__crest {
+  display: block;
+  margin: 0 auto 6px;
+  filter: drop-shadow(0 8px 24px rgba(0, 0, 0, 0.6));
+  animation: crest-in 420ms cubic-bezier(0.2, 0.9, 0.3, 1.4);
+}
+@keyframes crest-in {
+  from { opacity: 0; transform: scale(0.6) rotate(-8deg); }
+  to { opacity: 1; transform: none; }
+}
+.result__card--win {
+  border-color: rgba(255, 196, 64, 0.5);
+  box-shadow: 0 0 60px rgba(255, 176, 32, 0.14), 0 20px 50px rgba(0, 0, 0, 0.5);
+}
+.result__card--lose {
+  border-color: rgba(120, 140, 170, 0.35);
+  box-shadow: 0 20px 50px rgba(0, 0, 0, 0.5);
+}
+.result__card h1 { line-height: 1.15; }
+
+/* ── Amanda teaching, once ──
+ * A hole in the dimming rather than an arrow pointing at a diagram: the thing
+ * she is talking about is the only thing lit, so the words never have to
+ * describe where it is.
+ */
+.tut {
+  position: fixed;
+  inset: 0;
+  z-index: 60;
+  /* the dim is on the spotlight's shadow, so clicks still reach the board */
+  pointer-events: none;
+}
+.tut__spot {
+  position: fixed;
+  border-radius: 14px;
+  /* an enormous spread shadow IS the dimming — everything except this hole */
+  box-shadow:
+    0 0 0 4px rgba(255, 176, 32, 0.9),
+    0 0 26px 6px rgba(255, 176, 32, 0.35),
+    0 0 0 9999px rgba(4, 7, 14, 0.78);
+  animation: tut-pulse 1.5s ease-in-out infinite alternate;
+  pointer-events: none;
+}
+@keyframes tut-pulse {
+  from { box-shadow: 0 0 0 3px rgba(255,176,32,0.65), 0 0 20px 4px rgba(255,176,32,0.25), 0 0 0 9999px rgba(4,7,14,0.78); }
+  to   { box-shadow: 0 0 0 5px rgba(255,176,32,1),    0 0 34px 8px rgba(255,176,32,0.45), 0 0 0 9999px rgba(4,7,14,0.78); }
+}
+.tut__bubble {
+  position: fixed;
+  inset-inline: 0;
+  margin-inline: auto;
+  width: min(440px, calc(100vw - 32px));
+  pointer-events: auto;
+  background: rgba(12, 17, 29, 0.97);
+  border: 1px solid var(--accent);
+  border-radius: 16px;
+  padding: 14px 16px;
+  box-shadow: 0 18px 50px rgba(0, 0, 0, 0.65);
+  animation: tut-in 220ms ease-out;
+}
+@keyframes tut-in { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; } }
+.tut__text {
+  margin: 0 0 12px;
+  font-size: 15px;
+  line-height: 1.45;
+  font-weight: 600;
+}
+.tut__row { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; }
+.tut__row .btn-fight { padding: 8px 18px; font-size: 15px; }
+.tut__dots { display: flex; gap: 5px; margin-inline-end: auto; }
+.tut__dots i {
+  width: 7px; height: 7px; border-radius: 50%;
+  background: rgba(255, 255, 255, 0.22);
+}
+.tut__dots i.is-now { background: var(--accent); }
+.tut__skip { font-size: 12px; opacity: 0.65; }
+
+@media (max-height: 460px) {
+  .tut__bubble { width: min(380px, calc(100vw - 24px)); padding: 10px 12px; }
+  .tut__text { font-size: 13px; margin-bottom: 8px; }
+}
+
+/* ── the name, as a monster ──
+ * Or: big and beautiful on the home screen, in a monstrous font, sitting in
+ * the artwork — and NOWHERE during a match, because it is a game, not an app.
+ */
+.intro__name {
+  font-family: "Rubik Beastly", "Segoe UI", system-ui, sans-serif;
+  font-size: clamp(54px, 11vw, 128px);
+  line-height: 0.92;
+  margin: 0;
+  color: #fff;
+  /* glows in Amanda's own teal so it belongs to the picture behind it rather
+     than sitting on top of it */
+  text-shadow:
+    0 0 26px rgba(90, 230, 220, 0.55),
+    0 0 70px rgba(90, 230, 220, 0.3),
+    0 8px 34px rgba(0, 0, 0, 0.85);
+}
+.intro__sub {
+  font-family: "Rubik Beastly", "Segoe UI", system-ui, sans-serif;
+  font-size: clamp(16px, 2.4vw, 26px);
+  margin: 2px 0 20px;
+  color: var(--accent);
+  text-shadow: 0 4px 18px rgba(0, 0, 0, 0.8);
+  letter-spacing: 0.5px;
+}
+/* the badge becomes a small mark above the name rather than the headline */
+.intro--hero .intro__logo { width: min(88px, 13vh); margin: 0 0 4px; opacity: 0.95; }
+
+@media (max-height: 460px) {
+  .intro__name { font-size: clamp(40px, 9vw, 70px); }
+  .intro__sub { font-size: 14px; margin-bottom: 12px; }
+  .intro--hero .intro__logo { width: 54px; }
+}
+
+/* the name is an image now; the glow stays in CSS so it scales crisply */
+.intro__name { margin: 0; line-height: 0; }
+.intro__name img {
+  display: block;
+  width: min(360px, 62vw);
+  height: auto;
+  filter: drop-shadow(0 0 22px rgba(90, 230, 220, 0.5))
+          drop-shadow(0 6px 26px rgba(0, 0, 0, 0.85));
+}
+@media (max-height: 460px) {
+  .intro__name img { width: min(240px, 46vw); }
+}
