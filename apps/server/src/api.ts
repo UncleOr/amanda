@@ -13,6 +13,7 @@
  */
 import type { IncomingMessage, ServerResponse } from "node:http";
 import { createClient, type SupabaseClient } from "@supabase/supabase-js";
+import WebSocket from "ws";
 import { LEVELS, levelCost } from "@amanda/shared";
 import { CATALOG } from "./content.js";
 import { handleAdmin, handleCopy } from "./admin.js";
@@ -26,6 +27,21 @@ export function db(): SupabaseClient | null {
   if (!admin)
     admin = createClient(URL, SERVICE_KEY, {
       auth: { persistSession: false, autoRefreshToken: false },
+      /*
+       * A WebSocket, handed over explicitly.
+       *
+       * supabase-js builds a realtime client whether or not anything
+       * subscribes, and it wants a global WebSocket for it. Node only has one
+       * from 22, and the Railway container is older — so with the key finally
+       * set, EVERY query failed with "Node.js detected but native WebSocket
+       * not found" and the first thing that worked was a diagnostic that
+       * asked the database what was wrong.
+       *
+       * This server never subscribes to anything. It is passed the `ws`
+       * implementation it already depends on purely so the realtime client
+       * can exist quietly and never be used.
+       */
+      realtime: { transport: WebSocket as unknown as never },
     });
   return admin;
 }
