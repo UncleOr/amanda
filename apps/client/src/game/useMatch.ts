@@ -37,6 +37,7 @@ import {
 } from "../data/catalog";
 import { sfx } from "./sfx";
 import { albumToPool, loadAccount, type Account, type OwnedCard } from "./account";
+import { LESSONS } from "./lessons";
 import { Net, ONLINE_AVAILABLE, type Intent } from "./net";
 
 export type Phase =
@@ -494,6 +495,15 @@ export interface MatchApi {
   mirrorSeed: number | null;
   /** Start a mirror match against the computer. */
   startMirror: () => void;
+  /**
+   * Which tutorial match is running (1 or 2), or 0 for an ordinary game.
+   *
+   * A lesson is not a match against the computer: both sides are written down
+   * in lessons.ts, because Amanda cannot say "a giant? guard your King with
+   * him" unless a giant is actually coming.
+   */
+  lesson: number;
+  startLesson: (n: number) => void;
   /** The sandbox: no clock, both boards yours, every card available. */
   playground: boolean;
   /** Which board the picker is writing into. */
@@ -579,6 +589,8 @@ export function useMatch(): MatchApi {
    * order, from this seed. Null in every other mode.
    */
   const [mirrorSeed, setMirrorSeed] = useState<number | null>(null);
+  /** 1 or 2 while a tutorial match is running, 0 otherwise. */
+  const [lesson, setLesson] = useState(0);
   const [playground, setPlayground] = useState(false);
   const [editSide, setEditSide] = useState<EditSide>("me");
   /** The board on the other half, built by hand instead of by the AI. */
@@ -608,10 +620,19 @@ export function useMatch(): MatchApi {
       if (!alive || !a) return;
       setAccount(a);
       setGs((cur) =>
-        // Only re-deal an untouched deck; never pull cards out of a live match
-        // — and never out of a mirror match, whose whole point is that the
-        // deck came from the shared seed rather than from anyone's album.
+        /*
+         * Only re-deal an untouched deck, and never one that was dealt on
+         * purpose.
+         *
+         * A mirror deck comes from the shared seed and a lesson deck is
+         * written down in lessons.ts — and "untouched" is true of both of
+         * them during the countdown, so without this the account arriving a
+         * second later quietly replaced them with a deck drawn from the
+         * player's album. The tutorial's first card stopped being the King
+         * that Amanda's first line talks about.
+         */
         mirrorRef.current === null &&
+        lessonRef.current === 0 &&
         cur.hand === null &&
         cur.king === null &&
         Object.keys(cur.placements).length === 0
@@ -650,6 +671,8 @@ export function useMatch(): MatchApi {
   playgroundRef.current = playground;
   const mirrorRef = useRef(mirrorSeed);
   mirrorRef.current = mirrorSeed;
+  const lessonRef = useRef(lesson);
+  lessonRef.current = lesson;
   const editSideRef = useRef(editSide);
   editSideRef.current = editSide;
   const foeRef = useRef(foe);
@@ -1115,6 +1138,7 @@ export function useMatch(): MatchApi {
     soloAmandaRef.current = false;
     setPlayground(false);
     setMirrorSeed(null);
+    setLesson(0);
     setEditSide("me");
     setFoe({ placements: {}, king: null });
     benchRef.current = null;
@@ -1240,6 +1264,35 @@ export function useMatch(): MatchApi {
   );
 
   /**
+   * A tutorial match, with both sides written down in advance.
+   *
+   * Or: "there is no need for a bot. It's a fixed tutorial. Decide in advance
+   * what the opponent does. And make sure he loses." So the opponent is a
+   * list, not a plan, and the deck is dealt in a known order — which is what
+   * lets Amanda talk about the card you are holding instead of hoping.
+   *
+   * That he loses is not forced here. The boards in lessons.ts are built so
+   * the player wins by playing them, and lessons.test.ts plays each one three
+   * hundred times with the cards dropped in random places to keep it true.
+   */
+  const startLesson = useCallback(
+    (n: number) => {
+      const spec = LESSONS[n - 1];
+      if (!spec) return;
+      sfx.unlock();
+      sfx.play("click");
+      clearMatch();
+      setLesson(n);
+      setGs({ deck: [...spec.deck], hand: null, discard: [], placements: {}, king: null });
+      // A copy: the engine writes positions onto placements during a battle,
+      // and a lesson has to be the same lesson the second time it is played.
+      aiPlanRef.current = spec.opponent.map((p) => ({ ...p }));
+      setPhase("countdown");
+    },
+    [clearMatch],
+  );
+
+  /**
    * Mirror mode: the same deck for both sides.
    *
    * Or's line for it: "אותם קלפים בדיוק לשני הצדדים. אין תירוצים." So the
@@ -1352,6 +1405,12 @@ export function useMatch(): MatchApi {
   const playAgain = useCallback(() => {
     const wasOnline = onlineRef.current;
     const wasMirror = mirrorRef.current !== null;
+    const wasLesson = lessonRef.current;
+    if (wasLesson) {
+      // "Again" inside the tutorial means that lesson again, not a free match.
+      startLesson(wasLesson);
+      return;
+    }
     if (wasMirror) {
       // A fresh mirror deck, not a repeat of the same one — otherwise "again"
       // is the same puzzle twice.
@@ -1365,7 +1424,7 @@ export function useMatch(): MatchApi {
     }
     sfx.play("click");
     setPhase("countdown");
-  }, [clearMatch, startOnline, startMirror]);
+  }, [clearMatch, startOnline, startMirror, startLesson]);
 
   useEffect(() => {
     // "בלי הגבלת זמן" means the clock does not run at all, not that it runs
@@ -1500,6 +1559,8 @@ export function useMatch(): MatchApi {
     iWon: result != null && result.winner === mySide,
     mirrorSeed,
     startMirror,
+    lesson,
+    startLesson,
     playground,
     editSide,
     setEditSide,

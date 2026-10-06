@@ -197,6 +197,40 @@ async function adminRoutes(
       return true;
     }
 
+    /*
+     * Hand a player trophies or diamonds, for testing.
+     *
+     * Or: "give me options in the admin to bump users' diamonds and arenas,
+     * say for test purposes." Arenas ARE trophies — the ladder is a trophy
+     * range (packages/shared/src/arenas.ts) — so setting trophies is how you
+     * put somebody in the petrol station, and there is nothing else to set.
+     *
+     * Absolute values, not deltas. "Put this account in the alley" is a thing
+     * you want to be able to do twice and get the same answer; "+900" is not.
+     */
+    case "/api/admin/user/grant": {
+      const id = str("userId");
+      if (!id) {
+        deps.send(res, 400, { error: "which user" });
+        return true;
+      }
+      const patch: Record<string, number> = {};
+      if (typeof body.trophies === "number") patch.trophies = Math.max(0, Math.round(body.trophies));
+      if (typeof body.diamonds === "number") patch.diamonds = Math.max(0, Math.round(body.diamonds));
+      if (!Object.keys(patch).length) {
+        deps.send(res, 400, { error: "nothing to set" });
+        return true;
+      }
+      // best_trophies only ever goes up, the same as it does in a real match.
+      if (patch.trophies !== undefined) {
+        const { data } = await sb.from("players").select("best_trophies").eq("id", id).maybeSingle();
+        patch.best_trophies = Math.max(data?.best_trophies ?? 0, patch.trophies);
+      }
+      const { error } = await sb.from("players").update(patch).eq("id", id);
+      deps.send(res, error ? 500 : 200, error ? { error: error.message } : { ok: true, ...patch });
+      return true;
+    }
+
     case "/api/admin/user/password": {
       // Two ways, and the safe one is the default: send them a reset link.
       // Setting a password here would mean an admin typing someone else's

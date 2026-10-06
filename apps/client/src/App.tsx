@@ -3,6 +3,7 @@ import { Icon } from "./components/Icon";
 import { Album } from "./components/Album";
 import { Tutorial, type Step } from "./components/Tutorial";
 import { nextCue } from "./game/coach";
+import { LESSONS } from "./game/lessons";
 import { Profile } from "./components/Profile";
 import { Onboarding } from "./components/Onboarding";
 import { ChestReveal } from "./components/ChestReveal";
@@ -260,13 +261,46 @@ function Game() {
    */
   const [teaching, setTeaching] = useState(false);
   const taughtRef = useRef(false);
+  /*
+   * The tutorial starts its OWN match now, rather than attaching itself to
+   * whatever the player happened to press.
+   *
+   * Or: "there is no need for a bot. It's a fixed tutorial. Decide in advance
+   * what the opponent does." Riding on a normal game meant a child's first
+   * ever match was against an opponent built to win, while Amanda talked them
+   * through it — so the lesson and the match disagreed about what was
+   * happening.
+   */
   useEffect(() => {
-    if (taughtRef.current || m.phase !== "build" || m.playground) return;
+    if (taughtRef.current || m.playground) return;
+    // Wait until we know whether they have been taught: the account arrives a
+    // moment late, and starting a lesson for someone who finished it months
+    // ago is worse than starting it a second late.
+    if (m.account === null && !tutorialSeenLocally()) {
+      if (m.phase !== "intro") return;
+    }
     const seen = m.account ? m.account.tutorialDone : tutorialSeenLocally();
     if (seen) return;
+    if (m.phase !== "intro") return;
     taughtRef.current = true;
     setTeaching(true);
-  }, [m.phase, m.account, m.playground]);
+    m.startLesson(1);
+  }, [m.phase, m.account, m.playground, m]);
+
+  /*
+   * Finishing a lesson moves to the next one, and finishing the last one ends
+   * the teaching for good. Before this the tutorial simply stopped talking and
+   * left the player in a match, which is not an ending.
+   */
+  const [lessonDone, setLessonDone] = useState(false);
+  const lessonSeenRef = useRef(0);
+  useEffect(() => {
+    if (!teaching || m.lesson === 0) return;
+    if (m.phase !== "result") return;
+    if (lessonSeenRef.current === m.lesson) return;
+    lessonSeenRef.current = m.lesson;
+    setLessonDone(true);
+  }, [teaching, m.lesson, m.phase]);
 
   /*
    * She comments on the card you actually drew, not on a script. Each line is
@@ -288,6 +322,20 @@ function Game() {
       for (const cell of cells) lit.add(cell);
     return lit;
   }, [m.placements, m.king]);
+
+  /*
+   * The floor the two albums are lying on: the arena you have climbed to.
+   *
+   * Set as a CSS variable rather than passed down, because the element that
+   * needs it is .boards and nothing between here and there cares.
+   */
+  const arena = arenaFor(m.account?.trophies ?? 0);
+  useEffect(() => {
+    document.documentElement.style.setProperty(
+      "--arena-floor",
+      `url("${BASE}arena/${arena.id}.webp")`,
+    );
+  }, [arena.id]);
 
   /** The opponent's board, cut down to what is actually showing right now. */
   const revealedOpponent = useMemo(() => {
@@ -1166,7 +1214,7 @@ function Game() {
               verdict={verdictText(m.result, m.iWon)}
               // Where you fight is where you have climbed to. A guest with no
               // account fights in the first one, which is the right answer.
-              backdrop={arenaFor(m.account?.trophies ?? 0).id}
+              backdrop={arena.id}
             />
           </ErrorBoundary>
           {/* "ולעצור את הקרב בכל רגע נתון" — straight back to the boards you
@@ -1292,6 +1340,56 @@ function Game() {
             m.reloadAccount();
           }}
         />
+      )}
+
+      {/*
+        The end of a lesson. Two of them, and then she lets you go — which is
+        the ending the tutorial did not have: it used to run out of lines and
+        leave you standing in a match.
+      */}
+      {lessonDone && (
+        <div className="modal-overlay">
+          <div className="modal modal--confirm lesson-end">
+            <Icon name="win" size={72} />
+            {m.lesson < LESSONS.length ? (
+              <>
+                <h2>יפה. עכשיו משהו קצת יותר מתוחכם.</h2>
+                <p>במשחק הבא יש ליריב לוח אמיתי — ולך יש בדיוק מה שמנצח אותו.</p>
+                <div className="result__buttons">
+                  <button
+                    className="btn-fight"
+                    onClick={() => {
+                      setLessonDone(false);
+                      saidRef.current = new Set();
+                      m.startLesson(m.lesson + 1);
+                    }}
+                  >
+                    קדימה
+                  </button>
+                </div>
+              </>
+            ) : (
+              <>
+                <h2>זהו, אתה יודע לשחק.</h2>
+                <p>עכשיו לך תאסוף קלפים. אני רעבה.</p>
+                <div className="result__buttons">
+                  <button
+                    className="btn-fight"
+                    onClick={() => {
+                      setLessonDone(false);
+                      setTeaching(false);
+                      setCue(null);
+                      void markTutorialDone();
+                      m.reset();
+                    }}
+                  >
+                    יאללה
+                  </button>
+                </div>
+              </>
+            )}
+          </div>
+        </div>
       )}
 
       {teaching && cue && (

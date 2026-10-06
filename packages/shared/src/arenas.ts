@@ -1,7 +1,11 @@
 /**
  * Where you fight, and what you are climbing towards.
  *
- * Or named these and the order is his: a games room on the carpet at the
+ * Or named these and the order is his. The names are HIS names — the longer
+ * ones I had ("a neighbourhood basketball court") were descriptions of the
+ * look he asked for, not what the place is called. It is just "המגרש".
+ *
+ * The order: a games room on the carpet at the
  * start, a petrol station at the top. Every one is somewhere a child actually
  * goes — the monsters are fighting on your floor, in your street, at the
  * station you pass on the way to your grandmother.
@@ -33,19 +37,19 @@ export interface Arena {
 export const ARENAS: Arena[] = [
   {
     id: "playroom",
-    name: { he: "חדר משחקים", en: "The Playroom" },
+    name: { he: "חדר המשחקים", en: "The Playroom" },
     from: 0,
     tease: { he: "כאן כולם מתחילים. על השטיח.", en: "Everyone starts here. On the rug." },
   },
   {
     id: "court",
-    name: { he: "מגרש כדורסל שכונתי", en: "The Court" },
+    name: { he: "המגרש", en: "The Court" },
     from: 150,
     tease: { he: "בחוץ, על האספלט, מול כולם.", en: "Outside, on the asphalt, in front of everyone." },
   },
   {
     id: "station",
-    name: { he: "תחנת רכבת", en: "The Station" },
+    name: { he: "תחנת הרכבת", en: "The Station" },
     from: 450,
     tease: { he: "אף אחד לא עוצר פה. חוץ ממך.", en: "Nobody stops here. Except you." },
   },
@@ -57,7 +61,7 @@ export const ARENAS: Arena[] = [
   },
   {
     id: "fuel",
-    name: { he: "תחנת דלק", en: "The Fuel Stop" },
+    name: { he: "תחנת הדלק", en: "The Fuel Stop" },
     from: 1600,
     tease: { he: "הסוף. אל תדליק כאן גפרור.", en: "The end of the road. Don't strike a match." },
   },

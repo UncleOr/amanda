@@ -161,13 +161,20 @@ body {
   padding: 10px 12px;
   min-height: 0;
   /*
-   * The table the two albums are lying on. A real photograph of dark wood
-   * rather than another gradient — see the note on .board above.
+   * The floor you are playing on — and it is the ARENA you have climbed to.
+   *
+   * Or: "the background here should be the arena. The album is sitting on the
+   * floor of the playroom. And so on." It used to be one dark wooden table
+   * forever, which made the five arenas something you only saw during the
+   * battle itself. They are the progression; the whole point is to notice
+   * that the floor under your album has changed.
+   *
+   * Falls back to the table when no arena has been chosen yet.
    */
   position: relative;
   background:
-    linear-gradient(rgba(6, 9, 16, 0.72), rgba(6, 9, 16, 0.82)),
-    var(--surface-desk) center / cover no-repeat;
+    linear-gradient(rgba(6, 9, 16, 0.74), rgba(6, 9, 16, 0.86)),
+    var(--arena-floor, var(--surface-desk)) center / cover no-repeat;
   /* the board below sizes itself against this box on both axes */
   container-type: size;
 }

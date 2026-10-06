@@ -28,7 +28,7 @@ export interface ArenaLook {
 export const ARENA_LOOKS: ArenaLook[] = [
   {
     id: "playroom",
-    he: "חדר משחקים",
+    he: "חדר המשחקים",
     brief:
       "A child's playroom floor seen from directly above: a worn patterned rug in " +
       "muted blues and browns, scattered building blocks, a toy car and a few loose " +
@@ -37,7 +37,7 @@ export const ARENA_LOOKS: ArenaLook[] = [
   },
   {
     id: "court",
-    he: "מגרש כדורסל שכונתי",
+    he: "המגרש",
     brief:
       "A neighbourhood outdoor basketball court seen from directly above at dusk: " +
       "cracked faded asphalt, worn white painted lines, a few weeds through the " +
@@ -46,7 +46,7 @@ export const ARENA_LOOKS: ArenaLook[] = [
   },
   {
     id: "station",
-    he: "תחנת רכבת",
+    he: "תחנת הרכבת",
     brief:
       "An empty railway platform seen from directly above at night: wet concrete, a " +
       "yellow safety line down each side, rails and gravel at the far edges, puddles " +
@@ -64,7 +64,7 @@ export const ARENA_LOOKS: ArenaLook[] = [
   },
   {
     id: "fuel",
-    he: "תחנת דלק",
+    he: "תחנת הדלק",
     brief:
       "A petrol station forecourt seen from directly above at night: oil-stained " +
       "concrete, faded painted lane arrows, a pump island and a fallen traffic cone " +

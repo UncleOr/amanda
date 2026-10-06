@@ -1,5 +1,6 @@
 import { useCallback, useEffect, useMemo, useState } from "react";
 import { createClient } from "@supabase/supabase-js";
+import { ARENAS } from "@amanda/shared";
 
 /**
  * The admin panel. Opened with ?admin.
@@ -345,10 +346,77 @@ function CopyTab({ say }: { say: (s: string) => void }) {
 
 /* ──────────────────────────── users ──────────────────────────── */
 
+/**
+ * Put an account somewhere, for testing.
+ *
+ * Arenas ARE trophies — the ladder is a trophy range — so the arena buttons
+ * simply set the trophies that arena begins at. That is deliberately the only
+ * way to do it: an "arena" field that could disagree with the trophy count
+ * would be a second source of truth about the same fact.
+ */
+function GrantPanel({
+  user,
+  onClose,
+  onDone,
+}: {
+  user: AdminUser;
+  onClose: () => void;
+  onDone: (body: { trophies?: number; diamonds?: number }) => void;
+}) {
+  const [trophies, setTrophies] = useState(String(user.trophies));
+  const [diamonds, setDiamonds] = useState(String(user.diamonds));
+  return (
+    <div className="modal-overlay" onClick={onClose}>
+      <div className="modal modal--confirm" onClick={(e) => e.stopPropagation()}>
+        <h2>{user.nickname ?? user.email ?? "החשבון"}</h2>
+        <p className="admin__hint">
+          ארנה היא טווח גביעים, אז בחירת ארנה פשוט קובעת את הגביעים שהיא מתחילה
+          בהם. אין שדה נפרד — שני מקורות אמת לאותה עובדה זה באג שמחכה לקרות.
+        </p>
+        <div className="admin__arenas">
+          {ARENAS.map((a) => (
+            <button key={a.id} onClick={() => setTrophies(String(a.from))}>
+              {a.name.he}
+              <small>{a.from}</small>
+            </button>
+          ))}
+        </div>
+        <label className="admin__field">
+          גביעים
+          <input value={trophies} inputMode="numeric" onChange={(e) => setTrophies(e.target.value)} />
+        </label>
+        <label className="admin__field">
+          יהלומים
+          <input value={diamonds} inputMode="numeric" onChange={(e) => setDiamonds(e.target.value)} />
+        </label>
+        <div className="result__buttons">
+          <button
+            className="btn-fight"
+            onClick={() =>
+              onDone({
+                trophies: Number(trophies) || 0,
+                diamonds: Number(diamonds) || 0,
+              })
+            }
+          >
+            שמור
+          </button>
+          <button className="btn-fight btn-ghost" onClick={onClose}>
+            ביטול
+          </button>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+
 function UsersTab({ say }: { say: (s: string) => void }) {
   const [users, setUsers] = useState<AdminUser[] | null>(null);
   const [busy, setBusy] = useState<string | null>(null);
   const [confirmDelete, setConfirmDelete] = useState<AdminUser | null>(null);
+  /** Which account the "put them somewhere" panel is open for. */
+  const [granting, setGranting] = useState<AdminUser | null>(null);
 
   const [hidden, setHidden] = useState(0);
   const load = useCallback(async () => {
@@ -427,6 +495,9 @@ function UsersTab({ say }: { say: (s: string) => void }) {
                 >
                   איפוס סיסמה
                 </button>
+                <button disabled={busy === u.id} onClick={() => setGranting(u)}>
+                  גביעים / יהלומים
+                </button>
                 <button
                   className="admin__danger"
                   disabled={busy === u.id || u.isAdmin}
@@ -439,6 +510,18 @@ function UsersTab({ say }: { say: (s: string) => void }) {
           ))}
         </tbody>
       </table>
+
+      {granting && (
+        <GrantPanel
+          user={granting}
+          onClose={() => setGranting(null)}
+          onDone={(body) => {
+            const u = granting;
+            setGranting(null);
+            void act("/api/admin/user/grant", u, { userId: u.id, ...body });
+          }}
+        />
+      )}
 
       {confirmDelete && (
         <div className="modal-overlay" onClick={() => setConfirmDelete(null)}>
