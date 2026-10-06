@@ -15,7 +15,7 @@
  * database must never stop a game.
  */
 import type { SupabaseClient } from "@supabase/supabase-js";
-import type { Card } from "@amanda/shared";
+import { TUNED, type Card } from "@amanda/shared";
 import { CATALOG } from "./content.js";
 /*
  * One client for the whole process. This module used to build its own, which
@@ -26,9 +26,15 @@ import { CAN_SAVE, db } from "./supabase.js";
 
 export const PROGRESS_ENABLED = CAN_SAVE;
 
-/** Trophies moved by a single match. */
-export const TROPHIES_PER_WIN = 30;
-export const TROPHIES_PER_LOSS = 20;
+/**
+ * Trophies moved by a single match.
+ *
+ * Read through TUNED so the admin panel can turn them, and read at CALL time
+ * rather than captured here — a value changed while the server is up should
+ * apply to the next match, not to the next deploy.
+ */
+export const TROPHIES_PER_WIN = TUNED.trophiesPerWin;
+export const TROPHIES_PER_LOSS = TUNED.trophiesPerLoss;
 
 /** What each kind of chest holds. See docs/META.md. */
 interface ChestKind {
@@ -161,7 +167,7 @@ export async function recordMatch(opts: {
       player_a: a,
       player_b: b,
       winner: winnerId,
-      trophies_delta: winner ? TROPHIES_PER_WIN : 0,
+      trophies_delta: winner ? TUNED.trophiesPerWin : 0,
     });
 
     if (winnerId) {
@@ -170,7 +176,7 @@ export async function recordMatch(opts: {
         .select("trophies, best_trophies, diamonds")
         .eq("id", winnerId)
         .maybeSingle();
-      const trophies = (data?.trophies ?? 0) + TROPHIES_PER_WIN;
+      const trophies = (data?.trophies ?? 0) + TUNED.trophiesPerWin;
       // Every third win is a better chest, so there is something to count towards.
       const kind = trophies % 90 === 0 ? "gold" : trophies % 30 === 0 ? "silver" : "wood";
       const won = rollChest(kind);
@@ -208,7 +214,7 @@ export async function recordMatch(opts: {
       // moves forward. Never below zero.
       await sb
         .from("players")
-        .update({ trophies: Math.max(0, (data?.trophies ?? 0) - TROPHIES_PER_LOSS) })
+        .update({ trophies: Math.max(0, (data?.trophies ?? 0) - TUNED.trophiesPerLoss) })
         .eq("id", loserId);
     }
     saves.succeeded++;

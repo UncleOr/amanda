@@ -156,6 +156,14 @@ export const UPGRADE = {
 } as const;
 
 /** Trophy rewards (GDD §7). */
+/**
+ * @deprecated Dead, and misleadingly authoritative-looking.
+ *
+ * Nothing imported this. The server had its own TROPHIES_PER_WIN = 30 and
+ * TROPHIES_PER_LOSS = 20 and used those, so these numbers were simply wrong
+ * and sat here looking like the rule. The live values are TUNED in
+ * tunables.ts, which is also what the admin panel turns.
+ */
 export const TROPHIES = {
   win: 25,
   loss: -20,

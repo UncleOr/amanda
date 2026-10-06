@@ -67,6 +67,21 @@ export const ARENAS: Arena[] = [
   },
 ];
 
+/**
+ * "to <arena>", with the Hebrew the preposition actually needs.
+ *
+ * ל and ה collapse into one another: המגרש becomes למגרש, not להמגרש. Or
+ * caught "עוד 150 להמגרש" on the home screen, which is the kind of thing that
+ * reads as broken to every single Hebrew speaker and as fine to a string
+ * concatenation.
+ *
+ * A name that does not start with the article just takes the prefix:
+ * חדר המשחקים → לחדר המשחקים.
+ */
+export function toArena(name: string): string {
+  return name.startsWith("ה") ? `ל${name.slice(1)}` : `ל${name}`;
+}
+
 /** Which arena a player with this many trophies is fighting in. */
 export function arenaFor(trophies: number): Arena {
   let found = ARENAS[0]!;

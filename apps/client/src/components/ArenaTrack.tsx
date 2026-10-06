@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { ARENAS, arenaFor, arenaProgress } from "@amanda/shared";
+import { ARENAS, arenaFor, arenaProgress, toArena } from "@amanda/shared";
 import { Icon } from "./Icon";
 
 /**
@@ -40,8 +40,10 @@ export function ArenaTrack({ trophies }: { trophies: number }) {
           <small>
             {next ? (
               <>
-                <Icon name="win" size={12} /> {trophies} · עוד {next.from - trophies} ל
-                {next.name.he}
+                <Icon name="win" size={12} /> {trophies} · עוד {next.from - trophies}{" "}
+                {/* The trophy again, right after the number: "150 more" of WHAT
+                    was the missing half of the sentence. */}
+                <Icon name="win" size={12} /> {toArena(next.name.he)}
               </>
             ) : (
               <>
