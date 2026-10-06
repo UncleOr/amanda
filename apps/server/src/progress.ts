@@ -119,6 +119,17 @@ async function grant(sb: SupabaseClient, playerId: string, won: ReturnType<typeo
  * Record a finished match: trophies for both sides, and a chest for the winner.
  * Players who are not signed in simply have no id, and are skipped.
  */
+/*
+ * What happened the last time we tried to save a match.
+ *
+ * The catch below logs and moves on, which is the right behaviour — a match
+ * that finished matters more than a row that did not save — but it means the
+ * only account of a failure is in a log that nobody debugging from outside can
+ * read. Twice now a save has been quietly broken for days. These are reported
+ * by /api/health so the question "is progress saving?" has an answer.
+ */
+export const saves = { attempted: 0, succeeded: 0, lastError: null as string | null };
+
 export async function recordMatch(opts: {
   a: string | null;
   b: string | null;
@@ -126,6 +137,7 @@ export async function recordMatch(opts: {
 }): Promise<void> {
   const sb = db();
   if (!sb) return;
+  saves.attempted++;
   const { a, b, winner } = opts;
   const winnerId = winner === "A" ? a : winner === "B" ? b : null;
   const loserId = winner === "A" ? b : winner === "B" ? a : null;
@@ -174,8 +186,11 @@ export async function recordMatch(opts: {
         .update({ trophies: Math.max(0, (data?.trophies ?? 0) - TROPHIES_PER_LOSS) })
         .eq("id", loserId);
     }
+    saves.succeeded++;
+    saves.lastError = null;
   } catch (err) {
     // A match that finished is more important than a row that did not save.
+    saves.lastError = (err as Error).message.slice(0, 300);
     console.error("[progress] could not record match", err);
   }
 }

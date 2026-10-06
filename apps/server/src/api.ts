@@ -14,6 +14,7 @@
 import type { IncomingMessage, ServerResponse } from "node:http";
 import { LEVELS, levelCost } from "@amanda/shared";
 import { CATALOG } from "./content.js";
+import { saves } from "./progress.js";
 import { handleAdmin, handleCopy } from "./admin.js";
 
 import { SUPABASE_URL as URL, db, keyHasWhitespace, keyLength, keyStartsWith } from "./supabase.js";
@@ -166,6 +167,8 @@ async function health(res: ServerResponse): Promise<void> {
     /** Did a real query work, and if not, why. */
     dbError,
     copyRows: rows,
+    /* Whether finished matches are actually turning into trophies. */
+    saves: { ...saves, lastError: saves.lastError ? scrub(saves.lastError) : null },
     /** Which Supabase-ish variables this process can see, by name only. */
     sees: names,
     url: URL,
