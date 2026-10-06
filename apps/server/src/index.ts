@@ -14,6 +14,7 @@ import { PROGRESS_ENABLED } from "./progress.js";
 import { handleApi } from "./api.js";
 import { refreshCards } from "./cards.js";
 import { startScheduler } from "./schedule.js";
+import { findPair, type Waiting } from "./matchmaking.js";
 import { db } from "./supabase.js";
 import "./content.js"; // eager-load the card catalog at boot
 
@@ -81,8 +82,15 @@ const wss = new WebSocketServer({ server: http });
  */
 const playerIdOf = new WeakMap<WebSocket, string>();
 
-/** The player in the open queue, waiting for whoever turns up next. */
-let waiting: WebSocket | null = null;
+/**
+ * Everybody waiting for a quick match.
+ *
+ * A LIST, where it used to be one socket. The old shape could only answer
+ * "who was here first", which is why matching ignored everything else — see
+ * matchmaking.ts for the two numbers it looks at now and for why only one of
+ * them relaxes with waiting.
+ */
+const queue: Array<Waiting<WebSocket>> = [];
 /** The player waiting for a partner to face Amanda with. A separate queue:
  *  pairing someone who asked for her with someone who asked for a duel would
  *  give both of them the wrong game. */
@@ -136,6 +144,60 @@ function beginMatch(a: WebSocket, b: WebSocket, how: string, coop = false): void
   matchOf.set(b, m);
   console.log(`[server] match started (${how})`);
 }
+
+/** Read this player's record, so the queue knows who they are. */
+async function rate(entry: Waiting<WebSocket>): Promise<void> {
+  const playerId = playerIdOf.get(entry.who);
+  const sb = db();
+  if (!playerId || !sb) return; // a guest, or no database: matched with anybody
+  try {
+    const { data } = await sb
+      .from("players")
+      .select("trophies, album_power")
+      .eq("id", playerId)
+      .maybeSingle();
+    if (!data) return;
+    entry.trophies = (data.trophies as number) ?? 0;
+    entry.albumPower = (data.album_power as number) ?? 0;
+  } catch {
+    /* unrated is the safe answer: they get matched rather than stuck */
+  }
+}
+
+function leaveQueue(ws: WebSocket): void {
+  const i = queue.findIndex((q) => q.who === ws);
+  if (i >= 0) queue.splice(i, 1);
+}
+
+/**
+ * Pair whoever can be paired, now.
+ *
+ * Called when somebody joins, when their record arrives, and once a second —
+ * the last one because the trophy window widens with waiting, so two people
+ * who could not be paired a moment ago can be paired later without either of
+ * them doing anything.
+ */
+function tryToPair(): void {
+  for (let i = queue.length - 1; i >= 0; i--) if (!isOpen(queue[i]!.who)) queue.splice(i, 1);
+  for (;;) {
+    const pair = findPair(queue, Date.now());
+    if (!pair) return;
+    const [a, b] = pair;
+    leaveQueue(a.who);
+    leaveQueue(b.who);
+    const gap =
+      a.trophies !== null && b.trophies !== null ? Math.abs(a.trophies - b.trophies) : null;
+    beginMatch(
+      a.who,
+      b.who,
+      `quick match${gap === null ? ", unrated" : `, ${gap} trophies apart`}`,
+    );
+  }
+}
+
+// The window widens while somebody waits, so the queue is looked at again
+// even when nothing has happened.
+setInterval(tryToPair, 1000).unref?.();
 
 function closeRoomOf(ws: WebSocket): void {
   const code = roomOf.get(ws);
@@ -243,16 +305,24 @@ function handleLobby(ws: WebSocket, msg: ClientMessage): void {
 
     case "hello": {
       if (refuseIfSuspended(ws)) return;
-      // Open queue: pair with whoever is already waiting.
-      if (isOpen(waiting) && waiting !== ws) {
-        const opponent = waiting;
-        waiting = null;
-        beginMatch(opponent, ws, "quick match");
-      } else {
-        waiting = ws;
-        send(ws, { t: "waiting" });
-        console.log("[server] player waiting");
-      }
+      if (queue.some((q) => q.who === ws)) return; // already in line
+      /*
+       * Join the queue with no numbers, and fill them in when the database
+       * answers. Waiting for the read first would leave somebody staring at
+       * a blank screen because of a slow query — and a player whose record
+       * has not arrived yet is simply treated as a guest for a moment, which
+       * is the right failure.
+       */
+      const entry: Waiting<WebSocket> = {
+        who: ws,
+        trophies: null,
+        albumPower: null,
+        since: Date.now(),
+      };
+      queue.push(entry);
+      send(ws, { t: "waiting" });
+      void rate(entry).then(() => tryToPair());
+      tryToPair();
       return;
     }
 
@@ -324,7 +394,7 @@ wss.on("connection", (ws) => {
 
   ws.on("close", () => {
     presenceLeft(ws, playerIdOf.get(ws));
-    if (waiting === ws) waiting = null;
+    leaveQueue(ws);
     if (waitingCoop === ws) waitingCoop = null;
     closeRoomOf(ws);
     const match = matchOf.get(ws);

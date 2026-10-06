@@ -22,6 +22,7 @@
 import type { SupabaseClient } from "@supabase/supabase-js";
 import { ARENAS, givesSomething, type GrantFilters, type GrantGives } from "@amanda/shared";
 import { grantChest, rollChest } from "./progress.js";
+import { refreshAlbumPowerSoon } from "./albumPower.js";
 
 export interface ShopItem {
   id: string;
@@ -113,6 +114,10 @@ export async function deliver(
   }
 
   if (gives.chest) await grantChest(sb, playerId, rollChest(gives.chest));
+
+  // The album changed, so what it is worth changed. Not awaited: see
+  // albumPower.ts for why a stale total beats a failed delivery.
+  if (gives.cards?.length || gives.chest) refreshAlbumPowerSoon(sb, playerId);
 }
 
 /** Buy one thing. Returns a message for the player, or null. */

@@ -17,6 +17,7 @@
 import type { SupabaseClient } from "@supabase/supabase-js";
 import { TUNED, type Card } from "@amanda/shared";
 import { CATALOG } from "./content.js";
+import { refreshAlbumPowerSoon } from "./albumPower.js";
 /*
  * One client for the whole process. This module used to build its own, which
  * is how the admin endpoints came back to life while every match carried on
@@ -115,6 +116,8 @@ export async function grantChest(
 }
 
 async function grant(sb: SupabaseClient, playerId: string, won: ReturnType<typeof rollChest>) {
+  // Whatever else happens below, this album is about to be worth more.
+  queueMicrotask(() => refreshAlbumPowerSoon(sb, playerId));
   const counts = new Map<string, number>();
   for (const id of won.cards) counts.set(id, (counts.get(id) ?? 0) + 1);
   for (const [cardId, copies] of counts) {

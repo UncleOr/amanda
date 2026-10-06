@@ -27,6 +27,9 @@ export * from "./arenas.js";
 // The handful of numbers the admin panel may turn, and why only those.
 export * from "./tunables.js";
 
+// How much album somebody has — the other half of matchmaking
+export * from "./albumPower.js";
+
 // Gifts and promotions: what they give, and the closed list of who they reach
 export * from "./grants.js";
 
