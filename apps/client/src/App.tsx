@@ -1380,12 +1380,39 @@ function Game() {
               </div>
             )}
             <div className="result__buttons">
+              {/*
+               * "Again?" with the same person — offered before "new game",
+               * because after a close match that is the thing you want, and
+               * the other button quietly swaps your opponent for a stranger.
+               * Gone the moment they leave: there is nobody to ask.
+               */}
+              {m.online && !m.playground && !m.oppLeft && (
+                <button
+                  className={`btn-fight${m.rematchOffered && !m.rematchAsked ? "" : " btn-online"}`}
+                  onClick={m.askRematch}
+                  disabled={m.rematchAsked}
+                >
+                  <Icon name="again" size={17} />{" "}
+                  {m.rematchAsked
+                    ? m.rematchOffered
+                      ? "מתחילים…"
+                      : "מחכה ליריב…"
+                    : m.rematchOffered
+                      ? "רוצים עוד אחד! קדימה"
+                      : "קרב חוזר"}
+                </button>
+              )}
               {m.playground ? (
                 <button className="btn-fight" onClick={m.backToPlayground}>
                   ← חזרה ללוח
                 </button>
               ) : (
-                <button className="btn-fight" onClick={m.playAgain}>
+                <button
+                  // Against a bot this is still the main button. It only steps
+                  // back when there is a person to ask for another round.
+                  className={`btn-fight${m.online && !m.oppLeft ? " btn-ghost" : ""}`}
+                  onClick={m.playAgain}
+                >
                   <Icon name="again" size={17} /> משחק חדש
                 </button>
               )}

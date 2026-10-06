@@ -523,6 +523,11 @@ export interface MatchApi {
   spoke: { id: string; at: number } | null;
   /** Say one of the ready-made lines to the other player. */
   say: (id: string) => void;
+  /** You have asked the person you just played for another match. */
+  rematchAsked: boolean;
+  /** They have asked you. */
+  rematchOffered: boolean;
+  askRematch: () => void;
   /** Whether the other player's messages are shown at all. Per browser. */
   hearing: boolean;
   toggleHearing: () => void;
@@ -636,6 +641,8 @@ export function useMatch(): MatchApi {
   const [coop, setCoop] = useState(false);
   const [mate, setMate] = useState<BoardView | null>(null);
   const [heard, setHeard] = useState<{ id: string; at: number } | null>(null);
+  const [rematchAsked, setRematchAsked] = useState(false);
+  const [rematchOffered, setRematchOffered] = useState(false);
   const [spoke, setSpoke] = useState<{ id: string; at: number } | null>(null);
   /*
    * Being able to switch the other player off entirely.
@@ -1012,6 +1019,17 @@ export function useMatch(): MatchApi {
     netRef.current?.say(id);
   }, []);
 
+  /**
+   * "Again?" — only means anything once the match is over, which is also the
+   * only time the server will accept it.
+   */
+  const askRematch = useCallback(() => {
+    if (!netRef.current) return;
+    setRematchAsked(true);
+    sfx.play("click");
+    netRef.current.rematch();
+  }, []);
+
   const receiveHex = useCallback((id: string) => {
     // This is what the steel wall was always for.
     if (shieldedRef.current) {
@@ -1254,9 +1272,16 @@ export function useMatch(): MatchApi {
   }, []);
 
   /** Tear the match down to a clean slate, without deciding where to go next. */
-  const clearMatch = useCallback(() => {
-    netRef.current?.close();
-    netRef.current = null;
+  /**
+   * Everything about the ROUND just played — and nothing about the connection.
+   *
+   * Split out of clearMatch for the rematch, which starts a second round down
+   * the same socket: closing it and opening a new one would put both players
+   * back in the queue to be paired with strangers. Anything that describes the
+   * board, the hand, the result or what was said belongs here; anything that
+   * describes who you are connected to belongs in clearMatch below.
+   */
+  const clearRound = useCallback(() => {
     aiPlanRef.current = generateAiPlan();
     setGs(initialGameState(accountRef.current?.album));
     setResult(null);
@@ -1266,24 +1291,13 @@ export function useMatch(): MatchApi {
     setBoostedCells({});
     setXrayActive(false);
     setTargeting(null);
-    setOnline(false);
-    setOppLeft(false);
-    setNetError(false);
-    setRoomCode(null);
-    setRoomError(null);
     setStacked({});
     setStackSlots(0);
     setStackCorners(false);
     setFrozenFor(0);
-    setCoop(false);
     setMate(null);
-    setMyLane(0);
     setHeard(null);
     setSpoke(null);
-    soloAmandaRef.current = false;
-    setPlayground(false);
-    setMirrorSeed(null);
-    setLesson(0);
     setEditSide("me");
     setFoe({ placements: {}, king: null });
     benchRef.current = null;
@@ -1292,10 +1306,29 @@ export function useMatch(): MatchApi {
     setShielded(false);
     setExtraHand([]);
     setFirstPick(null);
-    setMySide("A");
     setNetOpp({ placements: {}, king: null });
+    setRematchAsked(false);
+    setRematchOffered(false);
     setTimeLeft(COUNTDOWN_SECONDS);
   }, []);
+
+  const clearMatch = useCallback(() => {
+    netRef.current?.close();
+    netRef.current = null;
+    clearRound();
+    setOnline(false);
+    setOppLeft(false);
+    setNetError(false);
+    setRoomCode(null);
+    setRoomError(null);
+    setCoop(false);
+    setMyLane(0);
+    soloAmandaRef.current = false;
+    setPlayground(false);
+    setMirrorSeed(null);
+    setLesson(0);
+    setMySide("A");
+  }, [clearRound]);
 
   const startMatch = useCallback(() => {
     sfx.unlock();
@@ -1340,6 +1373,15 @@ export function useMatch(): MatchApi {
         setMyLane(lane);
       },
       onPhase: (p, timeLeft) => {
+        if (p === "countdown" && phaseRef.current === "result") {
+          /*
+           * A rematch. The server has started a second round down this same
+           * socket, and the screen is still showing the last one — board,
+           * result and all. Clear the ROUND (not the connection: closing the
+           * socket here would send both players back to the queue).
+           */
+          clearRound();
+        }
         if (p === "locking") {
           enterPrebattle();
         } else {
@@ -1352,6 +1394,10 @@ export function useMatch(): MatchApi {
       onMate: (view) => setMate(view),
       onHexed: (id) => receiveHex(id),
       onOppReady: (r) => setOppReady(r),
+      onRematchWanted: () => {
+        setRematchOffered(true);
+        sfx.play("beep");
+      },
       onSaid: (id) => {
         // Dropped on the floor when the player has switched them off — and
         // dropped HERE rather than at the bubble, so nothing is stored.
@@ -1404,7 +1450,7 @@ export function useMatch(): MatchApi {
       intent,
       accountRef.current?.playerId ?? null,
     );
-  }, [enterPrebattle]);
+  }, [enterPrebattle, clearRound]);
 
   const hostRoom = useCallback(() => startOnline({ kind: "host" }), [startOnline]);
   /** Queue to face Amanda with a partner. It needs two — one board cannot win. */
@@ -1764,6 +1810,9 @@ export function useMatch(): MatchApi {
     heard,
     spoke,
     say,
+    rematchAsked,
+    rematchOffered,
+    askRematch,
     hearing,
     toggleHearing,
     hostRoom,

@@ -116,7 +116,19 @@ function newRoomCode(): string {
 }
 
 function beginMatch(a: WebSocket, b: WebSocket, how: string, coop = false): void {
-  const m = new Match(a, b, playerIdOf.get(a) ?? null, playerIdOf.get(b) ?? null, coop);
+  const m = new Match(
+    a,
+    b,
+    playerIdOf.get(a) ?? null,
+    playerIdOf.get(b) ?? null,
+    coop,
+    // Both asked to play again: the same two people, down the same two
+    // sockets, in the same mode. `matchOf` is simply pointed at the new one.
+    () => {
+      if (!isOpen(a) || !isOpen(b)) return;
+      beginMatch(a, b, "rematch", coop);
+    },
+  );
   matchOf.set(a, m);
   matchOf.set(b, m);
   console.log(`[server] match started (${how})`);

@@ -72,6 +72,10 @@ export class Match {
    * battle the same board, which is the only version of that worth having.
    */
   private readonly amanda: NetBoard | null;
+  /** Who has asked to play again, once this match is over. */
+  private rematch = new WeakSet<PlayerConn["ws"]>();
+  /** Called when BOTH have asked — the lobby starts the next round. */
+  private readonly onRematch: (() => void) | undefined;
 
   constructor(
     wsA: WebSocket,
@@ -79,7 +83,9 @@ export class Match {
     idA: string | null,
     idB: string | null,
     coop = false,
+    onRematch?: () => void,
   ) {
+    this.onRematch = onRematch;
     this.coop = coop;
     this.amanda = coop ? amandaBoard() : null;
     this.a = { ws: wsA, side: "A", view: emptyView(), board: null, playerId: idA, lastSaid: 0, saidCount: 0 };
@@ -186,6 +192,23 @@ export class Match {
       p.lastSaid = now;
       p.saidCount++;
       this.send(this.other(p), { t: "said", id: msg.id });
+    } else if (msg.t === "rematch") {
+      /*
+       * Only once it is over, and only while both are still here.
+       *
+       * `resultSent` is the gate: "again?" during the build phase would be a
+       * way to end somebody else's match early. `over` means one of them has
+       * already gone, and there is nobody to play again with.
+       */
+      if (!this.resultSent || this.over) return;
+      if (this.rematch.has(p.ws)) return;
+      this.rematch.add(p.ws);
+      this.send(this.other(p), { t: "rematchWanted" });
+      if (this.rematch.has(this.a.ws) && this.rematch.has(this.b.ws)) {
+        this.over = true;
+        for (const t of this.timers) clearTimeout(t);
+        this.onRematch?.();
+      }
     } else if (msg.t === "unready") {
       if (p.board !== null) {
         p.board = null;

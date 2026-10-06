@@ -82,7 +82,15 @@ export type ClientMessage =
    * Only the id travels: the words live in the catalogue on both sides, so
    * nothing a client sends can become text on somebody else's screen.
    */
-  | { t: "say"; id: string };
+  | { t: "say"; id: string }
+  /**
+   * "Again?" — offered once a match is over, to the person you just played.
+   *
+   * The second round runs down the SAME sockets. Sending both players back to
+   * the queue instead would be a different feature with the same button: they
+   * would each be paired with whoever happened to be waiting.
+   */
+  | { t: "rematch" };
 
 // ── server → client ────────────────────────────────────────────────
 export type ServerMessage =
@@ -138,7 +146,9 @@ export type ServerMessage =
   /** The opponent played an action card at you. */
   | { t: "hexed"; id: string }
   /** The other player said one of the ready-made lines. Id only — see "say". */
-  | { t: "said"; id: string };
+  | { t: "said"; id: string }
+  /** The other player would like to play you again. */
+  | { t: "rematchWanted" };
 
 export function encode(msg: ClientMessage | ServerMessage): string {
   return JSON.stringify(msg);

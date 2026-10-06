@@ -54,6 +54,8 @@ export interface NetHandlers {
   onOppReady?: (ready: boolean) => void;
   /** The other player said one of the ready-made lines. */
   onSaid?: (id: string) => void;
+  /** The other player would like to play you again. */
+  onRematchWanted?: () => void;
   /** The socket closed. `connected` is false when it never opened at all. */
   onClose?: (connected: boolean) => void;
 }
@@ -114,6 +116,9 @@ export class Net {
         case "said":
           this.handlers.onSaid?.(msg.id);
           break;
+        case "rematchWanted":
+          this.handlers.onRematchWanted?.();
+          break;
         case "oppReady":
           this.handlers.onOppReady?.(msg.ready);
           break;
@@ -159,6 +164,10 @@ export class Net {
   /** Say one of the ready-made lines (see taunts.ts). Id only. */
   say(id: string): void {
     this.sendMsg({ t: "say", id });
+  }
+  /** Ask the person you just played for another match. */
+  rematch(): void {
+    this.sendMsg({ t: "rematch" });
   }
   unready(): void {
     this.sendMsg({ t: "unready" });
