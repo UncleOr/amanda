@@ -18,6 +18,8 @@ import { grantChest, saves } from "./progress.js";
 import { fileReport, recentOpponents } from "./reports.js";
 import { acceptFriend, addableOpponents, askFriend, listFriends, removeFriend } from "./friends.js";
 import { isOnline } from "./presence.js";
+import { buy, ownedItems, shopWindow } from "./shop.js";
+import { inbox, markRead } from "./notify.js";
 import { handleAdmin, handleCopy } from "./admin.js";
 
 import { SUPABASE_URL as URL, db, keyHasWhitespace, keyLength, keyStartsWith } from "./supabase.js";
@@ -253,6 +255,46 @@ async function handleFriends(req: IncomingMessage, res: ServerResponse, path: st
   send(res, error ? 400 : 200, error ? { error } : { ok: true });
 }
 
+/**
+ * The shop, and what the player already owns.
+ *
+ * The window itself is public — it is a price list, and the game draws it
+ * before anybody signs in. Only "what is mine" and "buy this" need to know
+ * who you are.
+ */
+async function handleShop(req: IncomingMessage, res: ServerResponse, path: string): Promise<void> {
+  const sb = db();
+  if (!sb) return send(res, 200, { items: [], owned: [] });
+
+  if (path === "/api/shop") {
+    const items = await shopWindow(sb);
+    const playerId = await playerFrom(req);
+    const owned = playerId ? await ownedItems(sb, playerId) : [];
+    return send(res, 200, { items, owned });
+  }
+
+  const playerId = await playerFrom(req);
+  if (!playerId) return send(res, 401, { error: "who are you" });
+  const body = (await readBody(req)) as Record<string, unknown>;
+  const itemId = typeof body.itemId === "string" ? body.itemId : "";
+  if (!itemId) return send(res, 400, { error: "מה?" });
+  const error = await buy(sb, playerId, itemId);
+  send(res, error ? 400 : 200, error ? { error } : { ok: true });
+}
+
+/** The player's own inbox. */
+async function handleInbox(req: IncomingMessage, res: ServerResponse, path: string): Promise<void> {
+  const sb = db();
+  if (!sb) return send(res, 200, { notices: [], unread: 0 });
+  const playerId = await playerFrom(req);
+  if (!playerId) return send(res, 401, { error: "who are you" });
+  if (path === "/api/inbox/read") {
+    await markRead(sb, playerId);
+    return send(res, 200, { ok: true });
+  }
+  send(res, 200, await inbox(sb, playerId));
+}
+
 const adminDeps = { db, send, readBody, userFrom: playerFrom };
 
 /**
@@ -354,6 +396,19 @@ export async function handleApi(req: IncomingMessage, res: ServerResponse): Prom
   if (await handleCopy(req, res, adminDeps)) return true;
   // Everything behind the admin panel. It checks the admins table itself.
   if (await handleAdmin(req, res, adminDeps)) return true;
+  if (path.startsWith("/api/shop") || path.startsWith("/api/inbox")) {
+    if (req.method === "OPTIONS") {
+      send(res, 204, {});
+      return true;
+    }
+    try {
+      if (path.startsWith("/api/inbox")) await handleInbox(req, res, path);
+      else await handleShop(req, res, path);
+    } catch (err) {
+      send(res, 500, { error: (err as Error).message });
+    }
+    return true;
+  }
   if (path.startsWith("/api/friends")) {
     if (req.method === "OPTIONS") {
       send(res, 204, {});

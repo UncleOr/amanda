@@ -1,6 +1,8 @@
 import { useCallback, useEffect, useMemo, useState } from "react";
 import { createClient } from "@supabase/supabase-js";
 import { ARENAS } from "@amanda/shared";
+import { GiftsTab } from "./AdminGifts";
+import { ShopTab } from "./AdminShop";
 import { CardEditor } from "./CardEditor";
 
 /**
@@ -77,7 +79,9 @@ async function call(path: string, body: unknown = {}): Promise<Record<string, un
 export function Admin() {
   const [state, setState] = useState<"checking" | "out" | "denied" | "in" | "down">("checking");
   const [why, setWhy] = useState<string>("");
-  const [tab, setTab] = useState<"cards" | "copy" | "users" | "reports">("cards");
+  const [tab, setTab] = useState<"cards" | "copy" | "users" | "reports" | "shop" | "gifts">(
+    "cards",
+  );
   const [note, setNote] = useState<string | null>(null);
 
   const check = useCallback(async () => {
@@ -174,6 +178,12 @@ export function Admin() {
           <button className={tab === "reports" ? "on" : ""} onClick={() => setTab("reports")}>
             דיווחים
           </button>
+          <button className={tab === "shop" ? "on" : ""} onClick={() => setTab("shop")}>
+            חנות
+          </button>
+          <button className={tab === "gifts" ? "on" : ""} onClick={() => setTab("gifts")}>
+            מתנות
+          </button>
         </nav>
         <a className="btn-link" href={window.location.pathname}>
           ← למשחק
@@ -190,6 +200,10 @@ export function Admin() {
         <CopyTab say={setNote} />
       ) : tab === "reports" ? (
         <ReportsTab call={call} say={setNote} />
+      ) : tab === "shop" ? (
+        <ShopTab call={call} say={setNote} />
+      ) : tab === "gifts" ? (
+        <GiftsTab call={call} say={setNote} />
       ) : (
         <UsersTab say={setNote} />
       )}

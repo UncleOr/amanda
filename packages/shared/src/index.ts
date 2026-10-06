@@ -27,6 +27,9 @@ export * from "./arenas.js";
 // The handful of numbers the admin panel may turn, and why only those.
 export * from "./tunables.js";
 
+// Gifts and promotions: what they give, and the closed list of who they reach
+export * from "./grants.js";
+
 // The closed set of things one player may say to the other
 export * from "./taunts.js";
 

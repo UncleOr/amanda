@@ -20,9 +20,16 @@
  */
 import type { IncomingMessage, ServerResponse } from "node:http";
 import type { SupabaseClient } from "@supabase/supabase-js";
-import { CardSchema } from "@amanda/shared";
+import {
+  CardSchema,
+  givesSomething,
+  type GrantFilters,
+  type GrantGives,
+} from "@amanda/shared";
 import { cardState, refreshCards } from "./cards.js";
 import { listReports } from "./reports.js";
+import { audienceOf, deliver, runGrant } from "./shop.js";
+import { notify } from "./notify.js";
 
 /** The cards a brand new player starts with, as the database grants them. */
 const STARTER = [
@@ -266,6 +273,183 @@ async function adminRoutes(
       }
       const { error } = await sb.from("players").update(patch).eq("id", id);
       deps.send(res, error ? 500 : 200, error ? { error: error.message } : { ok: true, ...patch });
+      return true;
+    }
+
+    /*
+     * Give one person specific cards.
+     *
+     * Or: "it should also be possible to assign specific cards to a user from
+     * the admin panel." Goes through the same `deliver` as a purchase and a
+     * mass gift, so there is one answer to "what can a player receive" rather
+     * than three that drift (see shop.ts).
+     */
+    case "/api/admin/user/cards": {
+      const id = str("userId");
+      const cards = Array.isArray(body.cards) ? body.cards : [];
+      if (!id || !cards.length) {
+        deps.send(res, 400, { error: "למי, ומה" });
+        return true;
+      }
+      const gives = {
+        cards: cards
+          .filter((c): c is { cardId: string; copies?: number } =>
+            !!c && typeof (c as { cardId?: unknown }).cardId === "string",
+          )
+          .map((c) => ({ cardId: c.cardId, copies: Math.max(1, Math.round(c.copies ?? 1)) })),
+      };
+      if (!gives.cards.length) {
+        deps.send(res, 400, { error: "אין קלפים" });
+        return true;
+      }
+      await deliver(sb, id, gives, "grant");
+      await notify(
+        sb,
+        id,
+        "gift",
+        { he: "קיבלת קלפים", en: "You received cards" },
+        { he: gives.cards.map((c) => c.cardId).join(", ") },
+        "album",
+      );
+      deps.send(res, 200, { ok: true, cards: gives.cards.length });
+      return true;
+    }
+
+    /* ── gifts to many: the list, the preview, saving, and sending ── */
+
+    case "/api/admin/grants": {
+      const { data, error } = await sb
+        .from("grants")
+        .select("id, name, gives, filters, scheduled_at, executed_at, recipients, active, note, created_at")
+        .order("created_at", { ascending: false })
+        .limit(100);
+      deps.send(res, error ? 500 : 200, error ? { error: error.message } : { grants: data ?? [] });
+      return true;
+    }
+
+    /*
+     * How many people would this reach?
+     *
+     * Deliberately the SAME function the sending uses (audienceOf), so the
+     * number Or is shown and the number that receives it cannot differ. A
+     * preview computed by its own query is a preview that will one day be
+     * wrong about the one thing it exists to be right about.
+     */
+    case "/api/admin/grants/preview": {
+      const ids = await audienceOf(sb, (body.filters ?? {}) as GrantFilters);
+      deps.send(res, 200, { count: ids.length });
+      return true;
+    }
+
+    case "/api/admin/grants/save": {
+      const name = str("name").trim();
+      if (!name) {
+        deps.send(res, 400, { error: "צריך שם" });
+        return true;
+      }
+      const gives = (body.gives ?? {}) as GrantGives;
+      if (!givesSomething(gives)) {
+        deps.send(res, 400, { error: "המתנה ריקה" });
+        return true;
+      }
+      const row = {
+        name,
+        gives,
+        filters: (body.filters ?? {}) as GrantFilters,
+        scheduled_at: typeof body.scheduledAt === "string" && body.scheduledAt ? body.scheduledAt : null,
+        note: str("note") || null,
+        active: body.active !== false,
+      };
+      const id = str("id");
+      const { data, error } = id
+        ? await sb.from("grants").update(row).eq("id", id).select("id").maybeSingle()
+        : await sb.from("grants").insert(row).select("id").maybeSingle();
+      deps.send(res, error ? 500 : 200, error ? { error: error.message } : { ok: true, id: data?.id });
+      return true;
+    }
+
+    /*
+     * Send it now.
+     *
+     * Safe to press twice: delivery writes a receipt per person and reads the
+     * receipts first, so the second press reports everybody as already having
+     * it and hands out nothing (see shop.ts).
+     */
+    case "/api/admin/grants/send": {
+      const id = str("id");
+      if (!id) {
+        deps.send(res, 400, { error: "איזו מתנה" });
+        return true;
+      }
+      const report = await runGrant(sb, id, (playerId, gname) =>
+        notify(
+          sb,
+          playerId,
+          "gift",
+          { he: "יש לך מתנה", en: "You have a gift" },
+          { he: gname },
+          "album",
+        ),
+      );
+      deps.send(res, report.error ? 400 : 200, report);
+      return true;
+    }
+
+    case "/api/admin/grants/delete": {
+      const id = str("id");
+      if (!id) {
+        deps.send(res, 400, { error: "איזו מתנה" });
+        return true;
+      }
+      const { error } = await sb.from("grants").delete().eq("id", id);
+      deps.send(res, error ? 500 : 200, error ? { error: error.message } : { ok: true });
+      return true;
+    }
+
+    /* ── the shop ── */
+
+    case "/api/admin/shop": {
+      const { data, error } = await sb
+        .from("shop_items")
+        .select("*")
+        .order("sort")
+        .order("id");
+      deps.send(res, error ? 500 : 200, error ? { error: error.message } : { items: data ?? [] });
+      return true;
+    }
+
+    case "/api/admin/shop/save": {
+      const id = str("id").trim();
+      if (!id) {
+        deps.send(res, 400, { error: "צריך מזהה" });
+        return true;
+      }
+      const row = {
+        id,
+        kind: str("kind") || "avatar",
+        name: body.name ?? { he: id },
+        blurb: body.blurb ?? null,
+        grants: body.grants ?? {},
+        price_diamonds: Math.max(0, Math.round(Number(body.priceDiamonds) || 0)),
+        art: str("art") || null,
+        active: body.active !== false,
+        sort: Math.round(Number(body.sort) || 0),
+        available_from: typeof body.availableFrom === "string" && body.availableFrom ? body.availableFrom : null,
+        available_until: typeof body.availableUntil === "string" && body.availableUntil ? body.availableUntil : null,
+      };
+      const { error } = await sb.from("shop_items").upsert(row, { onConflict: "id" });
+      deps.send(res, error ? 500 : 200, error ? { error: error.message } : { ok: true });
+      return true;
+    }
+
+    case "/api/admin/shop/delete": {
+      const id = str("id");
+      if (!id) {
+        deps.send(res, 400, { error: "איזה פריט" });
+        return true;
+      }
+      const { error } = await sb.from("shop_items").delete().eq("id", id);
+      deps.send(res, error ? 500 : 200, error ? { error: error.message } : { ok: true });
       return true;
     }
 

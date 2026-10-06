@@ -590,6 +590,73 @@ export async function friendAction(
   return r.ok ? null : (r.error ?? "לא הצליח");
 }
 
+export interface ShopItem {
+  id: string;
+  kind: "avatar" | "emoji" | "skin" | "card" | "chest";
+  name: { he: string; en?: string };
+  blurb?: { he: string; en?: string } | null;
+  grants: Record<string, unknown>;
+  price_diamonds: number;
+  art: string | null;
+  sort: number;
+}
+
+/** What is on the shelves, and what is already yours. */
+export async function loadShop(): Promise<{ items: ShopItem[]; owned: string[] }> {
+  const empty = { items: [], owned: [] };
+  if (!SERVER_HTTP) return empty;
+  try {
+    const sb = db();
+    const token = sb ? (await sb.auth.getSession()).data.session?.access_token : null;
+    const res = await fetch(`${SERVER_HTTP}/api/shop`, {
+      method: "POST",
+      headers: {
+        "content-type": "application/json",
+        ...(token ? { authorization: `Bearer ${token}` } : {}),
+      },
+      body: "{}",
+    });
+    const body = (await res.json()) as { items?: ShopItem[]; owned?: string[] };
+    return { items: body.items ?? [], owned: body.owned ?? [] };
+  } catch {
+    return empty;
+  }
+}
+
+/** Buy one thing. Returns a message for the player, or null. */
+export async function buyItem(itemId: string): Promise<string | null> {
+  const r = await friendsCall<{ ok?: boolean; error?: string }>(
+    "/api/shop/buy",
+    { itemId },
+    { error: "אין חיבור לשרת" },
+  );
+  return r.ok ? null : (r.error ?? "לא הצליח");
+}
+
+export interface Notice {
+  id: string;
+  kind: "gift" | "offer" | "chest" | "friend" | "news";
+  title: { he: string; en?: string };
+  body: { he: string; en?: string } | null;
+  action: string | null;
+  read_at: string | null;
+  created_at: string;
+}
+
+/** What the game has to tell you, newest first. */
+export async function loadInbox(): Promise<{ notices: Notice[]; unread: number }> {
+  return friendsCall<{ notices: Notice[]; unread: number }>(
+    "/api/inbox",
+    {},
+    { notices: [], unread: 0 },
+  );
+}
+
+/** Mark the lot as read — an inbox here is a list you open, not one you manage. */
+export async function markInboxRead(): Promise<void> {
+  await friendsCall("/api/inbox/read", {}, {});
+}
+
 /**
  * Sign out, and come back as somebody else.
  *

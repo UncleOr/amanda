@@ -18,6 +18,7 @@ import {
   isAdmin,
   linkEmail,
   linkGoogle,
+  loadShop,
   saveProfile,
   switchAccount,
   type Account,
@@ -50,6 +51,24 @@ export const AVATAR_IDS = [
   "av_wolf",
 ] as const;
 
+/**
+ * The faces the shop sells.
+ *
+ * Kept apart from the free list above rather than mixed into it, because the
+ * grid has to be able to answer "can I have this one" — and the answer is a
+ * row in player_items, not a hard-coded list. A face that is not yours is not
+ * drawn here at all: a locked thing you can see but not choose is an
+ * advertisement inside the profile screen, and the shop is where the shop is.
+ */
+export const SHOP_AVATAR_IDS = [
+  "av_astronaut",
+  "av_mechanic",
+  "av_skater",
+  "av_yeti",
+  "av_jellyking",
+  "av_mothgirl",
+] as const;
+
 const BASE = import.meta.env.BASE_URL;
 
 interface Props {
@@ -59,6 +78,24 @@ interface Props {
 }
 
 export function Profile({ account, onClose, onChanged }: Props) {
+  /*
+   * Which bought faces are this player's. Asked once when the screen opens;
+   * the shop is the only thing that changes the answer, and it reloads the
+   * account when it does.
+   */
+  const [bought, setBought] = useState<string[]>([]);
+  useEffect(() => {
+    void loadShop().then(({ items, owned }) => {
+      const mine = new Set(owned);
+      setBought(
+        items
+          .filter((i) => i.kind === "avatar" && mine.has(i.id))
+          .map((i) => (i.grants as { avatar?: string }).avatar ?? "")
+          .filter(Boolean),
+      );
+    });
+  }, []);
+
   const [nickname, setNickname] = useState(account?.nickname ?? "");
   const [birthDate, setBirthDate] = useState(account?.birthDate ?? "");
   const [avatar, setAvatar] = useState(account?.avatar ?? AVATAR_IDS[0]);
@@ -228,7 +265,7 @@ export function Profile({ account, onClose, onChanged }: Props) {
 
         {facesOpen && (
           <div className="profile__faces">
-            {AVATAR_IDS.map((id) => (
+            {[...AVATAR_IDS, ...bought].map((id) => (
               <button
                 key={id}
                 className={`profile__avatar${avatar === id ? " is-picked" : ""}`}

@@ -13,6 +13,7 @@ import { areFriends } from "./friends.js";
 import { PROGRESS_ENABLED } from "./progress.js";
 import { handleApi } from "./api.js";
 import { refreshCards } from "./cards.js";
+import { startScheduler } from "./schedule.js";
 import { db } from "./supabase.js";
 import "./content.js"; // eager-load the card catalog at boot
 
@@ -340,6 +341,9 @@ wss.on("connection", (ws) => {
 
 http.listen(PORT, () => {
   console.log(`[server] Amanda multiplayer listening on :${PORT}`);
+  // Gifts that were set for a date go out on their own — see schedule.ts for
+  // why this is a loop that asks the database rather than a timer per gift.
+  startScheduler(db);
   console.log(
     PROGRESS_ENABLED
       ? "[server] progress is being recorded"

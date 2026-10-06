@@ -7,7 +7,7 @@ import { LESSONS } from "./game/lessons";
 import { Profile } from "./components/Profile";
 import { Onboarding } from "./components/Onboarding";
 import { ChestReveal } from "./components/ChestReveal";
-import { markChestSeen, type Chest } from "./game/account";
+import { loadInbox, markChestSeen, type Chest } from "./game/account";
 import { markTutorialDone, tutorialSeenLocally } from "./game/account";
 import { COOP_LANES, PHASES, arenaFor } from "@amanda/shared";
 import type { BattleResult } from "@amanda/engine";
@@ -32,6 +32,8 @@ import { ChestShelf } from "./components/ChestShelf";
 import { About } from "./components/About";
 import { Report } from "./components/Report";
 import { Friends } from "./components/Friends";
+import { Shop } from "./components/Shop";
+import { Inbox } from "./components/Inbox";
 import { SayButton, SaidBubble } from "./components/Say";
 const Admin = lazy(() => import("./components/Admin").then((m) => ({ default: m.Admin })));
 import { MoreModes } from "./components/MoreModes";
@@ -216,6 +218,9 @@ function Game() {
   const [friendOpen, setFriendOpen] = useState(false);
   const [modesOpen, setModesOpen] = useState(false);
   const [friendsOpen, setFriendsOpen] = useState(false);
+  const [shopOpen, setShopOpen] = useState(false);
+  const [inboxOpen, setInboxOpen] = useState(false);
+  const [unread, setUnread] = useState(0);
   const [aboutOpen, setAboutOpen] = useState(false);
   const [reportOpen, setReportOpen] = useState<"bug" | "player" | null>(null);
   /** Turned off for the session the moment the clip fails to load. */
@@ -473,6 +478,30 @@ function Game() {
     m.joinRoom(INVITE_CODE);
   }, [m]);
 
+  /*
+   * How many unread notices there are.
+   *
+   * Asked on the home screen only, and only with an account. A gift that
+   * arrived while the game was closed should be visible on opening it, and a
+   * gift that goes out on a schedule should turn up within the minute — but
+   * polling while somebody is in the middle of a match is a request made for
+   * nothing, because the bell is not drawn there.
+   */
+  useEffect(() => {
+    if (!m.account || m.phase !== "intro") return;
+    let alive = true;
+    const ask = async () => {
+      const { unread: n } = await loadInbox();
+      if (alive) setUnread(n);
+    };
+    void ask();
+    const t = window.setInterval(() => void ask(), 60_000);
+    return () => {
+      alive = false;
+      window.clearInterval(t);
+    };
+  }, [m.account, m.phase]);
+
   // One continuous score, started on the first screen that wants it and never
   // interrupted again (see music.ts). The phase is still named, for later.
   useEffect(() => {
@@ -576,6 +605,23 @@ function Game() {
           </div>
         )}
         <div className="topbar__right">
+          {/*
+           * The bell, only on the home screen and only with an account.
+           *
+           * Mid-match it would be a second thing asking to be looked at while
+           * a clock is running, and there is nothing here that cannot wait
+           * ninety seconds.
+           */}
+          {m.account && m.phase === "intro" && (
+            <button
+              className={`mute bell${unread ? " bell--new" : ""}`}
+              title="הודעות"
+              onClick={() => setInboxOpen(true)}
+            >
+              <Icon name="report" size={18} />
+              {unread > 0 && <span className="bell__count">{unread > 9 ? "9+" : unread}</span>}
+            </button>
+          )}
           {m.phase !== "intro" && (
             <button
               className="topbar__exit"
@@ -764,6 +810,13 @@ function Game() {
               </button>
               <button className="btn-lab" onClick={m.startPlayground} title="בלי שעון, שני הצדדים שלך">
                 <Icon name="stacked" size={15} /> מגרש המשחקים
+              </button>
+              <button
+                className="btn-lab"
+                onClick={() => setShopOpen(true)}
+                title="פרצופים, אימוג׳ים ועוד"
+              >
+                <Icon name="gem" size={15} /> החנות
               </button>
               {/* Only with an account: a friendship is between two real
                   accounts, and an anonymous one is thrown away on the next
@@ -1594,6 +1647,28 @@ function Game() {
 
       {reportOpen && (
         <Report initialKind={reportOpen} onClose={() => setReportOpen(null)} />
+      )}
+
+      {shopOpen && (
+        <Shop
+          onClose={() => setShopOpen(false)}
+          diamonds={m.account?.diamonds ?? 0}
+          onBought={() => m.reloadAccount()}
+        />
+      )}
+
+      {inboxOpen && (
+        <Inbox
+          onClose={() => {
+            setInboxOpen(false);
+            setUnread(0);
+          }}
+          onAction={(a) => {
+            if (a === "shop") setShopOpen(true);
+            else if (a === "friends") setFriendsOpen(true);
+            else if (a === "album") setAlbumOpen(true);
+          }}
+        />
       )}
 
       {friendsOpen && (

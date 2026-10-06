@@ -156,6 +156,40 @@ export const AVATARS: Record<string, string> = {
     "a baby dragon with oversized wings and a cheerful snaggletooth, head-and-shoulders, facing forward, centred and symmetrical, " +
     "filling the middle 70% with clear margin all round so it survives a circular " +
     "crop, flat deep-blue backdrop with a soft glow, readable at 48 pixels",
+
+  /*
+   * The six for the shop.
+   *
+   * Everything above is free and always has been. These are the first things
+   * the shop sells, so they have to be worth wanting — each one is a face the
+   * free set does not have, not a recolour of one that does. Same framing and
+   * same backdrop as the rest, because a bought avatar sitting next to a free
+   * one in the same row must look like it belongs to the same game.
+   */
+  av_astronaut:
+    "a child astronaut in a bubble helmet with a star reflected in the glass, head-and-shoulders, facing forward, centred and symmetrical, " +
+    "filling the middle 70% with clear margin all round so it survives a circular " +
+    "crop, flat deep-blue backdrop with a soft glow, readable at 48 pixels",
+  av_mechanic:
+    "a grease-smudged young mechanic in a petrol-station cap, spanner behind one ear, head-and-shoulders, facing forward, centred and symmetrical, " +
+    "filling the middle 70% with clear margin all round so it survives a circular " +
+    "crop, flat deep-blue backdrop with a soft glow, readable at 48 pixels",
+  av_skater:
+    "a cheerful skater kid in a backwards cap with a plaster on one cheek, head-and-shoulders, facing forward, centred and symmetrical, " +
+    "filling the middle 70% with clear margin all round so it survives a circular " +
+    "crop, flat deep-blue backdrop with a soft glow, readable at 48 pixels",
+  av_yeti:
+    "a fluffy white yeti cub with tiny horns and a shy smile, head-and-shoulders, facing forward, centred and symmetrical, " +
+    "filling the middle 70% with clear margin all round so it survives a circular " +
+    "crop, flat deep-blue backdrop with a soft glow, readable at 48 pixels",
+  av_jellyking:
+    "a tiny jellyfish wearing a crown far too big for it, glowing softly, head-and-shoulders, facing forward, centred and symmetrical, " +
+    "filling the middle 70% with clear margin all round so it survives a circular " +
+    "crop, flat deep-blue backdrop with a soft glow, readable at 48 pixels",
+  av_mothgirl:
+    "a gentle moth child with huge feathered antennae and dusty wings, head-and-shoulders, facing forward, centred and symmetrical, " +
+    "filling the middle 70% with clear margin all round so it survives a circular " +
+    "crop, flat deep-blue backdrop with a soft glow, readable at 48 pixels",
 };
 
 /** One brief per brand image. */
