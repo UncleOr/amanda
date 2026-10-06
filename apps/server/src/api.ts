@@ -128,17 +128,55 @@ const adminDeps = { db, send, readBody, userFrom: playerFrom };
  * any response — it bypasses row-level security completely, and anything that
  * can print it is a way to leak it.
  */
-function health(res: ServerResponse): void {
+/**
+ * Scrub anything token-shaped out of a message before it leaves the process.
+ *
+ * Supabase puts the key it rejected into its own error text, so an error
+ * message is a way to leak the key. Any long run of key characters goes.
+ */
+function scrub(text: string): string {
+  return text.replace(/[A-Za-z0-9_\-.]{30,}/g, "<redacted>");
+}
+
+async function health(res: ServerResponse): Promise<void> {
   const names = Object.keys(process.env).filter(
     (k) => k.includes("SUPABASE") || k.includes("SERVICE"),
   );
   const key = process.env.SUPABASE_SERVICE_KEY ?? "";
+  /*
+   * Actually try it, rather than reporting that a variable exists.
+   *
+   * "A key is present" and "the key works" turned out to be very different
+   * things: with the key set, every database request threw and the answer to
+   * why was only in a log nobody here can read.
+   */
+  let dbError: string | null = null;
+  let rows: number | null = null;
+  try {
+    const sb = db();
+    if (!sb) dbError = "no client";
+    else {
+      const { error, count } = await sb
+        .from("copy_strings")
+        .select("id", { count: "exact", head: true });
+      if (error) dbError = scrub(error.message);
+      else rows = count ?? 0;
+    }
+  } catch (err) {
+    dbError = scrub((err as Error).message);
+  }
   send(res, 200, {
     ok: true,
     /** True when a key is present AND looks like one, rather than a stray word. */
     canSave: key.length > 40,
     keyPresent: key.length > 0,
     keyLength: key.length,
+    /** Shape only — enough to tell a JWT from a publishable key from junk. */
+    keyStartsWith: key.slice(0, 3),
+    keyHasWhitespace: /\s/.test(key),
+    /** Did a real query work, and if not, why. */
+    dbError,
+    copyRows: rows,
     /** Which Supabase-ish variables this process can see, by name only. */
     sees: names,
     url: URL,
@@ -148,7 +186,7 @@ function health(res: ServerResponse): void {
 export async function handleApi(req: IncomingMessage, res: ServerResponse): Promise<boolean> {
   const path = (req.url ?? "").split("?")[0];
   if (path === "/api/health") {
-    health(res);
+    await health(res);
     return true;
   }
   // The words on the screen, for anyone, signed in or not.
