@@ -578,3 +578,60 @@
   max-width: 34ch;
   text-wrap: balance;
 }
+
+/* ════════ chests waiting on the home screen ════════
+ *
+ * Or: "buttons for chests that haven't been opened and prizes that haven't
+ * been taken — interactive and inviting and fun." So they bob, and the better
+ * ones bob with a glow around them.
+ */
+.shelf {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  margin-top: 12px;
+  flex-wrap: wrap;
+}
+.shelf__chest {
+  width: 62px;
+  height: 62px;
+  padding: 0;
+  border: none;
+  background: none;
+  cursor: pointer;
+  animation: chest-bob 2.4s ease-in-out infinite;
+  filter: drop-shadow(0 6px 12px rgba(0, 0, 0, 0.55));
+}
+.shelf__chest:nth-child(2) { animation-delay: 0.3s; }
+.shelf__chest:nth-child(3) { animation-delay: 0.6s; }
+.shelf__chest:nth-child(4) { animation-delay: 0.9s; }
+.shelf__chest img {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  display: block;
+}
+.shelf__chest:hover { animation-duration: 0.7s; }
+.shelf__chest:disabled { opacity: 0.5; animation: none; cursor: default; }
+.shelf__chest--silver {
+  filter: drop-shadow(0 6px 12px rgba(0, 0, 0, 0.55)) drop-shadow(0 0 10px rgba(195, 205, 216, 0.5));
+}
+.shelf__chest--gold {
+  filter: drop-shadow(0 6px 12px rgba(0, 0, 0, 0.55)) drop-shadow(0 0 14px rgba(240, 180, 41, 0.6));
+}
+@keyframes chest-bob {
+  0%, 100% { transform: translateY(0) rotate(-2deg); }
+  50% { transform: translateY(-5px) rotate(2deg); }
+}
+@media (prefers-reduced-motion: reduce) {
+  .shelf__chest { animation: none; }
+}
+.shelf__more {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  color: var(--muted);
+  font-weight: 800;
+  font-size: 13px;
+}

@@ -94,6 +94,20 @@ export function rollChest(kind: string): { cards: string[]; diamonds: number } {
  * Hand a chest's contents to a player: a copy of every card, and the diamonds.
  * Copies accumulate — a duplicate is the point, not a consolation.
  */
+/**
+ * Hand over what was inside. Called when a chest is OPENED, not when it is won.
+ *
+ * Exported because the opening now happens in the HTTP API, a minute or a week
+ * after the match that earned it.
+ */
+export async function grantChest(
+  sb: SupabaseClient,
+  playerId: string,
+  won: { cards: string[]; diamonds: number },
+) {
+  return grant(sb, playerId, won as ReturnType<typeof rollChest>);
+}
+
 async function grant(sb: SupabaseClient, playerId: string, won: ReturnType<typeof rollChest>) {
   const counts = new Map<string, number>();
   for (const id of won.cards) counts.set(id, (counts.get(id) ?? 0) + 1);
@@ -165,16 +179,27 @@ export async function recordMatch(opts: {
         .update({
           trophies,
           best_trophies: Math.max(data?.best_trophies ?? 0, trophies),
-          diamonds: (data?.diamonds ?? 0) + won.diamonds,
         })
         .eq("id", winnerId);
+      /*
+       * WON, NOT OPENED.
+       *
+       * Or asked for unopened chests on the home screen, and that cannot exist
+       * if winning a chest also opens it — which is what used to happen, right
+       * here, in the same breath as deciding it.
+       *
+       * What is INSIDE is still decided now, by this process, and written down.
+       * That part is not negotiable: if the contents were rolled when the
+       * player pressed "open", the client would be asking a server for a prize
+       * at a moment the player controls. It is sealed at the moment it is won
+       * and opening only breaks the seal.
+       */
       await sb.from("chests").insert({
         player_id: winnerId,
         kind,
-        opened_at: new Date().toISOString(),
+        opened_at: null,
         contents: won,
       });
-      await grant(sb, winnerId, won);
     }
 
     if (loserId) {

@@ -14,7 +14,7 @@
 import type { IncomingMessage, ServerResponse } from "node:http";
 import { LEVELS, levelCost } from "@amanda/shared";
 import { CATALOG } from "./content.js";
-import { saves } from "./progress.js";
+import { grantChest, saves } from "./progress.js";
 import { handleAdmin, handleCopy } from "./admin.js";
 
 import { SUPABASE_URL as URL, db, keyHasWhitespace, keyLength, keyStartsWith } from "./supabase.js";
@@ -104,6 +104,74 @@ async function levelUp(req: IncomingMessage, res: ServerResponse): Promise<void>
 }
 
 /** Returns true when it handled the request. */
+/**
+ * Open one of your own chests.
+ *
+ * What is inside was decided and written down when the match was won
+ * (progress.ts) — this only breaks the seal and hands it over. That split is
+ * the whole security of it: if the contents were rolled here, the player would
+ * be asking for a prize at a moment they choose, and choosing is the one thing
+ * they must not be able to do.
+ *
+ * Reads the chest by id AND by the caller's own player id, so asking for
+ * somebody else's chest finds nothing rather than finding theirs. Idempotent:
+ * a chest that is already open gives its contents back and grants nothing
+ * twice, because a dropped connection must not cost a prize or double one.
+ */
+async function openChest(req: IncomingMessage, res: ServerResponse): Promise<void> {
+  const sb = db();
+  if (!sb) return send(res, 503, { error: "no database" });
+  const playerId = await playerFrom(req);
+  if (!playerId) return send(res, 401, { error: "who are you" });
+
+  const body = (await readBody(req)) as { chestId?: unknown };
+  const chestId = typeof body.chestId === "string" ? body.chestId : "";
+  if (!chestId) return send(res, 400, { error: "which chest" });
+
+  const { data: chest } = await sb
+    .from("chests")
+    .select("id, kind, contents, opened_at")
+    .eq("id", chestId)
+    .eq("player_id", playerId)
+    .maybeSingle();
+  if (!chest) return send(res, 404, { error: "no such chest" });
+
+  const won = (chest.contents ?? {}) as { cards?: string[]; diamonds?: number };
+  const contents = { cards: won.cards ?? [], diamonds: won.diamonds ?? 0 };
+
+  if (chest.opened_at) {
+    // Already open. Say what was in it and grant nothing.
+    return send(res, 200, { ok: true, alreadyOpen: true, kind: chest.kind, ...contents });
+  }
+
+  // Mark it open FIRST and only on the row that is still closed. Two taps that
+  // arrive together leave exactly one of them holding the prize.
+  const { data: claimed } = await sb
+    .from("chests")
+    .update({ opened_at: new Date().toISOString() })
+    .eq("id", chestId)
+    .eq("player_id", playerId)
+    .is("opened_at", null)
+    .select("id");
+  if (!claimed?.length) {
+    return send(res, 200, { ok: true, alreadyOpen: true, kind: chest.kind, ...contents });
+  }
+
+  await grantChest(sb, playerId, contents);
+  if (contents.diamonds > 0) {
+    const { data: row } = await sb
+      .from("players")
+      .select("diamonds")
+      .eq("id", playerId)
+      .maybeSingle();
+    await sb
+      .from("players")
+      .update({ diamonds: (row?.diamonds ?? 0) + contents.diamonds })
+      .eq("id", playerId);
+  }
+  send(res, 200, { ok: true, kind: chest.kind, ...contents });
+}
+
 const adminDeps = { db, send, readBody, userFrom: playerFrom };
 
 /**
@@ -203,6 +271,18 @@ export async function handleApi(req: IncomingMessage, res: ServerResponse): Prom
   if (await handleCopy(req, res, adminDeps)) return true;
   // Everything behind the admin panel. It checks the admins table itself.
   if (await handleAdmin(req, res, adminDeps)) return true;
+  if (path === "/api/chest/open") {
+    if (req.method === "OPTIONS") {
+      send(res, 204, {});
+      return true;
+    }
+    try {
+      await openChest(req, res);
+    } catch (err) {
+      send(res, 500, { error: (err as Error).message });
+    }
+    return true;
+  }
   if (path !== "/api/level-up") return false;
   if (req.method === "OPTIONS") {
     send(res, 204, {});

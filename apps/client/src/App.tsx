@@ -7,7 +7,7 @@ import { LESSONS } from "./game/lessons";
 import { Profile } from "./components/Profile";
 import { Onboarding } from "./components/Onboarding";
 import { ChestReveal } from "./components/ChestReveal";
-import { markChestSeen, newestUnseenChest, type Chest } from "./game/account";
+import { markChestSeen, type Chest } from "./game/account";
 import { markTutorialDone, tutorialSeenLocally } from "./game/account";
 import { PHASES, arenaFor } from "@amanda/shared";
 import type { BattleResult } from "@amanda/engine";
@@ -28,6 +28,7 @@ import { ErrorBoundary } from "./components/ErrorBoundary";
 import { CardGallery } from "./components/CardGallery";
 import { CardPicker } from "./components/CardPicker";
 import { ArenaTrack } from "./components/ArenaTrack";
+import { ChestShelf } from "./components/ChestShelf";
 const Admin = lazy(() => import("./components/Admin").then((m) => ({ default: m.Admin })));
 import { MoreModes } from "./components/MoreModes";
 import { ArenaPreview } from "./components/ArenaPreview";
@@ -230,17 +231,14 @@ function Game() {
         }
       : null,
   );
-  useEffect(() => {
-    if (m.phase !== "result" || !m.iWon || !m.account) return;
-    let alive = true;
-    const t = window.setTimeout(() => {
-      void newestUnseenChest().then((c) => alive && c && setChest(c));
-    }, 900);
-    return () => {
-      alive = false;
-      window.clearTimeout(t);
-    };
-  }, [m.phase, m.iWon, m.account]);
+  /*
+   * The reveal no longer ambushes you at the end of a match.
+   *
+   * It used to look for a chest the moment you won and play the whole opening
+   * over the result screen — which was the only way to show one, because
+   * winning a chest also opened it. Now a chest waits on the home screen until
+   * you tap it, which is the point of having one.
+   */
   /*
    * Shown once, when an account exists and has never been set up. Guests have
    * no account to save it to, so they are not asked — they are asked the
@@ -737,6 +735,13 @@ function Game() {
             )}
             {/* Where you are on the ladder, and what is above you. */}
             {m.account && <ArenaTrack trophies={m.account.trophies} />}
+            {/* And what is waiting to be opened. */}
+            {m.account && (
+              <ChestShelf
+                onOpened={setChest}
+                reload={() => m.reloadAccount()}
+              />
+            )}
             <button className="btn-album" onClick={() => setAlbumOpen(true)}>
               <Icon name="deck" size={20} /> האלבום שלי
             </button>

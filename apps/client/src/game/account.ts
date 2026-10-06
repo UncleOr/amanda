@@ -216,6 +216,81 @@ export interface Chest {
  */
 const SEEN_CHESTS = "amanda.chests.seen";
 
+/**
+ * The chests you have won and not opened yet.
+ *
+ * They sit on the home screen until you do. Winning used to open them in the
+ * same breath, which meant "an unopened chest" could not exist — and an
+ * unopened chest is the thing that makes you come back tomorrow.
+ */
+export async function unopenedChests(): Promise<Chest[]> {
+  const sb = db();
+  if (!sb) return [];
+  try {
+    const { data: auth } = await sb.auth.getSession();
+    const id = auth.session?.user.id;
+    if (!id) return [];
+    const { data } = await sb
+      .from("chests")
+      .select("id, kind, contents, earned_at")
+      .eq("player_id", id)
+      .is("opened_at", null)
+      .order("earned_at", { ascending: true });
+    return (data ?? []).map((row) => {
+      const contents = (row.contents ?? {}) as { cards?: string[]; diamonds?: number };
+      return {
+        id: row.id,
+        kind: row.kind,
+        cards: contents.cards ?? [],
+        diamonds: contents.diamonds ?? 0,
+        earnedAt: row.earned_at,
+      };
+    });
+  } catch {
+    return [];
+  }
+}
+
+/**
+ * Break the seal on one.
+ *
+ * The SERVER grants the contents — what is inside was decided when the match
+ * was won and the client is only asking for it to be handed over. Returns what
+ * was in it, or null if anything went wrong, in which case the chest is still
+ * there to try again.
+ */
+export async function openChest(chestId: string): Promise<Chest | null> {
+  const sb = db();
+  if (!sb || !SERVER_HTTP) return null;
+  try {
+    const { data } = await sb.auth.getSession();
+    const token = data.session?.access_token;
+    if (!token) return null;
+    const res = await fetch(`${SERVER_HTTP}/api/chest/open`, {
+      method: "POST",
+      headers: { authorization: `Bearer ${token}`, "content-type": "application/json" },
+      body: JSON.stringify({ chestId }),
+    });
+    if (!res.ok) return null;
+    const body = (await res.json()) as {
+      ok?: boolean;
+      kind?: string;
+      cards?: string[];
+      diamonds?: number;
+    };
+    if (!body.ok) return null;
+    return {
+      id: chestId,
+      kind: body.kind ?? "wood",
+      cards: body.cards ?? [],
+      diamonds: body.diamonds ?? 0,
+      earnedAt: new Date().toISOString(),
+    };
+  } catch {
+    return null;
+  }
+}
+
 export async function newestUnseenChest(): Promise<Chest | null> {
   const sb = db();
   if (!sb) return null;
