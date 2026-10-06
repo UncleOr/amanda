@@ -82,71 +82,109 @@ function activeSynergy(view: CoachView): string | null {
  * because they stop being true the moment you play it.
  */
 export function nextCue(view: CoachView, said: Set<string>): Cue | null {
-  const say = (id: string, text: string, target?: string): Cue | null =>
-    said.has(id) ? null : { id, text, target };
-
-  // ── the battle is about to start ──
-  if (view.phase === "panic")
-    return say(
-      "panic",
-      "נגמר הערפל — עכשיו רואים מה היריב שם. שינויים של הרגע האחרון?",
-      ".side--enemy",
-    );
-
-  if (view.phase !== "build") return null;
-
+  /*
+   * ORDER IS THE POINT.
+   *
+   * Or wrote the tutorial as a walkthrough — king, then the giant, then the
+   * dragon, then an action card, then a weak one, then changing your mind,
+   * then the series bonus, then the fog, then go. The first version answered
+   * with whatever happened to be true first, which is reactive but not a
+   * walkthrough. These are tried in HIS order, so the first one that applies
+   * is always the earliest one still unsaid.
+   *
+   * A step whose moment never comes is simply skipped rather than stalling
+   * the whole sequence behind it — you cannot make someone draw a dragon.
+   */
   const inHand = card(view.hand);
+  const steps: Array<() => Cue | null> = [
+    // 1. a King, before anything else
+    () =>
+      !view.king && inHand && !view.handIsAction
+        ? {
+            id: "king",
+            text: "קודם כול מלך. הוא לא זז, הוא חזק פי שלושה, ואם הוא נופל — נגמר.",
+            target: ".side--me .slot--king",
+          }
+        : null,
 
-  // ── a card in your hand, described by what it actually is ──
-  if (view.handIsAction)
-    return say("action", "קלף פעולה. לא מניחים אותו על הלוח — לוקחים אותו לבר ומפעילים כשצריך.", ".hand");
+    // 2. "a giant? he is static, shoots hard, lots of health — guard the King"
+    () =>
+      view.king && inHand && inHand.stats.moveSpeed === 0 && inHand.stats.hp >= 800
+        ? {
+            id: "tank",
+            text: `${inHand.name.he}? סטטי, הרבה חיים. הוא לא ילך לשום מקום — שים אותו מול המלך, שם עוצרים את מי שבא אליו.`,
+            target: ".side--me .slot--guard",
+          }
+        : null,
 
-  if (inHand) {
-    if (!view.king)
-      return say(
-        "king",
-        "קודם כול מלך. הוא לא זז, הוא חזק פי שלושה, ואם הוא נופל — נגמר.",
-        ".side--me .slot--king",
-      );
+    // 3. "a dragon? light, it flies — to the back, and let it shoot"
+    () =>
+      view.king && inHand && (inHand.flying || inHand.stats.range === "sniper")
+        ? {
+            id: "flyer",
+            text: `${inHand.name.he} ${inHand.flying ? "עף" : "צלף"} — הוא לא צריך שהדרך תהיה פנויה. שים אותו מאחורה ושיירה משם.`,
+            target: ".side--me .board",
+          }
+        : null,
 
-    if (inHand.stats.moveSpeed === 0 && inHand.stats.hp >= 800)
-      return say(
-        "tank",
-        `${inHand.name.he}? סטטי, הרבה חיים. הוא לא ילך לשום מקום — שים אותו מול המלך, שם עוצרים את מי שבא אליו.`,
-        ".side--me .slot--guard",
-      );
+    // 4. "an action card. we'll use it later"
+    () =>
+      view.handIsAction
+        ? {
+            id: "action",
+            text: "קלף פעולה. לא מניחים אותו על הלוח — לוקחים אותו לבר ומפעילים כשצריך.",
+            target: ".hand",
+          }
+        : null,
 
-    if (inHand.flying || inHand.stats.range === "sniper")
-      return say(
-        "flyer",
-        `${inHand.name.he} ${inHand.flying ? "עף" : "צלף"} — הוא לא צריך שהדרך תהיה פנויה. שים אותו מאחורה ושיירה משם.`,
-        ".side--me .board",
-      );
+    // 5. "a weak card. better ones will come. bin it"
+    () =>
+      view.king && inHand && worth(inHand) < MEDIAN_WORTH * 0.6
+        ? {
+            id: "weak",
+            text: `${inHand.name.he} חלש. יגיעו טובים יותר — לפח איתו.`,
+            target: ".hand",
+          }
+        : null,
 
-    if (worth(inHand) < MEDIAN_WORTH * 0.6)
-      return say(
-        "weak",
-        `${inHand.name.he} חלש. יגיעו טובים יותר — לפח איתו.`,
-        ".hand",
-      );
+    // 6. "oh, we changed our mind. let's take it back"
+    () =>
+      view.discardCount > 0
+        ? {
+            id: "bin",
+            text: "התחרטת? הקלף העליון בפח חוזר. רק הוא, ומה שתיתן במקומו נקבר.",
+            target: ".hand",
+          }
+        : null,
+
+    // 7. the series bonus — the real rule, not adjacency
+    () => {
+      const syn = activeSynergy(view);
+      const line = syn ? synergyLine(syn) : null;
+      return line ? { id: "synergy", text: line, target: ".side--me .board" } : null;
+    },
+
+    // 8. "the fog is gone — you can see what they put down"
+    () =>
+      view.phase === "panic"
+        ? {
+            id: "fog",
+            text: "נגמר הערפל — עכשיו רואים מה היריב שם. שינויים של הרגע האחרון?",
+            target: ".side--enemy",
+          }
+        : null,
+
+    // 9. "right, let's see what happens"
+    () =>
+      view.phase === "panic" && said.has("fog")
+        ? { id: "go", text: "יאללה, בוא נראה מה קורה.", target: ".hand .btn-fight" }
+        : null,
+  ];
+
+  if (view.phase !== "build" && view.phase !== "panic") return null;
+  for (const step of steps) {
+    const cue = step();
+    if (cue && !said.has(cue.id)) return cue;
   }
-
-  // ── things that only become true once you have done something ──
-  if (view.discardCount > 0)
-    return say(
-      "bin",
-      "התחרטת? הקלף העליון בפח חוזר. רק הוא, ומה שתיתן במקומו נקבר.",
-      ".hand",
-    );
-
-  const syn = activeSynergy(view);
-  if (syn) {
-    const line = synergyLine(syn);
-    if (line) return say("synergy", line, ".side--me .board");
-  }
-
-  if (Object.keys(view.placements).length >= 4 && view.actionBarCount === 0)
-    return say("bar", "קלפי פעולה יושבים בבר למטה עד שתפעיל אותם. עד שלושה.", ".actions");
-
   return null;
 }

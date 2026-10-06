@@ -8,9 +8,9 @@
 import { CATALOG, SERIES } from "../data/catalog";
 import { CardView, CardBack } from "./CardView";
 import { Icon } from "./Icon";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { LEVELS, levelCost } from "@amanda/shared";
-import { levelUpCard, type Account } from "../game/account";
+import { levelUpCard, loadStats, type Account, type Stats } from "../game/account";
 
 interface Props {
   account: Account | null;
@@ -23,6 +23,21 @@ interface Props {
 export function Album({ account, onClose, onCardInfo, onChanged }: Props) {
   const [busy, setBusy] = useState<string | null>(null);
   const [note, setNote] = useState<string | null>(null);
+  /*
+   * Or: the album should hold everything about me THAT IS ABOUT THE GAME — not
+   * only which stickers I have, but what I have won and lost and collected.
+   * (The personal area holds everything about me as a person.) Counted from
+   * the match rows the server wrote, so it cannot disagree with what happened.
+   */
+  const [stats, setStats] = useState<Stats | null>(null);
+  useEffect(() => {
+    if (!account) return;
+    let alive = true;
+    void loadStats().then((s) => alive && setStats(s));
+    return () => {
+      alive = false;
+    };
+  }, [account]);
 
   async function buyLevel(cardId: string) {
     setBusy(cardId);
@@ -73,6 +88,46 @@ export function Album({ account, onClose, onCardInfo, onChanged }: Props) {
       {note && <p className="album__none album__none--warn">{note}</p>}
 
       <div className="album__scroll">
+        {stats && (
+          <section className="record">
+            <div className="record__grid">
+              <div className="record__cell">
+                <span className="record__n">{stats.wins}</span>
+                <span className="record__k">ניצחונות</span>
+              </div>
+              <div className="record__cell">
+                <span className="record__n">{stats.losses}</span>
+                <span className="record__k">הפסדים</span>
+              </div>
+              <div className="record__cell">
+                <span className="record__n">
+                  {stats.played ? Math.round((stats.wins / stats.played) * 100) : 0}%
+                </span>
+                <span className="record__k">אחוז ניצחון</span>
+              </div>
+              <div className="record__cell">
+                <span className="record__n">{stats.bestTrophies}</span>
+                <span className="record__k">שיא גביעים</span>
+              </div>
+              <div className="record__cell">
+                <span className="record__n">{stats.chestsOpened}</span>
+                <span className="record__k">תיבות</span>
+              </div>
+              <div className="record__cell">
+                <span className="record__n">{stats.copiesOwned}</span>
+                <span className="record__k">עותקים</span>
+              </div>
+            </div>
+            {stats.recent.length > 0 && (
+              <div className="record__streak" title="הקרבות האחרונים, החדש ביותר ראשון">
+                {stats.recent.map((won, i) => (
+                  <i key={i} className={won ? "is-win" : "is-loss"} />
+                ))}
+              </div>
+            )}
+          </section>
+        )}
+
         {SERIES.map((series) => {
           const cards = [...CATALOG.values()].filter((c) => c.seriesId === series.id);
           if (!cards.length) return null;

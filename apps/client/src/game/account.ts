@@ -255,6 +255,64 @@ export function markChestSeen(id: string): void {
   }
 }
 
+/** Everything the game knows about how you have done. */
+export interface Stats {
+  played: number;
+  wins: number;
+  losses: number;
+  /** Most recent first: true for a win. Used for the little streak row. */
+  recent: boolean[];
+  chestsOpened: number;
+  copiesOwned: number;
+  bestTrophies: number;
+}
+
+/**
+ * Read the player's record back out.
+ *
+ * Counted from the match rows the server wrote rather than from a running
+ * total on the player, so it cannot drift from what actually happened — and
+ * nothing a client does can inflate it.
+ */
+export async function loadStats(): Promise<Stats | null> {
+  const sb = db();
+  if (!sb) return null;
+  try {
+    const { data: auth } = await sb.auth.getSession();
+    const id = auth.session?.user.id;
+    if (!id) return null;
+    const [{ data: matches }, { count: chests }, { data: player }, { data: cards }] =
+      await Promise.all([
+        sb
+          .from("matches")
+          .select("winner, played_at")
+          .or(`player_a.eq.${id},player_b.eq.${id}`)
+          .order("played_at", { ascending: false })
+          .limit(100),
+        sb
+          .from("chests")
+          .select("id", { count: "exact", head: true })
+          .eq("player_id", id),
+        sb.from("players").select("best_trophies").eq("id", id).maybeSingle(),
+        sb.from("player_cards").select("copies").eq("player_id", id),
+      ]);
+    const rows = matches ?? [];
+    const recent = rows.map((m) => m.winner === id);
+    return {
+      played: rows.length,
+      wins: recent.filter(Boolean).length,
+      losses: recent.filter((w) => !w).length,
+      recent: recent.slice(0, 10),
+      chestsOpened: chests ?? 0,
+      copiesOwned: (cards ?? []).reduce((sum, c) => sum + (c.copies ?? 0), 0),
+      bestTrophies: player?.best_trophies ?? 0,
+    };
+  } catch (err) {
+    console.warn("[account] could not read the record", err);
+    return null;
+  }
+}
+
 /**
  * Whole years between a yyyy-mm-dd and today.
  *

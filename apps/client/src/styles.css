@@ -2615,11 +2615,14 @@ button:disabled {
 /* ════════ the home screen, as a choice rather than a form ════════ */
 
 /* The two ways to play, as pictures. One of them is who you would fight. */
-.pick { display: flex; gap: 14px; flex-wrap: wrap; }
+/* Fills the column. It was shrink-to-fit inside a 480px column and came out
+   218px wide, so the two cards wrapped onto separate lines on a phone. */
+.pick { display: flex; gap: 14px; flex-wrap: wrap; width: 100%; }
 .pick__card {
   position: relative;
-  flex: 1 1 140px;
-  min-width: 132px;
+  /* share the row evenly; basis 0 so a long label cannot widen one of them */
+  flex: 1 1 0;
+  min-width: 120px;
   padding: 0;
   border: 2px solid rgba(255, 255, 255, 0.14);
   border-radius: 18px;
@@ -3039,4 +3042,157 @@ button:disabled {
 .intro--hero:has(.intro__idle) .intro__art { animation: none; }
 @media (prefers-reduced-motion: reduce) {
   .intro__idle { display: none; }
+}
+
+/* ════════ the home screen on a phone ════════
+ * At 844×390 the menu column measured −38 to 428 against a 390px screen: it
+ * overflowed off BOTH ends, so the name was above the top edge and the album
+ * button below the bottom one, with nothing to scroll because the hero clips.
+ * The two picture buttons were simply too tall.
+ */
+@media (max-height: 520px) {
+  .intro--hero {
+    padding: 0 14px;
+    align-items: center;
+  }
+  .intro--hero .intro__card {
+    /* a safety net: if it still does not fit, it scrolls rather than hides */
+    max-height: 100dvh;
+    overflow-y: auto;
+    scrollbar-width: none;
+    padding: 10px 0;
+  }
+  .intro--hero .intro__card::-webkit-scrollbar { display: none; }
+
+  .intro__name img { width: min(190px, 40vw); }
+  .intro__sub { font-size: 13px; margin: 0 0 10px; }
+
+  /* the picture is still the button, just not half the screen tall */
+  .pick { gap: 10px; }
+  .pick__card { min-width: 104px; }
+  .pick__card img { aspect-ratio: auto; height: 74px; }
+  .pick__card span { padding: 6px 4px; font-size: 13px; }
+
+  .btn-album { margin-top: 10px; padding: 9px 16px; font-size: 14px; }
+  .pick--ways { max-width: none; }
+  .intro--hero .intro__version { margin-top: 6px; }
+}
+
+/* Very short — a small phone in landscape with browser chrome. */
+@media (max-height: 400px) {
+  .intro__name img { width: min(150px, 34vw); }
+  .intro__sub { display: none; }
+  .pick__card img { height: 62px; }
+  .me { top: 6px; padding: 3px 9px 3px 3px; }
+  .me img { width: 24px; height: 24px; }
+  .me__name { font-size: 12px; }
+}
+
+/* The rotate hint was overflowing its own screen: the heading ran off both
+   edges because nothing wrapped it. */
+@media (max-width: 560px) and (orientation: portrait) {
+  .rotate-hint h2 {
+    font-size: clamp(20px, 7vw, 30px);
+    margin: 0;
+    max-width: 100%;
+    overflow-wrap: anywhere;
+  }
+  .rotate-hint p {
+    max-width: 320px;
+    overflow-wrap: anywhere;
+  }
+}
+
+/* ════════ what you have, on the home screen ════════ */
+.purse {
+  position: absolute;
+  top: 10px;
+  inset-inline-end: 12px;
+  z-index: 4;
+  display: flex;
+  gap: 12px;
+  padding: 6px 12px;
+  border-radius: 999px;
+  border: 1px solid rgba(255, 255, 255, 0.14);
+  background: rgba(8, 12, 22, 0.72);
+  font-weight: 800;
+  font-variant-numeric: tabular-nums;
+}
+.purse__item { display: inline-flex; align-items: center; gap: 5px; font-size: 14px; }
+.purse__item--gem { color: #9fe6ff; }
+/* the corner profile moves out from under it */
+.me { inset-inline-start: 12px; inset-inline-end: auto; }
+
+/* ════════ your record, in the album ════════ */
+.record {
+  margin-bottom: 20px;
+  padding: 14px;
+  border-radius: 16px;
+  border: 1px solid rgba(255, 176, 32, 0.28);
+  background: linear-gradient(180deg, rgba(26, 36, 60, 0.7), rgba(12, 18, 32, 0.7));
+}
+.record__grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(84px, 1fr));
+  gap: 10px;
+}
+.record__cell { text-align: center; }
+.record__n {
+  display: block;
+  font-size: 22px;
+  font-weight: 900;
+  font-variant-numeric: tabular-nums;
+}
+.record__k { display: block; font-size: 11px; color: var(--muted); margin-top: 2px; }
+.record__streak { display: flex; gap: 4px; justify-content: center; margin-top: 12px; }
+.record__streak i { width: 12px; height: 12px; border-radius: 3px; }
+.record__streak i.is-win { background: rgba(60, 190, 120, 0.9); }
+.record__streak i.is-loss { background: rgba(190, 70, 70, 0.75); }
+
+/* ════════ things that ask to be pressed, move ════════
+ * Or: the buttons should move or pulse, especially the ones asking you to act.
+ * Slow and small — an invitation, not a flashing sign.
+ */
+.pick__card {
+  animation: card-breathe 4.6s ease-in-out infinite;
+}
+.pick__card:nth-child(2) { animation-delay: 2.3s; }
+@keyframes card-breathe {
+  0%, 100% { transform: translateY(0) scale(1); }
+  50% { transform: translateY(-3px) scale(1.008); }
+}
+/* hover still wins, so it never fights the pointer */
+.pick__card:hover:not(:disabled) { animation: none; }
+
+/* the album is the second thing you might want, so it glows rather than moves */
+.btn-album { animation: album-glow 3.4s ease-in-out infinite alternate; }
+@keyframes album-glow {
+  from { box-shadow: 0 0 0 rgba(255, 176, 32, 0); }
+  to { box-shadow: 0 0 22px rgba(255, 176, 32, 0.28); }
+}
+
+/* the three ways to bring a friend pulse in turn, so the eye walks down them */
+.pick--ways .btn-fight::before { animation: edge-pulse 2.6s ease-in-out infinite; }
+.pick--ways .btn-fight:nth-child(2)::before { animation-delay: 0.3s; }
+.pick--ways .btn-fight:nth-child(3)::before { animation-delay: 0.6s; }
+@keyframes edge-pulse {
+  0%, 100% { opacity: 0.55; }
+  50% { opacity: 1; }
+}
+
+/* ════════ the name, centred as a block ════════
+ * Or: "משחק קלפים מפלצתי" should sit centred UNDER אמנדה, not ranged beside it.
+ */
+.intro__name { display: flex; justify-content: center; }
+.intro--hero .intro__sub { text-align: center; }
+.intro--hero .intro__card { text-align: center; }
+.intro--hero .intro__buttons,
+.intro--hero .intro__secondary { justify-content: center; }
+.intro--hero .intro__version,
+.intro--hero .intro__hint { text-align: center; }
+
+@media (prefers-reduced-motion: reduce) {
+  .pick__card,
+  .btn-album,
+  .pick--ways .btn-fight::before { animation: none; }
 }

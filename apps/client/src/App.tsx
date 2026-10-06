@@ -401,6 +401,18 @@ function Game() {
         <main className="intro intro--hero">
           {/* Who you are sits in the corner, the way a game does it, rather
               than in a row of text links with the game modes. */}
+          {/* What you have, where you can see it without opening anything. */}
+          {m.account && (
+            <div className="purse" aria-label="מה יש לך">
+              <span className="purse__item">
+                <Icon name="win" size={16} /> {m.account.trophies}
+              </span>
+              <span className="purse__item purse__item--gem">💎 {m.account.diamonds}</span>
+              <span className="purse__item">
+                <Icon name="monster" size={16} /> {m.account.album.size}
+              </span>
+            </div>
+          )}
           <button className="me" onClick={() => setProfileOpen(true)}>
             {m.account?.avatar ? (
               <img src={`${BASE}brand/${m.account.avatar}.webp`} alt="" />

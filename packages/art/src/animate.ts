@@ -31,14 +31,19 @@ function ffmpeg(): string {
 }
 
 const BRIEF = [
-  "Subtle idle animation of this illustration.",
-  "Her hair and the hem of her long dress drift slowly as if underwater.",
-  "The teal spirit-flame around her head flickers gently and the lion's mane",
-  "ripples. Her fingers move very slightly. Tiny embers drift upward.",
-  "THE CAMERA DOES NOT MOVE: no zoom, no pan, no push in, no parallax.",
-  "She does not change pose, does not walk, does not turn. Nothing enters or",
-  "leaves the frame. The whole effect is barely perceptible — this sits behind",
-  "a menu and must never pull the eye.",
+  // Or, on the first attempt: the movement is too big. SHE does not move —
+  // the wind does. So this says so four different ways, because a video model
+  // will happily animate a whole character if you leave it any room to.
+  "Animate ONLY the wind and the background of this still illustration.",
+  "THE CHARACTER IS COMPLETELY STILL: her body, head, face, arms, hands and",
+  "shoulders do not move at all, not even slightly. She does not breathe, blink,",
+  "turn, lean, gesture or shift her weight. Treat her body as a frozen photograph.",
+  "What moves: strands of her hair lift and settle in a breeze, the hem and folds",
+  "of her long dress sway gently at the bottom, the floating runes drift slowly,",
+  "the embers and sparks rise, and the teal flame and the lion's mane flicker.",
+  "THE CAMERA IS LOCKED: no zoom, no pan, no push in, no drift, no parallax.",
+  "Nothing enters or leaves the frame. Barely perceptible — this sits behind a",
+  "menu and must never pull the eye.",
 ].join(" ");
 
 async function main(): Promise<void> {
