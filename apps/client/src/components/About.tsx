@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { Icon } from "./Icon";
+import { ageFrom } from "../game/account";
 
 /**
  * About, and the legal pages the stores will not publish us without.
@@ -26,6 +27,36 @@ import { Icon } from "./Icon";
  */
 
 const FILM = "https://www.youtube.com/watch?v=Z0h80PW_YJA";
+/** What to search for, when a link is not allowed. */
+const FILM_SEARCH = "אמנדה המפלצת מסונול כצנלסון";
+/**
+ * Old enough to be handed a link out of a children's app.
+ *
+ * Apple's Kids Category forbids links that leave the app without a parental
+ * gate, and Google's Families Policy expects the same care. Or's answer, and
+ * it is the right one: for anybody who has not said they are an adult, the
+ * link becomes WORDS — "search YouTube for…" — which is not a link at all and
+ * so cannot be tapped into somewhere else. An adult gets the link.
+ *
+ * Spotify is dropped entirely rather than gated. Or: "we can give up on
+ * Spotify." One fewer door is better than one more gate.
+ */
+const GROWN_UP = 18;
+
+/**
+ * May this person be handed a link that leaves the game?
+ *
+ * Exported so it can be tested, because the answer is what two app stores
+ * will be checking. The default when nobody has said their age is NO — a
+ * missing birth date is a child until proven otherwise, which is the only
+ * direction this is safe to be wrong in.
+ */
+export function mayFollowLinks(birthDate: string | null | undefined): boolean {
+  if (!birthDate) return false;
+  const age = ageFrom(birthDate);
+  // ageFrom returns 0 for anything it cannot parse, which lands on "no".
+  return age >= GROWN_UP;
+}
 /**
  * The theme song, where people can go and hear it in full.
  *
@@ -33,7 +64,7 @@ const FILM = "https://www.youtube.com/watch?v=Z0h80PW_YJA";
  * nowhere is worse than no link.
  */
 const SONG_YOUTUBE: string = "https://www.youtube.com/watch?v=yDtnLcs_A0M";
-const SONG_SPOTIFY: string = "https://open.spotify.com/track/2KSPWKqyXFhPXlE7knXuCt";
+const SONG_SEARCH = "אמנדה המפלצת מסונול כצנלסון";
 
 type Page = "about" | "privacy" | "a11y" | "terms";
 
@@ -44,8 +75,17 @@ const TABS: Array<{ id: Page; he: string }> = [
   { id: "terms", he: "תנאים" },
 ];
 
-export function About({ onClose }: { onClose: () => void }) {
+export function About({
+  onClose,
+  birthDate,
+}: {
+  onClose: () => void;
+  /** The account's birth date, or null when nobody has said. */
+  birthDate?: string | null;
+}) {
   const [page, setPage] = useState<Page>("about");
+  // Nobody has said = not an adult. The default has to fall that way.
+  const grown = mayFollowLinks(birthDate);
 
   return (
     <div className="modal-overlay" onClick={onClose}>
@@ -67,7 +107,7 @@ export function About({ onClose }: { onClose: () => void }) {
         </nav>
 
         <div className="about__body">
-          {page === "about" && <AboutUs />}
+          {page === "about" && <AboutUs grown={grown} />}
           {page === "privacy" && <Privacy />}
           {page === "a11y" && <Accessibility />}
           {page === "terms" && <Terms />}
@@ -77,7 +117,42 @@ export function About({ onClose }: { onClose: () => void }) {
   );
 }
 
-function AboutUs() {
+/**
+ * A way to reach something outside the game — as a link for an adult, and as
+ * words for everybody else.
+ *
+ * The words are the whole point. "Search YouTube for X" is text: there is
+ * nothing to tap, nothing that opens a browser, and nothing a seven-year-old
+ * can follow by accident. That is what satisfies Apple's Kids Category and
+ * Google's Families Policy without a password-shaped gate that a child would
+ * only find annoying.
+ */
+function WayOut({
+  href,
+  search,
+  label,
+  grown,
+}: {
+  href: string;
+  search: string;
+  label: string;
+  grown: boolean;
+}) {
+  if (grown)
+    return (
+      <a className="about__film" href={href} target="_blank" rel="noreferrer noopener">
+        <Icon name="play" size={18} /> {label}
+      </a>
+    );
+  return (
+    <p className="about__search">
+      <Icon name="play" size={15} /> {label}: חפשו ביוטיוב{" "}
+      <b>&ldquo;{search}&rdquo;</b>
+    </p>
+  );
+}
+
+function AboutUs({ grown }: { grown: boolean }) {
   return (
     <>
       <h2>אמנדה</h2>
@@ -93,34 +168,13 @@ function AboutUs() {
 
       <h3>הסרט</h3>
       <p>כל הסיפור, במלואו:</p>
-      <a className="about__film" href={FILM} target="_blank" rel="noreferrer noopener">
-        <Icon name="play" size={18} /> לצפייה בסרט המלא ביוטיוב
-      </a>
+      <WayOut href={FILM} search={FILM_SEARCH} label="הסרט המלא" grown={grown} />
 
-      {(SONG_YOUTUBE || SONG_SPOTIFY) && (
+      {SONG_YOUTUBE && (
         <>
           <h3>שיר הנושא</h3>
           <p>המוזיקה שמתנגנת כאן היא שלנו. לשמוע אותה במלואה:</p>
-          {SONG_YOUTUBE && (
-            <a
-              className="about__film"
-              href={SONG_YOUTUBE}
-              target="_blank"
-              rel="noreferrer noopener"
-            >
-              <Icon name="play" size={18} /> ביוטיוב
-            </a>
-          )}
-          {SONG_SPOTIFY && (
-            <a
-              className="about__film"
-              href={SONG_SPOTIFY}
-              target="_blank"
-              rel="noreferrer noopener"
-            >
-              <Icon name="play" size={18} /> בספוטיפיי
-            </a>
-          )}
+          <WayOut href={SONG_YOUTUBE} search={SONG_SEARCH} label="השיר" grown={grown} />
         </>
       )}
 

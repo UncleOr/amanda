@@ -1692,7 +1692,9 @@ function Game() {
         />
       )}
 
-      {aboutOpen && <About onClose={() => setAboutOpen(false)} />}
+      {aboutOpen && (
+        <About onClose={() => setAboutOpen(false)} birthDate={m.account?.birthDate} />
+      )}
 
       {reportOpen && (
         <Report initialKind={reportOpen} onClose={() => setReportOpen(null)} />

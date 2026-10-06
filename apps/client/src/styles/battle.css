@@ -174,3 +174,12 @@
     padding-top: 22px;
   }
 }
+/* The reason the arena gave up, for whoever is debugging it. Deliberately
+   quiet: the child reads the two lines above, not this one. */
+.arena__why {
+  margin: 2px 0 8px !important;
+  color: var(--muted);
+  font-size: 11px;
+  opacity: 0.75;
+  direction: ltr;
+}

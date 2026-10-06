@@ -129,3 +129,21 @@
 .gallery__slot--board { width: 74px; height: 96px; }
 .gallery__slot--hand { width: 124px; height: 161px; }
 .gallery__cap { font-size: 12px; color: var(--muted); }
+/* A way out of the game, written as words instead of a link — see WayOut in
+   About.tsx for why. It must not look tappable, because it is not. */
+.about__search {
+  display: flex;
+  align-items: baseline;
+  gap: 6px;
+  flex-wrap: wrap;
+  margin: 8px 0 !important;
+  padding: 9px 12px;
+  border-radius: 9px;
+  border: 1px dashed var(--line);
+  background: rgba(255, 255, 255, 0.03);
+  color: var(--muted);
+  font-size: 13px;
+  line-height: 1.6;
+  cursor: default;
+}
+.about__search b { color: var(--text); }

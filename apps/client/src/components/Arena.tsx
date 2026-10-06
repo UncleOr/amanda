@@ -163,6 +163,16 @@ export function Arena({
    * while rendering, not a rejected promise.
    */
   const [failed, setFailed] = useState(false);
+  /**
+   * WHY it failed, in a few words.
+   *
+   * Or hit this on his phone — "it told me it couldn't show me the battle and
+   * jumped straight to the result" — and there was nothing to go on, because
+   * the catch below threw the reason away. A player does not need a stack
+   * trace, but somebody has to be able to ask "what did it say" and get an
+   * answer that narrows it down.
+   */
+  const [why, setWhy] = useState<string | null>(null);
   const LANES = laneCount(result);
   const H = heightFor(LANES);
 
@@ -479,7 +489,23 @@ export function Arena({
         height: H,
         background: "#0e1220",
         antialias: true,
-        resolution: window.devicePixelRatio || 1,
+        /*
+         * WebGL, explicitly. Pixi v8 probes WebGPU first by default, and on
+         * phones that probe is the least reliable part of starting up —
+         * immature drivers, and a failure there takes the whole init with it.
+         * WebGL is on every phone that can run this game at all.
+         */
+        preference: "webgl",
+        /*
+         * Capped at 2.
+         *
+         * A modern phone reports a devicePixelRatio of 3, which with
+         * antialiasing asks for a buffer nine times the canvas — and in
+         * Amanda mode the canvas is already twice as tall. That allocation
+         * failing is exactly the kind of thing that ends up as "it could not
+         * show me the battle". Two is past the point anyone can see.
+         */
+        resolution: Math.min(window.devicePixelRatio || 1, 2),
         autoDensity: true,
       })
       .then(async () => {
@@ -929,10 +955,16 @@ export function Arena({
           }, playbackMs + holdMs + FINALE_MS),
         );
       })
-      .catch(() => {
+      .catch((err: unknown) => {
         // WebGL refused, a texture blew up, anything. Do not leave the player
-        // on a blank screen in a match that can never end.
-        if (!disposed) setFailed(true);
+        // on a blank screen in a match that can never end — but DO keep the
+        // reason, or the next report is as untraceable as the last one.
+        const reason = err instanceof Error ? err.message : String(err);
+        console.error("[arena] could not start:", err);
+        if (!disposed) {
+          setWhy(reason.slice(0, 120));
+          setFailed(true);
+        }
       });
 
     /*
@@ -946,7 +978,10 @@ export function Arena({
     timers.push(
       window.setTimeout(() => {
         if (disposed) return;
-        if (!hostRef.current?.querySelector("canvas")) setFailed(true);
+        if (!hostRef.current?.querySelector("canvas")) {
+          setWhy(`נתקע אחרי ${STARTUP_GRACE_MS / 1000} שניות בלי ציור`);
+          setFailed(true);
+        }
       }, STARTUP_GRACE_MS),
     );
 
@@ -977,6 +1012,9 @@ export function Arena({
         <div className="arena__oops">🙈</div>
         <p>לא הצלחתי להראות לך את הקרב.</p>
         <p className="arena__sub">הוא כבר הוכרע — אני לוקחת אותך לתוצאה.</p>
+        {/* Small, and in the corner: a child does not need it, and the one
+            person who does need it cannot ask for it if it is not written. */}
+        {why && <p className="arena__why">({why})</p>}
         <button
           className="btn-fight"
           onClick={() => {

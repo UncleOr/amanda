@@ -19,6 +19,18 @@ export const SERVER_URL: string =
 
 export const ONLINE_AVAILABLE = SERVER_URL !== "";
 
+/**
+ * How many times to try opening the socket before giving up, and how long to
+ * wait between tries (multiplied by the attempt, so 0.8s then 1.6s).
+ *
+ * Three is chosen against the thing it exists for: a Railway service waking
+ * from sleep takes a few seconds, and three tries spread over about two and a
+ * half seconds covers it without leaving a child staring at a dead screen if
+ * the server really is down.
+ */
+const CONNECT_ATTEMPTS = 3;
+const RETRY_MS = 800;
+
 /** What to ask the lobby for once the socket opens. */
 export type Intent =
   | { kind: "quick" }
@@ -75,6 +87,10 @@ export class Net {
   private connected = false;
   private intent: Intent = { kind: "quick" };
   private playerId: string | null = null;
+  /** How many times we have tried to open this socket. */
+  private attempts = 0;
+  private retryTimer: number | null = null;
+  private closedOnPurpose = false;
 
   /**
    * Open the socket. `intent` decides what to ask for once it is up: join the
@@ -84,6 +100,32 @@ export class Net {
     this.handlers = handlers;
     this.intent = intent;
     this.playerId = playerId ?? null;
+    this.attempts = 0;
+    this.closedOnPurpose = false;
+    this.open();
+  }
+
+  /**
+   * Open the socket, and try again a couple of times if it never opens.
+   *
+   * ═══ WHY RETRY AT ALL ═══
+   *
+   * A server that has been asleep answers the first request with a 502 while
+   * it wakes up. On Railway that is the whole point of Serverless mode — the
+   * service costs nothing while nobody is playing — but without this, the
+   * first child to press play would simply be told the server cannot be
+   * reached, which is a broken game rather than a cheap one.
+   *
+   * It is worth having even with the server always awake: a phone coming off
+   * a lift, a wifi handover, a moment of nothing. The old behaviour turned
+   * every one of those into "we could not reach the server".
+   *
+   * Only a socket that NEVER OPENED is retried. Once it has opened, a close
+   * means the match ended or the connection dropped, and silently reconnecting
+   * would drop the player into a queue they did not ask to rejoin.
+   */
+  private open(): void {
+    this.attempts++;
     const ws = new WebSocket(SERVER_URL);
     this.ws = ws;
     ws.onopen = () => {
@@ -104,8 +146,26 @@ export class Net {
                 : { t: "hello" },
       );
     };
-    ws.onclose = () => this.handlers.onClose?.(this.connected);
-    ws.onerror = () => this.handlers.onClose?.(this.connected);
+    /*
+     * A socket that fails to open fires BOTH `onerror` and `onclose`, so
+     * without this the caller is told twice — and on the last attempt it was
+     * told twice that the server could not be reached. Once per socket.
+     */
+    let reported = false;
+    const gone = () => {
+      if (this.closedOnPurpose || reported) return;
+      reported = true;
+      // It opened once: this is a drop or the end of a match, not a server
+      // that is asleep. Hand it to the caller as it always was.
+      if (this.connected || this.attempts >= CONNECT_ATTEMPTS) {
+        this.handlers.onClose?.(this.connected);
+        return;
+      }
+      // Never opened, and there are tries left — wake it up.
+      this.retryTimer = window.setTimeout(() => this.open(), RETRY_MS * this.attempts);
+    };
+    ws.onclose = gone;
+    ws.onerror = gone;
     ws.onmessage = (ev) => {
       let msg: ServerMessage;
       try {
@@ -189,6 +249,9 @@ export class Net {
     this.sendMsg({ t: "lock", board });
   }
   close(): void {
+    this.closedOnPurpose = true;
+    if (this.retryTimer !== null) window.clearTimeout(this.retryTimer);
+    this.retryTimer = null;
     this.handlers = {};
     this.ws?.close();
     this.ws = null;
