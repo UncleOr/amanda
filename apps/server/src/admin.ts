@@ -142,7 +142,7 @@ async function adminRoutes(
       }
       const { data: players } = await sb
         .from("players")
-        .select("id, nickname, trophies, diamonds, tutorial_done, birth_date, suspended_until");
+        .select("id, nickname, trophies, diamonds, tutorial_done, birth_date, suspended_until, gender");
       const { data: adminRows } = await sb.from("admins").select("user_id");
       const adminIds = new Set((adminRows ?? []).map((r) => r.user_id));
       const byId = new Map((players ?? []).map((p) => [p.id, p]));
@@ -185,6 +185,7 @@ async function adminRoutes(
             isYou: u.id === userId,
             isAdmin: adminIds.has(u.id),
             suspendedUntil: p?.suspended_until ?? null,
+            gender: (p?.gender as "boy" | "girl" | null) ?? null,
           };
         }),
       });
@@ -247,15 +248,19 @@ async function adminRoutes(
         deps.send(res, 400, { error: "which user" });
         return true;
       }
-      const patch: Record<string, number> = {};
+      const patch: Record<string, number | string | null> = {};
       if (typeof body.trophies === "number") patch.trophies = Math.max(0, Math.round(body.trophies));
       if (typeof body.diamonds === "number") patch.diamonds = Math.max(0, Math.round(body.diamonds));
+      // Null is a real answer — "did not say" — so `gender` being present at
+      // all is what decides whether it is written, not whether it is truthy.
+      if ("gender" in body)
+        patch.gender = body.gender === "boy" || body.gender === "girl" ? body.gender : null;
       if (!Object.keys(patch).length) {
         deps.send(res, 400, { error: "nothing to set" });
         return true;
       }
       // best_trophies only ever goes up, the same as it does in a real match.
-      if (patch.trophies !== undefined) {
+      if (typeof patch.trophies === "number") {
         const { data } = await sb.from("players").select("best_trophies").eq("id", id).maybeSingle();
         patch.best_trophies = Math.max(data?.best_trophies ?? 0, patch.trophies);
       }

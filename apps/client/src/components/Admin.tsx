@@ -40,6 +40,7 @@ interface AdminUser {
   isAdmin: boolean;
   isYou: boolean;
   suspendedUntil: string | null;
+  gender: "boy" | "girl" | null;
 }
 
 interface CopyEntry {
@@ -510,10 +511,15 @@ function GrantPanel({
 }: {
   user: AdminUser;
   onClose: () => void;
-  onDone: (body: { trophies?: number; diamonds?: number }) => void;
+  onDone: (body: {
+    trophies?: number;
+    diamonds?: number;
+    gender?: "boy" | "girl" | null;
+  }) => void;
 }) {
   const [trophies, setTrophies] = useState(String(user.trophies));
   const [diamonds, setDiamonds] = useState(String(user.diamonds));
+  const [gender, setGender] = useState<"boy" | "girl" | null>(user.gender);
   return (
     <div className="modal-overlay" onClick={onClose}>
       <div className="modal modal--confirm" onClick={(e) => e.stopPropagation()}>
@@ -538,6 +544,24 @@ function GrantPanel({
           יהלומים
           <input value={diamonds} inputMode="numeric" onChange={(e) => setDiamonds(e.target.value)} />
         </label>
+        <div className="admin__field">
+          פנייה
+          <div className="admin__arenas admin__arenas--tight">
+            {([
+              { v: "boy", he: "ילד" },
+              { v: "girl", he: "ילדה" },
+              { v: null, he: "לא אמר" },
+            ] as const).map((o) => (
+              <button
+                key={o.he}
+                className={gender === o.v ? "is-on" : ""}
+                onClick={() => setGender(o.v)}
+              >
+                {o.he}
+              </button>
+            ))}
+          </div>
+        </div>
         <div className="result__buttons">
           <button
             className="btn-fight"
@@ -545,6 +569,7 @@ function GrantPanel({
               onDone({
                 trophies: Number(trophies) || 0,
                 diamonds: Number(diamonds) || 0,
+                gender,
               })
             }
           >

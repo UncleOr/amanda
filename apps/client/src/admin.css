@@ -494,3 +494,10 @@
   line-height: 1.55;
   white-space: pre-wrap;
 }
+
+.admin__arenas--tight { margin: 0; }
+.admin__arenas button.is-on {
+  border-color: var(--accent);
+  color: var(--accent);
+  background: rgba(255, 176, 32, 0.12);
+}

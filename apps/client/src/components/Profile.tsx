@@ -23,6 +23,7 @@ import {
   type Account,
 } from "../game/account";
 import { Icon } from "./Icon";
+import * as V from "../data/voice";
 
 /**
  * The avatars drawn for this, matching packages/art/src/brandLooks.ts.
@@ -62,6 +63,7 @@ export function Profile({ account, onClose, onChanged }: Props) {
   const [birthDate, setBirthDate] = useState(account?.birthDate ?? "");
   const [avatar, setAvatar] = useState(account?.avatar ?? AVATAR_IDS[0]);
   const [facesOpen, setFacesOpen] = useState(false);
+  const [gender, setGenderChoice] = useState<V.Gender>(account?.gender ?? null);
   const [leaving, setLeaving] = useState(false);
   const [deleting, setDeleting] = useState(false);
   const [reallyDeleting, setReallyDeleting] = useState(false);
@@ -83,7 +85,8 @@ export function Profile({ account, onClose, onChanged }: Props) {
   const dirty =
     nickname !== (account?.nickname ?? "") ||
     birthDate !== (account?.birthDate ?? "") ||
-    avatar !== (account?.avatar ?? AVATAR_IDS[0]);
+    avatar !== (account?.avatar ?? AVATAR_IDS[0]) ||
+    gender !== (account?.gender ?? null);
 
   async function save() {
     setBusy(true);
@@ -91,8 +94,11 @@ export function Profile({ account, onClose, onChanged }: Props) {
       nickname: nickname.trim(),
       avatar,
       ...(birthDate ? { birthDate } : {}),
+      ...(gender ? { gender } : {}),
     });
     setBusy(false);
+    // The copy has to change under the player straight away, not on reload.
+    V.setGender(gender);
     setNote(err ?? "נשמר");
     if (!err) onChanged();
   }
@@ -237,6 +243,36 @@ export function Profile({ account, onClose, onChanged }: Props) {
             ))}
           </div>
         )}
+
+        {/*
+          Changing it later, which was impossible.
+          Or: "I still don't see that I can set my gender." He could not — the
+          question is asked during onboarding, and onboarding only ever appears
+          for an account that has never been set up. Anybody who already had a
+          nickname never got asked and had no way to answer.
+        */}
+        <section className="panel">
+          <h3>איך לפנות אליך</h3>
+          <div className="profile__gender">
+            {([
+              { v: "boy", he: "ילד" },
+              { v: "girl", he: "ילדה" },
+              { v: null, he: "לא אומר" },
+            ] as const).map((o) => (
+              <button
+                key={o.he}
+                className={gender === o.v ? "is-on" : ""}
+                onClick={() => setGenderChoice(o.v)}
+              >
+                {o.he}
+              </button>
+            ))}
+          </div>
+          <p className="profile__note">
+            בעברית אי אפשר לשבת על הגדר — אמנדה אומרת "בוא ילד" או "בואי ילדה".
+            מי שלא אומר, מקבל לשון זכר.
+          </p>
+        </section>
 
         <section className="panel">
           <h3>יום ההולדת שלך</h3>

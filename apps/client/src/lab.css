@@ -777,3 +777,21 @@
 .report__done { text-align: center; display: flex; flex-direction: column; align-items: center; gap: 8px; }
 .report__done h2 { margin: 2px 0 0; }
 .report__done p { color: var(--muted); margin: 0 0 8px; }
+
+/* How Amanda should address you — changeable after onboarding, not only in it. */
+.profile__gender { display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 8px; }
+.profile__gender button {
+  padding: 8px 18px;
+  border-radius: 11px;
+  border: 1px solid var(--line);
+  background: transparent;
+  color: var(--muted);
+  font: inherit;
+  font-weight: 700;
+  cursor: pointer;
+}
+.profile__gender button.is-on {
+  border-color: var(--accent);
+  color: var(--accent);
+  background: rgba(255, 176, 32, 0.12);
+}
