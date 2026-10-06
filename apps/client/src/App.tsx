@@ -470,7 +470,8 @@ function Game() {
     m.joinRoom(INVITE_CODE);
   }, [m]);
 
-  // Background music follows the phase (crossfading between clips).
+  // One continuous score, started on the first screen that wants it and never
+  // interrupted again (see music.ts). The phase is still named, for later.
   useEffect(() => {
     if (m.phase === "intro" || m.phase === "countdown" || m.phase === "waiting")
       music.play("menu");
@@ -478,7 +479,9 @@ function Game() {
     else if (m.phase === "panic") music.play("panic");
     else if (m.phase === "battle") music.play("battle");
     else if (m.phase === "result")
-      music.play(m.result?.winner === "A" ? "win" : "lose", { loop: false });
+      // The score keeps playing through the result — see music.ts. The name
+      // still says which ending it is, for whatever wants to know later.
+      music.play(m.result?.winner === "A" ? "win" : "lose");
   }, [m.phase, m.result]);
 
   // The clock, out loud. Building is a race against a timer you cannot see

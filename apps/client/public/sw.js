@@ -7,7 +7,7 @@
  * back to the cache only when offline); hashed assets and artwork are immutable,
  * so they come from the CACHE first.
  */
-const VERSION = "amanda-v3";
+const VERSION = "amanda-v4";
 
 self.addEventListener("install", (event) => {
   // Take over as soon as this version is ready; nothing is pre-cached, so the

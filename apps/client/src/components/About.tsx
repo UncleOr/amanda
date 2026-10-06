@@ -26,6 +26,15 @@ import { Icon } from "./Icon";
  */
 
 const FILM = "https://www.youtube.com/watch?v=Z0h80PW_YJA";
+/**
+ * The theme song, where people can go and hear it in full.
+ *
+ * Empty until Or gives me the two addresses — and an empty one simply does
+ * not render, because a link that goes nowhere is worse than no link, and
+ * guessing a URL for somebody's own song is not something I get to do.
+ */
+const SONG_YOUTUBE: string = "";
+const SONG_SPOTIFY: string = "";
 
 type Page = "about" | "privacy" | "a11y" | "terms";
 
@@ -88,6 +97,33 @@ function AboutUs() {
       <a className="about__film" href={FILM} target="_blank" rel="noreferrer noopener">
         <Icon name="play" size={18} /> לצפייה בסרט המלא ביוטיוב
       </a>
+
+      {(SONG_YOUTUBE || SONG_SPOTIFY) && (
+        <>
+          <h3>שיר הנושא</h3>
+          <p>המוזיקה שמתנגנת כאן היא שלנו. לשמוע אותה במלואה:</p>
+          {SONG_YOUTUBE && (
+            <a
+              className="about__film"
+              href={SONG_YOUTUBE}
+              target="_blank"
+              rel="noreferrer noopener"
+            >
+              <Icon name="play" size={18} /> ביוטיוב
+            </a>
+          )}
+          {SONG_SPOTIFY && (
+            <a
+              className="about__film"
+              href={SONG_SPOTIFY}
+              target="_blank"
+              rel="noreferrer noopener"
+            >
+              <Icon name="play" size={18} /> בספוטיפיי
+            </a>
+          )}
+        </>
+      )}
 
       <h3>מי עשה את זה</h3>
       <p>
