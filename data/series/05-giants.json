@@ -144,7 +144,7 @@
       },
       "art": {
         "placeholderColor": "#8a6d3b",
-        "sprite": null
+        "sprite": "cards/giants_03_hill_giant.webp"
       },
       "launch": false
     },
@@ -184,7 +184,7 @@
       },
       "art": {
         "placeholderColor": "#6fbf3b",
-        "sprite": null
+        "sprite": "cards/giants_04_rock_troll.webp"
       },
       "launch": false
     },
@@ -303,7 +303,7 @@
       },
       "art": {
         "placeholderColor": "#9aa4ad",
-        "sprite": null
+        "sprite": "cards/giants_07_iron_bulwark.webp"
       },
       "launch": false
     },
@@ -343,7 +343,7 @@
       },
       "art": {
         "placeholderColor": "#4b2e6b",
-        "sprite": null
+        "sprite": "cards/giants_08_vengeful_rok.webp"
       },
       "launch": false
     },

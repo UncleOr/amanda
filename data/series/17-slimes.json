@@ -149,7 +149,7 @@
       },
       "art": {
         "placeholderColor": "#6fbf3b",
-        "sprite": null
+        "sprite": "cards/slimes_03_acid_ooze.webp"
       },
       "launch": false
     },
@@ -195,7 +195,7 @@
       },
       "art": {
         "placeholderColor": "#2f7fe2",
-        "sprite": null
+        "sprite": "cards/slimes_04_splitting_blob.webp"
       },
       "launch": false
     },
@@ -281,7 +281,7 @@
       },
       "art": {
         "placeholderColor": "#4b2e6b",
-        "sprite": null
+        "sprite": "cards/slimes_06_toxic_sludge.webp"
       },
       "launch": false
     },
@@ -325,7 +325,7 @@
       },
       "art": {
         "placeholderColor": "#f2c530",
-        "sprite": null
+        "sprite": "cards/slimes_07_floating_brain.webp"
       },
       "launch": false
     },

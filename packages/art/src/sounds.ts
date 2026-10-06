@@ -48,7 +48,14 @@ export interface SoundSpec {
   /** What it is, in the game. Not sent to the model — it is for us. */
   what: string;
   prompt: string;
+  /** How long the clip ends up, after trimming. */
   seconds: number;
+  /**
+   * How long to ASK for. The model takes whole seconds and needs room to put
+   * the sound somewhere, so a 0.4s click is generated as 2s of mostly silence
+   * and then cut down — which is also why the head-trim below matters.
+   */
+  generate?: number;
   /** Peak level in the client copy, 0–1. The quiet ones play constantly. */
   level: number;
 }
@@ -115,6 +122,10 @@ export const SOUNDS: SoundSpec[] = [
     what: "the battle starts",
     prompt: `A monstrous war horn blast with one deep taiko drum hit under it. Dark fantasy, short and brutal, no melody. ${DRY}`,
     seconds: 1.6,
+    // Generated long: the first attempt put the blast at the very END of a
+    // 2-second clip, so cutting the lead silence left a third of a second of
+    // horn. More room to place it in means more of it survives the trim.
+    generate: 5,
     level: 0.85,
   },
   {
@@ -157,7 +168,7 @@ export async function generateSounds(only: string[]): Promise<void> {
   }
   console.log(`\nGenerating ${list.length} sounds\n`);
   for (const spec of list) {
-    const dest = join(RAW, `${spec.id}.mp3`);
+    const dest = join(RAW, `${spec.id}.wav`);
     // Named explicitly means "do it again"; otherwise never pay twice.
     if (!only.length && existsSync(dest)) {
       console.log(`   skip  ${spec.id} (exists)`);
@@ -165,7 +176,9 @@ export async function generateSounds(only: string[]): Promise<void> {
     }
     process.stdout.write(`   ${spec.id.padEnd(12)} ${spec.what.padEnd(34)} ... `);
     try {
-      const url = await sound(spec.prompt, { seconds: spec.seconds });
+      const url = await sound(spec.prompt, {
+        seconds: spec.generate ?? Math.max(2, Math.ceil(spec.seconds)),
+      });
       if (!url) throw new Error("no audio returned");
       await download(url, dest);
       console.log("OK");
@@ -192,7 +205,7 @@ export function processSounds(): void {
   const bin = ffmpeg();
   let done = 0;
   for (const spec of SOUNDS) {
-    const src = join(RAW, `${spec.id}.mp3`);
+    const src = join(RAW, `${spec.id}.wav`);
     if (!existsSync(src)) {
       console.log(`   miss  ${spec.id} (generate it first)`);
       continue;

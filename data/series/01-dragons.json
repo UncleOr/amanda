@@ -231,7 +231,7 @@
       },
       "art": {
         "placeholderColor": "#8a6d3b",
-        "sprite": null
+        "sprite": "cards/dragons_05_spike.webp"
       },
       "launch": false
     },
@@ -272,7 +272,7 @@
       },
       "art": {
         "placeholderColor": "#2f7fe2",
-        "sprite": null
+        "sprite": "cards/dragons_06_frost_breath.webp"
       },
       "launch": false
     },
@@ -316,7 +316,7 @@
       },
       "art": {
         "placeholderColor": "#9aa4ad",
-        "sprite": null
+        "sprite": "cards/dragons_07_gold_horn.webp"
       },
       "launch": false
     },
@@ -358,7 +358,7 @@
       },
       "art": {
         "placeholderColor": "#4b2e6b",
-        "sprite": null
+        "sprite": "cards/dragons_08_ghost_dragon.webp"
       },
       "launch": false
     },

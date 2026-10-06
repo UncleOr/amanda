@@ -106,21 +106,24 @@ export async function animate(
  * speakers". They were literally square and sawtooth oscillators, so he was
  * right. These are recorded-sounding instead, which no amount of Web Audio
  * will ever be.
+ *
+ * ElevenLabs is the obvious model for this and it is the one that failed —
+ * every request came back "Sound effect generation failed" from fal's side,
+ * whatever the input. Cassette answers, so Cassette it is. It returns a wav
+ * and takes whole seconds, which is why nothing here asks for 0.4s: the clips
+ * are generated long and cut down with ffmpeg afterwards.
  */
 export async function sound(
   prompt: string,
-  opts: { seconds?: number; influence?: number } = {},
+  opts: { seconds?: number } = {},
 ): Promise<string | null> {
-  const res = (await fal.subscribe("fal-ai/elevenlabs/sound-effects", {
+  const res = (await fal.subscribe("cassetteai/sound-effects-generator", {
     input: {
-      text: prompt,
-      duration_seconds: opts.seconds ?? 1.5,
-      // How literally to take the words. High, because these are specific
-      // requests ("a card slapped on wood"), not moods.
-      prompt_influence: opts.influence ?? 0.75,
+      prompt,
+      duration: Math.max(1, Math.round(opts.seconds ?? 2)),
     },
-  })) as { data?: { audio?: { url?: string } } };
-  return res.data?.audio?.url ?? null;
+  })) as { data?: { audio_file?: { url?: string } } };
+  return res.data?.audio_file?.url ?? null;
 }
 
 /** Download a generated image to disk. */

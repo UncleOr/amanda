@@ -179,7 +179,7 @@
       },
       "art": {
         "placeholderColor": "#6fbf3b",
-        "sprite": null
+        "sprite": "cards/insects_04_toxic_moth.webp"
       },
       "launch": false
     },
@@ -219,7 +219,7 @@
       },
       "art": {
         "placeholderColor": "#9aa4ad",
-        "sprite": null
+        "sprite": "cards/insects_05_armored_beetle.webp"
       },
       "launch": false
     },
@@ -257,7 +257,7 @@
       },
       "art": {
         "placeholderColor": "#4b2e6b",
-        "sprite": null
+        "sprite": "cards/insects_06_ambush_spider.webp"
       },
       "launch": false
     },
@@ -380,7 +380,7 @@
       },
       "art": {
         "placeholderColor": "#e2492f",
-        "sprite": null
+        "sprite": "cards/insects_09_bombardier.webp"
       },
       "launch": false
     },
