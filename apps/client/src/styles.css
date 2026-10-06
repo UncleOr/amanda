@@ -2521,13 +2521,27 @@ button:disabled {
   position: absolute;
   inset-inline: 0;
   top: 0;
-  /* Above the menu's own corner widgets, so its buttons are always reachable. */
+  /*
+   * Above the menu's own corner widgets, so its buttons are always reachable
+   * — but TRANSPARENT TO CLICKS everywhere it has no button.
+   *
+   * z-index alone was half a fix and half a new bug. Raising it stopped the
+   * purse swallowing the music button, and immediately made this full-width
+   * invisible bar swallow the profile button at the other end, which Or found
+   * within the hour. A bar that is not there should not be in the way: the
+   * strip ignores the pointer and its children take it back.
+   */
   z-index: 6;
+  pointer-events: none;
   background: none;
   border: none;
 }
 /* on the menu the logo IS the title, so the words are redundant furniture */
 .topbar--ghost .topbar__title { display: none; }
+/* …and everything in it is still a button. */
+.topbar--ghost > * {
+  pointer-events: auto;
+}
 
 .intro--hero {
   position: relative;
