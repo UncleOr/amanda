@@ -181,6 +181,24 @@ export async function handleApi(req: IncomingMessage, res: ServerResponse): Prom
     await health(res);
     return true;
   }
+  // The cards, for anyone. Same shape and same reasoning as /api/copy.
+  if (path === "/api/cards") {
+    const sb = db();
+    if (!sb) {
+      send(res, 200, { cards: [] });
+      return true;
+    }
+    try {
+      const { data, error } = await sb
+        .from("card_overrides")
+        .select("id, series_id, active, data");
+      send(res, 200, { cards: error ? [] : (data ?? []) });
+    } catch {
+      // The game ships with every card it has; an empty answer costs nothing.
+      send(res, 200, { cards: [] });
+    }
+    return true;
+  }
   // The words on the screen, for anyone, signed in or not.
   if (await handleCopy(req, res, adminDeps)) return true;
   // Everything behind the admin panel. It checks the admins table itself.

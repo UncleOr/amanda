@@ -10,6 +10,7 @@ import {
 import { Match } from "./match.js";
 import { PROGRESS_ENABLED } from "./progress.js";
 import { handleApi } from "./api.js";
+import { refreshCards } from "./cards.js";
 import "./content.js"; // eager-load the card catalog at boot
 
 const PORT = Number(process.env.PORT ?? 2567);
@@ -60,6 +61,13 @@ process.on("unhandledRejection", (err) => {
 process.on("uncaughtException", (err) => {
   console.error("[fatal-ish] uncaught exception, staying up:", err);
 });
+
+/*
+ * Whatever Or has changed about the cards, before anybody can start a match.
+ * Fire and forget: a failure here leaves the catalogue the files describe,
+ * which is a game, and waiting on it would mean a database outage stops play.
+ */
+void refreshCards();
 
 const wss = new WebSocketServer({ server: http });
 

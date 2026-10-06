@@ -21,5 +21,8 @@ export * from "./config.js";
 // Amanda mode
 export * from "./amandaBoard.js";
 
+// The ladder of arenas, and which one a trophy count puts you in.
+export * from "./arenas.js";
+
 // Multiplayer wire protocol
 export * from "./net.js";

@@ -8,7 +8,7 @@ import { Onboarding } from "./components/Onboarding";
 import { ChestReveal } from "./components/ChestReveal";
 import { markChestSeen, newestUnseenChest, type Chest } from "./game/account";
 import { markTutorialDone, tutorialSeenLocally } from "./game/account";
-import { PHASES } from "@amanda/shared";
+import { PHASES, arenaFor } from "@amanda/shared";
 import type { BattleResult } from "@amanda/engine";
 import { useMatch } from "./game/useMatch";
 import { useDrag } from "./game/useDrag";
@@ -26,6 +26,7 @@ import { Arena } from "./components/Arena";
 import { ErrorBoundary } from "./components/ErrorBoundary";
 import { CardGallery } from "./components/CardGallery";
 import { CardPicker } from "./components/CardPicker";
+import { ArenaTrack } from "./components/ArenaTrack";
 const Admin = lazy(() => import("./components/Admin").then((m) => ({ default: m.Admin })));
 import { MoreModes } from "./components/MoreModes";
 import { ArenaPreview } from "./components/ArenaPreview";
@@ -675,6 +676,8 @@ function Game() {
                 </button>
               </div>
             )}
+            {/* Where you are on the ladder, and what is above you. */}
+            {m.account && <ArenaTrack trophies={m.account.trophies} />}
             <button className="btn-album" onClick={() => setAlbumOpen(true)}>
               <Icon name="deck" size={20} /> האלבום שלי
             </button>
@@ -1161,6 +1164,9 @@ function Game() {
               onFinish={m.finishBattle}
               flip={m.mySide === "B"}
               verdict={verdictText(m.result, m.iWon)}
+              // Where you fight is where you have climbed to. A guest with no
+              // account fights in the first one, which is the right answer.
+              backdrop={arenaFor(m.account?.trophies ?? 0).id}
             />
           </ErrorBoundary>
           {/* "ולעצור את הקרב בכל רגע נתון" — straight back to the boards you

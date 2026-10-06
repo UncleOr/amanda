@@ -20,6 +20,8 @@
  */
 import type { IncomingMessage, ServerResponse } from "node:http";
 import type { SupabaseClient } from "@supabase/supabase-js";
+import { CardSchema } from "@amanda/shared";
+import { cardState, refreshCards } from "./cards.js";
 
 /** The cards a brand new player starts with, as the database grants them. */
 const STARTER = [
@@ -221,6 +223,76 @@ async function adminRoutes(
       }
       const { error } = await sb.auth.admin.deleteUser(id);
       deps.send(res, error ? 500 : 200, error ? { error: error.message } : { ok: true });
+      return true;
+    }
+
+    /*
+     * ── cards ──
+     *
+     * The editor sends a whole card, in exactly the shape the engine reads, so
+     * there is no translation layer to get wrong. It is validated HERE as well
+     * as in the browser, because the browser is not a place to check anything:
+     * a card that does not parse would be accepted and then behave as a blank
+     * in a battle somebody is playing.
+     */
+    case "/api/admin/cards": {
+      const rows = Array.isArray(body.rows) ? body.rows : null;
+      if (!rows) {
+        deps.send(res, 400, { error: "nothing to save" });
+        return true;
+      }
+      const saved: string[] = [];
+      for (const raw of rows) {
+        const r = raw as { id?: unknown; seriesId?: unknown; active?: unknown; data?: unknown };
+        if (typeof r.id !== "string" || typeof r.seriesId !== "string") continue;
+        const active = r.active !== false;
+        // A hidden card needs no valid body — it is not going to be played.
+        if (active) {
+          const parsed = CardSchema.safeParse(r.data);
+          if (!parsed.success) {
+            deps.send(res, 400, {
+              error: `${r.id}: ${parsed.error.issues[0]?.path.join(".")} ${parsed.error.issues[0]?.message}`,
+            });
+            return true;
+          }
+        }
+        const { error } = await sb.from("card_overrides").upsert(
+          {
+            id: r.id,
+            series_id: r.seriesId,
+            active,
+            data: r.data ?? {},
+            updated_at: new Date().toISOString(),
+            updated_by: userId,
+          },
+          { onConflict: "id" },
+        );
+        if (error) {
+          deps.send(res, 500, { error: error.message });
+          return true;
+        }
+        saved.push(r.id);
+      }
+      // This process fights with these cards, so it reloads immediately.
+      await refreshCards();
+      deps.send(res, 200, { ok: true, saved, cards: cardState });
+      return true;
+    }
+
+    /** Forget an override entirely, which puts a shipped card back as it was. */
+    case "/api/admin/cards/revert": {
+      const id = str("id");
+      if (!id) {
+        deps.send(res, 400, { error: "which card" });
+        return true;
+      }
+      const { error } = await sb.from("card_overrides").delete().eq("id", id);
+      if (error) {
+        deps.send(res, 500, { error: error.message });
+        return true;
+      }
+      await refreshCards();
+      deps.send(res, 200, { ok: true, cards: cardState });
       return true;
     }
 

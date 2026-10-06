@@ -12,7 +12,67 @@ export interface ArenaLook {
   brief: string;
 }
 
+/*
+ * ── Or's arenas, 2026-10-06 ──
+ *
+ * Named by him, in order, and the order IS the progression: a games room on
+ * the carpet at the start, a petrol station at the top. Every one of them is
+ * somewhere a child in Israel actually goes, which is the whole idea — the
+ * monsters are fighting on your floor, in your street, at the station you pass
+ * on the way to your grandmother.
+ *
+ * They still have to be QUIET. Seen from above, low contrast, nothing busy in
+ * the middle band, or the cards stop reading. A battlefield that is more
+ * interesting than the battle is a worse battlefield than a flat grey one.
+ */
 export const ARENA_LOOKS: ArenaLook[] = [
+  {
+    id: "playroom",
+    he: "חדר משחקים",
+    brief:
+      "A child's playroom floor seen from directly above: a worn patterned rug in " +
+      "muted blues and browns, scattered building blocks, a toy car and a few loose " +
+      "crayons pushed to the far edges. Warm lamplight from one side. The middle of " +
+      "the rug is plain and empty.",
+  },
+  {
+    id: "court",
+    he: "מגרש כדורסל שכונתי",
+    brief:
+      "A neighbourhood outdoor basketball court seen from directly above at dusk: " +
+      "cracked faded asphalt, worn white painted lines, a few weeds through the " +
+      "cracks, a chain-link fence shadow falling across the far edges. Desaturated " +
+      "grey-green. The centre of the court is empty tarmac.",
+  },
+  {
+    id: "station",
+    he: "תחנת רכבת",
+    brief:
+      "An empty railway platform seen from directly above at night: wet concrete, a " +
+      "yellow safety line down each side, rails and gravel at the far edges, puddles " +
+      "reflecting cold station lights. Deep blue-grey. The middle of the platform is " +
+      "bare and unlit.",
+  },
+  {
+    id: "alley",
+    he: "סמטת האימה",
+    brief:
+      "A narrow dark alley floor seen from directly above: wet uneven cobbles, a " +
+      "drain grate, scattered rubbish and a fallen bin pushed against the walls at " +
+      "the far edges, one weak green streetlamp glow seeping in from one side. " +
+      "Very dark, murky green-black, mist along the ground. The centre is empty.",
+  },
+  {
+    id: "fuel",
+    he: "תחנת דלק",
+    brief:
+      "A petrol station forecourt seen from directly above at night: oil-stained " +
+      "concrete, faded painted lane arrows, a pump island and a fallen traffic cone " +
+      "pushed to the far edges, harsh canopy light pooling and dying out towards the " +
+      "corners, a rainbow sheen in one puddle. Industrial grey and amber. The middle " +
+      "of the forecourt is bare.",
+  },
+
   {
     id: "rift",
     he: "בקע הלבה",

@@ -414,3 +414,148 @@
   font-size: 12px;
   font-weight: 800;
 }
+
+/* ════════ the arena ladder, on the home screen ════════
+ *
+ * Or: "show the arena route on the home screen… and let people see which
+ * arenas exist — dark and locked — so there is something to aim for."
+ */
+.track {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  width: 100%;
+  max-width: 320px;
+  margin: 12px auto 0;
+  padding: 7px 10px 7px 7px;
+  border-radius: 14px;
+  border: 1px solid rgba(255, 255, 255, 0.16);
+  background: rgba(8, 12, 22, 0.72);
+  color: var(--text);
+  cursor: pointer;
+  text-align: start;
+}
+.track:hover {
+  border-color: var(--accent);
+}
+.track__art {
+  flex: none;
+  width: 54px;
+  height: 40px;
+  border-radius: 9px;
+  background-size: cover;
+  background-position: center;
+  box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.12);
+}
+.track__text {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+}
+.track__text b {
+  font-size: 14px;
+}
+.track__text small {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  color: var(--muted);
+  font-size: 11.5px;
+}
+.track__bar {
+  display: block;
+  height: 5px;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.12);
+  overflow: hidden;
+}
+.track__bar i {
+  display: block;
+  height: 100%;
+  border-radius: 999px;
+  background: linear-gradient(90deg, #ffb020, #ff7a2f);
+}
+
+/* ---- the whole ladder ---- */
+.modal--arenas {
+  max-width: 560px;
+}
+.arenas__title {
+  margin: 0 0 14px;
+  font-size: 24px;
+}
+.arenas__list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+.arenas__row {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 9px 12px;
+  border-radius: 13px;
+  border: 1px solid var(--line);
+  background: rgba(10, 16, 28, 0.6);
+}
+/*
+ * Locked, and SHOWN. Dimmed and desaturated rather than hidden or blanked:
+ * the point is to want it, which needs you to be able to see what it is.
+ */
+.arenas__row.is-locked .arenas__art {
+  filter: grayscale(0.85) brightness(0.35);
+}
+.arenas__row.is-locked {
+  opacity: 0.72;
+  border-style: dashed;
+}
+.arenas__row.is-here {
+  border-color: var(--accent);
+  background: rgba(255, 176, 32, 0.12);
+}
+.arenas__art {
+  flex: none;
+  width: 76px;
+  height: 52px;
+  border-radius: 10px;
+  background-size: cover;
+  background-position: center;
+  box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.12);
+}
+.arenas__who {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+.arenas__who b {
+  font-size: 15px;
+}
+.arenas__who small {
+  color: var(--muted);
+  font-size: 12px;
+}
+.arenas__at {
+  flex: none;
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  color: var(--muted);
+  font-weight: 800;
+  font-size: 13px;
+  font-variant-numeric: tabular-nums;
+}
+.arenas__badge {
+  padding: 3px 11px;
+  border-radius: 999px;
+  background: rgba(255, 176, 32, 0.2);
+  border: 1px solid var(--accent);
+  color: var(--accent);
+  font-size: 11px;
+}

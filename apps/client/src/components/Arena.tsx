@@ -16,8 +16,14 @@ const W = ARENA.width * CELL;
 const laneCount = (result: { lanes?: number }) => result.lanes ?? ARENA.lanes;
 const heightFor = (lanes: number) => lanes * CELL + HEAD;
 const OWNER_TINT = { A: 0x4aa3ff, B: 0xff5a5a } as const;
-/** Which generated battlefield backdrop to fight on (assets/raw/arena/<id>). */
-const BACKDROP = "rift";
+/**
+ * The battlefield when nobody has said which.
+ *
+ * Normally the arena comes from the player's trophies — it IS the progression
+ * (packages/shared/src/arenas.ts) — but a replay with no account behind it,
+ * and the arena workbench, still have to fight somewhere.
+ */
+const BACKDROP = "playroom";
 
 /** Series tint as a Pixi colour, so same-family units read as a group. */
 function seriesTint(cardId: string): number {
@@ -133,9 +139,12 @@ export function Arena({
   onFinish,
   flip = false,
   verdict,
+  backdrop = BACKDROP,
 }: {
   result: BattleResult;
   onFinish: () => void;
+  /** Which arena to fight in. The caller knows the player's trophies; this does not. */
+  backdrop?: string;
   /** Mirror horizontally so the local player (B) still sees themselves on the left. */
   flip?: boolean;
   /** One sentence saying how the match was decided, shown when the clock runs out. */
@@ -495,7 +504,7 @@ export function Arena({
 
         const [bgTexture] = await Promise.all([
           inTime(
-            Assets.load(`${import.meta.env.BASE_URL}arena/${BACKDROP}.webp`) as Promise<Texture>,
+            Assets.load(`${import.meta.env.BASE_URL}arena/${backdrop}.webp`) as Promise<Texture>,
           ),
           urls.length ? inTime(Assets.load(urls)) : Promise.resolve(null),
         ]);

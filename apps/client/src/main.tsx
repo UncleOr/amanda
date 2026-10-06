@@ -7,6 +7,7 @@ import "./styles.css";
 import "./lab.css";
 import "./admin.css";
 import { loadCopy } from "./game/copy";
+import { loadCardOverrides } from "./game/cardOverrides";
 
 /*
  * Anything Or has rewritten, fetched in the background.
@@ -16,6 +17,11 @@ import { loadCopy } from "./game/copy";
  * the card text simply updates in place if an override arrives.
  */
 void loadCopy();
+/*
+ * And anything he has changed about the cards. Same promise: the game ships
+ * with every card it has, so a slow or missing server costs nothing.
+ */
+void loadCardOverrides();
 
 /*
  * Where the generated surfaces live, handed to CSS.
