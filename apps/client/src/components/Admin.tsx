@@ -45,28 +45,53 @@ interface CopyEntry {
   where: { kind: "json" | "source"; file: string; path?: (string | number)[]; line?: number };
 }
 
+/**
+ * One call to the admin API.
+ *
+ * Never throws. An unreachable server used to leave the panel on "רגע…"
+ * forever, because the rejection escaped and the state was never set — which
+ * is exactly what happens on a laptop with the match server not running.
+ */
 async function call(path: string, body: unknown = {}): Promise<Record<string, unknown>> {
-  const { data } = await sb.auth.getSession();
-  const token = data.session?.access_token;
-  if (!token) return { error: "not signed in" };
-  const res = await fetch(`${SERVER}${path}`, {
-    method: "POST",
-    headers: { authorization: `Bearer ${token}`, "content-type": "application/json" },
-    body: JSON.stringify(body),
-  });
-  return (await res.json()) as Record<string, unknown>;
+  if (!SERVER) return { error: "אין כתובת שרת בגרסה הזאת" };
+  try {
+    const { data } = await sb.auth.getSession();
+    const token = data.session?.access_token;
+    if (!token) return { error: "not signed in" };
+    const res = await fetch(`${SERVER}${path}`, {
+      method: "POST",
+      headers: { authorization: `Bearer ${token}`, "content-type": "application/json" },
+      body: JSON.stringify(body),
+    });
+    return (await res.json()) as Record<string, unknown>;
+  } catch {
+    return { error: "השרת לא עונה" };
+  }
 }
 
 export function Admin() {
-  const [state, setState] = useState<"checking" | "out" | "denied" | "in">("checking");
+  const [state, setState] = useState<"checking" | "out" | "denied" | "in" | "down">("checking");
+  const [why, setWhy] = useState<string>("");
   const [tab, setTab] = useState<"copy" | "users">("copy");
   const [note, setNote] = useState<string | null>(null);
 
   const check = useCallback(async () => {
     const { data } = await sb.auth.getSession();
-    if (!data.session) return setState("out");
+    /*
+     * An anonymous session counts as no session here. Every player has one
+     * from their first visit, so treating it as "signed in" sent Or straight
+     * to "you are not an admin" with no way to become one.
+     */
+    if (!data.session || data.session.user.is_anonymous) return setState("out");
     const r = await call("/api/admin/whoami");
-    setState(r.ok ? "in" : "denied");
+    if (r.ok) return setState("in");
+    // "Not an admin" and "the server is unreachable" need different screens.
+    const err = String(r.error ?? "");
+    if (err.includes("שרת") || err.includes("database")) {
+      setWhy(err);
+      return setState("down");
+    }
+    setState("denied");
   }, []);
 
   useEffect(() => {
@@ -85,13 +110,33 @@ export function Admin() {
         <button
           className="btn-fight"
           onClick={() =>
-            void sb.auth.signInWithOAuth({
-              provider: "google",
-              options: { redirectTo: window.location.href },
-            })
+            // Sign OUT of the anonymous session first: otherwise Supabase is
+            // being asked to attach Google to a throwaway account rather than
+            // to sign in as the real one.
+            void sb.auth.signOut().then(() =>
+              sb.auth.signInWithOAuth({
+                provider: "google",
+                options: { redirectTo: window.location.href },
+              }),
+            )
           }
         >
           התחברות עם גוגל
+        </button>
+      </div>
+    );
+
+  if (state === "down")
+    return (
+      <div className="admin admin--msg">
+        <h1>ניהול</h1>
+        <p>{why || "השרת לא עונה"}.</p>
+        <p className="admin__hint">
+          הניהול עובד מול שרת המשחק. בפיתוח צריך להריץ אותו (<code>pnpm dev</code>),
+          ובענן הוא צריך את <code>SUPABASE_SERVICE_KEY</code>.
+        </p>
+        <button className="btn-fight" onClick={() => void check()}>
+          נסה שוב
         </button>
       </div>
     );
