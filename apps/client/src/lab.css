@@ -400,3 +400,17 @@
     width: 48px;
   }
 }
+
+/* Which match this is, beside the clock. */
+.topbar__mode {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 3px 11px;
+  border-radius: 999px;
+  border: 1px solid rgba(143, 211, 255, 0.4);
+  background: rgba(143, 211, 255, 0.1);
+  color: #8fd3ff;
+  font-size: 12px;
+  font-weight: 800;
+}

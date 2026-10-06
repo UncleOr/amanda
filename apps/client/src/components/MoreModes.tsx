@@ -22,10 +22,12 @@ export function MoreModes({
   onClose,
   onPlayground,
   onAmandaSolo,
+  onMirror,
 }: {
   onClose: () => void;
   onPlayground: () => void;
   onAmandaSolo: () => void;
+  onMirror: () => void;
 }) {
   const modes: Mode[] = [
     {
@@ -45,17 +47,17 @@ export function MoreModes({
       start: onAmandaSolo,
     },
     {
+      id: "mirror",
+      icon: "deck",
+      title: "חפיסה זהה",
+      blurb: "אותם קלפים בדיוק לשני הצדדים, באותו סדר. אין תירוצים — רק מי שבנה נכון.",
+      start: onMirror,
+    },
+    {
       id: "duo",
       icon: "monster",
       title: "2 נגד 2",
       blurb: "שניים בונים לוח אחד מול שניים אחרים. מי שמתווכח טוב יותר מנצח.",
-      soon: true,
-    },
-    {
-      id: "mirror",
-      icon: "deck",
-      title: "חפיסה זהה",
-      blurb: "אותם קלפים בדיוק לשני הצדדים. אין תירוצים — רק מי שבנה נכון.",
       soon: true,
     },
     {

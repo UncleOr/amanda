@@ -459,6 +459,14 @@ function Game() {
             <Icon name="timer" size={15} /> {Math.ceil(m.timeLeft)}s
           </div>
         )}
+        {/* Which match this is, when it is not the ordinary one. Without it a
+            mirror match is indistinguishable from any other, and the one
+            thing that makes it interesting is invisible. */}
+        {m.mirrorSeed !== null && showBoards && (
+          <div className="topbar__mode">
+            <Icon name="deck" size={14} /> חפיסה זהה
+          </div>
+        )}
         <div className="topbar__right">
           {m.phase !== "intro" && (
             <button
@@ -1224,6 +1232,7 @@ function Game() {
           onClose={() => setModesOpen(false)}
           onPlayground={m.startPlayground}
           onAmandaSolo={m.startAmandaSolo}
+          onMirror={m.startMirror}
         />
       )}
 

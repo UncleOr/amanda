@@ -11,6 +11,7 @@ import {
   type Side,
 } from "@amanda/shared";
 import {
+  createRng,
   runBattle,
   type BattleResult,
   type BoardInput,
@@ -74,10 +75,17 @@ function isMonsterId(id: string): boolean {
   return CATALOG.has(id);
 }
 
-function shuffle<T>(items: T[]): T[] {
+/**
+ * Shuffle, optionally from a seed.
+ *
+ * The seed is what makes "חפיסה זהה" possible: both sides deal the same deck
+ * in the same order from the same number, and neither has to be told what the
+ * cards are. Without one it behaves exactly as it always did.
+ */
+function shuffle<T>(items: T[], rnd: () => number = Math.random): T[] {
   const a = [...items];
   for (let i = a.length - 1; i > 0; i--) {
-    const j = Math.floor(Math.random() * (i + 1));
+    const j = Math.floor(rnd() * (i + 1));
     [a[i], a[j]] = [a[j]!, a[i]!];
   }
   return a;
@@ -97,18 +105,28 @@ function monsterPool(album?: Map<string, OwnedCard> | null): string[] {
   return cardPool();
 }
 
-function matchDeck(album?: Map<string, OwnedCard> | null): string[] {
+/**
+ * The deck for one match.
+ *
+ * With a `seed` the album is ignored and the deck is dealt from the whole
+ * launch pool — that is the mirror mode, "חפיסה זהה": the same cards, in the
+ * same order, for both sides. It has to ignore the album, because a deck built
+ * from what you own is by definition not the same deck as your opponent's,
+ * and the entire point of the mode is that nobody can blame their collection.
+ */
+function matchDeck(album?: Map<string, OwnedCard> | null, seed?: number): string[] {
+  const rng = seed === undefined ? null : createRng(seed);
+  const rnd = rng ? () => rng.next() : Math.random;
   // An album smaller than a full deck is not padded. Running thin IS the game:
   // the gaps become Crumb Demons, and that is the reason to collect.
-  const monsters = shuffle(monsterPool(album)).slice(0, DECK.size);
+  const pool = seed === undefined ? monsterPool(album) : cardPool();
+  const monsters = shuffle(pool, rnd).slice(0, DECK.size);
   // Fill cards are the dramatic ones — at most one per deck, and not every
   // deck. The rest of the action slots go to the active cards.
   const fills =
-    Math.random() < FILL_CARD_CHANCE
-      ? shuffle([...PASSIVE_ACTIONS]).slice(0, FILL_CARDS_PER_DECK)
-      : [];
-  const actives = shuffle([...ACTIVE_ACTIONS]).slice(0, ACTION_DECK_COUNT - fills.length);
-  return shuffle([...monsters, ...actives, ...fills]);
+    rnd() < FILL_CARD_CHANCE ? shuffle([...PASSIVE_ACTIONS], rnd).slice(0, FILL_CARDS_PER_DECK) : [];
+  const actives = shuffle([...ACTIVE_ACTIONS], rnd).slice(0, ACTION_DECK_COUNT - fills.length);
+  return shuffle([...monsters, ...actives, ...fills], rnd);
 }
 
 function perimeterCells(): Array<{ x: number; y: number }> {
@@ -139,11 +157,17 @@ function power(cardId: string): number {
   return c.stats.hp + c.stats.power * 4;
 }
 
-function generateAiPlan(): Placement[] {
-  const pool = shuffle(cardPool())
-    .slice(0, DECK.size)
-    .map((id) => CATALOG.get(id)!)
-    .filter(Boolean);
+/**
+ * The computer's board.
+ *
+ * `deck` is the mirror mode: given one, the computer builds out of exactly the
+ * cards you were dealt instead of drawing its own. That is the whole claim of
+ * "חפיסה זהה" — same cards, both sides, so the only thing left to be better at
+ * is where you put them.
+ */
+function generateAiPlan(deck?: string[]): Placement[] {
+  const ids = deck ? deck.filter((id) => CATALOG.has(id)) : shuffle(cardPool()).slice(0, DECK.size);
+  const pool = ids.map((id) => CATALOG.get(id)!).filter(Boolean);
   if (pool.length === 0) return [];
 
   const pick = <T,>(xs: T[], fallback: T): T =>
@@ -466,6 +490,10 @@ export interface MatchApi {
   /** Why joining a room failed, if it did. */
   roomError: RoomError | null;
   iWon: boolean;
+  /** Mirror mode: the same deck on both sides. Null when it is off. */
+  mirrorSeed: number | null;
+  /** Start a mirror match against the computer. */
+  startMirror: () => void;
   /** The sandbox: no clock, both boards yours, every card available. */
   playground: boolean;
   /** Which board the picker is writing into. */
@@ -546,6 +574,11 @@ export function useMatch(): MatchApi {
    * The playground: no clock, both boards yours, every card in the game on tap.
    * It is a workbench, not a match — nothing here is saved, rated or rewarded.
    */
+  /**
+   * Mirror mode ("חפיסה זהה"): both sides are dealt the same deck, in the same
+   * order, from this seed. Null in every other mode.
+   */
+  const [mirrorSeed, setMirrorSeed] = useState<number | null>(null);
   const [playground, setPlayground] = useState(false);
   const [editSide, setEditSide] = useState<EditSide>("me");
   /** The board on the other half, built by hand instead of by the AI. */
@@ -575,8 +608,13 @@ export function useMatch(): MatchApi {
       if (!alive || !a) return;
       setAccount(a);
       setGs((cur) =>
-        // only re-deal an untouched deck; never pull cards out of a live match
-        cur.hand === null && cur.king === null && Object.keys(cur.placements).length === 0
+        // Only re-deal an untouched deck; never pull cards out of a live match
+        // — and never out of a mirror match, whose whole point is that the
+        // deck came from the shared seed rather than from anyone's album.
+        mirrorRef.current === null &&
+        cur.hand === null &&
+        cur.king === null &&
+        Object.keys(cur.placements).length === 0
           ? initialGameState(a.album)
           : cur,
       );
@@ -610,6 +648,8 @@ export function useMatch(): MatchApi {
   mySideRef.current = mySide;
   const playgroundRef = useRef(playground);
   playgroundRef.current = playground;
+  const mirrorRef = useRef(mirrorSeed);
+  mirrorRef.current = mirrorSeed;
   const editSideRef = useRef(editSide);
   editSideRef.current = editSide;
   const foeRef = useRef(foe);
@@ -1074,6 +1114,7 @@ export function useMatch(): MatchApi {
     setCoop(false);
     soloAmandaRef.current = false;
     setPlayground(false);
+    setMirrorSeed(null);
     setEditSide("me");
     setFoe({ placements: {}, king: null });
     benchRef.current = null;
@@ -1199,6 +1240,28 @@ export function useMatch(): MatchApi {
   );
 
   /**
+   * Mirror mode: the same deck for both sides.
+   *
+   * Or's line for it: "אותם קלפים בדיוק לשני הצדדים. אין תירוצים." So the
+   * album is deliberately not used — a deck built from what you own cannot be
+   * the same deck as anyone else's, and then the excuse is back.
+   *
+   * The computer is handed the very cards you were dealt, so the only thing
+   * left to be better at is where you put them.
+   */
+  const startMirror = useCallback(() => {
+    sfx.unlock();
+    sfx.play("click");
+    clearMatch();
+    const seed = 1 + Math.floor(Math.random() * 2_000_000_000);
+    setMirrorSeed(seed);
+    const deck = matchDeck(null, seed);
+    setGs({ deck, hand: null, discard: [], placements: {}, king: null });
+    aiPlanRef.current = generateAiPlan(deck);
+    setPhase("countdown");
+  }, [clearMatch]);
+
+  /**
    * The playground.
    *
    * Or's ask, plainly: a game with no clock where you build BOTH sides out of
@@ -1288,6 +1351,13 @@ export function useMatch(): MatchApi {
    */
   const playAgain = useCallback(() => {
     const wasOnline = onlineRef.current;
+    const wasMirror = mirrorRef.current !== null;
+    if (wasMirror) {
+      // A fresh mirror deck, not a repeat of the same one — otherwise "again"
+      // is the same puzzle twice.
+      startMirror();
+      return;
+    }
     clearMatch();
     if (wasOnline && ONLINE_AVAILABLE) {
       startOnline();
@@ -1295,7 +1365,7 @@ export function useMatch(): MatchApi {
     }
     sfx.play("click");
     setPhase("countdown");
-  }, [clearMatch, startOnline]);
+  }, [clearMatch, startOnline, startMirror]);
 
   useEffect(() => {
     // "בלי הגבלת זמן" means the clock does not run at all, not that it runs
@@ -1428,6 +1498,8 @@ export function useMatch(): MatchApi {
     mySide,
     oppLeft,
     iWon: result != null && result.winner === mySide,
+    mirrorSeed,
+    startMirror,
     playground,
     editSide,
     setEditSide,
