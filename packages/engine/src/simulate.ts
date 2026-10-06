@@ -67,7 +67,24 @@ function pickTarget(state: BattleState, u: Unit): TargetPick | null {
   if (enemies.length === 0) return null;
 
   if (u.targeting === "king") {
-    const king = enemies.find((e) => e.isKing);
+    /*
+     * The NEAREST King, not simply the first one in the list.
+     *
+     * A side can hold two of them now (Amanda mode: a King per player), and a
+     * King-hunter crosses lanes to reach one — so "the first King in the unit
+     * array" would send it marching past the crown in front of it to go and
+     * find the other player's.
+     */
+    let king: Unit | undefined;
+    let kingGap = Infinity;
+    for (const e of enemies) {
+      if (!e.isKing) continue;
+      const g = gapAhead(u, e);
+      if (g < kingGap) {
+        king = e;
+        kingGap = g;
+      }
+    }
     if (king) {
       const guards = guardsOf(state, u, king);
       // The King is only reachable once nothing of its own stands in the way.
@@ -236,10 +253,24 @@ export function runBattle(setup: BattleSetup): BattleResult {
     reveal(u);
     runOnDeath(state, ops, u);
     if (u.isKing) {
-      // The King's death ends the match; its owner loses.
-      state.winner = u.owner === "A" ? "B" : "A";
-      state.winReason = "kingDown";
-      state.ended = true;
+      /*
+       * A side falls when its LAST King falls.
+       *
+       * With one King a side that is the same thing it always was. With two —
+       * Amanda mode, where two players share one side and bring a King each —
+       * it is Or's ruling: "הצד נופל רק כששני המלכים נפלו". Before it, the
+       * first crown to drop ended the battle for both players, so one player
+       * could be knocked out and take their partner with them before the
+       * partner had lost anything.
+       */
+      const stillStanding = state.units.some(
+        (o) => o.alive && o.isKing && o.owner === u.owner,
+      );
+      if (!stillStanding) {
+        state.winner = u.owner === "A" ? "B" : "A";
+        state.winReason = "kingDown";
+        state.ended = true;
+      }
     }
   };
 

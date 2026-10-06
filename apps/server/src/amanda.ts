@@ -3,9 +3,15 @@
  *
  * Both players build on the SAME side — each in their own half of an
  * eight-lane board — and she holds the other side as its Queen. Proven
- * headlessly first (`pnpm --filter @amanda/engine amanda`): two boards win
- * roughly a third to a half of the time, and one board alone wins none at all,
- * which is the whole reason the mode needs two people.
+ * headlessly first (`pnpm --filter @amanda/engine amanda`). Over 800 battles
+ * at the shipped guard density: two boards win 46% and put her down in 37%,
+ * one board alone wins 2% — which is the whole reason the mode needs two
+ * people.
+ *
+ * Each player brings their own King, and a side falls only when BOTH are
+ * down (Or: "הצד נופל רק כששני המלכים נפלו"). In the same 800 battles the
+ * players never once lost to a crown falling; they lose on the King-HP
+ * tiebreak when the clock runs out. Before the ruling it was 142 in 300.
  */
 import {
   AMANDA_CARD,
