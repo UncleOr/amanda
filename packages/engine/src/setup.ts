@@ -1,5 +1,6 @@
 import { ARENA, BOARD, KING, type Card } from "@amanda/shared";
 import { createRng } from "./rng.js";
+import { synergyMembers } from "./synergy.js";
 import type { BattleState, Owner, SynergyDef, Unit } from "./types.js";
 
 /** Optional stat modifier applied to a placed card (e.g. from Action Cards). */
@@ -169,11 +170,24 @@ export function buildBattle(setup: BattleSetup): BattleState {
     lanes: setup.lanes ?? ARENA.lanes,
   };
 
+  const seriesOf = (cardId: string) => setup.catalog.get(cardId)?.seriesId;
+
   for (const board of [setup.a, setup.b]) {
-    for (const placement of board.placements) {
+    /*
+     * Which of this board's cards are in a touching group of their family.
+     * Worked out here, once, from the board as it was locked — see synergy.ts
+     * for why it is not recomputed while the battle runs.
+     */
+    const inGroup = new Set<number>();
+    for (const syn of state.synergies)
+      for (const i of synergyMembers(board.placements, seriesOf, syn.seriesId, syn.threshold))
+        inGroup.add(i);
+
+    for (const [index, placement] of board.placements.entries()) {
       const card = setup.catalog.get(placement.cardId);
       if (!card) throw new Error(`Unknown cardId in placement: ${placement.cardId}`);
       const unit = makeUnit(state, card, board.owner, placement);
+      if (inGroup.has(index)) unit.flags.synergy = true;
       if (unit.isKing && board.kingAccountLevelHp) {
         unit.maxHp += board.kingAccountLevelHp;
         unit.hp = unit.maxHp;

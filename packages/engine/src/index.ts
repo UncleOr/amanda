@@ -12,3 +12,6 @@ export * from "./setup.js";
 export { runBattle } from "./simulate.js";
 export * from "./report.js";
 export type { BattleOps, ChildProto } from "./abilities.js";
+// The build-time rule for "three of the family, touching" — the client needs
+// it to show the bonus on the board the player is still arranging.
+export { synergyMembers, touching } from "./synergy.js";

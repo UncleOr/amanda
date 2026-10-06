@@ -13,7 +13,7 @@
  *
  *   pnpm --filter @amanda/engine amanda [runs]
  */
-import { ARENA, BOARD } from "@amanda/shared";
+import { ARENA, BOARD, GUARD_DENSITY, buildAmandaBoard } from "@amanda/shared";
 import { runBattle, type Placement } from "../src/index.js";
 import { CARDS, SERIES } from "../../art/src/catalog.js";
 
@@ -60,26 +60,20 @@ function playerHalf(laneOffset: number, withKing: boolean): Placement[] {
   return out;
 }
 
-/** Her side: Amanda as its King, with a guard of the toughest things around. */
-function amandaSide(): Placement[] {
-  const tanks = launch
-    .filter((c) => c.stats.moveSpeed === 0)
-    .sort((a, b) => b.stats.hp - a.stats.hp)
-    .map((c) => c.id);
-  const out: Placement[] = [
-    // Her King slot is the centre of the EIGHT lanes, not of four.
-    { cardId: AMANDA, x: BOARD.kingSlot.x, y: 3, king: true },
-  ];
-  for (let x = 0; x < BOARD.width; x++) {
-    for (let y = 0; y < AMANDA_LANES; y++) {
-      if (x >= 1 && x <= 2 && (y === 3 || y === 4)) continue; // her 2×2
-      out.push({ cardId: tanks[rnd(Math.min(6, tanks.length))] ?? launch[0]!.id, x, y });
-    }
-  }
-  return out;
+/**
+ * Her side: THE ONE THE GAME ACTUALLY SHIPS.
+ *
+ * This script used to build her board itself — every cell filled, no gaps, no
+ * density — while the server built hers from `buildAmandaBoard` at 0.9. So the
+ * harness that was supposed to prove the mode was proving a different mode,
+ * and the drift the shared module was written to prevent had happened again,
+ * here, in the thing doing the checking. One definition, called by both.
+ */
+function amandaSide(density: number): Placement[] {
+  return buildAmandaBoard(CARDS.values(), density) as Placement[];
 }
 
-function one(bothPlayers: boolean) {
+function one(bothPlayers: boolean, density: number) {
   const players = bothPlayers
     ? [...playerHalf(0, true), ...playerHalf(BOARD.height, true)]
     : playerHalf(0, true);
@@ -90,13 +84,19 @@ function one(bothPlayers: boolean) {
       s.synergy ? [{ seriesId: s.id, threshold: s.synergy.threshold, ability: s.synergy.ability }] : [],
     ),
     a: { owner: "A", placements: players },
-    b: { owner: "B", placements: amandaSide() },
+    b: { owner: "B", placements: amandaSide(density) },
     lanes: AMANDA_LANES,
   });
   return res;
 }
 
 const runs = Number(process.argv[2] ?? 40);
+/** Sweep her guard density, or just measure the shipped one. */
+const densities = process.argv[3]
+  ? process.argv[3].split(",").map(Number)
+  : [GUARD_DENSITY];
+
+for (const density of densities) {
 for (const bothPlayers of [true, false]) {
   let playersWon = 0;
   let seconds = 0;
@@ -104,14 +104,24 @@ for (const bothPlayers of [true, false]) {
   let total = 0;
   const why: Record<string, number> = {};
   let amandaHp = 0;
+  /*
+   * The question Or actually asked — "she should be killable, just hard" — is
+   * about her dying, not about who won. Those are different things here: the
+   * players can take the match on the King tiebreak without ever putting her
+   * down, and reading a win rate as "we killed her" would hide exactly that.
+   */
+  let amandaKilled = 0;
   for (let i = 0; i < runs; i++) {
-    const r = one(bothPlayers);
+    const r = one(bothPlayers, density);
     if (r.winner === "A") playersWon++;
     seconds += r.ticks / 30;
-    const key = `${r.winner}:${r.winReason}${r.tiebreak ? "/" + r.tiebreak : ""}`;
+    // The tiebreak is an object; printing it raw gave "[object Object]" in
+    // every line of a report whose whole job is to be read.
+    const key = `${r.winner}:${r.winReason}`;
     why[key] = (why[key] ?? 0) + 1;
     const her = (r.units ?? []).find((u) => u.cardId === AMANDA);
     if (her) amandaHp += (her.hpLeft ?? 0) / (her.maxHp || 1);
+    if (r.winReason === "kingDown" && r.winner === "A") amandaKilled++;
     // A unit that neither dealt nor took damage never joined in. In an arena
     // twice as deep, that is the thing most likely to be quietly broken.
     for (const u of r.units ?? []) {
@@ -120,7 +130,7 @@ for (const bothPlayers of [true, false]) {
     }
   }
   console.log(
-    `${bothPlayers ? "two players" : "ONE player "} — players win ${Math.round(
+    `[guard ${density}] ${bothPlayers ? "two players" : "ONE player "} — players win ${Math.round(
       (playersWon / runs) * 100,
     )}%  ·  ${(seconds / runs).toFixed(1)}s average  ·  ${
       total ? Math.round((silent / total) * 100) : 0
@@ -129,7 +139,10 @@ for (const bothPlayers of [true, false]) {
   console.log(
     `              how it ended: ${Object.entries(why)
       .map(([k, v]) => `${k}×${v}`)
-      .join("  ")}  ·  Amanda left with ${Math.round((amandaHp / runs) * 100)}% hp`,
+      .join("  ")}  ·  Amanda left with ${Math.round(
+      (amandaHp / runs) * 100,
+    )}% hp  ·  KILLED ${amandaKilled}/${runs}`,
   );
+}
 }
 console.log(`\n(arena ${ARENA.width} wide × ${AMANDA_LANES} lanes)`);

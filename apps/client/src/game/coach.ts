@@ -10,7 +10,7 @@
  * it really is — a tutorial that teaches a rule the engine does not have is
  * worse than no tutorial at all.
  */
-import { CATALOG, SERIES_BY_ID } from "../data/catalog";
+import { CATALOG, SERIES_BY_ID, synergyGroups } from "../data/catalog";
 import type { Card } from "@amanda/shared";
 
 export interface Cue {
@@ -56,30 +56,22 @@ const MEDIAN_WORTH = (() => {
 /**
  * The series bonus, described accurately.
  *
- * NOTE for Or: in the game the bonus counts THREE OF THE SAME SERIES ANYWHERE
- * on your board — it is not about them being next to each other, and it is not
- * always "double power": each series has its own bonus. Said plainly here
- * because teaching the wrong rule would cost more than saying nothing.
+ * The rule is THREE OF THE SAME FAMILY TOUCHING EACH OTHER — sharing an edge,
+ * not a corner — and each family has its own bonus rather than all of them
+ * doubling power. It used to be three anywhere on the board; Or changed it on
+ * 2026-10-06 so that where you put a card matters. Teaching the wrong rule
+ * costs more than saying nothing, which is why this sentence says the rule.
  */
 function synergyLine(seriesId: string): string | null {
   const s = SERIES_BY_ID.get(seriesId);
   if (!s?.synergy) return null;
-  return `שלושה מאותה סדרה על הלוח — ${s.synergy.name.he} נדלק. ${s.synergy.description.he}`;
+  return `שלושה מאותה סדרה צמודים זה לזה — ${s.synergy.name.he} נדלק. ${s.synergy.description.he}`;
 }
 
-/** Which series already has three or more placed. */
+/** Which series has a touching group big enough, using the engine's own rule. */
 function activeSynergy(view: CoachView): string | null {
-  const counts = new Map<string, number>();
-  const ids = [...Object.values(view.placements), ...(view.king ? [view.king] : [])];
-  for (const id of ids) {
-    const c = card(id);
-    if (!c?.seriesId) continue;
-    counts.set(c.seriesId, (counts.get(c.seriesId) ?? 0) + 1);
-  }
-  for (const [seriesId, n] of counts) {
-    const s = SERIES_BY_ID.get(seriesId);
-    if (s?.synergy && n >= s.synergy.threshold) return seriesId;
-  }
+  const groups = synergyGroups(view.placements, view.king);
+  for (const seriesId of groups.keys()) return seriesId;
   return null;
 }
 

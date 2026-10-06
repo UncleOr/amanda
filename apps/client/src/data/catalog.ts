@@ -7,6 +7,10 @@ import {
   type Series,
 } from "@amanda/shared";
 import actionsJson from "../../../../data/action-cards.json";
+import { synergyMembers } from "@amanda/engine";
+
+/** Where the King sits on the 4×4, for the adjacency rule. */
+const KING_CELL = { x: 1, y: 1 };
 
 /**
  * Auto-load every series file under /data/series. Dropping a new NN-name.json
@@ -23,12 +27,43 @@ export const SERIES: Series[] = Object.keys(seriesModules)
 /** All series indexed by id, for lookups (synergy, detail view). */
 export const SERIES_BY_ID: Map<string, Series> = new Map(SERIES.map((s) => [s.id, s]));
 
-/** Series synergies passed to the battle engine (activate at 3 same-series cards). */
+/** Series synergies passed to the battle engine. */
 export const SYNERGIES = SERIES.map((s) => ({
   seriesId: s.id,
   threshold: s.synergy.threshold,
   ability: s.synergy.ability,
 }));
+
+/**
+ * Which cells on a board you are still arranging are in a live synergy group.
+ *
+ * Deliberately the ENGINE's own function rather than a second copy of the
+ * rule. The board highlights what will happen in the battle, and the only way
+ * to be sure of that is for both to be the same code — two implementations of
+ * "touching" would eventually disagree, and the one the player can see would
+ * be the one that is wrong.
+ *
+ * Returns seriesId → the cell keys lit up, "king" included when it qualifies.
+ */
+export function synergyGroups(
+  placements: Record<string, string>,
+  king: string | null,
+): Map<string, Set<string>> {
+  const keys = Object.keys(placements);
+  const board = keys.map((key) => {
+    const [x, y] = key.split("-").map(Number);
+    return { cardId: placements[key]!, x: x ?? 0, y: y ?? 0 };
+  });
+  if (king) board.push({ cardId: king, x: KING_CELL.x, y: KING_CELL.y, king: true } as never);
+  const keyAt = (i: number) => (i < keys.length ? keys[i]! : "king");
+
+  const out = new Map<string, Set<string>>();
+  for (const syn of SYNERGIES) {
+    const lit = synergyMembers(board, (id) => CATALOG.get(id)?.seriesId, syn.seriesId, syn.threshold);
+    if (lit.size) out.set(syn.seriesId, new Set([...lit].map(keyAt)));
+  }
+  return out;
+}
 
 /** Every playable monster card, keyed by id. */
 export const CATALOG: Map<string, Card> = new Map();

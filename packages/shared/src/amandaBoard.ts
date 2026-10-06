@@ -19,14 +19,29 @@ export const COOP_LANES = BOARD.height * 2;
 /**
  * How much of her side is actually defended.
  *
- * Measured at 50 battles a step, once her health meant what her card says:
+ * This is the only real difficulty dial. Her health barely moves the needle —
+ * when her side is packed, nothing reaches her and 5,555 or 50,000 play the
+ * same. The holes are what make her beatable.
  *
- *   0.90 → players win 34%, killed 8/50 · 0.80 → 54%, 10/50 · 0.65 → 76%, 11/50
+ * Or's ruling (2026-10-06): "5,555 — hard, but possible." So it was measured
+ * again, 150 battles a step, against the boards two players would build if
+ * they built well:
  *
- * 0.90 is hard, she really can be killed, and one player alone wins 0% at
- * EVERY setting — which is the whole reason the mode takes two.
+ *   | guard | two players win | SHE DIES | one player wins |
+ *   | 0.90  |       13%       |   13%    |       0%        |  ← was shipped
+ *   | 0.80  |       17%       |   16%    |       1%        |
+ *   | 0.70  |       41%       |   33%    |       1%        |  ← chosen
+ *   | 0.65  |       37%       |   26%    |       1%        |
+ *
+ * 0.70 is the one that matches the ruling: you put her down about a third of
+ * the time, and the average battle runs 39 of its 45 seconds, so it is close
+ * at the end rather than decided early.
+ *
+ * ONE PLAYER STILL WINS 1%, at every setting. That is the whole reason the
+ * mode takes two people, and it is the number to watch if this is ever tuned
+ * again — the moment a single board can do it, the mode has no point.
  */
-export const GUARD_DENSITY = 0.9;
+export const GUARD_DENSITY = 0.7;
 
 /** Minimal placement shape, structurally compatible with the engine's. */
 export interface AmandaPlacement {

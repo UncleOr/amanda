@@ -15,7 +15,7 @@ import { useDrag } from "./game/useDrag";
 import { sfx } from "./game/sfx";
 import { music } from "./game/music";
 import { hardRefresh } from "./game/refresh";
-import { ACTIONS, isEnemyTargeted } from "./data/catalog";
+import { ACTIONS, isEnemyTargeted, synergyGroups } from "./data/catalog";
 import * as V from "./data/voice";
 import { BoardGrid } from "./components/BoardGrid";
 import { CardView } from "./components/CardView";
@@ -241,6 +241,20 @@ function Game() {
    */
   const saidRef = useRef<Set<string>>(new Set());
   const [cue, setCue] = useState<Step | null>(null);
+  /**
+   * The cells on your board that a series bonus is lighting up right now.
+   *
+   * Three of a family touching each other (Or, 2026-10-06). Flattened to one
+   * set because the board only needs to know whether a cell is lit, not which
+   * family lit it — the frames are already tinted by series.
+   */
+  const mySynergy = useMemo(() => {
+    const lit = new Set<string>();
+    for (const cells of synergyGroups(m.placements, m.king).values())
+      for (const cell of cells) lit.add(cell);
+    return lit;
+  }, [m.placements, m.king]);
+
   /** The opponent's board, cut down to what is actually showing right now. */
   const revealedOpponent = useMemo(() => {
     const placements: Record<string, string> = {};
@@ -763,6 +777,7 @@ function Game() {
                 // In the lab the board you are not editing is still a picture.
                 interactive={interactive && (!m.playground || m.editSide === "me")}
                 editing={m.playground && m.editSide === "me"}
+                synergy={mySynergy}
                 handActive={m.hand !== null}
                 mods={m.mods}
                 targeting={m.targeting !== null && !isEnemyTargeted(m.targeting)}

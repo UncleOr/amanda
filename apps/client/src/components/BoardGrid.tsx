@@ -41,6 +41,14 @@ interface Props {
   editing?: boolean;
   /** Cells with a second card hidden underneath (Ground Floor). */
   stacked?: Record<string, string>;
+  /**
+   * Cells currently lit by a series bonus ("king" for the crown).
+   *
+   * The rule is three of a family TOUCHING, so it is a thing you do with your
+   * hands on this screen — and a rule you cannot see while you are arranging
+   * the board is a rule you cannot play to.
+   */
+  synergy?: Set<string>;
   /** How many more cells may still be stacked onto. */
   stackSlots?: number;
   /** True when the four corners are stackable without spending a slot. */
@@ -78,6 +86,7 @@ export function BoardGrid({
   dragOver = null,
   dragging = false,
   editing = false,
+  synergy,
   stacked = {},
   stackSlots = 0,
   stackCorners = false,
@@ -112,6 +121,7 @@ export function BoardGrid({
       <div
         className={
           `slot slot--king${king ? " slot--filled" : ""}` +
+          `${synergy?.has(KING_KEY) ? " slot--synergy" : ""}` +
           `${king && revealKing ? " slot--readable" : ""}` +
           `${targeting && king ? " slot--target" : ""}` +
           `${interactive && dragging && !king ? " slot--droppable" : ""}` +
@@ -157,6 +167,7 @@ export function BoardGrid({
             key={key}
             className={
               `slot${occ && shown ? " slot--filled slot--readable" : ""}` +
+              `${synergy?.has(key) ? " slot--synergy" : ""}` +
               `${isGuardPost(x, y) ? " slot--guard" : ""}` +
               `${stacked[key] ? " slot--stacked" : ""}` +
               `${stackableHere(key, occ) ? " slot--stackable" : ""}` +

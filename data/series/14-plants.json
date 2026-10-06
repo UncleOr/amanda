@@ -357,7 +357,7 @@
         "placeholderColor": "#6fbf3b",
         "sprite": "cards/plants_08_cactus.webp"
       },
-      "launch": true
+      "launch": false
     },
     {
       "id": "plants_09_sunflower",

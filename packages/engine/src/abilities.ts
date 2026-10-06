@@ -107,20 +107,23 @@ export function runAuras(state: BattleState): void {
     }
   }
 
-  // Series synergies: a bonus aura for a family once enough of them are alive.
+  /*
+   * Series synergies.
+   *
+   * Who qualifies was settled when the board was built — three of the family
+   * TOUCHING each other (Or, 2026-10-06; see synergy.ts). This used to count
+   * everything alive of that series anywhere on the board, which is why the
+   * count is gone from here: the decision is not made at this point any more,
+   * it is made on the building screen where the player can see it.
+   */
   if (state.synergies.length > 0) {
-    const counts: Record<Owner, Record<string, number>> = { A: {}, B: {} };
-    for (const u of state.units)
-      if (u.alive && u.seriesId)
-        counts[u.owner][u.seriesId] = (counts[u.owner][u.seriesId] ?? 0) + 1;
-
     for (const syn of state.synergies) {
       for (const owner of ["A", "B"] as const) {
-        if ((counts[owner][syn.seriesId] ?? 0) < syn.threshold) continue;
         const pct = num(syn.ability.params.pct);
         const members = state.units.filter(
-          (u) => u.alive && u.owner === owner && u.seriesId === syn.seriesId,
+          (u) => u.alive && u.owner === owner && u.seriesId === syn.seriesId && u.flags.synergy,
         );
+        if (members.length === 0) continue;
         switch (syn.ability.type) {
           case "damageReductionAura":
             for (const m of members) m.damageTakenMult *= 1 - pct / 100;

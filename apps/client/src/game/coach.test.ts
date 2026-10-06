@@ -35,7 +35,12 @@ describe("the coach", () => {
     expect(cue?.target).toContain("guard");
   });
 
-  it("counts the King towards a series, the way the engine does", () => {
+  /*
+   * Since 2026-10-06 the bonus needs the three to be TOUCHING, so these two
+   * pin the chain rather than the count: (0,0)–(0,1)–King is a chain of three
+   * that share edges, and the same three cards scattered is not.
+   */
+  it("lights up a touching chain, counting the King as one of the three", () => {
     const dragons = [...CATALOG.values()].filter((c) => c.seriesId === "dragons").slice(0, 2);
     const said = new Set(["king", "tank", "flyer", "action", "weak", "bin", "bar"]);
     const cue = nextCue(
@@ -47,6 +52,21 @@ describe("the coach", () => {
       said,
     );
     expect(cue?.id).toBe("synergy");
+  });
+
+  it("stays quiet when the same three are scattered", () => {
+    const dragons = [...CATALOG.values()].filter((c) => c.seriesId === "dragons").slice(0, 2);
+    const said = new Set(["king", "tank", "flyer", "action", "weak", "bin", "bar"]);
+    const cue = nextCue(
+      {
+        ...base,
+        king: dragons[0]!.id,
+        // Both corners, each diagonal from the King and far from each other.
+        placements: { "0-0": dragons[1]!.id, "3-3": flyer },
+      },
+      said,
+    );
+    expect(cue?.id).not.toBe("synergy");
   });
 
   it("sends a flyer to the back instead", () => {
