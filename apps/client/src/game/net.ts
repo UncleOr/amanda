@@ -35,6 +35,8 @@ export interface NetHandlers {
   onStart?: (side: Side, coop: boolean, lane: number) => void;
   onPhase?: (phase: string, timeLeft: number) => void;
   onOpp?: (view: BoardView) => void;
+  /** Amanda mode: your partner's half, unfogged, and which half it is. */
+  onMate?: (view: BoardView, lane: number) => void;
   onResult?: (r: {
     seed: number;
     boardA: NetBoard;
@@ -121,6 +123,9 @@ export class Net {
           break;
         case "opp":
           this.handlers.onOpp?.(msg.view);
+          break;
+        case "mate":
+          this.handlers.onMate?.(msg.view, msg.lane);
           break;
         case "result":
           this.handlers.onResult?.(msg);

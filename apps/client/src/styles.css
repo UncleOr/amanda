@@ -215,7 +215,9 @@ body {
 .board {
   display: grid;
   grid-template-columns: repeat(4, 1fr);
-  grid-template-rows: repeat(4, 1fr);
+  /* Four lanes everywhere except Amanda's side, which is eight — she faces
+     two players at once. The count comes in as --lanes from BoardGrid. */
+  grid-template-rows: repeat(var(--lanes, 4), 1fr);
   gap: 6px;
   /* Cards are portrait (a real trading-card shape), so each cell is 1:1.3 and
      the 4x4 board ends up taller than wide: 4 : (4 x 1.3) = 4 : 5.2.
@@ -225,7 +227,8 @@ body {
      and shoved its own label up behind the top bar. */
   flex: none;
   width: auto;
-  aspect-ratio: 4 / 5.2;
+  /* cells stay 1 : 1.3 whatever the lane count, so 4 : (lanes x 1.3) */
+  aspect-ratio: 4 / calc(var(--lanes, 4) * 1.3);
   /* Fit inside BOTH axes of the band: the height it was given, and half the
      row's width (two boards plus the divider between them). Whichever one
      binds, the 4:5.2 card proportions survive — capping only the width used to
@@ -864,6 +867,10 @@ button:disabled {
   align-items: center;
   justify-content: center;
   padding: 16px;
+  /* without this the arena inside sets the height and the screen scrolls,
+     which in eight-lane Amanda mode hid one of the two players entirely */
+  min-height: 0;
+  overflow: hidden;
 }
 .arena {
   border: 1px solid var(--line);
@@ -871,11 +878,29 @@ button:disabled {
   overflow: hidden;
   box-shadow: 0 12px 40px rgba(0, 0, 0, 0.5);
   max-width: 100%;
+  /* a flex item will not shrink below its content without this, and then the
+     canvas pushes the battle screen taller than the window instead */
+  min-height: 0;
+  max-height: 100%;
+  display: flex;
 }
 .arena canvas {
   display: block;
+  /*
+   * Fit BOTH axes, not just the width.
+   *
+   * Or, on the co-op battle: "I only saw my side of the fight." Amanda mode
+   * is eight lanes, so the canvas is twice as tall as a normal battle — and
+   * this rule only ever capped the width, so the bottom half (which is one of
+   * the two players) ran off the screen. Capping the height as well makes the
+   * whole arena fit, and the intrinsic size of the canvas keeps it in
+   * proportion while it shrinks.
+   */
   max-width: 100%;
+  max-height: 100%;
+  width: auto;
   height: auto;
+  object-fit: contain;
 }
 
 /* ---- result ---- */
@@ -3906,4 +3931,72 @@ button:disabled {
 }
 @media (prefers-reduced-motion: reduce) {
   .slot--king-empty { animation: none; border-color: rgba(255, 176, 32, 0.8); }
+}
+
+/* ---- Amanda mode: two halves a side ---- */
+/*
+ * The mode is two people arranging ONE eight-lane side, and until now the
+ * screen never said so: each player saw his own four lanes and, in the panel
+ * marked "Amanda", his partner's cards through fog. Now each side of the
+ * screen is drawn as the two halves it really is — you and your partner on
+ * the left, both halves of her on the right — in the lane order the battle
+ * will use. `.side--low` is for the player the server put in lanes 4-7: their
+ * own board belongs underneath, not on top.
+ */
+.side--split {
+  justify-content: flex-start;
+  gap: 4px;
+}
+.side--split .side__label { order: -2; }
+/*
+ * In co-op each half carries its own caption, because the side's single big
+ * label ended up over whichever board happened to be on top — so the player
+ * the server put in lanes 4-7 was told "your half" above his PARTNER's board.
+ *
+ * Then the two halves are stacked in the lane order the battle will use:
+ * lanes 0-3 on top, 4-7 underneath. `.side--low` is that second player, and
+ * everything they own moves below their partner.
+ */
+.side--me.side--split .side__label { display: none; }
+.side--split .mate__label--mine { order: 0; }
+.side--split > .board { order: 1; }
+.side--split .mate--theirs { order: 2; }
+.side--low.side--split .mate--theirs { order: -2; }
+.side--low.side--split .mate__label--mine { order: -1; }
+.mate {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 3px;
+  min-height: 0;
+  /* the ally reads as a quieter copy of your own board, not a second you */
+  opacity: 0.88;
+}
+.mate__label {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  font-size: 11px;
+  font-weight: 700;
+  color: var(--muted);
+  letter-spacing: 0.02em;
+}
+/*
+ * Two boards in the height one board used to have.
+ *
+ * `.board` normally takes `min(100cqh - 28px, ...)` of the `.boards`
+ * container. Here each of the two takes half of that height, and the width
+ * cap comes down with it so the 4 : 5.2 card proportions survive — the same
+ * rule as the single board, with the height it is actually allowed.
+ */
+.side--split .board {
+  height: min(50cqh - 34px, min(34cqw - 22px, 230px) * 1.3);
+}
+/*
+ * Amanda's single eight-lane board stands as tall as the two stacked halves
+ * facing it, so the lanes line up across the screen the way they will line up
+ * in the battle. Twice the lanes at the same width means twice the height.
+ */
+.side--enemy.side--split .board {
+  height: min(100cqh - 40px, min(34cqw - 22px, 230px) * 2.6);
 }

@@ -1,6 +1,7 @@
 import { CardView, CardBack } from "./CardView";
 import { Icon } from "./Icon";
-import { BOARD_SIZE, cellKey, isKingCell, type BattleMods } from "../game/useMatch";
+import type { CSSProperties } from "react";
+import { BOARD_SIZE, cellKey, type BattleMods } from "../game/useMatch";
 import { isCornerKey } from "../data/catalog";
 
 interface Props {
@@ -53,6 +54,17 @@ interface Props {
   stackSlots?: number;
   /** True when the four corners are stackable without spending a slot. */
   stackCorners?: boolean;
+  /**
+   * How many lanes deep this board is. Four everywhere except Amanda's side,
+   * which is eight because she faces two players at once.
+   *
+   * She cannot be drawn as two four-lane boards, which was the first thing
+   * tried: her 2×2 King sits at lanes 3 and 4 — exactly across the seam — so
+   * each half drew an empty throne of its own and neither showed her.
+   */
+  lanes?: number;
+  /** Top lane of the 2×2 King. Lane 1 on a four-lane board, 3 on Amanda's. */
+  kingLane?: number;
 }
 
 const KING_KEY = "king";
@@ -63,8 +75,8 @@ const KING_KEY = "king";
  * these two posts is what keeps it alive — they are the most valuable squares
  * on the board and should look like it.
  */
-function isGuardPost(x: number, y: number): boolean {
-  return x === 3 && (y === 1 || y === 2);
+function isGuardPost(x: number, y: number, kingLane: number): boolean {
+  return x === 3 && (y === kingLane || y === kingLane + 1);
 }
 
 export function BoardGrid({
@@ -88,6 +100,8 @@ export function BoardGrid({
   editing = false,
   synergy,
   stacked = {},
+  lanes = BOARD_SIZE,
+  kingLane = 1,
   stackSlots = 0,
   stackCorners = false,
 }: Props) {
@@ -106,9 +120,13 @@ export function BoardGrid({
   /** A cell already holding a card that will accept a second one on top. */
   const stackableHere = (key: string, occ?: string) => !!occ && !stacked[key] && canStackOn(key);
 
+  /** The King's 2×2, wherever it sits on a board of this depth. */
+  const kingHere = (x: number, y: number) =>
+    x >= 1 && x <= 2 && y >= kingLane && y <= kingLane + 1;
+
   const cells: Array<{ x: number; y: number }> = [];
   for (let x = 0; x < BOARD_SIZE; x++)
-    for (let y = 0; y < BOARD_SIZE; y++) if (!isKingCell(x, y)) cells.push({ x, y });
+    for (let y = 0; y < lanes; y++) if (!kingHere(x, y)) cells.push({ x, y });
 
   const size = compact ? "small" : "medium";
   // Depth (x) runs horizontally so the two boards face each other; lanes (y)
@@ -123,7 +141,11 @@ export function BoardGrid({
      * or from a logical property — and a spine drawn on the outer edge makes
      * two pages look like two pages rather than one open album.
      */
-    <div className={`board board--${side}${compact ? " board--compact" : ""}`} dir="ltr">
+    <div
+      className={`board board--${side}${compact ? " board--compact" : ""}`}
+      dir="ltr"
+      style={lanes === BOARD_SIZE ? undefined : { "--lanes": lanes } as CSSProperties}
+    >
       <div
         className={
           `slot slot--king${king ? " slot--filled" : ""}` +
@@ -137,7 +159,7 @@ export function BoardGrid({
           `${dragOver === KING_KEY && !king ? " slot--dragover" : ""}`
         }
         data-drop={interactive && !king ? KING_KEY : undefined}
-        style={{ gridColumn: "2 / 4", gridRow: "2 / 4" }}
+        style={{ gridColumn: "2 / 4", gridRow: `${kingLane + 1} / ${kingLane + 3}` }}
         onClick={() => {
           if (targeting && interactive) {
             if (king) onTargetKing?.();
@@ -178,7 +200,7 @@ export function BoardGrid({
             className={
               `slot${occ && shown ? " slot--filled slot--readable" : ""}` +
               `${synergy?.has(key) ? " slot--synergy" : ""}` +
-              `${isGuardPost(x, y) ? " slot--guard" : ""}` +
+              `${isGuardPost(x, y, kingLane) ? " slot--guard" : ""}` +
               `${stacked[key] ? " slot--stacked" : ""}` +
               `${stackableHere(key, occ) ? " slot--stackable" : ""}` +
               `${targeting && occ ? " slot--target" : ""}` +
@@ -209,7 +231,7 @@ export function BoardGrid({
                 <Icon name="stacked" size={15} />
               </span>
             )}
-            {isGuardPost(x, y) && !occ && interactive && (
+            {isGuardPost(x, y, kingLane) && !occ && interactive && (
               <span className="slot__guard-mark" title="משמר המלך. כאן עוצרים את מי שבא לאכול אותו.">
                 <Icon name="guard" size={15} />
               </span>

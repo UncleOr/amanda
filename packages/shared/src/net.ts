@@ -92,6 +92,18 @@ export type ServerMessage =
   | { t: "phase"; phase: string; timeLeft: number }
   /** Fogged view of the opponent's board for the current phase. */
   | { t: "opp"; view: BoardView }
+  /**
+   * Amanda mode only: your partner's half, with NO fog.
+   *
+   * It is a separate message from `opp` because a partner is not an opponent
+   * and the two were being confused — the panel labelled "Amanda" was showing
+   * the other player's cards, fogged, while Amanda herself was not built until
+   * the battle. Your ally is yours to see; she is the one behind the fog.
+   *
+   * `lane` is the row offset of the half it belongs to, so the client can draw
+   * the two halves in the order the engine will actually fight them in.
+   */
+  | { t: "mate"; view: BoardView; lane: number }
   /** Authoritative battle inputs — both clients replay this deterministically. */
   /**
    * `lanes` is not optional detail: the client replays this battle itself, and

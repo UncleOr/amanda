@@ -3,9 +3,11 @@ import { PHASES, encode, type BoardView, type NetBoard, type ServerMessage, type
 import { runBattle } from "@amanda/engine";
 import { CATALOG, SYNERGIES } from "./content.js";
 import { recordMatch } from "./progress.js";
-import { COOP_LANES, amandaBoard, joinBoards } from "./amanda.js";
+import { COOP_LANES, amandaBoard, amandaView, joinBoards } from "./amanda.js";
 
 const COUNTDOWN = 3;
+/** The lane offset of the second player's half of the shared co-op side. */
+const LANE_B = 4;
 const PANIC_LOCK_WINDOW = 8; // seconds after Panic to gather both locked boards
 
 interface PlayerConn {
@@ -48,6 +50,16 @@ export class Match {
 
   /** Amanda mode: both players share side A and fight her instead of each other. */
   private readonly coop: boolean;
+  /**
+   * Her board, built ONCE at the start of the match rather than at the end.
+   *
+   * It used to be generated inside computeResult, which meant nothing shown
+   * before the battle could possibly have been her: the panel labelled
+   * "Amanda" was showing the other player's cards. Building her up front gives
+   * the panic phase something true to reveal — and makes the reveal and the
+   * battle the same board, which is the only version of that worth having.
+   */
+  private readonly amanda: NetBoard | null;
 
   constructor(
     wsA: WebSocket,
@@ -57,11 +69,12 @@ export class Match {
     coop = false,
   ) {
     this.coop = coop;
+    this.amanda = coop ? amandaBoard() : null;
     this.a = { ws: wsA, side: "A", view: emptyView(), board: null, playerId: idA };
     this.b = { ws: wsB, side: "B", view: emptyView(), board: null, playerId: idB };
     // In Amanda mode both are side A; `lane` tells each which half is theirs.
     this.send(this.a, { t: "start", side: "A", coop, ...(coop ? { lane: 0 } : {}) });
-    this.send(this.b, { t: "start", side: coop ? "A" : "B", coop, ...(coop ? { lane: 4 } : {}) });
+    this.send(this.b, { t: "start", side: coop ? "A" : "B", coop, ...(coop ? { lane: LANE_B } : {}) });
     this.runTimeline();
   }
 
@@ -79,12 +92,30 @@ export class Match {
     this.timers.push(setTimeout(fn, seconds * 1000));
   }
 
+  /**
+   * Tell one player what they may see of everyone else.
+   *
+   * Ordinarily that is one thing — the opponent, through the fog of the
+   * current phase. In Amanda mode it is two different things, and conflating
+   * them was the bug: the enemy is HER (fogged, because she is the surprise),
+   * and the other player is an ALLY (not fogged, because the entire mode is
+   * two people arranging one side together, and they cannot do that blind).
+   */
+  private showOthers(p: PlayerConn): void {
+    if (this.coop && this.amanda) {
+      this.send(p, { t: "opp", view: fog(amandaView(this.amanda), this.phase) });
+      this.send(p, { t: "mate", view: this.other(p).view, lane: p === this.a ? LANE_B : 0 });
+      return;
+    }
+    this.send(p, { t: "opp", view: fog(this.other(p).view, this.phase) });
+  }
+
   private setPhase(phase: string, seconds: number): void {
     this.phase = phase;
     this.both({ t: "phase", phase, timeLeft: seconds });
-    // Re-send each opponent view with the new (looser) fog.
-    this.send(this.a, { t: "opp", view: fog(this.b.view, phase) });
-    this.send(this.b, { t: "opp", view: fog(this.a.view, phase) });
+    // Re-send each view with the new (looser) fog.
+    this.showOthers(this.a);
+    this.showOthers(this.b);
   }
 
   private runTimeline(): void {
@@ -113,7 +144,7 @@ export class Match {
     }
     if (msg.t === "board" && msg.view) {
       p.view = msg.view;
-      this.send(this.other(p), { t: "opp", view: fog(p.view, this.phase) });
+      this.showOthers(this.other(p));
     } else if (msg.t === "hex" && typeof msg.id === "string") {
       // Only the build phases can be interfered with; once boards are locked
       // there is nothing left to disturb.
@@ -143,7 +174,7 @@ export class Match {
     const boardA = this.coop
       ? joinBoards(this.a.board, this.b.board)
       : (this.a.board ?? fallback("A"));
-    const boardB = this.coop ? amandaBoard() : (this.b.board ?? fallback("B"));
+    const boardB = this.coop ? (this.amanda ?? amandaBoard()) : (this.b.board ?? fallback("B"));
     let winner: Side | null = null;
     try {
       const result = runBattle({

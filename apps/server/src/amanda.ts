@@ -15,6 +15,7 @@ import {
   type NetBoard,
   type NetPlacement,
   type Side,
+  type BoardView,
 } from "@amanda/shared";
 export { AMANDA_CARD, COOP_LANES };
 import { CATALOG } from "./content.js";
@@ -53,4 +54,22 @@ export function amandaBoard(density = GUARD_DENSITY): NetBoard {
   // The shape of her side lives in shared so the client can build the same one
   // for the developer preview — see buildAmandaBoard.
   return { owner: "B", placements: buildAmandaBoard(CATALOG.values(), density) as NetPlacement[] };
+}
+
+/**
+ * Her side as a fog-of-war view, so the panic phase can reveal her.
+ *
+ * It used to reveal the PARTNER instead — the panel said "Amanda" and showed
+ * the other player's cards — because in co-op the opponent view was still
+ * wired to the other socket. She is eight lanes wide where a human opponent is
+ * four, and the client splits her back into two halves to draw.
+ */
+export function amandaView(board: NetBoard): BoardView {
+  const placements: Record<string, string> = {};
+  let king: string | null = null;
+  for (const p of board.placements) {
+    if (p.king) king = p.cardId;
+    placements[`${p.x}-${p.y}`] = p.cardId;
+  }
+  return { placements, king };
 }

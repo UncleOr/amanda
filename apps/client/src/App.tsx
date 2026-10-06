@@ -9,7 +9,7 @@ import { Onboarding } from "./components/Onboarding";
 import { ChestReveal } from "./components/ChestReveal";
 import { markChestSeen, type Chest } from "./game/account";
 import { markTutorialDone, tutorialSeenLocally } from "./game/account";
-import { PHASES, arenaFor } from "@amanda/shared";
+import { COOP_LANES, PHASES, arenaFor } from "@amanda/shared";
 import type { BattleResult } from "@amanda/engine";
 import { useMatch } from "./game/useMatch";
 import { useDrag } from "./game/useDrag";
@@ -891,6 +891,10 @@ function Game() {
             <section
               className={`side side--me${m.frozenFor > 0 ? " side--frozen" : ""}${
                 m.playground && m.editSide === "me" ? " side--editing" : ""
+              }${m.coop ? " side--split" : ""}${
+                // Lane 4 means your half is the BOTTOM one. Draw it there, or
+                // the screen and the battle disagree about who stands where.
+                m.coop && m.myLane > 0 ? " side--low" : ""
               }`}
             >
               <div className="side__label">
@@ -915,6 +919,11 @@ function Game() {
                   <span className="frozen__note">לשלוף ולזרוק אפשר. להדביק — לא.</span>
                 </div>
               )}
+              {m.coop && (
+                <div className="mate__label mate__label--mine">
+                  <Icon name="king" size={13} /> החצי שלך
+                </div>
+              )}
               <BoardGrid
                 placements={m.placements}
                 king={m.king}
@@ -937,6 +946,32 @@ function Game() {
                 onKingClick={m.placeKing}
                 onCardInfo={openInfo}
               />
+              {m.coop && (
+                /*
+                 * Your partner's half.
+                 *
+                 * Or, after playing Amanda mode with Hod: "first of all it
+                 * sucks that each one only sees his own side." He was right,
+                 * and it was worse than that — the panel labelled "Amanda"
+                 * was showing the partner's cards through fog, so the one
+                 * person you were allowed to see was the one person you
+                 * weren't supposed to. This is the ally, unfogged, drawn
+                 * under or over you depending on which half the server gave
+                 * you, because that is the order the battle will use.
+                 */
+                <div className="mate mate--theirs">
+                  <div className="mate__label">
+                    <Icon name="friend" size={13} /> החצי של מי שאיתך
+                  </div>
+                  <BoardGrid
+                    placements={m.mate?.placements ?? {}}
+                    king={m.mate?.king ?? null}
+                    side="left"
+                    compact
+                    onCardInfo={openInfo}
+                  />
+                </div>
+              )}
             </section>
 
             <div className="midline">
@@ -946,7 +981,7 @@ function Game() {
             <section
               className={`side side--enemy${
                 m.playground && m.editSide === "enemy" ? " side--editing" : ""
-              }`}
+              }${m.coop ? " side--split" : ""}`}
             >
               <div className="side__label">
                 {m.playground ? (
@@ -966,6 +1001,11 @@ function Game() {
               <BoardGrid
                 placements={m.opponent.placements}
                 king={m.opponent.king}
+                // She faces two players, so her side is eight lanes deep and
+                // her King sits across lanes 3 and 4 — the middle of the
+                // eight, not the middle of four.
+                lanes={m.coop ? COOP_LANES : undefined}
+                kingLane={m.coop ? 3 : undefined}
                 side="right"
                 reveal={m.revealOpponentCell}
                 revealKing={m.revealOpponentKing}

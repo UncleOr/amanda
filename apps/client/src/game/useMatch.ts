@@ -219,14 +219,37 @@ function fillCrumbs(placements: Placement[]): Placement[] {
   return out;
 }
 
+/**
+ * Who wears the crown when the player never chose.
+ *
+ * The best card they placed gets promoted. If they placed NOTHING, the answer
+ * is nobody — and that line is the whole point of this comment.
+ *
+ * It used to return a crumb demon: the 1 HP filler, wearing the crown. A King
+ * dying ends the battle instantly, so a player who built nothing was killed on
+ * the first tick. In a one-on-one that merely looks like a harsh forfeit. In
+ * Amanda mode the two players share a side, so one crumb King took the OTHER
+ * player down with it — Or and Hod hit exactly this: "Hod immediately saw that
+ * he lost", a battle the server recorded as one tick long.
+ *
+ * With no King at all the side simply fights without one and is judged on
+ * damage at the end (measured: a full-length battle, lost on kingHp, instead
+ * of 0.0 seconds). Losing because you built nothing is fair. Losing before the
+ * first second, and taking your partner with you, is not.
+ */
 function resolveKing(
   king: string | null,
   placements: Record<string, string>,
-): { king: string; placements: Record<string, string> } {
+): { king: string | null; placements: Record<string, string> } {
   if (king) return { king, placements };
   let bestKey: string | null = null;
   let bestScore = -1;
   for (const [k, id] of Object.entries(placements)) {
+    // A crumb is never a candidate. By the time this runs the empty cells have
+    // already been filled with them, so "the best card on the board" was a
+    // crumb demon whenever the player built nothing — and the board is never
+    // empty by then, so the no-King case below could not be reached.
+    if (id === "crumb_demon") continue;
     const c = CATALOG.get(id);
     const score = (c?.stats.hp ?? 0) + (c?.stats.power ?? 0);
     if (score > bestScore) {
@@ -240,7 +263,7 @@ function resolveKing(
     delete rest[bestKey];
     return { king: promoted, placements: rest };
   }
-  return { king: "crumb_demon", placements };
+  return { king: null, placements };
 }
 
 export interface BattleMods {
@@ -282,15 +305,16 @@ function buildPlayerBoard(
 ): BoardInput {
   const levelOf = (id: string) => album?.get(id)?.level ?? 1;
   const resolved = resolveKing(state.king, state.placements);
-  const ps: Placement[] = [
-    {
+  const ps: Placement[] = [];
+  // No King is a real state — see resolveKing. Never crown a crumb.
+  if (resolved.king !== null)
+    ps.push({
       cardId: resolved.king,
       x: 1,
       y: 1,
       king: true,
       buff: cellBuff(mods, KING_KEY, false, levelOf(resolved.king)),
-    },
-  ];
+    });
   for (const [key, cardId] of Object.entries(resolved.placements)) {
     const [x, y] = key.split("-").map(Number) as [number, number];
     ps.push({
@@ -474,6 +498,19 @@ export interface MatchApi {
   online: boolean;
   /** Amanda mode: you share a side with the other player against her. */
   coop: boolean;
+  /**
+   * Amanda mode: your partner's half of your shared side, as it stands.
+   *
+   * Null until they place something. Not fogged — they are on your team, and
+   * the entire mode is two people arranging one eight-lane side together.
+   */
+  mate: BoardView | null;
+  /**
+   * Which half of that side is YOURS: 0 for the top four lanes, 4 for the
+   * bottom four. The server decides, and the two halves must be drawn in that
+   * order or the screen disagrees with the battle about who is where.
+   */
+  myLane: number;
   startAmanda: () => void;
   /** Developer preview of Amanda mode, alone and unwinnable. */
   startAmandaSolo: () => void;
@@ -582,6 +619,8 @@ export function useMatch(): MatchApi {
   const [oppReady, setOppReady] = useState(false);
   /** Amanda mode: you and the other player share a side against her. */
   const [coop, setCoop] = useState(false);
+  const [mate, setMate] = useState<BoardView | null>(null);
+  const [myLane, setMyLane] = useState(0);
   /** True for the developer's solo Amanda preview (see startAmandaSolo). */
   const soloAmandaRef = useRef(false);
   /**
@@ -1168,6 +1207,8 @@ export function useMatch(): MatchApi {
     setStackCorners(false);
     setFrozenFor(0);
     setCoop(false);
+    setMate(null);
+    setMyLane(0);
     soloAmandaRef.current = false;
     setPlayground(false);
     setMirrorSeed(null);
@@ -1219,10 +1260,13 @@ export function useMatch(): MatchApi {
         netRef.current?.close();
         netRef.current = null;
       },
-      onStart: (side, isCoop) => {
+      onStart: (side, isCoop, lane) => {
         matchStartedRef.current = true;
         setMySide(side);
         setCoop(isCoop);
+        // Which half of the shared side is yours. It was being dropped on the
+        // floor here, which is why both players were drawn as the top half.
+        setMyLane(lane);
       },
       onPhase: (p, timeLeft) => {
         if (p === "locking") {
@@ -1234,6 +1278,7 @@ export function useMatch(): MatchApi {
         }
       },
       onOpp: (view) => setNetOpp(view),
+      onMate: (view) => setMate(view),
       onHexed: (id) => receiveHex(id),
       onOppReady: (r) => setOppReady(r),
       onResult: (r) => {
@@ -1635,6 +1680,8 @@ export function useMatch(): MatchApi {
     startAmanda,
     startAmandaSolo,
     coop,
+    mate,
+    myLane,
     hostRoom,
     joinRoom,
     discardHand,
