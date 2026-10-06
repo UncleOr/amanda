@@ -1,6 +1,6 @@
 import { useMemo, useState } from "react";
 import { spriteFor } from "../game/skins";
-import { Icon } from "./Icon";
+import { Icon, type IconName } from "./Icon";
 import { SIMULATION } from "@amanda/shared";
 import {
   buildReport,
@@ -41,7 +41,7 @@ const FINDING_TEXT: Record<Finding["code"], (f: Finding) => string> = {
 const TIMELINE_TEXT: Record<TimelineEntry["kind"], (e: TimelineEntry) => string> = {
   firstBlood: (e) => `דם ראשון — ${e.actor ?? "משהו"} הפיל את ${e.target}`,
   kill: (e) => `${e.actor ?? "משהו"} הפיל את ${e.target}`,
-  kingDown: (e) => `👑 המלך ${e.target} נפל`,
+  kingDown: (e) => `המלך ${e.target} נפל`,
   reflected: (e) =>
     `${e.target} ספג ${e.damage?.toLocaleString("he-IL")} נזק חוזר מ${e.actor} — הוא פגע בקוצים`,
   split: (e) => `${e.actor} התפצל`,
@@ -50,15 +50,16 @@ const TIMELINE_TEXT: Record<TimelineEntry["kind"], (e: TimelineEntry) => string>
   end: (e) => (e.owner ? `הקרב נגמר` : `תיקו. לשנינו טעם רע בפה.`),
 };
 
-const ICON: Record<TimelineEntry["kind"], string> = {
-  firstBlood: "🩸",
-  kill: "💀",
-  kingDown: "👑",
-  reflected: "🌵",
-  split: "🧬",
-  reveal: "🃏",
-  freeze: "❄️",
-  end: "🏁",
+// The game's own icons, not the phone's. Each key is an id in iconLooks.ts.
+const ICON: Record<TimelineEntry["kind"], IconName> = {
+  firstBlood: "blood",
+  kill: "skull",
+  kingDown: "king",
+  reflected: "thorns",
+  split: "split",
+  reveal: "joker",
+  freeze: "frozen",
+  end: "flag",
 };
 
 /**
@@ -201,7 +202,10 @@ export function BattleLog({ result, mySide }: { result: BattleResult; mySide: Ow
             <span><i className="log__swatch log__swatch--top" /> הכי הרבה נזק</span>
             <span><i className="log__swatch log__swatch--some" /> תרם נזק</span>
             <span><i className="log__swatch log__swatch--idle" /> ישן</span>
-            <span>💀 נפל · ✅ שרד · 🧊 לא זז</span>
+            <span>
+            <Icon name="skull" size={13} /> נפל · <Icon name="ready" size={13} /> שרד ·{" "}
+            <Icon name="frozen" size={13} /> לא זז
+          </span>
             <span>לחץ על קלף ואספר לך</span>
           </div>
         </div>
@@ -231,14 +235,22 @@ export function BattleLog({ result, mySide }: { result: BattleResult; mySide: Ow
                           className="log__dot"
                           style={{ background: seriesColor(u.seriesId) }}
                         />
-                        {u.isKing && "👑 "}
+                        {u.isKing && <Icon name="king" size={13} />}
                         {u.name}
                       </td>
                       <td className={o === mySide ? "log__me" : "log__them"}>{sideName(o)}</td>
                       <td>{u.damageDealt.toLocaleString("he-IL")}</td>
                       <td>{u.damageTaken.toLocaleString("he-IL")}</td>
                       <td>{u.kills || ""}</td>
-                      <td>{u.survived ? "✅" : `💀 ${secs(u.diedAtTick ?? 0)}s`}</td>
+                      <td>
+                    {u.survived ? (
+                      <Icon name="ready" size={14} />
+                    ) : (
+                      <>
+                        <Icon name="skull" size={14} /> {secs(u.diedAtTick ?? 0)}s
+                      </>
+                    )}
+                  </td>
                     </tr>
                   )),
               )}
@@ -262,7 +274,9 @@ export function BattleLog({ result, mySide }: { result: BattleResult; mySide: Ow
             {report.timeline.map((e, i) => (
               <li key={i} className={e.owner === mySide ? "log__them-win" : ""}>
                 <span className="log__time">{secs(e.tick)}s</span>
-                <span className="log__icon">{ICON[e.kind]}</span>
+                <span className="log__icon">
+                  <Icon name={ICON[e.kind]} size={15} />
+                </span>
                 {TIMELINE_TEXT[e.kind](e)}
               </li>
             ))}
@@ -329,9 +343,14 @@ function BoardMap({
       <span className="log__cell-name">{u.name}</span>
       <span className="log__cell-dmg">{u.damageDealt.toLocaleString("he-IL")}</span>
       <span className="log__cell-marks">
-        {u.survived ? "✅" : "💀"}
-        {u.colsMoved === 0 && !u.isKing && "🧊"}
-        {u.kills > 0 && `⚔${u.kills}`}
+        <Icon name={u.survived ? "ready" : "skull"} size={12} />
+        {u.colsMoved === 0 && !u.isKing && <Icon name="frozen" size={12} />}
+        {u.kills > 0 && (
+                        <>
+                          <Icon name="melee" size={12} />
+                          {u.kills}
+                        </>
+                      )}
       </span>
     </button>
   );
@@ -348,9 +367,13 @@ function BoardMap({
             title={`${king.name} — לחצו לפרטים`}
             onClick={() => onPick(king)}
           >
-            <span className="log__cell-name">👑 {king.name}</span>
+            <span className="log__cell-name">
+            <Icon name="king" size={13} /> {king.name}
+          </span>
             <span className="log__cell-dmg">{king.damageDealt.toLocaleString("he-IL")}</span>
-            <span className="log__cell-marks">{king.survived ? "✅" : "💀"}</span>
+            <span className="log__cell-marks">
+            <Icon name={king.survived ? "ready" : "skull"} size={12} />
+          </span>
           </button>
         )}
         {/*
@@ -403,7 +426,7 @@ function UnitReportModal({
         style={{ ["--card-color"]: seriesColor(unit.seriesId) } as React.CSSProperties}
       >
         <button className="modal__close" onClick={onClose} title="סגירה">
-          ✕
+          <Icon name="exit" size={15} />
         </button>
         <div className="modal__banner">
           <div
@@ -416,7 +439,7 @@ function UnitReportModal({
           />
           <div className="modal__title">
             <h2>
-              {unit.isKing && "👑 "}
+              {unit.isKing && <Icon name="king" size={14} />}
               {unit.name}
             </h2>
             <p className="modal__subtitle">
@@ -431,7 +454,15 @@ function UnitReportModal({
               )}
               {card && <span className="badge">{RANGE_META[card.stats.range].he}</span>}
               <span className={`badge${unit.survived ? " badge--king" : ""}`}>
-                {unit.survived ? "✅ שרד" : `💀 נפל ב-${secs(unit.diedAtTick ?? 0)}s`}
+                {unit.survived ? (
+              <>
+                <Icon name="ready" size={14} /> שרד
+              </>
+            ) : (
+              <>
+                <Icon name="skull" size={14} /> נפל ב-{secs(unit.diedAtTick ?? 0)}s
+              </>
+            )}
               </span>
             </div>
           </div>

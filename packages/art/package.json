@@ -18,7 +18,8 @@
     "icons-set": "tsx src/cli.ts icons-set",
     "animate": "tsx src/animate.ts",
     "sounds": "tsx src/cli.ts sounds",
-    "sounds-process": "tsx src/cli.ts sounds-process"
+    "sounds-process": "tsx src/cli.ts sounds-process",
+    "surfaces": "tsx src/cli.ts surfaces"
   },
   "dependencies": {
     "@amanda/shared": "workspace:*",

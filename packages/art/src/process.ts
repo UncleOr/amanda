@@ -16,6 +16,7 @@ const OUT = join(REPO_ROOT, "apps", "client", "public", "cards");
 const ARENA_OUT = join(REPO_ROOT, "apps", "client", "public", "arena");
 const BRAND_OUT = join(REPO_ROOT, "apps", "client", "public", "brand");
 const ICON_OUT = join(REPO_ROOT, "apps", "client", "public", "icons");
+const SURFACE_OUT = join(REPO_ROOT, "apps", "client", "public", "surfaces");
 /** Portrait card art (3:4). Hand card is ~124px wide, so 384 covers retina. */
 const W = 384;
 const H = 512;
@@ -114,6 +115,27 @@ async function main(): Promise<void> {
         .toFile(join(ARENA_OUT, `${id}.webp`));
       processed++;
       console.log(`  arena ${id}`);
+    }
+  }
+
+  /*
+   * The surfaces everything else sits on: album paper, the table, the attic.
+   *
+   * Compressed hard and kept small on purpose. These are backgrounds, they
+   * stretch to whatever size the element is, and nobody ever looks straight
+   * at one — a sharper file would cost a slower first paint for nothing.
+   */
+  const surfaceDir = join(RAW, "surfaces");
+  if (existsSync(surfaceDir)) {
+    await mkdir(SURFACE_OUT, { recursive: true });
+    for (const file of readdirSync(surfaceDir).filter((f) => f.endsWith(".png"))) {
+      const id = file.replace(/\.png$/, "");
+      await sharp(join(surfaceDir, file))
+        .resize(900, 900, { fit: "inside", withoutEnlargement: true })
+        .webp({ quality: 72 })
+        .toFile(join(SURFACE_OUT, `${id}.webp`));
+      processed++;
+      console.log(`  surface ${id}`);
     }
   }
 

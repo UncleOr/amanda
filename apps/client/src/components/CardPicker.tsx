@@ -2,6 +2,7 @@ import { useMemo, useState } from "react";
 import { ACTIONS, CATALOG, SERIES } from "../data/catalog";
 import { CardView } from "./CardView";
 import { ActionCardView } from "./ActionCardView";
+import { Icon } from "./Icon";
 
 /**
  * The playground's card rack.
@@ -57,7 +58,7 @@ export function CardPicker({
           onClick={() => onPick(null)}
           title="בלי קלף ביד — נגיעה בקלף על הלוח מורידה אותו"
         >
-          🧽 מחק
+          <Icon name="erase" size={14} /> מחק
         </button>
         <input
           className="rack__search"

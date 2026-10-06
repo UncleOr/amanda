@@ -76,8 +76,16 @@ export function CardView({
           <span title={RANGE_META[card.stats.range].he}>
             <Icon name={RANGE_META[card.stats.range].icon} size={12} />
           </span>
-          {card.stats.moveSpeed > 0 && <span title="מסתער">🏃</span>}
-          {card.flying && <span title="מעופף">🕊️</span>}
+          {card.stats.moveSpeed > 0 && (
+            <span title="מסתער">
+              <Icon name="move" size={12} />
+            </span>
+          )}
+          {card.flying && (
+            <span title="מעופף">
+              <Icon name="fly" size={12} />
+            </span>
+          )}
         </span>
         <span className="card__flags">
           {king && <span className="card__boss" title="בונוס מלך ×3">
@@ -131,7 +139,9 @@ export function CardView({
 export function CardBack({ size = "small" }: { size?: "small" | "medium" }) {
   return (
     <div className={`card card--back card--${size}`} aria-label="מוסתר בערפל">
-      <span className="card-back__mark">👁</span>
+      <span className="card-back__mark">
+        <Icon name="hidden" size={20} />
+      </span>
     </div>
   );
 }

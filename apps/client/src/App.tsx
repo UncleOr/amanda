@@ -444,7 +444,7 @@ function Game() {
       {/* Two 4x4 boards of portrait cards only fit side by side in landscape,
           so on a phone held upright we ask for a turn instead of squashing. */}
       <div className="rotate-hint">
-        <div className="rotate-hint__icon">📱</div>
+        <div className="rotate-hint__icon"><Icon name="phone" size={56} /></div>
         <h2>סובב את המכשיר</h2>
         <p>אני משוחקת לרוחב, ילד. ככה אני רואה את שניכם.</p>
       </div>
@@ -489,7 +489,7 @@ function Game() {
                 else m.reset();
               }}
             >
-              ✕ יציאה
+              <Icon name="exit" size={14} /> יציאה
             </button>
           )}
           <button
@@ -497,7 +497,7 @@ function Game() {
             title={musicOn ? "כיבוי מוזיקה" : "הפעלת מוזיקה"}
             onClick={() => setMusicOn(music.toggleEnabled())}
           >
-            {musicOn ? "🎵" : "🎵̸"}
+            <Icon name={musicOn ? "musicOn" : "musicOff"} size={19} />
           </button>
           <button
             className="mute"
@@ -508,7 +508,7 @@ function Game() {
               setMuted(nowMuted);
             }}
           >
-            {muted ? "🔇" : "🔊"}
+            <Icon name={muted ? "soundOff" : "soundOn"} size={19} />
           </button>
         </div>
       </header>
@@ -524,7 +524,9 @@ function Game() {
               <span className="purse__item">
                 <Icon name="win" size={16} /> {m.account.trophies}
               </span>
-              <span className="purse__item purse__item--gem">💎 {m.account.diamonds}</span>
+              <span className="purse__item purse__item--gem">
+                <Icon name="gem" size={16} /> {m.account.diamonds}
+              </span>
               <span className="purse__item">
                 <Icon name="monster" size={16} /> {m.account.album.size}
               </span>
@@ -710,7 +712,7 @@ function Game() {
         <main className="intro">
           <div className="intro__card">
             <div className="overlay__count" style={{ fontSize: 60 }}>
-              {m.netError ? "🔌" : m.roomCode ? "👥" : "🌐"}
+              <Icon name={m.netError ? "unplugged" : m.roomCode ? "friend" : "online"} size={60} />
             </div>
             <h2>
               {m.netError ? "השרת לא עונה" : m.roomCode ? "מחכה לחבר שלך…" : "מחפשת לך יריב…"}
@@ -742,7 +744,7 @@ function Game() {
             <div className="intro__buttons">
               {m.netError && (
                 <button className="btn-fight" onClick={m.startMatch}>
-                  🤖 נגד המחשב
+                  <Icon name="robot" size={18} /> נגד המחשב
                 </button>
               )}
               <button className="btn-fight btn-online" onClick={m.reset}>
@@ -782,7 +784,7 @@ function Game() {
               </div>
               {m.frozenFor > 0 && (
                 <div className="frozen" role="status">
-                  <span className="frozen__icon">🧊</span>
+                  <span className="frozen__icon"><Icon name="frozen" size={26} /></span>
                   <strong>הידיים שלך קפואות</strong>
                   <span className="frozen__count">{m.frozenFor.toFixed(1)}</span>
                   <span className="frozen__note">לשלוף ולזרוק אפשר. להדביק — לא.</span>
@@ -863,7 +865,7 @@ function Game() {
           {m.targeting && (
             <div className="targeting-bar">
               <span className="targeting-bar__text">
-                🎯{" "}
+                <Icon name="target" size={16} />{" "}
                 {isEnemyTargeted(m.targeting)
                   ? "בחר קלף אצל היריב"
                   : m.firstPick
@@ -872,7 +874,7 @@ function Game() {
                 עבור "{ACTIONS.get(m.targeting)?.name.he}"
               </span>
               <button className="targeting-bar__cancel" onClick={m.cancelTargeting}>
-                ✕ ביטול
+                <Icon name="exit" size={13} /> ביטול
               </button>
             </div>
           )}
@@ -905,12 +907,12 @@ function Game() {
                       onClick={() => m.activateAction(a.id)}
                     >
                       {a.passive
-                        ? "♾️ פעיל"
+                        ? "פעיל ∞"
                         : a.used
-                          ? "✔ נוצל"
+                          ? "נוצל"
                           : !m.canPlayAction(a.id)
-                            ? "⏳ מאוחר מדי"
-                            : "▶ הפעל"}
+                            ? "מאוחר מדי"
+                            : "הפעל"}
                     </button>
                     <button
                       className="action-chip__info"
@@ -947,18 +949,24 @@ function Game() {
                   )
                 ) : (
                   <div className="lab__eraser" title="גע בקלף על הלוח כדי להוריד אותו">
-                    🧽
+                    <Icon name="erase" size={34} />
                   </div>
                 )}
               </div>
               <div className="lab__buttons">
                 {m.handIsAction && (
                   <button className="take-action" onClick={m.takeAction} disabled={m.barFull}>
-                    {m.barFull ? "הבר מלא" : "➕ קח לפעולה"}
+                    {m.barFull ? (
+                      "הבר מלא"
+                    ) : (
+                      <>
+                        <Icon name="plus" size={14} /> קח לפעולה
+                      </>
+                    )}
                   </button>
                 )}
                 <button className="btn-fight" onClick={m.toBattle}>
-                  ▶ הרץ קרב
+                  <Icon name="play" size={15} /> הרץ קרב
                 </button>
               </div>
               </div>
@@ -1013,24 +1021,31 @@ function Game() {
               <div className="hand__buttons">
                 {m.handIsAction && (
                   <button className="take-action" onClick={m.takeAction} disabled={m.barFull}>
-                    {m.barFull ? "הבר מלא" : "➕ קח לפעולה"}
+                    {m.barFull ? (
+                      "הבר מלא"
+                    ) : (
+                      <>
+                        <Icon name="plus" size={14} /> קח לפעולה
+                      </>
+                    )}
                   </button>
                 )}
                 <button onClick={m.discardHand} disabled={m.hand === null}>
-                  זרוק 🗑️
+                  זרוק <Icon name="discard" size={15} />
                 </button>
                 <button onClick={m.takeDiscard} disabled={!m.discardTop}>
-                  קח מהפח {m.discardTop ? "♻️" : ""}
+                  קח מהפח {m.discardTop && <Icon name="recycle" size={15} />}
                 </button>
               </div>
               {m.stackSlots > 0 && (
                 <p className="hand__hint hand__hint--stack">
-                  🏗️ אפשר להניח קלף על קלף שכבר הנחתם — נשארו {m.stackSlots}
+                  <Icon name="build" size={14} /> אפשר להניח קלף על קלף שכבר הנחתם — נשארו{" "}
+                  {m.stackSlots}
                 </p>
               )}
               {m.stackCorners && (
                 <p className="hand__hint hand__hint--stack">
-                  🏗️ ארבע הפינות פתוחות להנחה כפולה
+                  <Icon name="build" size={14} /> ארבע הפינות פתוחות להנחה כפולה
                 </p>
               )}
               {/* No sentence here any more — the empty crown on the board
@@ -1040,10 +1055,10 @@ function Game() {
                 onClick={m.online ? m.toggleReady : m.toBattle}
               >
                 {!m.online
-                  ? "⚔️ התחל קרב!"
+                  ? "התחל קרב!"
                   : m.ready
-                    ? "✔ מוכן — לחץ לביטול"
-                    : "⚔️ אני מוכן"}
+                    ? "מוכן — לחץ לביטול"
+                    : "אני מוכן"}
               </button>
               {m.online && (m.ready || m.oppReady) && (
                 <p className="hand__hint hand__hint--ready">
@@ -1068,7 +1083,9 @@ function Game() {
               {m.online ? (
                 <>
                   <div className="overlay__mini">הלוח שלך נעול</div>
-                  <div className="overlay__wait" aria-hidden="true">⏳</div>
+                  <div className="overlay__wait" aria-hidden="true">
+                    <Icon name="timer" size={54} />
+                  </div>
                   <div className="overlay__label">מחכה שהיריב יסיים…</div>
                 </>
               ) : (
@@ -1099,7 +1116,7 @@ function Game() {
           <ErrorBoundary
             fallback={
               <div className="result__card">
-                <h1>💥</h1>
+                <h1><Icon name="explode" size={64} /></h1>
                 <p>שגיאה בהצגת הקרב</p>
                 <button className="btn-fight" onClick={m.finishBattle}>
                   המשך לתוצאה
@@ -1119,7 +1136,7 @@ function Game() {
               slow match. */}
           {m.playground && (
             <button className="lab__stop" onClick={m.backToPlayground}>
-              ⏹ עצור וחזור ללוח
+              <Icon name="stop" size={14} /> עצור וחזור ללוח
             </button>
           )}
         </main>
@@ -1150,15 +1167,21 @@ function Game() {
                 </button>
               ) : (
                 <button className="btn-fight" onClick={m.playAgain}>
-                  🔄 משחק חדש
+                  <Icon name="again" size={17} /> משחק חדש
                 </button>
               )}
               <button className="btn-fight btn-ghost" onClick={m.reset}>
-                ☰ תפריט
+                <Icon name="menu" size={16} /> תפריט
               </button>
               {m.result && (
                 <button className="btn-fight btn-online" onClick={() => setShowLog((v) => !v)}>
-                  {showLog ? "מספיק, הבנתי" : "📋 שאסביר לך מה קרה?"}
+                  {showLog ? (
+                    "מספיק, הבנתי"
+                  ) : (
+                    <>
+                      <Icon name="report" size={16} /> שאסביר לך מה קרה?
+                    </>
+                  )}
                 </button>
               )}
             </div>
@@ -1241,7 +1264,6 @@ function Game() {
       {modesOpen && (
         <MoreModes
           onClose={() => setModesOpen(false)}
-          onPlayground={m.startPlayground}
           onAmandaSolo={m.startAmandaSolo}
           onMirror={m.startMirror}
         />

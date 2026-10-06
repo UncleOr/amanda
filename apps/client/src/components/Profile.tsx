@@ -113,7 +113,9 @@ export function Profile({ account, onClose, onChanged }: Props) {
               <span>
                 <Icon name="win" size={17} /> {account?.trophies ?? 0}
               </span>
-              <span className="is-gem">💎 {account?.diamonds ?? 0}</span>
+              <span className="is-gem">
+          <Icon name="gem" size={15} /> {account?.diamonds ?? 0}
+        </span>
               <span>
                 <Icon name="monster" size={17} /> {account?.album.size ?? 0}
               </span>

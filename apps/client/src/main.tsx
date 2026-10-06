@@ -17,6 +17,23 @@ import { loadCopy } from "./game/copy";
  */
 void loadCopy();
 
+/*
+ * Where the generated surfaces live, handed to CSS.
+ *
+ * A stylesheet cannot read import.meta.env, and the base path is "/" in dev
+ * and "/amanda/" on Pages — so a URL written into the CSS is wrong in one of
+ * the two places. These are set once, here, from the only value that knows.
+ */
+const SURFACES: Array<[string, string]> = [
+  ["--paper-album", "surfaces/album_page.webp"],
+  ["--surface-desk", "surfaces/desk.webp"],
+  ["--surface-menu", "surfaces/menu_backdrop.webp"],
+  ["--surface-battle", "surfaces/battle_strip.webp"],
+];
+for (const [name, file] of SURFACES) {
+  document.documentElement.style.setProperty(name, `url("${import.meta.env.BASE_URL}${file}")`);
+}
+
 createRoot(document.getElementById("root")!).render(
   <StrictMode>
     <App />

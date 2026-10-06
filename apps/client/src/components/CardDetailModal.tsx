@@ -1,5 +1,5 @@
 import type { CSSProperties } from "react";
-import { Icon } from "./Icon";
+import { Icon, type IconName } from "./Icon";
 import { CATALOG, SERIES_BY_ID } from "../data/catalog";
 import { ABILITY_LABEL, ELEMENT_META, RANGE_META, RARITY_META } from "../data/cardMeta";
 import { LEVELS, levelCost, levelMultiplier } from "@amanda/shared";
@@ -33,7 +33,7 @@ export function CardDetailModal({
         style={{ "--card-color": card.art.placeholderColor } as CSSProperties}
       >
         <button className="modal__close" onClick={onClose} title="סגירה">
-          ✕
+          <Icon name="exit" size={15} />
         </button>
 
         <div className="modal__banner">
@@ -51,7 +51,11 @@ export function CardDetailModal({
                 </span>
               ))}
               {series && <span className="badge">{series.name.he}</span>}
-              {card.midBoss && <span className="badge badge--king">👑 ענק אמצע</span>}
+              {card.midBoss && (
+                <span className="badge badge--king">
+                  <Icon name="king" size={13} /> ענק אמצע
+                </span>
+              )}
               {owned && <span className="badge badge--level">רמה {level}</span>}
             </div>
           </div>
@@ -76,11 +80,11 @@ export function CardDetailModal({
         )}
 
         <div className="modal__stats">
-          <Stat icon="❤️" label="חיים" value={hp} />
-          <Stat icon="⚔️" label="עוצמה" value={power} />
-          <Stat icon="⏱️" label="קצב תקיפה" value={`${card.stats.attackSpeed}ש׳`} />
+          <Stat icon="hp" label="חיים" value={hp} />
+          <Stat icon="power" label="עוצמה" value={power} />
+          <Stat icon="timer" label="קצב תקיפה" value={`${card.stats.attackSpeed}ש׳`} />
           <Stat
-            icon="🏃"
+            icon="move"
             label="תנועה"
             value={card.stats.moveSpeed > 0 ? `${card.stats.moveSpeed}/ש׳` : "סטטי"}
           />
@@ -125,10 +129,12 @@ export function CardDetailModal({
   );
 }
 
-function Stat({ icon, label, value }: { icon: string; label: string; value: string | number }) {
+function Stat({ icon, label, value }: { icon: IconName; label: string; value: string | number }) {
   return (
     <div className="stat">
-      <span className="stat__icon">{icon}</span>
+      <span className="stat__icon">
+        <Icon name={icon} size={16} />
+      </span>
       <span className="stat__value">{value}</span>
       <span className="stat__label">{label}</span>
     </div>

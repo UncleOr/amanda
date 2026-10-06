@@ -21,7 +21,8 @@
     "art:icons-set": "pnpm --filter @amanda/art icons-set",
     "art:animate": "pnpm --filter @amanda/art animate",
     "art:sounds": "pnpm --filter @amanda/art sounds",
-    "art:sounds-process": "pnpm --filter @amanda/art sounds-process"
+    "art:sounds-process": "pnpm --filter @amanda/art sounds-process",
+    "art:surfaces": "pnpm --filter @amanda/art surfaces"
   },
   "engines": {
     "node": ">=20"

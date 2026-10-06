@@ -71,7 +71,7 @@ export function Album({ account, onClose, onCardInfo, onChanged }: Props) {
                 <Icon name="win" size={16} /> {account.trophies}
               </span>
               <span className="album__count album__count--gem">
-                💎 {account.diamonds}
+                <Icon name="gem" size={15} /> {account.diamonds}
               </span>
             </>
           )}
@@ -90,38 +90,44 @@ export function Album({ account, onClose, onCardInfo, onChanged }: Props) {
       <div className="album__scroll">
         {stats && (
           <section className="record">
+            {/*
+              Or, on the version this replaced: "very app-like. Gaming. Fun.
+              Illustrations." It was a grid of numbers with grey captions under
+              them — a settings screen, not a trophy shelf. Each number is now
+              a plaque with the game's own icon on it, big enough to look at.
+            */}
+            <h3 className="record__title">הקרבות שלך</h3>
             <div className="record__grid">
-              <div className="record__cell">
-                <span className="record__n">{stats.wins}</span>
-                <span className="record__k">ניצחונות</span>
-              </div>
-              <div className="record__cell">
-                <span className="record__n">{stats.losses}</span>
-                <span className="record__k">הפסדים</span>
-              </div>
-              <div className="record__cell">
-                <span className="record__n">
-                  {stats.played ? Math.round((stats.wins / stats.played) * 100) : 0}%
-                </span>
-                <span className="record__k">אחוז ניצחון</span>
-              </div>
-              <div className="record__cell">
-                <span className="record__n">{stats.bestTrophies}</span>
-                <span className="record__k">שיא גביעים</span>
-              </div>
-              <div className="record__cell">
-                <span className="record__n">{stats.chestsOpened}</span>
-                <span className="record__k">תיבות</span>
-              </div>
-              <div className="record__cell">
-                <span className="record__n">{stats.copiesOwned}</span>
-                <span className="record__k">עותקים</span>
-              </div>
+              {(
+                [
+                  { icon: "win", n: stats.wins, k: "ניצחונות", tone: "good" },
+                  { icon: "lose", n: stats.losses, k: "הפסדים", tone: "bad" },
+                  {
+                    icon: "flag",
+                    n: `${stats.played ? Math.round((stats.wins / stats.played) * 100) : 0}%`,
+                    k: "אחוז ניצחון",
+                    tone: "gold",
+                  },
+                  { icon: "king", n: stats.bestTrophies, k: "שיא גביעים", tone: "gold" },
+                  { icon: "chest", n: stats.chestsOpened, k: "תיבות", tone: "" },
+                  { icon: "deck", n: stats.copiesOwned, k: "עותקים", tone: "" },
+                ] as const
+              ).map((cell) => (
+                <div key={cell.k} className={`record__cell record__cell--${cell.tone || "plain"}`}>
+                  <span className="record__icon">
+                    <Icon name={cell.icon} size={34} />
+                  </span>
+                  <span className="record__n">{cell.n}</span>
+                  <span className="record__k">{cell.k}</span>
+                </div>
+              ))}
             </div>
             {stats.recent.length > 0 && (
               <div className="record__streak" title="הקרבות האחרונים, החדש ביותר ראשון">
                 {stats.recent.map((won, i) => (
-                  <i key={i} className={won ? "is-win" : "is-loss"} />
+                  <span key={i} className={`record__mark ${won ? "is-win" : "is-loss"}`}>
+                    <Icon name={won ? "win" : "lose"} size={17} />
+                  </span>
                 ))}
               </div>
             )}

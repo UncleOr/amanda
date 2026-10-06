@@ -8,6 +8,10 @@ import { Icon } from "./Icon";
  * dressed up as a working button is worse than a shelf you can see is empty.
  *
  * To ship one of these: give it a `start` and drop the `soon` flag.
+ *
+ * The playground is deliberately NOT on this shelf. It has its own button on
+ * the home screen, and Or's note was simply that it should not be in both
+ * places at once — a door listed twice reads as two different doors.
  */
 interface Mode {
   id: string;
@@ -20,25 +24,14 @@ interface Mode {
 
 export function MoreModes({
   onClose,
-  onPlayground,
   onAmandaSolo,
   onMirror,
 }: {
   onClose: () => void;
-  onPlayground: () => void;
   onAmandaSolo: () => void;
   onMirror: () => void;
 }) {
   const modes: Mode[] = [
-    {
-      id: "lab",
-      icon: "stacked",
-      title: "מגרש המשחקים",
-      blurb:
-        "בלי שעון. בונים את שני הצדדים מכל הקלפים, מפעילים ועוצרים את הקרב מתי שבא לך. " +
-        "בלי קלף ביד — נגיעה מורידה קלף מהלוח. שום דבר לא נשמר.",
-      start: onPlayground,
-    },
     {
       id: "amanda",
       icon: "king",
@@ -73,7 +66,7 @@ export function MoreModes({
     <div className="modal-overlay" onClick={onClose}>
       <div className="modal modal--modes" onClick={(e) => e.stopPropagation()}>
         <button className="modal__close" onClick={onClose} title="סגירה">
-          ✕
+          <Icon name="exit" size={15} />
         </button>
         <h2 className="modes__title">עוד מודים</h2>
         <p className="modes__lead">מה שכבר מוכן, ומה שאני עוד מבשלת.</p>

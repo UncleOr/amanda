@@ -22,6 +22,7 @@ import { ARENA_LOOKS, buildArenaPrompt } from "./arenaLooks.js";
 import { BRAND_ASPECT, BRAND_LOOK, buildBrandPrompt } from "./brandLooks.js";
 import { ICON_LOOK, buildIconPrompt } from "./iconLooks.js";
 import { generateSounds, processSounds } from "./sounds.js";
+import { SURFACE_ASPECT, SURFACE_LOOK, buildSurfacePrompt } from "./surfaceLooks.js";
 import { download, generate, generateWithReference, uploadFile } from "./fal.js";
 
 const RAW = join(REPO_ROOT, "assets", "raw");
@@ -237,6 +238,32 @@ async function cmdIconSet(styleId?: string, only?: string): Promise<void> {
   console.log("\nDone -> assets/raw/icons/  (run `pnpm art:process` to cut and compress)\n");
 }
 
+/** The paper, the table and the walls — the things everything else sits on. */
+async function cmdSurfaces(styleId?: string): Promise<void> {
+  const dir = dirById(styleId ?? "");
+  const ids = Object.keys(SURFACE_LOOK);
+  console.log(`\nGenerating ${ids.length} surfaces (style: ${dir.id})\n`);
+  for (const id of ids) {
+    const dest = join(RAW, "surfaces", `${id}.png`);
+    if (existsSync(dest)) {
+      console.log(`   skip  ${id} (exists)`);
+      continue;
+    }
+    process.stdout.write(`   ${id.padEnd(16)} ... `);
+    try {
+      const [img] = await generate(buildSurfacePrompt(id, dir.style), {
+        aspectRatio: SURFACE_ASPECT[id] ?? "16:9",
+      });
+      if (!img) throw new Error("no image returned");
+      await download(img.url, dest);
+      console.log("OK");
+    } catch (err) {
+      console.log(`FAIL ${(err as Error).message}`);
+    }
+  }
+  console.log("\nDone -> assets/raw/surfaces/  (run `pnpm art:process`)\n");
+}
+
 const [cmd, ...args] = process.argv.slice(2);
 const run = async () => {
   switch (cmd) {
@@ -256,6 +283,8 @@ const run = async () => {
       return cmdIconSet(args[0], args[1]);
     case "card":
       return cmdCard(args[0], args[1], ...args.slice(2));
+    case "surfaces":
+      return cmdSurfaces(args[0]);
     case "sounds":
       return generateSounds(args);
     case "sounds-process":

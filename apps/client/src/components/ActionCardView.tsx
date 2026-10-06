@@ -1,6 +1,7 @@
 import type { CSSProperties } from "react";
 import { ACTIONS, isPassiveAction } from "../data/catalog";
 import { RARITY_META } from "../data/cardMeta";
+import { Icon } from "./Icon";
 
 /** Where the generated artwork for an action card lives. */
 export function actionArtUrl(id: string): string {
@@ -44,7 +45,7 @@ export function ActionCardView({ actionId, size = "medium", onClick, onInfo, use
       <div className="card__top">
         <span className="card__traits">
           <span className="action-card__kind" title={passive ? "פסיבי — פועל כל הזמן" : "קלף פעולה"}>
-            {used ? "✔" : passive ? "♾️" : "▶"}
+            {used ? <Icon name="ready" size={13} /> : passive ? "∞" : <Icon name="play" size={12} />}
           </span>
         </span>
         <span className="card__flags">

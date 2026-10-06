@@ -2,6 +2,7 @@ import type { CSSProperties } from "react";
 import { ACTIONS, isPassiveAction } from "../data/catalog";
 import { RARITY_META } from "../data/cardMeta";
 import { actionArtUrl } from "./ActionCardView";
+import { Icon } from "./Icon";
 
 
 export function ActionDetailModal({
@@ -30,7 +31,7 @@ export function ActionDetailModal({
         style={{ ["--card-color"]: "#ffb020" } as CSSProperties}
       >
         <button className="modal__close" onClick={onClose} title="סגירה">
-          ✕
+          <Icon name="exit" size={15} />
         </button>
         <div className="modal__banner">
           <div
@@ -49,7 +50,7 @@ export function ActionDetailModal({
                 {rarity.he}
               </span>
               <span className={`badge${passive ? " badge--king" : ""}`}>
-                {passive ? "♾️ פסיבי" : "▶ בלחיצה"}
+                {passive ? "∞ פסיבי" : "בלחיצה"}
               </span>
             </div>
           </div>
@@ -70,7 +71,7 @@ export function ActionDetailModal({
               </button>
             ) : (
               <button className="btn-fight btn-ghost" disabled>
-                {state === "used" ? "✔ כבר נוצל" : "♾️ פועל מעצמו"}
+                {state === "used" ? "כבר נוצל" : "∞ פועל מעצמו"}
               </button>
             )}
           </div>

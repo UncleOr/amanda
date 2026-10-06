@@ -84,6 +84,59 @@ export const ICON_LOOK: Record<string, string> = {
   timer: "a chunky hourglass with sand falling, warm amber and brass",
   ready: "a bold check mark, bright green, thick and confident",
   warning: "a rounded triangle with an exclamation stroke, amber and black",
+
+  /*
+   * ── the second pass ──
+   *
+   * Or, on the first version of the chrome: "I know you like being lazy and
+   * doing a bin emoji and a sound emoji and an hourglass emoji and a swords
+   * emoji… in the end you will have to make real graphics for everything."
+   * He is right, and these are the rest of them: every emoji that was still
+   * standing in the interface, drawn in the same hand as the cards.
+   */
+
+  // ── sound and music, which is where he noticed it ──
+  soundOn: "a chunky speaker cone with two bold curved sound waves, warm cream and gold",
+  soundOff: "a chunky speaker cone with a thick diagonal slash through it, dull grey and red",
+  musicOn: "two joined musical notes, bold and round, violet and gold",
+  musicOff: "two joined musical notes with a thick diagonal slash through them, dull grey",
+
+  // ── the chrome of the screen ──
+  exit: "a thick rounded X cross, bold strokes, dusty red and cream",
+  menu: "three thick stacked horizontal bars with rounded ends, cream and gold",
+  back: "a fat rounded arrow curving back to the left, pale cyan and white",
+  again: "two thick arrows chasing each other in a closed circular loop, bright teal",
+  plus: "a fat rounded plus sign, bright green with a thick outline",
+  play: "a fat rounded triangle pointing right, bright orange",
+  stop: "a fat rounded square, pale cyan",
+  info: "a bold lowercase letter i inside a thick circle, pale blue and cream",
+  erase: "a chunky pink eraser block seen at an angle with a smudge under it, pink and cream",
+  report: "a clipboard with three bold ruled lines on it, warm tan board and cream paper",
+
+  // ── things the game is about ──
+  gem: "a cut diamond gem with facets and a bright glint, brilliant cyan and white",
+  chest: "a fat wooden treasure chest with iron bands, lid slightly ajar with light spilling out, warm brown and gold",
+  skull: "a chunky cartoon monster skull with two fangs, bone cream and deep grey",
+  infinity: "a bold rounded infinity loop, violet and gold",
+  explode: "a chunky comic starburst explosion, orange red and yellow",
+  target: "a bold crosshair target over a card corner, red and cream",
+  move: "a running boot with two speed lines behind it, tan leather and pale blue lines",
+  fly: "a single broad feathered wing, pale cream and soft blue",
+  eye: "a wide open eye with a bold round pupil, pale cyan iris and cream",
+  hidden: "an eye with a thick bar across it, dull grey and violet",
+  build: "a stack of three blocks being set down by a crane hook, warm amber and steel",
+  blood: "a single fat dripping blood droplet, deep crimson",
+  split: "one blob dividing into two smaller blobs, sickly green",
+  thorns: "a short spiked branch with three thorns, dark green and bone",
+  joker: "a jester hat with two bells, violet and gold",
+  flag: "a chequered finish flag on a short pole, black and white squares",
+
+  // ── who you are playing ──
+  robot: "a boxy robot head with two round glowing eyes and an antenna, steel grey and red",
+  friend: "two rounded character silhouettes side by side, one teal one gold",
+  online: "a globe with a bold meridian and a signal arc beside it, deep blue and cream",
+  unplugged: "a power plug pulled out of its socket with the cable curling, grey and red",
+  phone: "a phone held upright with a curved rotate arrow around it, steel and gold",
 };
 
 export function buildIconPrompt(id: string, styleBrief: string): string {

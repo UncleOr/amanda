@@ -78,7 +78,9 @@ export function ChestReveal({ chest, onClose }: Props) {
               ))}
             </div>
             {chest.diamonds > 0 && allShown && (
-              <p className="chest__gems">💎 +{chest.diamonds}</p>
+              <p className="chest__gems">
+          <Icon name="gem" size={20} /> +{chest.diamonds}
+        </p>
             )}
             <button className="btn-fight" disabled={!allShown} onClick={onClose}>
               {allShown ? "יפה" : "…"}
