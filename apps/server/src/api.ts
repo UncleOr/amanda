@@ -172,6 +172,33 @@ async function openChest(req: IncomingMessage, res: ServerResponse): Promise<voi
   send(res, 200, { ok: true, kind: chest.kind, ...contents });
 }
 
+/**
+ * Delete your own account, from inside the game.
+ *
+ * NOT a nice-to-have. Both stores have required this since 2022: if an app
+ * lets you create an account, it must let you delete it from the app, and the
+ * route to it must not be hidden. We had deletion in the admin panel only,
+ * which is not the same thing and would have failed review.
+ *
+ * It deletes the auth user, and everything else follows: players, chests,
+ * player_cards and matches all reference it with `on delete cascade`, so there
+ * is no list of tables here to forget to update when a new one is added.
+ *
+ * No confirmation token and no grace period on purpose. A seven-year-old who
+ * wants their account gone should not need an email to get it, and the UI asks
+ * twice before it ever reaches here.
+ */
+async function deleteSelf(req: IncomingMessage, res: ServerResponse): Promise<void> {
+  const sb = db();
+  if (!sb) return send(res, 503, { error: "no database" });
+  const playerId = await playerFrom(req);
+  if (!playerId) return send(res, 401, { error: "who are you" });
+
+  const { error } = await sb.auth.admin.deleteUser(playerId);
+  if (error) return send(res, 500, { error: error.message });
+  send(res, 200, { ok: true });
+}
+
 const adminDeps = { db, send, readBody, userFrom: playerFrom };
 
 /**
@@ -271,6 +298,18 @@ export async function handleApi(req: IncomingMessage, res: ServerResponse): Prom
   if (await handleCopy(req, res, adminDeps)) return true;
   // Everything behind the admin panel. It checks the admins table itself.
   if (await handleAdmin(req, res, adminDeps)) return true;
+  if (path === "/api/account/delete") {
+    if (req.method === "OPTIONS") {
+      send(res, 204, {});
+      return true;
+    }
+    try {
+      await deleteSelf(req, res);
+    } catch (err) {
+      send(res, 500, { error: (err as Error).message });
+    }
+    return true;
+  }
   if (path === "/api/chest/open") {
     if (req.method === "OPTIONS") {
       send(res, 204, {});

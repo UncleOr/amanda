@@ -29,6 +29,7 @@ import { CardGallery } from "./components/CardGallery";
 import { CardPicker } from "./components/CardPicker";
 import { ArenaTrack } from "./components/ArenaTrack";
 import { ChestShelf } from "./components/ChestShelf";
+import { About } from "./components/About";
 const Admin = lazy(() => import("./components/Admin").then((m) => ({ default: m.Admin })));
 import { MoreModes } from "./components/MoreModes";
 import { ArenaPreview } from "./components/ArenaPreview";
@@ -211,6 +212,7 @@ function Game() {
   /** "Bring a friend" opens three ways to do it rather than guessing one. */
   const [friendOpen, setFriendOpen] = useState(false);
   const [modesOpen, setModesOpen] = useState(false);
+  const [aboutOpen, setAboutOpen] = useState(false);
   /** Turned off for the session the moment the clip fails to load. */
   const [idleOk, setIdleOk] = useState(true);
   /*
@@ -801,6 +803,13 @@ function Game() {
                     : "החדר מלא. שניים מספיקים לי."}
               </p>
             )}
+            {/*
+              About, and the legal pages. Required to be reachable WITHOUT an
+              account and without installing anything — a store will check.
+            */}
+            <button className="btn-link about__open" onClick={() => setAboutOpen(true)}>
+              אודות · פרטיות · נגישות
+            </button>
             <p className="intro__version">
               גרסה {__BUILD_ID__} · מסך {viewport}
               <button
@@ -1450,6 +1459,8 @@ function Game() {
           onChanged={() => m.reloadAccount()}
         />
       )}
+
+      {aboutOpen && <About onClose={() => setAboutOpen(false)} />}
 
       {modesOpen && (
         <MoreModes

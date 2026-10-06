@@ -482,6 +482,40 @@ export async function linkEmail(email: string, password: string): Promise<string
  * The album of the account being left is untouched and lives in the database;
  * signing back in with the same Google account brings all of it back.
  */
+/**
+ * Delete this account, for good.
+ *
+ * Both app stores have required this since 2022: an app that lets you make an
+ * account must let you delete it from inside the app. We only had it in the
+ * admin panel, which is not the same thing and would have failed review.
+ *
+ * The server deletes the auth user and the database cascades the rest —
+ * verified against the live schema rather than assumed: players references
+ * auth.users on delete cascade, and chests and player_cards reference players
+ * the same way. Match rows survive with the player set to null, so somebody
+ * else's history does not develop holes.
+ */
+export async function deleteAccount(): Promise<string | null> {
+  const sb = db();
+  if (!sb || !SERVER_HTTP) return "אין חיבור לשרת";
+  try {
+    const { data } = await sb.auth.getSession();
+    const token = data.session?.access_token;
+    if (!token) return "אין חשבון";
+    const res = await fetch(`${SERVER_HTTP}/api/account/delete`, {
+      method: "POST",
+      headers: { authorization: `Bearer ${token}`, "content-type": "application/json" },
+      body: "{}",
+    });
+    const body = (await res.json()) as { ok?: boolean; error?: string };
+    if (!body.ok) return body.error ?? "לא הצליח";
+    await sb.auth.signOut();
+    return null;
+  } catch (err) {
+    return (err as Error).message;
+  }
+}
+
 export async function switchAccount(): Promise<void> {
   const sb = db();
   if (!sb) return;

@@ -14,6 +14,7 @@ import { useEffect, useState } from "react";
 import {
   MIN_AGE,
   ageFrom,
+  deleteAccount,
   isAdmin,
   linkEmail,
   linkGoogle,
@@ -62,6 +63,8 @@ export function Profile({ account, onClose, onChanged }: Props) {
   const [avatar, setAvatar] = useState(account?.avatar ?? AVATAR_IDS[0]);
   const [facesOpen, setFacesOpen] = useState(false);
   const [leaving, setLeaving] = useState(false);
+  const [deleting, setDeleting] = useState(false);
+  const [reallyDeleting, setReallyDeleting] = useState(false);
   /** Whether to draw the admin link. The server decides; this only shows it. */
   const [admin, setAdmin] = useState(false);
   useEffect(() => {
@@ -152,6 +155,45 @@ export function Profile({ account, onClose, onChanged }: Props) {
           </section>
         )}
 
+        {deleting && (
+          <div className="modal-overlay" onClick={() => setDeleting(false)}>
+            <div className="modal modal--confirm" onClick={(e) => e.stopPropagation()}>
+              <h2>למחוק את החשבון?</h2>
+              <p>
+                הכול נמחק: האלבום, הקלפים, הגביעים, היהלומים וההיסטוריה. מיד,
+                בלי תקופת המתנה. <b>אי אפשר לבטל.</b>
+              </p>
+              <p className="profile__note">
+                אם רק רצית לשחק מחשבון אחר — <b>יציאה / החלפת משתמש</b> עושה
+                את זה בלי למחוק כלום.
+              </p>
+              <div className="result__buttons">
+                <button
+                  className="btn-fight profile__delete"
+                  disabled={reallyDeleting}
+                  onClick={() => {
+                    setReallyDeleting(true);
+                    void deleteAccount().then((err) => {
+                      setReallyDeleting(false);
+                      if (err) {
+                        setDeleting(false);
+                        setNote(err);
+                        return;
+                      }
+                      window.location.reload();
+                    });
+                  }}
+                >
+                  {reallyDeleting ? "מוחק…" : "כן, למחוק הכול"}
+                </button>
+                <button className="btn-fight btn-ghost" onClick={() => setDeleting(false)}>
+                  ביטול
+                </button>
+              </div>
+            </div>
+          </div>
+        )}
+
         {leaving && (
           <div className="modal-overlay" onClick={() => setLeaving(false)}>
             <div className="modal modal--confirm" onClick={(e) => e.stopPropagation()}>
@@ -232,6 +274,17 @@ export function Profile({ account, onClose, onChanged }: Props) {
                 onClick={() => setLeaving(true)}
               >
                 <Icon name="back" size={15} /> יציאה / החלפת משתמש
+              </button>
+              {/*
+                Deleting your own account, from inside the game. Both stores
+                have required this since 2022 and the route to it must not be
+                hidden — so it sits here, in plain sight, under the account.
+              */}
+              <button
+                className="btn-fight profile__wide profile__delete"
+                onClick={() => setDeleting(true)}
+              >
+                מחיקת החשבון שלי
               </button>
             </>
           ) : (
