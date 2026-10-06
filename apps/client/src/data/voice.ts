@@ -103,12 +103,16 @@ export const BATTLE_START = [
 ] as const;
 
 /** Nothing on the board yet and no King chosen. */
-export const NO_KING = [
-  "⚠️ עדיין אין מלך",
-  "⚠️ בלי מלך אין ממלכה",
-  "⚠️ שכחת מלך",
-  "⚠️ מי מולך פה?",
-] as const;
+/*
+ * Gone, on purpose. Or (2026-10-06): "the line that says there is no King —
+ * all of its versions — comes out, an icon will do."
+ *
+ * He is right, and it is worth saying why: the missing King is already drawn
+ * on the board, in the empty middle slot with a crown in it. A sentence
+ * underneath was the same fact a second time, in words, every time you looked
+ * down at your hand. The empty crown now simply asks for attention instead
+ * (see .slot--king--empty).
+ */
 
 /** Waiting for someone to play against. */
 export const SEARCHING = [

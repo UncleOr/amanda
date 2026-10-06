@@ -206,10 +206,95 @@ body {
      binds, the 4:5.2 card proportions survive — capping only the width used to
      stretch the cells into thin strips on a phone. */
   height: min(100cqh - 28px, min(50cqw - 30px, 330px) * 1.3);
-  padding: 7px;
-  background: var(--panel);
-  border: 1px solid var(--line);
-  border-radius: 14px;
+  padding: 9px;
+  /*
+   * A page of a sticker album, not a panel.
+   *
+   * Or: "it would be cool if the whole background of the game looked much
+   * more like two sticker albums — actual paper albums, with a fold at the
+   * edge." So each board is a leaf of paper: a warm sheet with a grain, a
+   * spine down the inner edge where it is bound, and a corner turned up. The
+   * empty slots are the printed outlines you stick onto.
+   */
+  position: relative;
+  background:
+    /* Fine and low-contrast. At 2px bands it read as corduroy, not paper. */
+    repeating-linear-gradient(
+      100deg,
+      rgba(255, 255, 255, 0.009) 0 1px,
+      rgba(0, 0, 0, 0.012) 1px 3px
+    ),
+    repeating-linear-gradient(
+      8deg,
+      rgba(255, 255, 255, 0.006) 0 1px,
+      rgba(0, 0, 0, 0.008) 1px 4px
+    ),
+    linear-gradient(165deg, #232a3d 0%, #1a2032 55%, #151a29 100%);
+  border: 1px solid #39425c;
+  box-shadow:
+    0 10px 26px rgba(0, 0, 0, 0.5),
+    inset 0 1px 0 rgba(255, 255, 255, 0.06);
+}
+
+/*
+ * The spine. Each board is bound on the edge facing the middle, so the two of
+ * them read as one album lying open — which is what the arena has always
+ * literally been, two 4×4 boards joined down the centre.
+ */
+.board::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  width: 13px;
+  pointer-events: none;
+  z-index: 1;
+  background: linear-gradient(
+    to right,
+    rgba(0, 0, 0, 0.42),
+    rgba(0, 0, 0, 0.1) 45%,
+    rgba(255, 255, 255, 0.05) 70%,
+    rgba(0, 0, 0, 0)
+  );
+}
+/* Bound on the inner edge — the one facing the middle of the screen. */
+.board--left {
+  border-radius: 14px 4px 4px 14px;
+}
+.board--left::before {
+  right: 0;
+  transform: scaleX(-1);
+}
+.board--right {
+  border-radius: 4px 14px 14px 4px;
+}
+.board--right::before {
+  left: 0;
+}
+
+/* The turned-up corner, on the outer edge where a thumb would lift it.
+   Small on purpose: a hint of paper, not an origami exercise. */
+.board::after {
+  content: "";
+  position: absolute;
+  bottom: -1px;
+  width: 0;
+  height: 0;
+  pointer-events: none;
+  z-index: 1;
+  border-style: solid;
+  filter: drop-shadow(0 -2px 3px rgba(0, 0, 0, 0.45));
+}
+/* …and lifted on the outer edge, where a thumb would get under it. */
+.board--left::after {
+  left: -1px;
+  border-width: 0 22px 22px 0;
+  border-color: transparent transparent var(--bg) transparent;
+}
+.board--right::after {
+  right: -1px;
+  border-width: 0 0 22px 22px;
+  border-color: transparent transparent var(--bg) transparent;
 }
 
 .slot {
@@ -220,7 +305,10 @@ body {
   align-items: center;
   justify-content: center;
   cursor: pointer;
-  background: #0f1524;
+  /* The printed outline on an album page: a shape pressed into the paper,
+     waiting for its sticker — not a tile floating above it. */
+  background: rgba(0, 0, 0, 0.26);
+  box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.45);
   transition: border-color 0.12s, transform 0.08s;
   overflow: hidden;
   /* Critical: let 1fr tracks stay equal instead of growing to card content. */
@@ -275,11 +363,55 @@ body {
   filter: drop-shadow(0 10px 18px rgba(0, 0, 0, 0.55));
 }
 
-/* a freshly placed card pops in */
-.slot--filled .card { animation: placepop 0.22s ease-out; }
-@keyframes placepop {
-  from { transform: scale(0.6) rotate(-8deg); opacity: 0.3; }
-  to { transform: scale(1) rotate(0); opacity: 1; }
+/*
+ * Sticking a sticker into an album.
+ *
+ * Or asked for this to stop reading as "a card appeared" and start reading as
+ * "you pressed a sticker down there". It used to be a pop — scaling up from
+ * 0.6 with a twist, which is how a thing arrives from somewhere else, not how
+ * a thing is pressed onto a page.
+ *
+ * So it lands the way a hand does it: tipped up on one edge, a little too big
+ * and a little crooked, then rolled flat onto the page from that edge. The
+ * transform-origin is the bottom corner, which is the corner a thumb is on.
+ * The paper takes the weight at the same moment (.slot--filled::before).
+ */
+.slot--filled .card {
+  animation: sticker-press 0.34s cubic-bezier(0.22, 1.2, 0.36, 1);
+  transform-origin: 85% 100%;
+}
+@keyframes sticker-press {
+  0% {
+    transform: perspective(420px) rotateX(38deg) rotate(-7deg) scale(1.12);
+    opacity: 0.35;
+  }
+  55% {
+    transform: perspective(420px) rotateX(6deg) rotate(-1.5deg) scale(1.03);
+    opacity: 1;
+  }
+  100% {
+    transform: perspective(420px) rotateX(0) rotate(0) scale(1);
+    opacity: 1;
+  }
+}
+/* The press: a shadow that spreads from under the sticker and settles, so the
+   page looks like it took the weight rather than the card merely appearing. */
+.slot--filled::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: 9px;
+  pointer-events: none;
+  z-index: 2;
+  animation: sticker-settle 0.34s ease-out;
+}
+@keyframes sticker-settle {
+  0% { box-shadow: inset 0 -14px 20px -8px rgba(0, 0, 0, 0.75); }
+  100% { box-shadow: inset 0 0 0 rgba(0, 0, 0, 0); }
+}
+@media (prefers-reduced-motion: reduce) {
+  .slot--filled .card,
+  .slot--filled::before { animation: none; }
 }
 /* the drawn hand card slides in */
 .hand__current .card--large { animation: dealin 0.25s ease-out; }
@@ -3268,4 +3400,42 @@ button:disabled {
 }
 @media (prefers-reduced-motion: reduce) {
   .slot--synergy::after { animation: none; opacity: 0.9; }
+}
+
+/*
+ * The empty crown, asking for a King.
+ *
+ * This carries the whole message now: the sentence that used to sit under
+ * your hand ("בלי מלך אין ממלכה" and its variants) is gone, because it said
+ * in words what the board was already showing. An empty slot that pulses is
+ * a thing you look at once; a line of text is a thing you read every time.
+ */
+.slot--king-empty {
+  border-style: solid;
+  border-color: rgba(255, 176, 32, 0.6);
+  animation: king-wanted 1.8s ease-in-out infinite;
+}
+.slot__hint--king {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+  color: var(--accent);
+}
+.slot__hint--king b {
+  font-size: 13px;
+  font-weight: 800;
+}
+@keyframes king-wanted {
+  0%, 100% {
+    box-shadow: inset 0 0 0 rgba(255, 176, 32, 0);
+    border-color: rgba(255, 176, 32, 0.4);
+  }
+  50% {
+    box-shadow: inset 0 0 26px rgba(255, 176, 32, 0.3);
+    border-color: rgba(255, 176, 32, 0.95);
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .slot--king-empty { animation: none; border-color: rgba(255, 176, 32, 0.8); }
 }

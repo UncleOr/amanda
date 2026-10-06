@@ -117,10 +117,19 @@ export function BoardGrid({
   const rowForY = (y: number) => y + 1;
 
   return (
-    <div className={`board${compact ? " board--compact" : ""}`} dir="ltr">
+    /*
+     * `side` is the only honest source for which edge is the inner one. The
+     * page is RTL, so "the left board" cannot be inferred from document order
+     * or from a logical property — and a spine drawn on the outer edge makes
+     * two pages look like two pages rather than one open album.
+     */
+    <div className={`board board--${side}${compact ? " board--compact" : ""}`} dir="ltr">
       <div
         className={
           `slot slot--king${king ? " slot--filled" : ""}` +
+          // An empty crown on YOUR board is the whole warning. It replaced a
+          // sentence under the hand that said the same thing in words.
+          `${!king && interactive ? " slot--king-empty" : ""}` +
           `${synergy?.has(KING_KEY) ? " slot--synergy" : ""}` +
           `${king && revealKing ? " slot--readable" : ""}` +
           `${targeting && king ? " slot--target" : ""}` +
@@ -152,8 +161,9 @@ export function BoardGrid({
             onInfo={onCardInfo ? () => onCardInfo(king) : undefined}
           />
         ) : (
-          <span className="slot__hint">
-            <Icon name="king" size={16} /> המלך
+          <span className="slot__hint slot__hint--king">
+            <Icon name="king" size={22} />
+            <b>המלך</b>
           </span>
         )}
       </div>

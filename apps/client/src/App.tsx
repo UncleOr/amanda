@@ -338,7 +338,6 @@ function Game() {
   const exitCancel = useLine(V.EXIT_CANCEL);
   const countdownLabel = useLine(V.COUNTDOWN_LABEL);
   const battleStart = useLine(V.BATTLE_START);
-  const noKing = useLine(V.NO_KING);
   const searching = useLine(V.SEARCHING);
 
   // Drag a card from the hand onto a board slot (mouse + touch).
@@ -1023,7 +1022,8 @@ function Game() {
                   🏗️ ארבע הפינות פתוחות להנחה כפולה
                 </p>
               )}
-              {!m.hasKing && <p className="warn">{noKing}</p>}
+              {/* No sentence here any more — the empty crown on the board
+                  says it, and said it first. */}
               <button
                 className={`btn-fight${m.ready ? " btn-fight--ready" : ""}`}
                 onClick={m.online ? m.toggleReady : m.toBattle}
