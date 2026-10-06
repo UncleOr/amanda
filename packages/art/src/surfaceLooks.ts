@@ -125,13 +125,44 @@ export const SCENE_LOOK: Record<string, string> = {
     "stars and sparks between them. Deep indigo and brass over a dark " +
     "background. The composition fills the whole wide strip evenly with no " +
     "empty corners and no single focal point",
+
+  /*
+   * ── the chests ──
+   *
+   * Opening one is the most "gaming" moment the game has and it was an icon
+   * of a card deck at 96px. Three chests, each clearly worth more than the
+   * last at a glance, drawn closed and full of something.
+   */
+  chest_wood:
+    "A fat sturdy wooden treasure chest, closed, iron bands and a heavy clasp, " +
+    "warm brown oak with a faint golden glow leaking from the seam of the lid. " +
+    "Three-quarter view, centred, floating on a plain dark background",
+  chest_silver:
+    "A fat ornate silver treasure chest, closed, polished steel bands, scrollwork " +
+    "and a jewelled clasp, cool silver and pale blue with bright light leaking " +
+    "from the seam of the lid. Three-quarter view, centred, floating on a plain dark background",
+  chest_gold:
+    "A fat magnificent golden treasure chest, closed, thick gold bands, carved " +
+    "monster faces on the corners and a huge jewelled clasp, brilliant gold with " +
+    "fierce light bursting from the seam of the lid and sparks around it. " +
+    "Three-quarter view, centred, floating on a plain dark background",
+
+  /** The flash at the moment it opens. */
+  chest_burst:
+    "A huge radial burst of golden light and sparks on a plain dark background, " +
+    "rays shooting outward from the centre, scattered stars and glinting confetti, " +
+    "nothing in the middle, nothing but light and sparks",
 };
 
-export const SCENE_ASPECT: Record<string, "16:9" | "21:9" | "4:3"> = {
+export const SCENE_ASPECT: Record<string, "16:9" | "21:9" | "4:3" | "1:1"> = {
   scene_win: "4:3",
   scene_lose: "4:3",
   scene_profile: "21:9",
   scene_album: "21:9",
+  chest_wood: "1:1",
+  chest_silver: "1:1",
+  chest_gold: "1:1",
+  chest_burst: "1:1",
 };
 
 const SCENE_RULES = [

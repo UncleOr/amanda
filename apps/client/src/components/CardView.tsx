@@ -11,6 +11,23 @@ interface StatBuff {
   hpMult?: number;
 }
 
+/**
+ * A number small enough to fit on a card: 1300 becomes 1.3K, 2000 becomes 2K.
+ *
+ * Or asked for this and it is the right call — the plate on a board card is a
+ * few millimetres wide on a phone, and four digits there are not a number,
+ * they are texture. The exact figure is on the card's own screen.
+ *
+ * Deliberately plain Latin "K" rather than a Hebrew abbreviation: it is what
+ * every other game a child plays uses, and it survives being 9 pixels tall.
+ */
+export function short(n: number): string {
+  if (n < 1000) return String(n);
+  const k = n / 1000;
+  // 2K rather than 2.0K; 1.3K rather than 1.25K.
+  return `${k < 10 ? Math.round(k * 10) / 10 : Math.round(k)}K`;
+}
+
 interface Props {
   /** An owned skin to draw instead of the card's own art. */
   skin?: string | null;
@@ -118,12 +135,22 @@ export function CardView({
           <span className={`card__stats${buffed ? " card__stats--buffed" : ""}`}>
             <span className="stat stat--hp" title="חיים">
               <Icon name="hp" size={13} className="stat__icon" />
-              <b>{hp}</b>
+              <b>{short(hp)}</b>
             </span>
-            <span className="stat stat--pw" title="עוצמה">
-              <Icon name="power" size={13} className="stat__icon" />
-              <b>{power}</b>
-            </span>
+            {/*
+              Or: "on mobile the numbers on the cards look bad. I suggest we
+              show only hearts on the cards once they are stuck to the board."
+              A card on the board is 1/12th of a half-board on a phone — two
+              four-digit numbers on that plate is a grey smear. Health is the
+              one you watch during a fight; power is one tap away on the card
+              itself, where there is room to read it.
+            */}
+            {size === "large" && (
+              <span className="stat stat--pw" title="עוצמה">
+                <Icon name="power" size={13} className="stat__icon" />
+                <b>{short(power)}</b>
+              </span>
+            )}
           </span>
         )}
       </div>

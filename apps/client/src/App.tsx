@@ -15,7 +15,7 @@ import { useDrag } from "./game/useDrag";
 import { sfx } from "./game/sfx";
 import { music } from "./game/music";
 import { hardRefresh } from "./game/refresh";
-import { ACTIONS, isEnemyTargeted, synergyGroups } from "./data/catalog";
+import { ACTIONS, cardPool, isEnemyTargeted, synergyGroups } from "./data/catalog";
 import * as V from "./data/voice";
 import { BoardGrid } from "./components/BoardGrid";
 import { CardView } from "./components/CardView";
@@ -158,6 +158,17 @@ if (INVITE_CODE) {
  */
 const AMANDA_DEV = new URLSearchParams(location.search).get("amanda");
 
+/**
+ * Open a chest without winning one.
+ *
+ *   ?chest=gold    (or silver, or wood)
+ *
+ * The reveal only ever appears after a win that earned one, which makes the
+ * most elaborate screen in the game also the hardest to look at. Same spirit
+ * as ?amanda=solo: a door for whoever is working on it.
+ */
+const CHEST_DEV = new URLSearchParams(location.search).get("chest");
+
 const REVIEW = new URLSearchParams(location.search).has("gallery")
   ? "gallery"
   : new URLSearchParams(location.search).has("arena")
@@ -205,7 +216,18 @@ function Game() {
    * just looks for one that has not been SHOWN, which is why it can appear a
    * moment late without anything being wrong.
    */
-  const [chest, setChest] = useState<Chest | null>(null);
+  const [chest, setChest] = useState<Chest | null>(() =>
+    CHEST_DEV
+      ? {
+          id: "dev",
+          kind: CHEST_DEV,
+          // A handful of real cards, so the reveal shows what it really shows.
+          cards: cardPool().slice(0, 5),
+          diamonds: 25,
+          earnedAt: new Date().toISOString(),
+        }
+      : null,
+  );
   useEffect(() => {
     if (m.phase !== "result" || !m.iWon || !m.account) return;
     let alive = true;
@@ -571,6 +593,8 @@ function Game() {
               />
             )}
           </div>
+          {/* The room she is standing in, behind the menu side only. */}
+          <div className="intro__room" aria-hidden="true" />
           <div className="intro__wash" aria-hidden="true" />
           {/* Embers drifting up past her. Spread by hand rather than randomly
               so they never clump, and purely decorative. */}

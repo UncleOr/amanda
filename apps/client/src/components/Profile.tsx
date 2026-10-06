@@ -10,13 +10,15 @@
  * decides otherwise, and signing in LINKS the one they already have rather
  * than starting a new one — which is why nothing says "register".
  */
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import {
   MIN_AGE,
   ageFrom,
+  isAdmin,
   linkEmail,
   linkGoogle,
   saveProfile,
+  switchAccount,
   type Account,
 } from "../game/account";
 import { Icon } from "./Icon";
@@ -59,6 +61,16 @@ export function Profile({ account, onClose, onChanged }: Props) {
   const [birthDate, setBirthDate] = useState(account?.birthDate ?? "");
   const [avatar, setAvatar] = useState(account?.avatar ?? AVATAR_IDS[0]);
   const [facesOpen, setFacesOpen] = useState(false);
+  const [leaving, setLeaving] = useState(false);
+  /** Whether to draw the admin link. The server decides; this only shows it. */
+  const [admin, setAdmin] = useState(false);
+  useEffect(() => {
+    let alive = true;
+    void isAdmin().then((yes) => alive && setAdmin(yes));
+    return () => {
+      alive = false;
+    };
+  }, []);
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [note, setNote] = useState<string | null>(null);
@@ -126,6 +138,46 @@ export function Profile({ account, onClose, onChanged }: Props) {
           </div>
         </section>
 
+        {/*
+          The panel, for the people who have it. Asked of the server, because
+          the admins table is unreachable from the browser by design — and the
+          answer only decides whether a link is drawn, never what it can do.
+        */}
+        {admin && (
+          <section className="profile__box">
+            <h3>ניהול</h3>
+            <a className="btn-fight btn-online profile__wide profile__admin" href="?admin">
+              <Icon name="menu" size={15} /> פתח את לוח הניהול
+            </a>
+          </section>
+        )}
+
+        {leaving && (
+          <div className="modal-overlay" onClick={() => setLeaving(false)}>
+            <div className="modal modal--confirm" onClick={(e) => e.stopPropagation()}>
+              <h2>לצאת מהחשבון?</h2>
+              <p>
+                האלבום, הגביעים והקלפים שלך נשמרים. אפשר לחזור אליהם בכל רגע עם
+                אותה התחברות. המכשיר יתחיל מחשבון אורח חדש.
+              </p>
+              <div className="result__buttons">
+                <button
+                  className="btn-fight"
+                  onClick={() => {
+                    setLeaving(false);
+                    void switchAccount().then(() => window.location.reload());
+                  }}
+                >
+                  כן, לצאת
+                </button>
+                <button className="btn-fight btn-ghost" onClick={() => setLeaving(false)}>
+                  ביטול
+                </button>
+              </div>
+            </div>
+          </div>
+        )}
+
         {facesOpen && (
           <div className="profile__faces">
             {AVATAR_IDS.map((id) => (
@@ -169,7 +221,19 @@ export function Profile({ account, onClose, onChanged }: Props) {
         <section className="panel">
           <h3>החשבון שלך</h3>
           {account?.linked ? (
-            <p className="profile__note">מחובר. האלבום שלך שמור גם אם תחליף מכשיר.</p>
+            <>
+              <p className="profile__note">מחובר. האלבום שלך שמור גם אם תחליף מכשיר.</p>
+              {/*
+                Leaving, which was not possible before. A signed-in player on a
+                shared machine had no way to hand it to anyone else.
+              */}
+              <button
+                className="btn-fight btn-ghost profile__wide"
+                onClick={() => setLeaving(true)}
+              >
+                <Icon name="back" size={15} /> יציאה / החלפת משתמש
+              </button>
+            </>
           ) : (
             <>
               <button

@@ -388,6 +388,54 @@ export async function linkEmail(email: string, password: string): Promise<string
  *
  * Returns an error message to show, or null when the redirect is on its way.
  */
+/**
+ * Sign out, and come back as somebody else.
+ *
+ * Deliberately NOT a plain signOut. Every player has an account from their
+ * first second, so a signed-out game is a game with no album — the next thing
+ * that happens has to be a new anonymous account, or the child is staring at
+ * a broken screen wondering what they did.
+ *
+ * The album of the account being left is untouched and lives in the database;
+ * signing back in with the same Google account brings all of it back.
+ */
+export async function switchAccount(): Promise<void> {
+  const sb = db();
+  if (!sb) return;
+  try {
+    await sb.auth.signOut();
+    await sb.auth.signInAnonymously();
+  } catch {
+    /* worst case the next load makes one */
+  }
+}
+
+/**
+ * Is this account allowed into the admin panel?
+ *
+ * Asked of the SERVER, which is the only thing that can answer: the admins
+ * table is unreachable from the browser on purpose. A false here hides a
+ * link; it is not what protects anything.
+ */
+export async function isAdmin(): Promise<boolean> {
+  const sb = db();
+  if (!sb || !SERVER_HTTP) return false;
+  try {
+    const { data } = await sb.auth.getSession();
+    const token = data.session?.access_token;
+    if (!token || data.session?.user.is_anonymous) return false;
+    const res = await fetch(`${SERVER_HTTP}/api/admin/whoami`, {
+      method: "POST",
+      headers: { authorization: `Bearer ${token}`, "content-type": "application/json" },
+      body: "{}",
+    });
+    if (!res.ok) return false;
+    return !!(await res.json()).ok;
+  } catch {
+    return false;
+  }
+}
+
 export async function linkGoogle(): Promise<string | null> {
   const sb = db();
   if (!sb) return "אין חיבור לשרת";

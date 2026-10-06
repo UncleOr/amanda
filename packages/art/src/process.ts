@@ -151,17 +151,28 @@ async function main(): Promise<void> {
     for (const file of readdirSync(sceneDir).filter((f) => f.endsWith(".png"))) {
       const id = file.replace(/\.png$/, "");
       /*
-       * Trimmed first. The model likes to leave a plain border around a
-       * banner — the profile plaque came back with white down both sides —
-       * and a background-image stretched to cover shows every pixel of it.
-       * The threshold is loose enough to take a near-white margin and tight
-       * enough to leave a painting that happens to be pale at one edge.
+       * An object, or a picture?
+       *
+       * A chest is a THING that sits on whatever is behind it, and each one
+       * came back standing on its own coloured square — which on a dark panel
+       * reads as a tile with a chest printed on it. Those get the backdrop
+       * flood-filled away, the same cutter the icons use, and keep their
+       * transparency as a png.
+       *
+       * A scene is a picture and fills its frame, so it is only trimmed: the
+       * model likes to leave a plain border on a banner (the profile plaque
+       * came back with white down both sides) and a background stretched to
+       * cover shows every pixel of it.
        */
-      await sharp(join(sceneDir, file))
-        .trim({ threshold: 12 })
-        .resize(1400, 1400, { fit: "inside", withoutEnlargement: true })
-        .webp({ quality: 82 })
-        .toFile(join(SCENE_OUT, `${id}.webp`));
+      if (id.startsWith("chest_") && id !== "chest_burst") {
+        await cutBackdrop(join(sceneDir, file), join(SCENE_OUT, `${id}.png`), 640);
+      } else {
+        await sharp(join(sceneDir, file))
+          .trim({ threshold: 12 })
+          .resize(1400, 1400, { fit: "inside", withoutEnlargement: true })
+          .webp({ quality: 82 })
+          .toFile(join(SCENE_OUT, `${id}.webp`));
+      }
       processed++;
       console.log(`  scene ${id}`);
     }

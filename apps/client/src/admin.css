@@ -240,3 +240,12 @@
 .admin__danger:hover:not(:disabled) {
   background: rgba(255, 90, 90, 0.14) !important;
 }
+
+/* The link into the panel, drawn only for the people the server says may. */
+.profile__admin {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  text-decoration: none;
+}
