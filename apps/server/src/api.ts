@@ -164,6 +164,12 @@ export async function handleApi(req: IncomingMessage, res: ServerResponse): Prom
     send(res, 405, { error: "post only" });
     return true;
   }
-  await levelUp(req, res);
+  try {
+    await levelUp(req, res);
+  } catch (err) {
+    // See the note in index.ts: answering beats rejecting, because a rejection
+    // here used to end every match the server was running.
+    send(res, 500, { error: (err as Error).message });
+  }
   return true;
 }

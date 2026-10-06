@@ -19,13 +19,46 @@ const ROOM_TTL_MS = 15 * 60 * 1000;
 
 // A tiny HTTP server for health checks (hosts like Render probe GET /).
 const http = createServer((req, res) => {
-  // The small API (levelling) shares this server; anything it does not claim
-  // falls through to the health check a host probes.
-  void handleApi(req, res).then((handled) => {
-    if (handled) return;
-    res.writeHead(200, { "content-type": "text/plain" });
-    res.end("Amanda multiplayer server — OK");
-  });
+  // The small API (levelling, copy, admin) shares this server; anything it
+  // does not claim falls through to the health check a host probes.
+  void handleApi(req, res)
+    .then((handled) => {
+      if (handled) return;
+      res.writeHead(200, { "content-type": "text/plain" });
+      res.end("Amanda multiplayer server — OK");
+    })
+    .catch((err) => {
+      /*
+       * A failing HTTP request must not take the match server with it.
+       *
+       * It did. The moment the service key arrived and the admin endpoints
+       * could really reach the database, one rejected query became an
+       * unhandled rejection — which Node turns into process.exit — and the
+       * server crash-looped. Every battle in progress died with it, for a
+       * request nobody was even playing.
+       */
+      console.error("[api] request failed:", err);
+      if (!res.headersSent) {
+        res.writeHead(500, { "content-type": "application/json; charset=utf-8" });
+        res.end(JSON.stringify({ error: "server error" }));
+      } else {
+        res.end();
+      }
+    });
+});
+
+/*
+ * The last line of defence, for the same reason.
+ *
+ * Node kills the process on an unhandled rejection by default. For a server
+ * that holds every live match in memory, that trade is exactly backwards: one
+ * stray promise anywhere is worth less than the games already being played.
+ */
+process.on("unhandledRejection", (err) => {
+  console.error("[fatal-ish] unhandled rejection, staying up:", err);
+});
+process.on("uncaughtException", (err) => {
+  console.error("[fatal-ish] uncaught exception, staying up:", err);
 });
 
 const wss = new WebSocketServer({ server: http });

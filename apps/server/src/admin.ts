@@ -92,6 +92,23 @@ export async function handleAdmin(
     deps.send(res, 503, { error: "no database" });
     return true;
   }
+  try {
+    return await adminRoutes(req, res, deps, sb, path);
+  } catch (err) {
+    // Answer, rather than rejecting into the caller. See the note in index.ts
+    // about what a rejection here used to cost.
+    deps.send(res, 500, { error: (err as Error).message });
+    return true;
+  }
+}
+
+async function adminRoutes(
+  req: IncomingMessage,
+  res: ServerResponse,
+  deps: AdminDeps,
+  sb: SupabaseClient,
+  path: string,
+): Promise<boolean> {
   const userId = await deps.userFrom(req);
   if (!userId) {
     deps.send(res, 401, { error: "who are you" });
@@ -255,15 +272,24 @@ export async function handleCopy(
     deps.send(res, 200, { copy: {} });
     return true;
   }
-  const { data, error } = await sb.from("copy_strings").select("id, variant, text");
-  if (error) {
+  /*
+   * Any failure answers with "no overrides" rather than throwing. These are
+   * the words on the screen: the game already has all of them, so the worst
+   * case of a broken query is that Or's latest edit is not shown yet.
+   */
+  try {
+    const { data, error } = await sb.from("copy_strings").select("id, variant, text");
+    if (error) {
+      deps.send(res, 200, { copy: {} });
+      return true;
+    }
+    const copy: Record<string, string[]> = {};
+    for (const row of (data ?? []).sort((a, b) => a.variant - b.variant)) {
+      (copy[row.id] ??= []).push(row.text);
+    }
+    deps.send(res, 200, { copy });
+  } catch {
     deps.send(res, 200, { copy: {} });
-    return true;
   }
-  const copy: Record<string, string[]> = {};
-  for (const row of (data ?? []).sort((a, b) => a.variant - b.variant)) {
-    (copy[row.id] ??= []).push(row.text);
-  }
-  deps.send(res, 200, { copy });
   return true;
 }
