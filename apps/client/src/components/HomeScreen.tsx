@@ -113,23 +113,6 @@ export function HomeScreen({
 
   return (
     <main className="intro intro--hero">
-      {/* What you have, where you can see it without opening anything. */}
-      {m.account && (
-        <div className="purse" aria-label="מה יש לך">
-          <span className="purse__item">
-            <Icon name="win" size={16} /> {m.account.trophies}
-          </span>
-          <span className="purse__item purse__item--gem">
-            <Icon name="gem" size={16} /> {m.account.diamonds}
-          </span>
-          {/* The third number is now nachos rather than the album size: the
-              album has its own button two inches away, and this row is for
-              the things a match MOVES. */}
-          <span className="purse__item purse__item--nacho">
-            <Icon name="nacho" size={16} /> {m.account.nachos}
-          </span>
-        </div>
-      )}
       <button className="me" onClick={() => panel.show("profile")}>
         {m.account?.avatar ? (
           <img src={`${BASE}brand/${m.account.avatar}.webp`} alt="" />
@@ -350,7 +333,21 @@ export function HomeScreen({
             friends and online play locked". The collecting IS the game; what
             an account buys is keeping it.
           */}
-          <ArenaTrack trophies={m.account?.trophies ?? 0} />
+          {/*
+            The ladder and the album, side by side.
+
+            Or: *"my album could be on the same row as the arena"* — and he is
+            right about why. They are the same sentence: where you have got to,
+            and what you have got. It was in the shop column because the shop
+            is where more of it comes from, which is a fact about the shop and
+            not about the album.
+          */}
+          <div className="home__ladder">
+            <ArenaTrack trophies={m.account?.trophies ?? 0} />
+            <button className="btn-album" onClick={() => panel.show("album")}>
+              <Icon name="deck" size={18} /> האלבום שלי
+            </button>
+          </div>
           <NachoBar nachos={m.account?.nachos ?? 0} />
           {/* And what is waiting to be opened. It draws nothing at all when
               there is nothing waiting, so it gets its panel from CSS rather
@@ -366,6 +363,40 @@ export function HomeScreen({
             reloadKey={m.award}
           />
         </section>
+
+        {/*
+          What you have, where you can see it without opening anything.
+
+          ═══ IT IS A ROW OF THE GRID NOW, NOT A CORNER ═══
+
+          Or: *"the diamond bar is not aligned with anything… I would move the
+          whole left part up so it lines up with the shop and friends."* It was
+          `position: absolute` at 12px from the edge while the column beside it
+          starts at the screen's own padding — 92px on his monitor — so the two
+          could only ever line up by someone matching two numbers by hand and
+          keeping them matched.
+
+          Being the first cell of that column lines it up by construction. It
+          also answers the other half of what he asked — *"and where do I see
+          how many nachos I have?"* — because the count now sits at the top of
+          the column he is already looking at.
+        */}
+        {m.account && (
+          <div className="home__purse purse" aria-label="מה יש לך">
+            <span className="purse__item">
+              <Icon name="win" size={16} /> {m.account.trophies}
+            </span>
+            <span className="purse__item purse__item--gem">
+              <Icon name="gem" size={16} /> {m.account.diamonds}
+            </span>
+            {/* The third number is nachos rather than the album size: the
+                album has its own button, and this row is for the things a
+                match MOVES. */}
+            <span className="purse__item purse__item--nacho">
+              <Icon name="nacho" size={16} /> {m.account.nachos}
+            </span>
+          </div>
+        )}
 
         {/* ─────────────── collecting ─────────────── */}
         {/*
@@ -417,10 +448,6 @@ export function HomeScreen({
               </span>
             </button>
           )}
-          <button className="rail__item" onClick={() => panel.show("album")}>
-            <Icon name="deck" size={19} />
-            <span>האלבום שלי</span>
-          </button>
         </section>
 
         {/* ─────────────── other people ─────────────── */}

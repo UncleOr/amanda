@@ -1,6 +1,15 @@
 import { useEffect, useState } from "react";
-import { TAUNTS, tauntById } from "@amanda/shared";
+import {
+  EMOJI_PACKS,
+  TAUNTS,
+  emojiFromSayId,
+  emojiById,
+  ownedEmoji,
+  sayIdFor,
+  tauntById,
+} from "@amanda/shared";
 import { Icon } from "./Icon";
+import { EmojiFace } from "./EmojiFace";
 
 /**
  * Saying something to the other player.
@@ -9,7 +18,7 @@ import { Icon } from "./Icon";
  * during the battle and at the end of it". This is the picker and the bubble.
  *
  * There is no text field and there never will be — the reasoning is in
- * packages/shared/src/taunts.ts. The two things worth knowing here:
+ * packages/shared/src/taunts.ts. Three things worth knowing here:
  *
  *   The picker only offers what can be said NOW. "Good game" belongs at the
  *   end, and offering it while somebody is still building is how a friendly
@@ -18,6 +27,13 @@ import { Icon } from "./Icon";
  *   A bubble is one line, briefly. Not a log, not a history, nothing kept. A
  *   child who wants it to stop has a switch that stops it (see `hearing`),
  *   and nothing to scroll back through afterwards.
+ *
+ *   THE EMOJI ARE A SECOND ROW, AND SOME OF THEM ARE OWNED. Or: *"the emoji
+ *   (illustrated, in the theme!) are also something you buy in the shop or
+ *   win in a chest, so that encourages you too."* Which only works if a
+ *   player can see that there are more — so the ones you do not have are
+ *   drawn locked rather than left out, exactly as the shop and the album are
+ *   for a guest.
  */
 const SHOW_MS = 4000;
 
@@ -26,6 +42,8 @@ export function SayButton({
   atEnd = false,
   hearing = true,
   onToggleHearing,
+  owned = [],
+  onWantMore,
 }: {
   onSay: (id: string) => void;
   /** True on the result screen, where the end-of-match lines unlock. */
@@ -33,9 +51,17 @@ export function SayButton({
   /** False when the other player's lines are switched off. */
   hearing?: boolean;
   onToggleHearing?: () => void;
+  /** Shop items this player holds, for the emoji packs. */
+  owned?: readonly string[];
+  /** Tapping a locked emoji — opens the shop. Absent means do not offer. */
+  onWantMore?: () => void;
 }) {
   const [open, setOpen] = useState(false);
   const offered = TAUNTS.filter((t) => atEnd || t.when === "always");
+  const mine = ownedEmoji(owned);
+  const mineIds = new Set(mine.map((e) => e.id));
+  /** The packs this player does not hold, so the row can show what is missing. */
+  const missing = EMOJI_PACKS.filter((p) => !owned.includes(p.id));
 
   return (
     <div className={`say${open ? " say--open" : ""}`}>
@@ -46,11 +72,48 @@ export function SayButton({
         aria-expanded={open}
       >
         <Icon name={open ? "exit" : "friend"} size={16} />
-        {!open && <span className="say__handle-emoji">👋</span>}
+        {!open && <EmojiFace id="wave" size={18} className="say__handle-face" />}
       </button>
 
       {open && (
         <div className="say__sheet" role="menu">
+          {/* The pictures first: they are one tap and the sentences are a read. */}
+          <div className="say__faces">
+            {mine.map((e) => (
+              <button
+                key={e.id}
+                className="say__face"
+                role="menuitem"
+                title={e.he}
+                onClick={() => {
+                  onSay(sayIdFor(e.id));
+                  setOpen(false);
+                }}
+              >
+                <EmojiFace id={e.id} size={30} label={e.he} />
+              </button>
+            ))}
+            {/*
+              What is missing, as one button rather than a row of padlocks.
+              A dozen greyed-out faces is a nag; "there are more" with the
+              number is an offer.
+            */}
+            {onWantMore && missing.length > 0 && (
+              <button
+                className="say__face say__face--more"
+                role="menuitem"
+                title="עוד אימוג'ים בחנות"
+                onClick={() => {
+                  setOpen(false);
+                  onWantMore();
+                }}
+              >
+                <Icon name="plus" size={16} />
+                <small>עוד</small>
+              </button>
+            )}
+          </div>
+
           {onToggleHearing && (
             /*
              * The way out, where the way in is.
@@ -83,10 +146,15 @@ export function SayButton({
                 setOpen(false);
               }}
             >
-              <span className="say__emoji">{t.emoji}</span>
+              <span className="say__emoji">
+                <EmojiFace id={t.face} size={22} />
+              </span>
               <span className="say__words">{t.he}</span>
             </button>
           ))}
+          {/* A sentence's face is always one of the free ones, so nothing in
+              the list above can be a picture this player does not have. */}
+          {mineIds.size === 0 && <p className="say__none">אין אימוג'ים</p>}
         </div>
       )}
     </div>
@@ -99,6 +167,10 @@ export function SayButton({
  * `at` is a timestamp rather than a boolean so that saying the SAME line
  * twice still shows twice — with a boolean the second one would look like
  * nothing happened.
+ *
+ * It renders a sentence OR a bare picture, because the `say` channel carries
+ * both: an emoji on its own is bigger and has no words under it, which is the
+ * whole point of sending one instead of a line.
  */
 export function SaidBubble({
   said,
@@ -116,12 +188,25 @@ export function SaidBubble({
     return () => window.clearTimeout(t);
   }, [said?.id, said?.at]);
 
-  const taunt = said ? tauntById(said.id) : undefined;
-  if (!taunt || !show) return null;
+  if (!said || !show) return null;
+
+  const loneEmoji = emojiFromSayId(said.id);
+  if (loneEmoji)
+    return (
+      <div className={`bubble bubble--face${mine ? " bubble--mine" : ""}`} role="status">
+        <EmojiFace id={loneEmoji.id} size={52} label={loneEmoji.he} />
+      </div>
+    );
+
+  const taunt = tauntById(said.id);
+  if (!taunt) return null;
+  const face = emojiById(taunt.face);
 
   return (
     <div className={`bubble${mine ? " bubble--mine" : ""}`} role="status">
-      <span className="bubble__emoji">{taunt.emoji}</span>
+      <span className="bubble__emoji">
+        <EmojiFace id={taunt.face} size={30} label={face?.he} />
+      </span>
       <span className="bubble__words">{taunt.he}</span>
     </div>
   );

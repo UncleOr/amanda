@@ -3,6 +3,8 @@ import {
   PHASES,
   TAUNT_LIMITS,
   encode,
+  emojiFromSayId,
+  ownedEmoji,
   tauntById,
   type BoardView,
   type NetBoard,
@@ -13,6 +15,7 @@ import { runBattle, type BattleResult, type Placement } from "@amanda/engine";
 import { CATALOG, SYNERGIES } from "./content.js";
 import { recordMatch } from "./progress.js";
 import { awardMeta, factsFor } from "./meta.js";
+import { cardOf, itemsOf } from "./profiles.js";
 import { COOP_LANES, amandaBoard, amandaView, joinBoards } from "./amanda.js";
 
 const COUNTDOWN = 3;
@@ -94,7 +97,45 @@ export class Match {
     // In Amanda mode both are side A; `lane` tells each which half is theirs.
     this.send(this.a, { t: "start", side: "A", coop, ...(coop ? { lane: 0 } : {}) });
     this.send(this.b, { t: "start", side: coop ? "A" : "B", coop, ...(coop ? { lane: LANE_B } : {}) });
+    /*
+     * Who each of them is about to fight.
+     *
+     * After `start` and never instead of it: this comes from a row read when
+     * the socket signed on (profiles.ts), and a match must not wait on a
+     * database. If it is not there, each of them gets a stranger's card —
+     * which is a worse versus screen and a perfectly good match.
+     *
+     * In Amanda mode the other player is a PARTNER, not an opponent, and the
+     * card is sent all the same: "who am I playing WITH" is the same question
+     * and the screen says so.
+     */
+    this.send(this.a, { t: "opponent", who: cardOf(wsB) });
+    this.send(this.b, { t: "opponent", who: cardOf(wsA) });
     this.runTimeline();
+  }
+
+  /**
+   * May this player send this, right now?
+   *
+   * Two different answers in one question. A TAUNT is a sentence from the
+   * closed list and everybody has all of them. An EMOJI is a picture, and
+   * some of them are bought or won — which is the entire reason they are
+   * drawn rather than unicode, so "do you own it" has to be asked somewhere.
+   *
+   * Asked HERE rather than in the picker, for the same reason the rate limit
+   * is: a picker that hides what you do not own stops an honest player and
+   * nobody else, and the one thing a crafted socket frame could otherwise do
+   * is show everybody an emoji that was supposed to be worth buying.
+   *
+   * The item list was read when the socket signed on. If it never arrived,
+   * the free emoji still work and the paid ones do not — the permissive
+   * failure would be the one that gives away the thing being sold.
+   */
+  private maySay(p: PlayerConn, id: string): boolean {
+    if (tauntById(id)) return true;
+    const emoji = emojiFromSayId(id);
+    if (!emoji) return false;
+    return ownedEmoji(itemsOf(p.ws)).some((e) => e.id === emoji.id);
   }
 
   private send(p: PlayerConn, msg: ServerMessage): void {
@@ -186,7 +227,7 @@ export class Match {
        * dropped in silence: the only ids that exist are the ones in
        * taunts.ts, so anything else is somebody poking at the socket.
        */
-      if (!tauntById(msg.id)) return;
+      if (!this.maySay(p, msg.id)) return;
       const now = Date.now();
       if (now - p.lastSaid < TAUNT_LIMITS.gapSeconds * 1000) return;
       if (p.saidCount >= TAUNT_LIMITS.perMatch) return;

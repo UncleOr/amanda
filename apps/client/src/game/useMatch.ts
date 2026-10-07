@@ -6,9 +6,11 @@ import {
   COOP_LANES,
   buildAmandaBoard,
   levelMultiplier,
+  emojiFromSayId,
   tauntById,
   type BotLevel,
   type Card,
+  type PlayerCard,
   type RoomError,
   type Side,
 } from "@amanda/shared";
@@ -226,6 +228,40 @@ interface Skill {
    */
   draw: number;
 }
+
+/**
+ * The bot, as somebody to fight.
+ *
+ * Or asked for the versus beat "against a friend AND against the bot too",
+ * which means the computer needs a name, a face and a number like anybody
+ * else. Its trophies are its measured win rate against a human-shaped board
+ * (apps/client/scripts/bot-report.ts) turned into a figure on the same scale
+ * the arenas use — not a real count, because the bot has no account, but not
+ * a made-up one either: the hard bot IS harder and the card should say so.
+ */
+export const BOT_CARDS: Record<BotLevel, PlayerCard> = {
+  easy: {
+    nickname: "בוט קליל",
+    avatar: "versus_robot",
+    trophies: 40,
+    catchphrase: null,
+    gender: null,
+  },
+  normal: {
+    nickname: "הבוט",
+    avatar: "versus_robot",
+    trophies: 300,
+    catchphrase: "phrase.fight",
+    gender: null,
+  },
+  hard: {
+    nickname: "בוט קשה",
+    avatar: "versus_robot",
+    trophies: 700,
+    catchphrase: "phrase.onlyamanda",
+    gender: null,
+  },
+};
 
 const SKILL: Record<BotLevel, Skill> = {
   /*
@@ -706,6 +742,20 @@ export interface MatchApi {
   toggleReady: () => void;
   finishBattle: () => void;
   /**
+   * WHO is on the other side — name, face, trophies, catchphrase.
+   *
+   * Deliberately not called `opponent`: that name is taken, by the opponent's
+   * BOARD. Two things about the same person, one of them a grid of monsters
+   * and one of them a face, and the compiler caught them sharing a name.
+   *
+   * From the server in an online match, and made up locally for the bot,
+   * which has no account to read. Null while a match is being found, and null
+   * for the playground, where the other side is also you.
+   */
+  rival: PlayerCard | null;
+  /** The same card for the player themselves, built from their account. */
+  me: PlayerCard;
+  /**
    * What the last match paid: nachos, any chest the bar filled, and which
    * challenges moved. Null until the server has answered, and null for every
    * match that is not worth anything (see finishBattle).
@@ -726,6 +776,8 @@ export function useMatch(): MatchApi {
   const [result, setResult] = useState<BattleResult | null>(null);
   /** What the server said the last match was worth. See finishBattle. */
   const [award, setAward] = useState<Award | null>(null);
+  /** Who is on the other side. See the `opponent` message in net.ts. */
+  const [rival, setRival] = useState<PlayerCard | null>(null);
   const [actionBar, setActionBar] = useState<string[]>([]);
   const [usedActions, setUsedActions] = useState<Record<string, boolean>>({});
   const [boardPowerAdd, setBoardPowerAdd] = useState(0);
@@ -1459,6 +1511,7 @@ export function useMatch(): MatchApi {
     setGs(initialGameState(accountRef.current?.album));
     setResult(null);
     setAward(null);
+    setRival(null);
     soloBoardsRef.current = null;
     setActionBar([]);
     setUsedActions({});
@@ -1505,6 +1558,18 @@ export function useMatch(): MatchApi {
     setMySide("A");
   }, [clearRound]);
 
+  /**
+   * Put the computer on the other side of the versus screen.
+   *
+   * The bot has no account to read, so its card is made up here — see
+   * BOT_CARDS. Called wherever a match against it begins, which is three
+   * places, because "again" after a solo match starts one without going
+   * through startMatch.
+   */
+  const faceTheBot = useCallback(() => {
+    setRival(BOT_CARDS[botLevelRef.current]);
+  }, []);
+
   const startMatch = useCallback(() => {
     sfx.unlock();
     sfx.play("click");
@@ -1514,6 +1579,10 @@ export function useMatch(): MatchApi {
     // and getting that wrong swaps the battle report's labels and inverts the
     // win check.
     clearMatch();
+    // AFTER the clear, not before: clearRound empties the versus card along
+    // with everything else, so setting it first set it and then threw it away.
+    // The screen showed "היריב" with no face for every solo match.
+    faceTheBot();
     setPhase("countdown");
   }, [clearMatch]);
 
@@ -1577,11 +1646,14 @@ export function useMatch(): MatchApi {
         setRematchOffered(true);
         sfx.play("beep");
       },
+      onOpponent: (who) => setRival(who),
       onSaid: (id) => {
         // Dropped on the floor when the player has switched them off — and
         // dropped HERE rather than at the bubble, so nothing is stored.
         if (!hearingRef.current) return;
-        if (!tauntById(id)) return;
+        // Either a sentence from the closed list or one of the drawn emoji.
+        // Anything else is somebody poking at the socket.
+        if (!tauntById(id) && !emojiFromSayId(id)) return;
         setHeard({ id, at: Date.now() });
         sfx.play("beep");
       },
@@ -1731,6 +1803,7 @@ export function useMatch(): MatchApi {
     sfx.unlock();
     sfx.play("click");
     clearMatch();
+    faceTheBot();
     const seed = 1 + Math.floor(Math.random() * 2_000_000_000);
     setMirrorSeed(seed);
     const deck = matchDeck(null, seed);
@@ -1869,9 +1942,12 @@ export function useMatch(): MatchApi {
       startOnline();
       return;
     }
+    // Another one against the computer, without going through startMatch —
+    // so the versus card has to be set here too.
+    faceTheBot();
     sfx.play("click");
     setPhase("countdown");
-  }, [clearMatch, startOnline, startMirror, startLesson]);
+  }, [clearMatch, startOnline, startMirror, startLesson, faceTheBot]);
 
   useEffect(() => {
     // "בלי הגבלת זמן" means the clock does not run at all, not that it runs
@@ -2008,6 +2084,14 @@ export function useMatch(): MatchApi {
     oppLeft,
     iWon: result != null && result.winner === mySide,
     award,
+    rival,
+    me: {
+      nickname: account?.nickname ?? null,
+      avatar: account?.avatar ?? null,
+      trophies: account?.trophies ?? 0,
+      catchphrase: account?.catchphrase ?? null,
+      gender: account?.gender ?? null,
+    },
     mirrorSeed,
     startMirror,
     lesson,

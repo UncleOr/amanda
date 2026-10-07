@@ -62,6 +62,12 @@ export interface Account {
    * whole point of it next to trophies.
    */
   nachos: number;
+  /**
+   * The line thrown across the versus screen, as an id from catchphrases.ts.
+   * Null means "has not chosen", which is the normal state and reads as a
+   * versus card with no line under it.
+   */
+  catchphrase: string | null;
   /** True once a real identity is attached and the album is safe. */
   linked: boolean;
   /** cardId → what you own of it. */
@@ -293,7 +299,7 @@ export async function loadAccount(): Promise<Account | null> {
       const [{ data: player }, { data: cards }] = await Promise.all([
         sb
           .from("players")
-          .select("trophies, diamonds, nachos, tutorial_done, nickname, avatar, birth_date, gender")
+          .select("trophies, diamonds, nachos, tutorial_done, nickname, avatar, birth_date, gender, catchphrase")
           .eq("id", userId)
           .maybeSingle(),
         sb.from("player_cards").select("card_id, copies, level").eq("player_id", userId),
@@ -311,6 +317,7 @@ export async function loadAccount(): Promise<Account | null> {
           trophies: player.trophies ?? 0,
           diamonds: player.diamonds ?? 0,
           nachos: player.nachos ?? 0,
+          catchphrase: player.catchphrase ?? null,
           tutorialDone: player.tutorial_done ?? false,
           nickname: player.nickname ?? null,
           avatar: player.avatar ?? null,

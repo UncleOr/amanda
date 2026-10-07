@@ -16,6 +16,7 @@ const OUT = join(REPO_ROOT, "apps", "client", "public", "cards");
 const ARENA_OUT = join(REPO_ROOT, "apps", "client", "public", "arena");
 const BRAND_OUT = join(REPO_ROOT, "apps", "client", "public", "brand");
 const ICON_OUT = join(REPO_ROOT, "apps", "client", "public", "icons");
+const EMOJI_OUT = join(REPO_ROOT, "apps", "client", "public", "emoji");
 const SURFACE_OUT = join(REPO_ROOT, "apps", "client", "public", "surfaces");
 const SCENE_OUT = join(REPO_ROOT, "apps", "client", "public", "scenes");
 /** Portrait card art (3:4). Hand card is ~124px wide, so 384 covers retina. */
@@ -211,6 +212,22 @@ async function main(): Promise<void> {
       await cutBackdrop(join(iconDir, file), join(ICON_OUT, `${id}.png`), 128);
       processed++;
       console.log(`  icon  ${id}`);
+    }
+  }
+
+  /*
+   * The emoji. Cut and compressed exactly like the icons — same brief, same
+   * 128px — but into their own folder, because these are owned content rather
+   * than furniture and the game asks "do I have this one" about each of them.
+   */
+  const emojiDir = join(RAW, "emoji");
+  if (existsSync(emojiDir)) {
+    await mkdir(EMOJI_OUT, { recursive: true });
+    for (const file of readdirSync(emojiDir).filter((f) => f.endsWith(".png"))) {
+      const id = file.replace(/[.]png$/, "");
+      await cutBackdrop(join(emojiDir, file), join(EMOJI_OUT, `${id}.png`), 128);
+      processed++;
+      console.log(`  emoji ${id}`);
     }
   }
 

@@ -21,6 +21,7 @@ import { STYLE_DIRECTIONS, TEST_MONSTERS } from "./styles.js";
 import { ARENA_LOOKS, buildArenaPrompt } from "./arenaLooks.js";
 import { BRAND_ASPECT, BRAND_LOOK, buildBrandPrompt } from "./brandLooks.js";
 import { ICON_LOOK, buildIconPrompt } from "./iconLooks.js";
+import { EMOJI_LOOK, buildEmojiPrompt } from "./emojiLooks.js";
 import { generateSounds, processSounds } from "./sounds.js";
 import {
   SCENE_ASPECT,
@@ -222,6 +223,36 @@ async function cmdBrand(styleId?: string): Promise<void> {
 }
 
 /** The game's own icon set, one flat icon per id. */
+/**
+ * The emoji players send each other.
+ *
+ * Same shape as cmdIconSet and deliberately a separate command: icons are
+ * furniture that ships with the game, and these are CONTENT — some of them are
+ * bought and some are won — so regenerating one set must never touch the other.
+ */
+async function cmdEmoji(styleId?: string, only?: string): Promise<void> {
+  const dir = dirById(styleId ?? "");
+  const ids = Object.keys(EMOJI_LOOK).filter((id) => !only || id === only);
+  console.log(`\nGenerating ${ids.length} emoji (style: ${dir.id})\n`);
+  for (const id of ids) {
+    const dest = join(RAW, "emoji", `${id}.png`);
+    if (existsSync(dest)) {
+      console.log(`   skip  ${id} (exists)`);
+      continue;
+    }
+    process.stdout.write(`   ${id.padEnd(14)} ... `);
+    try {
+      const [img] = await generate(buildEmojiPrompt(id, dir.style), { aspectRatio: "1:1" });
+      if (!img) throw new Error("no image returned");
+      await download(img.url, dest);
+      console.log("OK");
+    } catch (err) {
+      console.log(`FAIL ${(err as Error).message}`);
+    }
+  }
+  console.log("\nDone -> assets/raw/emoji/  (run `pnpm art:process` to cut and compress)\n");
+}
+
 async function cmdIconSet(styleId?: string, only?: string): Promise<void> {
   const dir = dirById(styleId ?? "");
   const ids = Object.keys(ICON_LOOK).filter((id) => !only || id === only);
@@ -314,6 +345,8 @@ const run = async () => {
       return cmdBrand(args[0]);
     case "icons-set":
       return cmdIconSet(args[0], args[1]);
+    case "emoji":
+      return cmdEmoji(args[0], args[1]);
     case "card":
       return cmdCard(args[0], args[1], ...args.slice(2));
     case "surfaces":
@@ -326,7 +359,7 @@ const run = async () => {
       return processSounds();
     default:
       console.log(
-        "Usage: style | anchor <style> | cards <style> [series|all] | card <cardId> <style> [notes…] | actions <style> | arena <style> | brand <style> | sounds [ids…] | sounds-process",
+        "Usage: style | anchor <style> | cards <style> [series|all] | card <cardId> <style> [notes…] | actions <style> | arena <style> | brand <style> | icons-set <style> [id] | emoji <style> [id] | sounds [ids…] | sounds-process",
       );
   }
 };

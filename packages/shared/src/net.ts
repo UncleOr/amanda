@@ -94,6 +94,32 @@ export type ClientMessage =
   /** Ask a friend to come and play. Checked against the friends table. */
   | { t: "invite"; to: string };
 
+/**
+ * Who you are about to fight: everything the versus screen shows.
+ *
+ * Or: *"at the start of a match against a friend (and against the bot too)
+ * there should be a second where you see who you are fighting — how many
+ * trophies they have, their nickname and their picture."*
+ *
+ * Sent by the server, which is the only side that knows any of it. Deliberately
+ * a small flat record rather than a reference to a player row: the client must
+ * never be in a position to look up a stranger, and this is exactly what is
+ * public about an opponent and nothing else — no id, no age, no email.
+ *
+ * The CATCHPHRASE is an id, not a sentence, for the same reason a taunt is:
+ * the words live in the catalogue on both sides, so nothing a client sends can
+ * become text on somebody else's screen.
+ */
+export interface PlayerCard {
+  nickname: string | null;
+  avatar: string | null;
+  trophies: number;
+  /** An id from catchphrases.ts, or null for "chose not to say anything". */
+  catchphrase: string | null;
+  /** Which way to word a line said TO them. Null means "did not say". */
+  gender: "boy" | "girl" | null;
+}
+
 // ── server → client ────────────────────────────────────────────────
 export type ServerMessage =
   | { t: "waiting" }
@@ -135,6 +161,15 @@ export type ServerMessage =
       lanes?: number;
       coop?: boolean;
     }
+  /**
+   * Who the other player is — name, face, trophies, catchphrase.
+   *
+   * Sent once, right after `start`, and separate from it because it arrives
+   * from a database and `start` must not wait on one. A match whose profile
+   * never turns up is a match with a plain "היריב" on the versus screen, which
+   * is a worse screen and a perfectly good game.
+   */
+  | { t: "opponent"; who: PlayerCard }
   | { t: "oppLeft" }
   /**
    * You are suspended and no match will start. Carries the date it lifts, so

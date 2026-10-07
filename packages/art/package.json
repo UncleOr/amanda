@@ -16,6 +16,7 @@
     "icons": "tsx src/icons.ts",
     "brand": "tsx src/cli.ts brand",
     "icons-set": "tsx src/cli.ts icons-set",
+    "emoji": "tsx src/cli.ts emoji",
     "animate": "tsx src/animate.ts",
     "sounds": "tsx src/cli.ts sounds",
     "sounds-process": "tsx src/cli.ts sounds-process",

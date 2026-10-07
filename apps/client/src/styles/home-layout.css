@@ -104,6 +104,7 @@
   text-align: center;
 }
 
+.home__purse { grid-area: purse; }
 .home__brand {
   grid-area: brand;
   text-align: center;
@@ -193,9 +194,10 @@
  * hierarchy and physically."*
  */
 .intro--hero .home {
-  grid-template-columns: minmax(0, 1.4fr) minmax(200px, 0.44fr);
+  grid-template-columns: minmax(0, 1.4fr) minmax(200px, 0.46fr);
   grid-template-areas:
     "brand    brand"
+    "play     purse"
     "play     collect"
     "play     social"
     "play     meta"
@@ -219,6 +221,22 @@
 }
 .intro--hero .home__progress > * { flex: 1 1 230px; min-width: 0; }
 .intro--hero .home__progress .quests { flex: 2 1 320px; }
+/*
+ * Or: *"I would make the arena part a bit taller, give it more room."* It is
+ * the one panel in the row whose content is a picture rather than a line of
+ * text, so it was the one being squeezed. The album rides in the same cell —
+ * *"my album could be on the same row as the arena"* — because the two are
+ * one sentence: where you have got to, and what you have got.
+ */
+.intro--hero .home__progress .home__ladder { flex: 1.35 1 280px; }
+.home__ladder {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  min-width: 0;
+}
+.home__ladder .track { flex: 1; }
+.home__ladder .btn-album { width: 100%; margin: 0; }
 
 /* ---- one column, once there is no room for two ---- */
 /*
@@ -229,14 +247,27 @@
 @media (max-width: 860px) {
   .intro--hero .home {
     grid-template-columns: minmax(0, 1fr);
+    /*
+     * The purse comes SECOND here, not where it sits on a desktop.
+     *
+     * In two columns it is the top of the quiet column, beside the play
+     * cards. Stacked, that same position put it below them and above the
+     * shop — which on a 384-tall phone is a thousand pixels down the page.
+     * Measured there: top 989 on a screen 384 tall. "What do I have" has to
+     * be answerable without scrolling, which is also how Or found it missing
+     * — *"and where do I see how many nachos I have?"*
+     */
     grid-template-areas:
       "brand"
+      "purse"
       "play"
       "progress"
       "collect"
       "social"
       "meta";
   }
+  /* It is a bar across the top here, not a column heading. */
+  .intro--hero .home .purse { justify-content: center; gap: 18px; }
   /*
    * The progress panels go side by side rather than stacking.
    *
@@ -612,4 +643,276 @@
 }
 @media (prefers-reduced-motion: reduce) {
   .btn-news__dot { animation: none; }
+}
+
+/* ---- the purse, no longer in a corner ---- */
+/*
+ * Everything that made it an absolutely-positioned island comes off: it is a
+ * cell of the grid now (see `purse` in the template above), so it lines up
+ * with the shop and friends below it by construction rather than by two
+ * numbers somebody has to keep matched.
+ */
+.intro--hero .home .purse {
+  position: static;
+  inset: auto;
+  width: 100%;
+  justify-content: center;
+  gap: 14px;
+}
+
+/* ---- the two ways to play, the same size as each other ---- */
+/*
+ * Or: *"the two big buttons don't look good and aren't aligned."* They were
+ * not: the bot's card carries the difficulty pills under its label and the
+ * friends card does not, so the one grew and the other sat short beside it
+ * with its picture at a different height.
+ *
+ * `align-items: stretch` makes them equal height, and the label is pushed to
+ * the bottom of each with an auto margin — so the two pictures start on the
+ * same line and the two labels end on it, whatever is underneath.
+ */
+.intro--hero .home .pick {
+  align-items: stretch;
+  justify-content: center;
+}
+.intro--hero .home .pick__card {
+  display: flex;
+  flex-direction: column;
+  flex: 1 1 0;
+}
+.intro--hero .home .pick__card > img { width: 100%; height: auto; }
+.intro--hero .home .pick__card > span:not(.pick__levels) { margin-top: auto; }
+
+/* ---- a laptop that is only 700 tall ---- */
+/*
+ * Or's monitor reports 1536x695, which is the case every rule above was one
+ * tier too generous for: it overflowed by 62px, and the thing that fell off
+ * the bottom was the challenges — the one part of the screen whose whole job
+ * is to be seen.
+ *
+ * The three progress panels are all exactly as tall as the tallest, so the
+ * challenge list is what sets that height. Everything below takes a little
+ * out of it rather than one thing taking a lot.
+ */
+@media (max-height: 740px) {
+  .intro--hero { padding-block: 6px; }
+  .intro--hero .home { gap: 8px; }
+  .home__progress,
+  .home__collect { padding: 7px; gap: 6px; }
+  .quests { padding: 7px 9px; gap: 4px; }
+  .quests__list { gap: 4px; }
+  .quests__list li { padding: 4px 7px; gap: 2px 7px; }
+  .quests__what { font-size: 12px; line-height: 1.25; }
+  .quests__clock { display: none; }
+  .nachos { padding: 7px 9px; gap: 3px; }
+  .nachos__row > i { width: 24px; height: 24px; }
+  .home__ladder { gap: 6px; }
+  .home__ladder .btn-album { padding: 7px 14px; font-size: 13px; }
+}
+/*
+ * The portraits are capped against the HEIGHT only where there is width to
+ * spare. Without the width guard this rule also caught a landscape phone —
+ * 30vh of 384 is 115px — and crushed the two cards to a third of their size,
+ * which is what pushed "קשה" out of its own button.
+ */
+@media (min-width: 861px) and (max-height: 740px) {
+  .intro--hero .home .pick__card { max-width: min(260px, 30vh); }
+}
+
+/* ---- the difficulty pills must fit the card they are in ---- */
+/*
+ * "קשה" was being clipped off the right edge of the robot card on a landscape
+ * phone. `.pick__levels` is `width: fit-content`, so when three pills and
+ * their padding come to more than the card is wide they simply hang over the
+ * side — the card is sized by the row, and the row by the screen.
+ *
+ * Capped to the card and allowed to wrap, and on a narrow one the pills give
+ * up some padding first so that wrapping is the last resort rather than the
+ * first.
+ */
+/*
+ * Capped to the card, and NOT allowed to wrap. Wrapping was the first fix and
+ * it was worse than the clipping: "קשה" dropped onto a line of its own below
+ * the card, reading as a stray word rather than the third setting of a dial.
+ * Three pills on one line that give up padding is the right failure.
+ */
+.pick__card > .pick__levels { max-width: 100%; }
+@media (max-width: 900px) {
+  .pick__card > .pick__levels { gap: 2px; padding: 2px; }
+  .pick__card > .pick__levels > span { padding: 3px 7px; font-size: 10.5px; }
+}
+
+/* ════════ the beat before a match ════════ */
+/*
+ * Or: *"at the start of a match against a friend (and against the bot too)
+ * there should be a second where you see who you are fighting — how many
+ * trophies they have, their nickname and their picture."*
+ *
+ * It lives in the three-second countdown that already existed, so nothing was
+ * added to the wait. The number that used to be the whole screen is now the
+ * smallest thing on it.
+ */
+.versus {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: clamp(12px, 4vw, 48px);
+  width: min(100%, 820px);
+  padding: 0 16px;
+  animation: versus-in 420ms cubic-bezier(0.2, 0.9, 0.3, 1.2) both;
+}
+@keyframes versus-in {
+  from { opacity: 0; transform: scale(0.94); }
+  to { opacity: 1; transform: none; }
+}
+.versus__side {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 5px;
+  flex: 1 1 0;
+  min-width: 0;
+  /* The two sides slide in from their own edges, so it reads as two people
+     arriving rather than one card fading up. */
+  animation: versus-side 480ms cubic-bezier(0.2, 0.9, 0.3, 1.2) both;
+  transform-origin: center;
+}
+.versus__side { animation-name: versus-from-end; }
+.versus__side--mine { animation-name: versus-from-start; }
+@keyframes versus-from-start {
+  from { opacity: 0; transform: translateX(28px); }
+  to { opacity: 1; transform: none; }
+}
+@keyframes versus-from-end {
+  from { opacity: 0; transform: translateX(-28px); }
+  to { opacity: 1; transform: none; }
+}
+.versus__face {
+  display: grid;
+  place-items: center;
+  width: clamp(64px, 16vh, 104px);
+  height: clamp(64px, 16vh, 104px);
+  border-radius: 50%;
+  border: 3px solid var(--line);
+  background: var(--panel-2);
+  overflow: hidden;
+}
+.versus__face img { width: 100%; height: 100%; object-fit: cover; display: block; }
+.versus__side--mine .versus__face {
+  border-color: #4aa3ff;
+  box-shadow: 0 0 24px rgba(74, 163, 255, 0.45);
+}
+.versus__side:not(.versus__side--mine) .versus__face {
+  border-color: #ff5a5a;
+  box-shadow: 0 0 24px rgba(255, 90, 90, 0.45);
+}
+.versus__name {
+  font-size: clamp(14px, 2.4vh, 19px);
+  text-align: center;
+  max-width: 100%;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.versus__cups { display: inline-flex; align-items: center; gap: 5px; color: var(--muted); font-size: 13px; }
+
+.versus__vs {
+  position: relative;
+  display: grid;
+  place-items: center;
+  flex: none;
+  width: clamp(62px, 11vh, 86px);
+  height: clamp(62px, 11vh, 86px);
+}
+.versus__word {
+  font-size: clamp(15px, 2.6vh, 21px);
+  font-weight: 900;
+  color: var(--accent);
+  letter-spacing: 1px;
+}
+.versus__clock {
+  position: absolute;
+  bottom: -2px;
+  font-size: 12px;
+  font-weight: 800;
+  color: var(--muted);
+  font-variant-numeric: tabular-nums;
+}
+/* The countdown as a ring around the word, so the number is a detail rather
+   than the event. `--left` is 1 at the start and 0 at the end. */
+.versus__ring {
+  position: absolute;
+  inset: 0;
+  border-radius: 50%;
+  background: conic-gradient(
+    var(--accent) calc(var(--left, 1) * 360deg),
+    rgba(255, 255, 255, 0.08) 0
+  );
+  -webkit-mask: radial-gradient(circle, transparent 60%, #000 62%);
+  mask: radial-gradient(circle, transparent 60%, #000 62%);
+  transition: background 0.2s linear;
+}
+
+/* ---- the catchphrase, which is the thing people buy ---- */
+/*
+ * Or, on why they are worth money: *"then people will have a reason to buy
+ * from the shop, because it is something you SEE."* So the free ones are
+ * plain and the bought ones are not — what is being sold is not the sentence,
+ * it is how it ARRIVES, and that only reads as worth something if the lines
+ * everybody already has are quieter.
+ *
+ * Drawn as TYPE, never as a picture of type: a sentence baked into an image
+ * cannot be translated, cannot be read aloud by a screen reader, and goes
+ * soft on a phone.
+ */
+.phrase {
+  margin: 4px 0 0;
+  max-width: 22ch;
+  text-align: center;
+  font-size: clamp(11px, 1.9vh, 14px);
+  font-weight: 800;
+  line-height: 1.35;
+}
+.phrase--plain { color: var(--text); opacity: 0.85; }
+.phrase--chalk {
+  color: #e8ecf5;
+  text-shadow: 0 1px 0 rgba(0, 0, 0, 0.6);
+  letter-spacing: 0.5px;
+}
+.phrase--ember {
+  background: linear-gradient(100deg, #ffb020, #ff5a5a);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+  filter: drop-shadow(0 0 10px rgba(255, 90, 90, 0.45));
+}
+.phrase--ice {
+  background: linear-gradient(100deg, #9fe6ff, #4aa3ff);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+  filter: drop-shadow(0 0 10px rgba(74, 163, 255, 0.45));
+}
+.phrase--gold {
+  background: linear-gradient(100deg, #fff3c4, #f0c24a 45%, #fff3c4);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+  filter: drop-shadow(0 0 12px rgba(240, 194, 74, 0.55));
+}
+.phrase--slime {
+  color: #a6f06a;
+  text-shadow: 0 0 10px rgba(166, 240, 106, 0.55), 0 2px 0 rgba(0, 0, 0, 0.5);
+}
+.phrase--shadow {
+  color: #cdb6ff;
+  text-shadow: 0 0 14px rgba(140, 90, 255, 0.8), 0 0 3px rgba(0, 0, 0, 0.9);
+  letter-spacing: 0.5px;
+}
+
+.overlay--versus { gap: 14px; }
+
+@media (prefers-reduced-motion: reduce) {
+  .versus,
+  .versus__side { animation: none; }
 }

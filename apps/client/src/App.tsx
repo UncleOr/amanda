@@ -42,6 +42,7 @@ const prefetchArena = () => void import("./components/Arena");
 import { CardPicker } from "./components/CardPicker";
 import { About } from "./components/About";
 import { Updates } from "./components/Updates";
+import { Versus } from "./components/Versus";
 import { Report } from "./components/Report";
 import { Friends } from "./components/Friends";
 import { Shop } from "./components/Shop";
@@ -1153,10 +1154,34 @@ function Game() {
       {/* ---- countdown before build ---- */}
       {m.phase === "countdown" && (
         <main className="build">
-          <div className="overlay">
-            <div className="overlay__count">{Math.ceil(m.timeLeft)}</div>
-            <div className="overlay__label">{countdownLabel}</div>
-          </div>
+          {/*
+            The three seconds before a match now show who is in it.
+
+            Or: "at the start of a match against a friend (and against the bot
+            too) there should be a second where you see who you are fighting."
+            This pause already existed with nothing in it but a number; the
+            number is still here, smaller, in the middle of the card.
+
+            The playground has no opponent — both sides are yours — so it keeps
+            the plain count.
+          */}
+          {m.playground ? (
+            <div className="overlay">
+              <div className="overlay__count">{Math.ceil(m.timeLeft)}</div>
+              <div className="overlay__label">{countdownLabel}</div>
+            </div>
+          ) : (
+            <div className="overlay overlay--versus">
+              <Versus
+                me={m.me}
+                them={m.rival}
+                secondsLeft={m.timeLeft}
+                total={3}
+                joined={m.coop}
+              />
+              <div className="overlay__label">{countdownLabel}</div>
+            </div>
+          )}
         </main>
       )}
 

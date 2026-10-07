@@ -3,6 +3,7 @@ import {
   type BoardView,
   type ClientMessage,
   type NetBoard,
+  type PlayerCard,
   type RoomError,
   type ServerMessage,
   type Side,
@@ -72,6 +73,8 @@ export interface NetHandlers {
   onOppReady?: (ready: boolean) => void;
   /** The other player said one of the ready-made lines. */
   onSaid?: (id: string) => void;
+  /** Who the other player is — name, face, trophies, catchphrase. */
+  onOpponent?: (who: PlayerCard) => void;
   /** The other player would like to play you again. */
   onRematchWanted?: () => void;
   /** A friend has opened a room and wants you in it. */
@@ -185,6 +188,9 @@ export class Net {
           break;
         case "said":
           this.handlers.onSaid?.(msg.id);
+          break;
+        case "opponent":
+          this.handlers.onOpponent?.(msg.who);
           break;
         case "rematchWanted":
           this.handlers.onRematchWanted?.();

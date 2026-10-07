@@ -42,6 +42,12 @@ export * from "./soloTrophies.js";
 // How many nachos a match is worth, and how many fill a chest
 export * from "./nachos.js";
 
+// The emoji players send each other: which exist, and who owns them
+export * from "./emoji.js";
+
+// The one line that is yours, thrown across the versus screen
+export * from "./catchphrases.js";
+
 // The closed set of things one player may say to the other
 export * from "./taunts.js";
 

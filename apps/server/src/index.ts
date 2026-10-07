@@ -12,6 +12,7 @@ import { arrived, deliver, left as presenceLeft } from "./presence.js";
 import { areFriends } from "./friends.js";
 import { PROGRESS_ENABLED } from "./progress.js";
 import { handleApi } from "./api.js";
+import { cardOf, forget, loadProfile, profileOf } from "./profiles.js";
 import { refreshCards } from "./cards.js";
 import { startScheduler } from "./schedule.js";
 import { findPair, type Waiting } from "./matchmaking.js";
@@ -224,27 +225,16 @@ setInterval(() => {
  * out mid-match does not yank somebody out of a game already in progress — it
  * stops the next one. That is the right moment for it.
  */
-const suspendedUntil = new WeakMap<WebSocket, number>();
-
-async function checkSuspended(ws: WebSocket, playerId: string): Promise<void> {
-  const sb = db();
-  if (!sb) return;
-  try {
-    const { data } = await sb
-      .from("players")
-      .select("suspended_until")
-      .eq("id", playerId)
-      .maybeSingle();
-    const until = data?.suspended_until ? Date.parse(data.suspended_until) : 0;
-    if (until > Date.now()) suspendedUntil.set(ws, until);
-  } catch {
-    /* a database that cannot be reached must not stop anybody playing */
-  }
-}
-
-/** True when this socket may not start a match, and told so. */
+/**
+ * True when this socket may not start a match, and told so.
+ *
+ * The date comes from the profile read on sign-on (profiles.ts), which used
+ * to be a query of its own for this one column. Three different things wanted
+ * that row — this, the versus screen and the emoji picker — so there is now
+ * one read and they share it.
+ */
 function refuseIfSuspended(ws: WebSocket): boolean {
-  const until = suspendedUntil.get(ws) ?? 0;
+  const until = profileOf(ws).suspendedUntil;
   if (until <= Date.now()) return false;
   send(ws, { t: "suspended", until: new Date(until).toISOString() });
   return true;
@@ -258,7 +248,7 @@ function handleLobby(ws: WebSocket, msg: ClientMessage): void {
         // From here on this socket counts as that player being online, which
         // is what their friends' lists are reading (see presence.ts).
         arrived(msg.playerId, ws);
-        void checkSuspended(ws, msg.playerId);
+        void loadProfile(ws, msg.playerId);
       }
       return;
     }
@@ -394,6 +384,7 @@ wss.on("connection", (ws) => {
 
   ws.on("close", () => {
     presenceLeft(ws, playerIdOf.get(ws));
+    forget(ws);
     leaveQueue(ws);
     if (waitingCoop === ws) waitingCoop = null;
     closeRoomOf(ws);
