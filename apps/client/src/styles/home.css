@@ -363,3 +363,17 @@
   .pick__levels { margin-top: 3px; padding: 2px; }
   .pick__levels > span { padding: 2px 7px; font-size: 10px; }
 }
+/* The advertised thing, pictured. See shopItemArt. */
+.rail__promo-row { display: flex; align-items: center; gap: 9px; width: 100%; }
+.rail__promo-art {
+  flex: none;
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  object-fit: cover;
+  background: rgba(0, 0, 0, 0.3);
+}
+.rail__promo-words { display: flex; flex-direction: column; gap: 1px; min-width: 0; text-align: start; }
+@media (max-height: 460px) and (orientation: landscape) {
+  .rail__promo-art { width: 32px; height: 32px; }
+}

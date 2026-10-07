@@ -34,11 +34,22 @@ const SECTIONS: Array<{ kind: ShopItem["kind"]; he: string }> = [
   { kind: "card", he: "קלפים" },
 ];
 
-function artUrl(item: ShopItem): string | null {
+/**
+ * The picture for a shop item.
+ *
+ * Exported because the promotion banner on the home screen needs the same
+ * answer — Or: "obviously you should also see a picture of what is being
+ * advertised." Two copies of this would be two chances to disagree about
+ * where an avatar's picture lives.
+ */
+export function shopItemArt(item: ShopItem): string | null {
   if (item.art) return `${BASE}${item.art}`;
   // An avatar's picture is its id, the same as everywhere else in the game.
   const avatar = (item.grants as { avatar?: string }).avatar;
-  return avatar ? `${BASE}brand/${avatar}.webp` : null;
+  if (avatar) return `${BASE}brand/${avatar}.webp`;
+  // A card, or a skin for one, is drawn as that card.
+  const cardId = (item.grants as { cardId?: string }).cardId;
+  return cardId ? `${BASE}cards/${cardId}.webp` : null;
 }
 
 export function Shop({
@@ -106,7 +117,7 @@ export function Shop({
                   <div className="shelf__row">
                     {row.map((item) => {
                       const mine = owned.includes(item.id);
-                      const art = artUrl(item);
+                      const art = shopItemArt(item);
                       const tooDear = item.price_diamonds > diamonds;
                       return (
                         <div className={`good${mine ? " is-mine" : ""}`} key={item.id}>
