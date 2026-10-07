@@ -7,7 +7,7 @@ import { LESSONS } from "./game/lessons";
 import { Profile } from "./components/Profile";
 import { Onboarding } from "./components/Onboarding";
 import { ChestReveal } from "./components/ChestReveal";
-import { loadInbox, markChestSeen, type Chest } from "./game/account";
+import { loadInbox, loadShop, markChestSeen, type Chest, type ShopItem } from "./game/account";
 import { markTutorialDone, tutorialSeenLocally } from "./game/account";
 import { COOP_LANES, PHASES, arenaFor } from "@amanda/shared";
 import type { BattleResult } from "@amanda/engine";
@@ -44,6 +44,7 @@ import { About } from "./components/About";
 import { Report } from "./components/Report";
 import { Friends } from "./components/Friends";
 import { Shop } from "./components/Shop";
+import { Lock, WhySignIn } from "./components/SignedInOnly";
 import { Inbox } from "./components/Inbox";
 import { SayButton, SaidBubble } from "./components/Say";
 const Admin = lazy(() => import("./components/Admin").then((m) => ({ default: m.Admin })));
@@ -247,6 +248,8 @@ function Game() {
   const [modesOpen, setModesOpen] = useState(false);
   const [friendsOpen, setFriendsOpen] = useState(false);
   const [shopOpen, setShopOpen] = useState(false);
+  /** Set when a guest reaches for something that needs an account. */
+  const [whyOpen, setWhyOpen] = useState(false);
   const [inboxOpen, setInboxOpen] = useState(false);
   const [unread, setUnread] = useState(0);
   const [aboutOpen, setAboutOpen] = useState(false);
@@ -542,6 +545,45 @@ function Game() {
     };
   }, [m.account, m.phase]);
 
+  /*
+   * What the rail advertises: the newest thing on the shelves.
+   *
+   * Read from the shop itself so a holiday sale is a row with dates on it
+   * rather than a banner somebody has to remember to take down. Asked once,
+   * on the home screen, and never during a match.
+   */
+  const [promo, setPromo] = useState<ShopItem | null>(null);
+  useEffect(() => {
+    if (m.phase !== "intro") return;
+    void loadShop().then(({ items }) => {
+      // Highest `sort` wins: it is the field Or already uses to put something
+      // at the front of a shelf, so "featured" needs no second concept.
+      const best = [...items].sort((a, b) => b.sort - a.sort)[0];
+      setPromo(best ?? null);
+    });
+  }, [m.phase]);
+
+  /*
+   * Everything a guest may not do.
+   *
+   * Or: "an anonymous user can only play a one-off against a bot." Everybody
+   * HAS an account — the game makes an anonymous one on first visit so a match
+   * has somewhere to go — but that one is thrown away when the browser is
+   * cleared, so it cannot be the thing that owns an album. `linked` is true
+   * once a Google account or an email is attached, and that is the line.
+   *
+   * Locked, not hidden: see SignedInOnly.tsx.
+   */
+  const signedIn = m.account?.linked === true;
+  /** Open the thing, or explain why not. One call at every locked door. */
+  const gated = (open: () => void) => () => {
+    if (signedIn) open();
+    else {
+      sfx.play("beep");
+      setWhyOpen(true);
+    }
+  };
+
   // One continuous score, started on the first screen that wants it and never
   // interrupted again (see music.ts). The phase is still named, for later.
   useEffect(() => {
@@ -773,6 +815,49 @@ function Game() {
               />
             ))}
           </div>
+          {/*
+           * The other half of the screen.
+           *
+           * Or: "notice you have the whole left side of the screen empty —
+           * it is asking for the shop, friends, some promotional banner."
+           * He is right: it was Amanda's portrait and nothing else, on the
+           * widest part of the screen.
+           *
+           * It is a RAIL rather than more menu: these are places you visit
+           * between matches, not ways to start one, and putting them in the
+           * main column would have pushed the two "play" cards down.
+           */}
+          <aside className="rail">
+            <button className="rail__item" onClick={gated(() => setShopOpen(true))}>
+              <Icon name="gem" size={19} />
+              <span>חנות נוחות</span>
+              {!signedIn && <Lock />}
+            </button>
+            <button className="rail__item" onClick={gated(() => setFriendsOpen(true))}>
+              <Icon name="friend" size={19} />
+              <span>חברים</span>
+              {!signedIn && <Lock />}
+            </button>
+            {/*
+             * The promotion slot.
+             *
+             * Deliberately driven by the shop's own window rather than a
+             * hard-coded message: an item with `available_until` set IS the
+             * holiday sale, so the banner appears and disappears on its own
+             * and Or never has to remember to take it down. Nothing to show
+             * means nothing is drawn.
+             */}
+            {promo && (
+              <button className="rail__promo" onClick={gated(() => setShopOpen(true))}>
+                <span className="rail__promo-tag">חדש בחנות</span>
+                <b>{promo.name.he}</b>
+                {promo.blurb?.he && <small>{promo.blurb.he}</small>}
+                <span className="rail__promo-price">
+                  <Icon name="gem" size={12} /> {promo.price_diamonds}
+                </span>
+              </button>
+            )}
+          </aside>
           <div className="intro__card">
             {/*
               Drawn, not typeset. A webfont can fail to load — and did, on Or's
@@ -800,12 +885,13 @@ function Game() {
                 </button>
                 <button
                   className="pick__card"
-                  onClick={() => setFriendOpen(true)}
+                  onClick={gated(() => setFriendOpen(true))}
                   disabled={!m.onlineAvailable}
                   title={m.onlineAvailable ? "" : "לא בגרסה הזאת"}
                 >
                   <img src={`${BASE}brand/versus_player.webp`} alt="" />
                   <span>לשחק עם חברים</span>
+                  {!signedIn && <Lock />}
                 </button>
               </div>
             ) : (
@@ -829,21 +915,35 @@ function Game() {
                 </button>
               </div>
             )}
-            {/* Where you are on the ladder, and what is above you. */}
-            {m.account && <ArenaTrack trophies={m.account.trophies} />}
+            {/*
+              Where you are on the ladder, and what is above you.
+              Drawn for a guest too, and shut — a ladder you cannot see the
+              top of is not a ladder, and one you cannot see at all persuades
+              nobody to sign in.
+            */}
+            <button
+              className={`track-gate${signedIn ? "" : " is-locked"}`}
+              onClick={signedIn ? undefined : gated(() => {})}
+              disabled={signedIn}
+            >
+              <ArenaTrack trophies={m.account?.trophies ?? 0} />
+              {!signedIn && <Lock />}
+            </button>
             {/* And what is waiting to be opened. */}
-            {m.account && (
+            {signedIn && (
               <ChestShelf
                 onOpened={setChest}
                 reload={() => m.reloadAccount()}
               />
             )}
-            <button className="btn-album" onClick={() => setAlbumOpen(true)}>
+            <button className="btn-album" onClick={gated(() => setAlbumOpen(true))}>
               <Icon name="deck" size={20} /> האלבום שלי
+              {!signedIn && <Lock />}
             </button>
-            {/* The two side doors: a workbench, and a shelf of what is coming.
-                Deliberately smaller than the two ways to actually play — they
-                sit beside the game, not in front of it. */}
+            {/* The side doors. Deliberately smaller than the two ways to
+                actually play — they sit beside the game, not in front of it.
+                The playground is the one thing here a guest may have: it saves
+                nothing, so there is nothing to lose. */}
             <div className="extras">
               <button className="btn-modes" onClick={() => setModesOpen(true)}>
                 <Icon name="monster" size={18} /> עוד מודים
@@ -851,25 +951,6 @@ function Game() {
               <button className="btn-lab" onClick={m.startPlayground} title="בלי שעון, שני הצדדים שלך">
                 <Icon name="stacked" size={15} /> מגרש המשחקים
               </button>
-              <button
-                className="btn-lab"
-                onClick={() => setShopOpen(true)}
-                title="פרצופים, אימוג׳ים ועוד"
-              >
-                <Icon name="gem" size={15} /> החנות
-              </button>
-              {/* Only with an account: a friendship is between two real
-                  accounts, and an anonymous one is thrown away on the next
-                  browser clear (see apps/server/src/friends.ts). */}
-              {m.account && (
-                <button
-                  className="btn-lab"
-                  onClick={() => setFriendsOpen(true)}
-                  title="מי מחובר, ולהזמין למשחק"
-                >
-                  <Icon name="friend" size={15} /> חברים
-                </button>
-              )}
             </div>
             {joining && (
               <form
@@ -923,7 +1004,10 @@ function Game() {
             <button className="btn-link about__open" onClick={() => setAboutOpen(true)}>
               אודות · פרטיות · נגישות
             </button>
-            <button className="btn-link about__open" onClick={() => setReportOpen("bug")}>
+            {/* The server refuses a report from an anonymous account anyway
+                (apps/server/src/reports.ts) — so without this a guest pressed
+                it, typed, and was told no at the end. */}
+            <button className="btn-link about__open" onClick={gated(() => setReportOpen("bug"))}>
               משהו לא עובד?
             </button>
             <p className="intro__version">
@@ -946,6 +1030,49 @@ function Game() {
       {/* ---- waiting for an online opponent ---- */}
       {m.phase === "waiting" && (
         <main className="intro">
+          {/*
+           * The other half of the screen.
+           *
+           * Or: "notice you have the whole left side of the screen empty —
+           * it is asking for the shop, friends, some promotional banner."
+           * He is right: it was Amanda's portrait and nothing else, on the
+           * widest part of the screen.
+           *
+           * It is a RAIL rather than more menu: these are places you visit
+           * between matches, not ways to start one, and putting them in the
+           * main column would have pushed the two "play" cards down.
+           */}
+          <aside className="rail">
+            <button className="rail__item" onClick={gated(() => setShopOpen(true))}>
+              <Icon name="gem" size={19} />
+              <span>חנות נוחות</span>
+              {!signedIn && <Lock />}
+            </button>
+            <button className="rail__item" onClick={gated(() => setFriendsOpen(true))}>
+              <Icon name="friend" size={19} />
+              <span>חברים</span>
+              {!signedIn && <Lock />}
+            </button>
+            {/*
+             * The promotion slot.
+             *
+             * Deliberately driven by the shop's own window rather than a
+             * hard-coded message: an item with `available_until` set IS the
+             * holiday sale, so the banner appears and disappears on its own
+             * and Or never has to remember to take it down. Nothing to show
+             * means nothing is drawn.
+             */}
+            {promo && (
+              <button className="rail__promo" onClick={gated(() => setShopOpen(true))}>
+                <span className="rail__promo-tag">חדש בחנות</span>
+                <b>{promo.name.he}</b>
+                {promo.blurb?.he && <small>{promo.blurb.he}</small>}
+                <span className="rail__promo-price">
+                  <Icon name="gem" size={12} /> {promo.price_diamonds}
+                </span>
+              </button>
+            )}
+          </aside>
           <div className="intro__card">
             <div className="overlay__count" style={{ fontSize: 60 }}>
               <Icon name={m.netError ? "unplugged" : m.roomCode ? "friend" : "online"} size={60} />
@@ -1537,7 +1664,7 @@ function Game() {
               </button>
               {/* Where a complaint about a person actually occurs to somebody:
                   right after playing them, not buried in a settings page. */}
-              {m.online && !m.playground && (
+              {m.online && !m.playground && signedIn && (
                 <button className="btn-fight btn-ghost" onClick={() => setReportOpen("player")}>
                   <Icon name="warning" size={15} /> דיווח על היריב
                 </button>
@@ -1698,6 +1825,16 @@ function Game() {
 
       {reportOpen && (
         <Report initialKind={reportOpen} onClose={() => setReportOpen(null)} />
+      )}
+
+      {whyOpen && (
+        <WhySignIn
+          onClose={() => setWhyOpen(false)}
+          onSignIn={() => {
+            setWhyOpen(false);
+            setProfileOpen(true);
+          }}
+        />
       )}
 
       {shopOpen && (

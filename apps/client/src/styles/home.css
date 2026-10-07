@@ -122,3 +122,131 @@
 .overlay__label { font-size: 22px; font-weight: 800; color: var(--accent); }
 .overlay__mini { font-size: 14px; color: var(--muted); }
 .build { position: relative; }
+
+/* ---- the rail: the other half of the screen ---- */
+/*
+ * Or: "notice you have the whole left side of the screen empty — it is asking
+ * for the shop, friends, some promotional banner." It was Amanda's portrait
+ * and nothing else, across the widest part of the screen.
+ *
+ * A rail rather than more menu: these are places you visit BETWEEN matches,
+ * and putting them in the main column would push the two "play" cards down.
+ * It sits over her artwork, on the side the banner leaves quiet.
+ */
+.rail {
+  position: absolute;
+  z-index: 3;
+  /*
+   * `inline-END`, which in this right-to-left page is the visual LEFT.
+   *
+   * It was `inline-start` and landed straight on top of the menu: the menu
+   * column sits at the start of an RTL line, so the empty half of Amanda's
+   * banner — the half Or was pointing at — is the end. It flips correctly if
+   * the game is ever read left-to-right: the menu moves to the left and the
+   * rail follows to the right.
+   */
+  inset-inline-end: clamp(10px, 3vw, 28px);
+  top: 50%;
+  transform: translateY(-50%);
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  width: min(210px, 30vw);
+}
+.rail__item {
+  display: flex;
+  align-items: center;
+  gap: 9px;
+  padding: 10px 13px;
+  border-radius: 11px;
+  border: 1px solid var(--line);
+  background: rgba(10, 14, 24, 0.72);
+  backdrop-filter: blur(4px);
+  color: var(--text);
+  font: inherit;
+  font-size: 14px;
+  font-weight: 700;
+  cursor: pointer;
+  text-align: start;
+}
+.rail__item span { flex: 1; min-width: 0; }
+.rail__item:hover { border-color: var(--accent); background: rgba(14, 20, 34, 0.85); }
+
+/* The promotion. Driven by the shop's own window — see the promo state in
+   App.tsx — so a holiday sale appears and disappears on its own. */
+.rail__promo {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 2px;
+  padding: 11px 13px;
+  border-radius: 11px;
+  border: 1px solid rgba(255, 211, 107, 0.45);
+  background: linear-gradient(160deg, rgba(255, 211, 107, 0.16), rgba(10, 14, 24, 0.8));
+  backdrop-filter: blur(4px);
+  color: var(--text);
+  font: inherit;
+  cursor: pointer;
+  text-align: start;
+}
+.rail__promo:hover { border-color: #ffd36b; }
+.rail__promo-tag {
+  font-size: 10px;
+  font-weight: 800;
+  letter-spacing: 0.08em;
+  color: #ffd36b;
+}
+.rail__promo b { font-size: 14px; }
+.rail__promo small { color: var(--muted); font-size: 11px; line-height: 1.4; }
+.rail__promo-price {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  margin-top: 4px;
+  padding: 3px 9px;
+  border-radius: 5px;
+  background: linear-gradient(180deg, #ffe9a8, #f0c24a);
+  color: #241a05;
+  font-size: 11px;
+  font-weight: 800;
+}
+
+/* ---- locked, not hidden ---- */
+/*
+ * A guest sees the album, the arenas and the shop and cannot open them. That
+ * is the whole mechanism: a hidden thing persuades nobody, and the point is
+ * that a child wants it and asks to be signed in.
+ */
+.lock {
+  display: inline-grid;
+  place-items: center;
+  flex: none;
+  width: 19px;
+  height: 19px;
+  margin-inline-start: 6px;
+  border-radius: 50%;
+  background: rgba(0, 0, 0, 0.45);
+  color: var(--accent);
+  vertical-align: middle;
+}
+.track-gate {
+  display: block;
+  position: relative;
+  width: 100%;
+  padding: 0;
+  border: 0;
+  background: none;
+  font: inherit;
+  color: inherit;
+  text-align: inherit;
+}
+.track-gate.is-locked { cursor: pointer; }
+.track-gate.is-locked .track { opacity: 0.55; filter: grayscale(0.5); pointer-events: none; }
+.track-gate.is-locked > .lock { position: absolute; top: 8px; inset-inline-end: 10px; }
+
+.modal--why { max-width: 400px; }
+.modal--why h2 { margin: 0 0 6px; font-size: 20px; }
+.why__lead { color: var(--muted); font-size: 13px; line-height: 1.6; margin: 0 0 12px; }
+.why__list { list-style: none; margin: 0 0 16px; padding: 0; display: flex; flex-direction: column; gap: 8px; }
+.why__list li { display: flex; align-items: center; gap: 9px; font-size: 14px; }
+.why__list li svg { color: var(--accent); flex: none; }

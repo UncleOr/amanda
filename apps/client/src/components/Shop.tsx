@@ -85,7 +85,7 @@ export function Shop({
 
         <div className="shop__sign">
           <span className="shop__strip" aria-hidden="true" />
-          <h2>החנות</h2>
+          <h2>חנות נוחות</h2>
           <span className="shop__purse">
             <Icon name="gem" size={15} /> {diamonds}
           </span>
