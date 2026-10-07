@@ -70,8 +70,19 @@ describe("two Kings on one side", () => {
       ],
     } as BoardInput;
     const res = run(players, attackers);
-    // The paper King is gone...
-    expect(res.units?.find((u) => u.cardId === "paperKing")?.hpLeft ?? 0).toBe(0);
+    /*
+     * The paper King is gone.
+     *
+     * This read `res.units?.find(...)?.hpLeft ?? 0` — and `BattleResult` has
+     * no `units`. The optional chain swallowed it, the `?? 0` turned it into
+     * `expect(0).toBe(0)`, and the line proved nothing at all while looking
+     * like the point of the test. The field is `finalUnits`, and it is read
+     * without an optional chain on purpose: if it ever stops existing, this
+     * should fail rather than quietly pass again.
+     */
+    const paper = res.finalUnits.find((u) => u.cardId === "paperKing");
+    expect(paper, "the paper King was never on the board").toBeDefined();
+    expect(paper!.hp).toBe(0);
     // ...and the battle still ran to the clock rather than stopping on it.
     expect(res.winReason).not.toBe("kingDown");
     expect(res.ticks).toBeGreaterThan(60);

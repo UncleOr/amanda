@@ -32,3 +32,9 @@
 @import "./styles/profile.css";
 @import "./styles/chests.css";
 @import "./styles/social.css";
+/*
+ * New, so it goes on the end where it can only add — see the note in the file.
+ * It is the only sheet allowed to override the home screen's positioning,
+ * which it does by moving those elements into a grid.
+ */
+@import "./styles/home-layout.css";

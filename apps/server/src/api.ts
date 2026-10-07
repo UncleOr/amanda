@@ -21,6 +21,8 @@ import { isOnline } from "./presence.js";
 import { buy, ownedItems, shopWindow } from "./shop.js";
 import { inbox, markRead } from "./notify.js";
 import { handleAdmin, handleCopy } from "./admin.js";
+import { awardMatch, claim, factsFor, standings } from "./meta.js";
+import { soloResult } from "./solo.js";
 
 import { SUPABASE_URL as URL, db, keyHasWhitespace, keyLength, keyStartsWith } from "./supabase.js";
 
@@ -283,6 +285,52 @@ async function handleShop(req: IncomingMessage, res: ServerResponse, path: strin
 }
 
 /** The player's own inbox. */
+/**
+ * Nachos and challenges: what is live, what a match was worth, and claiming.
+ *
+ * `/api/meta` is readable without an account — a guest sees today's three
+ * challenges at zero, which is the whole point of showing them a locked thing
+ * rather than hiding it.
+ *
+ * `/api/meta/solo` is the one that matters. It is handed the two boards and
+ * the seed of a match the browser played against the bot, and it RE-RUNS that
+ * battle here before paying anything out: see meta.ts for why the outcome is
+ * never taken from the client.
+ */
+async function handleMeta(req: IncomingMessage, res: ServerResponse, path: string): Promise<void> {
+  const sb = db();
+  const playerId = await playerFrom(req);
+
+  if (path === "/api/meta") {
+    if (!sb) return send(res, 200, { challenges: [] });
+    return send(res, 200, { challenges: await standings(sb, playerId) });
+  }
+
+  if (!sb) return send(res, 200, { nachos: 0, chests: [], moved: [] });
+  if (!playerId) return send(res, 401, { error: "who are you" });
+
+  if (path === "/api/meta/solo") {
+    const outcome = soloResult(await readBody(req));
+    if ("error" in outcome) return send(res, 400, { error: outcome.error });
+    const facts = factsFor(outcome.result, "A", outcome.mine);
+    const award = await awardMatch(sb, playerId, facts);
+    // The score comes back from HERE even though the browser graded the same
+    // battle itself: one authority, so a bug in either grader shows up as a
+    // disagreement on the screen rather than as a quiet difference in pay.
+    return send(res, 200, { ...award, score: facts.score, won: facts.won });
+  }
+
+  if (path === "/api/meta/claim") {
+    const body = (await readBody(req)) as Record<string, unknown>;
+    const id = typeof body.challengeId === "string" ? body.challengeId : "";
+    if (!id) return send(res, 400, { error: "מה?" });
+    const done = await claim(sb, playerId, id);
+    return send(res, done.ok ? 200 : 400, done.ok ? { ok: true, gave: done.gave } : { error: done.why });
+  }
+
+  send(res, 404, { error: "no such thing" });
+}
+
 async function handleInbox(req: IncomingMessage, res: ServerResponse, path: string): Promise<void> {
   const sb = db();
   if (!sb) return send(res, 200, { notices: [], unread: 0 });
@@ -404,6 +452,18 @@ export async function handleApi(req: IncomingMessage, res: ServerResponse): Prom
     try {
       if (path.startsWith("/api/inbox")) await handleInbox(req, res, path);
       else await handleShop(req, res, path);
+    } catch (err) {
+      send(res, 500, { error: (err as Error).message });
+    }
+    return true;
+  }
+  if (path.startsWith("/api/meta")) {
+    if (req.method === "OPTIONS") {
+      send(res, 204, {});
+      return true;
+    }
+    try {
+      await handleMeta(req, res, path);
     } catch (err) {
       send(res, 500, { error: (err as Error).message });
     }

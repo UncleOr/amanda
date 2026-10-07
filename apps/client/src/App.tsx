@@ -13,7 +13,7 @@ import { COOP_LANES, PHASES, arenaFor } from "@amanda/shared";
 import type { BattleResult } from "@amanda/engine";
 import { useMatch } from "./game/useMatch";
 import { useOverlay } from "./game/useOverlay";
-import { HomeScreen } from "./components/HomeScreen";
+import { HomeScreen, chosenLayout } from "./components/HomeScreen";
 import { BattleScreen } from "./components/BattleScreen";
 import { ResultScreen } from "./components/ResultScreen";
 import { useDrag } from "./game/useDrag";
@@ -691,6 +691,7 @@ function Game() {
           promo={promo}
           onChest={setChest}
           viewport={viewport}
+          layout={chosenLayout()}
         />
       )}
 

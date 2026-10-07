@@ -44,6 +44,7 @@ import {
   type Account,
   type OwnedCard,
 } from "./account";
+import { reportSolo, type Award } from "./meta";
 import { LESSONS } from "./lessons";
 import { Net, ONLINE_AVAILABLE, type Intent } from "./net";
 
@@ -697,6 +698,12 @@ export interface MatchApi {
   oppReady: boolean;
   toggleReady: () => void;
   finishBattle: () => void;
+  /**
+   * What the last match paid: nachos, any chest the bar filled, and which
+   * challenges moved. Null until the server has answered, and null for every
+   * match that is not worth anything (see finishBattle).
+   */
+  award: Award | null;
   /** Back to the main menu, abandoning whatever is in progress. */
   reset: () => void;
   /** Straight into another match of the same kind, skipping the menu. */
@@ -710,6 +717,8 @@ export function useMatch(): MatchApi {
   /** Loaded once, in the background; the game never waits for it. */
   const [account, setAccount] = useState<Account | null>(null);
   const [result, setResult] = useState<BattleResult | null>(null);
+  /** What the server said the last match was worth. See finishBattle. */
+  const [award, setAward] = useState<Award | null>(null);
   const [actionBar, setActionBar] = useState<string[]>([]);
   const [usedActions, setUsedActions] = useState<Record<string, boolean>>({});
   const [boardPowerAdd, setBoardPowerAdd] = useState(0);
@@ -791,6 +800,8 @@ export function useMatch(): MatchApi {
   const [myLane, setMyLane] = useState(0);
   /** True for the developer's solo Amanda preview (see startAmandaSolo). */
   const soloAmandaRef = useRef(false);
+  /** The two boards of the match just fought, for reporting it. See startBattle. */
+  const soloBoardsRef = useRef<{ mine: Placement[]; theirs: Placement[] } | null>(null);
   /**
    * The playground: no clock, both boards yours, every card in the game on tap.
    * It is a workbench, not a match — nothing here is saved, rated or rewarded.
@@ -1400,6 +1411,18 @@ export function useMatch(): MatchApi {
       mine = { ...mine, placements: [...mine.placements, ...partner] };
     }
 
+    /*
+     * The two boards, kept for the server.
+     *
+     * A match against the bot is fought entirely in here and the server never
+     * hears about it — which was fine while it was worth nothing. Now it pays
+     * nachos and moves challenges along, so it has to be reported, and the
+     * server re-runs it rather than believing the outcome (apps/server/src/
+     * solo.ts). These are what it re-runs, so they are kept as they were
+     * handed to the engine, after the filling and before anything else.
+     */
+    soloBoardsRef.current = { mine: mine.placements, theirs: aiFull.placements };
+
     const r = runBattle({
       seed: BATTLE_SEED,
       catalog: CATALOG,
@@ -1428,6 +1451,8 @@ export function useMatch(): MatchApi {
     aiPlanRef.current = generateAiPlan(undefined, botLevelRef.current);
     setGs(initialGameState(accountRef.current?.album));
     setResult(null);
+    setAward(null);
+    soloBoardsRef.current = null;
     setActionBar([]);
     setUsedActions({});
     setBoardPowerAdd(0);
@@ -1783,6 +1808,28 @@ export function useMatch(): MatchApi {
     const w = result?.winner;
     sfx.play(w === mySideRef.current ? "win" : "lose");
     setPhase("result");
+    /*
+     * Tell the server what was played, and show what it paid.
+     *
+     * Only a REAL match against the bot. The playground has two boards that
+     * are both yours, a tutorial lesson is a scripted board, and the Amanda
+     * preview is deliberately unwinnable — none of the three is a performance,
+     * and paying out on them would make the fastest way to a chest the one
+     * that is not the game. An online match is already recorded by the server
+     * that simulated it.
+     */
+    const boards = soloBoardsRef.current;
+    if (
+      !boards ||
+      onlineRef.current ||
+      playgroundRef.current ||
+      lessonRef.current ||
+      soloAmandaRef.current
+    )
+      return;
+    void reportSolo({ seed: BATTLE_SEED, ...boards }).then((won) => {
+      if (won.nachos || won.chests.length || won.moved.length) setAward(won);
+    });
   }, [result]);
 
   const reset = useCallback(() => {
@@ -1953,6 +2000,7 @@ export function useMatch(): MatchApi {
     mySide,
     oppLeft,
     iWon: result != null && result.winner === mySide,
+    award,
     mirrorSeed,
     startMirror,
     lesson,

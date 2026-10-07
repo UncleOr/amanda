@@ -2,6 +2,8 @@ import { useState } from "react";
 import { Icon } from "./Icon";
 import { ArenaTrack } from "./ArenaTrack";
 import { ChestShelf } from "./ChestShelf";
+import { NachoBar } from "./NachoBar";
+import { Challenges } from "./Challenges";
 import { Lock } from "./SignedInOnly";
 import { shopItemArt } from "./Shop";
 import { hardRefresh } from "../game/refresh";
@@ -18,7 +20,45 @@ const BASE = import.meta.env.BASE_URL;
  * screen in one function. Four pieces of state came with it — which friend
  * option is showing, the room code being typed, and whether the idle clip
  * loaded — because nothing outside this screen has ever looked at them.
+ *
+ * ═══ THE SCREEN IS SIX GROUPS, AND THE LAYOUT ONLY ARRANGES THEM ═══
+ *
+ * Or: *"think about a much smarter, more sensible arrangement — what belongs
+ * to playing together, what belongs to progress together, what belongs to
+ * settings together."* So the markup below is grouped by PURPOSE and says
+ * nothing about position:
+ *
+ *   home__brand     the name
+ *   home__play      the ways to start a match, and nothing else
+ *   home__progress  where you are and what you are two games from
+ *   home__collect   the album, the shop, and what the shop is advertising
+ *   home__social    other people
+ *   home__meta      the small print
+ *
+ * Where each group LANDS is three lines of grid-template-areas per option in
+ * home-layout.css, chosen by `data-layout` on the screen. Three real layouts
+ * over one set of markup, so they can be looked at side by side rather than
+ * described — which is what Or asked for: *"can you show me examples of each
+ * of the options?"*
+ *
+ * `?layout=a|b|c` picks one. That parameter is a way of CHOOSING, not a
+ * feature: once Or has picked, the other two go and so does this.
  */
+
+/** Which arrangement is on screen. See home-layout.css. */
+export type Layout = "a" | "b" | "c";
+
+/** Or's pick. Changed here, not in the URL, once the choice is made. */
+const DEFAULT_LAYOUT: Layout = "b";
+
+export function chosenLayout(): Layout {
+  try {
+    const asked = new URLSearchParams(window.location.search).get("layout");
+    return asked === "a" || asked === "b" || asked === "c" ? asked : DEFAULT_LAYOUT;
+  } catch {
+    return DEFAULT_LAYOUT;
+  }
+}
 
 /** Embers drifting up past her. Spread by hand so they never clump. */
 const MOTES = [
@@ -59,17 +99,20 @@ export function HomeScreen({
   promo,
   onChest,
   viewport,
+  layout = DEFAULT_LAYOUT,
 }: {
   m: MatchApi;
   panel: Overlays;
   /** Run this, or show the sign-in prompt — see SignedInOnly.tsx. */
   gated: (open: () => void) => () => void;
   signedIn: boolean;
-  /** What the rail advertises, or null. */
+  /** What the shop corner advertises, or null. */
   promo: ShopItem | null;
   onChest: (chest: Chest) => void;
   /** "1024×768", for the version line. */
   viewport: string;
+  /** Which arrangement to draw. See the note above. */
+  layout?: Layout;
 }) {
   /** Which way of playing with a friend is showing. */
   const [friendOpen, setFriendOpen] = useState(false);
@@ -79,197 +122,102 @@ export function HomeScreen({
   const [idleOk, setIdleOk] = useState(true);
 
   return (
-      <main className="intro intro--hero">
-        {/* Who you are sits in the corner, the way a game does it, rather
-            than in a row of text links with the game modes. */}
-        {/* What you have, where you can see it without opening anything. */}
-        {m.account && (
-          <div className="purse" aria-label="מה יש לך">
-            <span className="purse__item">
-              <Icon name="win" size={16} /> {m.account.trophies}
-            </span>
-            <span className="purse__item purse__item--gem">
-              <Icon name="gem" size={16} /> {m.account.diamonds}
-            </span>
-            <span className="purse__item">
-              <Icon name="monster" size={16} /> {m.account.album.size}
-            </span>
-          </div>
-        )}
-        <button className="me" onClick={() => panel.show("profile")}>
-          {m.account?.avatar ? (
-            <img src={`${BASE}brand/${m.account.avatar}.webp`} alt="" />
-          ) : (
-            <Icon name="king" size={20} />
-          )}
-          <span className="me__name">
-            {m.account?.nickname ?? (m.account?.linked ? "הפרופיל שלי" : "התחברות")}
+    <main className="intro intro--hero" data-layout={layout}>
+      {/* What you have, where you can see it without opening anything. */}
+      {m.account && (
+        <div className="purse" aria-label="מה יש לך">
+          <span className="purse__item">
+            <Icon name="win" size={16} /> {m.account.trophies}
           </span>
-        </button>
-        {/*
-          She is the background, not a picture inside a box. The banner was
-          generated with its left half deliberately empty, which is where
-          everything below sits.
-        */}
-        {/*
-          The still is always there; the clip plays over it if it loads.
-          A hero that needs a video to exist is a hero that is a black
-          rectangle on a slow connection, so the picture never depends on it.
-          `onError` drops the video for good rather than retrying forever.
-        */}
-        <div
-          className="intro__art"
-          style={{ backgroundImage: `url("${BASE}brand/amanda_banner.webp")` }}
-          aria-hidden="true"
-        >
-          {idleOk && (
-            <video
-              className="intro__idle"
-              src={`${BASE}brand/amanda_idle.webm`}
-              autoPlay
-              loop
-              muted
-              playsInline
-              preload="auto"
-              onError={() => setIdleOk(false)}
-            />
-          )}
+          <span className="purse__item purse__item--gem">
+            <Icon name="gem" size={16} /> {m.account.diamonds}
+          </span>
+          {/* The third number is now nachos rather than the album size: the
+              album has its own button two inches away, and this row is for
+              the things a match MOVES. */}
+          <span className="purse__item purse__item--nacho">
+            <Icon name="nacho" size={16} /> {m.account.nachos}
+          </span>
         </div>
-        {/* The room she is standing in, behind the menu side only. */}
-        <div className="intro__room" aria-hidden="true" />
-        <div className="intro__wash" aria-hidden="true" />
-        {/* Embers drifting up past her. Spread by hand rather than randomly
-            so they never clump, and purely decorative. */}
-        <div className="intro__motes" aria-hidden="true">
-          {MOTES.map((mote, n) => (
-            <i
-              key={n}
-              style={{
-                insetInlineStart: `${mote.x}%`,
-                animationDuration: `${mote.dur}s`,
-                animationDelay: `${mote.delay}s`,
-                opacity: mote.o,
-              }}
-            />
-          ))}
-        </div>
+      )}
+      <button className="me" onClick={() => panel.show("profile")}>
+        {m.account?.avatar ? (
+          <img src={`${BASE}brand/${m.account.avatar}.webp`} alt="" />
+        ) : (
+          <Icon name="king" size={20} />
+        )}
+        <span className="me__name">
+          {m.account?.nickname ?? (m.account?.linked ? "הפרופיל שלי" : "התחברות")}
+        </span>
+      </button>
+      {/*
+        She is the background, not a picture inside a box. The banner was
+        generated with its left half deliberately empty, which is where
+        everything below sits.
+
+        The still is always there; the clip plays over it if it loads. A hero
+        that needs a video to exist is a hero that is a black rectangle on a
+        slow connection, so the picture never depends on it. `onError` drops
+        the video for good rather than retrying forever.
+      */}
+      <div
+        className="intro__art"
+        style={{ backgroundImage: `url("${BASE}brand/amanda_banner.webp")` }}
+        aria-hidden="true"
+      >
+        {idleOk && (
+          <video
+            className="intro__idle"
+            src={`${BASE}brand/amanda_idle.webm`}
+            autoPlay
+            loop
+            muted
+            playsInline
+            preload="auto"
+            onError={() => setIdleOk(false)}
+          />
+        )}
+      </div>
+      {/* The room she is standing in, behind the menu side only. */}
+      <div className="intro__room" aria-hidden="true" />
+      <div className="intro__wash" aria-hidden="true" />
+      {/* Embers drifting up past her. Spread by hand rather than randomly
+          so they never clump, and purely decorative. */}
+      <div className="intro__motes" aria-hidden="true">
+        {MOTES.map((mote, n) => (
+          <i
+            key={n}
+            style={{
+              insetInlineStart: `${mote.x}%`,
+              animationDuration: `${mote.dur}s`,
+              animationDelay: `${mote.delay}s`,
+              opacity: mote.o,
+            }}
+          />
+        ))}
+      </div>
+
+      <div className="home">
         {/*
-         * The other half of the screen.
-         *
-         * Or: "notice you have the whole left side of the screen empty —
-         * it is asking for the shop, friends, some promotional banner."
-         * He is right: it was Amanda's portrait and nothing else, on the
-         * widest part of the screen.
-         *
-         * It is a RAIL rather than more menu: these are places you visit
-         * between matches, not ways to start one, and putting them in the
-         * main column would have pushed the two "play" cards down.
-         */}
-        {/*
-         * The small print, moved up out of the menu.
-         *
-         * Or: "אודות, פרטיות, נגישות and 'something not working?' can move
-         * to the top left." Two reasons it is the right move: they are not
-         * things you choose between matches, so they were taking height in
-         * the column that holds the actual game — and that column was
-         * running off the top of a short window because of it.
-         *
-         * They stay reachable WITHOUT an account and without installing
-         * anything, which a store will check.
-         */}
-        <aside className="smallprint">
-          <button className="btn-link" onClick={() => panel.show("about")}>
-            אודות · פרטיות · נגישות
-          </button>
-          {/* Open to everybody: the player most likely to hit a bug is the
-              one who just arrived. Reporting a PERSON still needs an
-              account, and the server is where that is decided. */}
-          <button className="btn-link" onClick={() => panel.show({ kind: "report", about: "bug" })}>
-            משהו לא עובד?
-          </button>
-          {/*
-           * The version, and the way to force a fresh copy.
-           *
-           * It was the last line INSIDE the menu column, which now scrolls
-           * when the window is short — so it was the first thing to fall off
-           * the bottom, which is exactly what Or saw. Out here it cannot.
-           *
-           * The refresh button only exists in a browser tab. Installed as an
-           * app there is nothing to hard-refresh in the same sense, and Or
-           * wants it gone from there: "a button we will remove soon, or that
-           * should only appear in the browser app".
-           */}
-          <p className="intro__version">
-            גרסה {__BUILD_ID__} · מסך {viewport}
-            {!INSTALLED && (
-              <button
-                className="btn-link"
-                title="מוריד אותי מחדש ומנקה גרסאות ישנות"
-                onClick={() => void hardRefresh()}
-              >
-                ⟳ רענן
-              </button>
-            )}
-          </p>
-        </aside>
-        <aside className="rail">
-          <button className="rail__item" onClick={gated(() => panel.show("shop"))}>
-            <Icon name="gem" size={19} />
-            <span>חנות נוחות</span>
-            {!signedIn && <Lock />}
-          </button>
-          <button className="rail__item" onClick={gated(() => panel.show("friends"))}>
-            <Icon name="friend" size={19} />
-            <span>חברים</span>
-            {!signedIn && <Lock />}
-          </button>
-          {/*
-           * The promotion slot.
-           *
-           * Deliberately driven by the shop's own window rather than a
-           * hard-coded message: an item with `available_until` set IS the
-           * holiday sale, so the banner appears and disappears on its own
-           * and Or never has to remember to take it down. Nothing to show
-           * means nothing is drawn.
-           */}
-          {promo && (
-            <button className="rail__promo" onClick={gated(() => panel.show("shop"))}>
-              <span className="rail__promo-tag">חדש בחנות</span>
-              <span className="rail__promo-row">
-                {/* The thing itself. An advertisement with no picture of
-                    what it is selling is a sentence, not an advertisement. */}
-                {shopItemArt(promo) && (
-                  <img className="rail__promo-art" src={shopItemArt(promo)!} alt="" />
-                )}
-                <span className="rail__promo-words">
-                  <b>{promo.name.he}</b>
-                  {promo.blurb?.he && <small>{promo.blurb.he}</small>}
-                </span>
-              </span>
-              <span className="rail__promo-price">
-                <Icon name="gem" size={12} /> {promo.price_diamonds}
-              </span>
-            </button>
-          )}
-        </aside>
-        <div className="intro__card">
-          {/*
-            Drawn, not typeset. A webfont can fail to load — and did, on Or's
-            screen, where the name fell back to a plain system face. The
-            letterforms are baked into an image so the name always looks like
-            the name. Rendered FROM the real font rather than generated, so
-            the Hebrew is correct by construction instead of by luck.
-          */}
+          Drawn, not typeset. A webfont can fail to load — and did, on Or's
+          screen, where the name fell back to a plain system face. The
+          letterforms are baked into an image so the name always looks like
+          the name. Rendered FROM the real font rather than generated, so the
+          Hebrew is correct by construction instead of by luck.
+        */}
+        <header className="home__brand">
           <h1 className="intro__name">
             <img src={`${BASE}brand/wordmark.png`} alt="אמנדה" width={720} height={197} />
           </h1>
           <p className="intro__sub">משחק קלפים מפלצתי</p>
-          <div className="intro__main">
-          <div className="intro__choices">
+        </header>
+
+        {/* ─────────────── playing ─────────────── */}
+        <section className="home__play intro__card" aria-label="לשחק">
           {/*
-            The "you VS the opponent" portrait was describing a match that
-            has not been chosen yet. The same two pictures do more work as
-            the choice itself: one is who you would be fighting.
+            The "you VS the opponent" portrait was describing a match that has
+            not been chosen yet. The same two pictures do more work as the
+            choice itself: one is who you would be fighting.
           */}
           {!friendOpen ? (
             <div className="pick">
@@ -280,8 +228,8 @@ export function HomeScreen({
                   How hard it tries. Three settings, each one MEASURED over
                   700 battles rather than guessed: the easy bot wins 17% of
                   them, the ordinary one 51%, the hard one around 58%.
-                  Remembered, so a child who found the easy one does not
-                  have to find it again.
+                  Remembered, so a child who found the easy one does not have
+                  to find it again.
                 */}
                 <span
                   className="pick__levels"
@@ -326,8 +274,8 @@ export function HomeScreen({
               <button className="btn-fight btn-online" onClick={() => m.startOnline()}>
                 מישהו אקראי
               </button>
-              {/* The event, not the everyday opponent. It takes two people
-                  on purpose: one board cannot beat her. */}
+              {/* The event, not the everyday opponent. It takes two people on
+                  purpose: one board cannot beat her. */}
               <button className="btn-fight btn-amanda" onClick={() => m.startAmanda()}>
                 נגד אמנדה — שניים נגדה
               </button>
@@ -336,36 +284,6 @@ export function HomeScreen({
               </button>
             </div>
           )}
-          {/*
-            Where you are on the ladder, and what is above you.
-            Open to a guest: Or, after seeing how many padlocks a first
-            visit had on it — "open the album to guests and leave only the
-            shop, friends and online play locked". The collecting IS the
-            game; what an account buys is keeping it.
-          */}
-          <ArenaTrack trophies={m.account?.trophies ?? 0} />
-          {/* And what is waiting to be opened. */}
-          {m.account && (
-            <ChestShelf
-              onOpened={onChest}
-              reload={() => m.reloadAccount()}
-            />
-          )}
-          <button className="btn-album" onClick={() => panel.show("album")}>
-            <Icon name="deck" size={20} /> האלבום שלי
-          </button>
-          {/* The side doors. Deliberately smaller than the two ways to
-              actually play — they sit beside the game, not in front of it.
-              The playground is the one thing here a guest may have: it saves
-              nothing, so there is nothing to lose. */}
-          <div className="extras">
-            <button className="btn-modes" onClick={() => panel.show("modes")}>
-              <Icon name="monster" size={18} /> עוד מודים
-            </button>
-            <button className="btn-lab" onClick={m.startPlayground} title="בלי שעון, שני הצדדים שלך">
-              <Icon name="stacked" size={15} /> מגרש המשחקים
-            </button>
-          </div>
           {joining && (
             <form
               className="join"
@@ -388,7 +306,22 @@ export function HomeScreen({
               </button>
             </form>
           )}
-          </div>
+          {/* The other two ways to play. Or: "more modes should be beside
+              'play with friends'." Deliberately smaller than the two cards —
+              they sit beside the game, not in front of it. The playground is
+              the one thing here a guest may have: it saves nothing, so there
+              is nothing to lose. */}
+          <div className="extras">
+            <button className="btn-modes" onClick={() => panel.show("modes")}>
+              <Icon name="monster" size={18} /> עוד מודים
+            </button>
+            <button
+              className="btn-lab"
+              onClick={m.startPlayground}
+              title="בלי שעון, שני הצדדים שלך"
+            >
+              <Icon name="stacked" size={15} /> מגרש המשחקים
+            </button>
           </div>
           {/* Told, and told until when. */}
           {m.suspendedUntil && (
@@ -411,10 +344,135 @@ export function HomeScreen({
                   : "החדר מלא. שניים מספיקים לי."}
             </p>
           )}
-          {!m.onlineAvailable && (
-            <p className="intro__hint">(מצב אונליין דורש שרת פעיל)</p>
+          {!m.onlineAvailable && <p className="intro__hint">(מצב אונליין דורש שרת פעיל)</p>}
+        </section>
+
+        {/* ─────────────── progress ─────────────── */}
+        {/*
+          Everything that answers "what am I two games away from", in one
+          place and in the order the distances get shorter: the arena is weeks
+          off, the chest is three matches, a daily challenge is tonight.
+        */}
+        <section className="home__progress" aria-label="ההתקדמות שלי">
+          {/*
+            Open to a guest: Or, after seeing how many padlocks a first visit
+            had on it — "open the album to guests and leave only the shop,
+            friends and online play locked". The collecting IS the game; what
+            an account buys is keeping it.
+          */}
+          <ArenaTrack trophies={m.account?.trophies ?? 0} />
+          <NachoBar nachos={m.account?.nachos ?? 0} />
+          {/* And what is waiting to be opened. It draws nothing at all when
+              there is nothing waiting, so it gets its panel from CSS rather
+              than from a wrapper here — a wrapper would leave an empty box in
+              the row on every day nobody won a chest. */}
+          {m.account && <ChestShelf onOpened={onChest} reload={() => m.reloadAccount()} />}
+          <Challenges
+            signedIn={signedIn}
+            gated={gated}
+            onClaimed={() => m.reloadAccount()}
+            // Re-read after every finished match, which is the only thing that
+            // moves a challenge along.
+            reloadKey={m.award}
+          />
+        </section>
+
+        {/* ─────────────── collecting ─────────────── */}
+        {/*
+          Or: "my album can be on the left beside the shop, and the banner
+          should be above or below the shop." The three of them are one thing
+          — what you own, where more of it comes from, and what is new.
+        */}
+        <section className="home__collect" aria-label="האוסף שלי">
+          <button className="btn-album" onClick={() => panel.show("album")}>
+            <Icon name="deck" size={20} /> האלבום שלי
+          </button>
+          <button className="rail__item" onClick={gated(() => panel.show("shop"))}>
+            <Icon name="gem" size={19} />
+            <span>חנות נוחות</span>
+            {!signedIn && <Lock />}
+          </button>
+          {/*
+            The promotion slot.
+
+            Deliberately driven by the shop's own window rather than a
+            hard-coded message: an item with `available_until` set IS the
+            holiday sale, so the banner appears and disappears on its own and
+            Or never has to remember to take it down. Nothing to show means
+            nothing is drawn.
+          */}
+          {promo && (
+            <button className="rail__promo" onClick={gated(() => panel.show("shop"))}>
+              <span className="rail__promo-tag">חדש בחנות</span>
+              <span className="rail__promo-row">
+                {/* The thing itself. An advertisement with no picture of what
+                    it is selling is a sentence, not an advertisement. */}
+                {shopItemArt(promo) && (
+                  <img className="rail__promo-art" src={shopItemArt(promo)!} alt="" />
+                )}
+                <span className="rail__promo-words">
+                  <b>{promo.name.he}</b>
+                  {promo.blurb?.he && <small>{promo.blurb.he}</small>}
+                </span>
+              </span>
+              <span className="rail__promo-price">
+                <Icon name="gem" size={12} /> {promo.price_diamonds}
+              </span>
+            </button>
           )}
-        </div>
-      </main>
+        </section>
+
+        {/* ─────────────── other people ─────────────── */}
+        {/* Or: "and friends in an area slightly apart from them." */}
+        <section className="home__social" aria-label="חברים">
+          <button className="rail__item" onClick={gated(() => panel.show("friends"))}>
+            <Icon name="friend" size={19} />
+            <span>חברים</span>
+            {!signedIn && <Lock />}
+          </button>
+        </section>
+
+        {/*
+          The small print.
+
+          Or: "אודות, פרטיות, נגישות and 'something not working?' can move to
+          the bottom left." They are not things anybody chooses between
+          matches, and the column they were in — the one with the actual game
+          in it — was running off the top of a short window partly because of
+          them. They stay reachable WITHOUT an account and without installing
+          anything, which a store will check.
+        */}
+        <aside className="home__meta smallprint">
+          <button className="btn-link" onClick={() => panel.show("about")}>
+            אודות · פרטיות · נגישות
+          </button>
+          {/* Open to everybody: the player most likely to hit a bug is the one
+              who just arrived. Reporting a PERSON still needs an account, and
+              the server is where that is decided. */}
+          <button className="btn-link" onClick={() => panel.show({ kind: "report", about: "bug" })}>
+            משהו לא עובד?
+          </button>
+          {/*
+            The version, and the way to force a fresh copy. The refresh button
+            only exists in a browser tab — installed as an app there is nothing
+            to hard-refresh in the same sense, and Or wants it gone from there:
+            "a button we will remove soon, or that should only appear in the
+            browser app".
+          */}
+          <p className="intro__version">
+            גרסה {__BUILD_ID__} · מסך {viewport}
+            {!INSTALLED && (
+              <button
+                className="btn-link"
+                title="מוריד אותי מחדש ומנקה גרסאות ישנות"
+                onClick={() => void hardRefresh()}
+              >
+                ⟳ רענן
+              </button>
+            )}
+          </p>
+        </aside>
+      </div>
+    </main>
   );
 }

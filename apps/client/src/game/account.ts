@@ -56,6 +56,12 @@ export interface Account {
    * falls back to the masculine, which is the Hebrew default.
    */
   gender: "boy" | "girl" | null;
+  /**
+   * Lifetime nachos. The bar on the home screen is the remainder — see
+   * packages/shared/src/nachos.ts — and this never goes down, which is the
+   * whole point of it next to trophies.
+   */
+  nachos: number;
   /** True once a real identity is attached and the album is safe. */
   linked: boolean;
   /** cardId → what you own of it. */
@@ -287,7 +293,7 @@ export async function loadAccount(): Promise<Account | null> {
       const [{ data: player }, { data: cards }] = await Promise.all([
         sb
           .from("players")
-          .select("trophies, diamonds, tutorial_done, nickname, avatar, birth_date, gender")
+          .select("trophies, diamonds, nachos, tutorial_done, nickname, avatar, birth_date, gender")
           .eq("id", userId)
           .maybeSingle(),
         sb.from("player_cards").select("card_id, copies, level").eq("player_id", userId),
@@ -304,6 +310,7 @@ export async function loadAccount(): Promise<Account | null> {
           playerId: userId,
           trophies: player.trophies ?? 0,
           diamonds: player.diamonds ?? 0,
+          nachos: player.nachos ?? 0,
           tutorialDone: player.tutorial_done ?? false,
           nickname: player.nickname ?? null,
           avatar: player.avatar ?? null,
@@ -964,6 +971,26 @@ export async function linkGoogle(): Promise<string | null> {
   } catch (err) {
     return (err as Error).message;
   }
+}
+
+/**
+ * The player's own access token, for a call to our server.
+ *
+ * Every `/api/...` call proves who it is with this and the server reads the
+ * player id out of it — never from the body, or anyone could spend anyone's
+ * diamonds. Null when there is nobody signed in, including a guest whose
+ * anonymous session has not been created yet.
+ */
+export async function authToken(): Promise<string | null> {
+  const sb = db();
+  if (!sb) return null;
+  const { data } = await sb.auth.getSession();
+  return data.session?.access_token ?? null;
+}
+
+/** Where our own small API lives, or "" when the game is running without one. */
+export function serverHttp(): string {
+  return SERVER_HTTP;
 }
 
 /** True once the account is a real one and the album is safe. */

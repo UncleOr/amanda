@@ -30,6 +30,15 @@ CATALOG.set("crumb_demon", {
   art: { placeholderColor: "#7a7a7a", sprite: "cards/crumb_demon.webp" },
 });
 
+/**
+ * Series ids to their Hebrew names.
+ *
+ * Only the names: a challenge that says "put a Lions card in the front row"
+ * needs to say "Lions" in Hebrew, and nothing else about a series reaches
+ * packages/shared/src/challenges.ts on purpose — see the Pools type there.
+ */
+export const SERIES_NAMES = new Map<string, string>(series.map((s) => [s.id, s.name.he]));
+
 /** Series synergies applied in battle (same as the client passes). */
 export const SYNERGIES = series.map((s) => ({
   seriesId: s.id,

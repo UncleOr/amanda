@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { Icon } from "./Icon";
 import { BattleLog } from "./BattleLog";
+import { Payout } from "./Payout";
 import { SayButton, SaidBubble } from "./Say";
 import * as V from "../data/voice";
 import { verdictText } from "../game/verdict";
@@ -68,6 +69,10 @@ export function ResultScreen({
               </p>
             </>
           )}
+          {/* And what it was worth. Arrives a round trip after the result,
+              because the server re-runs the battle before paying anything —
+              and draws nothing at all until it does. */}
+          <Payout award={m.award} />
           {/* The two of you, after the fact. The end-of-match lines unlock
               here — "good game" means nothing during the build phase. */}
           {m.online && !m.playground && (

@@ -131,6 +131,18 @@ export const ICON_LOOK: Record<string, string> = {
   joker: "a jester hat with two bells, violet and gold",
   flag: "a chequered finish flag on a short pole, black and white squares",
 
+  // ── the progression loop ──
+  //
+  // Nachos are an element from the film, and the thing a match pays out in
+  // besides trophies. It has to read as FOOD at 20px and as a small pile
+  // rather than one crisp, because the bar on the home screen fills with
+  // three or four of them at a time.
+  nacho:
+    "a small stacked pile of three triangular tortilla chips with melted " +
+    "cheese dripping over them, golden yellow and warm orange",
+  challenge:
+    "a scroll of parchment with a bold tick mark on it, cream and gold with a red ribbon",
+
   // ── who you are playing ──
   robot: "a boxy robot head with two round glowing eyes and an antenna, steel grey and red",
   friend: "two rounded character silhouettes side by side, one teal one gold",

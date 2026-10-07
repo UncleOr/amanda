@@ -72,6 +72,8 @@ export type IconName =
   | "thorns"
   | "joker"
   | "flag"
+  | "nacho"
+  | "challenge"
   | "robot"
   | "friend"
   | "online"

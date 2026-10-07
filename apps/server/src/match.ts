@@ -9,9 +9,10 @@ import {
   type ServerMessage,
   type Side,
 } from "@amanda/shared";
-import { runBattle } from "@amanda/engine";
+import { runBattle, type BattleResult, type Placement } from "@amanda/engine";
 import { CATALOG, SYNERGIES } from "./content.js";
 import { recordMatch } from "./progress.js";
+import { awardMeta, factsFor } from "./meta.js";
 import { COOP_LANES, amandaBoard, amandaView, joinBoards } from "./amanda.js";
 
 const COUNTDOWN = 3;
@@ -227,8 +228,11 @@ export class Match {
       : (this.a.board ?? fallback("A"));
     const boardB = this.coop ? (this.amanda ?? amandaBoard()) : (this.b.board ?? fallback("B"));
     let winner: Side | null = null;
+    // Kept outside the try: the nacho and challenge award below needs the
+    // battle itself, not just who won.
+    let result: BattleResult | null = null;
     try {
-      const result = runBattle({
+      result = runBattle({
         seed: this.seed,
         catalog: CATALOG,
         synergies: SYNERGIES,
@@ -259,6 +263,32 @@ export class Match {
       void recordMatch({ a: this.b.playerId, b: null, winner: beatHer ? "A" : "B" });
     } else {
       void recordMatch({ a: this.a.playerId, b: this.b.playerId, winner });
+    }
+    /*
+     * Nachos and challenge progress, for both of them.
+     *
+     * Separate from recordMatch because they are a different kind of thing:
+     * trophies are the ladder and are decided by the result alone, while these
+     * are decided by HOW the board did — which needs the battle itself, and
+     * this is the only place that still has it. In co-op the two players share
+     * one side, so they share the grade; their boards differ, so a challenge
+     * about a card one of them played moves for that one only.
+     */
+    if (result) {
+      const both: Array<[string | null, Placement[]]> = this.coop
+        ? [
+            [this.a.playerId, this.a.board?.placements ?? []],
+            [this.b.playerId, this.b.board?.placements ?? []],
+          ]
+        : [
+            [this.a.playerId, boardA.placements],
+            [this.b.playerId, boardB.placements],
+          ];
+      both.forEach(([id, placements], i) => {
+        if (!id) return;
+        const side = this.coop ? "A" : i === 0 ? "A" : "B";
+        void awardMeta(id, factsFor(result, side, placements));
+      });
     }
   }
 

@@ -68,29 +68,69 @@ function collectableCards(): Card[] {
   return [...CATALOG.values()].filter((c) => c.id !== "crumb_demon" && Boolean(c.seriesId));
 }
 
-function pickByRarity(pool: Card[]): Card | null {
-  const total = pool.reduce((sum, c) => sum + (RARITY_WEIGHT[c.rarity] ?? 1), 0);
+/**
+ * How much more likely a card you ALREADY HAVE is than one you do not.
+ *
+ * Or, describing what should come out of a chest: *"diamonds, and every so
+ * often cards as well — mostly more of the cards you already have, which is
+ * what lets you upgrade them, since you need X copies of the same card to pay
+ * diamonds and level it up. But rare ones too."*
+ *
+ * That is the whole economy in one sentence, and it is the opposite of how a
+ * chest usually works. A chest that draws uniformly from the catalogue gives a
+ * wide, shallow album: a hundred cards at one copy each and nothing to upgrade.
+ * Weighting towards what you own makes a duplicate the NORMAL result and the
+ * upgrade the thing it is for — while the draw still reaches the whole
+ * catalogue, so a chest can always surprise you.
+ *
+ * Three is deliberately mild. At a 20-card album out of 60 it makes a
+ * duplicate about half of every draw rather than a third; at a full album it
+ * does nothing at all, because everything is a duplicate by then.
+ */
+const OWNED_WEIGHT = 3;
+
+function weightOf(c: Card, owned?: ReadonlySet<string>): number {
+  const base = RARITY_WEIGHT[c.rarity] ?? 1;
+  return owned?.has(c.id) ? base * OWNED_WEIGHT : base;
+}
+
+function pickByRarity(pool: Card[], owned?: ReadonlySet<string>): Card | null {
+  const total = pool.reduce((sum, c) => sum + weightOf(c, owned), 0);
   if (total <= 0) return null;
   let roll = Math.random() * total;
   for (const c of pool) {
-    roll -= RARITY_WEIGHT[c.rarity] ?? 1;
+    roll -= weightOf(c, owned);
     if (roll <= 0) return c;
   }
   return pool[pool.length - 1] ?? null;
 }
 
-/** Roll the contents of one chest: card ids, repeats allowed (copies matter). */
-export function rollChest(kind: string): { cards: string[]; diamonds: number } {
+/**
+ * Roll the contents of one chest: card ids, repeats allowed (copies matter).
+ *
+ * `owned` is the player's album, and it only ever tilts the draw — see
+ * OWNED_WEIGHT. Left out, the draw is by rarity alone, which is what the
+ * shop's grants and gifts do: those are not rewards for an album, they are
+ * presents, and a present that is mostly things you already have is a worse
+ * present.
+ */
+export function rollChest(
+  kind: string,
+  owned?: ReadonlySet<string>,
+): { cards: string[]; diamonds: number } {
   const spec = CHESTS[kind] ?? CHESTS.wood!;
   const pool = collectableCards();
   const cards: string[] = [];
   if (spec.guarantees) {
+    // The promised rarity is drawn WITHOUT the album tilt. It is the part of
+    // the chest that is meant to be new; weighting it towards what you have
+    // would turn the guarantee into another duplicate.
     const promised = pool.filter((c) => c.rarity === spec.guarantees);
     const one = pickByRarity(promised.length ? promised : pool);
     if (one) cards.push(one.id);
   }
   while (cards.length < spec.cards) {
-    const c = pickByRarity(pool);
+    const c = pickByRarity(pool, owned);
     if (!c) break;
     cards.push(c.id);
   }

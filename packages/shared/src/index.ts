@@ -33,6 +33,12 @@ export * from "./albumPower.js";
 // Gifts and promotions: what they give, and the closed list of who they reach
 export * from "./grants.js";
 
+// Daily, weekly and monthly challenges, computed from the date
+export * from "./challenges.js";
+
+// How many nachos a match is worth, and how many fill a chest
+export * from "./nachos.js";
+
 // The closed set of things one player may say to the other
 export * from "./taunts.js";
 
