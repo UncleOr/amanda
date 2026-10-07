@@ -104,7 +104,9 @@
   aspect-ratio: 1;
   object-fit: cover;
 }
-.pick__card span {
+/* The card's own label. `> span` so it does not also claim the difficulty
+   pills nested inside, which are a row and not a block. */
+.pick__card > span {
   display: block;
   padding: 9px 6px;
   font-weight: 800;

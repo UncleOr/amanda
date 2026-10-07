@@ -20,10 +20,14 @@
  * everybody does, because a board of thirteen cards always has a passenger.
  * "The bot has dead weight in 40% and the player in 12%" is a finding.
  *
- *   node ../../node_modules/.pnpm/vite-node@*/node_modules/vite-node/vite-node.mjs  *     scripts/bot-report.ts 900
+ * Run it with vite-node, NOT tsx — the card catalogue is loaded with
+ * `import.meta.glob`, which only Vite understands:
  *
- * (vite-node rather than tsx: the card catalogue is loaded with
- * `import.meta.glob`, which only Vite understands.)
+ *   BIN=$(ls -d node_modules/.pnpm/vite-node@...)
+ *   cd apps/client && node "$BIN" scripts/bot-report.ts 900 normal
+ *
+ * (the glob for that path is spelled out in the shell rather than here,
+ * because a star followed by a slash closes this comment)
  *
  * ═══ USE AT LEAST 900 RUNS ═══
  *
@@ -66,6 +70,8 @@ import { CATALOG, SERIES } from "../src/data/catalog";
 import { __testing } from "../src/game/useMatch";
 
 const RUNS = Number(process.argv[2] ?? 300);
+/** Which setting of the difficulty dial to measure. */
+const LEVEL = (process.argv[3] ?? "normal") as "easy" | "normal" | "hard";
 
 const synergies = [...SERIES.values()].map((s) => ({
   seriesId: s.id,
@@ -113,7 +119,7 @@ for (let i = 0; i < RUNS; i++) {
     catalog: CATALOG,
     synergies,
     a: { owner: "A", placements: humanish() },
-    b: { owner: "B", placements: __testing.generateAiPlan() },
+    b: { owner: "B", placements: __testing.generateAiPlan(undefined, LEVEL) },
     recordFrames: false,
   });
   if (res.winner === "B") botWins++;

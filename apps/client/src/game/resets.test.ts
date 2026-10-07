@@ -45,6 +45,8 @@ const OUTLIVES_A_MATCH: Record<string, string> = {
     "the screen you are on. Every caller of clearMatch sets it immediately afterwards, to the screen it is going to — resetting it here would flash the wrong one.",
   setInvitation:
     "a friend calling you in. It arrives while you are between matches, which is exactly when clearMatch runs.",
+  setBotLevelState:
+    "how hard the computer tries. A per-browser choice, remembered on purpose — a child who found the easy bot should not have to find it again after every match.",
 };
 
 /** The body of a top-level `const NAME = useCallback(() => { … }, [...])`. */

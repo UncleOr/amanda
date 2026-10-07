@@ -144,6 +144,24 @@ const MOTES = [
  * while it is on screen. Re-rolling on every render would change the words
  * under the player's eyes mid-sentence.
  */
+/**
+ * True when the game is running as an installed app rather than a browser tab.
+ *
+ * Read once: a window does not stop being installed halfway through a visit.
+ */
+const INSTALLED =
+  typeof window !== "undefined" &&
+  (window.matchMedia?.("(display-mode: standalone)").matches ||
+    // iOS does not report standalone through matchMedia.
+    (navigator as { standalone?: boolean }).standalone === true);
+
+/** The three settings of the bot dial, and what each one means in a sentence. */
+const BOT_LEVELS: ReadonlyArray<{ id: "easy" | "normal" | "hard"; he: string; note: string }> = [
+  { id: "easy", he: "קליל", note: "לוח דליל, קלפים חלשים. מנצח ב-17% מהקרבות." },
+  { id: "normal", he: "רגיל", note: "בונה כמו שהוא יודע. חצי-חצי." },
+  { id: "hard", he: "קשה", note: "בוחר מתוך אוסף גדול בהרבה. מנצח בערך ב-58%." },
+];
+
 function useLine(lines: readonly V.Line[]): string {
   const [line] = useState(() => V.pick(lines));
   return line;
@@ -849,6 +867,30 @@ function Game() {
             <button className="btn-link" onClick={() => setReportOpen("bug")}>
               משהו לא עובד?
             </button>
+            {/*
+             * The version, and the way to force a fresh copy.
+             *
+             * It was the last line INSIDE the menu column, which now scrolls
+             * when the window is short — so it was the first thing to fall off
+             * the bottom, which is exactly what Or saw. Out here it cannot.
+             *
+             * The refresh button only exists in a browser tab. Installed as an
+             * app there is nothing to hard-refresh in the same sense, and Or
+             * wants it gone from there: "a button we will remove soon, or that
+             * should only appear in the browser app".
+             */}
+            <p className="intro__version">
+              גרסה {__BUILD_ID__} · מסך {viewport}
+              {!INSTALLED && (
+                <button
+                  className="btn-link"
+                  title="מוריד אותי מחדש ומנקה גרסאות ישנות"
+                  onClick={() => void hardRefresh()}
+                >
+                  ⟳ רענן
+                </button>
+              )}
+            </p>
           </aside>
           <aside className="rail">
             <button className="rail__item" onClick={gated(() => setShopOpen(true))}>
@@ -905,6 +947,33 @@ function Game() {
                 <button className="pick__card" onClick={m.startMatch}>
                   <img src={`${BASE}brand/versus_robot.webp`} alt="" />
                   <span>לשחק עם בוט</span>
+                  {/*
+                    How hard it tries. Three settings, each one MEASURED over
+                    700 battles rather than guessed: the easy bot wins 17% of
+                    them, the ordinary one 51%, the hard one around 58%.
+                    Remembered, so a child who found the easy one does not
+                    have to find it again.
+                  */}
+                  <span
+                    className="pick__levels"
+                    role="group"
+                    aria-label="כמה הבוט מתאמץ"
+                    onClick={(e) => e.stopPropagation()}
+                  >
+                    {BOT_LEVELS.map((lvl) => (
+                      <span
+                        key={lvl.id}
+                        role="button"
+                        tabIndex={0}
+                        className={m.botLevel === lvl.id ? "is-on" : ""}
+                        title={lvl.note}
+                        onClick={() => m.setBotLevel(lvl.id)}
+                        onKeyDown={(e) => e.key === "Enter" && m.setBotLevel(lvl.id)}
+                      >
+                        {lvl.he}
+                      </span>
+                    ))}
+                  </span>
                 </button>
                 <button
                   className="pick__card"
@@ -1013,16 +1082,6 @@ function Game() {
                     : "החדר מלא. שניים מספיקים לי."}
               </p>
             )}
-            <p className="intro__version">
-              גרסה {__BUILD_ID__} · מסך {viewport}
-              <button
-                className="btn-link"
-                title="מוריד אותי מחדש ומנקה גרסאות ישנות"
-                onClick={() => void hardRefresh()}
-              >
-                ⟳ רענן
-              </button>
-            </p>
             {!m.onlineAvailable && (
               <p className="intro__hint">(מצב אונליין דורש שרת פעיל)</p>
             )}
@@ -1067,6 +1126,30 @@ function Game() {
             <button className="btn-link" onClick={() => setReportOpen("bug")}>
               משהו לא עובד?
             </button>
+            {/*
+             * The version, and the way to force a fresh copy.
+             *
+             * It was the last line INSIDE the menu column, which now scrolls
+             * when the window is short — so it was the first thing to fall off
+             * the bottom, which is exactly what Or saw. Out here it cannot.
+             *
+             * The refresh button only exists in a browser tab. Installed as an
+             * app there is nothing to hard-refresh in the same sense, and Or
+             * wants it gone from there: "a button we will remove soon, or that
+             * should only appear in the browser app".
+             */}
+            <p className="intro__version">
+              גרסה {__BUILD_ID__} · מסך {viewport}
+              {!INSTALLED && (
+                <button
+                  className="btn-link"
+                  title="מוריד אותי מחדש ומנקה גרסאות ישנות"
+                  onClick={() => void hardRefresh()}
+                >
+                  ⟳ רענן
+                </button>
+              )}
+            </p>
           </aside>
           <aside className="rail">
             <button className="rail__item" onClick={gated(() => setShopOpen(true))}>

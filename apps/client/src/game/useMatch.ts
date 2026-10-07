@@ -173,13 +173,81 @@ function power(cardId: string): number {
  * "חפיסה זהה" — same cards, both sides, so the only thing left to be better at
  * is where you put them.
  */
-function generateAiPlan(deck?: string[]): Placement[] {
-  const ids = deck ? deck.filter((id) => CATALOG.has(id)) : shuffle(cardPool()).slice(0, DECK.size);
+/**
+ * How hard the computer tries.
+ *
+ * ═══ WHY A DIAL AND NOT A CLEVERER BOT ═══
+ *
+ * Measured first (`apps/client/scripts/bot-report.ts`): the bot already wins
+ * 52-55% against a board built the way a person builds one, and two honest
+ * attempts to improve its placement BOTH made it worse. The reason is that
+ * the planner only chooses where cards go — who they attack is decided by the
+ * engine, at the time, from the board in front of them. There is very little
+ * cleverness left to add.
+ *
+ * What the game was actually missing is the opposite: something a
+ * seven-year-old can beat. So this is one knob with three settings, and each
+ * one is MEASURED rather than hoped at — the numbers below were tuned until
+ * the win rates came out where they should.
+ */
+export type BotLevel = "easy" | "normal" | "hard";
+
+interface Skill {
+  /** How many of the ranked list to choose from. 1 means always the best. */
+  window: number;
+  /** Choose from the BOTTOM of the ranking instead of the top. */
+  fromWorst: boolean;
+  /** Chance per cell of ignoring the role rules and putting anything there. */
+  sloppiness: number;
+  /** Cells left empty. A thin board is the most readable kind of weak. */
+  gaps: number;
+  /**
+   * How many cards it gets to choose its thirteen from.
+   *
+   * A person draws thirteen at random, so the normal bot does too. Measured,
+   * choosing PERFECTLY from a random thirteen only buys six points of win
+   * rate — the planner's rules are the ceiling, not the picking. A wider
+   * draw is what actually makes a hard opponent, and it is the honest kind of
+   * hard: somebody with more of the collection, which is what a better player
+   * has.
+   *
+   * Tuned by measurement, not by feel. The whole pool came out at 92%, which
+   * is not a hard opponent but a wall; 20 gave 56%, 30 gave 58%, 40 gives
+   * 61%. Sixty-one is the shape wanted — clearly against you, clearly
+   * winnable.
+   */
+  draw: number;
+}
+
+const SKILL: Record<BotLevel, Skill> = {
+  /*
+   * Beatable by a child, without being a pushover that teaches nothing.
+   * It fields real cards in roughly sensible places — it just fields the
+   * wrong ones, leaves holes, and sometimes puts a shooter where a wall
+   * should be. Which is what a beginner's board looks like, and makes it a
+   * fair thing to learn against.
+   */
+  easy: { window: 6, fromWorst: true, sloppiness: 0.45, gaps: 3, draw: DECK.size },
+  normal: { window: 4, fromWorst: false, sloppiness: 0, gaps: 0, draw: DECK.size },
+  /** Every choice the planner knows how to make, made correctly. */
+  hard: { window: 1, fromWorst: false, sloppiness: 0, gaps: 0, draw: 40 },
+};
+
+function generateAiPlan(deck?: string[], level: BotLevel = "normal"): Placement[] {
+  const skill = SKILL[level] ?? SKILL.normal;
+  const ids = deck
+    ? deck.filter((id) => CATALOG.has(id))
+    : shuffle(cardPool()).slice(0, skill.draw);
   const pool = ids.map((id) => CATALOG.get(id)!).filter(Boolean);
   if (pool.length === 0) return [];
 
-  const pick = <T,>(xs: T[], fallback: T): T =>
-    xs.length ? xs[Math.floor(Math.random() * Math.min(4, xs.length))]! : fallback;
+  const pick = <T,>(xs: T[], fallback: T): T => {
+    if (!xs.length) return fallback;
+    const n = Math.min(skill.window, xs.length);
+    const i = Math.floor(Math.random() * n);
+    // From the worst end for the easy bot: the same ranking, read backwards.
+    return (skill.fromWorst ? xs[xs.length - 1 - i] : xs[i]) ?? fallback;
+  };
   const dps = (c: Card) => (c.stats.attackSpeed > 0 ? c.stats.power / c.stats.attackSpeed : 0);
 
   const used = new Set<string>();
@@ -201,16 +269,30 @@ function generateAiPlan(deck?: string[]): Placement[] {
   const useful = pool.filter((c) => c.stats.range !== "melee" || c.stats.moveSpeed > 0);
 
   const placements: Placement[] = [{ cardId: kingCard.id, x: 1, y: 1, king: true }];
-  for (const cell of perimeterCells()) {
-    const ranked = isGuardPost(cell.x, cell.y)
-      ? walls.length
-        ? walls
-        : hitters
-      : cell.x === 3
-        ? hitters
-        : useful.length
-          ? useful
-          : hitters;
+  // Which cells to leave empty, chosen at random rather than always the same
+  // ones — a board with the same three holes every game is a board you learn
+  // the shape of instead of learning the game.
+  const cells = perimeterCells();
+  const empty = new Set(
+    shuffle(cells.map((_, i) => i)).slice(0, Math.min(skill.gaps, cells.length - 1)),
+  );
+  for (const [i, cell] of cells.entries()) {
+    if (empty.has(i)) continue;
+    // Sloppiness: the role rules exist for a reason, so ignoring them puts a
+    // shooter on a guard post or a wall in the back row. Wrong in the way a
+    // beginner is wrong, rather than wrong at random.
+    const sloppy = Math.random() < skill.sloppiness;
+    const ranked = sloppy
+      ? hitters
+      : isGuardPost(cell.x, cell.y)
+        ? walls.length
+          ? walls
+          : hitters
+        : cell.x === 3
+          ? hitters
+          : useful.length
+            ? useful
+            : hitters;
     placements.push({ cardId: take(ranked).id, x: cell.x, y: cell.y });
   }
   // Front row first keeps the battle readable when the boards are revealed.
@@ -550,6 +632,9 @@ export interface MatchApi {
   startAmanda: () => void;
   /** Developer preview of Amanda mode, alone and unwinnable. */
   startAmandaSolo: () => void;
+  /** How hard the computer tries. Remembered per browser. */
+  botLevel: BotLevel;
+  setBotLevel: (level: BotLevel) => void;
   /** The player's account, or null when playing without one. */
   account: Account | null;
   /** Re-read it, after the player changes something about themselves. */
@@ -654,6 +739,29 @@ export function useMatch(): MatchApi {
   const [ready, setReady] = useState(false);
   const [oppReady, setOppReady] = useState(false);
   /** Amanda mode: you and the other player share a side against her. */
+  /*
+   * Which bot you are playing. Remembered, because a child who has found the
+   * easy one should not have to find it again every time.
+   */
+  const [botLevel, setBotLevelState] = useState<BotLevel>(() => {
+    try {
+      const saved = localStorage.getItem("amanda.bot");
+      return saved === "easy" || saved === "hard" ? saved : "normal";
+    } catch {
+      return "normal";
+    }
+  });
+  const botLevelRef = useRef(botLevel);
+  botLevelRef.current = botLevel;
+  const setBotLevel = useCallback((level: BotLevel) => {
+    setBotLevelState(level);
+    try {
+      localStorage.setItem("amanda.bot", level);
+    } catch {
+      /* not remembering it is not worth failing over */
+    }
+  }, []);
+
   const [coop, setCoop] = useState(false);
   const [mate, setMate] = useState<BoardView | null>(null);
   const [heard, setHeard] = useState<{ id: string; at: number } | null>(null);
@@ -814,7 +922,7 @@ export function useMatch(): MatchApi {
   const modsRef = useRef<BattleMods>({ boardPowerAdd: 0, boostedCells: {} });
   modsRef.current = { boardPowerAdd, boostedCells };
   const aiPlanRef = useRef<Placement[] | null>(null);
-  if (!aiPlanRef.current) aiPlanRef.current = generateAiPlan();
+  if (!aiPlanRef.current) aiPlanRef.current = generateAiPlan(undefined, botLevelRef.current);
 
   /** Refill the hand, preferring cards already drawn ahead by "triple draw". */
   const refill = useCallback((next: GameState): GameState => {
@@ -1317,7 +1425,7 @@ export function useMatch(): MatchApi {
    * describes who you are connected to belongs in clearMatch below.
    */
   const clearRound = useCallback(() => {
-    aiPlanRef.current = generateAiPlan();
+    aiPlanRef.current = generateAiPlan(undefined, botLevelRef.current);
     setGs(initialGameState(accountRef.current?.album));
     setResult(null);
     setActionBar([]);
@@ -1595,7 +1703,7 @@ export function useMatch(): MatchApi {
     setMirrorSeed(seed);
     const deck = matchDeck(null, seed);
     setGs({ deck, hand: null, discard: [], placements: {}, king: null });
-    aiPlanRef.current = generateAiPlan(deck);
+    aiPlanRef.current = generateAiPlan(deck, botLevelRef.current);
     setPhase("countdown");
   }, [clearMatch]);
 
@@ -1865,6 +1973,8 @@ export function useMatch(): MatchApi {
     startOnline: () => startOnline(),
     startAmanda,
     startAmandaSolo,
+    botLevel,
+    setBotLevel,
     coop,
     mate,
     myLane,

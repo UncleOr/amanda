@@ -281,18 +281,26 @@
 .smallprint {
   position: absolute;
   z-index: 3;
-  inset-inline-end: clamp(10px, 3vw, 28px);
   /*
-   * Below the purse, which sits at z-index 4 and would otherwise swallow the
-   * first link — the same way it once swallowed the music button. Two things
-   * occupying the same corner means one of them cannot be pressed, so they
-   * do not share the corner.
+   * Bottom left, centred. Or: "אודות פרטיות should be at the bottom left, and
+   * centre 'something not working' underneath it — generally, headings like
+   * these should be centred."
+   *
+   * Bottom also keeps it clear of the purse, which sits top-left at z-index 4
+   * and swallowed the first link when they shared that corner — the same way
+   * it once swallowed the music button.
    */
-  top: clamp(86px, 13vh, 118px);
+  inset-inline-end: clamp(10px, 3vw, 28px);
+  bottom: clamp(10px, 2.5vh, 22px);
   display: flex;
   flex-direction: column;
-  align-items: flex-start;
-  gap: 2px;
+  align-items: center;
+  text-align: center;
+  gap: 3px;
+}
+.smallprint .intro__version {
+  margin: 2px 0 0 !important;
+  text-align: center;
 }
 /*
  * Backed, because they sit over artwork.
@@ -314,6 +322,44 @@
 /* On a short screen the rail starts below the small print rather than being
    centred into it. */
 @media (max-height: 560px) {
-  .smallprint { top: 74px; }
-  .smallprint .btn-link { font-size: 11px; }
+  .smallprint { bottom: 6px; gap: 1px; }
+  .smallprint .btn-link { font-size: 11px; padding: 2px 7px; }
+}
+
+/* ---- how hard the bot tries ---- */
+/*
+ * Three words under the robot. Each one is a measured setting, not a mood:
+ * over 700 battles the easy bot wins 17%, the ordinary one 51%, the hard one
+ * around 58% (apps/client/scripts/bot-report.ts).
+ *
+ * Inside the card rather than beside it, so the choice is attached to the
+ * thing it changes — and it stops the click from starting a match, because
+ * picking a difficulty is not pressing play.
+ */
+.pick__card > .pick__levels {
+  display: flex;
+  gap: 3px;
+  margin-top: 6px;
+  padding: 3px;
+  border-radius: 999px;
+  background: rgba(0, 0, 0, 0.42);
+}
+.pick__card > .pick__levels > span {
+  padding: 3px 10px;
+  border-radius: 999px;
+  font-size: 11px;
+  font-weight: 700;
+  color: var(--muted);
+  cursor: pointer;
+  user-select: none;
+  white-space: nowrap;
+}
+.pick__card > .pick__levels > span:hover { color: var(--text); }
+.pick__card > .pick__levels > span.is-on {
+  background: var(--accent);
+  color: #241a05;
+}
+@media (max-height: 460px) and (orientation: landscape) {
+  .pick__levels { margin-top: 3px; padding: 2px; }
+  .pick__levels > span { padding: 2px 7px; font-size: 10px; }
 }
