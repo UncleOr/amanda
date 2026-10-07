@@ -39,3 +39,4 @@ assets/raw/
 # the loose copy of the source deck at the repo root; the filed copy under
 # assets/reference/ is the one that ships
 /קלפי מפלצות עם בליד.pdf
+.scratch/
