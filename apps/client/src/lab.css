@@ -973,3 +973,26 @@
     gap: 0;
   }
 }
+
+/*
+ * The ladder on a phone held sideways.
+ *
+ * Five arenas at the desktop size need just over 400px of height, and a phone
+ * in landscape has 384. The one that fell off the bottom was תחנת הדלק — the
+ * last arena, the hardest, the whole reason the ladder exists. "So there is
+ * something to aim for" does not survive the thing you aim for being below
+ * the fold.
+ *
+ * Tighter rows rather than a scroll: a list you have to discover by scrolling
+ * is a list whose last item most people never see.
+ */
+@media (max-height: 460px) and (orientation: landscape) {
+  .modal--arenas { max-height: 94vh; }
+  .arenas__title { margin: 4px 0 6px !important; font-size: 16px; }
+  .arenas__list { gap: 4px; }
+  .arenas__row { padding: 5px 9px; gap: 9px; border-radius: 10px; }
+  .arenas__art { width: 58px; height: 38px; border-radius: 8px; }
+  .arenas__who b { font-size: 13px; }
+  .arenas__who small { font-size: 10px; line-height: 1.3; }
+  .arenas__badge { font-size: 10px; padding: 2px 7px; }
+}

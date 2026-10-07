@@ -917,28 +917,21 @@ function Game() {
             )}
             {/*
               Where you are on the ladder, and what is above you.
-              Drawn for a guest too, and shut — a ladder you cannot see the
-              top of is not a ladder, and one you cannot see at all persuades
-              nobody to sign in.
+              Open to a guest: Or, after seeing how many padlocks a first
+              visit had on it — "open the album to guests and leave only the
+              shop, friends and online play locked". The collecting IS the
+              game; what an account buys is keeping it.
             */}
-            <button
-              className={`track-gate${signedIn ? "" : " is-locked"}`}
-              onClick={signedIn ? undefined : gated(() => {})}
-              disabled={signedIn}
-            >
-              <ArenaTrack trophies={m.account?.trophies ?? 0} />
-              {!signedIn && <Lock />}
-            </button>
+            <ArenaTrack trophies={m.account?.trophies ?? 0} />
             {/* And what is waiting to be opened. */}
-            {signedIn && (
+            {m.account && (
               <ChestShelf
                 onOpened={setChest}
                 reload={() => m.reloadAccount()}
               />
             )}
-            <button className="btn-album" onClick={gated(() => setAlbumOpen(true))}>
+            <button className="btn-album" onClick={() => setAlbumOpen(true)}>
               <Icon name="deck" size={20} /> האלבום שלי
-              {!signedIn && <Lock />}
             </button>
             {/* The side doors. Deliberately smaller than the two ways to
                 actually play — they sit beside the game, not in front of it.
@@ -1004,10 +997,11 @@ function Game() {
             <button className="btn-link about__open" onClick={() => setAboutOpen(true)}>
               אודות · פרטיות · נגישות
             </button>
-            {/* The server refuses a report from an anonymous account anyway
-                (apps/server/src/reports.ts) — so without this a guest pressed
-                it, typed, and was told no at the end. */}
-            <button className="btn-link about__open" onClick={gated(() => setReportOpen("bug"))}>
+            {/* Open to everybody: the player most likely to hit a bug is the
+                one who just arrived, and a guest's report is as useful as
+                anybody's. Reporting a PERSON still needs an account, and the
+                server is where that is decided. */}
+            <button className="btn-link about__open" onClick={() => setReportOpen("bug")}>
               משהו לא עובד?
             </button>
             <p className="intro__version">

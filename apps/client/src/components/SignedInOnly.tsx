@@ -3,18 +3,22 @@ import { Icon } from "./Icon";
 /**
  * What a guest may do, and what an account is for.
  *
- * Or's ruling: *"we should decide what is only available to signed-in users,
- * to encourage everyone to sign in. Reports. Friends. Shop. Album. Arena
- * progress. As far as I'm concerned an anonymous user can only play a one-off
- * against a bot."*
+ * Or's first ruling was everything: reports, friends, shop, album, arena
+ * progress. Then he saw a first visit with that many padlocks on it and
+ * narrowed it: *"open the album to guests and leave only the shop, friends
+ * and online play locked."*
+ *
+ * That is the better line, and the reason is worth keeping: COLLECTING IS THE
+ * GAME. A child who cannot see their album has not been given a reason to
+ * want an account, they have been given a reason to leave. What an account
+ * buys is not the album — it is KEEPING the album, which a guest genuinely
+ * cannot do, because an anonymous account dies with the browser's storage.
  *
  * ═══ LOCKED, NOT HIDDEN ═══
  *
- * Every one of these is drawn and visibly shut rather than removed. A hidden
- * thing persuades nobody — the whole point is that a child sees the album,
- * the shelf of arenas and the shop, wants them, and asks a grown-up to sign
- * them in. It is the same reasoning as the locked arenas Or asked for: "so
- * there is something to aim for."
+ * The three that remain are drawn and visibly shut rather than removed. A
+ * hidden thing persuades nobody. Same reasoning as the locked arenas Or asked
+ * for: "so there is something to aim for."
  *
  * ═══ "SIGNED IN" MEANS A REAL IDENTITY ═══
  *
@@ -28,12 +32,12 @@ export const LOCKED_REASON = "צריך חשבון. זה חינם, ושומר א�
 
 /** Everything a guest is missing, in the order it is worth wanting. */
 export const WHAT_AN_ACCOUNT_GIVES = [
-  { icon: "deck", he: "אלבום — הקלפים נשמרים" },
-  { icon: "win", he: "גביעים, וארנות שנפתחות" },
-  { icon: "chest", he: "תיבות ופרסים" },
-  { icon: "gem", he: "חנות הנוחות" },
-  { icon: "friend", he: "חברים ומשחק מולם" },
+  // The first line is the true one, and it is first on purpose: a guest can
+  // already SEE their album — what they cannot do is keep it.
+  { icon: "deck", he: "האלבום נשמר — גם אם תנקה את הדפדפן או תחליף מכשיר" },
   { icon: "online", he: "לשחק מול אנשים אמיתיים" },
+  { icon: "friend", he: "חברים — לראות מי מחובר ולהזמין למשחק" },
+  { icon: "gem", he: "חנות נוחות" },
 ] as const;
 
 /**
@@ -64,8 +68,8 @@ export function WhySignIn({ onClose, onSignIn }: { onClose: () => void; onSignIn
         </button>
         <h2>עם חשבון זה שלך</h2>
         <p className="why__lead">
-          בלי חשבון אפשר לשחק מול הבוט כמה שבא לך — אבל שום דבר לא נשמר, וברגע
-          שתנקה את הדפדפן הכול ייעלם.
+          בלי חשבון אפשר לשחק ולאסוף — אבל הכול יושב רק בדפדפן הזה, וברגע
+          שתנקה אותו או תעבור למכשיר אחר, הוא ייעלם.
         </p>
         <ul className="why__list">
           {WHAT_AN_ACCOUNT_GIVES.map((row) => (

@@ -18,7 +18,17 @@ import { createClient, type SupabaseClient } from "@supabase/supabase-js";
  * Publishable, and meant to be: row level security is what protects the data,
  * not the key. Overridable at build time for a different environment.
  */
-const URL = import.meta.env.VITE_SUPABASE_URL ?? "https://iiviygfltyrsonioyqxm.supabase.co";
+/*
+ * NOT called `URL`.
+ *
+ * It was, and that shadowed the global `URL` CONSTRUCTOR for this whole
+ * module — so `new URL(...)` was calling a string, and every Google sign-in
+ * died with "URL is not a constructor" (minified, on Or's screen, to "hh is
+ * not a constructor"). The two places that need the real one are
+ * comeBackTo() and cleanOAuthFromUrl(), both added in the same commit that
+ * introduced the bug.
+ */
+const SUPABASE_URL = import.meta.env.VITE_SUPABASE_URL ?? "https://iiviygfltyrsonioyqxm.supabase.co";
 const KEY = import.meta.env.VITE_SUPABASE_KEY ?? "sb_publishable_j1lvAt_idYWAzD0WCEJ4ig_PR0egOzG";
 
 /** One card in the album. */
@@ -54,8 +64,8 @@ export interface Account {
 
 let client: SupabaseClient | null = null;
 function db(): SupabaseClient | null {
-  if (!URL || !KEY) return null;
-  if (!client) client = createClient(URL, KEY, { auth: { persistSession: true } });
+  if (!SUPABASE_URL || !KEY) return null;
+  if (!client) client = createClient(SUPABASE_URL, KEY, { auth: { persistSession: true } });
   return client;
 }
 
@@ -102,7 +112,7 @@ export function getAuthTrace(): string {
 }
 
 /** True when the build was given somewhere to store accounts. */
-export const ACCOUNTS_AVAILABLE = Boolean(URL && KEY);
+export const ACCOUNTS_AVAILABLE = Boolean(SUPABASE_URL && KEY);
 
 /**
  * The match server over plain HTTP, for the small API beside the socket.
@@ -210,7 +220,37 @@ export async function loadAccount(): Promise<Account | null> {
       .join(" · ");
     if (returning.error) {
       cleanOAuthFromUrl();
-      lastAuthError = returning.error;
+      /*
+       * ═══ "Identity is already linked to another user" ═══
+       *
+       * This is the one Or actually hit, and the trace on his screen is what
+       * named it. It means the Google account he picked is already attached
+       * to an Amanda account he made earlier — so LINKING it to the guest
+       * account in this browser can never succeed, no matter how many times
+       * he tries.
+       *
+       * There is a right answer and it is not an error message: sign him
+       * INTO that account. He gets his real album back. What he loses is
+       * whatever this browser collected as a guest, which was never saved
+       * anywhere and is the entire reason to sign in.
+       *
+       * `linkGoogle` has this fallback already — but it only runs when
+       * linkIdentity fails IMMEDIATELY. This failure happens at Supabase,
+       * after the trip to Google, and comes home as a parameter in the URL,
+       * so nothing on the client was left to catch it.
+       */
+      if (/already.*linked|identity_already_exists/i.test(returning.error)) {
+        lastAuthError = null;
+        const { error } = await sb.auth.signInWithOAuth({
+          provider: "google",
+          options: { redirectTo: comeBackTo() },
+        });
+        // The browser is leaving for Google; nothing after this runs.
+        if (!error) return null;
+        lastAuthError = "חשבון הגוגל הזה כבר שייך לחשבון אחר, ולא הצלחתי להיכנס אליו.";
+      } else {
+        lastAuthError = returning.error;
+      }
       // Fall through: the player still gets to play, as a guest, and the
       // profile screen can tell them what happened.
     }

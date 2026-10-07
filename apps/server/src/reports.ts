@@ -95,8 +95,22 @@ export async function fileReport(
   reporterId: string,
   input: ReportInput,
 ): Promise<string | null> {
-  if (!(await isRegistered(sb, reporterId)))
-    return "צריך חשבון כדי לדווח. אפשר להתחבר באזור האישי.";
+  /*
+   * A BUG report is welcome from anybody, including a guest.
+   *
+   * The "registered only" rule was applied to both kinds, and that was wrong
+   * for one of them. It exists to stop abuse of PLAYER reports — an anonymous
+   * account is free, so a report from one is a report from nobody and being
+   * reported by one is being reported by nobody. None of that applies to
+   * somebody telling us the battle would not draw: that is information we
+   * want, from whoever has it, and the five-an-hour limit below is what stops
+   * it being spammed.
+   *
+   * It also matters now that Or has opened the game up to guests: the player
+   * most likely to hit a bug is the one who just arrived.
+   */
+  if (input.kind === "player" && !(await isRegistered(sb, reporterId)))
+    return "צריך חשבון כדי לדווח על שחקן. אפשר להתחבר באזור האישי.";
 
   const message = input.message.trim().slice(0, 1000);
   if (input.kind === "bug" && message.length < 3) return "ספר לנו מה קרה.";
