@@ -501,3 +501,159 @@
   color: var(--accent);
   background: rgba(255, 176, 32, 0.12);
 }
+
+/* ════════ the content tabs: phrases, series, numbers ════════ */
+
+/* "This one is not what the game shipped with." Small, beside the thing it
+   is about, so a list of twenty lines shows the three he has touched. */
+.admin__badge {
+  display: inline-block;
+  margin-inline-start: 6px;
+  padding: 1px 6px;
+  border-radius: 999px;
+  background: rgba(255, 176, 32, 0.18);
+  border: 1px solid rgba(255, 211, 107, 0.5);
+  color: #ffd36b;
+  font-size: 10px;
+  font-weight: 800;
+  vertical-align: middle;
+}
+
+/* What a phrase will actually look like, while it is being written. What is
+   being sold is how a line ARRIVES, so a form that shows only the words is a
+   form for choosing blind. */
+.admin__preview {
+  display: flex;
+  justify-content: center;
+  padding: 14px 10px;
+  margin: 4px 0 10px;
+  border-radius: 10px;
+  border: 1px dashed var(--line);
+  background: rgba(0, 0, 0, 0.25);
+}
+
+.admin__num { width: 72px; }
+
+/* One dial: the name, the number it is at, the slider, and the warning. The
+   warning is not optional furniture — the dials that need explaining are
+   exactly the ones that get turned by accident. */
+.admin__dial { gap: 2px; }
+.admin__dial input[type="range"] { width: 100%; accent-color: var(--accent); }
+.admin__dial-now {
+  color: var(--accent);
+  font-variant-numeric: tabular-nums;
+}
+.admin__dial small { line-height: 1.45; }
+
+/* ════════ the statistics screen ════════ */
+/*
+ * Or asked for *"lots of information and statistics"*, which is the easy half
+ * — the hard half is a page somebody looks at twice. Everything here is
+ * grouped by the QUESTION it answers rather than by where the number came
+ * from, and the groups are in the order the questions matter: who is here,
+ * what they play, where they leave, what it earns, what they like.
+ */
+.stats { padding: 18px 22px 40px; display: flex; flex-direction: column; gap: 22px; }
+.stats__group {
+  padding: 16px 18px;
+  border-radius: 14px;
+  border: 1px solid var(--line);
+  background: rgba(255, 255, 255, 0.025);
+}
+.stats__group h2 {
+  margin: 0 0 12px;
+  font-size: 17px;
+  color: var(--accent);
+}
+.stats__group h3 {
+  margin: 18px 0 7px;
+  font-size: 13px;
+  font-weight: 800;
+  color: var(--muted);
+}
+.stats__row {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(132px, 1fr));
+  gap: 9px;
+}
+.stats__row--sparks { grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); }
+
+.stat {
+  display: flex;
+  flex-direction: column;
+  gap: 1px;
+  padding: 10px 12px;
+  border-radius: 10px;
+  background: rgba(0, 0, 0, 0.3);
+  border: 1px solid var(--line);
+}
+.stat__n {
+  font-size: 23px;
+  font-weight: 900;
+  line-height: 1.1;
+  font-variant-numeric: tabular-nums;
+}
+.stat__label { font-size: 11.5px; color: var(--muted); }
+/* The sentence under a number that needs one. "Out of 50" turns a count into
+   a fact; without it, 12 is just 12. */
+.stat__note { font-size: 10px; color: var(--muted); opacity: 0.75; line-height: 1.35; }
+
+/*
+ * A ranked list, with the bar BEHIND the words rather than beside them.
+ * Beside it, the longest name decides where every bar starts and the whole
+ * column of them stops being comparable at a glance.
+ */
+.tally { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 3px; }
+.tally li {
+  position: relative;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 5px 10px;
+  border-radius: 7px;
+  background: rgba(0, 0, 0, 0.28);
+  font-size: 12.5px;
+  overflow: hidden;
+}
+.tally__bar {
+  position: absolute;
+  inset-block: 0;
+  inset-inline-start: 0;
+  background: rgba(255, 176, 32, 0.16);
+}
+.tally__name { position: relative; flex: 1; min-width: 0; }
+.tally li b { position: relative; font-variant-numeric: tabular-nums; }
+
+/*
+ * Fourteen days as fourteen bars, drawn by hand.
+ *
+ * A charting library for one shape is three hundred kilobytes to say "this is
+ * the tallest day". The point of it is the SHAPE — climbing, flat, or one
+ * spike and nothing since — which divs say perfectly well.
+ */
+.spark { display: flex; flex-direction: column; gap: 5px; }
+.spark__title { font-size: 12px; font-weight: 800; color: var(--muted); }
+.spark__bars {
+  display: flex;
+  align-items: flex-end;
+  gap: 3px;
+  height: 64px;
+  padding: 4px 6px;
+  border-radius: 9px;
+  background: rgba(0, 0, 0, 0.3);
+}
+.spark__bars > i {
+  flex: 1;
+  /* A day with nothing in it still draws a sliver, so fourteen days read as
+     fourteen days rather than as a gap of unknown length. */
+  min-height: 2px;
+  border-radius: 2px 2px 0 0;
+  background: linear-gradient(180deg, #ffd36b, rgba(255, 176, 32, 0.4));
+}
+
+.stats--one { gap: 14px; }
+.stats__head { display: flex; align-items: baseline; justify-content: space-between; gap: 12px; }
+.stats__head h2 { margin: 0; font-size: 19px; }
+/* The one view here that is a story rather than a number. */
+.stats__recent { list-style: none; margin: 0; padding: 0; font-size: 12.5px; line-height: 1.9; }
+.stats__recent li { border-bottom: 1px solid rgba(255, 255, 255, 0.05); }

@@ -25,6 +25,25 @@ import { awardMatch, claim, factsFor, standings } from "./meta.js";
 import { soloResult } from "./solo.js";
 
 import { SUPABASE_URL as URL, db, keyHasWhitespace, keyLength, keyStartsWith } from "./supabase.js";
+import { phraseOverrides, seriesOverrides, tunableValues } from "./live.js";
+import { MAX_EVENT_BYTES, track, type EventKind } from "./events.js";
+
+/**
+ * The only event kinds a browser may report.
+ *
+ * Everything else — a purchase, a chest, what a match paid — is written by
+ * the server from what it did itself, so there is nothing here anyone could
+ * claim that would be worth claiming.
+ *
+ * `playground` is its own kind rather than a `match` with a mode, which it
+ * nearly was. A browser allowed to report matches is a browser allowed to
+ * report WON matches, and a leaderboard of made-up wins is the one statistic
+ * on this screen that would be worth forging. The playground has no result
+ * and no reward, so counting one costs nothing even if somebody lies about
+ * it — and keeping it a separate word is what makes that true by
+ * construction rather than by a check somebody has to remember.
+ */
+const FROM_BROWSER = ["open", "quit", "playground"] as const;
 
 export { db };
 
@@ -177,6 +196,15 @@ async function openChest(req: IncomingMessage, res: ServerResponse): Promise<voi
   // Which of them the album had never held. The celebration on the other end
   // needs an answer only this moment can give — see grantChest.
   const fresh = await grantChest(sb, playerId, contents);
+  // What was in it, and how much of it was new — which is the difference
+  // between "chests are exciting" and "chests are duplicates", and the one
+  // number that says whether the collection is working.
+  track(sb, playerId, "chest", {
+    kind: chest.kind,
+    cards: contents.cards.length,
+    diamonds: contents.diamonds,
+    fresh: fresh.length,
+  });
   if (contents.diamonds > 0) {
     const { data: row } = await sb
       .from("players")
@@ -450,6 +478,71 @@ export async function handleApi(req: IncomingMessage, res: ServerResponse): Prom
       // The game ships with every card it has; an empty answer costs nothing.
       send(res, 200, { cards: [] });
     }
+    return true;
+  }
+  /*
+   * The phrases, the series and the numbers, for anyone.
+   *
+   * ONE request for all three rather than three, because the browser wants
+   * all three at the same moment — boot — and three round trips on a phone is
+   * three chances to be slow. Served from what this process already has in
+   * memory (live.ts), so it costs no database call at all.
+   *
+   * Same promise as /api/cards and /api/copy: an empty answer is a correct
+   * answer. The game ships with its own phrases, its own series and its own
+   * numbers, and nothing here is awaited before a child can press play.
+   */
+  /*
+   * ═══ WHAT ONLY THE BROWSER KNOWS ═══
+   *
+   * Three of the things Or asked to count never reach the server on their
+   * own: opening the game, leaving a match half way through, and the
+   * playground (which is played entirely in the browser and has no result to
+   * report). So the browser says.
+   *
+   * ═══ AND WHY THAT IS NOT A HOLE ═══
+   *
+   * An endpoint that takes events from a client is an endpoint somebody can
+   * post nonsense to. Four things keep it boring:
+   *
+   *   only three KINDS are accepted here. Everything that touches money,
+   *     cards or trophies — buying, chests, match rewards — is written by the
+   *     server from what it did itself and can never be claimed from outside.
+   *   the player id comes from the TOKEN, never from the body, so nobody can
+   *     write into somebody else's history.
+   *   the data bag is capped and stored as-is, never read back as code.
+   *   nothing here grants anything. The worst a forged request achieves is a
+   *     wrong number on Or's statistics screen.
+   */
+  if (path === "/api/track") {
+    if (req.method === "OPTIONS") {
+      send(res, 204, {});
+      return true;
+    }
+    const body = (await readBody(req)) as { kind?: unknown; data?: unknown };
+    const kind = typeof body.kind === "string" ? body.kind : "";
+    if (!FROM_BROWSER.includes(kind as (typeof FROM_BROWSER)[number])) {
+      send(res, 400, { error: "not a thing" });
+      return true;
+    }
+    const data = body.data && typeof body.data === "object" ? (body.data as object) : {};
+    if (JSON.stringify(data).length > MAX_EVENT_BYTES) {
+      send(res, 400, { error: "too much" });
+      return true;
+    }
+    // A guest is a real person having a real session; `playerFrom` returning
+    // nothing is a null player id and not a refusal.
+    track(db(), await playerFrom(req), kind as EventKind, data as Record<string, unknown>);
+    send(res, 200, { ok: true });
+    return true;
+  }
+
+  if (path === "/api/live") {
+    send(res, 200, {
+      phrases: phraseOverrides(),
+      series: seriesOverrides(),
+      tunables: tunableValues(),
+    });
     return true;
   }
   // The words on the screen, for anyone, signed in or not.

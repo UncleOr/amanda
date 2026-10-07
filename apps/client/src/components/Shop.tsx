@@ -2,6 +2,7 @@ import { useCallback, useEffect, useState } from "react";
 import { Icon } from "./Icon";
 import { Plaque } from "./Plaque";
 import { CATCHPHRASES, EMOJI } from "@amanda/shared";
+import { priceNow } from "../game/account";
 import { buyItem, loadShop, type ShopItem } from "../game/account";
 import { Overlay } from "./Overlay";
 
@@ -131,7 +132,11 @@ export function Shop({
                       const art = shopItemArt(item);
                       // A phrase tile draws the line itself; see below.
                       const phrase = CATCHPHRASES.find((p) => p.item === item.id);
-                      const tooDear = item.price_diamonds > diamonds;
+                      // What it costs TODAY. The same arithmetic the server
+                      // does at the till, so a sale cannot be shown and not
+                      // charged (or the reverse) — see priceNow in shop.ts.
+                      const { pay, was } = priceNow(item);
+                      const tooDear = pay > diamonds;
                       return (
                         <div className={`good${mine ? " is-mine" : ""}`} key={item.id}>
                           {/* The picture is not lazy-loaded: the shop is a
@@ -169,11 +174,16 @@ export function Shop({
                               onClick={() => void take(item)}
                               title={tooDear ? "אין מספיק יהלומים" : undefined}
                             >
-                              {item.price_diamonds === 0 ? (
+                              {/* The old price, struck through, is the whole
+                                  mechanism of a sale: a lower number nobody
+                                  has seen the higher one for is just a
+                                  price. */}
+                              {was !== null && <s className="good__was">{was}</s>}
+                              {pay === 0 ? (
                                 "חינם"
                               ) : (
                                 <>
-                                  <Icon name="gem" size={12} /> {item.price_diamonds}
+                                  <Icon name="gem" size={12} /> {pay}
                                 </>
                               )}
                             </button>

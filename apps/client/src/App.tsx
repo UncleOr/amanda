@@ -8,6 +8,7 @@ import { Profile } from "./components/Profile";
 import { Onboarding } from "./components/Onboarding";
 import { ChestReveal } from "./components/ChestReveal";
 import { loadInbox, loadShop, markChestSeen, openChest, unopenedChests, type Chest, type ShopItem } from "./game/account";
+import { track } from "./game/track";
 import { markTutorialDone, tutorialSeenLocally } from "./game/account";
 import { COOP_LANES, PHASES, arenaFor } from "@amanda/shared";
 import type { BattleResult } from "@amanda/engine";
@@ -1290,6 +1291,18 @@ function Game() {
               <button
                 className="btn-fight btn-danger"
                 onClick={() => {
+                  /*
+                   * Or asked to see *"user behaviour (abandoning mid-game for
+                   * instance)"*. This is the deliberate kind — the player
+                   * said yes to leaving — and the phase is the useful half of
+                   * it: quitting while building is boredom with the build,
+                   * quitting during the battle is something else entirely.
+                   */
+                  if (m.phase !== "result" && m.phase !== "intro")
+                    track("quit", {
+                      phase: m.phase,
+                      mode: m.playground ? "playground" : m.online ? "online" : "bot",
+                    });
                   setConfirmExit(false);
                   m.reset();
                 }}

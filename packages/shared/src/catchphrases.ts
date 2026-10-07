@@ -91,7 +91,7 @@ export const NO_PHRASE = "phrase.none";
  * becomes a wall of padlocks. The shop is where you meet the ones you do not
  * have.
  */
-export const CATCHPHRASES: readonly Catchphrase[] = [
+export const CATCHPHRASES: Catchphrase[] = [
   /*
    * The opt-out, and the default. A child who does not want to shout anything
    * at a stranger should not have to, and the versus screen reads perfectly
@@ -188,10 +188,100 @@ export function phrasesOfTone(tone: PhraseTone): Catchphrase[] {
   return CATCHPHRASES.filter((p) => p.tone === tone && p.id !== NO_PHRASE);
 }
 
-const BY_ID = new Map(CATCHPHRASES.map((p) => [p.id, p]));
+let BY_ID = new Map(CATCHPHRASES.map((p) => [p.id, p]));
 
 export function catchphraseById(id: string | null | undefined): Catchphrase | undefined {
   return id ? BY_ID.get(id) : undefined;
+}
+
+/**
+ * The lines Or has written or changed since this build shipped.
+ *
+ * ═══ WHY THE WORDS ARE A ROW NOW ═══
+ *
+ * He is the copywriter. Every line above is his except four, and those four
+ * are mine — drafts, written because he asked for warm phrases and the shop
+ * needed something to sell that evening. A phrase he cannot fix without me is
+ * a phrase that stays wrong until I am next at a keyboard, which is exactly
+ * the wrong way round for the one part of this game that is his job.
+ *
+ * OVERRIDES, not a replacement. The array above is still where the lines come
+ * from and the game is complete with no rows at all — the same promise
+ * card_overrides makes, for the same reason: nobody waits on a fetch to find
+ * out what their catchphrase says.
+ *
+ * ═══ THE FILE VERSIONS ARE KEPT ═══
+ *
+ * A row that is deleted has to put back what was there, and a layer that only
+ * ever adds cannot do that. So the originals are held aside and restored
+ * before each new set is applied, which makes applying twice the same as
+ * applying once.
+ */
+const SHIPPED: readonly Catchphrase[] = [...CATCHPHRASES];
+
+export interface PhraseOverride {
+  id: string;
+  active: boolean;
+  data: unknown;
+}
+
+/** Shallow sanity for a row. An unusable one is skipped, never thrown over. */
+function usable(data: unknown): Catchphrase | null {
+  if (!data || typeof data !== "object") return null;
+  const d = data as Record<string, unknown>;
+  if (typeof d.id !== "string" || !d.id) return null;
+  if (typeof d.he !== "string") return null;
+  const tone: PhraseTone = d.tone === "kind" ? "kind" : "taunt";
+  const style = STYLES.includes(d.style as PhraseStyle) ? (d.style as PhraseStyle) : "plain";
+  return {
+    id: d.id,
+    tone,
+    he: d.he,
+    style,
+    ...(typeof d.heF === "string" && d.heF ? { heF: d.heF } : {}),
+    ...(typeof d.en === "string" && d.en ? { en: d.en } : {}),
+    ...(d.free === true ? { free: true } : {}),
+    ...(typeof d.item === "string" && d.item ? { item: d.item } : {}),
+  };
+}
+
+export const STYLES: PhraseStyle[] = [
+  "plain",
+  "chalk",
+  "ember",
+  "ice",
+  "gold",
+  "slime",
+  "shadow",
+];
+
+/**
+ * Put a set of overrides into the list. Returns how many took effect.
+ *
+ * Rebuilds from the shipped array each time rather than layering, so a row
+ * that was deleted comes BACK to what the file says instead of lingering.
+ */
+export function applyPhraseOverrides(rows: readonly PhraseOverride[]): number {
+  CATCHPHRASES.length = 0;
+  CATCHPHRASES.push(...SHIPPED.map((p) => ({ ...p })));
+  let applied = 0;
+  for (const row of rows) {
+    const at = CATCHPHRASES.findIndex((p) => p.id === row.id);
+    if (!row.active) {
+      // Hidden rather than deleted: a line that ships in the file cannot be
+      // removed, and this is what "delete" means for one of those.
+      if (at >= 0) CATCHPHRASES.splice(at, 1);
+      applied++;
+      continue;
+    }
+    const card = usable(row.data);
+    if (!card) continue;
+    if (at >= 0) CATCHPHRASES[at] = card;
+    else CATCHPHRASES.push(card);
+    applied++;
+  }
+  BY_ID = new Map(CATCHPHRASES.map((p) => [p.id, p]));
+  return applied;
 }
 
 /** What this player may choose from: the free ones, plus whatever they hold. */

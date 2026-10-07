@@ -14,6 +14,7 @@ import { PROGRESS_ENABLED } from "./progress.js";
 import { handleApi } from "./api.js";
 import { cardOf, forget, loadProfile, profileOf } from "./profiles.js";
 import { refreshCards } from "./cards.js";
+import { refreshLive } from "./live.js";
 import { startScheduler } from "./schedule.js";
 import { findPair, type Waiting } from "./matchmaking.js";
 import { db } from "./supabase.js";
@@ -74,6 +75,11 @@ process.on("uncaughtException", (err) => {
  * which is a game, and waiting on it would mean a database outage stops play.
  */
 void refreshCards();
+/*
+ * And whatever he has changed about the phrases, the series and the numbers.
+ * Same arrangement and the same reasoning — see live.ts.
+ */
+void refreshLive();
 
 const wss = new WebSocketServer({ server: http });
 

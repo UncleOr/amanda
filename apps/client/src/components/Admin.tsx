@@ -3,6 +3,8 @@ import { createClient } from "@supabase/supabase-js";
 import { ARENAS } from "@amanda/shared";
 import { GiftsTab } from "./AdminGifts";
 import { ShopTab } from "./AdminShop";
+import { DialsTab, PhrasesTab, SeriesTab } from "./AdminContent";
+import { PlayerStats, StatsTab } from "./AdminStats";
 import { CardEditor } from "./CardEditor";
 // The panel's own sheet, loaded with the panel. It used to be in the entry
 // file, so every child downloaded the admin styles to play a card game.
@@ -83,7 +85,18 @@ async function call(path: string, body: unknown = {}): Promise<Record<string, un
 export function Admin() {
   const [state, setState] = useState<"checking" | "out" | "denied" | "in" | "down">("checking");
   const [why, setWhy] = useState<string>("");
-  const [tab, setTab] = useState<"cards" | "copy" | "users" | "reports" | "shop" | "gifts">(
+  const [tab, setTab] = useState<
+    | "cards"
+    | "copy"
+    | "users"
+    | "reports"
+    | "shop"
+    | "gifts"
+    | "phrases"
+    | "series"
+    | "dials"
+    | "stats"
+  >(
     "cards",
   );
   const [note, setNote] = useState<string | null>(null);
@@ -170,6 +183,11 @@ export function Admin() {
       <header className="admin__bar">
         <h1>ניהול אמנדה</h1>
         <nav>
+          {/* First, because it is the only tab that answers a question rather
+              than changing something. */}
+          <button className={tab === "stats" ? "on" : ""} onClick={() => setTab("stats")}>
+            נתונים
+          </button>
           <button className={tab === "cards" ? "on" : ""} onClick={() => setTab("cards")}>
             קלפים
           </button>
@@ -188,6 +206,15 @@ export function Admin() {
           <button className={tab === "gifts" ? "on" : ""} onClick={() => setTab("gifts")}>
             מתנות
           </button>
+          <button className={tab === "phrases" ? "on" : ""} onClick={() => setTab("phrases")}>
+            משפטים
+          </button>
+          <button className={tab === "series" ? "on" : ""} onClick={() => setTab("series")}>
+            סדרות
+          </button>
+          <button className={tab === "dials" ? "on" : ""} onClick={() => setTab("dials")}>
+            מספרים
+          </button>
         </nav>
         <a className="btn-link" href={window.location.pathname}>
           ← למשחק
@@ -198,7 +225,9 @@ export function Admin() {
           {note}
         </p>
       )}
-      {tab === "cards" ? (
+      {tab === "stats" ? (
+        <StatsTab call={call} />
+      ) : tab === "cards" ? (
         <CardEditor call={call} say={setNote} />
       ) : tab === "copy" ? (
         <CopyTab say={setNote} />
@@ -208,6 +237,12 @@ export function Admin() {
         <ShopTab call={call} say={setNote} />
       ) : tab === "gifts" ? (
         <GiftsTab call={call} say={setNote} />
+      ) : tab === "phrases" ? (
+        <PhrasesTab call={call} say={setNote} />
+      ) : tab === "series" ? (
+        <SeriesTab call={call} say={setNote} />
+      ) : tab === "dials" ? (
+        <DialsTab call={call} say={setNote} />
       ) : (
         <UsersTab say={setNote} />
       )}
@@ -610,6 +645,8 @@ function UsersTab({ say }: { say: (s: string) => void }) {
   /** Which account the "put them somewhere" panel is open for. */
   const [granting, setGranting] = useState<AdminUser | null>(null);
   const [suspending, setSuspending] = useState<AdminUser | null>(null);
+  /** Whose statistics are being read, instead of the list. */
+  const [looking, setLooking] = useState<AdminUser | null>(null);
 
   const [hidden, setHidden] = useState(0);
   const load = useCallback(async () => {
@@ -633,6 +670,18 @@ function UsersTab({ say }: { say: (s: string) => void }) {
   };
 
   if (!users) return <div className="admin__body">טוען…</div>;
+
+  // One person, instead of the list. Not a modal: there is a lot to read and
+  // it is the kind of screen somebody scrolls.
+  if (looking)
+    return (
+      <PlayerStats
+        call={call}
+        userId={looking.id}
+        name={looking.nickname ?? looking.email ?? "אורח"}
+        onClose={() => setLooking(null)}
+      />
+    );
 
   return (
     <div className="admin__body">
@@ -683,6 +732,13 @@ function UsersTab({ say }: { say: (s: string) => void }) {
               <td>{u.cards}</td>
               <td>{u.tutorialDone ? "✔" : "—"}</td>
               <td className="admin__actions">
+                {/* Or asked for the statistics per user as well as overall.
+                    They are genuinely different questions: the overview says
+                    whether the game is working, this says what one child is
+                    doing with it. */}
+                <button disabled={busy === u.id} onClick={() => setLooking(u)}>
+                  נתונים
+                </button>
                 <button
                   disabled={busy === u.id}
                   onClick={() => void act("/api/admin/user/reset", u, { userId: u.id })}

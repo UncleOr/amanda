@@ -402,6 +402,24 @@
   cursor: pointer;
 }
 .good__buy:disabled { opacity: 0.45; cursor: not-allowed; }
+/*
+ * The old price, on a tile that is on sale.
+ *
+ * Struck through and smaller rather than hidden, because the discount IS the
+ * old number: a tile that says 80 where it used to say 120, with no 120 on
+ * it, is a tile that says 80.
+ */
+.good__was {
+  margin-inline-end: 2px;
+  opacity: 0.55;
+  font-size: 0.82em;
+  font-weight: 700;
+}
+/* A whole tile that is on sale says so from across the shelf. */
+.good:has(.good__was) {
+  border-color: rgba(255, 143, 208, 0.75);
+  box-shadow: 0 0 16px rgba(255, 143, 208, 0.22);
+}
 
 /* ---- notices ---- */
 .modal--inbox { max-width: 440px; }

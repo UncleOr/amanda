@@ -75,7 +75,7 @@ export interface Account {
 }
 
 let client: SupabaseClient | null = null;
-function db(): SupabaseClient | null {
+export function db(): SupabaseClient | null {
   if (!SUPABASE_URL || !KEY) return null;
   if (!client) client = createClient(SUPABASE_URL, KEY, { auth: { persistSession: true } });
   return client;
@@ -836,6 +836,26 @@ export interface ShopItem {
   price_diamonds: number;
   art: string | null;
   sort: number;
+  /**
+   * On sale until `sale_until` — pay this, not `price_diamonds`.
+   *
+   * The full price stays where it is on purpose: what makes a sale a sale is
+   * seeing what it was. `priceNow` on the server decides which number is live
+   * and is the same function the till uses, so the tile and the charge cannot
+   * drift apart — see shop.ts.
+   */
+  sale_price_diamonds?: number | null;
+  sale_until?: string | null;
+}
+
+/** What this item costs right now, and what it used to. Mirrors shop.ts. */
+export function priceNow(item: ShopItem): { pay: number; was: number | null } {
+  const full = item.price_diamonds ?? 0;
+  const sale = item.sale_price_diamonds;
+  if (sale === null || sale === undefined || !item.sale_until) return { pay: full, was: null };
+  if (item.sale_until < new Date().toISOString()) return { pay: full, was: null };
+  if (sale >= full) return { pay: full, was: null };
+  return { pay: sale, was: full };
 }
 
 /** What is on the shelves, and what is already yours. */

@@ -40,6 +40,7 @@ import { buildReport, type BattleResult, type Placement } from "@amanda/engine";
 import { CATALOG, SERIES_NAMES } from "./content.js";
 import { rollChest } from "./progress.js";
 import { db } from "./supabase.js";
+import { track } from "./events.js";
 import { deliver } from "./shop.js";
 
 /** Side B is mirrored into the far half of the arena; x = 3 is the front row. */
@@ -140,6 +141,25 @@ export async function awardMatch(
     const { chests, total } = await addNachos(sb, playerId, nachos);
     const moved = await advanceChallenges(sb, playerId, facts, now);
     const won = botLevel && facts.won ? await addSoloTrophies(sb, playerId, botLevel, now) : null;
+    /*
+     * Write the match down. Every finished match comes through here —
+     * against a person and against the computer — which makes this the one
+     * place "how many games has this child played" can be answered from.
+     *
+     * The cards go with it because Or asked what players LIKE: a card that
+     * keeps turning up on winning boards is the answer, and the only way to
+     * know is to have kept the boards. Ids only, which the game already
+     * knows about every player who plays it.
+     */
+    track(sb, playerId, "match", {
+      mode: botLevel ? "bot" : "online",
+      ...(botLevel ? { level: botLevel } : {}),
+      won: facts.won,
+      score: facts.score,
+      cards: facts.cardIds,
+      nachos,
+      trophies: won?.gave ?? 0,
+    });
     return {
       nachos,
       total,
@@ -385,5 +405,11 @@ export async function claim(
   if (challenge.reward.diamonds)
     await deliver(sb, playerId, { diamonds: challenge.reward.diamonds }, "challenge");
   if (challenge.reward.nachos) await addNachos(sb, playerId, challenge.reward.nachos);
+  // Which challenges actually get finished, and which sit there all week.
+  track(sb, playerId, "claim", {
+    id: challengeId,
+    period: challenge.period,
+    diamonds: challenge.reward.diamonds ?? 0,
+  });
   return { ok: true, gave: challenge.reward };
 }

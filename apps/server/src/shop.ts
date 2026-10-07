@@ -23,6 +23,7 @@ import type { SupabaseClient } from "@supabase/supabase-js";
 import { ARENAS, givesSomething, type GrantFilters, type GrantGives } from "@amanda/shared";
 import { grantChest, rollChest } from "./progress.js";
 import { refreshAlbumPowerSoon } from "./albumPower.js";
+import { track } from "./events.js";
 
 export interface ShopItem {
   id: string;
@@ -34,6 +35,36 @@ export interface ShopItem {
   price_cents: number | null;
   art: string | null;
   sort: number;
+  /**
+   * On sale: pay this instead, until `sale_until`.
+   *
+   * Or asked for *"sales"* in the admin panel. The full price stays in
+   * `price_diamonds` on purpose — a sale that overwrites the old number is a
+   * price change, and the thing that makes a sale work is seeing what it was.
+   */
+  sale_price_diamonds?: number | null;
+  sale_until?: string | null;
+}
+
+/**
+ * What this item costs right now, and what it says it costs.
+ *
+ * One function, used by the shelf and by the till, because a sale that is
+ * shown and not charged (or charged and not shown) is the worst possible bug
+ * in a shop a child spends diamonds in.
+ */
+export function priceNow(
+  item: { price_diamonds?: number | null; sale_price_diamonds?: number | null; sale_until?: string | null },
+  now = new Date().toISOString(),
+): { pay: number; was: number | null } {
+  const full = item.price_diamonds ?? 0;
+  const sale = item.sale_price_diamonds;
+  // A sale with no end never ends, which is a price and not a sale — so an
+  // end date is required for one to count.
+  if (sale === null || sale === undefined || !item.sale_until) return { pay: full, was: null };
+  if (item.sale_until < now) return { pay: full, was: null };
+  if (sale >= full) return { pay: full, was: null };
+  return { pay: sale, was: full };
 }
 
 /**
@@ -47,7 +78,9 @@ export async function shopWindow(sb: SupabaseClient): Promise<ShopItem[]> {
   const now = new Date().toISOString();
   const { data } = await sb
     .from("shop_items")
-    .select("id, kind, name, blurb, grants, price_diamonds, price_cents, art, sort")
+    .select(
+      "id, kind, name, blurb, grants, price_diamonds, price_cents, art, sort, sale_price_diamonds, sale_until",
+    )
     .eq("active", true)
     .or(`available_from.is.null,available_from.lte.${now}`)
     .or(`available_until.is.null,available_until.gte.${now}`)
@@ -129,7 +162,9 @@ export async function buy(
   const now = new Date().toISOString();
   const { data: item } = await sb
     .from("shop_items")
-    .select("id, grants, price_diamonds, active, available_from, available_until")
+    .select(
+      "id, kind, grants, price_diamonds, active, available_from, available_until, sale_price_diamonds, sale_until",
+    )
     .eq("id", itemId)
     .maybeSingle();
 
@@ -145,7 +180,9 @@ export async function buy(
     .maybeSingle();
   if (already) return "זה כבר שלך.";
 
-  const price = item.price_diamonds ?? 0;
+  // The same function the shelf used to draw the price, so the number on the
+  // tile and the number taken out of the purse cannot drift apart.
+  const price = priceNow(item, now).pay;
   const { data: me } = await sb.from("players").select("diamonds").eq("id", playerId).maybeSingle();
   const have = me?.diamonds ?? 0;
   if (have < price) return `חסרים ${price - have} יהלומים.`;
@@ -171,6 +208,15 @@ export async function buy(
   await sb.from("player_items").insert({ player_id: playerId, item_id: itemId, source: "bought" });
   // Some items ARE the thing (a card, a chest) rather than a thing you wear.
   await deliver(sb, playerId, (item.grants ?? {}) as GrantGives, "bought");
+  /*
+   * What was bought, and what was actually paid.
+   *
+   * `paid` rather than the list price, because the two differ during a sale
+   * and the interesting question — "did the sale sell anything" — needs the
+   * number that was charged at the moment it was charged. The list price is
+   * still in the shop row if it is ever wanted.
+   */
+  track(sb, playerId, "buy", { item: itemId, kind: item.kind ?? null, paid: price });
   return null;
 }
 

@@ -41,6 +41,7 @@ import {
   isTargetedAction,
 } from "../data/catalog";
 import { sfx } from "./sfx";
+import { track } from "./track";
 import {
   albumToPool,
   loadAccount,
@@ -1598,6 +1599,21 @@ export function useMatch(): MatchApi {
     setResult(r);
     sfx.play("go");
     setPhase("battle");
+    /*
+     * Or asked *"how many playground games"*. It is counted HERE — when two
+     * boards actually fight — rather than when the playground opens, because
+     * opening it and putting one card down is not a game and would make the
+     * number flattering and useless.
+     *
+     * No winner is reported and there is none to report: the playground has
+     * no reward, which is also why this is the one event the browser is
+     * allowed to send (see api.ts).
+     */
+    track("playground", {
+      cards: Object.keys(mine.placements).length,
+      theirs: Object.keys(foeRef.current.placements).length,
+      ticks: r.ticks,
+    });
   }, []);
 
   /** Tear the match down to a clean slate, without deciding where to go next. */

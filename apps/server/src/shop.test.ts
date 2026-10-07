@@ -1,6 +1,6 @@
 import { describe, expect, it } from "vitest";
 import type { SupabaseClient } from "@supabase/supabase-js";
-import { audienceOf, buy, runGrant } from "./shop.js";
+import { audienceOf, buy, priceNow, runGrant } from "./shop.js";
 
 /**
  * The two things in this file that cannot be allowed to be wrong.
@@ -302,5 +302,60 @@ describe("who a gift reaches", () => {
       cards: [{ player_id: "a", card_id: "furries_01_chuppy", copies: 1 }],
     });
     expect(await audienceOf(sb, { missingCardId: "furries_01_chuppy" })).toEqual(["b"]);
+  });
+});
+
+/**
+ * A sale is shown and charged by the same function, and these are the four
+ * ways a half-written one could quietly become a permanent price cut.
+ *
+ * Or asked for *"sales"* in the admin panel. The danger in a shop a child
+ * spends diamonds in is not that a sale fails to apply — it is that it
+ * applies forever, or that the tile says one number and the till takes
+ * another. Both of those are this function being wrong, which is why the
+ * shelf and the till both call it rather than each doing the arithmetic.
+ */
+describe("what an item costs right now", () => {
+  const SOON = "2030-01-01T00:00:00.000Z";
+  const PAST = "2020-01-01T00:00:00.000Z";
+  const NOW = "2026-10-07T00:00:00.000Z";
+
+  it("is the full price when there is no sale", () => {
+    expect(priceNow({ price_diamonds: 120 }, NOW)).toEqual({ pay: 120, was: null });
+  });
+
+  it("is the sale price while the sale is on, and says what it was", () => {
+    expect(
+      priceNow({ price_diamonds: 120, sale_price_diamonds: 80, sale_until: SOON }, NOW),
+    ).toEqual({ pay: 80, was: 120 });
+  });
+
+  it("goes back to the full price by itself once the date passes", () => {
+    expect(
+      priceNow({ price_diamonds: 120, sale_price_diamonds: 80, sale_until: PAST }, NOW),
+    ).toEqual({ pay: 120, was: null });
+  });
+
+  /*
+   * A discount with no end never ends, which is a price change wearing a
+   * sale's clothes — and it would show a struck-through "was" forever.
+   */
+  it("ignores a discount with no end date", () => {
+    expect(
+      priceNow({ price_diamonds: 120, sale_price_diamonds: 80, sale_until: null }, NOW),
+    ).toEqual({ pay: 120, was: null });
+  });
+
+  /* A "sale" that costs more is a typo, and it must not be charged. */
+  it("never charges more than the full price", () => {
+    expect(
+      priceNow({ price_diamonds: 120, sale_price_diamonds: 150, sale_until: SOON }, NOW),
+    ).toEqual({ pay: 120, was: null });
+  });
+
+  it("allows a free giveaway", () => {
+    expect(
+      priceNow({ price_diamonds: 120, sale_price_diamonds: 0, sale_until: SOON }, NOW),
+    ).toEqual({ pay: 0, was: 120 });
   });
 });

@@ -27,6 +27,9 @@ import {
   type GrantGives,
 } from "@amanda/shared";
 import { cardState, refreshCards } from "./cards.js";
+import { liveState, refreshLive } from "./live.js";
+import { aboutPlayer, overview } from "./stats.js";
+import { TUNABLES } from "@amanda/shared";
 import { listReports } from "./reports.js";
 import { audienceOf, deliver, runGrant } from "./shop.js";
 import { notify } from "./notify.js";
@@ -436,6 +439,17 @@ async function adminRoutes(
         sort: Math.round(Number(body.sort) || 0),
         available_from: typeof body.availableFrom === "string" && body.availableFrom ? body.availableFrom : null,
         available_until: typeof body.availableUntil === "string" && body.availableUntil ? body.availableUntil : null,
+        /*
+         * The sale. Both halves or neither: a discount with no end date is
+         * not a sale, it is a price, and shop.ts refuses to honour one — so
+         * saving a number with no date would quietly do nothing.
+         */
+        sale_price_diamonds:
+          body.salePrice === null || body.salePrice === undefined || body.salePrice === ""
+            ? null
+            : Math.max(0, Math.round(Number(body.salePrice) || 0)),
+        sale_until:
+          typeof body.saleUntil === "string" && body.saleUntil ? body.saleUntil : null,
       };
       const { error } = await sb.from("shop_items").upsert(row, { onConflict: "id" });
       deps.send(res, error ? 500 : 200, error ? { error: error.message } : { ok: true });
@@ -603,6 +617,204 @@ async function adminRoutes(
       // This process fights with these cards, so it reloads immediately.
       await refreshCards();
       deps.send(res, 200, { ok: true, saved, cards: cardState });
+      return true;
+    }
+
+    /* ── statistics ──────────────────────────────────────────────── */
+
+    /** Everything about everybody, for the overview screen. */
+    case "/api/admin/stats": {
+      deps.send(res, 200, await overview(sb));
+      return true;
+    }
+
+    /** The same questions about one person, from the users tab. */
+    case "/api/admin/stats/player": {
+      const id = str("userId");
+      if (!id) {
+        deps.send(res, 400, { error: "איזה משתמש" });
+        return true;
+      }
+      deps.send(res, 200, await aboutPlayer(sb, id));
+      return true;
+    }
+
+    /* ── the phrases, the series and the numbers ───────────────────
+     *
+     * Or: *"in the admin interface I need to be able to manage everything:
+     * items in the shop including prices, and to add new ones and delete and
+     * temporarily take down from the shop, cards, series, sales, phrases,
+     * including assigning and giving things to users."*
+     *
+     * All three follow the card endpoints above exactly: the row is the
+     * whole object, saving reloads THIS process (it fights with these
+     * values), and deleting a row puts the shipped version back rather than
+     * removing anything.
+     */
+
+    case "/api/admin/phrases": {
+      const { data, error } = await sb
+        .from("phrase_overrides")
+        .select("id, active, data, updated_at")
+        .order("id");
+      deps.send(res, error ? 500 : 200, error ? { error: error.message } : { rows: data ?? [] });
+      return true;
+    }
+
+    case "/api/admin/phrases/save": {
+      const data = body.data as Record<string, unknown> | undefined;
+      const id = typeof data?.id === "string" ? data.id.trim() : "";
+      if (!id) {
+        deps.send(res, 400, { error: "צריך מזהה למשפט" });
+        return true;
+      }
+      if (typeof data?.he !== "string" || !data.he.trim()) {
+        deps.send(res, 400, { error: "צריך משפט" });
+        return true;
+      }
+      const { error } = await sb.from("phrase_overrides").upsert(
+        {
+          id,
+          active: body.active !== false,
+          data: { ...data, id },
+          updated_at: new Date().toISOString(),
+          updated_by: userId,
+        },
+        { onConflict: "id" },
+      );
+      if (error) {
+        deps.send(res, 500, { error: error.message });
+        return true;
+      }
+      await refreshLive();
+      deps.send(res, 200, { ok: true, live: liveState });
+      return true;
+    }
+
+    /** Forget the override, which puts a shipped line back as it was. */
+    case "/api/admin/phrases/revert": {
+      const id = str("id");
+      if (!id) {
+        deps.send(res, 400, { error: "איזה משפט" });
+        return true;
+      }
+      const { error } = await sb.from("phrase_overrides").delete().eq("id", id);
+      if (error) {
+        deps.send(res, 500, { error: error.message });
+        return true;
+      }
+      await refreshLive();
+      deps.send(res, 200, { ok: true, live: liveState });
+      return true;
+    }
+
+    case "/api/admin/series": {
+      const { data, error } = await sb
+        .from("series_overrides")
+        .select("id, active, data, sort")
+        .order("sort");
+      deps.send(res, error ? 500 : 200, error ? { error: error.message } : { rows: data ?? [] });
+      return true;
+    }
+
+    case "/api/admin/series/save": {
+      const id = str("id").trim();
+      if (!id) {
+        deps.send(res, 400, { error: "איזו סדרה" });
+        return true;
+      }
+      const { error } = await sb.from("series_overrides").upsert(
+        {
+          id,
+          active: body.active !== false,
+          data: (body.data as Record<string, unknown>) ?? {},
+          sort: body.sort === null || body.sort === undefined ? null : Math.round(Number(body.sort)),
+          updated_at: new Date().toISOString(),
+          updated_by: userId,
+        },
+        { onConflict: "id" },
+      );
+      if (error) {
+        deps.send(res, 500, { error: error.message });
+        return true;
+      }
+      await refreshLive();
+      deps.send(res, 200, { ok: true, live: liveState });
+      return true;
+    }
+
+    case "/api/admin/series/revert": {
+      const id = str("id");
+      if (!id) {
+        deps.send(res, 400, { error: "איזו סדרה" });
+        return true;
+      }
+      const { error } = await sb.from("series_overrides").delete().eq("id", id);
+      if (error) {
+        deps.send(res, 500, { error: error.message });
+        return true;
+      }
+      await refreshLive();
+      deps.send(res, 200, { ok: true, live: liveState });
+      return true;
+    }
+
+    /**
+     * The dials, and what they are currently set to.
+     *
+     * The LIST comes from the code (TUNABLES), not from the table: the label,
+     * the warning and the bounds belong beside the dial they describe, and a
+     * copy of them in the database would be a second answer to "what is the
+     * most this may be" that the server does not enforce.
+     */
+    case "/api/admin/tunables": {
+      deps.send(res, 200, {
+        dials: TUNABLES.map((t) => ({
+          id: t.id,
+          he: t.he,
+          note: t.note,
+          min: t.min,
+          max: t.max,
+          step: t.step,
+          value: t.get(),
+        })),
+      });
+      return true;
+    }
+
+    case "/api/admin/tunables/save": {
+      const rows = Array.isArray(body.rows) ? body.rows : null;
+      if (!rows) {
+        deps.send(res, 400, { error: "nothing to save" });
+        return true;
+      }
+      const known = new Map(TUNABLES.map((t) => [t.id, t]));
+      const clean = rows
+        .map((r) => r as { id?: unknown; value?: unknown })
+        .filter((r) => typeof r.id === "string" && known.has(r.id) && Number.isFinite(Number(r.value)))
+        .map((r) => {
+          const dial = known.get(r.id as string)!;
+          return {
+            id: r.id as string,
+            // Clamped HERE as well as on the way in, because the bounds are
+            // the whole protection and a panel is a thing anybody can forge a
+            // request to. See applyTunables for the other half of it.
+            value: Math.min(dial.max, Math.max(dial.min, Number(r.value))),
+            updated_at: new Date().toISOString(),
+            updated_by: userId,
+          };
+        });
+      if (!clean.length) {
+        deps.send(res, 400, { error: "אין פה מספר שאני מכיר" });
+        return true;
+      }
+      const { error } = await sb.from("tunables").upsert(clean, { onConflict: "id" });
+      if (error) {
+        deps.send(res, 500, { error: error.message });
+        return true;
+      }
+      await refreshLive();
+      deps.send(res, 200, { ok: true, saved: clean.length, live: liveState });
       return true;
     }
 

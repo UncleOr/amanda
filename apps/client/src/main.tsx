@@ -8,6 +8,8 @@ import "./lab.css";
 
 import { loadCopy } from "./game/copy";
 import { loadCardOverrides } from "./game/cardOverrides";
+import { loadLiveContent } from "./game/liveContent";
+import { track } from "./game/track";
 
 /*
  * Anything Or has rewritten, fetched in the background.
@@ -22,6 +24,21 @@ void loadCopy();
  * with every card it has, so a slow or missing server costs nothing.
  */
 void loadCardOverrides();
+/*
+ * And the phrases, the series and the numbers — one request for the three of
+ * them, and the same promise again. See liveContent.ts.
+ */
+void loadLiveContent();
+/*
+ * And a mark that somebody opened the game — the usage number Or asked for.
+ *
+ * `last_seen_at` on the player already says WHEN somebody was last here, and
+ * says nothing about how often, which is the actual question. One row a visit
+ * answers "how many times this week" and "how many different people today"
+ * with the same data. A guest counts: opening the game without an account is
+ * a real person having a real session.
+ */
+track("open", { installed: window.matchMedia?.("(display-mode: standalone)").matches ?? false });
 
 /*
  * Where the generated surfaces live, handed to CSS.
