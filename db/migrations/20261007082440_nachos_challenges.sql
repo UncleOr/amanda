@@ -32,7 +32,7 @@ alter table public.players
   add column if not exists nacho_chests integer not null default 0;
 
 -- ── how far along one player is on one challenge ───────────────────
-create table public.player_challenges (
+create table if not exists public.player_challenges (
   player_id    uuid not null references public.players (id) on delete cascade,
   -- "d:2026-10-07:1" — the period, the period's key, and which template.
   -- Computed, not a foreign key: see the note at the top.
@@ -45,11 +45,12 @@ create table public.player_challenges (
 );
 
 -- "What am I in the middle of" — every read is for one player, newest first.
-create index player_challenges_recent_idx
+create index if not exists player_challenges_recent_idx
   on public.player_challenges (player_id, updated_at desc);
 
 alter table public.player_challenges enable row level security;
 
+drop policy if exists "challenges read own" on public.player_challenges;
 create policy "challenges read own" on public.player_challenges
   for select to authenticated using ((select auth.uid()) = player_id);
 
