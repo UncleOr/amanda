@@ -661,19 +661,34 @@
   }
 }
 
-/* why the match ended — especially when nothing of yours died */
-.result__verdict {
+/*
+ * Why the match ended — especially when nothing of yours died.
+ *
+ * ═══ THE SELECTOR CARRIES A CLASS MORE THAN IT LOOKS LIKE IT NEEDS ═══
+ *
+ * Or: *"the sentence under 'you won' should be centred."*
+ *
+ * It was not, and the reason was not this rule — it was that this rule had
+ * never applied. battle.css has `.result__card p { color: var(--muted);
+ * margin: 0 0 18px }`, which is specificity (0,1,1) against a bare class's
+ * (0,1,0), so it wins whatever order the files are imported in. The verdict
+ * has a `max-width` of 44ch and no side margins at all, which in a
+ * right-to-left column puts a 332px box against the inline-start edge of a
+ * 442px one, under a headline that IS centred. That is exactly the slip Or
+ * saw, and `text-align: center` could not fix it: the words were already
+ * centred inside a box that was not.
+ *
+ * One more class is enough to outrank it, and the colour comes back with the
+ * margin — a muted grey over the painted scene behind this screen is hard to
+ * read at the best of times, and the verdict is the sentence that explains an
+ * ending somebody did not expect.
+ */
+.result__card .result__verdict {
   margin: 0 auto 6px;
   max-width: 44ch;
   color: var(--text);
   font-size: 14px;
   line-height: 1.5;
-  /*
-   * Or: *"the sentence under 'you won' should be centred."* It was `margin:
-   * 0 auto`, which centres the BOX and says nothing about the words in it —
-   * and the box is 44ch wide while the line is shorter, so the sentence sat
-   * against the inline-start edge of a centred box under a centred headline.
-   */
   text-align: center;
 }
 

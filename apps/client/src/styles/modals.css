@@ -49,12 +49,25 @@
   align-items: center;
   padding: 18px 0 14px;
 }
+/*
+ * The card's picture, with its placeholder colour underneath.
+ *
+ * `background-image` is set inline by CardDetailModal when the card has art;
+ * the gradient stays as the LAST layer so a card with no picture yet is the
+ * coloured tile it has always been, and one whose image has not arrived has
+ * something to arrive over rather than a hole.
+ */
 .modal__portrait {
   width: 64px;
   height: 64px;
   border-radius: 12px;
   flex-shrink: 0;
-  background: linear-gradient(160deg, var(--card-color), color-mix(in srgb, var(--card-color) 60%, #000));
+  background-size: cover;
+  background-position: center top;
+  background-repeat: no-repeat;
+  background-color: var(--card-color);
+  background-image:
+    linear-gradient(160deg, var(--card-color), color-mix(in srgb, var(--card-color) 60%, #000));
   box-shadow: inset 0 0 0 2px rgba(255, 255, 255, 0.2);
 }
 .modal__title h2 { margin: 0; font-size: 22px; }

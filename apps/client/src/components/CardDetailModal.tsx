@@ -4,6 +4,7 @@ import { CATALOG, SERIES_BY_ID } from "../data/catalog";
 import { ABILITY_LABEL, ELEMENT_META, RANGE_META, RARITY_META } from "../data/cardMeta";
 import { LEVELS, levelCost, levelMultiplier } from "@amanda/shared";
 import { Overlay } from "./Overlay";
+import { spriteFor } from "../game/skins";
 
 export function CardDetailModal({
   cardId,
@@ -25,6 +26,10 @@ export function CardDetailModal({
   // numbers on an upgraded card should be the numbers it fights with.
   const hp = Math.round(card.stats.hp * mult);
   const power = Math.round(card.stats.power * mult);
+  // The same resolution CardView does, so a skin the player owns is the
+  // picture here too rather than only on the board.
+  const sprite = card.art.sprite ? spriteFor(card.id, card.art.sprite) : null;
+  const art = sprite ? `${import.meta.env.BASE_URL}${sprite}` : null;
 
   return (
     <Overlay onClick={onClose}>
@@ -38,7 +43,23 @@ export function CardDetailModal({
         </button>
 
         <div className="modal__banner">
-          <div className="modal__portrait" />
+          {/*
+            The card's own artwork, where there is any.
+            
+            This was a bare `<div className="modal__portrait" />` — a square of
+            `--card-color` and nothing else. Which is correct for a card that
+            has no picture yet, and wrong for the 53 that do: the one screen a
+            player opens in order to LOOK at a card was the one screen that did
+            not show it.
+
+            The placeholder colour stays underneath as the background, so a
+            card without art still gets the tile it always had, and a slow
+            image has something to be slow over.
+          */}
+          <div
+            className="modal__portrait"
+            style={art ? { backgroundImage: `url("${art}")` } : undefined}
+          />
           <div className="modal__title">
             <h2>{card.name.he}</h2>
             <p className="modal__subtitle">{card.name.en}</p>

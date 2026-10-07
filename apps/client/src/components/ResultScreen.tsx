@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { Icon } from "./Icon";
 import { BattleLog } from "./BattleLog";
 import { Payout } from "./Payout";
@@ -31,6 +31,20 @@ export function ResultScreen({
   onOpenChest?: () => void;
 }) {
   const [showLog, setShowLog] = useState(false);
+  /*
+   * The report opens BELOW the buttons, and on a phone that is below the
+   * screen: tapping "shall I explain what happened?" left the screen looking
+   * exactly as it had, with the answer out of sight. It is brought into view
+   * instead of being left to be found.
+   *
+   * `block: "start"` rather than "center" because the report is taller than
+   * the window — centring it would start the reader in the middle of it.
+   */
+  const logRef = useRef<HTMLDivElement>(null);
+  useEffect(() => {
+    if (!showLog) return;
+    logRef.current?.scrollIntoView({ behavior: "smooth", block: "start" });
+  }, [showLog]);
   const [winTitle, setWinTitle] = useState("");
   const [loseTitle, setLoseTitle] = useState("");
   const [leftTitle, setLeftTitle] = useState("");
@@ -149,7 +163,11 @@ export function ResultScreen({
               </button>
             )}
           </div>
-          {showLog && m.result && <BattleLog result={m.result} mySide={m.mySide} />}
+          {showLog && m.result && (
+            <div ref={logRef}>
+              <BattleLog result={m.result} mySide={m.mySide} />
+            </div>
+          )}
           </div>
         </div>
       </main>

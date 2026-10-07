@@ -1796,3 +1796,33 @@
   .record__icon img,
   .record__icon svg { width: 18px; height: 18px; }
 }
+
+/* ════════ the profile, on a phone ════════ */
+/*
+ * Measured at 844x390: the name plaque was 156px — its `min-height` is
+ * `clamp(118px, 22vw, 156px)`, and on a landscape phone 22vw is 186, so it
+ * took the ceiling. That is 45% of the visible area for a name and three
+ * numbers, in a screen whose other five panels are the things you came to
+ * change.
+ *
+ * `vw` is the wrong unit for it here. Everything that decides whether this
+ * screen is usable is VERTICAL — the same mistake the home grid's gap made
+ * and for the same reason, so it is measured the same way.
+ *
+ * In home-layout.css rather than profile.css because profile.css is imported
+ * earlier and `@media` adds no specificity; see the album block above, which
+ * learned this the expensive way.
+ */
+@media (max-width: 860px), (max-height: 560px) {
+  .profile__hero {
+    min-height: clamp(76px, 24vh, 120px);
+    gap: 12px;
+    padding: 10px 14px;
+    margin-bottom: 10px;
+    border-radius: 14px;
+  }
+  .profile__top { padding: 6px 12px; }
+  .profile__scroll { padding: 0 12px 20px; }
+  .panel { padding: 10px 12px; margin-bottom: 10px; border-radius: 12px; }
+  .panel h3 { margin-bottom: 7px; font-size: 13.5px; }
+}
