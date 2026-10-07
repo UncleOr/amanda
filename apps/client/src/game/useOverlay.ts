@@ -29,6 +29,8 @@ export type Overlay =
   | { kind: "shop" }
   | { kind: "inbox" }
   | { kind: "about" }
+  /** "What's new" — see data/updates.ts. */
+  | { kind: "updates" }
   /** The "what an account gives you" prompt, shown at a locked door. */
   | { kind: "why" }
   | { kind: "report"; about: "bug" | "player" };

@@ -537,3 +537,79 @@
   .intro--hero { padding-block: clamp(6px, 1.2vh, 14px); }
   .home__brand { margin-block-end: 0; }
 }
+
+/* ---- "what's new" ---- */
+/*
+ * Or: *"updates — what's new in this version, so there is a reason to come
+ * back."* The link lives with the small print, because it is not something
+ * you choose between matches; the DOT is the part that does the work, and it
+ * is the same green as the one on a finished challenge, so "there is
+ * something here" looks the same wherever it appears.
+ */
+.btn-news { position: relative; }
+.btn-news__dot {
+  display: inline-block;
+  width: 7px;
+  height: 7px;
+  margin-inline-start: 5px;
+  border-radius: 50%;
+  background: #4ade80;
+  box-shadow: 0 0 6px rgba(74, 222, 128, 0.85);
+  vertical-align: middle;
+  animation: news-dot 2.4s ease-in-out infinite;
+}
+@keyframes news-dot {
+  0%, 70%, 100% { transform: scale(1); opacity: 1; }
+  85% { transform: scale(1.35); opacity: 0.75; }
+}
+
+.modal--news { max-width: 470px; }
+.news__title { display: flex; align-items: center; gap: 8px; margin: 0 0 4px; font-size: 20px; }
+.news__lead { color: var(--muted); font-size: 13px; margin: 0; }
+.news__list {
+  list-style: none;
+  margin: 10px 0 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  /* Several years of these will not fit a phone; the modal scrolls, not the page. */
+  max-height: 58vh;
+  overflow-y: auto;
+}
+.news__list > li { padding-inline-start: 12px; border-inline-start: 2px solid var(--line); }
+.news__list > li.is-newest { border-inline-start-color: var(--accent); }
+.news__list header { display: flex; align-items: baseline; gap: 8px; flex-wrap: wrap; }
+.news__list header b { font-size: 15px; }
+.news__list header small { color: var(--muted); font-size: 11.5px; }
+.news__flag {
+  padding: 1px 8px;
+  border-radius: 999px;
+  background: rgba(74, 222, 128, 0.18);
+  border: 1px solid rgba(74, 222, 128, 0.45);
+  color: #4ade80;
+  font-size: 10.5px;
+  font-weight: 800;
+}
+.news__list ul { list-style: none; margin: 6px 0 0; padding: 0; display: flex; flex-direction: column; gap: 5px; }
+.news__list ul li {
+  position: relative;
+  padding-inline-start: 14px;
+  font-size: 13px;
+  line-height: 1.5;
+  color: var(--text);
+}
+.news__list ul li::before {
+  content: "";
+  position: absolute;
+  inset-inline-start: 2px;
+  top: 8px;
+  width: 5px;
+  height: 5px;
+  border-radius: 50%;
+  background: var(--accent);
+  opacity: 0.75;
+}
+@media (prefers-reduced-motion: reduce) {
+  .btn-news__dot { animation: none; }
+}

@@ -7,6 +7,7 @@ import { Challenges } from "./Challenges";
 import { Lock } from "./SignedInOnly";
 import { shopItemArt } from "./Shop";
 import { hardRefresh } from "../game/refresh";
+import { hasUnreadUpdate } from "../data/updates";
 import type { Chest, ShopItem } from "../game/account";
 import type { Overlays } from "../game/useOverlay";
 import type { MatchApi } from "../game/useMatch";
@@ -99,6 +100,16 @@ export function HomeScreen({
   const [codeInput, setCodeInput] = useState("");
   /** Turned off for the session the moment the clip fails to load. */
   const [idleOk, setIdleOk] = useState(true);
+  /*
+   * Is there a "what's new" nobody here has read?
+   *
+   * Read ONCE, into state, rather than on every render. The answer changes
+   * when the panel is opened, and a value recomputed during render would
+   * flip the dot off mid-paint while the panel that did it is still
+   * animating open. `unread && !panel.is("updates")` would read better and
+   * would do exactly that.
+   */
+  const [newsUnread, setNewsUnread] = useState(hasUnreadUpdate);
 
   return (
     <main className="intro intro--hero">
@@ -435,6 +446,22 @@ export function HomeScreen({
         <aside className="home__meta smallprint">
           <button className="btn-link" onClick={() => panel.show("about")}>
             אודות · פרטיות · נגישות
+          </button>
+          {/*
+            Or: "updates — what's new in this version, so there is a reason to
+            come back." It sits with the small print because it is not a thing
+            you choose between matches — and it carries a dot when there is
+            something unread, which is the part that does the bringing back.
+          */}
+          <button
+            className="btn-link btn-news"
+            onClick={() => {
+              setNewsUnread(false);
+              panel.show("updates");
+            }}
+          >
+            מה חדש
+            {newsUnread && <i className="btn-news__dot" aria-label="יש עדכון שלא קראתם" />}
           </button>
           {/* Open to everybody: the player most likely to hit a bug is the one
               who just arrived. Reporting a PERSON still needs an account, and

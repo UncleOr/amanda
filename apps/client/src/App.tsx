@@ -41,6 +41,7 @@ const Arena = lazy(() => import("./components/Arena").then((m) => ({ default: m.
 const prefetchArena = () => void import("./components/Arena");
 import { CardPicker } from "./components/CardPicker";
 import { About } from "./components/About";
+import { Updates } from "./components/Updates";
 import { Report } from "./components/Report";
 import { Friends } from "./components/Friends";
 import { Shop } from "./components/Shop";
@@ -1302,6 +1303,8 @@ function Game() {
       {panel.is("about") && (
         <About onClose={() => panel.close()} birthDate={m.account?.birthDate} />
       )}
+
+      {panel.is("updates") && <Updates onClose={() => panel.close()} />}
 
       {/* The kind of report rides along with the panel itself, so it cannot
           fall out of step with it — see useOverlay.ts. */}
