@@ -70,17 +70,48 @@ const ICON: Record<TimelineEntry["kind"], IconName> = {
 export function BattleLog({ result, mySide }: { result: BattleResult; mySide: Owner }) {
   const [tab, setTab] = useState<"analysis" | "map" | "units" | "timeline">("analysis");
   const [copied, setCopied] = useState(false);
+  /** The report as text, shown when the clipboard would not take it. */
+  const [fallback, setFallback] = useState<string | null>(null);
   const [inspect, setInspect] = useState<UnitReport | null>(null);
   const report = useMemo(() => buildReport(result, CATALOG), [result]);
 
   const theirSide: Owner = mySide === "A" ? "B" : "A";
   const sideName = (o: Owner) => (o === mySide ? "אתה" : "היריב");
 
+  /**
+   * Put the whole report on the clipboard, or show it if that is not possible.
+   *
+   * ═══ THIS USED TO THROW ═══
+   *
+   * It was `navigator.clipboard?.writeText(...).then(...)`. The optional chain
+   * guards `clipboard` being undefined and then calls `.then` on the
+   * `undefined` that produces — so on any browser without the API the button
+   * raised a TypeError instead of copying. Or found it on his phone: "and you
+   * can't copy the JSON."
+   *
+   * Two things are wrong on a phone and both are handled. The API may be
+   * missing entirely, and it may be present and REFUSE — a write needs a
+   * secure context and a real user gesture, and Safari turns some of them
+   * down anyway. Either way the answer is the same: show the text, selected,
+   * so a long-press and "copy" gets it. A button that silently does nothing
+   * is worse than no button.
+   */
   const copyJson = () => {
-    void navigator.clipboard?.writeText(JSON.stringify(report, null, 2)).then(() => {
-      setCopied(true);
-      window.setTimeout(() => setCopied(false), 1800);
-    });
+    const text = JSON.stringify(report, null, 2);
+    const showIt = () => setFallback(text);
+    try {
+      const write = navigator.clipboard?.writeText(text);
+      if (!write) return showIt();
+      void write.then(
+        () => {
+          setCopied(true);
+          window.setTimeout(() => setCopied(false), 1800);
+        },
+        showIt,
+      );
+    } catch {
+      showIt();
+    }
   };
 
   return (
@@ -114,6 +145,21 @@ export function BattleLog({ result, mySide }: { result: BattleResult; mySide: Ow
           {copied ? "✔ הועתק" : "⧉ העתק JSON"}
         </button>
       </div>
+
+      {fallback !== null && (
+        <>
+          <textarea
+            className="log__json"
+            readOnly
+            value={fallback}
+            // Selected on arrival: the whole point is that the next thing the
+            // player does is "copy", and selecting it by hand on a phone is
+            // the fiddly part.
+            ref={(el) => el?.select()}
+          />
+          <p className="log__json-note">הדפדפן לא נתן להעתיק. סמנו הכול והעתיקו ידנית.</p>
+        </>
+      )}
 
       {tab === "analysis" && (
         <div className="log__body">

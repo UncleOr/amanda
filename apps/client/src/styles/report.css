@@ -73,10 +73,26 @@
   text-align: start;
   border-top: 1px solid var(--line);
   padding-top: 12px;
-  width: min(640px, 86vw);
+  /*
+   * ═══ AS WIDE AS THE CARD, NOT AS WIDE AS THE WINDOW ═══
+   *
+   * This said `min(640px, 86vw)`, and 86vw on an 844-wide phone is 726 — so
+   * the report came out 640px wide inside a 560px card that clips
+   * (`.result__card` is `overflow: hidden`). In a right-to-left page the
+   * clipped edge is the LEFT one, which is exactly what Or reported: "on
+   * mobile the battle report is cut off on the left."
+   *
+   * A viewport measurement can never know how wide its own container is.
+   * `100%` does, and the cap keeps it from sprawling on a desktop.
+   */
+  width: 100%;
+  max-width: 640px;
 }
 .log__tabs {
   display: flex;
+  /* Five buttons on a narrow screen: wrap rather than push the last one
+     (which is "copy JSON") off the edge. */
+  flex-wrap: wrap;
   gap: 6px;
   align-items: center;
   margin-bottom: 10px;
@@ -588,7 +604,14 @@
   .room-code { font-size: 30px; padding: 6px 12px; margin: 6px auto; letter-spacing: 7px; }
 
   /* the battle report: smaller type, and never taller than the screen */
-  .log { margin-top: 10px; padding-top: 8px; width: min(640px, 92vw); }
+  /*
+   * The phone override had the same viewport measurement as the base rule,
+   * and THIS is the one that was in effect when Or saw the report cut off —
+   * 92vw of an 844-wide screen is 776, capped to 640, inside a 560px card
+   * that clips. Fitting the container is the whole fix; it belongs in both
+   * places or the one that wins is the one that is still wrong.
+   */
+  .log { margin-top: 10px; padding-top: 8px; width: 100%; max-width: 640px; }
   .log__body--scroll { max-height: 150px; }
   .log__tabs { gap: 4px; margin-bottom: 6px; }
   .log__tab { font-size: 11px; padding: 2px 9px; }
@@ -677,3 +700,30 @@
   font-size: 13px;
 }
 .log__facts b { color: var(--muted); font-weight: 700; }
+
+/* ---- the JSON, when the clipboard will not take it ---- */
+/*
+ * Some browsers have no `navigator.clipboard` at all and some refuse the
+ * write; on a phone both are common. Rather than a button that silently does
+ * nothing, the report falls back to showing the text — selected, ready for a
+ * long-press and "copy".
+ */
+.log__json {
+  /* JSON is not Hebrew. In an RTL page it came out right-aligned with the
+     braces in the wrong places, which is unreadable and unpasteable. */
+  direction: ltr;
+  text-align: left;
+  width: 100%;
+  margin-top: 8px;
+  padding: 8px;
+  border-radius: 8px;
+  border: 1px solid var(--line);
+  background: rgba(0, 0, 0, 0.35);
+  color: var(--muted);
+  font-family: ui-monospace, Menlo, Consolas, monospace;
+  font-size: 10px;
+  line-height: 1.35;
+  height: 120px;
+  resize: vertical;
+}
+.log__json-note { margin: 6px 0 0; font-size: 11px; color: var(--muted); }
