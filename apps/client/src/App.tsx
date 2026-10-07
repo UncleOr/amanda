@@ -827,6 +827,29 @@ function Game() {
            * between matches, not ways to start one, and putting them in the
            * main column would have pushed the two "play" cards down.
            */}
+          {/*
+           * The small print, moved up out of the menu.
+           *
+           * Or: "אודות, פרטיות, נגישות and 'something not working?' can move
+           * to the top left." Two reasons it is the right move: they are not
+           * things you choose between matches, so they were taking height in
+           * the column that holds the actual game — and that column was
+           * running off the top of a short window because of it.
+           *
+           * They stay reachable WITHOUT an account and without installing
+           * anything, which a store will check.
+           */}
+          <aside className="smallprint">
+            <button className="btn-link" onClick={() => setAboutOpen(true)}>
+              אודות · פרטיות · נגישות
+            </button>
+            {/* Open to everybody: the player most likely to hit a bug is the
+                one who just arrived. Reporting a PERSON still needs an
+                account, and the server is where that is decided. */}
+            <button className="btn-link" onClick={() => setReportOpen("bug")}>
+              משהו לא עובד?
+            </button>
+          </aside>
           <aside className="rail">
             <button className="rail__item" onClick={gated(() => setShopOpen(true))}>
               <Icon name="gem" size={19} />
@@ -990,20 +1013,6 @@ function Game() {
                     : "החדר מלא. שניים מספיקים לי."}
               </p>
             )}
-            {/*
-              About, and the legal pages. Required to be reachable WITHOUT an
-              account and without installing anything — a store will check.
-            */}
-            <button className="btn-link about__open" onClick={() => setAboutOpen(true)}>
-              אודות · פרטיות · נגישות
-            </button>
-            {/* Open to everybody: the player most likely to hit a bug is the
-                one who just arrived, and a guest's report is as useful as
-                anybody's. Reporting a PERSON still needs an account, and the
-                server is where that is decided. */}
-            <button className="btn-link about__open" onClick={() => setReportOpen("bug")}>
-              משהו לא עובד?
-            </button>
             <p className="intro__version">
               גרסה {__BUILD_ID__} · מסך {viewport}
               <button
@@ -1036,6 +1045,29 @@ function Game() {
            * between matches, not ways to start one, and putting them in the
            * main column would have pushed the two "play" cards down.
            */}
+          {/*
+           * The small print, moved up out of the menu.
+           *
+           * Or: "אודות, פרטיות, נגישות and 'something not working?' can move
+           * to the top left." Two reasons it is the right move: they are not
+           * things you choose between matches, so they were taking height in
+           * the column that holds the actual game — and that column was
+           * running off the top of a short window because of it.
+           *
+           * They stay reachable WITHOUT an account and without installing
+           * anything, which a store will check.
+           */}
+          <aside className="smallprint">
+            <button className="btn-link" onClick={() => setAboutOpen(true)}>
+              אודות · פרטיות · נגישות
+            </button>
+            {/* Open to everybody: the player most likely to hit a bug is the
+                one who just arrived. Reporting a PERSON still needs an
+                account, and the server is where that is decided. */}
+            <button className="btn-link" onClick={() => setReportOpen("bug")}>
+              משהו לא עובד?
+            </button>
+          </aside>
           <aside className="rail">
             <button className="rail__item" onClick={gated(() => setShopOpen(true))}>
               <Icon name="gem" size={19} />

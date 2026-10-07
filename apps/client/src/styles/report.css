@@ -546,7 +546,16 @@
    * column left the card a thin strip in a dark void; the identity block and
    * the buttons sit side by side instead, so the card uses the width it has.
    */
-  .intro { padding: 8px; align-items: center; }
+  /*
+   * `safe` centring, not plain centring.
+   *
+   * This line re-stated `align-items: center` and in doing so threw away the
+   * `safe` that .intro sets for exactly this case: when the card is taller
+   * than the window, plain centring pushes its top ABOVE the viewport and
+   * nothing can scroll to it — which is how the word אמנדה ended up cut off
+   * along its top edge on Or's desktop.
+   */
+  .intro { padding: 8px; align-items: safe center; }
   .intro__card { padding: 14px 26px; border-radius: 14px; width: min(620px, 95vw); }
   .intro__main {
     display: flex;

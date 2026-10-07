@@ -19,9 +19,22 @@
   flex: 1;
   min-height: 0;
   display: flex;
-  /* `safe` for the same reason as .result — centring inside a scroll container
-     puts the top of a tall card out of reach */
-  align-items: safe center;
+  /*
+   * ═══ AUTO MARGINS, NOT `safe center` ═══
+   *
+   * Or: "on desktop the word אמנדה is cut off at the top." It was: on a
+   * window shorter than the card, centring pushes the card's top ABOVE the
+   * viewport, and with nothing able to scroll there it is simply gone.
+   *
+   * This said `align-items: safe center`, which is meant to prevent exactly
+   * that. The keyword parses in this browser — it reads back as "safe
+   * center" — and it did NOT prevent it: measured at 1876x660 the card still
+   * sat at -17px (masked to -3 by the entry animation's translate). Auto
+   * margins on the child do work, because an auto margin collapses to zero
+   * the moment there is no spare room: centred when it fits, flush with the
+   * top when it does not.
+   */
+  align-items: flex-start;
   justify-content: safe center;
   padding: 20px;
   /* a short window (a phone on its side) can be shorter than this card —
@@ -250,3 +263,57 @@
 .why__list { list-style: none; margin: 0 0 16px; padding: 0; display: flex; flex-direction: column; gap: 8px; }
 .why__list li { display: flex; align-items: center; gap: 9px; font-size: 14px; }
 .why__list li svg { color: var(--accent); flex: none; }
+
+/* Centred when there is room, flush to the top when there is not — the auto
+   margins are what makes the alignment above safe. See .intro. */
+.intro__card { margin-block: auto; }
+
+/* ---- the small print, out of the way ---- */
+/*
+ * Or: "אודות · פרטיות · נגישות and 'something not working?' can move to the
+ * top left." Two reasons that is right: they are not things anybody chooses
+ * between matches, and the column they were in — the one with the actual game
+ * in it — was running off the top of a short window partly because of them.
+ *
+ * Top of the quiet side, above the rail. Still reachable without an account
+ * and without installing anything, which a store checks.
+ */
+.smallprint {
+  position: absolute;
+  z-index: 3;
+  inset-inline-end: clamp(10px, 3vw, 28px);
+  /*
+   * Below the purse, which sits at z-index 4 and would otherwise swallow the
+   * first link — the same way it once swallowed the music button. Two things
+   * occupying the same corner means one of them cannot be pressed, so they
+   * do not share the corner.
+   */
+  top: clamp(86px, 13vh, 118px);
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 2px;
+}
+/*
+ * Backed, because they sit over artwork.
+ *
+ * Pale 12px text lands on whatever happens to be behind it — and behind the
+ * top of this side is a bright orange lion. Legible over the lion, legible
+ * over the dark, without turning two quiet links into two more buttons.
+ */
+.smallprint .btn-link {
+  font-size: 12px;
+  padding: 3px 9px;
+  border-radius: 7px;
+  background: rgba(8, 11, 19, 0.6);
+  backdrop-filter: blur(3px);
+  opacity: 0.85;
+}
+.smallprint .btn-link:hover { opacity: 1; background: rgba(8, 11, 19, 0.82); }
+
+/* On a short screen the rail starts below the small print rather than being
+   centred into it. */
+@media (max-height: 560px) {
+  .smallprint { top: 74px; }
+  .smallprint .btn-link { font-size: 11px; }
+}

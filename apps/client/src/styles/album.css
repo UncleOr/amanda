@@ -140,11 +140,25 @@
 
 .intro--hero {
   position: relative;
+  /*
+   * `hidden` because the artwork bleeds past the screen on purpose. That also
+   * means NOTHING here can scroll — so the menu column must fit, or be able
+   * to scroll by itself. See .intro--hero .intro__card below.
+   */
   overflow: hidden;
   display: flex;
-  align-items: center;
+  /*
+   * flex-start, with auto margins on the card doing the centring.
+   *
+   * This said `center`, and on a window shorter than the card that pushed the
+   * card's top above the viewport — which is how the word אמנדה ended up cut
+   * off along its top edge on Or's desktop, with no way to scroll to it. An
+   * auto margin collapses to zero when there is no spare room: centred when
+   * it fits, flush with the top when it does not.
+   */
+  align-items: flex-start;
   justify-content: flex-start;
-  padding: 0 clamp(16px, 6vw, 92px);
+  padding: clamp(8px, 2vh, 20px) clamp(16px, 6vw, 92px);
 }
 .intro__art {
   position: absolute;
@@ -209,6 +223,17 @@
 .intro--hero .intro__card {
   position: relative;
   z-index: 3;
+  /*
+   * The menu scrolls itself when the window is too short for it.
+   *
+   * The container cannot scroll (it clips the artwork), so without this the
+   * last button simply fell off the bottom — which is what happened the
+   * moment the top stopped being cut off instead. The scrollbar is hidden:
+   * a bar down the middle of the hero would look like a mistake.
+   */
+  max-height: 100%;
+  overflow-y: auto;
+  scrollbar-width: none;
   background: none;
   border: none;
   box-shadow: none;
@@ -217,6 +242,7 @@
   text-align: start;
   animation: hero-in 420ms cubic-bezier(0.2, 0.9, 0.3, 1.2);
 }
+.intro--hero .intro__card::-webkit-scrollbar { display: none; }
 @keyframes hero-in {
   from { opacity: 0; transform: translateY(14px); }
   to { opacity: 1; transform: none; }
