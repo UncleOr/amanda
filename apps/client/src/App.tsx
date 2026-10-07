@@ -42,6 +42,7 @@ const prefetchArena = () => void import("./components/Arena");
 import { CardPicker } from "./components/CardPicker";
 import { About } from "./components/About";
 import { Updates } from "./components/Updates";
+import { MatePeek } from "./components/MatePeek";
 import { Challenges } from "./components/Challenges";
 import { Versus } from "./components/Versus";
 import { Report } from "./components/Report";
@@ -849,18 +850,18 @@ function Game() {
                  * under or over you depending on which half the server gave
                  * you, because that is the order the battle will use.
                  */
-                <div className="mate mate--theirs">
-                  <div className="mate__label">
-                    <Icon name="friend" size={13} /> החצי של מי שאיתך
-                  </div>
-                  <BoardGrid
-                    placements={m.mate?.placements ?? {}}
-                    king={m.mate?.king ?? null}
-                    side="left"
-                    compact
-                    onCardInfo={openInfo}
-                  />
-                </div>
+                /*
+                 * On a phone it is a thumbnail you tap to open — Or, playing
+                 * it with Hod: "two against Amanda on mobile, you can't see
+                 * what is going on because it is so small." See MatePeek.
+                 */
+                <MatePeek
+                  label="החצי של מי שאיתך"
+                  placements={m.mate?.placements ?? {}}
+                  king={m.mate?.king ?? null}
+                  side="left"
+                  onCardInfo={openInfo}
+                />
               )}
             </section>
 
