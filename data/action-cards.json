@@ -20,24 +20,6 @@
     ]
   },
   {
-    "id": "recycle_bin",
-    "name": {
-      "he": "פח מחזור",
-      "en": "Recycle Bin"
-    },
-    "rarity": "common",
-    "copiesInPack": 15,
-    "description": {
-      "he": "מחזיר ליד את הקלף האחרון שזרקת לפח.",
-      "en": "Returns the last card you discarded back to your hand."
-    },
-    "effect": "recycleDiscard",
-    "params": {},
-    "usableIn": [
-      "build"
-    ]
-  },
-  {
     "id": "energy_boost",
     "name": {
       "he": "בוסט אנרגיה",

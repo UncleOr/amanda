@@ -67,6 +67,7 @@ const ArenaPreview = lazy(() =>
   import("./components/ArenaPreview").then((m) => ({ default: m.ArenaPreview })),
 );
 import { MoreModes } from "./components/MoreModes";
+import { Overlay } from "./components/Overlay";
 
 
 /**
@@ -1131,8 +1132,10 @@ function Game() {
                 <button onClick={m.discardHand} disabled={m.hand === null}>
                   זרוק <Icon name="discard" size={15} />
                 </button>
-                <button onClick={m.takeDiscard} disabled={!m.discardTop}>
-                  קח מהפח {m.discardTop && <Icon name="recycle" size={15} />}
+                {/* One take-back a match. Once it is spent the button goes
+                    out and stays out — see takeDiscard for why. */}
+                <button onClick={m.takeDiscard} disabled={!m.canTakeDiscard}>
+                  קח מהפח {m.canTakeDiscard && <Icon name="recycle" size={15} />}
                 </button>
               </div>
               {m.stackSlots > 0 && (
@@ -1248,7 +1251,7 @@ function Game() {
       )}
 
       {confirmExit && (
-        <div className="modal-overlay" onClick={() => setConfirmExit(false)}>
+        <Overlay onClick={() => setConfirmExit(false)}>
           <div className="modal modal--confirm" onClick={(e) => e.stopPropagation()}>
             <h2>{exitTitle}</h2>
             <p className="modal__role">{exitBody}</p>
@@ -1267,7 +1270,7 @@ function Game() {
               </button>
             </div>
           </div>
-        </div>
+        </Overlay>
       )}
 
       {chest && (
@@ -1297,7 +1300,7 @@ function Game() {
         leave you standing in a match.
       */}
       {lessonDone && (
-        <div className="modal-overlay">
+        <Overlay>
           <div className="modal modal--confirm lesson-end">
             <Icon name="win" size={72} />
             {m.lesson < LESSONS.length ? (
@@ -1338,7 +1341,7 @@ function Game() {
               </>
             )}
           </div>
-        </div>
+        </Overlay>
       )}
 
       {teaching && cue && (
@@ -1384,7 +1387,7 @@ function Game() {
         because the list is already on the screen.
       */}
       {panel.is("challenges") && (
-        <div className="modal-overlay" onClick={() => panel.close()}>
+        <Overlay onClick={() => panel.close()}>
           <div className="modal modal--quests" onClick={(e) => e.stopPropagation()}>
             <button className="modal__close" onClick={() => panel.close()} title="סגירה">
               <Icon name="exit" size={15} />
@@ -1396,7 +1399,7 @@ function Game() {
               reloadKey={m.award}
             />
           </div>
-        </div>
+        </Overlay>
       )}
 
       {/* The kind of report rides along with the panel itself, so it cannot
@@ -1455,7 +1458,7 @@ function Game() {
        * because the room is open and waiting while this sits there.
        */}
       {m.invitation && (
-        <div className="modal-overlay" onClick={m.declineInvitation}>
+        <Overlay onClick={m.declineInvitation}>
           <div className="modal modal--invite" onClick={(e) => e.stopPropagation()}>
             <Icon name="friend" size={44} />
             <h2>{m.invitation.nickname ?? "חבר"} מזמין אותך למשחק</h2>
@@ -1468,7 +1471,7 @@ function Game() {
               </button>
             </div>
           </div>
-        </div>
+        </Overlay>
       )}
 
       {panel.is("modes") && (

@@ -36,6 +36,7 @@ import {
   SYNERGIES,
   cardPool,
   isCornerKey,
+  isEnemyTargeted,
   isPassiveAction,
   isTargetedAction,
 } from "../data/catalog";
@@ -404,6 +405,12 @@ export interface BattleMods {
   boardPowerAdd: number;
   /** Cells (cellKey or "king") upgraded ×1.5 by Full Refuel. */
   boostedCells: Record<string, true>;
+  /**
+   * Flat health the enemy's radioactive eraser took off your King, aimed at
+   * the one thing it is not allowed to delete. Carried as a cut rather than
+   * a removal because a board with no King is not a board.
+   */
+  kingWound?: number;
 }
 
 /** Combine the board buff + a per-cell ×1.5 boost into an engine PlacementBuff. */
@@ -430,6 +437,46 @@ export function cellBuff(
   return Object.keys(buff).length ? buff : undefined;
 }
 
+/**
+ * The King's health after an eraser has been aimed at it.
+ *
+ * The engine takes a MULTIPLIER, and the card promises a flat number, so the
+ * conversion has to happen somewhere and the King's full health is only known
+ * here. Never below 1: a King erased by arithmetic is the deletion the card
+ * is not allowed to do.
+ */
+export function woundedKingMult(cardId: string, wound: number): number | null {
+  if (wound <= 0) return null;
+  const full = (CATALOG.get(cardId)?.stats.hp ?? 0) * KING.hpMultiplier;
+  if (full <= 0) return null;
+  return Math.max(1, full - wound) / full;
+}
+
+/**
+ * Is the one take-back still there to be spent? See takeDiscard for the rule.
+ *
+ * Pure and exported so the rule can be tested as the rule, rather than as a
+ * sentence in a test file that happens to agree with the code.
+ */
+export function canTakeFromBin(binUsed: boolean, binSize: number): boolean {
+  return !binUsed && binSize > 0;
+}
+
+/**
+ * Spend it: the top card comes back and what you were holding is buried.
+ *
+ * Buried rather than swapped because a swap puts the card you just gave up
+ * on top, one tap from returning — and with only one take-back a match that
+ * no longer matters for taking, but it still decides what the PILE looks
+ * like for anything that reads it.
+ */
+export function takeFromBin<T extends { hand: string | null; discard: string[] }>(s: T): T {
+  if (s.discard.length === 0) return s;
+  const top = s.discard[s.discard.length - 1]!;
+  const rest = s.discard.slice(0, -1);
+  return { ...s, hand: top, discard: s.hand !== null ? [s.hand, ...rest] : rest };
+}
+
 function buildPlayerBoard(
   state: GameState,
   mods: BattleMods,
@@ -446,7 +493,12 @@ function buildPlayerBoard(
       x: 1,
       y: 1,
       king: true,
-      buff: cellBuff(mods, KING_KEY, false, levelOf(resolved.king)),
+      buff: (() => {
+        const buff = cellBuff(mods, KING_KEY, false, levelOf(resolved.king));
+        const hurt = woundedKingMult(resolved.king, mods.kingWound ?? 0);
+        if (hurt === null) return buff;
+        return { ...(buff ?? {}), hpMult: (buff?.hpMult ?? 1) * hurt };
+      })(),
     });
   for (const [key, cardId] of Object.entries(resolved.placements)) {
     const [x, y] = key.split("-").map(Number) as [number, number];
@@ -597,8 +649,10 @@ export interface MatchApi {
   discardTop: string | null;
   /** Cards still face-down in the deck — drives the "do I discard?" decision. */
   deckLeft: number;
-  /** Cards in the discard pile (any of which the top one can be taken back). */
+  /** Cards in the discard pile. */
   discardCount: number;
+  /** Is the one take-back still available? See takeDiscard. */
+  canTakeDiscard: boolean;
   /** Cards already drawn ahead, waiting behind the one in your hand. */
   extraHand: string[];
   /** Cells you may still stack a second card onto. */
@@ -780,6 +834,11 @@ export function useMatch(): MatchApi {
   const [rival, setRival] = useState<PlayerCard | null>(null);
   const [actionBar, setActionBar] = useState<string[]>([]);
   const [usedActions, setUsedActions] = useState<Record<string, boolean>>({});
+  /** The one take-back has been spent this match. See takeDiscard. */
+  const [binUsed, setBinUsed] = useState(false);
+  const binUsedRef = useRef(false);
+  /** Flat health an enemy eraser took off YOUR King. See receiveHex. */
+  const [kingWound, setKingWound] = useState(0);
   const [boardPowerAdd, setBoardPowerAdd] = useState(0);
   const [boostedCells, setBoostedCells] = useState<Record<string, true>>({});
   const [xrayActive, setXrayActive] = useState(false);
@@ -990,7 +1049,7 @@ export function useMatch(): MatchApi {
   const targetingRef = useRef(targeting);
   targetingRef.current = targeting;
   const modsRef = useRef<BattleMods>({ boardPowerAdd: 0, boostedCells: {} });
-  modsRef.current = { boardPowerAdd, boostedCells };
+  modsRef.current = { boardPowerAdd, boostedCells, kingWound };
   const aiPlanRef = useRef<Placement[] | null>(null);
   if (!aiPlanRef.current) aiPlanRef.current = generateAiPlan(undefined, botLevelRef.current);
 
@@ -1095,25 +1154,34 @@ export function useMatch(): MatchApi {
   }, [refill]);
 
   /**
-   * Take the top card out of the bin.
+   * Take the top card out of the bin — ONCE a match.
    *
-   * The card you were holding goes to the BOTTOM of the pile, not back on top.
-   * It used to swap, which meant whatever you had just thrown away was always
-   * one tap from returning — so throwing cost nothing and the bin was an undo
-   * button. Or's rule: only the top card, and only the top card. You get one
-   * change of heart, and then what you gave up is buried.
+   * ═══ THE BIN IS A CHANGE OF HEART, NOT A SECOND DECK ═══
+   *
+   * It began as a swap, which made throwing free: whatever you had just
+   * thrown was always one tap from returning. Burying the card you traded
+   * fixed that one hole and left the bigger one open — you could still keep
+   * taking, down through everything you had thrown all match, which turned
+   * a 20-card deck into a 20-card deck you could search.
+   *
+   * Or, after playing it: *"I need to be able to pull only ONE card back and
+   * no more. If I already pulled a card I should not be pulling the ones
+   * after it out of the recycling."*
+   *
+   * So it is one, for the whole match. That is what makes throwing a
+   * decision: you get a single undo, you choose when to spend it, and after
+   * that the bin is a bin.
+   *
+   * The spent flag lives beside the board state rather than inside it
+   * because it describes the PLAYER's match, not the pile — clearRound
+   * resets it with everything else that is about one round.
    */
   const takeDiscard = useCallback(() => {
-    let ok = false;
-    setGs((s) => {
-      if (s.discard.length === 0) return s;
-      ok = true;
-      const top = s.discard[s.discard.length - 1]!;
-      const rest = s.discard.slice(0, -1);
-      const discard = s.hand !== null ? [s.hand, ...rest] : rest;
-      return { ...s, hand: top, discard };
-    });
-    if (ok) sfx.play("draw");
+    if (!canTakeFromBin(binUsedRef.current, gsRef.current.discard.length)) return;
+    setGs(takeFromBin);
+    binUsedRef.current = true;
+    setBinUsed(true);
+    sfx.play("draw");
   }, []);
 
   // Guards against a fast double-click taking the same action card twice: the
@@ -1243,7 +1311,7 @@ export function useMatch(): MatchApi {
     netRef.current.rematch();
   }, []);
 
-  const receiveHex = useCallback((id: string) => {
+  const receiveHex = useCallback((id: string, cell?: string) => {
     // This is what the steel wall was always for.
     if (shieldedRef.current) {
       setShielded(false);
@@ -1252,6 +1320,32 @@ export function useMatch(): MatchApi {
     const a = ACTIONS.get(id);
     if (a?.effect === "freezeOpponentPlacing") {
       setFrozenFor(Number(a.params?.seconds ?? 5));
+      sfx.play("discard");
+      return;
+    }
+    /*
+     * The radioactive eraser, landing on YOUR board.
+     *
+     * Only this client can carry it out: the sender was looking at a fogged
+     * copy, and deleting a card there would have erased a picture while the
+     * real board — the one that goes into the battle — kept the card. That
+     * is what "the eraser does not work" looked like from the other side.
+     *
+     * The King cannot be erased outright, because a board with no King is not
+     * a board. It takes the wound instead, carried into the fight as a cut to
+     * its health, which is what the card already promised in words.
+     */
+    if (a?.effect === "eraseEnemyCard" && cell) {
+      if (cell === KING_KEY) {
+        setKingWound(Number(a.params?.kingFlatDamage ?? 2000));
+      } else {
+        setGs((s) => {
+          if (!s.placements[cell]) return s;
+          const placements = { ...s.placements };
+          delete placements[cell];
+          return { ...s, placements };
+        });
+      }
       sfx.play("discard");
     }
   }, []);
@@ -1296,17 +1390,7 @@ export function useMatch(): MatchApi {
       const a = ACTIONS.get(id);
       const params = a?.params ?? {};
       if (a?.effect === "boardPowerBuff") setBoardPowerAdd((b) => b + Number(params.power ?? 50));
-      else if (a?.effect === "recycleDiscard") {
-        // Straight back into your hand, without spending a draw on it.
-        const st = gsRef.current;
-        if (st.discard.length) {
-          const discard = [...st.discard];
-          const back = discard.pop()!;
-          const held = st.hand;
-          if (held) setExtraHand((e) => [held, ...e]);
-          setGs({ ...st, hand: back, discard });
-        }
-      } else if (a?.effect === "freezeEnemy") {
+      else if (a?.effect === "freezeEnemy") {
         // Seconds are the currency of the build phase, so this buys you some.
         setTimeLeft((t) => t + Number(params.seconds ?? 3));
       } else if (a?.effect === "blockNextActionCard") {
@@ -1379,6 +1463,9 @@ export function useMatch(): MatchApi {
       // Aimed at the opponent's board: the card is gone. A King cannot be
       // erased outright, so it takes a heavy wound instead.
       eraseEnemyAt(key, Number(ACTIONS.get(id)?.params?.kingFlatDamage ?? 2000));
+      // Against a person the board being erased is THEIRS, so only their
+      // client can really do it — all this side can do is say where.
+      netRef.current?.hex(id, key);
     }
     setUsedActions((u) => ({ ...u, [id]: true }));
     setTargeting(null);
@@ -1386,17 +1473,34 @@ export function useMatch(): MatchApi {
     sfx.play("place");
   }, []);
 
+  /*
+   * ═══ WHOSE BOARD THE GUARD CHECKS ═══
+   *
+   * Both halves of the screen call these two, and they looked at
+   * `gsRef.current` — YOUR board — whichever half had been clicked. For the
+   * radioactive eraser, which is aimed at the opponent, that meant the click
+   * landed on a cell you had nothing in and the function returned before it
+   * did anything. Or: *"the radioactive eraser action card does not work."*
+   * It never had.
+   *
+   * An enemy-targeted card needs no guard here at all: BoardGrid only calls
+   * `onTarget` for a cell it is DRAWING something in, so the board it
+   * rendered has already vouched for the target — and it is the only one of
+   * the two that knows which board that was.
+   */
   const applyTargetCell = useCallback(
     (x: number, y: number) => {
       const id = targetingRef.current;
-      if (!id || !gsRef.current.placements[cellKey(x, y)]) return;
+      if (!id) return;
+      if (!isEnemyTargeted(id) && !gsRef.current.placements[cellKey(x, y)]) return;
       applyTargetTo(id, cellKey(x, y));
     },
     [applyTargetTo],
   );
   const applyTargetKing = useCallback(() => {
     const id = targetingRef.current;
-    if (!id || !gsRef.current.king) return;
+    if (!id) return;
+    if (!isEnemyTargeted(id) && !gsRef.current.king) return;
     applyTargetTo(id, KING_KEY);
   }, [applyTargetTo]);
   const cancelTargeting = useCallback(() => setTargeting(null), []);
@@ -1515,6 +1619,9 @@ export function useMatch(): MatchApi {
     soloBoardsRef.current = null;
     setActionBar([]);
     setUsedActions({});
+    binUsedRef.current = false;
+    setBinUsed(false);
+    setKingWound(0);
     setBoardPowerAdd(0);
     setBoostedCells({});
     setXrayActive(false);
@@ -1636,7 +1743,7 @@ export function useMatch(): MatchApi {
       },
       onOpp: (view) => setNetOpp(view),
       onMate: (view) => setMate(view),
-      onHexed: (id) => receiveHex(id),
+      onHexed: (id, cell) => receiveHex(id, cell),
       onOppReady: (r) => setOppReady(r),
       onInvited: (from) => {
         setInvitation(from);
@@ -2053,6 +2160,7 @@ export function useMatch(): MatchApi {
     discardTop: gs.discard.length ? gs.discard[gs.discard.length - 1]! : null,
     deckLeft: gs.deck.length,
     discardCount: gs.discard.length,
+    canTakeDiscard: !binUsed && gs.discard.length > 0,
     extraHand,
     frozenFor,
     canPlayAction,
@@ -2071,7 +2179,7 @@ export function useMatch(): MatchApi {
     actionBar: actionBar.map((id) => ({ id, used: !!usedActions[id], passive: isPassiveAction(id) })),
     barFull: actionBar.length >= ACTION_SLOTS,
     targeting,
-    mods: { boardPowerAdd, boostedCells },
+    mods: { boardPowerAdd, boostedCells, kingWound },
     online,
     account,
     reloadAccount: () => void loadAccount().then((a) => a && setAccount(a)),

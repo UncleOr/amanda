@@ -139,7 +139,16 @@ export const ACTIVE_ACTIONS = [
   "full_refuel", // ×1.5 a chosen card (targeted)
   "recall_card", // remove a chosen card (targeted)
   "sandstorm", // shuffle the enemy front row
-  "recycle_bin", // take the last card you threw away back
+  /*
+   * "Recycle Bin" was here — take the last card you threw away back.
+   *
+   * Or: *"and that action card that pulls a card out of the recycling is
+   * completely unnecessary. We do not need it."* He is right, and the reason
+   * is the bin itself: every player already gets one take-back, every match,
+   * with no card required (see takeDiscard). A card that hands out a second
+   * one is a card whose whole effect is "the rule you already have, again" —
+   * and it was spending one of four action slots to say it.
+   */
   "time_freeze", // buy yourself seconds
   "steel_wall", // block the next action card played against you
   "triple_draw", // hold three cards at once instead of one

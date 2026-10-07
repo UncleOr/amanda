@@ -9,9 +9,6 @@ export const ACTION_LOOK: Record<string, string> = {
   triple_draw:
     "three ornate playing cards fanned out in mid-air, trailing golden motion streaks, " +
     "as if snapped from a deck in one sweep",
-  recycle_bin:
-    "a battered metal trash can tipping over, one glowing card floating back out of it " +
-    "on a green recycling swirl",
   energy_boost:
     "a cracked battery cell overloading, raw yellow lightning bursting from its terminals, " +
     "surging power rings radiating outward",

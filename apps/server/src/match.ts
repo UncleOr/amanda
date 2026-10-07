@@ -196,7 +196,7 @@ export class Match {
   /** Handle a message from one of the two clients. */
   handle(ws: WebSocket, raw: string): void {
     const p = ws === this.a.ws ? this.a : this.b;
-    let msg: { t: string; view?: BoardView; board?: NetBoard; id?: string };
+    let msg: { t: string; view?: BoardView; board?: NetBoard; id?: string; cell?: string };
     try {
       msg = JSON.parse(raw);
     } catch {
@@ -209,7 +209,13 @@ export class Match {
       // Only the build phases can be interfered with; once boards are locked
       // there is nothing left to disturb.
       if (this.phase === "build" || this.phase === "panic")
-        this.send(this.other(p), { t: "hexed", id: msg.id });
+        this.send(this.other(p), {
+          t: "hexed",
+          id: msg.id,
+          // Passed through untouched: which cell was hit is the other
+          // client's business, and it is the one holding that board.
+          ...(typeof msg.cell === "string" ? { cell: msg.cell } : {}),
+        });
     } else if (msg.t === "lock" && msg.board) {
       // Ready, with the board as it stands. A player who is ready may keep
       // building and send this again; the last one received is the one used.

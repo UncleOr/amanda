@@ -68,7 +68,7 @@ export interface NetHandlers {
   /** The server will not start a match: this account is suspended until then. */
   onSuspended?: (until: string) => void;
   /** The opponent played an action card at you. */
-  onHexed?: (id: string) => void;
+  onHexed?: (id: string, cell?: string) => void;
   /** The opponent is (or is no longer) ready to fight. */
   onOppReady?: (ready: boolean) => void;
   /** The other player said one of the ready-made lines. */
@@ -184,7 +184,7 @@ export class Net {
           this.handlers.onRoom?.(msg.code);
           break;
         case "hexed":
-          this.handlers.onHexed?.(msg.id);
+          this.handlers.onHexed?.(msg.id, msg.cell);
           break;
         case "said":
           this.handlers.onSaid?.(msg.id);
@@ -236,9 +236,9 @@ export class Net {
   sendBoard(view: BoardView): void {
     this.sendMsg({ t: "board", view });
   }
-  /** Play an action card at the opponent. */
-  hex(id: string): void {
-    this.sendMsg({ t: "hex", id });
+  /** Play an action card at the opponent, optionally at one of their cells. */
+  hex(id: string, cell?: string): void {
+    this.sendMsg({ t: "hex", id, ...(cell ? { cell } : {}) });
   }
   /** Say one of the ready-made lines (see taunts.ts). Id only. */
   say(id: string): void {

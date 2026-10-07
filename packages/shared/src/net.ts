@@ -76,7 +76,13 @@ export type ClientMessage =
    * what it does is the receiving client's business, so a new card of this kind
    * needs no server change.
    */
-  | { t: "hex"; id: string }
+  /*
+   * `cell` is for the cards that are aimed at a PLACE on the other player's
+   * board rather than at the player — the radioactive eraser. The board being
+   * erased belongs to the other client, so the id alone cannot say what
+   * happened: "0-2", or "king".
+   */
+  | { t: "hex"; id: string; cell?: string }
   /**
    * Say one of the ready-made lines to the other player (see taunts.ts).
    * Only the id travels: the words live in the catalogue on both sides, so
@@ -181,7 +187,7 @@ export type ServerMessage =
   /** Whether the opponent has declared themselves ready. */
   | { t: "oppReady"; ready: boolean }
   /** The opponent played an action card at you. */
-  | { t: "hexed"; id: string }
+  | { t: "hexed"; id: string; cell?: string }
   /** The other player said one of the ready-made lines. Id only — see "say". */
   | { t: "said"; id: string }
   /** The other player would like to play you again. */

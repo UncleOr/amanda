@@ -20,7 +20,6 @@ describe("action cards", () => {
     "shuffleEnemyFrontRow",
     "upgradeCardTemp",
     "removeCard",
-    "recycleDiscard",
     "freezeEnemy",
     "blockNextActionCard",
     "draw",
@@ -48,7 +47,7 @@ describe("action cards", () => {
   it("the cards that need a target are marked as needing one", () => {
     const needsTarget = ["full_refuel", "recall_card", "swap_places", "radioactive_eraser"];
     for (const id of needsTarget) expect(isTargetedAction(id), id).toBe(true);
-    for (const id of ["energy_boost", "xray", "recycle_bin"]) {
+    for (const id of ["energy_boost", "xray", "time_freeze"]) {
       expect(isTargetedAction(id), id).toBe(false);
     }
     expect(isEnemyTargeted("radioactive_eraser")).toBe(true);
@@ -74,8 +73,14 @@ describe("action cards", () => {
     }
   });
 
-  it("holds 14 playable action cards, not 5", () => {
-    expect(ACTIVE_ACTIONS.length).toBe(14);
+  /*
+   * Thirteen, because the recycle bin was taken out: every player already has
+   * one take-back a match without spending a card on it, so the card's whole
+   * effect was "the rule you already have, again". The number is pinned so
+   * that losing another one has to be deliberate.
+   */
+  it("holds 13 playable action cards, not 5", () => {
+    expect(ACTIVE_ACTIONS.length).toBe(13);
   });
 
   /**
