@@ -33,15 +33,24 @@ export function BattleScreen({
   return (
       <main className="battle">
         <ErrorBoundary
-          fallback={
+          fallback={(why) => (
             <div className="result__card">
               <h1><Icon name="explode" size={64} /></h1>
               <p>שגיאה בהצגת הקרב</p>
+              {/*
+                The actual error, in English, in small grey type.
+                
+                Or has hit this twice and both times all either of us had was
+                the Hebrew sentence above — the real message went to the
+                console, which on a phone is nowhere. One line is enough to
+                turn his next screenshot into a diagnosis.
+              */}
+              <p className="battle__why">{why}</p>
               <button className="btn-fight" onClick={m.finishBattle}>
                 המשך לתוצאה
               </button>
             </div>
-          }
+          )}
         >
           {/*
             The fallback is a line of text, not a spinner, and it should

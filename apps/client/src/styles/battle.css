@@ -183,3 +183,15 @@
   opacity: 0.75;
   direction: ltr;
 }
+
+/* The real error under the friendly one. English, small, grey, one line —
+   see ErrorBoundary for why it is on the screen at all. */
+.battle__why {
+  margin: 2px 0 14px;
+  color: var(--muted);
+  font-size: 11px;
+  line-height: 1.4;
+  opacity: 0.8;
+  direction: ltr;
+  word-break: break-word;
+}

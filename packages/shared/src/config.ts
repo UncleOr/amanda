@@ -51,7 +51,16 @@ export const KING = {
  */
 export const PHASES = {
   build: { seconds: 90, label: { he: "בונים את שדה הקרב", en: "Build Frenzy" } },
-  panic: { seconds: 15, label: { he: "פאניקה", en: "Panic Seconds" } },
+  /*
+   * Or, having played it: *"the panic phase, let's put it back to 10
+   * seconds, it feels too long again."* 15 → 10.
+   *
+   * This is the window where the opponent's King is revealed and you can
+   * still answer it, so its length is how much of a REACTION the reveal gets
+   * — long enough and it stops being a panic and becomes a second build.
+   * Turnable from the admin panel (TUNABLES "phases.panic").
+   */
+  panic: { seconds: 10, label: { he: "פאניקה", en: "Panic Seconds" } },
   /*
    * Or, after playing: *"I think the battle time is too short now. Let's
    * lengthen it by about 10-15 seconds."* 45 → 58.

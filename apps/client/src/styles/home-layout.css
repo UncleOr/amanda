@@ -1133,19 +1133,27 @@
 }
 
 /* ════════ the emoji row in the say sheet ════════ */
+/*
+ * A grid rather than a wrapping row, so the faces sit in even rows.
+ *
+ * Wrapped, nine items at a fixed 40px came out seven and then two, with the
+ * second line nearly empty — which reads as a mistake rather than as a set.
+ * `auto-fit` divides whatever width there is into equal columns, so adding a
+ * pack later rearranges them instead of leaving a stub.
+ */
 .say__faces {
-  display: flex;
-  flex-wrap: wrap;
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(38px, 1fr));
   gap: 4px;
-  padding-bottom: 6px;
-  margin-bottom: 4px;
+  padding-bottom: 7px;
+  margin-bottom: 1px;
   border-bottom: 1px solid var(--line);
 }
 .say__face {
   display: grid;
   place-items: center;
-  width: 40px;
-  height: 40px;
+  width: 100%;
+  aspect-ratio: 1;
   padding: 0;
   border: 1px solid transparent;
   border-radius: 10px;
@@ -1473,20 +1481,50 @@
      the end of the line it is about. */
   .intro--hero .home .pick__card .lock { top: 4px; inset-inline-end: 4px; }
 
-  /* The "play with a friend" list, which replaces the two cards in place. */
+  /*
+   * ═══ THE WAYS TO PLAY WITH A FRIEND: A GRID, NOT A WRAP ═══
+   *
+   * Or: *"on mobile the options for a friend match do not look good."*
+   *
+   * They were a wrapping flex row of four buttons with `flex: 1 1 auto`, and
+   * three of the four labels are short while the fourth is "נגד אמנדה —
+   * שניים נגדה". So they came out at four different widths, the long one
+   * claimed a line of its own and stretched across it, and the row above it
+   * stretched to fill what was left. Nothing lined up with anything — which
+   * is the same thing that was wrong with this whole screen before, and has
+   * the same answer.
+   *
+   * Two columns. Four equal buttons, in the order they are written: the room
+   * you open, the code you were given, the stranger, and her. The way back is
+   * its own line because it is not one of the four.
+   */
   .intro--hero .home .pick--ways {
-    flex-direction: row;
-    flex-wrap: wrap;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 6px;
     max-width: none;
-    justify-content: center;
   }
   .intro--hero .home .pick--ways .btn-fight {
-    width: auto;
-    flex: 1 1 auto;
-    padding: 6px 10px;
-    font-size: 11px;
+    width: 100%;
+    margin: 0;
+    padding: 8px 10px;
+    font-size: 11.5px;
+    text-align: center;
   }
-  .intro--hero .home .pick--ways .btn-link { flex: 0 0 100%; font-size: 10px; }
+  /*
+   * She does NOT get the whole width, which was the first answer and left a
+   * hole: four buttons with the fourth spanning both columns is two, one,
+   * and an empty square. A grid with a gap in it is the thing this screen
+   * has spent all day not being.
+   *
+   * Her emphasis is her COLOUR — `.btn-amanda` is a different button
+   * already — and that reads at any width.
+   */
+  .intro--hero .home .pick--ways .btn-link {
+    grid-column: 1 / -1;
+    font-size: 10.5px;
+    padding: 2px;
+  }
 
   /*
    * ---- the two side doors ----

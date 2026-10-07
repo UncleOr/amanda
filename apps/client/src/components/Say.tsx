@@ -65,14 +65,31 @@ export function SayButton({
 
   return (
     <div className={`say${open ? " say--open" : ""}`}>
+      {/*
+        ═══ THE BUTTON IS ONE FACE ═══
+
+        Or: *"the emoji button does not look good."* It was a padlock-grey
+        pill with a `friend` icon AND a second picture beside it — and that
+        second picture was `<EmojiFace id="wave" />`, which does not exist.
+        The emoji were renamed to the characters months ago (chuppy_hi,
+        dragon_fire, …) and this call was left behind, so the button carrying
+        the emoji feature was drawing a BROKEN IMAGE.
+
+        One face, round, the size of a thumb. Chuppy waving, because he is the
+        one every player already has and the one this button is about.
+      */}
       <button
         className="say__handle"
         onClick={() => setOpen((o) => !o)}
         title={open ? "סגירה" : "להגיד משהו"}
+        aria-label={open ? "סגירה" : "להגיד משהו"}
         aria-expanded={open}
       >
-        <Icon name={open ? "exit" : "friend"} size={16} />
-        {!open && <EmojiFace id="wave" size={18} className="say__handle-face" />}
+        {open ? (
+          <Icon name="exit" size={18} />
+        ) : (
+          <EmojiFace id="chuppy_hi" size={26} className="say__handle-face" />
+        )}
       </button>
 
       {open && (
@@ -136,22 +153,39 @@ export function SayButton({
               </span>
             </button>
           )}
-          {offered.map((t) => (
-            <button
-              key={t.id}
-              className="say__one"
-              role="menuitem"
-              onClick={() => {
-                onSay(t.id);
-                setOpen(false);
-              }}
-            >
-              <span className="say__emoji">
-                <EmojiFace id={t.face} size={22} />
-              </span>
-              <span className="say__words">{t.he}</span>
-            </button>
-          ))}
+          {/*
+            ═══ THE SENTENCES ARE CHIPS, NOT ROWS ═══
+
+            Or: *"the window that opens needs scrolling and that is hard in
+            the middle of a match."* He is right about both halves. Ten
+            full-width rows at 35px is 350px of sheet on a screen that is 390
+            tall — and the thing it covers is the board you are building,
+            during the ninety seconds you have to build it.
+
+            Each sentence is as wide as its own words now and they wrap, so
+            the same ten take four lines instead of ten. The picture stays:
+            it is what makes a line findable at a glance, which matters more
+            here than anywhere, because nobody is reading carefully while a
+            clock is running.
+          */}
+          <div className="say__lines">
+            {offered.map((t) => (
+              <button
+                key={t.id}
+                className="say__one"
+                role="menuitem"
+                onClick={() => {
+                  onSay(t.id);
+                  setOpen(false);
+                }}
+              >
+                <span className="say__emoji">
+                  <EmojiFace id={t.face} size={18} />
+                </span>
+                <span className="say__words">{t.he}</span>
+              </button>
+            ))}
+          </div>
           {/* A sentence's face is always one of the free ones, so nothing in
               the list above can be a picture this player does not have. */}
           {mineIds.size === 0 && <p className="say__none">אין אימוג'ים</p>}
