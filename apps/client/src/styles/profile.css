@@ -479,3 +479,13 @@
 .profile__wide { width: min(320px, 100%); margin-top: 8px; }
 .profile__or { color: var(--muted); font-size: 12px; margin: 12px 0 8px; }
 .profile__save { margin: 4px 0 16px; }
+/* The sign-in trace. Deliberately tiny and grey: a player should be able to
+   look straight past it, and somebody debugging should be able to read it
+   off a photograph of the screen. */
+.profile__trace {
+  margin: 4px 0 0 !important;
+  font-size: 10px;
+  color: var(--muted);
+  opacity: 0.55;
+  letter-spacing: 0.02em;
+}

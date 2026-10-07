@@ -59,6 +59,48 @@ function db(): SupabaseClient | null {
   return client;
 }
 
+/**
+ * Tell me when the signed-in person changes.
+ *
+ * ═══ WHY THIS WAS MISSING AND WHY IT MATTERS ═══
+ *
+ * The account was read exactly once, at boot. That is fine for every ordinary
+ * visit — and wrong for the one case that is giving trouble: coming back from
+ * Google. The code in the URL is exchanged for a session ASYNCHRONOUSLY by
+ * supabase-js, and if that lands even a moment after the one read, the game
+ * holds the old anonymous account and the player is looking at a screen that
+ * says they are not signed in while the library believes they are.
+ *
+ * Subscribing closes that for good: whenever a session appears, changes, or
+ * is refreshed, the game looks again. It also covers signing in from another
+ * tab, and a token refresh after the laptop was shut.
+ */
+export function onAccountChange(fn: () => void): () => void {
+  const sb = db();
+  if (!sb) return () => {};
+  const { data } = sb.auth.onAuthStateChange((event) => {
+    // SIGNED_IN fires on every tab focus in some versions; the cheap guard is
+    // that the caller re-reads and compares, which it does.
+    if (event === "SIGNED_IN" || event === "USER_UPDATED" || event === "TOKEN_REFRESHED")
+      fn();
+  });
+  return () => data.subscription.unsubscribe();
+}
+
+/**
+ * What this page load saw of a sign-in, in a few words.
+ *
+ * Or has now hit the Google problem twice, and each time the only thing to go
+ * on was "it comes back not signed in". This is the smallest thing that turns
+ * that into a fact: it records what the browser actually arrived with, and
+ * the profile screen prints it. It is not for players — it is so that the one
+ * person debugging it can read it off a screenshot.
+ */
+let authTrace = "";
+export function getAuthTrace(): string {
+  return authTrace;
+}
+
 /** True when the build was given somewhere to store accounts. */
 export const ACCOUNTS_AVAILABLE = Boolean(URL && KEY);
 
@@ -81,6 +123,28 @@ export function takeAuthError(): string | null {
   const e = lastAuthError;
   lastAuthError = null;
   return e;
+}
+
+/**
+ * Where Google should send the player back to.
+ *
+ * ═══ A FIXED ADDRESS, NOT `window.location.href` ═══
+ *
+ * It used to be whatever URL the player happened to be on. That is one URL on
+ * a good day and a different one on every other: a query string somebody was
+ * sent, a leftover `?code=` from a previous attempt, a hash. Supabase only
+ * honours a redirect that MATCHES ITS ALLOW-LIST, and silently falls back to
+ * the project's Site URL when it does not — so an unexpected query string
+ * does not produce an error, it produces a player who lands somewhere else
+ * entirely and wonders why they are not signed in.
+ *
+ * One canonical address instead: the app's own base. It is the same every
+ * time, it is the one written in docs/SUPABASE-SETUP.md, and it is therefore
+ * the one that can actually be allow-listed and checked.
+ */
+function comeBackTo(): string {
+  const url = new URL(import.meta.env.BASE_URL, window.location.origin);
+  return url.toString();
 }
 
 /** Is this page load a return from an OAuth provider, and did it go well? */
@@ -137,6 +201,13 @@ export async function loadAccount(): Promise<Account | null> {
      * REPORTED rather than papered over with a new guest.
      */
     const returning = oauthReturn();
+    authTrace = [
+      returning.code ? "code:yes" : "code:no",
+      returning.error ? `err:${returning.error.slice(0, 40)}` : null,
+      window.matchMedia?.("(display-mode: standalone)").matches ? "pwa" : "browser",
+    ]
+      .filter(Boolean)
+      .join(" · ");
     if (returning.error) {
       cleanOAuthFromUrl();
       lastAuthError = returning.error;
@@ -146,6 +217,11 @@ export async function loadAccount(): Promise<Account | null> {
 
     const existing = await sb.auth.getSession();
     let userId = existing.data.session?.user.id;
+    authTrace += existing.data.session
+      ? existing.data.session.user.is_anonymous
+        ? " · session:guest"
+        : " · session:signed-in"
+      : " · session:none";
 
     if (!userId && returning.code) {
       // supabase-js exchanges the code itself when it can. If we are here it
@@ -825,7 +901,7 @@ export async function linkGoogle(): Promise<string | null> {
 
     const { error } = await sb.auth.linkIdentity({
       provider: "google",
-      options: { redirectTo: window.location.href },
+      options: { redirectTo: comeBackTo() },
     });
     if (!error) return null;
 
@@ -840,7 +916,7 @@ export async function linkGoogle(): Promise<string | null> {
     if (error.message.toLowerCase().includes("already")) {
       const { error: signInError } = await sb.auth.signInWithOAuth({
         provider: "google",
-        options: { redirectTo: window.location.href },
+        options: { redirectTo: comeBackTo() },
       });
       return signInError ? signInError.message : null;
     }

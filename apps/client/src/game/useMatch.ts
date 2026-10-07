@@ -37,7 +37,13 @@ import {
   isTargetedAction,
 } from "../data/catalog";
 import { sfx } from "./sfx";
-import { albumToPool, loadAccount, type Account, type OwnedCard } from "./account";
+import {
+  albumToPool,
+  loadAccount,
+  onAccountChange,
+  type Account,
+  type OwnedCard,
+} from "./account";
 import { LESSONS } from "./lessons";
 import { Net, ONLINE_AVAILABLE, type Intent } from "./net";
 
@@ -713,6 +719,19 @@ export function useMatch(): MatchApi {
    */
   useEffect(() => {
     let alive = true;
+    /*
+     * And look again whenever the signed-in person changes.
+     *
+     * Coming back from Google, the session is created asynchronously — if it
+     * lands after the one read below, the game would otherwise sit there
+     * holding the old anonymous account while the library knows better. See
+     * onAccountChange.
+     */
+    const stop = onAccountChange(() => {
+      void loadAccount().then((a) => {
+        if (alive && a) setAccount(a);
+      });
+    });
     void loadAccount().then((a) => {
       if (!alive || !a) return;
       setAccount(a);
@@ -739,6 +758,7 @@ export function useMatch(): MatchApi {
     });
     return () => {
       alive = false;
+      stop();
     };
   }, []);
 

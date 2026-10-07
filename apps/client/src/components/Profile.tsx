@@ -20,6 +20,7 @@ import {
   linkGoogle,
   loadShop,
   takeAuthError,
+  getAuthTrace,
   saveProfile,
   switchAccount,
   type Account,
@@ -345,6 +346,15 @@ export function Profile({ account, onClose, onChanged }: Props) {
           </button>
         )}
         {note && <p className="profile__note profile__note--loud">{note}</p>}
+        {/*
+          What this page load actually saw of a sign-in.
+          Not for players — it is so that a screenshot of this screen answers
+          "what happened" instead of "it came back not signed in". See
+          authTrace in account.ts.
+        */}
+        <p className="profile__trace" dir="ltr">
+          {getAuthTrace()}
+        </p>
 
         <section className="panel">
           <h3>החשבון שלך</h3>
