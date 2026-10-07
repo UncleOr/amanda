@@ -24,9 +24,13 @@
 import type { SupabaseClient } from "@supabase/supabase-js";
 import {
   challengesFor,
+  israelDay,
   nachoChestKind,
   nachosForScore,
   progressFrom,
+  soloTrophiesFor,
+  withinDailyCap,
+  type BotLevel,
   type Challenge,
   type MatchFacts,
   type Pools,
@@ -92,6 +96,13 @@ export function factsFor(
 /** What one finished match gave a player, for the screen to celebrate. */
 export interface MetaAward {
   nachos: number;
+  /** Trophies this match added. Only ever from beating the computer. */
+  trophies: number;
+  /**
+   * True when the day's ceiling on solo trophies is why `trophies` is zero,
+   * so the screen can say so rather than looking broken.
+   */
+  cappedOut: boolean;
   /**
    * The lifetime count AFTER this match.
    *
@@ -106,7 +117,7 @@ export interface MetaAward {
   moved: Array<{ id: string; progress: number; need: number; done: boolean }>;
 }
 
-const NONE: MetaAward = { nachos: 0, total: 0, chests: [], moved: [] };
+const NONE: MetaAward = { nachos: 0, trophies: 0, cappedOut: false, total: 0, chests: [], moved: [] };
 
 /**
  * Pay out a finished match: nachos, any chest they filled, challenge progress.
@@ -121,17 +132,74 @@ export async function awardMatch(
   playerId: string,
   facts: MatchFacts,
   now: Date = new Date(),
+  /** Set for a match against the computer; left out for one against a person. */
+  botLevel?: BotLevel,
 ): Promise<MetaAward> {
   try {
     const nachos = nachosForScore(facts.score);
     const { chests, total } = await addNachos(sb, playerId, nachos);
     const moved = await advanceChallenges(sb, playerId, facts, now);
-    return { nachos, total, chests, moved };
+    const won = botLevel && facts.won ? await addSoloTrophies(sb, playerId, botLevel, now) : null;
+    return {
+      nachos,
+      total,
+      chests,
+      moved,
+      trophies: won?.gave ?? 0,
+      cappedOut: won?.cappedOut ?? false,
+    };
   } catch (err) {
     // A match that finished matters more than a counter that did not move.
     console.error("[meta] could not award the match", err);
     return NONE;
   }
+}
+
+/**
+ * Trophies for a win against the computer, under the day's ceiling.
+ *
+ * ═══ WHY THE DAY IS READ AND WRITTEN IN ONE GO ═══
+ *
+ * `solo_day` is the Israeli calendar day the counter belongs to, and a row
+ * whose day is not today is treated as a zero rather than being cleared by
+ * anything — so there is no job to run at midnight and no window in which a
+ * stale counter is still being spent. The first solo win of a new day
+ * overwrites both columns together.
+ */
+async function addSoloTrophies(
+  sb: SupabaseClient,
+  playerId: string,
+  level: BotLevel,
+  now: Date,
+): Promise<{ gave: number; cappedOut: boolean }> {
+  const want = soloTrophiesFor(level);
+  if (want <= 0) return { gave: 0, cappedOut: false };
+
+  const today = israelDay(now);
+  const { data } = await sb
+    .from("players")
+    .select("trophies, best_trophies, solo_day, solo_trophies")
+    .eq("id", playerId)
+    .maybeSingle();
+
+  // Yesterday's total is not today's. Not cleared anywhere — simply not read.
+  const already = data?.solo_day === today ? (data?.solo_trophies ?? 0) : 0;
+  const gave = withinDailyCap(already, want);
+  if (gave <= 0) return { gave: 0, cappedOut: true };
+
+  const trophies = (data?.trophies ?? 0) + gave;
+  await sb
+    .from("players")
+    .update({
+      trophies,
+      best_trophies: Math.max(data?.best_trophies ?? 0, trophies),
+      solo_day: today,
+      solo_trophies: already + gave,
+    })
+    .eq("id", playerId);
+  // Trimmed by the ceiling rather than paid in full — the screen says so, so
+  // that a win that quietly paid 4 instead of 12 does not look like a bug.
+  return { gave, cappedOut: gave < want };
 }
 
 /**

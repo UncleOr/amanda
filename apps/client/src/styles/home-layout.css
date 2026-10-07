@@ -8,20 +8,18 @@
  * `.smallprint` positioning, which it does by taking those elements out of
  * absolute position and into the grid.
  *
- * ═══ ONE SET OF MARKUP, THREE ARRANGEMENTS ═══
+ * ═══ SIX GROUPS, ONE ARRANGEMENT ═══
  *
  * Or: *"think about a much smarter, more sensible arrangement — what belongs
  * to playing together, what belongs to progress together, what belongs to
  * settings together. If you want to offer a few options for us to choose
- * from, go ahead."* And then: *"can you show me examples of each of them?"*
+ * from, go ahead."*
  *
- * So the three options are three sets of grid-template-areas over the same six
- * groups, picked by `data-layout` on the screen (`?layout=a|b|c`). They can be
- * looked at rather than described. Once Or picks one, the other two go.
- *
- *   א  two sides        playing on one half, everything else on the other
- *   ב  progress across  play in the middle, progress as a wide strip below it
- *   ג  three boxes      play | progress | collecting, three equal columns
+ * Three were built as three sets of grid-template-areas over the same markup,
+ * switchable with `?layout=a|b|c` so they could be looked at rather than
+ * described. Or picked the one below — play in the middle, the progress strip
+ * across the full width under it, the shop in the quiet column beside her
+ * portrait. The other two have been deleted along with the parameter.
  */
 
 /* ---- the frame ---- */
@@ -33,9 +31,31 @@
  */
 .intro--hero .home {
   display: grid;
-  gap: clamp(10px, 1.6vw, 20px);
+  /*
+   * The gap is measured in VIEWPORT HEIGHT, not width.
+   *
+   * It was `1.6vw`, which gives a 1440x860 laptop the same 20px of air
+   * between rows as a 1440x1200 monitor — and the laptop is the one with no
+   * room. Everything that decides whether this screen fits is vertical.
+   */
+  gap: clamp(8px, 1.4vh, 18px);
   width: 100%;
-  max-width: 1320px;
+  /*
+   * ═══ NO CENTRED CAP, BECAUSE SHE DOES NOT MOVE WITH IT ═══
+   *
+   * This was `max-width: 1320px`, which on a big screen centres the grid and
+   * pulls both columns INWARD — while the artwork behind it keeps filling the
+   * width. Her head is height-fitted, so it sits at about 0.57 x the viewport
+   * height from the left whatever the width is: 494px at 1440x860, 620px at
+   * 1920x1080. At 1920 the capped grid put the shop column at 300..700 and
+   * her face at 514..726, which is the thing this layout exists to avoid.
+   *
+   * Full width, with the screen's own padding holding the columns off the
+   * edges, keeps the quiet column where the dark half of the banner is at
+   * every size. The play card has its own cap, so the right-hand side does
+   * not sprawl.
+   */
+  max-width: none;
   margin-block: auto;
   align-items: start;
   /* Over her artwork and the wash, under the purse and the profile button. */
@@ -84,7 +104,13 @@
   text-align: center;
 }
 
-.home__brand { grid-area: brand; text-align: center; }
+.home__brand {
+  grid-area: brand;
+  text-align: center;
+  /* It spans both columns now, so it is the thing that sets the top margin
+     for the quiet column beside the play cards. */
+  margin-block-end: 2px;
+}
 .home__play { grid-area: play; }
 .home__progress { grid-area: progress; }
 .home__collect { grid-area: collect; }
@@ -140,65 +166,59 @@
 .home__social .rail__item { width: 100%; }
 .home__collect .btn-album { width: 100%; margin: 0; }
 
-/* ---- א: two sides ---- */
+/* ---- where the six groups land ---- */
 /*
- * The shape the screen already had, made honest: everything that is not
- * playing moves to one column instead of being three absolutely-positioned
- * islands. Playing and progress stay together on the wide side, because they
- * are the two halves of "press play".
+ * The two ways to play sit on the inline-start side — the RIGHT of this
+ * right-to-left page — and the progress strip runs the full width underneath,
+ * so the arena, the nacho bar, any waiting chest and today's challenges read
+ * as one row of "how close am I", which is what they are.
+ *
+ * ═══ WHICH SIDE GETS THE MENU IS DECIDED BY HER HEAD ═══
+ *
+ * Or: *"her head is hidden."* It was, and swapping these two columns is what
+ * fixed it. The banner is drawn with Amanda in one half and the other half
+ * left dark for type, and the page mirrors it so the empty half falls under
+ * the menu. Measured at 1440x860, after the mirror her head lands at x
+ * 410..578 — the left third. The play card had been in the left column,
+ * spanning 286..826, straight across her face.
+ *
+ * With the columns this way round the play card hugs the right edge, the
+ * quiet column sits at the far left, and her head is in the gap between them.
+ * That is also where the menu belongs in Hebrew anyway: the inline-start side.
+ *
+ * The quiet column holds the shop, what it is advertising, and the album. It
+ * starts BELOW the title line rather than at the very top of the screen —
+ * Or, on finding the album up in the corner: *"it is a bit strange that 'my
+ * album' is right at the top right; it needs to come down, both in the
+ * hierarchy and physically."*
  */
-.intro--hero[data-layout="a"] .home {
-  /* The quiet column starts at the very top here, where the purse and the
-     profile button already are. Room for both. */
-  padding-block-start: 34px;
-  grid-template-columns: minmax(0, 1fr) minmax(220px, 0.62fr);
+.intro--hero .home {
+  grid-template-columns: minmax(0, 1.4fr) minmax(200px, 0.44fr);
   grid-template-areas:
-    "brand   collect"
-    "play    collect"
-    "progress social"
-    "progress meta";
-}
-
-/* ---- ב: progress across ---- */
-/*
- * The recommended one. The two ways to play sit in the middle at the top, and
- * the progress strip runs the full width underneath — the arena, the nacho bar
- * and today's challenges read as one row of "how close am I", which is what
- * they are. The shop and the album take the quiet column beside her portrait.
- */
-.intro--hero[data-layout="b"] .home {
-  grid-template-columns: minmax(230px, 0.5fr) minmax(0, 1.3fr);
-  grid-template-areas:
-    "collect brand"
-    "collect play"
-    "social  play"
-    "meta    play"
+    "brand    brand"
+    "play     collect"
+    "play     social"
+    "play     meta"
     "progress progress";
 }
-.intro--hero[data-layout="b"] .home__progress {
+/*
+ * Hugging the inline-start edge of its cell, not centred in it.
+ *
+ * Centred, the card drifted back towards the middle of the screen and over
+ * her face again — the cell is wide on purpose, to leave her room, and a
+ * centred card spends half of that room.
+ */
+.intro--hero .home .intro__card { margin-inline: 0 auto; }
+.intro--hero .home__brand { justify-self: start; width: 100%; }
+
+.intro--hero .home__progress {
   /* Across, not down: this is the row that is meant to be read sideways. */
   flex-direction: row;
   flex-wrap: wrap;
   align-items: stretch;
 }
-.intro--hero[data-layout="b"] .home__progress > * { flex: 1 1 230px; min-width: 0; }
-.intro--hero[data-layout="b"] .home__progress .quests { flex: 2 1 320px; }
-
-/* ---- ג: three boxes ---- */
-/*
- * Three columns of equal weight: play, progress, collecting. The most
- * symmetrical and the least opinionated — nothing is bigger than anything
- * else, which is either calm or flat depending on your taste, and is the
- * reason it is here to be compared rather than assumed.
- */
-.intro--hero[data-layout="c"] .home {
-  grid-template-columns: repeat(3, minmax(0, 1fr));
-  grid-template-areas:
-    "brand brand brand"
-    "play  progress collect"
-    "play  progress social"
-    "meta  meta     meta";
-}
+.intro--hero .home__progress > * { flex: 1 1 230px; min-width: 0; }
+.intro--hero .home__progress .quests { flex: 2 1 320px; }
 
 /* ---- one column, once there is no room for two ---- */
 /*
@@ -207,10 +227,7 @@
  * matter. Playing first, then what you are close to, then the shop.
  */
 @media (max-width: 860px) {
-  .intro--hero .home,
-  .intro--hero[data-layout="a"] .home,
-  .intro--hero[data-layout="b"] .home,
-  .intro--hero[data-layout="c"] .home {
+  .intro--hero .home {
     grid-template-columns: minmax(0, 1fr);
     grid-template-areas:
       "brand"
@@ -229,6 +246,17 @@
    * narrow boxes in a row and the challenges across the bottom is the same
    * information in a third of the height.
    */
+  /*
+   * Centred again, not hugging the edge.
+   *
+   * The card is pushed to the inline-start on a wide screen so it keeps off
+   * her face; in one column there is no face to keep off, and the push left
+   * the two portraits jammed against the right edge with the difficulty
+   * pills clipped off the side of the robot.
+   */
+  .intro--hero .home .intro__card { margin-inline: auto; }
+  .intro--hero .home__brand { justify-self: stretch; }
+
   .intro--hero .home__progress {
     flex-direction: row;
     flex-wrap: wrap;
@@ -461,9 +489,51 @@
   from { box-shadow: 0 0 0 rgba(255, 176, 32, 0); }
   to { box-shadow: 0 0 16px rgba(255, 176, 32, 0.55); }
 }
+.payout__bit--cup { border-color: rgba(255, 211, 107, 0.6); }
 .payout__bit--quest { border-color: rgba(74, 222, 128, 0.5); background: rgba(74, 222, 128, 0.14); }
 .payout__near { color: var(--muted); font-size: 12.5px; }
 @media (prefers-reduced-motion: reduce) {
   .payout { animation: none; }
   .payout__bit--chest { animation: none; }
+}
+
+/* ---- making it fit a laptop ---- */
+/*
+ * Or: *"the bottom is cut off, so we are going to have to make it fit."*
+ *
+ * Measured at 1440x860 it overflowed by 48px, and the three places that were
+ * spending height without earning it are below. All three are capped against
+ * `vh` rather than given a fixed smaller number, so a tall monitor keeps the
+ * generous version and only the short window pays.
+ */
+.intro--hero .home__brand .intro__name img {
+  /*
+   * The wordmark was 99px tall because its width is capped against the
+   * viewport WIDTH, and a short wide laptop is exactly the case that misses:
+   * plenty of width, no height. The `max(...)` floor stops the same rule
+   * shrinking it to a stamp on a landscape phone.
+   */
+  width: min(300px, 38vw, max(120px, 24vh));
+  height: auto;
+}
+/* It had a flat 20px under it AND a grid gap under that — the same air twice. */
+.intro--hero .home__brand .intro__sub { margin-block-end: clamp(2px, 0.8vh, 14px); }
+/*
+ * The two portraits are square and sized by their WIDTH, so on a short wide
+ * laptop they stay 260px tall while the window has no room for them — which
+ * was the last 50px of overflow at 1366x768. Capped against the height as
+ * well; on anything 930 tall or more this changes nothing.
+ */
+@media (min-width: 861px) {
+  .intro--hero .home .pick__card { max-width: min(260px, 28vh); }
+}
+@media (max-height: 820px) {
+  .home__progress,
+  .home__collect { padding: 9px; }
+  .intro--hero .home__progress > * { flex-basis: 210px; }
+  .extras { margin-top: 8px; }
+  /* The screen's own top and bottom padding, which on a short window is
+     holding air the grid needs. */
+  .intro--hero { padding-block: clamp(6px, 1.2vh, 14px); }
+  .home__brand { margin-block-end: 0; }
 }

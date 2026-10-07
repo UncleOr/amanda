@@ -313,7 +313,7 @@ async function handleMeta(req: IncomingMessage, res: ServerResponse, path: strin
     const outcome = soloResult(await readBody(req));
     if ("error" in outcome) return send(res, 400, { error: outcome.error });
     const facts = factsFor(outcome.result, "A", outcome.mine);
-    const award = await awardMatch(sb, playerId, facts);
+    const award = await awardMatch(sb, playerId, facts, new Date(), outcome.level);
     // The score comes back from HERE even though the browser graded the same
     // battle itself: one authority, so a bug in either grader shows up as a
     // disagreement on the screen rather than as a quiet difference in pay.

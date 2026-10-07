@@ -180,17 +180,19 @@
 }
 @keyframes breathe {
   /*
-   * Translate only — the SCALE stays put.
+   * Translate only, and NO scale at all.
    *
-   * This used to grow from 1.14 to 1.19, which on a wide screen is not
-   * breathing, it is a slow zoom into her chest. Size is fixed now at the one
-   * value that crops the banner's empty edge, and the life comes from drifting
-   * a couple of percent sideways and up. Small enough that you notice it only
-   * if you stop and look, which is the point.
+   * It grew from 1.14 to 1.19 once, which on a wide screen is not breathing,
+   * it is a slow zoom into her chest. That was cut to a fixed 1.14 — and the
+   * fixed 1.14 was still a 14% enlargement of a 1376x768 drawing, on top of
+   * the overflow in album.css. Between them she was drawn at 1.62x her own
+   * pixels, which is what Or was looking at when he said "enormous and
+   * pixelated". The sizing lives in one place now (`background-size` in
+   * album.css) and this does nothing but drift her a couple of percent.
    */
-  0%   { transform: scaleX(-1) scale(1.14) translate3d(0, 0, 0); }
-  50%  { transform: scaleX(-1) scale(1.14) translate3d(-1.6%, -0.9%, 0); }
-  100% { transform: scaleX(-1) scale(1.14) translate3d(0.4%, 0.6%, 0); }
+  0%   { transform: scaleX(-1) translate3d(0, 0, 0); }
+  50%  { transform: scaleX(-1) translate3d(-1.6%, -0.9%, 0); }
+  100% { transform: scaleX(-1) translate3d(0.4%, 0.6%, 0); }
 }
 
 /* embers drifting up over the artwork */
@@ -227,7 +229,7 @@
 
 /* Nothing here is information, so when motion is unwelcome it simply stops. */
 @media (prefers-reduced-motion: reduce) {
-  .intro__art { animation: none; transform: scaleX(-1) scale(1.14); }
+  .intro__art { animation: none; transform: scaleX(-1); }
   .intro__motes { display: none; }
   .intro__name img { animation: none; }
 }

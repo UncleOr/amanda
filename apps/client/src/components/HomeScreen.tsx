@@ -31,34 +31,16 @@ const BASE = import.meta.env.BASE_URL;
  *   home__brand     the name
  *   home__play      the ways to start a match, and nothing else
  *   home__progress  where you are and what you are two games from
- *   home__collect   the album, the shop, and what the shop is advertising
+ *   home__collect   the shop, what it is advertising, and the album
  *   home__social    other people
  *   home__meta      the small print
  *
- * Where each group LANDS is three lines of grid-template-areas per option in
- * home-layout.css, chosen by `data-layout` on the screen. Three real layouts
- * over one set of markup, so they can be looked at side by side rather than
- * described — which is what Or asked for: *"can you show me examples of each
- * of the options?"*
- *
- * `?layout=a|b|c` picks one. That parameter is a way of CHOOSING, not a
- * feature: once Or has picked, the other two go and so does this.
+ * Where each group LANDS is one set of grid-template-areas in
+ * home-layout.css. Three were built and shown side by side — Or picked the
+ * one where the progress strip runs the full width under the two ways to
+ * play ("ב הכי בכיוון"), and the other two are gone along with the
+ * `?layout=` parameter that switched between them.
  */
-
-/** Which arrangement is on screen. See home-layout.css. */
-export type Layout = "a" | "b" | "c";
-
-/** Or's pick. Changed here, not in the URL, once the choice is made. */
-const DEFAULT_LAYOUT: Layout = "b";
-
-export function chosenLayout(): Layout {
-  try {
-    const asked = new URLSearchParams(window.location.search).get("layout");
-    return asked === "a" || asked === "b" || asked === "c" ? asked : DEFAULT_LAYOUT;
-  } catch {
-    return DEFAULT_LAYOUT;
-  }
-}
 
 /** Embers drifting up past her. Spread by hand so they never clump. */
 const MOTES = [
@@ -99,7 +81,6 @@ export function HomeScreen({
   promo,
   onChest,
   viewport,
-  layout = DEFAULT_LAYOUT,
 }: {
   m: MatchApi;
   panel: Overlays;
@@ -111,8 +92,6 @@ export function HomeScreen({
   onChest: (chest: Chest) => void;
   /** "1024×768", for the version line. */
   viewport: string;
-  /** Which arrangement to draw. See the note above. */
-  layout?: Layout;
 }) {
   /** Which way of playing with a friend is showing. */
   const [friendOpen, setFriendOpen] = useState(false);
@@ -122,7 +101,7 @@ export function HomeScreen({
   const [idleOk, setIdleOk] = useState(true);
 
   return (
-    <main className="intro intro--hero" data-layout={layout}>
+    <main className="intro intro--hero">
       {/* What you have, where you can see it without opening anything. */}
       {m.account && (
         <div className="purse" aria-label="מה יש לך">
@@ -379,14 +358,21 @@ export function HomeScreen({
 
         {/* ─────────────── collecting ─────────────── */}
         {/*
-          Or: "my album can be on the left beside the shop, and the banner
-          should be above or below the shop." The three of them are one thing
-          — what you own, where more of it comes from, and what is new.
+          Or: "my album can be beside the shop, and the banner should be above
+          or below the shop." The three are one thing — where more cards come
+          from, what is new there, and what you already have.
+
+          ═══ THE ALBUM IS LAST HERE ON PURPOSE ═══
+
+          It was first, and Or: *"it is a bit strange that 'my album' is right
+          at the top right — it needs to come down, both in the hierarchy and
+          physically."* He is right twice over. It was the loudest thing on the
+          screen — top of the quiet column, in a gold box, with a glow
+          animation on it — which put the thing you look at BETWEEN matches
+          above the two buttons that start one. It is now a plain row under
+          the shop, and the column itself starts below the title.
         */}
         <section className="home__collect" aria-label="האוסף שלי">
-          <button className="btn-album" onClick={() => panel.show("album")}>
-            <Icon name="deck" size={20} /> האלבום שלי
-          </button>
           <button className="rail__item" onClick={gated(() => panel.show("shop"))}>
             <Icon name="gem" size={19} />
             <span>חנות נוחות</span>
@@ -420,6 +406,10 @@ export function HomeScreen({
               </span>
             </button>
           )}
+          <button className="rail__item" onClick={() => panel.show("album")}>
+            <Icon name="deck" size={19} />
+            <span>האלבום שלי</span>
+          </button>
         </section>
 
         {/* ─────────────── other people ─────────────── */}

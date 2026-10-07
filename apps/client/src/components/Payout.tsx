@@ -22,10 +22,17 @@ import type { Award } from "../game/meta";
 export function Payout({ award }: { award: Award | null }) {
   if (!award) return null;
   const done = award.moved.filter((c) => c.done).length;
-  if (!award.nachos && !award.chests.length && !done) return null;
+  if (!award.nachos && !award.trophies && !award.chests.length && !done && !award.cappedOut)
+    return null;
 
   return (
     <p className="payout">
+      {/* Trophies first: they are the only thing here that moves the arena. */}
+      {award.trophies > 0 && (
+        <span className="payout__bit payout__bit--cup">
+          <Icon name="win" size={17} /> +{award.trophies}
+        </span>
+      )}
       {award.nachos > 0 && (
         <span className="payout__bit">
           <Icon name="nacho" size={17} /> +{award.nachos}
@@ -52,6 +59,17 @@ export function Payout({ award }: { award: Award | null }) {
           also says why. Only when the bar is nearly full — "4 more" is not
           an invitation. */}
       {!award.chests.length && award.nachos > 0 && <NextChestHint award={award} />}
+      {/*
+        Said, rather than left looking broken.
+
+        A win against the hard bot that pays 4 trophies instead of 12 — or
+        nothing at all — is the daily ceiling doing its job, and a number that
+        quietly changes is how a player decides the game is buggy. The nachos
+        and the challenges carry on regardless, which is the sentence.
+      */}
+      {award.cappedOut && (
+        <span className="payout__near">מספיק גביעים מהבוט להיום — נאצ'וס ואתגרים ממשיכים</span>
+      )}
     </p>
   );
 }

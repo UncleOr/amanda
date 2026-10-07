@@ -23,17 +23,33 @@
  * client, and moving it here would make every solo match wait on a round trip
  * — which is the one thing a game you can play on a train must not do.
  *
- * What bounds the damage instead: solo play pays nachos and challenge progress
- * but NO trophies, so nothing a liar can reach moves them up the ladder past
- * real players. The worst outcome is a faster chest, in a game where chests
- * are not sold for money.
+ * What bounds the damage instead is in soloTrophies.ts: the setting the
+ * browser claims is CAPPED BY THE BOARD it sent, so a weak opponent board is
+ * paid as the easy bot whatever it was called — and the easy bot pays nothing.
+ * A day of beating the computer is capped as well, so the ladder cannot be
+ * climbed by grinding it.
  */
 import { runBattle, type BattleResult, type Placement } from "@amanda/engine";
-import { BOARD } from "@amanda/shared";
+import { BOARD, payableLevel, type BotLevel } from "@amanda/shared";
 import { CATALOG, SYNERGIES } from "./content.js";
 
-/** The most placements one side can send: a 4×4 board, both halves in co-op. */
+/** The most placements one side can send: a 4x4 board, both halves in co-op. */
 const MAX_PLACEMENTS = BOARD.width * BOARD.height * 2;
+
+/** The auto-filler dropped into empty slots. Not a card anybody chose. */
+const FILLER = "crumb_demon";
+
+/**
+ * How many cards somebody actually chose to put on this board.
+ *
+ * The filler does not count: it is dropped into every empty slot when a board
+ * locks, so counting it would make a half-empty board look full — which is the
+ * exact thing this number is here to detect. See REAL_BOARD_CARDS for why the
+ * count is the test and the board's WEIGHT turned out not to be.
+ */
+function realCards(placements: Placement[]): number {
+  return placements.filter((p) => p.cardId !== FILLER && CATALOG.has(p.cardId)).length;
+}
 
 /** One placement, taken apart rather than trusted. */
 function placement(raw: unknown): Placement | null {
@@ -65,6 +81,11 @@ export interface SoloOutcome {
   result: BattleResult;
   /** The player's own board, for reading which row a card was put in. */
   mine: Placement[];
+  /**
+   * The setting to PAY for: what the browser claimed, capped by what the
+   * opponent board can support. See payableLevel.
+   */
+  level: BotLevel;
 }
 
 /**
@@ -82,6 +103,11 @@ export function soloResult(raw: unknown): SoloOutcome | { error: string } {
   const mine = board(body.mine);
   const theirs = board(body.theirs);
   if (!mine || !theirs) return { error: "bad board" };
+  // Anything that is not one of the three words is the easy bot, which pays
+  // nothing — an unrecognised setting must never be the generous one.
+  const claimed: BotLevel =
+    body.level === "hard" || body.level === "normal" ? body.level : "easy";
+  const level = payableLevel(claimed, realCards(theirs));
 
   try {
     const result = runBattle({
@@ -92,7 +118,7 @@ export function soloResult(raw: unknown): SoloOutcome | { error: string } {
       b: { owner: "B", placements: theirs },
       recordFrames: false,
     });
-    return { result, mine };
+    return { result, mine, level };
   } catch (err) {
     console.error("[solo] could not replay the match", err);
     return { error: "could not replay" };

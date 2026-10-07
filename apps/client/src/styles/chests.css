@@ -125,11 +125,26 @@
  */
 .intro__idle {
   position: absolute;
-  inset: 0;
-  width: 100%;
+  /*
+   * Laid out to match the still EXACTLY, because it is the same picture and
+   * any disagreement between them shows as a jump the moment the clip loads.
+   *
+   * The still is `background-size: auto 100%` anchored to the element's right
+   * edge (album.css), so this is height-fitted and pinned to the same edge.
+   * `right`/`left` rather than the logical properties on purpose: the page is
+   * right-to-left, so `inset-inline-end` is the LEFT edge here, and what has
+   * to line up is a physical edge of a physical picture. The parent's
+   * scaleX(-1) then mirrors both together.
+   *
+   * The clip is 1280x716 and the still 1376x768 — the same shape to within a
+   * quarter of a percent, which is why height-fitting both is enough.
+   */
+  top: 0;
+  bottom: 0;
+  right: 0;
+  left: auto;
+  width: auto;
   height: 100%;
-  object-fit: cover;
-  object-position: 62% center;
   display: block;
 }
 .intro--hero:has(.intro__idle) .intro__art { animation: none; }

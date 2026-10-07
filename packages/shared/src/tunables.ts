@@ -44,6 +44,14 @@ import { PHASES } from "./config.js";
 export const TUNED = {
   trophiesPerWin: 30,
   trophiesPerLoss: 20,
+  /*
+   * Beating the computer, by setting. See soloTrophies.ts for why these are
+   * much smaller than a win against a person, why losing to it costs nothing,
+   * and why a day of it is capped.
+   */
+  soloTrophiesNormal: 8,
+  soloTrophiesHard: 12,
+  soloTrophiesPerDay: 60,
 };
 
 export interface Tunable {
@@ -117,6 +125,36 @@ export const TUNABLES: Tunable[] = [
     step: 1,
     get: () => TUNED.trophiesPerWin,
     set: (v) => (TUNED.trophiesPerWin = v),
+  },
+  {
+    id: "trophies.solo.normal",
+    he: "גביעים על ניצחון מול בוט רגיל",
+    note: "בהרבה פחות מניצחון מול אדם, אחרת הארנות מודדות שעות ולא מיומנות. הבוט הקליל תמיד נותן אפס.",
+    min: 0,
+    max: 30,
+    step: 1,
+    get: () => TUNED.soloTrophiesNormal,
+    set: (v) => (TUNED.soloTrophiesNormal = v),
+  },
+  {
+    id: "trophies.solo.hard",
+    he: "גביעים על ניצחון מול בוט קשה",
+    note: "הפער בינו לבין הרגיל הוא הדבר היחיד שבקשה מזויפת יכולה להרוויח — השרת לא יכול להבדיל ביניהם מהלוח. כדאי שיישאר קטן.",
+    min: 0,
+    max: 30,
+    step: 1,
+    get: () => TUNED.soloTrophiesHard,
+    set: (v) => (TUNED.soloTrophiesHard = v),
+  },
+  {
+    id: "trophies.solo.perDay",
+    he: "תקרת גביעים יומית מול הבוט",
+    note: "הכי הרבה שיום של משחק מול המחשב יכול להוסיף. בלי תקרה אפשר להגיע לארנה העליונה בלי לפגוש אף אחד.",
+    min: 0,
+    max: 500,
+    step: 5,
+    get: () => TUNED.soloTrophiesPerDay,
+    set: (v) => (TUNED.soloTrophiesPerDay = v),
   },
   {
     id: "trophies.loss",

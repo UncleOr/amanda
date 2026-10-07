@@ -9,7 +9,7 @@
  */
 import { authToken, serverHttp } from "./account";
 import type { Placement } from "@amanda/engine";
-import type { Challenge } from "@amanda/shared";
+import type { BotLevel, Challenge } from "@amanda/shared";
 
 /** One live challenge, and how far along you are. */
 export interface Standing extends Challenge {
@@ -21,6 +21,10 @@ export interface Standing extends Challenge {
 /** What a finished match paid. */
 export interface Award {
   nachos: number;
+  /** Trophies the match added. Only ever from beating the computer. */
+  trophies: number;
+  /** True when the day's ceiling on solo trophies trimmed what it paid. */
+  cappedOut: boolean;
   /** The lifetime count after this match. The bar is this mod NACHOS_PER_CHEST. */
   total: number;
   /** Chest kinds the nacho bar filled. Usually none, sometimes one. */
@@ -31,7 +35,7 @@ export interface Award {
   won?: boolean;
 }
 
-const NOTHING: Award = { nachos: 0, total: 0, chests: [], moved: [] };
+const NOTHING: Award = { nachos: 0, trophies: 0, cappedOut: false, total: 0, chests: [], moved: [] };
 
 /**
  * Today's challenges, with this player's progress.
@@ -61,13 +65,21 @@ export async function loadChallenges(): Promise<Standing[]> {
  * Report a match played against the bot, and collect what it was worth.
  *
  * `theirs` is the opponent's board, which the server needs because it replays
- * the battle rather than believing the outcome. Returns nothing at all when
- * there is no account to credit, which includes every guest.
+ * the battle rather than believing the outcome — and because the board is what
+ * vouches for the difficulty setting. Returns nothing at all when there is no
+ * account to credit, which includes every guest.
  */
 export async function reportSolo(opts: {
   seed: number;
   mine: Placement[];
   theirs: Placement[];
+  /**
+   * Which setting the bot was on. The server does not simply believe it — it
+   * caps the claim by how strong the opponent board actually is, and an easy
+   * board is paid as easy whatever this says (packages/shared/src/
+   * soloTrophies.ts).
+   */
+  level: BotLevel;
 }): Promise<Award> {
   const base = serverHttp();
   if (!base) return NOTHING;

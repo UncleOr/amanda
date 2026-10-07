@@ -162,12 +162,32 @@
 }
 .intro__art {
   position: absolute;
-  /* Overflows the screen deliberately. The banner has an empty half drawn into
-     it for text, and its outer edge otherwise sits at the screen edge as a
-     flat dark band. Bleeding past the frame crops that away. */
-  inset: -10% -18%;
-  background-size: cover;
-  background-position: 62% center;
+  /*
+   * ═══ SHE IS DRAWN 1376x768, AND THAT IS THE WHOLE STORY ═══
+   *
+   * Or: *"Amanda in the background is enormous, pixelated, and her head is
+   * hidden."* All three were the same cause. This said `inset: -10% -18%`
+   * with `background-size: cover`, and profile.css scaled it a further 1.14
+   * on top — so on a 1440x860 window the picture was being drawn at about
+   * 2230x1180, which is **1.62x** its own pixels. That is the blur, that is
+   * "enormous", and the overflow is what pushed the top of her head and her
+   * flame hair off the top of the screen.
+   *
+   * `auto 100%` fits her to the HEIGHT and lets the width fall where it
+   * falls: 1.12x on a 860-tall window instead of 1.62x, and nothing is
+   * cropped vertically, so she is whole. The 1.12 is a floor, not a choice —
+   * the source is 768 tall and the window is not. Sharper than this needs a
+   * bigger picture, not better CSS.
+   *
+   * `100% top`: the position is in the element's own coordinates, BEFORE the
+   * mirror below, and she is drawn in the right half of the source. Anchoring
+   * the right edge keeps all of her and pushes the empty half out of frame;
+   * after the mirror she stands against the left of the screen. Whatever is
+   * left uncovered is the menu side, where the room and the wash are.
+   */
+  inset: 0;
+  background-size: auto 100%;
+  background-position: 100% top;
   background-repeat: no-repeat;
   z-index: 0;
   /*
@@ -198,6 +218,20 @@
  * Two layers, in this order: the room, then the wash that darkens it enough
  * for white type. The mask is what keeps the room on the menu side only.
  */
+/*
+ * ═══ BOTH EDGES, NOT ONE ═══
+ *
+ * The room and the wash used to darken one side, because the menu was one
+ * column on one side and Amanda had the rest. The home screen is a grid now
+ * (home-layout.css) with the play card hugging the right and the shop column
+ * at the far left, so there is UI over BOTH edges and only the middle is
+ * hers.
+ *
+ * The clear band is 26%..46%, which is where her head measures: x 410..578 of
+ * 1440, the gap deliberately left between the two columns. Darkening that
+ * band is the one thing these two must not do — it is the whole reason the
+ * banner has a face in it.
+ */
 .intro__room {
   position: absolute;
   inset: 0;
@@ -205,17 +239,33 @@
   pointer-events: none;
   background: var(--surface-menu) center / cover no-repeat;
   opacity: 0.55;
-  -webkit-mask-image: linear-gradient(to right, transparent 30%, #000 72%);
-  mask-image: linear-gradient(to right, transparent 30%, #000 72%);
+  -webkit-mask-image: linear-gradient(to right, #000 0%, transparent 14%, transparent 48%, #000 74%);
+  mask-image: linear-gradient(to right, #000 0%, transparent 14%, transparent 48%, #000 74%);
 }
 .intro__wash {
   position: absolute;
   inset: 0;
   z-index: 2;
   pointer-events: none;
+  /*
+   * ═══ WHY THE CLEAR BAND IS SO WIDE ═══
+   *
+   * These stops are percentages of the WIDTH, and her head is not. The banner
+   * is fitted to the height, so her face sits at about 0.57 x the viewport
+   * height from the left — which is 28..40% of the width on a 1440x860
+   * laptop and 22..31% on a phone held sideways. A band tuned to the laptop
+   * put her face in the dark on the phone.
+   *
+   * 16..46% covers where her head lands on everything from a 390-tall phone
+   * to a 1080 monitor. The columns that sit over the lit part keep their own
+   * panel backgrounds, so the wash does not have to carry them.
+   */
   background: linear-gradient(
     to right,
-    rgba(7, 10, 18, 0) 34%,
+    rgba(7, 10, 18, 0.7) 0%,
+    rgba(7, 10, 18, 0.28) 10%,
+    rgba(7, 10, 18, 0) 16%,
+    rgba(7, 10, 18, 0) 46%,
     rgba(7, 10, 18, 0.72) 68%,
     rgba(7, 10, 18, 0.92) 100%
   );

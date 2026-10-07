@@ -7,6 +7,7 @@ import {
   buildAmandaBoard,
   levelMultiplier,
   tauntById,
+  type BotLevel,
   type Card,
   type RoomError,
   type Side,
@@ -191,7 +192,13 @@ function power(cardId: string): number {
  * one is MEASURED rather than hoped at — the numbers below were tuned until
  * the win rates came out where they should.
  */
-export type BotLevel = "easy" | "normal" | "hard";
+/*
+ * Defined in @amanda/shared and re-exported here, where everything already
+ * imports it from. The server needs the same three words — it decides what
+ * beating each setting is worth — and two copies of a three-word union is
+ * exactly the kind of thing that drifts by one word and breaks a payout.
+ */
+export type { BotLevel };
 
 interface Skill {
   /** How many of the ranked list to choose from. 1 means always the best. */
@@ -1827,7 +1834,7 @@ export function useMatch(): MatchApi {
       soloAmandaRef.current
     )
       return;
-    void reportSolo({ seed: BATTLE_SEED, ...boards }).then((won) => {
+    void reportSolo({ seed: BATTLE_SEED, ...boards, level: botLevelRef.current }).then((won) => {
       if (won.nachos || won.chests.length || won.moved.length) setAward(won);
     });
   }, [result]);

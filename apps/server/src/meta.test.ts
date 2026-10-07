@@ -1,6 +1,6 @@
 import { describe, expect, it } from "vitest";
 import type { SupabaseClient } from "@supabase/supabase-js";
-import { NACHOS_PER_CHEST, type MatchFacts } from "@amanda/shared";
+import { NACHOS_PER_CHEST, TUNED, type MatchFacts } from "@amanda/shared";
 import { awardMatch, claim, liveChallenges, standings } from "./meta.js";
 
 /**
@@ -37,13 +37,33 @@ interface Row {
  * every row and make the double-claim test pass while the guard did nothing.
  */
 function fakeDb(seed: {
-  players?: Record<string, { nachos?: number; nacho_chests?: number; diamonds?: number }>;
+  players?: Record<
+    string,
+    {
+      nachos?: number;
+      nacho_chests?: number;
+      diamonds?: number;
+      trophies?: number;
+      best_trophies?: number;
+      solo_day?: string | null;
+      solo_trophies?: number;
+    }
+  >;
   challenges?: Row[];
   cards?: Row[];
 }) {
   const players: Record<string, Row> = {};
   for (const [id, p] of Object.entries(seed.players ?? {}))
-    players[id] = { nachos: 0, nacho_chests: 0, diamonds: 0, ...p };
+    players[id] = {
+      nachos: 0,
+      nacho_chests: 0,
+      diamonds: 0,
+      trophies: 0,
+      best_trophies: 0,
+      solo_day: null,
+      solo_trophies: 0,
+      ...p,
+    };
   const challenges: Row[] = [...(seed.challenges ?? [])];
   const chests: Row[] = [];
   const cards: Row[] = [...(seed.cards ?? [])];
@@ -277,5 +297,84 @@ describe("challenges", () => {
     ]);
     expect(both.filter((r) => r.ok)).toHaveLength(1);
     expect(state.players[ME]!.diamonds).toBe(one.reward.diamonds);
+  });
+});
+
+/**
+ * ═══ BEATING THE COMPUTER ═══
+ *
+ * Or asked for trophies from the bot because "in the early days there will
+ * not be enough players to make progress from 1v1 alone". The two things that
+ * have to hold for that not to turn the arena ladder into a clock are the
+ * ceiling and the zero, and both are here.
+ */
+describe("trophies from the computer", () => {
+  it("pays nothing for the easy bot, however well it went", async () => {
+    const { sb, state } = fakeDb({ players: { [ME]: {} } });
+    const got = await awardMatch(sb, ME, facts({ score: 10 }), DAY, "easy");
+    expect(got.trophies).toBe(0);
+    expect(state.players[ME]!.trophies).toBe(0);
+    // ...and the rest of the loop still ran.
+    expect(got.nachos).toBe(3);
+  });
+
+  it("pays more for the hard bot than the ordinary one", async () => {
+    const one = fakeDb({ players: { [ME]: {} } });
+    const two = fakeDb({ players: { [ME]: {} } });
+    const normal = await awardMatch(one.sb, ME, facts(), DAY, "normal");
+    const hard = await awardMatch(two.sb, ME, facts(), DAY, "hard");
+    expect(normal.trophies).toBe(TUNED.soloTrophiesNormal);
+    expect(hard.trophies).toBeGreaterThan(normal.trophies);
+  });
+
+  it("pays nothing for losing to it — nobody won those trophies", async () => {
+    const { sb, state } = fakeDb({ players: { [ME]: { trophies: 100 } } });
+    const got = await awardMatch(sb, ME, facts({ won: false, score: 4 }), DAY, "hard");
+    expect(got.trophies).toBe(0);
+    expect(state.players[ME]!.trophies).toBe(100);
+  });
+
+  it("pays nothing at all for a match against a person — the match server did that", async () => {
+    const { sb, state } = fakeDb({ players: { [ME]: {} } });
+    const got = await awardMatch(sb, ME, facts(), DAY);
+    expect(got.trophies).toBe(0);
+    expect(state.players[ME]!.trophies).toBe(0);
+  });
+
+  it("stops at the day's ceiling, and says that is why", async () => {
+    const { sb, state } = fakeDb({ players: { [ME]: {} } });
+    let paid = 0;
+    // Far more wins than the ceiling can possibly cover.
+    for (let i = 0; i < 40; i++) {
+      const got = await awardMatch(sb, ME, facts(), DAY, "hard");
+      paid += got.trophies;
+    }
+    expect(paid).toBe(TUNED.soloTrophiesPerDay);
+    expect(state.players[ME]!.trophies).toBe(TUNED.soloTrophiesPerDay);
+    // The last one of those was trimmed, and the screen is told so.
+    const after = await awardMatch(sb, ME, facts(), DAY, "hard");
+    expect(after.trophies).toBe(0);
+    expect(after.cappedOut).toBe(true);
+    // And the rest of the loop is untouched by the ceiling.
+    expect(after.nachos).toBe(3);
+  });
+
+  it("starts again tomorrow, without anything having to clear it", async () => {
+    const { sb, state } = fakeDb({ players: { [ME]: {} } });
+    for (let i = 0; i < 40; i++) await awardMatch(sb, ME, facts(), DAY, "hard");
+    expect(state.players[ME]!.solo_trophies).toBe(TUNED.soloTrophiesPerDay);
+
+    const tomorrow = new Date("2026-10-08T12:00:00Z");
+    const fresh = await awardMatch(sb, ME, facts(), tomorrow, "hard");
+    expect(fresh.trophies).toBe(TUNED.soloTrophiesHard);
+    // Yesterday's counter was never cleared — it was simply not read.
+    expect(state.players[ME]!.solo_day).toBe("2026-10-08");
+    expect(state.players[ME]!.solo_trophies).toBe(TUNED.soloTrophiesHard);
+  });
+
+  it("carries the best-ever mark up with it", async () => {
+    const { sb, state } = fakeDb({ players: { [ME]: { trophies: 90, best_trophies: 90 } } });
+    await awardMatch(sb, ME, facts(), DAY, "hard");
+    expect(state.players[ME]!.best_trophies).toBe(90 + TUNED.soloTrophiesHard);
   });
 });

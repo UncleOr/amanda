@@ -36,6 +36,9 @@ export * from "./grants.js";
 // Daily, weekly and monthly challenges, computed from the date
 export * from "./challenges.js";
 
+// What beating the computer is worth, and what the board can vouch for
+export * from "./soloTrophies.js";
+
 // How many nachos a match is worth, and how many fill a chest
 export * from "./nachos.js";
 
