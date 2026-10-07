@@ -41,9 +41,21 @@ export const EMOJI_REFS: Record<string, string> = {
   amanda: "assets/raw/brand/amanda_portrait.png",
   crumb: "apps/client/public/cards/crumb_demon.webp",
   dragon: "apps/client/public/cards/dragons_01_flame_dragon.webp",
-  // Fried Bread has no card: he is from the film, and Or named him alongside
-  // the others. Drawn from scratch, which is why there is no reference here.
-  bread: "",
+  /*
+   * Fried Bread DOES have a card.
+   *
+   * I said he did not, drew him from a description, and got a friendly slice
+   * of toast twice. Or: *"Fried Bread has a card! In the card booklet I sent
+   * you."* He does — #42, series המאכלים, in
+   * assets/reference/monster-cards-with-bleed.pdf, and he is not friendly at
+   * all: a furious craggy crouton with fangs and fists. The artwork is cropped
+   * out of that page so he is drawn from himself like the other four.
+   *
+   * Worth knowing beyond this file: that booklet has 24 cards and only two of
+   * them are in the game (docs/DECK-SOURCE.md). Reaching into it for a
+   * character is reaching into a deck the game does not have.
+   */
+  bread: "assets/reference/fried-bread-card.png",
 };
 
 /** Shared rules. Same family as the icons, so the game looks like one game. */
@@ -112,32 +124,24 @@ export const EMOJI_LOOK: Record<string, { from: string; doing: string }> = {
   },
   dragon_wink: { from: "dragon", doing: "giving a big confident wink with a toothy grin" },
 
-  // ── Fried Bread, from the film ──
-  bread_hi: {
-    from: "bread",
-    doing:
-      "a cute chibi slice of fried golden bread with a happy face and two tiny arms, waving hello",
-  },
   /*
-   * The bread has to look like BREAD. The first pass of these two came back
-   * as a plain round blob and a yellow circle with heart eyes — the "slice of
-   * fried bread" was lost somewhere between the description and the drawing,
-   * because nothing anchors this character (he has no card). Saying the shape
-   * three ways is the fix.
+   * ── Fried Bread (#42) ──
+   *
+   * The card is FURIOUS: fangs, scowl, clenched fists. These say "cute" and
+   * "angry" in the same breath on purpose, because a sweetened-down bread
+   * with a smile is not the character — the joke is that a slice of fried
+   * bread is this cross about something.
    */
+  bread_hi: { from: "bread", doing: "waving hello, grumpily, one fist still clenched" },
   bread_tongue: {
     from: "bread",
-    doing:
-      "a cute chibi character who IS A THICK RECTANGULAR SLICE OF FRIED BREAD — square-ish " +
-      "with rounded corners, a golden-brown toasted crust around a paler middle, visible " +
-      "crumb texture — with a cheeky face, tongue sticking out and one eye winking",
+    doing: "sticking its tongue out rudely between its fangs, one eye screwed up, cheeky",
   },
   bread_heart: {
     from: "bread",
     doing:
-      "a cute chibi character who IS A THICK RECTANGULAR SLICE OF FRIED BREAD — square-ish " +
-      "with rounded corners, a golden-brown toasted crust around a paler middle, visible " +
-      "crumb texture — with big heart-shaped eyes, hugging a tiny red heart",
+      "scowling furiously while holding one tiny red heart out in front of it, as though "
+      + "offering it under protest",
   },
 
   // ── Amanda herself ──
