@@ -14,6 +14,8 @@ import type { BattleResult } from "@amanda/engine";
 import { useMatch } from "./game/useMatch";
 import { useOverlay } from "./game/useOverlay";
 import { HomeScreen } from "./components/HomeScreen";
+import { BattleScreen } from "./components/BattleScreen";
+import { ResultScreen } from "./components/ResultScreen";
 import { useDrag } from "./game/useDrag";
 import { sfx } from "./game/sfx";
 import { music } from "./game/music";
@@ -37,7 +39,6 @@ import { ActionDetailModal } from "./components/ActionDetailModal";
  */
 const Arena = lazy(() => import("./components/Arena").then((m) => ({ default: m.Arena })));
 const prefetchArena = () => void import("./components/Arena");
-import { ErrorBoundary } from "./components/ErrorBoundary";
 import { CardPicker } from "./components/CardPicker";
 import { About } from "./components/About";
 import { Report } from "./components/Report";
@@ -62,7 +63,6 @@ const ArenaPreview = lazy(() =>
   import("./components/ArenaPreview").then((m) => ({ default: m.ArenaPreview })),
 );
 import { MoreModes } from "./components/MoreModes";
-import { BattleLog } from "./components/BattleLog";
 
 
 /**
@@ -70,28 +70,6 @@ import { BattleLog } from "./components/BattleLog";
  * standing is settled by a tiebreak chain — and a player who sees their King
  * and half their board alive deserves to be told which link decided it.
  */
-function verdictText(result: BattleResult, iWon: boolean): string {
-  const whose = iWon ? "של היריב" : "שלך";
-  const pct = (n: number) => `${Math.round(n * 100)}%`;
-  switch (result.winReason) {
-    case "kingDown":
-      return `המלך ${whose} נפל — זה מסיים את הקרב מיד.`;
-    case "kingHp": {
-      const t = result.tiebreak!;
-      const mine = result.winner === "A" ? t.b : t.a;
-      const theirs = result.winner === "A" ? t.a : t.b;
-      return `נגמר הזמן ושני המלכים שרדו — הוכרע לפי חיי המלך: ${pct(
-        iWon ? theirs : mine,
-      )} שלך מול ${pct(iWon ? mine : theirs)} של היריב.`;
-    }
-    case "totalHp":
-      return "נגמר הזמן והמלכים שרדו עם אותו אחוז חיים — הוכרע לפי סך החיים על הלוח.";
-    case "aliveCount":
-      return "נגמר הזמן והחיים היו שווים — הוכרע לפי מספר הקלפים ששרדו.";
-    case "coinFlip":
-      return "נגמר הזמן והכול יצא שווה לחלוטין — הוכרע בהטלת מטבע.";
-  }
-}
 
 /**
  * A board's header in the playground: which half you are editing, and a way
@@ -442,7 +420,6 @@ function Game() {
     window.addEventListener("resize", onResize);
     return () => window.removeEventListener("resize", onResize);
   }, []);
-  const [showLog, setShowLog] = useState(false);
   const openInfo = (cardId: string) => setDetail(cardId);
 
   const showBoards = m.phase === "build" || m.phase === "panic" || m.phase === "prebattle";
@@ -597,16 +574,6 @@ function Game() {
 
   // Settled when the result arrives, not on every render — the headline must
   // not reshuffle itself while the player is reading it.
-  const [winTitle, setWinTitle] = useState("");
-  const [loseTitle, setLoseTitle] = useState("");
-  const [leftTitle, setLeftTitle] = useState("");
-  useEffect(() => {
-    if (m.phase !== "result") return;
-    setWinTitle(V.pick(V.WIN_TITLE));
-    setLoseTitle(V.pick(V.LOSE_TITLE));
-    setLeftTitle(V.pick(V.OPPONENT_LEFT));
-  }, [m.phase]);
-  const winnerText = m.oppLeft && !m.result ? leftTitle : m.iWon ? winTitle : loseTitle;
 
   /*
    * The phase announces itself across the middle of the screen and goes away,
@@ -1194,167 +1161,11 @@ function Game() {
 
       {/* ---- battle ---- */}
       {m.phase === "battle" && m.result && (
-        <main className="battle">
-          <ErrorBoundary
-            fallback={
-              <div className="result__card">
-                <h1><Icon name="explode" size={64} /></h1>
-                <p>שגיאה בהצגת הקרב</p>
-                <button className="btn-fight" onClick={m.finishBattle}>
-                  המשך לתוצאה
-                </button>
-              </div>
-            }
-          >
-            {/*
-              The fallback is a line of text, not a spinner, and it should
-              almost never be seen: the chunk is prefetched the moment the
-              build phase starts. If it IS seen, the battle is already decided
-              — the result was computed before this screen mounted — so the
-              only thing waiting costs is the animation.
-            */}
-            <Suspense fallback={<div className="arena arena--loading">רגע…</div>}>
-              <Arena
-                result={m.result}
-                onFinish={m.finishBattle}
-                flip={m.mySide === "B"}
-                verdict={verdictText(m.result, m.iWon)}
-                // Where you fight is where you have climbed to. A guest with
-                // no account fights in the first one, which is right.
-                backdrop={arena.id}
-              />
-            </Suspense>
-          </ErrorBoundary>
-          {/* "ולעצור את הקרב בכל רגע נתון" — straight back to the boards you
-              built, mid-blow if you like. A lab you cannot interrupt is just a
-              slow match. */}
-          {m.playground && (
-            <button className="lab__stop" onClick={m.backToPlayground}>
-              <Icon name="stop" size={14} /> עצור וחזור ללוח
-            </button>
-          )}
-          {/* The battle is forty-five seconds of the two of you watching the
-              same thing happen. That is the moment people want to say "whoa". */}
-          {m.online && !m.playground && (
-            <>
-              <SaidBubble said={m.heard} />
-              <SaidBubble said={m.spoke} mine />
-              <SayButton onSay={m.say} hearing={m.hearing} onToggleHearing={m.toggleHearing} />
-            </>
-          )}
-        </main>
+        <BattleScreen m={m} result={m.result} backdrop={arena.id} />
       )}
 
       {/* ---- result ---- */}
-      {m.phase === "result" && (
-        <main className="result">
-          <div className={`result__card result__card--${m.iWon ? "win" : "lose"}`}>
-            {/*
-              The picture first, and it is the whole top of the screen.
-              Or: "gaming. Fun. Illustrations." This used to be a 96px icon
-              over a flat panel — a dialog box reporting an outcome. A child
-              who just won should be looking at something, not reading a
-              notice. The headline and buttons sit over the lower third,
-              which the illustration leaves quiet for them.
-            */}
-            <div className="result__scene" aria-hidden="true" />
-            <div className="result__body">
-            {/* In the lab there is no winner, only a reading. Crowning the
-                player for a board they also built for the other side would be
-                nonsense, and the taunts are aimed at an opponent who is them. */}
-            <h1>{m.playground ? (m.iWon ? "הצד שלך החזיק" : "הצד שמולך החזיק") : winnerText}</h1>
-            {m.result && (
-              <>
-                <p className="result__verdict">{verdictText(m.result, m.iWon)}</p>
-                <p className="result__tally">
-                  <span>
-                    <Icon name="timer" size={15} /> {(m.result.ticks / 30).toFixed(1)}ש׳
-                  </span>
-                  <span>
-                    <Icon name="skull" size={15} />{" "}
-                    {m.result.events.filter((e) => e.type === "death").length} נפלו
-                  </span>
-                </p>
-              </>
-            )}
-            {/* The two of you, after the fact. The end-of-match lines unlock
-                here — "good game" means nothing during the build phase. */}
-            {m.online && !m.playground && (
-              <div className="result__say">
-                <SaidBubble said={m.heard} />
-                <SaidBubble said={m.spoke} mine />
-                <SayButton
-                  onSay={m.say}
-                  atEnd
-                  hearing={m.hearing}
-                  onToggleHearing={m.toggleHearing}
-                />
-              </div>
-            )}
-            <div className="result__buttons">
-              {/*
-               * "Again?" with the same person — offered before "new game",
-               * because after a close match that is the thing you want, and
-               * the other button quietly swaps your opponent for a stranger.
-               * Gone the moment they leave: there is nobody to ask.
-               */}
-              {m.online && !m.playground && !m.oppLeft && (
-                <button
-                  className={`btn-fight${m.rematchOffered && !m.rematchAsked ? "" : " btn-online"}`}
-                  onClick={m.askRematch}
-                  disabled={m.rematchAsked}
-                >
-                  <Icon name="again" size={17} />{" "}
-                  {m.rematchAsked
-                    ? m.rematchOffered
-                      ? "מתחילים…"
-                      : "מחכה ליריב…"
-                    : m.rematchOffered
-                      ? "רוצים עוד אחד! קדימה"
-                      : "קרב חוזר"}
-                </button>
-              )}
-              {m.playground ? (
-                <button className="btn-fight" onClick={m.backToPlayground}>
-                  ← חזרה ללוח
-                </button>
-              ) : (
-                <button
-                  // Against a bot this is still the main button. It only steps
-                  // back when there is a person to ask for another round.
-                  className={`btn-fight${m.online && !m.oppLeft ? " btn-ghost" : ""}`}
-                  onClick={m.playAgain}
-                >
-                  <Icon name="again" size={17} /> משחק חדש
-                </button>
-              )}
-              <button className="btn-fight btn-ghost" onClick={m.reset}>
-                <Icon name="menu" size={16} /> תפריט
-              </button>
-              {/* Where a complaint about a person actually occurs to somebody:
-                  right after playing them, not buried in a settings page. */}
-              {m.online && !m.playground && signedIn && (
-                <button className="btn-fight btn-ghost" onClick={() => panel.show({ kind: "report", about: "player" })}>
-                  <Icon name="warning" size={15} /> דיווח על היריב
-                </button>
-              )}
-              {m.result && (
-                <button className="btn-fight btn-online" onClick={() => setShowLog((v) => !v)}>
-                  {showLog ? (
-                    "מספיק, הבנתי"
-                  ) : (
-                    <>
-                      <Icon name="report" size={16} /> שאסביר לך מה קרה?
-                    </>
-                  )}
-                </button>
-              )}
-            </div>
-            {showLog && m.result && <BattleLog result={m.result} mySide={m.mySide} />}
-            </div>
-          </div>
-        </main>
-      )}
+      {m.phase === "result" && <ResultScreen m={m} panel={panel} signedIn={signedIn} />}
 
       {/* floating card that follows the pointer while dragging */}
       {drag.cardId && (
