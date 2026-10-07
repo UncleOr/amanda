@@ -42,6 +42,7 @@ const prefetchArena = () => void import("./components/Arena");
 import { CardPicker } from "./components/CardPicker";
 import { About } from "./components/About";
 import { Updates } from "./components/Updates";
+import { Challenges } from "./components/Challenges";
 import { Versus } from "./components/Versus";
 import { Report } from "./components/Report";
 import { Friends } from "./components/Friends";
@@ -1375,6 +1376,27 @@ function Game() {
       )}
 
       {panel.is("updates") && <Updates onClose={() => panel.close()} />}
+
+      {/*
+        Today's challenges, when the home screen had no room to show them.
+        See ChallengeButton — on anything bigger this panel never opens,
+        because the list is already on the screen.
+      */}
+      {panel.is("challenges") && (
+        <div className="modal-overlay" onClick={() => panel.close()}>
+          <div className="modal modal--quests" onClick={(e) => e.stopPropagation()}>
+            <button className="modal__close" onClick={() => panel.close()} title="סגירה">
+              <Icon name="exit" size={15} />
+            </button>
+            <Challenges
+              signedIn={signedIn}
+              gated={gated}
+              onClaimed={() => m.reloadAccount()}
+              reloadKey={m.award}
+            />
+          </div>
+        </div>
+      )}
 
       {/* The kind of report rides along with the panel itself, so it cannot
           fall out of step with it — see useOverlay.ts. */}

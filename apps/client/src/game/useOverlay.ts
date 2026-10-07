@@ -31,6 +31,8 @@ export type Overlay =
   | { kind: "about" }
   /** "What's new" — see data/updates.ts. */
   | { kind: "updates" }
+  /** Today's challenges, when the screen is too small to hold the list. */
+  | { kind: "challenges" }
   /** The "what an account gives you" prompt, shown at a locked door. */
   | { kind: "why" }
   | { kind: "report"; about: "bug" | "player" };

@@ -163,3 +163,39 @@ export function Challenges({
     </section>
   );
 }
+
+/**
+ * The same challenges, as a button — for a screen with no room for the list.
+ *
+ * It asks the server the same question the list does, which looks wasteful
+ * and is not: the answer is tiny, it is asked once when the screen opens, and
+ * the alternative is lifting the state into the home screen so that a block
+ * which is usually not rendered can tell a button which usually is not what
+ * to say. One small fetch is cheaper than that coupling.
+ *
+ * The COUNT is of challenges that are finished and unclaimed — not of
+ * challenges. "3" meaning "there are three today" is noise; "3" meaning
+ * "three rewards are sitting there" is the reason to tap.
+ */
+export function ChallengeButton({
+  onOpen,
+  reloadKey,
+}: {
+  onOpen: () => void;
+  reloadKey?: unknown;
+}) {
+  const [ready, setReady] = useState(0);
+  useEffect(() => {
+    void loadChallenges().then((live) =>
+      setReady(live.filter((c) => c.done && !c.claimed).length),
+    );
+  }, [reloadKey]);
+
+  return (
+    <button className="quests__open" onClick={onOpen}>
+      <Icon name="challenge" size={20} />
+      <span>אתגרים</span>
+      {ready > 0 && <i className="quests__dot quests__dot--big">{ready}</i>}
+    </button>
+  );
+}

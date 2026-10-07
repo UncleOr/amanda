@@ -3,10 +3,11 @@ import { Icon } from "./Icon";
 import { ArenaTrack } from "./ArenaTrack";
 import { ChestShelf } from "./ChestShelf";
 import { NachoBar } from "./NachoBar";
-import { Challenges } from "./Challenges";
+import { ChallengeButton, Challenges } from "./Challenges";
 import { Lock } from "./SignedInOnly";
 import { shopItemArt } from "./Shop";
 import { hardRefresh } from "../game/refresh";
+import { useCompact } from "../game/useCompact";
 import { hasUnreadUpdate } from "../data/updates";
 import { listFriends, type Chest, type ShopItem } from "../game/account";
 import type { Overlays } from "../game/useOverlay";
@@ -100,6 +101,8 @@ export function HomeScreen({
   const [codeInput, setCodeInput] = useState("");
   /** Turned off for the session the moment the clip fails to load. */
   const [idleOk, setIdleOk] = useState(true);
+  /** Too little room for the full arrangement — see useCompact. */
+  const compact = useCompact();
   /*
    * How many friends, and how many are waiting for an answer.
    *
@@ -381,14 +384,34 @@ export function HomeScreen({
               than from a wrapper here — a wrapper would leave an empty box in
               the row on every day nobody won a chest. */}
           {m.account && <ChestShelf onOpened={onChest} reload={() => m.reloadAccount()} />}
-          <Challenges
-            signedIn={signedIn}
-            gated={gated}
-            onClaimed={() => m.reloadAccount()}
-            // Re-read after every finished match, which is the only thing that
-            // moves a challenge along.
-            reloadKey={m.award}
-          />
+          {/*
+            On a phone this is a button, and everywhere else it is the block
+            itself.
+
+            Or: *"on mobile it does not look inviting at all… maybe more menus
+            and popups so that everything fits."* The challenge list is the
+            tallest thing on this screen by a long way — three rows, a header
+            and a set of tabs — and it is also the one part that a player
+            opens, reads and closes. That makes it the right thing to put
+            behind a button on a screen 384 pixels tall, and the wrong thing
+            to hide on a screen with room for it.
+
+            The dot is what keeps it honest: a panel nobody opens is a feature
+            nobody has, so when something in there is finished the button says
+            so from the outside.
+          */}
+          {compact ? (
+            <ChallengeButton onOpen={() => panel.show("challenges")} reloadKey={m.award} />
+          ) : (
+            <Challenges
+              signedIn={signedIn}
+              gated={gated}
+              onClaimed={() => m.reloadAccount()}
+              // Re-read after every finished match, which is the only thing
+              // that moves a challenge along.
+              reloadKey={m.award}
+            />
+          )}
         </section>
 
         {/*
@@ -442,6 +465,23 @@ export function HomeScreen({
           the shop, and the column itself starts below the title.
         */}
         <section className="home__collect" aria-label="האוסף שלי">
+          {/*
+            The album, as a door — but only where it is not already beside
+            the arena.
+
+            On a wide screen it rides in the ladder cell, which is what Or
+            asked for: *"my album could be on the same row as the arena."* On
+            a phone that cell is one line of pictures with no room for a
+            button, so the album joins the shop and friends in the row of
+            doors instead. One button, one place, decided by whether there is
+            room — not two copies that can drift.
+          */}
+          {compact && (
+            <button className="rail__item" onClick={() => panel.show("album")}>
+              <Icon name="deck" size={19} />
+              <span>האלבום</span>
+            </button>
+          )}
           <button className="rail__item" onClick={gated(() => panel.show("shop"))}>
             <Icon name="gem" size={19} />
             <span>חנות נוחות</span>
