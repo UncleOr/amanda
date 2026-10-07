@@ -41,6 +41,47 @@
   /* Over her artwork and the wash, under the purse and the profile button. */
   position: relative;
   z-index: 2;
+  /*
+   * ═══ THE GRID IS WHAT SCROLLS NOW ═══
+   *
+   * `.intro--hero` is `overflow: hidden` on purpose — the artwork bleeds past
+   * the screen — so something inside it has to be able to scroll or the
+   * bottom of the screen is simply unreachable. That used to be
+   * `.intro__card`, when the card WAS the whole menu. It is now one cell of
+   * six, so the job moves out here: measured on a landscape phone, the grid
+   * would not scroll at all and everything below the two play cards was
+   * gone. The scrollbar stays hidden, as it was — a bar down the middle of
+   * the hero reads as a mistake.
+   */
+  max-height: 100%;
+  overflow-y: auto;
+  scrollbar-width: none;
+}
+.intro--hero .home::-webkit-scrollbar { display: none; }
+
+/*
+ * The play group keeps the card's LOOK and gives up its sizing.
+ *
+ * It still carries `.intro__card`, which is what gives it the hero styling
+ * and the entrance animation. But that rule also says `max-width: 420px`,
+ * `max-height: 100%` and `overflow-y: auto` — three things that were right
+ * for a column holding the entire menu and wrong for one cell of a grid,
+ * where they make a second scrolling box inside the first.
+ */
+.intro--hero .home .intro__card {
+  /*
+   * Wider than 420, but still capped.
+   *
+   * Dropping the cap altogether let the two "who do you want to play"
+   * portraits grow to 400px each on a 1440 screen, which made the home
+   * screen two enormous photographs. The cell is as wide as the layout
+   * gives it; the card inside sits in the middle of it at a readable size.
+   */
+  max-width: 540px;
+  margin-inline: auto;
+  max-height: none;
+  overflow: visible;
+  text-align: center;
 }
 
 .home__brand { grid-area: brand; text-align: center; }
@@ -179,7 +220,34 @@
       "social"
       "meta";
   }
-  .intro--hero[data-layout="b"] .home__progress { flex-direction: column; }
+  /*
+   * The progress panels go side by side rather than stacking.
+   *
+   * Stacked, each of them took the full width of the screen for one short
+   * line — measured on a landscape phone the nacho bar was 844px wide and
+   * almost entirely empty, and the chest shelf below it the same. Three
+   * narrow boxes in a row and the challenges across the bottom is the same
+   * information in a third of the height.
+   */
+  .intro--hero .home__progress {
+    flex-direction: row;
+    flex-wrap: wrap;
+    align-items: stretch;
+  }
+  .intro--hero .home__progress > * { flex: 1 1 190px; min-width: 0; }
+  .intro--hero .home__progress .quests { flex: 1 1 100%; }
+}
+
+/* On a short window — a phone on its side — the panels give back their air. */
+@media (max-height: 520px) {
+  .home__progress,
+  .home__collect { padding: 8px; gap: 6px; }
+  .nachos { padding: 7px 9px; gap: 3px; }
+  .nachos__row > i { width: 23px; height: 23px; }
+  .nachos__say { font-size: 11px; }
+  .quests { padding: 8px 9px; gap: 5px; }
+  .quests__list li { padding: 5px 7px; }
+  .home__progress .shelf { padding: 7px 9px; }
 }
 
 /* ---- the nacho bar ---- */
