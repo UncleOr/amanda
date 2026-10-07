@@ -40,6 +40,14 @@ const MELEE_REACH = 0.6;
 interface TargetPick {
   unit: Unit;
   gap: number;
+  /**
+   * This target is not in the unit's own lane, so the unit has to walk across
+   * to it before it may swing. Set by King-hunting and by the empty-lane
+   * fallback — the two picks that leave the lane. Without it a unit reaches
+   * three lanes sideways and hits something it is nowhere near, because
+   * `gapAhead` measures along the column axis and knows nothing about lanes.
+   */
+  crossLane?: boolean;
 }
 
 /**
@@ -54,6 +62,63 @@ function guardsOf(state: BattleState, u: Unit, king: Unit): Unit[] {
 }
 
 /**
+ * The nearest thing worth hitting on the way to the enemy King.
+ *
+ * Returns the King itself once nothing of its own stands between, and null
+ * when that side has no King left — which happens, because a player who
+ * placed no cards is given no King at all.
+ */
+function huntKing(state: BattleState, u: Unit, enemies: Unit[]): TargetPick | null {
+  /*
+   * The NEAREST King, not simply the first one in the list.
+   *
+   * A side can hold two of them (Amanda mode: a King per player), and a
+   * King-hunter crosses lanes to reach one — so "the first King in the unit
+   * array" would send it marching past the crown in front of it to go and
+   * find the other player's.
+   */
+  let king: Unit | undefined;
+  let kingGap = Infinity;
+  for (const e of enemies) {
+    if (!e.isKing) continue;
+    const g = gapAhead(u, e);
+    if (g < kingGap) {
+      king = e;
+      kingGap = g;
+    }
+  }
+  if (!king) return null;
+
+  const guards = guardsOf(state, u, king);
+  // The King is only reachable once nothing of its own stands in the way.
+  const prey = guards.length ? guards : [king];
+  let best = prey[0]!;
+  let bestGap = gapAhead(u, best);
+  for (const e of prey) {
+    const g = gapAhead(u, e);
+    if (g < bestGap) {
+      best = e;
+      bestGap = g;
+    }
+  }
+  return { unit: best, gap: bestGap, crossLane: true };
+}
+
+/** Whatever is nearest, in any lane. The last resort. */
+function nearestAnywhere(u: Unit, enemies: Unit[]): TargetPick | null {
+  let best: Unit | undefined;
+  let bestGap = Infinity;
+  for (const e of enemies) {
+    const g = gapAhead(u, e);
+    if (g < bestGap) {
+      best = e;
+      bestGap = g;
+    }
+  }
+  return best ? { unit: best, gap: bestGap, crossLane: true } : null;
+}
+
+/**
  * Choose what a unit is attacking.
  *
  * An ordinary card fights whatever is in front of it, in its own lane. A card
@@ -61,45 +126,31 @@ function guardsOf(state: BattleState, u: Unit, king: Unit): Unit[] {
  * it has to — and while the King is still shielded it works on the guards
  * standing in the way. Snipers pick the farthest target rather than the
  * nearest; that is what makes them snipers.
+ *
+ * ═══ AN EMPTY LANE IS NOT THE END OF THE FIGHT ═══
+ *
+ * Or, after a game: *"we just had another match that ended with all the
+ * attackers in a straight line reaching the end and attacking nothing, and
+ * the Kings neither moving nor attacking. If there is nothing to attack in
+ * your lane you should start attacking the King or the guards."*
+ *
+ * Exactly right, and it was a real stall: a lane unit whose own lane had been
+ * cleared returned NO target at all, so it walked to the far wall and stood
+ * there for the rest of the battle. Two boards could clear opposite lanes and
+ * the match would run out the clock with a dozen units staring at a wall.
+ *
+ * So an empty lane now falls through to hunting the King, which is the same
+ * search a King-hunter does — guards first, crown once it is bare. The lane
+ * discipline that makes a battle readable is untouched: this only ever
+ * happens when there is nothing left in the lane to be disciplined about.
  */
 function pickTarget(state: BattleState, u: Unit): TargetPick | null {
   const enemies = state.units.filter((e) => e.alive && e.owner !== u.owner && isAhead(u, e));
   if (enemies.length === 0) return null;
 
   if (u.targeting === "king") {
-    /*
-     * The NEAREST King, not simply the first one in the list.
-     *
-     * A side can hold two of them now (Amanda mode: a King per player), and a
-     * King-hunter crosses lanes to reach one — so "the first King in the unit
-     * array" would send it marching past the crown in front of it to go and
-     * find the other player's.
-     */
-    let king: Unit | undefined;
-    let kingGap = Infinity;
-    for (const e of enemies) {
-      if (!e.isKing) continue;
-      const g = gapAhead(u, e);
-      if (g < kingGap) {
-        king = e;
-        kingGap = g;
-      }
-    }
-    if (king) {
-      const guards = guardsOf(state, u, king);
-      // The King is only reachable once nothing of its own stands in the way.
-      const prey = guards.length ? guards : [king];
-      let best = prey[0]!;
-      let bestGap = gapAhead(u, best);
-      for (const e of prey) {
-        const g = gapAhead(u, e);
-        if (g < bestGap) {
-          best = e;
-          bestGap = g;
-        }
-      }
-      return { unit: best, gap: bestGap };
-    }
+    const hunted = huntKing(state, u, enemies);
+    if (hunted) return hunted;
     // No King left to hunt: fall through and fight like anything else.
   }
 
@@ -114,7 +165,16 @@ function pickTarget(state: BattleState, u: Unit): TargetPick | null {
     const shielded = ahead.some((e) => !e.isKing && gapAhead(u, e) < kingGap);
     if (shielded) ahead = ahead.filter((e) => !e.isKing);
   }
-  if (ahead.length === 0) return null;
+  /*
+   * Nothing left in this lane — go and find the crown.
+   *
+   * `huntKing` can come back empty when that side has no King (a player who
+   * placed nothing is given none), so there is one more fallback behind it:
+   * the nearest enemy anywhere. Between them, a unit that can see an enemy
+   * always has something to walk towards, which is the property that was
+   * missing.
+   */
+  if (ahead.length === 0) return huntKing(state, u, enemies) ?? nearestAnywhere(u, enemies);
 
   let best = ahead[0]!;
   let bestGap = gapAhead(u, best);
@@ -483,9 +543,19 @@ export function runBattle(setup: BattleSetup): BattleResult {
       if (state.tick < u.stunnedUntil) continue; // frozen / stunned
 
       const picked = pickTarget(state, u);
-      // A card that hunts the King has to be able to cross to it. Static cards
-      // stay put and shoot; only something that can move changes lane.
-      if (picked && u.targeting === "king" && effectiveMoveSpeed(u) > 0)
+      /*
+       * A unit fighting outside its own lane has to WALK there.
+       *
+       * `gapAhead` measures along the column axis and knows nothing about
+       * lanes, so without this a unit that had cleared its lane would reach
+       * across the board and hit something three lanes away without moving —
+       * which is worse than the stall it replaced. `crossLane` is set by
+       * exactly the two picks that leave the lane.
+       *
+       * Static cards stay put and shoot; only something that can move changes
+       * lane.
+       */
+      if (picked && picked.crossLane && effectiveMoveSpeed(u) > 0)
         driftTowardLane(u, picked.unit);
       if (picked && inAttackRange(u, picked.gap)) {
         if (u.attackCooldown <= 0 && u.power > 0) {

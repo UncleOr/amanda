@@ -38,7 +38,22 @@ function card(id: string, hp: number, power: number, abilities: Card["abilities"
   } as Card;
 }
 
-/** A tough King on both sides, so a duel is decided by the duel. */
+/**
+ * A tough King on both sides, so a duel is decided by the duel.
+ *
+ * ═══ A NOTE ON WHAT A DUEL NOW LOOKS LIKE ═══
+ *
+ * A unit that clears its lane no longer stands at the far wall doing nothing
+ * — it crosses to the enemy King (see pickTarget; Or asked for it after a
+ * match ended with everybody staring at a wall). In a one-against-one test
+ * that means the SURVIVOR wanders off and keeps fighting, so "how many of B
+ * died" stopped measuring "what did A's card do to B's card".
+ *
+ * The measurements below were tightened rather than the engine loosened, and
+ * each says how. Giving these Kings no power was tried first and was worse:
+ * a King that cannot defend itself is a free kill, and two tests started
+ * ending in `kingDown` that had been decided on a tiebreak.
+ */
 const KING = card("king", 4000, 100);
 
 function arena(cards: Card[]): Map<string, Card> {
@@ -121,9 +136,29 @@ describe("poison is the answer to a wall", () => {
     expect(r.killedB).toBe(1);
   });
 
+  /*
+   * "Did the attacker kill the wall", not "did anything kill the wall".
+   *
+   * The wall does die in this fight now — it clears its lane, walks over to
+   * A's King and is cut down by it, which is a perfectly good thing for a
+   * wall to do and nothing to do with fleas. What the test means is that the
+   * flea could not do it, and the way to say that is the order of the two
+   * deaths: the flea went first, so whatever killed the wall, it was not the
+   * flea.
+   */
+  const diedAt = (r: ReturnType<typeof fight>, cardId: string): number | null => {
+    const unit = r.finalUnits.find((u) => u.cardId === cardId && !u.alive);
+    const death = r.events.find((e) => e.type === "death" && e.uid === unit?.uid);
+    return death ? death.tick : null;
+  };
+
   it("the same card without poison does not", () => {
     const r = fight(arena([WALL, FLEA]), "flea", "wall");
-    expect(r.killedB).toBe(0);
+    const flea = diedAt(r, "flea");
+    const wall = diedAt(r, "wall");
+    expect(flea, "the flea was supposed to lose this duel").not.toBeNull();
+    // Either the wall outlived the whole battle, or it outlived the flea.
+    expect(wall === null || wall > flea!).toBe(true);
   });
 
   it("armor does not stop it — that is the whole point", () => {
@@ -166,11 +201,29 @@ describe("a wide swing is the answer to anything that multiplies", () => {
    * lane throws half its arc off the board — which is true of the real card
    * too, and is the sort of thing the playground is for.
    */
-  it("the wide swing kills more than it was aimed at", () => {
+  /*
+   * Measured EARLY, because the end of the battle no longer separates them.
+   *
+   * Given long enough the narrow swinger clears its own lane, crosses to the
+   * next one and eventually kills just as many — both finish on twelve. What
+   * the wide swing buys is not a bigger pile at the end, it is the same pile
+   * sooner, which is the thing that wins a lane. Ten seconds in is where the
+   * difference lives.
+   */
+  const killsBy = (r: ReturnType<typeof run>, tick: number) =>
+    r.events.filter(
+      (e) =>
+        e.type === "death" &&
+        e.tick <= tick &&
+        r.finalUnits.find((u) => u.uid === e.uid)?.owner === "B",
+    ).length;
+
+  it("the wide swing kills more, sooner, than it was aimed at", () => {
     const cat = arena([SPLITTER, WIDE, NARROW]);
     const wide = run(cat, solo("A", "wide", 1), side("B", "splitter", 4));
     const narrow = run(cat, solo("A", "narrow", 1), side("B", "splitter", 4));
-    expect(wide.killedB).toBeGreaterThan(narrow.killedB);
+    const TEN_SECONDS = 300;
+    expect(killsBy(wide, TEN_SECONDS)).toBeGreaterThan(killsBy(narrow, TEN_SECONDS));
   });
 
   it("…and it reaches the lanes either side, not just the one it aimed at", () => {
@@ -223,13 +276,21 @@ describe("a burning lane is the answer to a stacked lane", () => {
     expect(run(cat, solo("A", "plain", 1), column("B", "ant", 1, 3)).winner).toBe("B");
   });
 
-  it("but it does nothing to the lanes it is not pointing at", () => {
-    const cat = arena([LAVA, ANT]);
-    const r = run(cat, solo("A", "lava", 0), column("B", "ant", 3, 3));
-    const untouched = r.finalUnits.filter(
-      (u) => u.owner === "B" && !u.isKing && u.hp === u.maxHp,
-    );
-    expect(untouched.length).toBeGreaterThan(0);
+  /*
+   * A COMPARISON, because "still at full health" stopped being the question.
+   *
+   * The lava card clears its own empty lane, walks across to lane 3 and
+   * punches the ants there like any other card — so nothing finishes at full
+   * health any more, and the old assertion was measuring the walk rather than
+   * the burn. Against a card with identical stats and no burn, the two should
+   * leave lane 3 in the same state: that is what "it does nothing to the
+   * lanes it is not pointing at" actually claims.
+   */
+  it("but its BURN does nothing to the lanes it is not pointing at", () => {
+    const cat = arena([LAVA, PLAIN, ANT]);
+    const burning = run(cat, solo("A", "lava", 0), column("B", "ant", 3, 3));
+    const plain = run(cat, solo("A", "plain", 0), column("B", "ant", 3, 3));
+    expect(healthLeft(burning)).toBe(healthLeft(plain));
   });
 });
 
