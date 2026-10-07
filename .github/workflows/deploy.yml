@@ -10,9 +10,20 @@ permissions:
   pages: write
   id-token: write
 
+# ═══ cancel-in-progress MUST be false here ═══
+#
+# It was true, and three deploys in a row failed with "Deployment request
+# failed due to in progress deployment". Cancelling the workflow run does NOT
+# cancel the Pages deployment GitHub has already started on its side — so the
+# next run arrived, found that deployment still going, and died. Three commits
+# never reached the site; the fourth happened to carry them.
+#
+# With false, a queued run WAITS instead. GitHub also drops any run queued
+# between the one in flight and the newest, so a burst of pushes still ends
+# with the latest commit live — it just gets there without failing.
 concurrency:
   group: pages
-  cancel-in-progress: true
+  cancel-in-progress: false
 
 jobs:
   build:
@@ -24,7 +35,8 @@ jobs:
           version: 9
       - uses: actions/setup-node@v4
         with:
-          node-version: 20
+          # 20 is deprecated on the runners and already being forced to 24.
+          node-version: 22
           cache: pnpm
       - run: pnpm install
       - run: pnpm --filter @amanda/client build
