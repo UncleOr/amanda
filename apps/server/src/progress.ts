@@ -186,15 +186,35 @@ export function rollChest(
  * Exported because the opening now happens in the HTTP API, a minute or a week
  * after the match that earned it.
  */
+/**
+ * Hand over a chest's contents, and say which cards had never been seen.
+ *
+ * Or: *"when I get a NEW card, make a bit of a celebration out of it. Pop up
+ * a popup, some fireworks, announce a new card."*
+ *
+ * ═══ WHY THE SERVER ANSWERS THIS AND NOT THE BROWSER ═══
+ *
+ * The browser could compare the chest against the album it is holding, and it
+ * would be wrong about it. The album in the browser was loaded at some earlier
+ * moment, the server put these cards into the real one before the reveal ever
+ * ran, and a reload anywhere in between turns "new" into "I already had it" or
+ * the reverse. The only moment anybody can truthfully answer it is the one
+ * below, where the row is read immediately before it is written — so that is
+ * where it is answered.
+ */
 export async function grantChest(
   sb: SupabaseClient,
   playerId: string,
   won: { cards: string[]; diamonds: number; items?: string[] },
-) {
+): Promise<string[]> {
   return grant(sb, playerId, won as ReturnType<typeof rollChest>);
 }
 
-async function grant(sb: SupabaseClient, playerId: string, won: ReturnType<typeof rollChest>) {
+async function grant(
+  sb: SupabaseClient,
+  playerId: string,
+  won: ReturnType<typeof rollChest>,
+): Promise<string[]> {
   // Whatever else happens below, this album is about to be worth more.
   queueMicrotask(() => refreshAlbumPowerSoon(sb, playerId));
   /*
@@ -212,6 +232,8 @@ async function grant(sb: SupabaseClient, playerId: string, won: ReturnType<typeo
     );
   const counts = new Map<string, number>();
   for (const id of won.cards) counts.set(id, (counts.get(id) ?? 0) + 1);
+  /** Cards that had no row at all a moment ago. See grantChest. */
+  const fresh: string[] = [];
   for (const [cardId, copies] of counts) {
     // Upsert-with-increment is not one call in PostgREST, so read then write.
     // A player opens one chest at a time, so there is nothing to race.
@@ -221,6 +243,7 @@ async function grant(sb: SupabaseClient, playerId: string, won: ReturnType<typeo
       .eq("player_id", playerId)
       .eq("card_id", cardId)
       .maybeSingle();
+    if (!data) fresh.push(cardId);
     await sb
       .from("player_cards")
       .upsert(
@@ -228,6 +251,7 @@ async function grant(sb: SupabaseClient, playerId: string, won: ReturnType<typeo
         { onConflict: "player_id,card_id" },
       );
   }
+  return fresh;
 }
 
 /**

@@ -1,4 +1,4 @@
-import { lazy, Suspense, useEffect, useMemo, useRef, useState } from "react";
+import { lazy, Suspense, useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { Icon } from "./components/Icon";
 import { Album } from "./components/Album";
 import { Tutorial, type Step } from "./components/Tutorial";
@@ -7,7 +7,7 @@ import { LESSONS } from "./game/lessons";
 import { Profile } from "./components/Profile";
 import { Onboarding } from "./components/Onboarding";
 import { ChestReveal } from "./components/ChestReveal";
-import { loadInbox, loadShop, markChestSeen, type Chest, type ShopItem } from "./game/account";
+import { loadInbox, loadShop, markChestSeen, openChest, unopenedChests, type Chest, type ShopItem } from "./game/account";
 import { markTutorialDone, tutorialSeenLocally } from "./game/account";
 import { COOP_LANES, PHASES, arenaFor } from "@amanda/shared";
 import type { BattleResult } from "@amanda/engine";
@@ -227,6 +227,10 @@ function Game() {
           kind: CHEST_DEV,
           // A handful of real cards, so the reveal shows what it really shows.
           cards: cardPool().slice(0, 5),
+          // Two of them new, so the celebration can be looked at too — it
+          // depends on an answer only the server can give (see grantChest),
+          // which otherwise makes it unreachable from this door.
+          fresh: cardPool().slice(0, 2),
           diamonds: 25,
           earnedAt: new Date().toISOString(),
         }
@@ -240,6 +244,26 @@ function Game() {
    * winning a chest also opened it. Now a chest waits on the home screen until
    * you tap it, which is the point of having one.
    */
+  /**
+   * Open the chest this match just won, from the result screen.
+   *
+   * Or: *"it would make sense that pressing 'a chest is waiting for you' takes
+   * you straight to the chests."* The oldest unopened one, because a player
+   * who already had one waiting and then won another should get the one that
+   * has been waiting longer — the list comes back in that order.
+   *
+   * Opening is still the server's business (it marks `opened_at` and returns
+   * the contents), so this is exactly what the shelf on the home screen does.
+   * Nothing happens on a miss: if the chest is somehow gone, the home screen
+   * is where it would have been.
+   */
+  const openNewestChest = useCallback(async () => {
+    const waiting = await unopenedChests();
+    const first = waiting[0];
+    if (!first) return;
+    const opened = await openChest(first.id);
+    if (opened) setChest(opened);
+  }, []);
   /*
    * Shown once, when an account exists and has never been set up. Guests have
    * no account to save it to, so they are not asked — they are asked the
@@ -1241,7 +1265,14 @@ function Game() {
       )}
 
       {/* ---- result ---- */}
-      {m.phase === "result" && <ResultScreen m={m} panel={panel} signedIn={signedIn} />}
+      {m.phase === "result" && (
+        <ResultScreen
+          m={m}
+          panel={panel}
+          signedIn={signedIn}
+          onOpenChest={() => void openNewestChest()}
+        />
+      )}
 
       {/* floating card that follows the pointer while dragging */}
       {drag.cardId && (

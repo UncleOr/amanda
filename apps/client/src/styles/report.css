@@ -668,6 +668,13 @@
   color: var(--text);
   font-size: 14px;
   line-height: 1.5;
+  /*
+   * Or: *"the sentence under 'you won' should be centred."* It was `margin:
+   * 0 auto`, which centres the BOX and says nothing about the words in it —
+   * and the box is 44ch wide while the line is shorter, so the sentence sat
+   * against the inline-start edge of a centred box under a centred headline.
+   */
+  text-align: center;
 }
 
 /* music is opt-in; the button shows which way it is set */

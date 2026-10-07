@@ -690,3 +690,122 @@
 @media (prefers-reduced-motion: reduce) {
   .slot--king-empty { animation: none; border-color: rgba(255, 176, 32, 0.8); }
 }
+
+/* ════════ a card you have never had ════════ */
+/*
+ * Or: *"when I get a NEW card, make a bit of a celebration out of it. Pop up
+ * a popup, some fireworks, announce a new card."*
+ *
+ * It sits OVER the open chest rather than replacing it — the rest of what was
+ * inside is still underneath, and closing this goes back to it. The server
+ * decides what counts as new (see grantChest), so this never fires on a
+ * duplicate, which is what keeps it from becoming the close button with
+ * confetti on it.
+ */
+.newcard {
+  position: absolute;
+  inset: 0;
+  z-index: 3;
+  display: grid;
+  place-items: center;
+  padding: 10px;
+  background: radial-gradient(circle at center, rgba(12, 18, 32, 0.82), rgba(4, 7, 14, 0.94));
+  animation: fade 180ms ease-out;
+}
+.newcard__box {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: clamp(6px, 1.6vh, 14px);
+  max-width: 100%;
+  text-align: center;
+  animation: newcard-in 520ms cubic-bezier(0.18, 1.3, 0.35, 1) both;
+}
+@keyframes newcard-in {
+  0% { opacity: 0; transform: scale(0.55) rotate(-6deg); }
+  100% { opacity: 1; transform: none; }
+}
+
+/*
+ * The fireworks.
+ *
+ * Each spark is one element given an ANGLE, a DELAY and a DISTANCE by
+ * ChestReveal, and the single keyframe below throws it that way. One rule for
+ * fourteen sparks, instead of fourteen rules — and the shape of the burst is
+ * a loop in the component, where changing the count is changing a number.
+ *
+ * `translate(-50%, -50%)` first so the rotation happens about the middle of
+ * the box and not about the corner of a 7px dot.
+ */
+.newcard__fw {
+  position: absolute;
+  top: 46%;
+  left: 50%;
+  width: 0;
+  height: 0;
+  pointer-events: none;
+}
+.newcard__fw > i {
+  position: absolute;
+  width: 7px;
+  height: 7px;
+  margin: -3.5px 0 0 -3.5px;
+  border-radius: 50%;
+  background: #ffd36b;
+  box-shadow: 0 0 10px rgba(255, 176, 32, 0.9);
+  transform: rotate(var(--a)) translateX(0);
+  animation: spark 1150ms ease-out var(--d) infinite;
+}
+/* Three colours, taken in turn, so the burst is not one gold cloud. */
+.newcard__fw > i:nth-child(3n + 1) { background: #7ee8dd; box-shadow: 0 0 10px rgba(90, 230, 220, 0.9); }
+.newcard__fw > i:nth-child(3n + 2) { background: #ff8fd0; box-shadow: 0 0 10px rgba(255, 143, 208, 0.85); }
+@keyframes spark {
+  0% { opacity: 0; transform: rotate(var(--a)) translateX(0) scale(0.4); }
+  18% { opacity: 1; }
+  70% { opacity: 0.9; }
+  100% { opacity: 0; transform: rotate(var(--a)) translateX(var(--r)) scale(0.2); }
+}
+
+.newcard__tag {
+  margin: 0;
+  font-size: clamp(18px, 4.6vh, 30px);
+  font-weight: 900;
+  color: #ffd36b;
+  text-shadow: 0 0 18px rgba(255, 176, 32, 0.55), 0 3px 0 rgba(0, 0, 0, 0.5);
+  animation: newcard-tag 1.4s ease-in-out infinite alternate;
+}
+@keyframes newcard-tag {
+  from { transform: scale(1); }
+  to { transform: scale(1.06); }
+}
+.newcard__cards {
+  display: flex;
+  gap: 8px;
+  /* Three big cards is wider than a phone. They shrink together rather than
+     wrapping, because a second row here would push the button off. */
+  max-width: 100%;
+}
+.newcard__cell {
+  display: block;
+  flex: none;
+  /* A card is width:100%/height:100%, so the shape has to come from the cell
+     holding it — see .album__cell, which learned this the same way. */
+  width: clamp(62px, 17vh, 112px);
+  aspect-ratio: 3 / 4;
+  animation: newcard-card 620ms cubic-bezier(0.18, 1.3, 0.35, 1) both;
+}
+.newcard__cell:nth-child(2) { animation-delay: 110ms; }
+.newcard__cell:nth-child(3) { animation-delay: 220ms; }
+@keyframes newcard-card {
+  0% { opacity: 0; transform: translateY(22px) rotate(-8deg) scale(0.7); }
+  100% { opacity: 1; transform: none; }
+}
+.newcard__more { margin: 0; color: var(--muted); font-size: 12px; }
+
+@media (prefers-reduced-motion: reduce) {
+  .newcard__box,
+  .newcard__cell,
+  .newcard__tag { animation: none; }
+  .newcard__fw { display: none; }
+}

@@ -52,7 +52,17 @@ export const KING = {
 export const PHASES = {
   build: { seconds: 90, label: { he: "בונים את שדה הקרב", en: "Build Frenzy" } },
   panic: { seconds: 15, label: { he: "פאניקה", en: "Panic Seconds" } },
-  battle: { seconds: 45, label: { he: "קדימה לקרב!", en: "Auto-Battle" } },
+  /*
+   * Or, after playing: *"I think the battle time is too short now. Let's
+   * lengthen it by about 10-15 seconds."* 45 → 58.
+   *
+   * It is not only pacing. A battle that runs out of clock is decided on a
+   * tiebreak rather than by a King falling, so the length of this number is
+   * also how often the game ends with an argument instead of an ending — and
+   * it is turnable from the admin panel now (TUNABLES "phases.battle"), so
+   * the next adjustment does not need me.
+   */
+  battle: { seconds: 58, label: { he: "קדימה לקרב!", en: "Auto-Battle" } },
 } as const;
 
 /**

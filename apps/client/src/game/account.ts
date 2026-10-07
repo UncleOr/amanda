@@ -413,6 +413,15 @@ export interface Chest {
    */
   items?: string[];
   earnedAt: string;
+  /**
+   * Card ids in here that the album had never held before.
+   *
+   * Or: *"when I get a NEW card, make a bit of a celebration out of it."* The
+   * server answers this and the browser cannot — see grantChest on the server
+   * for why. Absent on a chest that was already open, which is correct:
+   * nothing was granted that time.
+   */
+  fresh?: string[];
 }
 
 /**
@@ -491,6 +500,7 @@ export async function openChest(chestId: string): Promise<Chest | null> {
       cards?: string[];
       diamonds?: number;
       items?: string[];
+      fresh?: string[];
     };
     if (!body.ok) return null;
     return {
@@ -499,6 +509,7 @@ export async function openChest(chestId: string): Promise<Chest | null> {
       cards: body.cards ?? [],
       diamonds: body.diamonds ?? 0,
       ...(body.items?.length ? { items: body.items } : {}),
+      ...(body.fresh?.length ? { fresh: body.fresh } : {}),
       earnedAt: new Date().toISOString(),
     };
   } catch {

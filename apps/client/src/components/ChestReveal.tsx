@@ -81,6 +81,13 @@ export function ChestReveal({ chest, onClose }: Props) {
   const [shown, setShown] = useState(0);
   const look = CHEST_LOOK[chest.kind] ?? CHEST_LOOK.wood!;
   const [line] = useState(() => V.pick(V.CHEST_LINES));
+  /*
+   * Cards in here the album had never held. Only ever a handful, and usually
+   * none — which is the reason the celebration is worth having.
+   */
+  const fresh = (chest.fresh ?? []).filter((id) => CATALOG.has(id));
+  /** The celebration, held back until every card has turned. */
+  const [party, setParty] = useState(false);
 
   // Turn them over one at a time once it is open.
   useEffect(() => {
@@ -110,6 +117,33 @@ export function ChestReveal({ chest, onClose }: Props) {
   };
 
   const allShown = shown >= chest.cards.length;
+
+  /*
+   * ═══ A NEW CARD IS AN EVENT ═══
+   *
+   * Or: *"when I get a NEW card, make a bit of a celebration out of it. Pop
+   * up a popup, some fireworks, announce a new card."*
+   *
+   * It waits for the last card to turn rather than firing on the one that is
+   * new. Two reasons: the turning is itself a reveal and interrupting it
+   * throws away the part the chest exists for, and a chest with three new
+   * cards would otherwise set off three separate celebrations on top of each
+   * other.
+   *
+   * It only happens when something is actually new. A chest of duplicates is
+   * the ordinary case, and a "celebration" that fires every single time is
+   * just the close button with confetti on it.
+   */
+  useEffect(() => {
+    if (!allShown || !fresh.length || party) return;
+    const t = window.setTimeout(() => {
+      setParty(true);
+      sfx.play("win");
+    }, 420);
+    return () => window.clearTimeout(t);
+    // `fresh` is derived from the chest and does not change under us.
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [allShown, party]);
 
   return (
     <div className="chest" role="dialog">
@@ -182,6 +216,65 @@ export function ChestReveal({ chest, onClose }: Props) {
             </button>
           </>
         )}
+      </div>
+
+      {party && <NewCards ids={fresh} onClose={() => setParty(false)} />}
+    </div>
+  );
+}
+
+/**
+ * The fuss over a card you have never had.
+ *
+ * Over the chest rather than instead of it: the chest is still underneath
+ * with the rest of what was in it, and closing this goes back to it. A
+ * separate screen would make "you got a new card" and "here is what was in
+ * the chest" two events, and they are one.
+ *
+ * The fireworks are drawn here rather than in CSS alone because each one needs
+ * its own angle and delay, and twelve hand-written rules for twelve sparks is
+ * a worse version of a loop. Everything else about them — the colours, the
+ * arc, the fade — is in chests.css.
+ */
+function NewCards({ ids, onClose }: { ids: string[]; onClose: () => void }) {
+  const many = ids.length > 1;
+  return (
+    <div className="newcard" role="dialog" onClick={onClose}>
+      <div className="newcard__box" onClick={(e) => e.stopPropagation()}>
+        <div className="newcard__fw" aria-hidden="true">
+          {Array.from({ length: 14 }, (_, i) => (
+            <i
+              key={i}
+              style={{
+                // Spread evenly around the circle, then nudged so the ring
+                // does not read as a clock face.
+                ["--a" as string]: `${(i * 360) / 14 + (i % 3) * 7}deg`,
+                ["--d" as string]: `${(i % 5) * 90}ms`,
+                ["--r" as string]: `${86 + (i % 4) * 26}px`,
+              }}
+            />
+          ))}
+        </div>
+        <p className="newcard__tag">{many ? `${ids.length} קלפים חדשים!` : "קלף חדש!"}</p>
+        {/*
+          Each card gets a CELL with a shape on it. `.card` is 100% of
+          whatever holds it in both directions, so a card dropped straight
+          into a flex row has a width and no height at all and comes out
+          invisible — the same trap the album grid fell into.
+        */}
+        <div className="newcard__cards">
+          {ids.slice(0, 3).map((id) => (
+            <span className="newcard__cell" key={id}>
+              <CardView cardId={id} size="large" />
+            </span>
+          ))}
+        </div>
+        {/* The one that is not a card: more than three and the row stops
+            being a row of cards and starts being a list. */}
+        {ids.length > 3 && <p className="newcard__more">ועוד {ids.length - 3}</p>}
+        <button className="btn-fight" onClick={onClose}>
+          איזה יופי
+        </button>
       </div>
     </div>
   );

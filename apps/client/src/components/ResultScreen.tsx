@@ -21,11 +21,14 @@ export function ResultScreen({
   m,
   panel,
   signedIn,
+  onOpenChest,
 }: {
   m: MatchApi;
   panel: Overlays;
   /** Reporting a person needs an account; the server refuses otherwise. */
   signedIn: boolean;
+  /** Open the chest this match just won, from the line that announces it. */
+  onOpenChest?: () => void;
 }) {
   const [showLog, setShowLog] = useState(false);
   const [winTitle, setWinTitle] = useState("");
@@ -72,7 +75,7 @@ export function ResultScreen({
           {/* And what it was worth. Arrives a round trip after the result,
               because the server re-runs the battle before paying anything —
               and draws nothing at all until it does. */}
-          <Payout award={m.award} />
+          <Payout award={m.award} onOpenChest={onOpenChest} />
           {/* The two of you, after the fact. The end-of-match lines unlock
               here — "good game" means nothing during the build phase. */}
           {m.online && !m.playground && (

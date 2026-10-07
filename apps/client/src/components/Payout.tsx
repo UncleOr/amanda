@@ -19,7 +19,21 @@ import type { Award } from "../game/meta";
  * simply draws nothing, which is why every branch below is a guard and not a
  * placeholder.
  */
-export function Payout({ award }: { award: Award | null }) {
+export function Payout({
+  award,
+  /**
+   * Open the chest that was just won, here, now.
+   *
+   * Or: *"it would make sense that pressing 'a chest is waiting for you'
+   * takes you straight to the chests."* It said where to go and then made you
+   * go there — back to the home screen, find the shelf, find the chest. The
+   * sentence names the thing; pressing the name should be pressing the thing.
+   */
+  onOpenChest,
+}: {
+  award: Award | null;
+  onOpenChest?: () => void;
+}) {
   if (!award) return null;
   const done = award.moved.filter((c) => c.done).length;
   if (!award.nachos && !award.trophies && !award.chests.length && !done && !award.cappedOut)
@@ -45,9 +59,15 @@ export function Payout({ award }: { award: Award | null }) {
         to go and look.
       */}
       {award.chests.map((kind, i) => (
-        <span key={i} className="payout__bit payout__bit--chest">
+        <button
+          key={i}
+          type="button"
+          className="payout__bit payout__bit--chest"
+          onClick={onOpenChest}
+          disabled={!onOpenChest}
+        >
           <Icon name="chest" size={19} /> תיבה מחכה לך!
-        </span>
+        </button>
       ))}
       {done > 0 && (
         <span className="payout__bit payout__bit--quest">

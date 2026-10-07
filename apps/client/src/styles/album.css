@@ -63,6 +63,22 @@
   gap: 12px;
 }
 /*
+ * On a landscape phone a card is 150px tall, so a 390px screen holds TWO ROWS
+ * of an album with fifty-two cards in it — the screen whose whole job is
+ * showing you what you have was showing four of them at a time.
+ *
+ * Narrower cells rather than a different layout: the album is a grid of cards
+ * everywhere, and a card at 76px still carries its picture, its name and its
+ * numbers. Measured at 844x390: 7 cards a row instead of 5, and three rows on
+ * screen instead of two.
+ */
+@media (max-width: 860px), (max-height: 560px) {
+  .album__grid {
+    grid-template-columns: repeat(auto-fill, minmax(76px, 1fr));
+    gap: 7px;
+  }
+}
+/*
  * A .card is width:100%/height:100%, so it takes the size of whatever holds
  * it. The album grid gave its cells a width and no height, which collapsed
  * every card to a 3:1 sliver. The cell carries the card's shape instead.

@@ -174,7 +174,9 @@ async function openChest(req: IncomingMessage, res: ServerResponse): Promise<voi
     return send(res, 200, { ok: true, alreadyOpen: true, kind: chest.kind, ...contents });
   }
 
-  await grantChest(sb, playerId, contents);
+  // Which of them the album had never held. The celebration on the other end
+  // needs an answer only this moment can give — see grantChest.
+  const fresh = await grantChest(sb, playerId, contents);
   if (contents.diamonds > 0) {
     const { data: row } = await sb
       .from("players")
@@ -186,7 +188,7 @@ async function openChest(req: IncomingMessage, res: ServerResponse): Promise<voi
       .update({ diamonds: (row?.diamonds ?? 0) + contents.diamonds })
       .eq("id", playerId);
   }
-  send(res, 200, { ok: true, kind: chest.kind, ...contents });
+  send(res, 200, { ok: true, kind: chest.kind, ...contents, fresh });
 }
 
 /**
