@@ -1758,3 +1758,41 @@
   margin: 0 0 10px;
   font-size: 17px;
 }
+
+/* ════════ the album, on a phone ════════ */
+/*
+ * ═══ WHY THIS IS HERE AND NOT IN album.css ═══
+ *
+ * `.album__cover` and `.record` are defined in chests.css, which is imported
+ * AFTER album.css — and `@media` adds no specificity, so the same selector in
+ * an earlier file loses to the plain one in a later file however many media
+ * queries are wrapped around it. The first version of this change was written
+ * in album.css and measured EXACTLY the same numbers afterwards: 128px cover,
+ * 169px record. home-layout.css is imported last, which is the whole reason
+ * the phone rules live at the end of it.
+ */
+@media (max-width: 860px), (max-height: 560px) {
+  /*
+   * ═══ THE FURNITURE GIVES WAY FIRST ═══
+   *
+   * Measured at 844x390: the bar is 67px and the drawn cover is 128, so 195
+   * of a 390px screen was spent before the first card — and then the battle
+   * record below it took the rest. The album opened on a picture of an album
+   * and a table of numbers, and you had to scroll to find out that it had any
+   * cards in it.
+   *
+   * Both of them stay, because both are good, and both are the wrong size for
+   * a screen that is 390 tall and exists to show a collection. The cover
+   * becomes a band rather than a poster, and the record becomes the
+   * last-but-one thing you scroll to rather than the first thing you see.
+   */
+  .album__cover { height: clamp(44px, 11vh, 68px); margin-bottom: 8px; }
+  .album__scroll { padding: 8px 10px 20px; }
+  .record { margin-bottom: 12px; padding: 9px 10px 8px; }
+  .record__title { font-size: 12px; margin-bottom: 6px; }
+  .record__grid { gap: 6px; grid-template-columns: repeat(auto-fit, minmax(74px, 1fr)); }
+  .record__cell { padding: 6px 4px 5px; border-radius: 10px; }
+  .record__n { font-size: 17px; }
+  .record__icon img,
+  .record__icon svg { width: 18px; height: 18px; }
+}
