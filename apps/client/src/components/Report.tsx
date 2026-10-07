@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { Icon } from "./Icon";
 import { fileReport, recentOpponents, type Opponent } from "../game/account";
+import { Overlay } from "./Overlay";
 
 /**
  * Reporting a bug, or a player who was unpleasant.
@@ -53,7 +54,7 @@ export function Report({
   }
 
   return (
-    <div className="modal-overlay" onClick={onClose}>
+    <Overlay onClick={onClose}>
       <div className="modal modal--report" onClick={(e) => e.stopPropagation()}>
         <button className="modal__close" onClick={onClose} title="סגירה">
           <Icon name="exit" size={15} />
@@ -140,6 +141,6 @@ export function Report({
           </>
         )}
       </div>
-    </div>
+    </Overlay>
   );
 }

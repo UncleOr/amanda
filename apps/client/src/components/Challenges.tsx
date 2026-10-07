@@ -1,6 +1,6 @@
 import { useCallback, useEffect, useState } from "react";
 import { periodEndsOn, type Period } from "@amanda/shared";
-import { claimChallenge, loadChallenges, type Standing } from "../game/meta";
+import { challengesSoFar, claimChallenge, loadChallenges, type Standing } from "../game/meta";
 import { Icon } from "./Icon";
 import { Lock } from "./SignedInOnly";
 
@@ -53,7 +53,12 @@ export function Challenges({
   onClaimed?: () => void;
   reloadKey?: unknown;
 }) {
-  const [live, setLive] = useState<Standing[]>([]);
+  /*
+   * Seeded from what the server last said, so the panel has something to draw
+   * on its very first frame. Or: *"the challenges window takes a long time to
+   * open."* It was opening empty and then waiting — see challengesSoFar.
+   */
+  const [live, setLive] = useState<Standing[]>(challengesSoFar);
   const [busy, setBusy] = useState<string | null>(null);
   const [error, setError] = useState<string | null>(null);
   /** Which period is showing. Daily first: it is the one that expires soonest. */
@@ -184,11 +189,13 @@ export function ChallengeButton({
   onOpen: () => void;
   reloadKey?: unknown;
 }) {
-  const [ready, setReady] = useState(0);
+  const count = (live: Standing[]) => live.filter((c) => c.done && !c.claimed).length;
+  // Seeded from the remembered answer for the same reason the list is: the
+  // dot should not have to wait for a round trip to say what it already knows.
+  const [ready, setReady] = useState(() => count(challengesSoFar()));
   useEffect(() => {
-    void loadChallenges().then((live) =>
-      setReady(live.filter((c) => c.done && !c.claimed).length),
-    );
+    void loadChallenges().then((live) => setReady(count(live)));
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [reloadKey]);
 
   return (

@@ -3,6 +3,7 @@ import { Icon } from "./Icon";
 import { Plaque } from "./Plaque";
 import { CATCHPHRASES, EMOJI } from "@amanda/shared";
 import { buyItem, loadShop, type ShopItem } from "../game/account";
+import { Overlay } from "./Overlay";
 
 /**
  * The shop.
@@ -98,7 +99,7 @@ export function Shop({
   }
 
   return (
-    <div className="modal-overlay" onClick={onClose}>
+    <Overlay onClick={onClose}>
       <div className="modal modal--shop" onClick={(e) => e.stopPropagation()}>
         <button className="modal__close" onClick={onClose} title="סגירה">
           <Icon name="exit" size={15} />
@@ -190,6 +191,6 @@ export function Shop({
 
         {note && <p className="friends__note">{note}</p>}
       </div>
-    </div>
+    </Overlay>
   );
 }

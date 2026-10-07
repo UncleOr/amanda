@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { Icon } from "./Icon";
 import { loadInbox, markInboxRead, type Notice } from "../game/account";
+import { Overlay } from "./Overlay";
 
 /**
  * What the game has to tell you.
@@ -53,7 +54,7 @@ export function Inbox({ onClose, onAction }: { onClose: () => void; onAction: (a
   }, []);
 
   return (
-    <div className="modal-overlay" onClick={onClose}>
+    <Overlay onClick={onClose}>
       <div className="modal modal--inbox" onClick={(e) => e.stopPropagation()}>
         <button className="modal__close" onClick={onClose} title="סגירה">
           <Icon name="exit" size={15} />
@@ -92,6 +93,6 @@ export function Inbox({ onClose, onAction }: { onClose: () => void; onAction: (a
           </ul>
         )}
       </div>
-    </div>
+    </Overlay>
   );
 }

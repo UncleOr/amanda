@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { ARENAS, arenaFor, arenaProgress, toArena } from "@amanda/shared";
 import { Icon } from "./Icon";
+import { Overlay } from "./Overlay";
 
 /**
  * The ladder of arenas, on the home screen.
@@ -55,7 +56,7 @@ export function ArenaTrack({ trophies }: { trophies: number }) {
       </button>
 
       {open && (
-        <div className="modal-overlay" onClick={() => setOpen(false)}>
+        <Overlay onClick={() => setOpen(false)}>
           <div className="modal modal--arenas" onClick={(e) => e.stopPropagation()}>
             <button className="modal__close" onClick={() => setOpen(false)} title="סגירה">
               <Icon name="exit" size={15} />
@@ -97,7 +98,7 @@ export function ArenaTrack({ trophies }: { trophies: number }) {
               })}
             </ol>
           </div>
-        </div>
+        </Overlay>
       )}
     </>
   );

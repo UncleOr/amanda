@@ -7,6 +7,7 @@ import { CardEditor } from "./CardEditor";
 // The panel's own sheet, loaded with the panel. It used to be in the entry
 // file, so every child downloaded the admin styles to play a card game.
 import "../admin.css";
+import { Overlay } from "./Overlay";
 
 /**
  * The admin panel. Opened with ?admin.
@@ -538,7 +539,7 @@ function GrantPanel({
   const [diamonds, setDiamonds] = useState(String(user.diamonds));
   const [gender, setGender] = useState<"boy" | "girl" | null>(user.gender);
   return (
-    <div className="modal-overlay" onClick={onClose}>
+    <Overlay onClick={onClose}>
       <div className="modal modal--confirm" onClick={(e) => e.stopPropagation()}>
         <h2>{user.nickname ?? user.email ?? "החשבון"}</h2>
         <p className="admin__hint">
@@ -597,7 +598,7 @@ function GrantPanel({
           </button>
         </div>
       </div>
-    </div>
+    </Overlay>
   );
 }
 
@@ -758,7 +759,7 @@ function UsersTab({ say }: { say: (s: string) => void }) {
       )}
 
       {suspending && (
-        <div className="modal-overlay" onClick={() => setSuspending(null)}>
+        <Overlay onClick={() => setSuspending(null)}>
           <div className="modal modal--confirm" onClick={(e) => e.stopPropagation()}>
             <h2>להשעות את {suspending.nickname ?? suspending.email ?? "החשבון"}?</h2>
             <p>
@@ -794,11 +795,11 @@ function UsersTab({ say }: { say: (s: string) => void }) {
               </button>
             </div>
           </div>
-        </div>
+        </Overlay>
       )}
 
       {confirmDelete && (
-        <div className="modal-overlay" onClick={() => setConfirmDelete(null)}>
+        <Overlay onClick={() => setConfirmDelete(null)}>
           <div className="modal modal--confirm" onClick={(e) => e.stopPropagation()}>
             <h2>למחוק את {confirmDelete.nickname ?? confirmDelete.email ?? "החשבון הזה"}?</h2>
             <p>
@@ -821,7 +822,7 @@ function UsersTab({ say }: { say: (s: string) => void }) {
               </button>
             </div>
           </div>
-        </div>
+        </Overlay>
       )}
     </div>
   );

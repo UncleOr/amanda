@@ -38,6 +38,32 @@ export interface Award {
 const NOTHING: Award = { nachos: 0, trophies: 0, cappedOut: false, total: 0, chests: [], moved: [] };
 
 /**
+ * The last answer the server gave, kept so the panel can open instantly.
+ *
+ * ═══ WHY THIS EXISTS ═══
+ *
+ * Or: *"the challenges window takes a long time to open."* It did, and the
+ * reason was not the server being slow. The list only draws once it has data
+ * (`if (!live.length) return null`), and opening the panel mounted a FRESH
+ * copy that started from nothing and asked again — so every open was a whole
+ * round trip of blank panel, every time, including the second time.
+ *
+ * Meanwhile the button on the home screen had already asked the same question
+ * and had the answer sitting in a state hook nobody else could reach.
+ *
+ * So the answer is remembered here, where both of them can see it. The panel
+ * paints from it on its first frame and the refresh lands underneath; the
+ * only open that still waits is the first one of the visit, which is the one
+ * where there is genuinely nothing to show yet.
+ */
+let lastChallenges: Standing[] = [];
+
+/** What the server last said, without asking it again. Possibly stale, never wrong-shaped. */
+export function challengesSoFar(): Standing[] {
+  return lastChallenges;
+}
+
+/**
  * Today's challenges, with this player's progress.
  *
  * Works signed out: a guest gets the same six at zero, because the point of
@@ -53,6 +79,10 @@ export async function loadChallenges(): Promise<Standing[]> {
     });
     if (!res.ok) return [];
     const body = (await res.json()) as { challenges?: Standing[] };
+    // Only a real answer is remembered. An empty one means the server could
+    // not be reached, and replacing a good list with nothing would make the
+    // panel go blank on a dropped connection.
+    if (body.challenges?.length) lastChallenges = body.challenges;
     return body.challenges ?? [];
   } catch {
     // A home screen without today's challenges is a home screen. Nothing here

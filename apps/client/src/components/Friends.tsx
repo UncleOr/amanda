@@ -6,6 +6,7 @@ import {
   listFriends,
   type Friend,
 } from "../game/account";
+import { Overlay } from "./Overlay";
 
 /**
  * The friends list.
@@ -78,7 +79,7 @@ export function Friends({
   const name = (f: { nickname: string | null }) => f.nickname ?? "בלי שם";
 
   return (
-    <div className="modal-overlay" onClick={onClose}>
+    <Overlay onClick={onClose}>
       <div className="modal modal--friends" onClick={(e) => e.stopPropagation()}>
         <button className="modal__close" onClick={onClose} title="סגירה">
           <Icon name="exit" size={15} />
@@ -177,6 +178,6 @@ export function Friends({
           </div>
         )}
       </div>
-    </div>
+    </Overlay>
   );
 }

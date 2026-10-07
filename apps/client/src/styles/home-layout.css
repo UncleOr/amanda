@@ -1200,108 +1200,361 @@
   box-shadow: 0 0 6px rgba(74, 222, 128, 0.85);
 }
 
-/* ════════ the phone, rethought ════════ */
+/* ════════ the phone ════════ */
 /*
- * Or, looking at it on his: *"on mobile it does not look inviting at all. The
- * whole layout needs rethinking so that nobody has to scroll. Maybe more
- * menus and popups so that everything fits."*
+ * Or, after the second attempt at this: *"the home screen on mobile still
+ * does not look good. I think it is worth planning and thinking it through to
+ * the end and only then deciding between a few options and winning."*
  *
- * ═══ WHAT EARNS A PLACE ON A 384-TALL SCREEN ═══
+ * So, the thinking, written down — because the two previous attempts were the
+ * same mistake twice and neither of them wrote it down.
  *
- * In order, and nothing else does:
+ * ═══ THE SCREEN IS WIDE AND SHORT, AND THE LAYOUT WAS TALL AND NARROW ═══
  *
- *   THE TWO WAYS TO PLAY — the screen exists for them, so they keep their
- *     size. Shrinking those to fit the furniture around them would be the
- *     wrong way round.
- *   THE PURSE — "what do I have" has to be answerable without scrolling,
- *     which is exactly how Or came to ask where the nachos were.
- *   ONE LINE OF PROGRESS — the arena, the nacho bar, any waiting chest, and
- *     the challenges as a button.
- *   ONE ROW OF DOORS — shop and friends, as icons rather than rows of text.
+ * The game is landscape-only on a phone — portrait gets a "turn your device"
+ * wall — so "mobile" here means 844x390, twice as wide as it is tall. The old
+ * arrangement stacked six full-width rows down it. Measured, on Or's screen:
  *
- * Everything else becomes a door rather than a thing on the floor. The
- * challenge LIST is the tallest block on this screen and the one a player
- * opens, reads and closes, so here it is a button carrying the number of
- * rewards waiting (ChallengeButton) and the list is a panel. The advert goes
- * entirely: its own tile would be a third of the screen for something nobody
- * asked to see, and the shop door is right there.
+ *   the purse          816px wide, for three numbers      26px tall
+ *   the play cards     540px wide, centred at x=152
+ *   the progress row   816px wide, its contents centred
+ *   the doors          758px wide, two 54px buttons in the middle of it
+ *   the friends door    54px wide, alone at the far edge
+ *
+ * Every row chose its own width, so nothing could line up with anything —
+ * which is Or's whole list in one sentence: *"the album and convenience shop
+ * buttons are not aligned to anything. Same for arenas, chests and
+ * challenges. Same for more modes and the playground."* Not five problems.
+ * One.
+ *
+ * ═══ WHAT WAS CONSIDERED ═══
+ *
+ *   A. THREE COLUMNS — doors | play | progress. Uses the width honestly, and
+ *      covers her completely: three columns of furniture laid across the
+ *      picture that is the reason the screen looks like anything.
+ *   B. HERO PLUS A DOCK — the play cards filling the middle, one row of icons
+ *      along the bottom. The usual phone-game answer, and the one that puts
+ *      the arena and the nacho bar back inside a menu, which is where Or
+ *      found them last time and asked for them to come out.
+ *   C. ONE COLUMN, DOWN HER EMPTY HALF. The banner is drawn with half of it
+ *      deliberately empty; mirrored for Hebrew, that empty half is the
+ *      inline-start side — which is where a Hebrew menu starts anyway.
+ *
+ * C, and it is not the compromise of the three. It is the only one where the
+ * alignment comes for free: one column is one width, and one width means the
+ * purse, the cards, the arena and the doors begin and end on the same two
+ * lines without anyone keeping numbers matched by hand. It also leaves her
+ * standing in the other half, which is what the entrance below is for.
+ *
+ * ═══ THE COLUMN IS THREE CELLS WIDE ═══
+ *
+ *   brand brand purse       the name, and what you have, on one line
+ *   play  play  play        the two ways to start, and the two side doors
+ *   progress                where you are and what you are two games from
+ *   collect collect social  album · shop · friends, each exactly one third
+ *   meta                    the small print
+ *
+ * The thirds are what make the doors equal. Before this they were three
+ * buttons in two different flex rows that happened to end up near each other.
  */
 @media (max-width: 860px), (max-height: 560px) {
-  .intro--hero { padding-block: 5px; }
+  .intro--hero { padding-block: 4px; }
+
+  /*
+   * ═══ THE PROFILE CHIP CHANGES CORNERS ═══
+   *
+   * It is `position: absolute` in the inline-start corner, which on a phone
+   * is the corner this whole column now starts in — so the name of the game
+   * was being printed underneath the word "התחברות".
+   *
+   * Padding the name's row past it was the first answer and the wrong one: it
+   * spent 108px of a 314px row on a gap. The chip goes to the OTHER top
+   * corner instead, beside the sound and inbox buttons, where there is
+   * nothing but dungeon wall and where it keeps better company — those are
+   * the other three things on this screen that are about the app rather than
+   * about the game.
+   */
+  .intro--hero .me {
+    top: 6px;
+    inset-inline-start: auto;
+    inset-inline-end: 104px;
+    padding: 3px 9px 3px 3px;
+    gap: 6px;
+  }
+  .intro--hero .me img,
+  .intro--hero .me > .icon { width: 22px; height: 22px; }
+  .intro--hero .me__name {
+    max-width: 62px;
+    overflow: hidden;
+    font-size: 10.5px;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+
   .intro--hero .home {
     /*
-     * The purse comes SECOND, not where it sits on a desktop.
+     * ═══ THE ONE MEASUREMENT THE LAYOUT RESTS ON ═══
      *
-     * In two columns it is the top of the quiet column, beside the play
-     * cards. Stacked, that same position put it below them and above the
-     * shop — which on a 384-tall phone measured 989px down the page.
+     * She is drawn `background-size: auto 100%`, so on a 390-tall screen the
+     * 1376x768 banner comes out 699px wide and her raised hand reaches about
+     * 460px across it. Everything past that is dungeon wall. 58% of an 808px
+     * content box is 469 — the column stops roughly where she does.
      *
-     * The doors share one row: two cells side by side rather than two rows
-     * of one button each.
+     * The floor matters more than the ceiling: 58% of a 568-wide phone is
+     * 329, and the two play cards stop being cards much below 320.
      */
-    grid-template-columns: 1fr auto;
+    width: clamp(320px, 58%, 520px);
+    grid-template-columns: repeat(3, minmax(0, 1fr));
     grid-template-rows: none;
     grid-template-areas:
-      "brand    brand"
-      "purse    purse"
-      "play     play"
-      "progress progress"
-      "collect  social"
-      "meta     meta";
-    gap: 4px;
-  }
-
-  /* Centred again: the push to the inline-start exists to keep the card off
-     her face, and in one column there is no face to keep off. */
-  .intro--hero .home .intro__card { margin-inline: auto; }
-  .intro--hero .home__brand { justify-self: stretch; }
-  .intro--hero .home .purse { justify-content: center; gap: 18px; padding: 3px 10px; }
-
-  /* One line of progress, read sideways. */
-  .intro--hero .home__progress {
-    flex-direction: row;
-    flex-wrap: nowrap;
-    align-items: center;
-    justify-content: center;
-    gap: 7px;
-    padding: 6px;
+      "brand    brand    purse"
+      "play     play     play"
+      "progress progress progress"
+      "collect  collect  social"
+      "meta     meta     meta";
+    gap: clamp(4px, 1.2vh, 10px) 6px;
+    align-content: center;
   }
   /*
-   * Who gets the width.
+   * A grid item's default `min-width: auto` is its MIN-CONTENT width, and a
+   * track is not allowed to squash it below that — so the play group, whose
+   * two cards and two chips want 620px between them, simply hung 150px out of
+   * a 473px column and took the whole row's alignment with it. Measured
+   * before and after: 620 → 473.
+   */
+  /*
+   * `min-width: 0` alone was not enough, which is worth writing down because
+   * it looked like it should have been.
    *
-   * The nacho bar and the chest shelf are fixed-size pictures — five pips and
-   * a chest — so they take exactly what they need and no more. Everything
-   * left over goes to the arena, which is the only one of them made of WORDS:
-   * starved of width its name wrapped to two lines and the whole row grew
-   * from 56px to 110.
+   * The play group carries `.intro__card`, which has `margin-inline: auto` on
+   * it — and auto inline margins on a grid item turn it from STRETCHED into
+   * SHRINK-TO-FIT, and shrink-to-fit has a floor of min-content that
+   * `min-width: 0` does not lower. So it came out 620px wide inside a 473px
+   * column, hanging 147px out of the layout and taking the whole screen's
+   * alignment with it. Measured: 620 → 473.
+   *
+   * `width: 100%` resolves against the grid AREA, which is the one number
+   * that is always right here however many columns a row spans.
    */
-  .intro--hero .home__progress > * { flex: 0 0 auto; min-width: 0; }
+  .intro--hero .home > * { min-width: 0; width: 100%; }
+
+  /* ---- the name, and the purse beside it ---- */
   /*
-   * `width: 100%` is what the nacho bar wants in a COLUMN, and it is what
-   * broke the row: with `flex-basis: auto` that 100% became its basis, the
-   * bar took 790 of 832 pixels and the arena beside it collapsed to zero.
+   * Or: *"the diamonds, nachos and trophies bar on mobile is really long.
+   * Why? There is no reason."* There was none. It was a full-width strip
+   * because it was a full-width ROW, with three numbers floating in the
+   * middle of it. On the end of the name's line it is as wide as it needs to
+   * be, and it finally has something to line up with.
    */
-  .home__progress .nachos { width: auto; }
-  .intro--hero .home__progress .home__ladder { flex: 1 1 auto; min-width: 0; }
+  .intro--hero .home__brand {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    justify-self: stretch;
+    margin-block-end: 0;
+    text-align: start;
+  }
+  .intro--hero .home__brand .intro__name { margin: 0; }
+  .intro--hero .home__brand .intro__name img { width: clamp(92px, 15vw, 132px); }
+  /*
+   * Or: *"the sentence under the word Amanda cannot be seen."* It could not:
+   * it was `display: none`, cut back when this screen was a tall stack and
+   * every row was a fight. Beside the name on one line it costs no height.
+   */
+  .intro--hero .home__brand .intro__sub {
+    display: block;
+    margin: 0;
+    font-size: clamp(8.5px, 1.5vw, 11px);
+    white-space: nowrap;
+    opacity: 0.75;
+  }
+  .intro--hero .home .purse {
+    justify-content: flex-end;
+    gap: 9px;
+    width: auto;
+    padding: 3px 9px;
+    font-size: 11px;
+  }
+  .intro--hero .home .purse .icon { width: 13px; height: 13px; }
+
+  /* ---- the two ways to play ---- */
+  .intro--hero .home .intro__card { margin-inline: auto; max-width: none; padding: 0; }
+  .intro--hero .home .pick { gap: 6px; }
+  /*
+   * ═══ THE CARDS TURN SIDEWAYS ═══
+   *
+   * Or: *"the pictures on the big buttons are cut off and not fitted."* They
+   * were. The art is 512x512 and the old phone rule pushed it into
+   * `height: clamp(40px, 13vh, 110px)` with `object-fit: cover` — 50px tall
+   * on a 390px screen, so a square picture was shown as a 4.4:1 slice of
+   * itself with the robot's head above the crop and the player's below it.
+   *
+   * Cropping it differently was never going to fix a crop. On a screen this
+   * short the card wants to be short too, and a short card wants its picture
+   * BESIDE the words rather than above them — which lets the square be a
+   * square. Nothing is cut off because nothing is being forced into a shape
+   * it is not.
+   */
+  .intro--hero .home .pick__card {
+    display: grid;
+    /*
+     * Two columns and two rows, with the picture spanning both rows.
+     *
+     * Auto-placement does not know that the label and the difficulty pills
+     * are one column of text: it put the label beside the picture and the
+     * pills on a NEW ROW underneath it, which made a 54px card 85px tall for
+     * no visible reason. Saying where the picture goes says where everything
+     * else goes.
+     */
+    grid-template-columns: auto minmax(0, 1fr);
+    grid-template-rows: auto auto;
+    align-items: center;
+    gap: 2px 8px;
+    max-width: none;
+    padding: 5px;
+    border-radius: 13px;
+    text-align: start;
+  }
+  .intro--hero .home .pick__card > img { grid-area: 1 / 1 / 3 / 2; }
+  .intro--hero .home .pick__card > span { grid-column: 2; }
+  .intro--hero .home .pick__card > img {
+    width: clamp(44px, 9vh, 64px);
+    height: clamp(44px, 9vh, 64px);
+    border-radius: 9px;
+    object-fit: contain;
+  }
+  .intro--hero .home .pick__card > span {
+    padding: 0;
+    font-size: clamp(10.5px, 1.5vw, 13px);
+    line-height: 1.2;
+  }
+  .intro--hero .home .pick__card > .pick__levels {
+    justify-content: flex-start;
+    margin-top: 3px;
+    gap: 2px;
+  }
+  .intro--hero .home .pick__card > .pick__levels > span { padding: 1px 5px; font-size: 9px; }
+  /* The padlock rode the corner of a tall card; on a wide one it belongs at
+     the end of the line it is about. */
+  .intro--hero .home .pick__card .lock { top: 4px; inset-inline-end: 4px; }
+
+  /* The "play with a friend" list, which replaces the two cards in place. */
+  .intro--hero .home .pick--ways {
+    flex-direction: row;
+    flex-wrap: wrap;
+    max-width: none;
+    justify-content: center;
+  }
+  .intro--hero .home .pick--ways .btn-fight {
+    width: auto;
+    flex: 1 1 auto;
+    padding: 6px 10px;
+    font-size: 11px;
+  }
+  .intro--hero .home .pick--ways .btn-link { flex: 0 0 100%; font-size: 10px; }
+
+  /*
+   * ---- the two side doors ----
+   *
+   * Or: *"same for more modes and the playground (which looks like a button
+   * that is switched off)."* The playground was the one thing on this screen
+   * drawn in outline with no fill — which is what every other button in this
+   * game uses to mean "you cannot press this". It matches the one beside it
+   * now, and the pair share the row's full width, so they line up with the
+   * cards above them and the doors below.
+   */
+  .intro--hero .home .extras {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 6px;
+    margin-top: 6px;
+  }
+  .intro--hero .home .extras > button {
+    width: 100%;
+    justify-content: center;
+    padding: 5px 8px;
+    font-size: 10.5px;
+  }
+
+  /* ---- progress: the arena, then everything that is counted ---- */
+  /*
+   * ═══ ONE ROW DID NOT FIT, AND THE MEASUREMENT SAYS SO ═══
+   *
+   * Four things wanted this row: the arena (163px to say its name and how far
+   * through it you are), the nacho bar (207), the chest shelf (56) and the
+   * challenge button (63). That is 489 before any gaps, in a column that is
+   * 473 at best and 371 on a 667-wide phone. The three fixed-size ones always
+   * win a flex fight, so the arena was squeezed to **15px** — Or's screenshot
+   * shows the nacho bar sitting on top of it.
+   *
+   * The arena is the only one of the four made of WORDS, so it gets the full
+   * width on its own line, and the three things that are COUNTED share the
+   * line underneath. The whole block costs 19px more than the broken row did,
+   * and there were 40 going spare.
+   */
+  .intro--hero .home__progress {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) auto auto;
+    grid-template-areas:
+      "ladder ladder ladder"
+      "nachos shelf  quests";
+    align-items: stretch;
+    gap: 5px;
+    padding: 5px;
+  }
+  .intro--hero .home__progress > * { min-width: 0; }
+  .intro--hero .home__progress .home__ladder { grid-area: ladder; }
+  /* `width: 100%` is what the nacho bar wants in a COLUMN; in a flex row it
+     became its basis and took 790 of 832px. In a named grid cell neither
+     applies — the cell decides. */
+  .home__progress .nachos { grid-area: nachos; width: auto; }
+  .home__progress .shelf { grid-area: shelf; }
+  .home__progress .quests__open { grid-area: quests; }
+  /*
+   * The pips shrink with the screen. Five of them at 28px plus a chest is a
+   * 207px bar, which is more than half the column on a small phone — and the
+   * only thing a pip has to do is be COUNTABLE, which 20px manages.
+   */
+  .home__progress .nachos { flex-direction: row; gap: 7px; padding: 4px 8px; }
+  .home__progress .nachos__row > i { width: clamp(18px, 4.6vh, 24px); height: clamp(18px, 4.6vh, 24px); }
+  .home__progress .nachos__row { gap: 4px; }
+  .home__progress .nachos__chest { margin-inline-start: 4px; padding-inline-start: 6px; }
+  /*
+   * Everything in the counted row is sized against the VIEWPORT HEIGHT, not
+   * a fixed number: these three and the arena above them are the block that
+   * has to give way when the screen is 375 tall rather than 390, and a fixed
+   * size means the top of the game's name goes off the screen instead.
+   */
+  /* `.shelf` carries a 10px bottom padding from the social rail it was born
+     in, which on this row is ten pixels of nothing under a picture. */
+  .home__progress .shelf { padding: 3px 5px; }
+  .home__progress .shelf__chest { padding: 0; border: 0; background: none; line-height: 0; }
+  .home__progress .shelf__chest img {
+    width: clamp(24px, 7vh, 34px);
+    height: clamp(24px, 7vh, 34px);
+    object-fit: contain;
+    display: block;
+  }
+  .home__progress .track__art { width: clamp(26px, 7.5vh, 34px); height: clamp(26px, 7.5vh, 34px); }
+  .home__progress .track__text b { font-size: clamp(11px, 2.6vh, 14px); }
+  .home__progress .track__text small { font-size: clamp(9px, 2.2vh, 11.5px); }
+  .home__progress .quests__open { padding: 4px 7px; font-size: 9.5px; }
+  .home__progress .quests__open .icon { width: clamp(15px, 4vh, 19px); height: clamp(15px, 4vh, 19px); }
   .home__progress .track__text b,
   .home__progress .track__text small { white-space: nowrap; }
-  .home__progress .track__art { width: 34px; height: 34px; }
-  .home__progress .shelf { padding: 4px 7px; }
-  /* The album is a door down there instead — see HomeScreen. Two ways in
-     would cost a row, and a row is the thing this screen has none of. */
+  .home__progress .track { padding: 2px 6px 2px 2px; gap: 6px; }
+  .home__progress .track__text { gap: 1px; }
+  /* The album is a door in the row below instead — see HomeScreen. Two ways
+     in would cost a row, and rows are the thing this screen has none of. */
   .home__ladder .btn-album { display: none; }
 
-  /*
-   * ═══ THE DOORS BECOME ICONS ═══
-   *
-   * Shop and friends were full-width rows of text: two rows of height for two
-   * taps. As icons they are one row, and the word stays underneath so nothing
-   * is a guess.
-   */
+  /* ---- the doors: three equal thirds ---- */
   .home__collect,
   .home__social {
+    display: flex;
+    /* The panels stack their contents everywhere else; here they are a row of
+       equal thirds, and `display: flex` alone leaves the column behind. */
     flex-direction: row;
-    justify-content: center;
     gap: 6px;
     padding: 0;
     border: 0;
@@ -1309,84 +1562,87 @@
   }
   .home__collect .rail__item,
   .home__social .rail__item {
+    flex: 1 1 0;
     flex-direction: column;
     gap: 2px;
     width: auto;
-    min-width: 64px;
-    padding: 7px 10px;
-    font-size: 10.5px;
+    min-width: 0;
+    padding: clamp(3px, 1vh, 7px) 4px;
+    font-size: 10px;
+    line-height: 1.15;
     text-align: center;
   }
+  .home__collect .rail__item .icon,
+  .home__social .rail__item .icon {
+    width: clamp(14px, 4vh, 19px);
+    height: clamp(14px, 4vh, 19px);
+  }
   .rail__count { margin-inline-start: 0; }
+  /* An advertisement would be a third of this screen for something nobody
+     asked to see, and the shop door is right beside it. */
   .rail__promo { display: none; }
 
-  /*
-   * ═══ AND THE CARDS GIVE UP HEIGHT, NOT WIDTH ═══
-   *
-   * The two portraits are square and sized by their WIDTH, so on an 832-wide
-   * phone they were 132px tall each and the screen came to 594px on a 384px
-   * display. Capping the width would shrink the one thing that should stay
-   * big; capping the picture's HEIGHT and letting it crop keeps the card the
-   * size of a card and loses only the top of a haircut.
-   */
-  .intro--hero .home .pick__card { max-width: none; }
-  .intro--hero .home .pick__card > img {
-    width: 100%;
-    height: clamp(40px, 13vh, 110px);
-    object-fit: cover;
-    object-position: center 28%;
-  }
-
-  /* The two side doors, as one line of chips rather than two stacked
-     buttons. They are the smallest thing on the screen on purpose — they
-     sit beside the game, not in front of it. */
-  .intro--hero .home .extras {
-    flex-direction: row;
-    justify-content: center;
-    gap: 6px;
-    margin-top: 5px;
-  }
-  .intro--hero .home .extras { margin-top: 3px; }
-  .intro--hero .home .extras > button { padding: 3px 10px; font-size: 10.5px; }
-
-  .intro--hero .home__brand .intro__name img { width: min(150px, 28vw); }
-  .intro--hero .home__brand .intro__sub { display: none; }
-
-  /* Nothing on this screen keeps padding it does not need. */
-  .intro--hero .home .intro__card { padding: 0; }
-  .intro--hero .home .pick { gap: 7px; }
-  .home__collect,
-  .home__social { padding: 0; }
-  .home__collect .rail__item,
-  .home__social .rail__item,
-  .quests__open {
-    min-width: 54px;
-    padding: 4px 7px;
-    font-size: 9.5px;
-    line-height: 1.1;
-  }
-  .home__collect .rail__item .icon,
-  .home__social .rail__item .icon { width: 17px; height: 17px; }
-  .home__progress .track { padding: 3px 6px 3px 3px; gap: 7px; }
-  .home__progress .nachos { padding: 5px 7px; }
-  .home__progress .shelf { padding: 4px 6px; }
-
-  /* Two links on one line, at the very bottom. */
+  /* ---- the small print ---- */
   .intro--hero .home .smallprint {
     flex-direction: row;
     flex-wrap: wrap;
     align-items: center;
     justify-content: center;
-    gap: 0 10px;
+    gap: 0 9px;
     line-height: 1.1;
   }
-  .intro--hero .home .smallprint .btn-link { font-size: 10px; padding: 1px 6px; }
+  .intro--hero .home .smallprint .btn-link { font-size: 9.5px; padding: 0 4px; }
   .intro--hero .home .smallprint .intro__version {
-    font-size: 8.5px;
-    opacity: 0.55;
+    flex: 0 0 100%;
+    margin: 0;
+    font-size: 8px;
+    opacity: 0.5;
     line-height: 1;
+    text-align: center;
   }
 }
+
+/* ════════ the buttons arrive, she does not ════════ */
+/*
+ * Or: *"so that people see Amanda's background, I think all the buttons
+ * should come into the screen with an animation on load. Meaning at first you
+ * see the background and only after half a second all the buttons come into
+ * their places."*
+ *
+ * Five groups, each sliding up into place a beat after the one before. The
+ * `both` fill mode is the half that does the work he actually asked for: it
+ * holds the FIRST keyframe while the delay runs down, so for the first 420ms
+ * there is nothing on the screen but her.
+ *
+ * ═══ ONCE A PAGE LOAD, NOT ONCE A MATCH ═══
+ *
+ * The class is handed out exactly once, by HomeScreen (see `firstLook`). A
+ * reveal is something that happens when the game opens; sitting through it
+ * again every time you walk back from a battle would be the same animation
+ * doing the opposite job.
+ */
+.home--enter > * {
+  animation: home-in 420ms cubic-bezier(0.22, 1, 0.3, 1) both;
+}
+@keyframes home-in {
+  from { opacity: 0; transform: translateY(16px) scale(0.985); }
+  to { opacity: 1; transform: none; }
+}
+.home--enter .home__brand { animation-delay: 420ms; }
+.home--enter .home__purse { animation-delay: 500ms; }
+.home--enter .home__play { animation-delay: 560ms; }
+.home--enter .home__progress { animation-delay: 660ms; }
+.home--enter .home__collect { animation-delay: 730ms; }
+.home--enter .home__social { animation-delay: 760ms; }
+.home--enter .home__meta { animation-delay: 820ms; }
+
+/* Nothing here is information, so where motion is unwelcome it simply is not
+   there — including the delay, which would otherwise be three-quarters of a
+   second of empty screen with nothing to explain it. */
+@media (prefers-reduced-motion: reduce) {
+  .home--enter > * { animation: none; }
+}
+
 
 /* ════════ your partner, on a phone ════════ */
 /*

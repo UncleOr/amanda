@@ -3,6 +3,7 @@ import { Icon, type IconName } from "./Icon";
 import { CATALOG, SERIES_BY_ID } from "../data/catalog";
 import { ABILITY_LABEL, ELEMENT_META, RANGE_META, RARITY_META } from "../data/cardMeta";
 import { LEVELS, levelCost, levelMultiplier } from "@amanda/shared";
+import { Overlay } from "./Overlay";
 
 export function CardDetailModal({
   cardId,
@@ -26,7 +27,7 @@ export function CardDetailModal({
   const power = Math.round(card.stats.power * mult);
 
   return (
-    <div className="modal-overlay" onClick={onClose}>
+    <Overlay onClick={onClose}>
       <div
         className="modal"
         onClick={(e) => e.stopPropagation()}
@@ -125,7 +126,7 @@ export function CardDetailModal({
           </div>
         )}
       </div>
-    </div>
+    </Overlay>
   );
 }
 

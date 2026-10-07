@@ -3,6 +3,7 @@ import { ACTIONS, isPassiveAction } from "../data/catalog";
 import { RARITY_META } from "../data/cardMeta";
 import { actionArtUrl } from "./ActionCardView";
 import { Icon } from "./Icon";
+import { Overlay } from "./Overlay";
 
 
 export function ActionDetailModal({
@@ -24,7 +25,7 @@ export function ActionDetailModal({
   const rarity = RARITY_META[card.rarity];
 
   return (
-    <div className="modal-overlay" onClick={onClose}>
+    <Overlay onClick={onClose}>
       <div
         className="modal"
         onClick={(e) => e.stopPropagation()}
@@ -77,6 +78,6 @@ export function ActionDetailModal({
           </div>
         )}
       </div>
-    </div>
+    </Overlay>
   );
 }

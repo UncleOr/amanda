@@ -1,4 +1,5 @@
 import { Icon } from "./Icon";
+import { Overlay } from "./Overlay";
 
 /**
  * The shelf of modes that do not exist yet.
@@ -63,7 +64,7 @@ export function MoreModes({
   ];
 
   return (
-    <div className="modal-overlay" onClick={onClose}>
+    <Overlay onClick={onClose}>
       <div className="modal modal--modes" onClick={(e) => e.stopPropagation()}>
         <button className="modal__close" onClick={onClose} title="סגירה">
           <Icon name="exit" size={15} />
@@ -97,6 +98,6 @@ export function MoreModes({
           ))}
         </ul>
       </div>
-    </div>
+    </Overlay>
   );
 }

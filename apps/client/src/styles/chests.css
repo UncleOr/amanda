@@ -22,7 +22,7 @@
   width: min(520px, calc(100vw - 32px));
   max-height: calc(100dvh - 40px);
   overflow-y: auto;
-  padding: 22px;
+  padding: clamp(10px, 3vh, 22px);
   border-radius: 20px;
   border: 2px solid var(--accent);
   background: rgba(10, 15, 26, 0.96);
@@ -40,7 +40,13 @@
 .chest__lid {
   position: relative;
   display: block;
-  width: min(240px, 58vw);
+  /*
+   * Sized against the HEIGHT as well as the width. 240px of chest plus a
+   * title and a line of Amanda underneath came to 344px inside a panel capped
+   * at `100dvh - 40px` — which on a 390-tall phone is 350, so the thing you
+   * are meant to hit arrived with a scrollbar down the side of it.
+   */
+  width: min(240px, 58vw, 42vh);
   aspect-ratio: 1;
   margin: 0 auto;
   border: none;
@@ -53,10 +59,108 @@
   filter: drop-shadow(0 12px 26px rgba(0, 0, 0, 0.6));
   animation: chest-wobble 1.6s ease-in-out infinite;
 }
-.chest__lid:hover { animation-duration: 0.5s; }
 @keyframes chest-wobble {
   0%, 100% { transform: rotate(-3deg) scale(1); }
   50% { transform: rotate(3deg) scale(1.04); }
+}
+
+/*
+ * ════════ four taps, and each one nearly does it ════════
+ *
+ * Or: *"when you open a chest it should flash and be cool, and you should
+ * open it by tapping it lots of times, and each time it almost opens, like in
+ * Brawl Stars."*
+ *
+ * `--built` comes from ChestReveal and is how far along the chest is, 0 to 1.
+ * Everything here reads from that one number, so "further along" is a single
+ * idea rather than four classes that have to be kept in step: the glow gets
+ * hotter, the idle wobble gets faster and wider, and the light under the lid
+ * gets brighter.
+ *
+ * The `--built, 0` fallback matters — the property is only set while the
+ * chest is closed, and every calc() below would be invalid without it.
+ */
+.chest__lid {
+  /* A chest that has been hit three times should look three times as close
+     to going off as one that has not been touched. */
+  filter:
+    drop-shadow(0 12px 26px rgba(0, 0, 0, 0.6))
+    drop-shadow(0 0 calc(var(--built, 0) * 34px) rgba(255, 211, 107, calc(var(--built, 0) * 0.95)))
+    brightness(calc(1 + var(--built, 0) * 0.35));
+}
+
+/*
+ * The light under the lid.
+ *
+ * Invisible at zero and nearly blinding by the fourth tap, drawn BEHIND the
+ * painting so it reads as something getting out rather than something painted
+ * on top of it.
+ */
+.chest__lid::before {
+  content: "";
+  position: absolute;
+  inset: 22% 12% 8%;
+  z-index: -1;
+  border-radius: 50%;
+  background: radial-gradient(
+    ellipse at center,
+    rgba(255, 238, 190, calc(var(--built, 0) * 0.95)) 0%,
+    rgba(255, 176, 32, calc(var(--built, 0) * 0.55)) 38%,
+    transparent 72%
+  );
+  filter: blur(calc(6px + var(--built, 0) * 10px));
+  pointer-events: none;
+}
+
+/*
+ * The jolt, on every tap.
+ *
+ * Two names, identical keyframes. A CSS animation restarts only when its NAME
+ * changes, so tapping again while the last jolt is still playing would
+ * otherwise do nothing visible — which is the one tap in four that most needs
+ * to feel like it landed. ChestReveal alternates the class on the tap count.
+ *
+ * It grows with `--built` as well, so the fourth jolt is twice the first and
+ * the chest looks like it is losing the argument.
+ */
+.chest__lid--hit-a { animation-name: chest-wobble, chest-jolt-a; }
+.chest__lid--hit-b { animation-name: chest-wobble, chest-jolt-b; }
+/*
+ * Both animations' timings in one place, AFTER the names, because the
+ * `animation` shorthand resets every longhand it does not mention — writing
+ * the duration above and a shorthand below silently throws the duration away.
+ *
+ * The wobble gets twitchier the closer the chest is: 1.6s untouched, about
+ * 0.6s on the tap before it goes.
+ */
+.chest__lid--hit-a,
+.chest__lid--hit-b {
+  animation-duration: calc(1.6s - var(--built, 0) * 1s), 260ms;
+  animation-timing-function: ease-in-out, ease-out;
+  animation-iteration-count: infinite, 1;
+}
+@keyframes chest-jolt-a {
+  0% { transform: scale(1); }
+  28% { transform: scale(calc(1.1 + var(--built, 0) * 0.14)) rotate(-7deg); }
+  58% { transform: scale(calc(0.95 - var(--built, 0) * 0.03)) rotate(6deg); }
+  100% { transform: scale(1) rotate(0deg); }
+}
+@keyframes chest-jolt-b {
+  0% { transform: scale(1); }
+  28% { transform: scale(calc(1.1 + var(--built, 0) * 0.14)) rotate(7deg); }
+  58% { transform: scale(calc(0.95 - var(--built, 0) * 0.03)) rotate(-6deg); }
+  100% { transform: scale(1) rotate(0deg); }
+}
+
+.chest__lid--hit-a,
+.chest__lid--hit-b { will-change: transform, filter; }
+
+/* A chest that shakes at you is the instruction. Where motion is unwelcome,
+   the glow still builds — it is the part that says "nearly" without moving. */
+@media (prefers-reduced-motion: reduce) {
+  .chest__lid,
+  .chest__lid--hit-a,
+  .chest__lid--hit-b { animation: none; }
 }
 /*
  * The flash at the moment it opens.

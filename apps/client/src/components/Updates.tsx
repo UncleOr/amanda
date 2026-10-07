@@ -1,6 +1,7 @@
 import { useEffect } from "react";
 import { Icon } from "./Icon";
 import { UPDATES, markUpdatesSeen } from "../data/updates";
+import { Overlay } from "./Overlay";
 
 /**
  * "What's new" — the reason to open the game again.
@@ -24,7 +25,7 @@ export function Updates({ onClose }: { onClose: () => void }) {
   const newestFirst = [...UPDATES].reverse();
 
   return (
-    <div className="modal-overlay" onClick={onClose}>
+    <Overlay onClick={onClose}>
       <div className="modal modal--news" onClick={(e) => e.stopPropagation()}>
         <button className="modal__close" onClick={onClose} title="סגירה">
           <Icon name="exit" size={15} />
@@ -56,6 +57,6 @@ export function Updates({ onClose }: { onClose: () => void }) {
           </ol>
         )}
       </div>
-    </div>
+    </Overlay>
   );
 }

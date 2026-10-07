@@ -11,6 +11,23 @@
  * rattles at you until you tap it, a burst of light when you do, and the cards
  * turn over one at a time — because the whole point of a chest is the moment
  * before you know.
+ *
+ * ═══ AND IT TAKES FOUR TAPS, NOT ONE ═══
+ *
+ * Or: *"when you open a chest it should flash and be cool, and you should
+ * open it by tapping it lots of times, and each time it almost opens, like in
+ * Brawl Stars."*
+ *
+ * The reason that works, and the reason a single tap does not: a chest is
+ * worth exactly as much as the wait before it. One tap spends the moment
+ * immediately. Four taps make the player do the waiting with their hands, and
+ * every one of them is allowed to be the one — so the thing that is actually
+ * being built is not a progress bar, it is a guess.
+ *
+ * So each tap jolts the lid harder, leaks more light, and resolves nothing.
+ * The last one bursts. There is NO sentence anywhere telling anybody to tap:
+ * a chest that shudders and glows when you touch it has already said it, and
+ * Or was explicit — *"no need to write an explanation about this!!!"*
  */
 import { useEffect, useState } from "react";
 import { CATALOG } from "../data/catalog";
@@ -19,6 +36,7 @@ import { Icon } from "./Icon";
 import { EmojiFace } from "./EmojiFace";
 import { Plaque } from "./Plaque";
 import { CATCHPHRASES, EMOJI, EMOJI_PACKS } from "@amanda/shared";
+import { sfx } from "../game/sfx";
 import type { Chest } from "../game/account";
 import * as V from "../data/voice";
 
@@ -38,8 +56,19 @@ interface Props {
   onClose: () => void;
 }
 
+/**
+ * Taps to open.
+ *
+ * Four. Three is over before the player notices it was a game; six turns the
+ * best moment in the app into work, and a child is doing it on a phone with
+ * one thumb.
+ */
+const TAPS_TO_OPEN = 4;
+
 export function ChestReveal({ chest, onClose }: Props) {
   const [opened, setOpened] = useState(false);
+  /** How many times it has been hit. 0 .. TAPS_TO_OPEN - 1 while it holds. */
+  const [taps, setTaps] = useState(0);
   /**
    * The flash, which outlives the chest by a beat.
    *
@@ -67,10 +96,17 @@ export function ChestReveal({ chest, onClose }: Props) {
     return () => window.clearTimeout(t);
   }, [burst]);
 
-  const open = () => {
+  const hit = () => {
     if (opened) return;
-    setBurst(true);
-    setOpened(true);
+    const next = taps + 1;
+    if (next >= TAPS_TO_OPEN) {
+      sfx.play("explode");
+      setBurst(true);
+      setOpened(true);
+      return;
+    }
+    setTaps(next);
+    sfx.play("click");
   };
 
   const allShown = shown >= chest.cards.length;
@@ -87,20 +123,31 @@ export function ChestReveal({ chest, onClose }: Props) {
         {!opened ? (
           <>
             {/*
-              The chest IS the button. A painting with a separate "open"
-              control underneath makes the picture scenery; tapping the thing
-              itself is the whole gesture.
+              The chest IS the button, and the only one. The "open" button that
+              used to sit under it would have skipped the whole thing in a
+              single press — and with four taps to give, a shortcut past them
+              is a shortcut past the feature.
+
+              `--built` carries how far along it is, 0 to 1, and chests.css
+              does the rest: the glow, the shake and the light coming out of
+              the seam all read from that one number, so the build-up is one
+              idea in one place instead of four classes.
+
+              The alternating `--hit-a` / `--hit-b` is how the jolt plays
+              AGAIN on a tap that happens while the last jolt is still
+              running: a CSS animation only restarts when its name changes, so
+              the two names are identical keyframes and the parity swaps them.
             */}
             <button
-              className="chest__lid"
-              onClick={open}
+              className={`chest__lid chest__lid--hit-${taps % 2 === 0 ? "a" : "b"}`}
+              onClick={hit}
               aria-label={`פתח ${look.he}`}
-              style={{ backgroundImage: `url("${BASE}scenes/${look.art}")` }}
+              style={{
+                backgroundImage: `url("${BASE}scenes/${look.art}")`,
+                ["--built" as string]: `${taps / TAPS_TO_OPEN}`,
+              }}
             />
             <p className="chest__says">{line}</p>
-            <button className="btn-fight chest__open" onClick={open}>
-              פתח
-            </button>
           </>
         ) : (
           <>

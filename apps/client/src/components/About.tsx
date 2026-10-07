@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { Icon } from "./Icon";
 import { ageFrom } from "../game/account";
+import { Overlay } from "./Overlay";
 
 /**
  * About, and the legal pages the stores will not publish us without.
@@ -88,7 +89,7 @@ export function About({
   const grown = mayFollowLinks(birthDate);
 
   return (
-    <div className="modal-overlay" onClick={onClose}>
+    <Overlay onClick={onClose}>
       <div className="modal modal--about" onClick={(e) => e.stopPropagation()}>
         <button className="modal__close" onClick={onClose} title="סגירה">
           <Icon name="exit" size={15} />
@@ -113,7 +114,7 @@ export function About({
           {page === "terms" && <Terms />}
         </div>
       </div>
-    </div>
+    </Overlay>
   );
 }
 

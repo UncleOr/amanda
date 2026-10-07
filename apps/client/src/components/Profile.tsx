@@ -29,6 +29,7 @@ import { Icon } from "./Icon";
 import { NO_PHRASE, ownedCatchphrases } from "@amanda/shared";
 import { Plaque } from "./Plaque";
 import * as V from "../data/voice";
+import { Overlay } from "./Overlay";
 
 /**
  * The avatars drawn for this, matching packages/art/src/brandLooks.ts.
@@ -224,7 +225,7 @@ export function Profile({ account, onClose, onChanged }: Props) {
         )}
 
         {deleting && (
-          <div className="modal-overlay" onClick={() => setDeleting(false)}>
+          <Overlay onClick={() => setDeleting(false)}>
             <div className="modal modal--confirm" onClick={(e) => e.stopPropagation()}>
               <h2>למחוק את החשבון?</h2>
               <p>
@@ -259,11 +260,11 @@ export function Profile({ account, onClose, onChanged }: Props) {
                 </button>
               </div>
             </div>
-          </div>
+          </Overlay>
         )}
 
         {leaving && (
-          <div className="modal-overlay" onClick={() => setLeaving(false)}>
+          <Overlay onClick={() => setLeaving(false)}>
             <div className="modal modal--confirm" onClick={(e) => e.stopPropagation()}>
               <h2>לצאת מהחשבון?</h2>
               <p>
@@ -285,7 +286,7 @@ export function Profile({ account, onClose, onChanged }: Props) {
                 </button>
               </div>
             </div>
-          </div>
+          </Overlay>
         )}
 
         {facesOpen && (

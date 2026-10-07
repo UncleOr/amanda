@@ -1,4 +1,5 @@
 import { Icon } from "./Icon";
+import { Overlay } from "./Overlay";
 
 /**
  * What a guest may do, and what an account is for.
@@ -61,7 +62,7 @@ export function Lock() {
  */
 export function WhySignIn({ onClose, onSignIn }: { onClose: () => void; onSignIn: () => void }) {
   return (
-    <div className="modal-overlay" onClick={onClose}>
+    <Overlay onClick={onClose}>
       <div className="modal modal--why" onClick={(e) => e.stopPropagation()}>
         <button className="modal__close" onClick={onClose} title="סגירה">
           <Icon name="exit" size={15} />
@@ -87,6 +88,6 @@ export function WhySignIn({ onClose, onSignIn }: { onClose: () => void; onSignIn
           </button>
         </div>
       </div>
-    </div>
+    </Overlay>
   );
 }

@@ -69,6 +69,16 @@ const BOT_LEVELS: ReadonlyArray<{ id: "easy" | "normal" | "hard"; he: string; no
  * True when the game is running as an installed app rather than a browser tab.
  * Read once: a window does not stop being installed halfway through a visit.
  */
+/**
+ * Has the home screen been looked at yet this visit?
+ *
+ * Module-level, so it survives HomeScreen being unmounted and mounted again —
+ * which happens on the way back from every match. See `.home--enter` in
+ * home-layout.css for what it is for: the buttons fly in once, when the game
+ * opens, and never again while the tab is open.
+ */
+let seenHome = false;
+
 const INSTALLED =
   typeof window !== "undefined" &&
   (window.matchMedia?.("(display-mode: standalone)").matches ||
@@ -140,6 +150,21 @@ export function HomeScreen({
    * would do exactly that.
    */
   const [newsUnread, setNewsUnread] = useState(hasUnreadUpdate);
+  /*
+   * Or: *"so that people see Amanda's background, all the buttons should come
+   * into the screen with an animation on load — at first you see the
+   * background and only after half a second the buttons come into place."*
+   *
+   * Read in a lazy initialiser rather than an effect, so the very first
+   * render already carries the class: set it afterwards and the screen paints
+   * once with everything in place, which is the one frame the whole thing
+   * exists to avoid.
+   */
+  const [firstLook] = useState(() => {
+    if (seenHome) return false;
+    seenHome = true;
+    return true;
+  });
 
   return (
     <main className="intro intro--hero">
@@ -200,7 +225,7 @@ export function HomeScreen({
         ))}
       </div>
 
-      <div className="home">
+      <div className={`home${firstLook ? " home--enter" : ""}`}>
         {/*
           Drawn, not typeset. A webfont can fail to load — and did, on Or's
           screen, where the name fell back to a plain system face. The

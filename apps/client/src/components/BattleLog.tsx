@@ -14,6 +14,7 @@ import {
 } from "@amanda/engine";
 import { CATALOG } from "../data/catalog";
 import { ELEMENT_META, RANGE_META, seriesColor } from "../data/cardMeta";
+import { Overlay } from "./Overlay";
 
 
 const TPS = SIMULATION.ticksPerSecond;
@@ -465,7 +466,7 @@ function UnitReportModal({
   })();
 
   return (
-    <div className="modal-overlay" onClick={onClose}>
+    <Overlay onClick={onClose}>
       <div
         className="modal modal--unit"
         onClick={(e) => e.stopPropagation()}
@@ -555,6 +556,6 @@ function UnitReportModal({
           </li>
         </ul>
       </div>
-    </div>
+    </Overlay>
   );
 }
