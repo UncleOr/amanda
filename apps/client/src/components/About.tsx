@@ -153,21 +153,39 @@ function WayOut({
 }
 
 function AboutUs({ grown }: { grown: boolean }) {
+  /*
+   * ═══ EVERY WORD BELOW IS OR'S ═══
+   *
+   * He is a copywriter and he sent this as finished copy. What was here
+   * before was my draft, and the difference is the whole argument for the
+   * rule: mine described the game ("Amanda began as a deck of cards"), his
+   * dares you to play it. Nothing here is to be tidied, shortened or
+   * rephrased — if a line needs to change, it changes because Or changed it.
+   *
+   * The only thing the code decides is where the film link goes, and that is
+   * not a copy decision: a link out of a children's app needs a grown-up
+   * (see WayOut and GROWN_UP above), so for anybody who has not said they are
+   * one the last sentence ends in words instead of a door.
+   */
   return (
     <>
-      <h2>אמנדה</h2>
+      <h2>אם אתם מפחדים ממפלצות — המשחק הזה לא בשבילכם</h2>
       <p>
-        אמנדה התחילה כחפיסת קלפי מפלצות ובסרט, הרבה לפני שהיא הייתה משחק. היא
-        לא נוצרה בשביל מסך — היא נוצרה בשביל שולחן, קלפים ביד, וילדים שמתווכחים
-        מי מנצח.
+        הכירו את אמנדה: המפלצת הכי חזקה באלבום המפלצות. דרקונים יורקי אש, ענקי
+        אבן, אפילו צ'ופי המחשמל — כולם ניסו להילחם בה ונכשלו. אמנדה אכלה את
+        כולם לארוחת ערב, והיא תשמח לאכול גם אתכם לקינוח.
       </p>
       <p>
-        המשחק הזה הוא אותה חפיסה, רק שהמפלצות נלחמות לבד. אתם בונים את הלוח,
-        ואז מרפים. אמנדה שופטת. אמנדה גם אוכלת.
+        אבל זה לא אומר שאתם צריכים לוותר מראש. אם יש לכם סבלנות ומוח, אם אתם
+        יודעים לאסוף את הקלפים הנכונים ולהשתמש בהם בתבונה, אם יש לכם חברים
+        שיודעים לשחק טוב כמוכם ובעיקר — אם יש לכם אומץ להתמודד מול המפלצת
+        החזקה מכולם — אולי תוכלו לנצח ולהיות מלכי המפלצות.
       </p>
-
-      <h3>הסרט</h3>
-      <p>כל הסיפור, במלואו:</p>
+      <p>
+        המשחק נוצר על ידי הוד אסולין ואור אסולין, בהשראת הסרט שיצרנו יחד:
+        "אמנדה — המפלצת מסונול כצנלסון". מוזמנים לצפות בו ולהעלות לנו קצת את
+        הצפיות. תיהנו!
+      </p>
       <WayOut href={FILM} search={FILM_SEARCH} label="הסרט המלא" grown={grown} />
 
       {SONG_YOUTUBE && (
@@ -177,11 +195,6 @@ function AboutUs({ grown }: { grown: boolean }) {
           <WayOut href={SONG_YOUTUBE} search={SONG_SEARCH} label="השיר" grown={grown} />
         </>
       )}
-
-      <h3>מי עשה את זה</h3>
-      <p>
-        אור, והוד. אבא ובן. הקלפים, הדמויות והסיפור הם שלהם; המשחק נבנה סביבם.
-      </p>
     </>
   );
 }

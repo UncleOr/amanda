@@ -33,8 +33,25 @@
  * screen already knows the opponent's gender (players.gender).
  */
 
+/**
+ * What a line is FOR.
+ *
+ * Or: *"and for the phrases, have both nicely-taunting ones and encouraging
+ * ones — good luck, good game, and so on."* Which is a kinder set than the
+ * word "catchphrase" suggests, and the right one for a game two children in
+ * the same house play against each other: not every player wants their one
+ * line to be a boast, and a child who would rather wish you luck should be
+ * able to.
+ *
+ * The picker groups by this, so the choice reads as "what kind of person am
+ * I at the start of a match" rather than as a list of nine sentences.
+ */
+export type PhraseTone = "taunt" | "kind";
+
 export interface Catchphrase {
   id: string;
+  /** Teasing, or warm. See PhraseTone. */
+  tone: PhraseTone;
   /** Or's line. Masculine where Hebrew forces a choice; see `heF`. */
   he: string;
   /** The same line said to a girl. Empty means "use `he`". */
@@ -60,35 +77,116 @@ export type PhraseStyle = "plain" | "chalk" | "ember" | "ice" | "gold" | "slime"
 /** What a player has chosen to say, when they have chosen nothing. */
 export const NO_PHRASE = "phrase.none";
 
+/*
+ * ═══ FIVE TO START WITH, AND THE REST ARE EARNED ═══
+ *
+ * Or: *"you have 5 phrases to start. And each time more and more are added…
+ * eventually there will be hundreds. Some will arrive in the shop, some in
+ * chests."* So `free` is exactly five — his four lines and the opt-out — and
+ * everything else carries an `item`.
+ *
+ * That is also why the picker shows only what you OWN. Everywhere else in this
+ * game a locked thing is drawn rather than hidden, because wanting it is the
+ * point; a list of hundreds is the case where that stops being true and
+ * becomes a wall of padlocks. The shop is where you meet the ones you do not
+ * have.
+ */
 export const CATCHPHRASES: readonly Catchphrase[] = [
-  // ── everybody starts with these ──
-  { id: "phrase.fight", he: "ילד ילד ילד, בוא להילחם", free: true, style: "plain" },
+  /*
+   * The opt-out, and the default. A child who does not want to shout anything
+   * at a stranger should not have to, and the versus screen reads perfectly
+   * well with a name and a face and no line under it.
+   */
+  { id: NO_PHRASE, tone: "kind", he: "", free: true, style: "plain" },
+
+  // ── the four you start with. Or's words. ──
+  { id: "phrase.fight", tone: "taunt", he: "ילד ילד ילד, בוא להילחם", free: true, style: "plain" },
   {
     id: "phrase.mighty",
+    tone: "taunt",
     he: "אני אדיר, אני כביר, אני אדביק אותך לקיר",
     free: true,
     style: "chalk",
   },
-  { id: "phrase.onlyamanda", he: "רק אמנדה יכולה לנצח אותי", free: true, style: "ember" },
-  { id: "phrase.appetite", he: "בתיאבון, הארוחה מתחילה ילד", free: true, style: "ice" },
-  /*
-   * The opt-out, and it is the default. A child who does not want to shout
-   * anything at a stranger should not have to, and the versus screen reads
-   * perfectly well with a name and a face and no line under it.
-   */
-  { id: NO_PHRASE, he: "", free: true, style: "plain" },
+  {
+    id: "phrase.onlyamanda",
+    tone: "taunt",
+    he: "רק אמנדה יכולה לנצח אותי",
+    free: true,
+    style: "ember",
+  },
+  {
+    id: "phrase.appetite",
+    tone: "taunt",
+    he: "בתיאבון, הארוחה מתחילה ילד",
+    free: true,
+    style: "ice",
+  },
 
-  // ── bought, or found in a chest ──
-  { id: "phrase.danger", he: "הופה, נהיה פה מסוכן", style: "ember", item: "phrase.danger" },
-  { id: "phrase.clever", he: "חכם על חזקים", style: "slime", item: "phrase.clever" },
-  { id: "phrase.winner", he: "המנצח בין השניים", style: "gold", item: "phrase.winner" },
+  // ── teasing, bought or found. Or's words. ──
+  {
+    id: "phrase.danger",
+    tone: "taunt",
+    he: "הופה, נהיה פה מסוכן",
+    style: "ember",
+    item: "phrase.danger",
+  },
+  { id: "phrase.clever", tone: "taunt", he: "חכם על חזקים", style: "slime", item: "phrase.clever" },
+  {
+    id: "phrase.winner",
+    tone: "taunt",
+    he: "המנצח בין השניים",
+    style: "gold",
+    item: "phrase.winner",
+  },
   {
     id: "phrase.behindyou",
+    tone: "taunt",
     he: "זהירות, אמנדה מאחוריך!",
     style: "shadow",
     item: "phrase.behindyou",
   },
+
+  /*
+   * ── the warm ones ──
+   *
+   * DRAFTS. Or asked for "encouraging ones — good luck, good game and so on"
+   * and did not send the words, so these are mine and are expected to be
+   * rewritten.
+   *
+   * None of them needs an `heF`, and that is not an accident of drafting: a
+   * warm line is not aimed at anybody in particular, so there is no gendered
+   * "you" in it to get wrong. That is what makes this the safe tone for a
+   * child playing a stranger.
+   */
+  {
+    id: "phrase.goodluck",
+    tone: "kind",
+    he: "בהצלחה לשנינו",
+    style: "ice",
+    item: "phrase.goodluck",
+  },
+  {
+    id: "phrase.goodgame",
+    tone: "kind",
+    he: "שיהיה משחק טוב",
+    style: "chalk",
+    item: "phrase.goodgame",
+  },
+  {
+    id: "phrase.friends",
+    tone: "kind",
+    he: "באתי לשחק, לא לריב",
+    style: "slime",
+    item: "phrase.friends",
+  },
+  { id: "phrase.learn", tone: "kind", he: "תלמד אותי משהו", style: "gold", item: "phrase.learn" },
 ];
+
+/** The lines of one kind, for the picker to group them. */
+export function phrasesOfTone(tone: PhraseTone): Catchphrase[] {
+  return CATCHPHRASES.filter((p) => p.tone === tone && p.id !== NO_PHRASE);
+}
 
 const BY_ID = new Map(CATCHPHRASES.map((p) => [p.id, p]));
 

@@ -17,6 +17,14 @@ import { Icon } from "./Icon";
  * have about five things in a row and not about a bar that is 60% along. The
  * next chest's picture sits at the end of it, so what the counting is FOR is
  * never a separate thing to look up.
+ *
+ * ═══ AND NO SENTENCE UNDER IT ═══
+ *
+ * It said "עוד 5 נאצ'וס לתיבה" and Or cut it: *"we don't need that
+ * sentence."* He is right, and the reason is the paragraph above — the pips
+ * ARE the sentence. Spelling out a number you can see by counting five things
+ * is the screen not trusting its own picture, and it cost a line of height on
+ * every size.
  */
 export function NachoBar({ nachos }: { nachos: number }) {
   const bar = nachoBar(nachos);
@@ -41,11 +49,6 @@ export function NachoBar({ nachos }: { nachos: number }) {
           <Icon name="chest" size={26} />
         </span>
       </span>
-      <small className="nachos__say">
-        {/* The sentence is the point: it names the distance, not the state. */}
-        עוד {bar.toGo} {bar.toGo === 1 ? "נאצ'וס" : "נאצ'וסים"} לתיבה
-        {next !== "wood" && <b> {next === "gold" ? "הזהב" : "הכסף"}</b>}
-      </small>
     </div>
   );
 }

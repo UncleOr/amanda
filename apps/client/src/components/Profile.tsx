@@ -26,8 +26,8 @@ import {
   type Account,
 } from "../game/account";
 import { Icon } from "./Icon";
-import { Lock } from "./SignedInOnly";
-import { CATCHPHRASES, NO_PHRASE } from "@amanda/shared";
+import { NO_PHRASE, ownedCatchphrases } from "@amanda/shared";
+import { Plaque } from "./Plaque";
 import * as V from "../data/voice";
 
 /**
@@ -318,33 +318,39 @@ export function Profile({ account, onClose, onChanged }: Props) {
           same reason the shop and the album are shown to a guest: a hidden
           thing persuades nobody. You cannot want a line you have never read.
         */}
+        {/*
+          The one line that is yours.
+
+          ═══ ONLY THE ONES YOU HAVE ═══
+
+          Everywhere else in this game a locked thing is drawn rather than
+          hidden, because wanting it is the point. Or drew the line here, and
+          at the right place: *"don't put the phrases you don't have yet. The
+          hope is that eventually there will be hundreds of them."* A list of
+          hundreds is where "locked, not hidden" stops persuading and starts
+          being a wall of padlocks. The shop is where you meet the rest.
+
+          And no sentence explaining what a catchphrase is. Or: *"we don't
+          need 'what is written about you when a match starts'. Remember what
+          we said about explanatory lines? Cut, cut, cut."*
+        */}
         <section className="panel">
           <h3>משפט המחץ שלי</h3>
-          <p className="panel__lead">מה שכתוב עליך כשמתחיל משחק.</p>
           <div className="phrases">
-            {CATCHPHRASES.map((p) => {
-              const locked = !p.free && !owned.includes(p.item ?? "");
-              const silent = p.id === NO_PHRASE;
-              return (
-                <button
-                  key={p.id}
-                  className={`phrases__one${phrase === p.id ? " is-picked" : ""}${
-                    locked ? " is-locked" : ""
-                  }`}
-                  aria-pressed={phrase === p.id}
-                  disabled={locked}
-                  title={locked ? "אפשר לקנות בחנות או למצוא בתיבה" : ""}
-                  onClick={() => setPhrase(p.id)}
-                >
-                  {silent ? (
-                    <span className="phrases__silent">בלי משפט</span>
-                  ) : (
-                    <span className={`phrase phrase--${p.style}`}>{p.he}</span>
-                  )}
-                  {locked && <Lock />}
-                </button>
-              );
-            })}
+            {ownedCatchphrases(owned).map((p) => (
+              <button
+                key={p.id}
+                className={`phrases__one${phrase === p.id ? " is-picked" : ""}`}
+                aria-pressed={phrase === p.id}
+                onClick={() => setPhrase(p.id)}
+              >
+                {p.id === NO_PHRASE ? (
+                  <span className="phrases__silent">בלי משפט</span>
+                ) : (
+                  <Plaque phrase={p} />
+                )}
+              </button>
+            ))}
           </div>
         </section>
 
@@ -357,11 +363,25 @@ export function Profile({ account, onClose, onChanged }: Props) {
         */}
         <section className="panel">
           <h3>איך לפנות אליך</h3>
+          {/*
+            ═══ NO EXPLANATION, AND NOT "לא אומר" ═══
+
+            There was a line under this explaining that Hebrew forces the
+            choice and that saying nothing gets you the masculine. Or: *"do
+            you understand that there is no reason for that sentence to be in
+            the interface? Why the hell does the user care?"* He is right —
+            it was me explaining a problem with the language to a
+            seven-year-old who only wants to tap a word.
+
+            And the third option could not stay "לא אומר", because that is
+            itself masculine: the button for "I would rather not say" was
+            quietly saying it for you. Or's suggestion, and his wording.
+          */}
           <div className="profile__gender">
             {([
-              { v: "boy", he: "ילד" },
-              { v: "girl", he: "ילדה" },
-              { v: null, he: "לא אומר" },
+              { v: "boy", he: "בן" },
+              { v: "girl", he: "בת" },
+              { v: null, he: "למה להגדיר?" },
             ] as const).map((o) => (
               <button
                 key={o.he}
@@ -372,10 +392,6 @@ export function Profile({ account, onClose, onChanged }: Props) {
               </button>
             ))}
           </div>
-          <p className="profile__note">
-            בעברית אי אפשר לשבת על הגדר — אמנדה אומרת "בוא ילד" או "בואי ילדה".
-            מי שלא אומר, מקבל לשון זכר.
-          </p>
         </section>
 
         <section className="panel">

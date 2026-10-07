@@ -1,4 +1,5 @@
 import { catchphraseById, phraseText, type PlayerCard } from "@amanda/shared";
+import { Plaque } from "./Plaque";
 import { Icon } from "./Icon";
 
 const BASE = import.meta.env.BASE_URL;
@@ -98,7 +99,7 @@ function Fighter({
       {/* The line, if they have chosen one. Nothing at all if they have not —
           a card with a name and a face reads perfectly well without it, and
           not every child wants to shout something at a stranger. */}
-      {line && <p className={`phrase phrase--${phrase?.style ?? "plain"}`}>{line}</p>}
+      {line && phrase && <Plaque phrase={{ ...phrase, he: line }} size="big" />}
     </div>
   );
 }

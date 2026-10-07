@@ -81,13 +81,17 @@ export function Payout({ award }: { award: Award | null }) {
  * that copy is the one from before the match, which makes it the only number
  * here that would be wrong. Shown only when the bar is nearly full: "4 more"
  * is a fact, not an invitation.
+ *
+ * ═══ "נאצ'וס" IS ALREADY PLURAL ═══
+ *
+ * This had a singular/plural switch on it and wrote "נאצ'וסים" for anything
+ * above one. Or: *"of course — you don't say נאצ'וסים. נאצ'וס is already
+ * plural."* He is right; it is a loan word that arrived in the plural, and
+ * pluralising it again is the English speaker's mistake. There is no switch
+ * now because there is nothing to switch between.
  */
 function NextChestHint({ award }: { award: Award }) {
   const bar = nachoBar(award.total);
   if (bar.toGo > 2) return null;
-  return (
-    <span className="payout__near">
-      עוד {bar.toGo} {bar.toGo === 1 ? "נאצ'וס" : "נאצ'וסים"} ותיבה
-    </span>
-  );
+  return <span className="payout__near">עוד {bar.toGo} נאצ'וס ותיבה</span>;
 }

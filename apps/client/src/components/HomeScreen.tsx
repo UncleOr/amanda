@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Icon } from "./Icon";
 import { ArenaTrack } from "./ArenaTrack";
 import { ChestShelf } from "./ChestShelf";
@@ -8,7 +8,7 @@ import { Lock } from "./SignedInOnly";
 import { shopItemArt } from "./Shop";
 import { hardRefresh } from "../game/refresh";
 import { hasUnreadUpdate } from "../data/updates";
-import type { Chest, ShopItem } from "../game/account";
+import { listFriends, type Chest, type ShopItem } from "../game/account";
 import type { Overlays } from "../game/useOverlay";
 import type { MatchApi } from "../game/useMatch";
 
@@ -100,6 +100,33 @@ export function HomeScreen({
   const [codeInput, setCodeInput] = useState("");
   /** Turned off for the session the moment the clip fails to load. */
   const [idleOk, setIdleOk] = useState(true);
+  /*
+   * How many friends, and how many are waiting for an answer.
+   *
+   * Or: *"the friends button should say how many friends, small."* The second
+   * number matters more than the first: somebody who has asked to be your
+   * friend is waiting on YOU, and a request that sits unseen for a week is
+   * the thing this screen can actually fix. So the count is quiet and the
+   * waiting ones are a dot.
+   *
+   * Only for a signed-in player — a guest has no friends list to count, and
+   * the call would be a round trip to be told so.
+   */
+  const [friends, setFriends] = useState<{ have: number; waiting: number } | null>(null);
+  useEffect(() => {
+    if (!signedIn) return;
+    let alive = true;
+    void listFriends().then((list) => {
+      if (!alive) return;
+      setFriends({
+        have: list.filter((f) => f.state === "friend").length,
+        waiting: list.filter((f) => f.state === "asking").length,
+      });
+    });
+    return () => {
+      alive = false;
+    };
+  }, [signedIn]);
   /*
    * Is there a "what's new" nobody here has read?
    *
@@ -456,6 +483,15 @@ export function HomeScreen({
           <button className="rail__item" onClick={gated(() => panel.show("friends"))}>
             <Icon name="friend" size={19} />
             <span>חברים</span>
+            {friends && friends.have > 0 && (
+              <small className="rail__count">{friends.have}</small>
+            )}
+            {/* Somebody is waiting on an answer. A dot rather than a number,
+                for the same reason the challenge tabs use one: "there is
+                something here" is the whole message. */}
+            {friends && friends.waiting > 0 && (
+              <i className="rail__dot" aria-label="מישהו מחכה לתשובה" />
+            )}
             {!signedIn && <Lock />}
           </button>
         </section>

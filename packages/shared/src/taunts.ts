@@ -51,22 +51,22 @@ export interface Taunt {
 
 export const TAUNTS: readonly Taunt[] = [
   // ── while you are building, and while you are watching ──
-  { id: "taunt.hi", face: "wave", he: "היי!", en: "Hi!", when: "always" },
-  { id: "taunt.ready", face: "flex", he: "אני מוכן לזה", en: "I'm ready for this", when: "always" },
-  { id: "taunt.wow", face: "shock", he: "ואו, הלוח הזה", en: "Whoa, that board", when: "always" },
-  { id: "taunt.scary", face: "scared", he: "מפחיד אותי", en: "That scares me", when: "always" },
-  { id: "taunt.nice", face: "crown", he: "מהלך יפה", en: "Nice move", when: "always" },
-  { id: "taunt.hurry", face: "think", he: "נו כבר", en: "Come on already", when: "always" },
-  { id: "taunt.laugh", face: "laugh", he: "חחח", en: "Hahaha", when: "always" },
-  { id: "taunt.think", face: "think", he: "רגע, אני חושב", en: "Hold on, thinking", when: "always" },
-  { id: "taunt.luck", face: "wave", he: "בהצלחה", en: "Good luck", when: "always" },
-  { id: "taunt.crumbs", face: "crumb", he: "תאכל פירורים", en: "Eat crumbs", when: "always" },
+  { id: "taunt.hi", face: "chuppy_hi", he: "היי!", en: "Hi!", when: "always" },
+  { id: "taunt.ready", face: "dragon_fire", he: "אני מוכן לזה", en: "I'm ready for this", when: "always" },
+  { id: "taunt.wow", face: "crumb_shock", he: "ואו, הלוח הזה", en: "Whoa, that board", when: "always" },
+  { id: "taunt.scary", face: "crumb_cry", he: "מפחיד אותי", en: "That scares me", when: "always" },
+  { id: "taunt.nice", face: "chuppy_heart", he: "מהלך יפה", en: "Nice move", when: "always" },
+  { id: "taunt.hurry", face: "crumb_shock", he: "נו כבר", en: "Come on already", when: "always" },
+  { id: "taunt.laugh", face: "chuppy_laugh", he: "חחח", en: "Hahaha", when: "always" },
+  { id: "taunt.think", face: "crumb_cry", he: "רגע, אני חושב", en: "Hold on, thinking", when: "always" },
+  { id: "taunt.luck", face: "chuppy_hi", he: "בהצלחה", en: "Good luck", when: "always" },
+  { id: "taunt.crumbs", face: "bread_hi", he: "תאכל פירורים", en: "Eat crumbs", when: "always" },
 
   // ── once it is decided ──
-  { id: "taunt.gg", face: "wave", he: "משחק טוב", en: "Good game", when: "end" },
-  { id: "taunt.gotme", face: "shock", he: "תפסת אותי", en: "You got me", when: "end" },
-  { id: "taunt.close", face: "scared", he: "זה היה צמוד", en: "That was close", when: "end" },
-  { id: "taunt.again", face: "flex", he: "עוד אחד?", en: "One more?", when: "end" },
+  { id: "taunt.gg", face: "chuppy_hi", he: "משחק טוב", en: "Good game", when: "end" },
+  { id: "taunt.gotme", face: "crumb_shock", he: "תפסת אותי", en: "You got me", when: "end" },
+  { id: "taunt.close", face: "crumb_cry", he: "זה היה צמוד", en: "That was close", when: "end" },
+  { id: "taunt.again", face: "chuppy_tongue", he: "עוד אחד?", en: "One more?", when: "end" },
 ];
 
 const BY_ID = new Map(TAUNTS.map((t) => [t.id, t]));

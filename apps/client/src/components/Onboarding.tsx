@@ -84,7 +84,10 @@ export function Onboarding({ initialNickname, onDone }: Props) {
                 setStage("face");
               }}
             >
-              ילד
+              {/* "בן"/"בת", and the third is not "לא אומר" — that phrasing is
+                  itself masculine, so the button for declining to say was
+                  saying it. Or's wording; the same three are in Profile. */}
+              בן
             </button>
             <button
               className="btn-fight"
@@ -94,10 +97,10 @@ export function Onboarding({ initialNickname, onDone }: Props) {
                 setStage("face");
               }}
             >
-              ילדה
+              בת
             </button>
             <button className="btn-link" onClick={() => setStage("face")}>
-              לא אומר
+              למה להגדיר?
             </button>
           </div>
         )}

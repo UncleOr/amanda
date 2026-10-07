@@ -21,7 +21,7 @@ import { STYLE_DIRECTIONS, TEST_MONSTERS } from "./styles.js";
 import { ARENA_LOOKS, buildArenaPrompt } from "./arenaLooks.js";
 import { BRAND_ASPECT, BRAND_LOOK, buildBrandPrompt } from "./brandLooks.js";
 import { ICON_LOOK, buildIconPrompt } from "./iconLooks.js";
-import { EMOJI_LOOK, buildEmojiPrompt } from "./emojiLooks.js";
+import { EMOJI_LOOK, buildEmojiPrompt, emojiReference } from "./emojiLooks.js";
 import { generateSounds, processSounds } from "./sounds.js";
 import {
   SCENE_ASPECT,
@@ -233,16 +233,45 @@ async function cmdBrand(styleId?: string): Promise<void> {
 async function cmdEmoji(styleId?: string, only?: string): Promise<void> {
   const dir = dirById(styleId ?? "");
   const ids = Object.keys(EMOJI_LOOK).filter((id) => !only || id === only);
-  console.log(`\nGenerating ${ids.length} emoji (style: ${dir.id})\n`);
+  console.log(`
+Generating ${ids.length} emoji (style: ${dir.id})
+`);
+  /*
+   * References are uploaded ONCE per character, not once per emoji.
+   *
+   * Five characters make sixteen emoji, so uploading per-emoji would send
+   * Chuppy's card three times for no reason — and each upload is a round
+   * trip before the generation even starts.
+   */
+  const uploaded = new Map<string, string>();
+  async function referenceFor(id: string): Promise<string | null> {
+    const file = emojiReference(id);
+    if (!file) return null;
+    const abs = join(REPO_ROOT, file);
+    if (!existsSync(abs)) {
+      console.log(`   (no reference at ${file})`);
+      return null;
+    }
+    if (!uploaded.has(file)) uploaded.set(file, await uploadFile(abs));
+    return uploaded.get(file)!;
+  }
+
   for (const id of ids) {
     const dest = join(RAW, "emoji", `${id}.png`);
     if (existsSync(dest)) {
       console.log(`   skip  ${id} (exists)`);
       continue;
     }
-    process.stdout.write(`   ${id.padEnd(14)} ... `);
+    process.stdout.write(`   ${id.padEnd(15)} ... `);
     try {
-      const [img] = await generate(buildEmojiPrompt(id, dir.style), { aspectRatio: "1:1" });
+      const prompt = buildEmojiPrompt(id, dir.style);
+      const ref = await referenceFor(id);
+      // With a reference the character is REDRAWN from its own art, so it is
+      // recognisably the same creature. Without one — Fried Bread, who has no
+      // card — it is drawn from the description alone.
+      const [img] = ref
+        ? await generateWithReference(prompt, [ref], { aspectRatio: "1:1" })
+        : await generate(prompt, { aspectRatio: "1:1" });
       if (!img) throw new Error("no image returned");
       await download(img.url, dest);
       console.log("OK");

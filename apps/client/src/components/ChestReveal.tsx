@@ -17,6 +17,7 @@ import { CATALOG } from "../data/catalog";
 import { CardView, CardBack } from "./CardView";
 import { Icon } from "./Icon";
 import { EmojiFace } from "./EmojiFace";
+import { Plaque } from "./Plaque";
 import { CATCHPHRASES, EMOJI, EMOJI_PACKS } from "@amanda/shared";
 import type { Chest } from "../game/account";
 import * as V from "../data/voice";
@@ -165,7 +166,7 @@ function Prize({ id }: { id: string }) {
           <b>{pack.he}</b>
         </>
       ) : (
-        <span className={`phrase phrase--${phrase!.style}`}>{phrase!.he}</span>
+        <Plaque phrase={phrase!} size="big" />
       )}
     </div>
   );

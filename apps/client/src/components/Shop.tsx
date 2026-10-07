@@ -1,5 +1,6 @@
 import { useCallback, useEffect, useState } from "react";
 import { Icon } from "./Icon";
+import { Plaque } from "./Plaque";
 import { CATCHPHRASES, EMOJI } from "@amanda/shared";
 import { buyItem, loadShop, type ShopItem } from "../game/account";
 
@@ -145,7 +146,7 @@ export function Shop({
                           */}
                           <div className={`good__art${phrase ? " good__art--phrase" : ""}`}>
                             {phrase ? (
-                              <span className={`phrase phrase--${phrase.style}`}>{phrase.he}</span>
+                              <Plaque phrase={phrase} />
                             ) : art ? (
                               <img src={art} alt="" />
                             ) : (

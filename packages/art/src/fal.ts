@@ -56,13 +56,15 @@ export async function generate(
 export async function generateWithReference(
   prompt: string,
   referenceUrls: string[],
-  opts: { numImages?: number; seed?: number } = {},
+  opts: { numImages?: number; seed?: number; aspectRatio?: AspectRatio } = {},
 ) {
   const res = (await fal.subscribe(EDIT_MODEL, {
     input: {
       prompt,
       image_urls: referenceUrls,
-      aspect_ratio: "3:4", // portrait — matches the 1:1.3 card shape
+      // Portrait by default — it matches the 1:1.3 card shape. An emoji is
+      // square, which is the only other thing that asks for this.
+      aspect_ratio: opts.aspectRatio ?? "3:4",
       resolution: "1K",
       output_format: "png",
       num_images: opts.numImages ?? 1,

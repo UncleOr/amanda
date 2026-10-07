@@ -202,7 +202,21 @@
     "play     social"
     "play     meta"
     "progress progress";
+  /*
+   * The small print's row takes the slack, and the small print sits at the
+   * bottom of it.
+   *
+   * Or: *"the about/privacy part should be somewhere at the side at the
+   * BOTTOM, not in the middle of the screen."* It was fourth in a column of
+   * four, which on a tall window leaves it floating halfway down with air
+   * underneath. Giving that row `1fr` and the block `align-self: end` pins it
+   * to the bottom of the column — still aligned with the shop above it,
+   * because it is still the same column, which is the whole reason the purse
+   * moved in here too.
+   */
+  grid-template-rows: auto auto auto auto 1fr auto;
 }
+.home__meta { align-self: end; }
 /*
  * Hugging the inline-start edge of its cell, not centred in it.
  *
@@ -853,61 +867,99 @@
   transition: background 0.2s linear;
 }
 
-/* ---- the catchphrase, which is the thing people buy ---- */
+/* ---- the catchphrase, on its plaque ---- */
 /*
  * Or, on why they are worth money: *"then people will have a reason to buy
- * from the shop, because it is something you SEE."* So the free ones are
- * plain and the bought ones are not — what is being sold is not the sentence,
- * it is how it ARRIVES, and that only reads as worth something if the lines
- * everybody already has are quieter.
+ * from the shop, because it is something you SEE."* And on the shape:
+ * *"the phrases need to be on a designed sort of plaque — in the shop, in the
+ * settings screen, and when they appear… and much narrower, not taking up the
+ * whole width of the screen."*
  *
- * Drawn as TYPE, never as a picture of type: a sentence baked into an image
- * cannot be translated, cannot be read aloud by a screen reader, and goes
- * soft on a phone.
+ * One plaque, three places. A line that looks like a banner when you buy it
+ * and like a paragraph when it is shown is two different things wearing the
+ * same words.
+ *
+ * Drawn as TYPE on a shape, never as a picture of type: an image of a
+ * sentence cannot be translated, cannot be read aloud by a screen reader, and
+ * goes soft on a phone.
+ *
+ * The free lines get the two quiet treatments on purpose — what is being sold
+ * is not the sentence, it is how it ARRIVES, and that only reads as worth
+ * something if the ones everybody has are plainer.
  */
-.phrase {
-  margin: 4px 0 0;
-  max-width: 22ch;
-  text-align: center;
-  font-size: clamp(11px, 1.9vh, 14px);
+.plaque {
+  display: inline-flex;
+  align-items: stretch;
+  /* Sizes to its words and stops. The shape is half of what makes it read as
+     a trophy rather than as a table row. */
+  max-width: 100%;
+  font-size: clamp(11px, 1.7vh, 13.5px);
   font-weight: 800;
-  line-height: 1.35;
+  line-height: 1.3;
+  filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.5));
 }
-.phrase--plain { color: var(--text); opacity: 0.85; }
-.phrase--chalk {
-  color: #e8ecf5;
-  text-shadow: 0 1px 0 rgba(0, 0, 0, 0.6);
-  letter-spacing: 0.5px;
+.plaque__words {
+  padding: 5px 14px;
+  background: var(--pl-fill, rgba(255, 255, 255, 0.07));
+  border-block: 1px solid var(--pl-edge, var(--line));
+  color: var(--pl-ink, var(--text));
+  text-align: center;
+  min-width: 0;
 }
-.phrase--ember {
-  background: linear-gradient(100deg, #ffb020, #ff5a5a);
-  -webkit-background-clip: text;
-  background-clip: text;
-  color: transparent;
-  filter: drop-shadow(0 0 10px rgba(255, 90, 90, 0.45));
+/* The notched ends. A triangle cut out of each side, which is what makes the
+   shape a ribbon and not a pill. */
+.plaque__end {
+  flex: none;
+  width: 11px;
+  background: var(--pl-fill, rgba(255, 255, 255, 0.07));
+  border: 1px solid var(--pl-edge, var(--line));
 }
-.phrase--ice {
-  background: linear-gradient(100deg, #9fe6ff, #4aa3ff);
-  -webkit-background-clip: text;
-  background-clip: text;
-  color: transparent;
-  filter: drop-shadow(0 0 10px rgba(74, 163, 255, 0.45));
+.plaque__end:first-child {
+  border-inline-end: 0;
+  clip-path: polygon(100% 0, 100% 100%, 0 100%, 45% 50%, 0 0);
 }
-.phrase--gold {
-  background: linear-gradient(100deg, #fff3c4, #f0c24a 45%, #fff3c4);
-  -webkit-background-clip: text;
-  background-clip: text;
-  color: transparent;
-  filter: drop-shadow(0 0 12px rgba(240, 194, 74, 0.55));
+.plaque__end:last-child {
+  border-inline-start: 0;
+  clip-path: polygon(0 0, 100% 0, 55% 50%, 100% 100%, 0 100%);
 }
-.phrase--slime {
-  color: #a6f06a;
-  text-shadow: 0 0 10px rgba(166, 240, 106, 0.55), 0 2px 0 rgba(0, 0, 0, 0.5);
+.plaque--big { font-size: clamp(12px, 2.1vh, 16px); }
+.plaque--big .plaque__words { padding: 7px 18px; }
+.plaque--big .plaque__end { width: 14px; }
+
+/*
+ * The treatments. Each sets three tokens — the fill, the edge and the ink —
+ * so a style is three lines and never a second copy of the shape.
+ */
+.plaque--plain { --pl-fill: rgba(255, 255, 255, 0.07); --pl-edge: var(--line); --pl-ink: var(--text); }
+.plaque--chalk {
+  --pl-fill: rgba(232, 236, 245, 0.12);
+  --pl-edge: rgba(232, 236, 245, 0.45);
+  --pl-ink: #e8ecf5;
 }
-.phrase--shadow {
-  color: #cdb6ff;
-  text-shadow: 0 0 14px rgba(140, 90, 255, 0.8), 0 0 3px rgba(0, 0, 0, 0.9);
-  letter-spacing: 0.5px;
+.plaque--ember {
+  --pl-fill: linear-gradient(100deg, rgba(255, 176, 32, 0.3), rgba(255, 90, 90, 0.3));
+  --pl-edge: rgba(255, 140, 60, 0.75);
+  --pl-ink: #ffd7a8;
+}
+.plaque--ice {
+  --pl-fill: linear-gradient(100deg, rgba(159, 230, 255, 0.26), rgba(74, 163, 255, 0.26));
+  --pl-edge: rgba(110, 190, 255, 0.75);
+  --pl-ink: #d6f1ff;
+}
+.plaque--gold {
+  --pl-fill: linear-gradient(100deg, rgba(255, 243, 196, 0.34), rgba(240, 194, 74, 0.34));
+  --pl-edge: rgba(240, 194, 74, 0.95);
+  --pl-ink: #fff3c4;
+}
+.plaque--slime {
+  --pl-fill: rgba(166, 240, 106, 0.2);
+  --pl-edge: rgba(166, 240, 106, 0.7);
+  --pl-ink: #ddffc2;
+}
+.plaque--shadow {
+  --pl-fill: rgba(140, 90, 255, 0.26);
+  --pl-edge: rgba(176, 140, 255, 0.8);
+  --pl-ink: #e4d9ff;
 }
 
 .overlay--versus { gap: 14px; }
@@ -1002,26 +1054,23 @@
 }
 
 /* ════════ choosing your line ════════ */
-.phrases { display: flex; flex-direction: column; gap: 7px; }
+/*
+ * The rows size to the plaques, which are narrow. They were full-width table
+ * rows with a sentence floating in the middle of each — Or: *"and they need
+ * to be much narrower."*
+ */
+.phrases { display: flex; flex-wrap: wrap; justify-content: center; gap: 8px; }
 .phrases__one {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 8px;
-  padding: 9px 12px;
-  border-radius: 11px;
-  border: 1px solid var(--line);
-  background: rgba(255, 255, 255, 0.04);
+  padding: 4px;
+  border-radius: 10px;
+  border: 1px solid transparent;
+  background: none;
   font: inherit;
   cursor: pointer;
-  text-align: center;
 }
-.phrases__one:hover:not(:disabled) { border-color: var(--accent); }
-.phrases__one.is-picked { border-color: var(--accent); background: rgba(255, 176, 32, 0.14); }
-/* Locked, not hidden: you cannot want a line you have never read. */
-.phrases__one.is-locked { opacity: 0.55; cursor: default; }
-.phrases__one .phrase { margin: 0; max-width: none; }
-.phrases__silent { color: var(--muted); font-size: 13px; }
+.phrases__one:hover { border-color: var(--line); }
+.phrases__one.is-picked { border-color: var(--accent); background: rgba(255, 176, 32, 0.12); }
+.phrases__silent { display: inline-block; padding: 6px 16px; color: var(--muted); font-size: 13px; }
 
 /* ════════ who you are fighting, during the fight ════════ */
 /*
@@ -1088,7 +1137,8 @@
   padding: 6px;
   text-align: center;
 }
-.good__art--phrase .phrase { margin: 0; font-size: 11.5px; max-width: 100%; }
+.good__art--phrase .plaque { font-size: 10.5px; }
+.good__art--phrase .plaque__words { padding: 4px 9px; }
 
 /* ---- something from the shop, found in a chest ---- */
 /*
@@ -1120,7 +1170,31 @@
 }
 .chest__prize-faces { display: flex; gap: 6px; }
 .chest__prize b { font-size: 15px; }
-.chest__prize .phrase { margin: 0; font-size: 15px; }
+
 @media (prefers-reduced-motion: reduce) {
   .chest__prize { animation: none; }
+}
+
+/* ---- how many friends ---- */
+.rail__count {
+  margin-inline-start: auto;
+  padding: 1px 7px;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.1);
+  color: var(--muted);
+  font-size: 11px;
+  font-weight: 800;
+  font-variant-numeric: tabular-nums;
+}
+/* Somebody is waiting on an answer — the same green as a finished challenge
+   and an unread update, so "there is something here" looks the same
+   everywhere in this game. */
+.rail__dot {
+  flex: none;
+  width: 7px;
+  height: 7px;
+  margin-inline-start: 5px;
+  border-radius: 50%;
+  background: #4ade80;
+  box-shadow: 0 0 6px rgba(74, 222, 128, 0.85);
 }

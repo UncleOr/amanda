@@ -82,27 +82,55 @@ export interface Emoji {
  * teaser.
  */
 export const EMOJI: readonly Emoji[] = [
-  // ── everybody has these ──
-  { id: "wave", he: "היי", en: "Hi", free: true, motion: "swing" },
-  { id: "flex", he: "אני מוכן", en: "Ready", free: true, motion: "beat" },
-  { id: "shock", he: "ואו", en: "Whoa", free: true, motion: "pop" },
-  { id: "laugh", he: "חחח", en: "Haha", free: true, motion: "shake" },
-  { id: "think", he: "רגע, חושב", en: "Thinking", free: true, motion: "bob" },
-  { id: "scared", he: "מפחיד", en: "Scary", free: true, motion: "wobble" },
-  { id: "crown", he: "כתר", en: "Crown", free: true, motion: "bob" },
-  { id: "crumb", he: "פירורים", en: "Crumbs", free: true, motion: "wobble" },
+  /*
+   * ═══ THE GAME'S OWN CHARACTERS, NOT GENERIC FACES ═══
+   *
+   * The first set was a round monster face per feeling — a laughing blob, a
+   * shocked blob. Or's note replaced it: *"base them on iconic monster
+   * characters: Chuppy, Amanda, the Crumb Demon, Fried Bread, Flame Dragon.
+   * But of course in cute versions, and as relevant emoji — doing hearts,
+   * laughing, sticking their tongues out."*
+   *
+   * It is the better idea by a distance. A child who sends Chuppy with his
+   * tongue out is sending a character he collects, so the emoji becomes
+   * another place the album turns up — and the paid packs have a reason to
+   * exist that is not "four more blobs".
+   *
+   * Each id is `<character>_<feeling>`, because both halves get asked about
+   * separately: the pack is about the character, and what the sender MEANT is
+   * the feeling.
+   *
+   * The free eight deliberately span four of the five characters. A guest
+   * should meet Chuppy, the Crumb Demon, the dragon and the bread before
+   * being asked for anything; Amanda is the one you buy, which is right for
+   * the monster on the cover.
+   */
+
+  // ── Chuppy: the friend you are handed on day one ──
+  { id: "chuppy_hi", he: "היי", en: "Hi", free: true, motion: "swing" },
+  { id: "chuppy_laugh", he: "חחח", en: "Haha", free: true, motion: "shake" },
+  { id: "chuppy_heart", he: "אהבתי", en: "Love it", free: true, motion: "beat" },
+  { id: "chuppy_tongue", he: "בלה", en: "Bleh", free: true, motion: "wobble" },
+
+  // ── the Crumb Demon ──
+  { id: "crumb_cry", he: "אוי לא", en: "Oh no", free: true, motion: "wobble" },
+  { id: "crumb_shock", he: "ואו", en: "Whoa", free: true, motion: "pop" },
+
+  // ── Flame Dragon, and the bread ──
+  { id: "dragon_fire", he: "אני מוכן", en: "Ready", free: true, motion: "flicker" },
+  { id: "bread_hi", he: "לחם מטוגן", en: "Fried bread", free: true, motion: "bob" },
 
   // ── the monsters pack ──
-  { id: "fireskull", he: "גולגולת בוערת", en: "Burning skull", pack: "emoji.monsters", motion: "flicker" },
-  { id: "monsterheart", he: "לב מפלצת", en: "Monster heart", pack: "emoji.monsters", motion: "beat" },
-  { id: "wink", he: "קריצה", en: "Wink", pack: "emoji.monsters", motion: "pop" },
-  { id: "babydragon", he: "דרקונצ'יק", en: "Baby dragon", pack: "emoji.monsters", motion: "bob" },
+  { id: "dragon_laugh", he: "דרקון צוחק", en: "Dragon laughing", pack: "emoji.monsters", motion: "shake" },
+  { id: "dragon_wink", he: "קריצת דרקון", en: "Dragon wink", pack: "emoji.monsters", motion: "pop" },
+  { id: "bread_tongue", he: "לחם מתחצף", en: "Cheeky bread", pack: "emoji.monsters", motion: "wobble" },
+  { id: "bread_heart", he: "לחם מאוהב", en: "Bread in love", pack: "emoji.monsters", motion: "beat" },
 
   // ── the Amanda pack ──
-  { id: "smirk", he: "החיוך של אמנדה", en: "Amanda's smirk", pack: "emoji.amanda", motion: "flicker" },
-  { id: "firelion", he: "אריה אש", en: "Fire lion", pack: "emoji.amanda", motion: "shake" },
-  { id: "slimeblob", he: "ריר שמח", en: "Happy slime", pack: "emoji.amanda", motion: "wobble" },
-  { id: "crumbdemon", he: "שד פירורים", en: "Crumb demon", pack: "emoji.amanda", motion: "spin" },
+  { id: "amanda_smirk", he: "החיוך של אמנדה", en: "Amanda's smirk", pack: "emoji.amanda", motion: "flicker" },
+  { id: "amanda_laugh", he: "אמנדה צוחקת", en: "Amanda laughing", pack: "emoji.amanda", motion: "shake" },
+  { id: "amanda_heart", he: "נשיקה מאמנדה", en: "A kiss from Amanda", pack: "emoji.amanda", motion: "beat" },
+  { id: "crumb_tongue", he: "שד פירורים", en: "Crumb demon", pack: "emoji.amanda", motion: "spin" },
 ];
 
 /**
@@ -120,7 +148,7 @@ export function sayIdFor(emojiId: string): string {
   return EMOJI_SAY_PREFIX + emojiId;
 }
 
-/** The emoji a `say` id refers to, or null when it is not one. */
+/** The emoji a `say` id refers to, or undefined when it is not one. */
 export function emojiFromSayId(id: string): Emoji | undefined {
   return id.startsWith(EMOJI_SAY_PREFIX) ? BY_ID.get(id.slice(EMOJI_SAY_PREFIX.length)) : undefined;
 }
