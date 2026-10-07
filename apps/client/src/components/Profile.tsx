@@ -26,6 +26,8 @@ import {
   type Account,
 } from "../game/account";
 import { Icon } from "./Icon";
+import { Lock } from "./SignedInOnly";
+import { CATCHPHRASES, NO_PHRASE } from "@amanda/shared";
 import * as V from "../data/voice";
 
 /**
@@ -86,9 +88,12 @@ export function Profile({ account, onClose, onChanged }: Props) {
    * account when it does.
    */
   const [bought, setBought] = useState<string[]>([]);
+  /** Every shop item this player holds, for the catchphrases below. */
+  const [owned, setOwned] = useState<string[]>([]);
   useEffect(() => {
-    void loadShop().then(({ items, owned }) => {
-      const mine = new Set(owned);
+    void loadShop().then(({ items, owned: mineIds }) => {
+      const mine = new Set(mineIds);
+      setOwned(mineIds);
       setBought(
         items
           .filter((i) => i.kind === "avatar" && mine.has(i.id))
@@ -103,6 +108,8 @@ export function Profile({ account, onClose, onChanged }: Props) {
   const [avatar, setAvatar] = useState(account?.avatar ?? AVATAR_IDS[0]);
   const [facesOpen, setFacesOpen] = useState(false);
   const [gender, setGenderChoice] = useState<V.Gender>(account?.gender ?? null);
+  /** The line thrown across the versus screen. NO_PHRASE means say nothing. */
+  const [phrase, setPhrase] = useState(account?.catchphrase ?? NO_PHRASE);
   const [leaving, setLeaving] = useState(false);
   const [deleting, setDeleting] = useState(false);
   const [reallyDeleting, setReallyDeleting] = useState(false);
@@ -137,6 +144,7 @@ export function Profile({ account, onClose, onChanged }: Props) {
     nickname !== (account?.nickname ?? "") ||
     birthDate !== (account?.birthDate ?? "") ||
     avatar !== (account?.avatar ?? AVATAR_IDS[0]) ||
+    phrase !== (account?.catchphrase ?? NO_PHRASE) ||
     gender !== (account?.gender ?? null);
 
   async function save() {
@@ -144,6 +152,9 @@ export function Profile({ account, onClose, onChanged }: Props) {
     const err = await saveProfile({
       nickname: nickname.trim(),
       avatar,
+      // "" rather than the sentinel: the column holds a real id or nothing,
+      // and NO_PHRASE is this screen's way of saying "nothing" out loud.
+      catchphrase: phrase === NO_PHRASE ? "" : phrase,
       ...(birthDate ? { birthDate } : {}),
       ...(gender ? { gender } : {}),
     });
@@ -294,6 +305,48 @@ export function Profile({ account, onClose, onChanged }: Props) {
             ))}
           </div>
         )}
+
+        {/*
+          The one line that is yours.
+
+          Or: *"let everyone choose a catchphrase, at first from 5 phrases —
+          but catchphrases (designed!) are another thing you can buy in the
+          shop or win in a chest. Then people will have a reason to buy from
+          the shop, because it is something you SEE."*
+
+          The ones that are not yours are drawn here anyway, locked, for the
+          same reason the shop and the album are shown to a guest: a hidden
+          thing persuades nobody. You cannot want a line you have never read.
+        */}
+        <section className="panel">
+          <h3>משפט המחץ שלי</h3>
+          <p className="panel__lead">מה שכתוב עליך כשמתחיל משחק.</p>
+          <div className="phrases">
+            {CATCHPHRASES.map((p) => {
+              const locked = !p.free && !owned.includes(p.item ?? "");
+              const silent = p.id === NO_PHRASE;
+              return (
+                <button
+                  key={p.id}
+                  className={`phrases__one${phrase === p.id ? " is-picked" : ""}${
+                    locked ? " is-locked" : ""
+                  }`}
+                  aria-pressed={phrase === p.id}
+                  disabled={locked}
+                  title={locked ? "אפשר לקנות בחנות או למצוא בתיבה" : ""}
+                  onClick={() => setPhrase(p.id)}
+                >
+                  {silent ? (
+                    <span className="phrases__silent">בלי משפט</span>
+                  ) : (
+                    <span className={`phrase phrase--${p.style}`}>{p.he}</span>
+                  )}
+                  {locked && <Lock />}
+                </button>
+              );
+            })}
+          </div>
+        </section>
 
         {/*
           Changing it later, which was impossible.

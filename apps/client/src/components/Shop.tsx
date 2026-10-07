@@ -1,5 +1,6 @@
 import { useCallback, useEffect, useState } from "react";
 import { Icon } from "./Icon";
+import { CATCHPHRASES, EMOJI } from "@amanda/shared";
 import { buyItem, loadShop, type ShopItem } from "../game/account";
 
 /**
@@ -30,6 +31,7 @@ const SECTIONS: Array<{ kind: ShopItem["kind"]; he: string }> = [
   { kind: "avatar", he: "פרצופים" },
   { kind: "skin", he: "מראה לקלפים" },
   { kind: "emoji", he: "אימוג׳ים" },
+  { kind: "phrase", he: "משפטי מחץ" },
   { kind: "chest", he: "תיבות" },
   { kind: "card", he: "קלפים" },
 ];
@@ -49,7 +51,14 @@ export function shopItemArt(item: ShopItem): string | null {
   if (avatar) return `${BASE}brand/${avatar}.webp`;
   // A card, or a skin for one, is drawn as that card.
   const cardId = (item.grants as { cardId?: string }).cardId;
-  return cardId ? `${BASE}cards/${cardId}.webp` : null;
+  if (cardId) return `${BASE}cards/${cardId}.webp`;
+  /*
+   * An emoji pack is drawn as the first emoji in it — which needs no `art`
+   * column and no second place to keep a filename. The item id IS the pack
+   * id (see the migration), so the pack can simply be asked what is in it.
+   */
+  const pack = EMOJI.find((e) => e.pack === item.id);
+  return pack ? `${BASE}emoji/${pack.id}.png` : null;
 }
 
 export function Shop({
@@ -118,6 +127,8 @@ export function Shop({
                     {row.map((item) => {
                       const mine = owned.includes(item.id);
                       const art = shopItemArt(item);
+                      // A phrase tile draws the line itself; see below.
+                      const phrase = CATCHPHRASES.find((p) => p.item === item.id);
                       const tooDear = item.price_diamonds > diamonds;
                       return (
                         <div className={`good${mine ? " is-mine" : ""}`} key={item.id}>
@@ -125,14 +136,25 @@ export function Shop({
                               thing you deliberately open, every tile is on
                               screen at once, and they are 66 pixels across.
                               Deferring them only buys a row of empty circles. */}
-                          <div className="good__art">
-                            {art ? (
+                          {/*
+                            A catchphrase has no picture, because it IS the
+                            picture: what is being sold is how the sentence
+                            arrives, so the tile shows the sentence in the
+                            treatment you would be buying. A generic gem
+                            there would be selling it blind.
+                          */}
+                          <div className={`good__art${phrase ? " good__art--phrase" : ""}`}>
+                            {phrase ? (
+                              <span className={`phrase phrase--${phrase.style}`}>{phrase.he}</span>
+                            ) : art ? (
                               <img src={art} alt="" />
                             ) : (
                               <Icon name="gem" size={30} />
                             )}
                           </div>
-                          <b className="good__name">{item.name.he}</b>
+                          {/* The name of a phrase is the phrase, already
+                              shown above it. Saying it twice is clutter. */}
+                          {!phrase && <b className="good__name">{item.name.he}</b>}
                           {item.blurb?.he && <small className="good__blurb">{item.blurb.he}</small>}
                           {mine ? (
                             <span className="good__mine">

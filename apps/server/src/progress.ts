@@ -15,7 +15,7 @@
  * database must never stop a game.
  */
 import type { SupabaseClient } from "@supabase/supabase-js";
-import { TUNED, type Card } from "@amanda/shared";
+import { CATCHPHRASES, EMOJI_PACKS, TUNED, type Card } from "@amanda/shared";
 import { CATALOG } from "./content.js";
 import { refreshAlbumPowerSoon } from "./albumPower.js";
 /*
@@ -43,11 +43,20 @@ interface ChestKind {
   diamonds: number;
   /** A rarity that is guaranteed to appear at least once. */
   guarantees?: Card["rarity"];
+  /**
+   * The chance this chest also holds something from the shop — an emoji pack
+   * or a catchphrase.
+   *
+   * Or asked for both: *"something you buy in the shop OR win in a chest."*
+   * The wooden one never does, which is what makes a silver one worth
+   * counting towards; see nachoChestKind for the rhythm those arrive on.
+   */
+  treasure?: number;
 }
 export const CHESTS: Record<string, ChestKind> = {
   wood: { cards: 3, diamonds: 5 },
-  silver: { cards: 5, diamonds: 15, guarantees: "rare" },
-  gold: { cards: 8, diamonds: 40, guarantees: "epic" },
+  silver: { cards: 5, diamonds: 15, guarantees: "rare", treasure: 0.25 },
+  gold: { cards: 8, diamonds: 40, guarantees: "epic", treasure: 0.6 },
 };
 
 /**
@@ -62,6 +71,33 @@ const RARITY_WEIGHT: Record<string, number> = {
   epic: 5,
   legendary: 1,
 };
+
+/**
+ * The things a chest may hold that are not cards or diamonds.
+ *
+ * Deliberately the ids and not a database read: a chest is rolled inside a
+ * match ending, and that must not wait on a query. The ids are the same ones
+ * the shop sells (see the migration) and the same ones `ownedEmoji` and
+ * `ownedCatchphrases` ask about — one name for one thing.
+ *
+ * A player who already holds one is not given it again; `treasureFor` checks.
+ */
+const TREASURES: readonly string[] = [
+  ...EMOJI_PACKS.map((p) => p.id),
+  ...CATCHPHRASES.filter((p) => p.item).map((p) => p.item!),
+];
+
+/**
+ * Something from the shop, if this chest rolled one and there is anything
+ * left to give. Null is the ordinary answer.
+ */
+function treasureFor(spec: ChestKind, owned?: ReadonlySet<string>): string | null {
+  if (!spec.treasure || Math.random() >= spec.treasure) return null;
+  // Never a duplicate: a pack you already own is worth nothing, and "you won
+  // a thing you have" is a worse moment than winning no thing at all.
+  const left = TREASURES.filter((id) => !owned?.has(id));
+  return left.length ? left[Math.floor(Math.random() * left.length)]! : null;
+}
 
 /** Only real, collectable monsters — the filler that pads a board is not a prize. */
 function collectableCards(): Card[] {
@@ -117,7 +153,9 @@ function pickByRarity(pool: Card[], owned?: ReadonlySet<string>): Card | null {
 export function rollChest(
   kind: string,
   owned?: ReadonlySet<string>,
-): { cards: string[]; diamonds: number } {
+  /** Shop items this player holds, so a chest never gives one twice. */
+  items?: ReadonlySet<string>,
+): { cards: string[]; diamonds: number; items?: string[] } {
   const spec = CHESTS[kind] ?? CHESTS.wood!;
   const pool = collectableCards();
   const cards: string[] = [];
@@ -134,7 +172,8 @@ export function rollChest(
     if (!c) break;
     cards.push(c.id);
   }
-  return { cards, diamonds: spec.diamonds };
+  const treasure = treasureFor(spec, items);
+  return { cards, diamonds: spec.diamonds, ...(treasure ? { items: [treasure] } : {}) };
 }
 
 /**
@@ -150,7 +189,7 @@ export function rollChest(
 export async function grantChest(
   sb: SupabaseClient,
   playerId: string,
-  won: { cards: string[]; diamonds: number },
+  won: { cards: string[]; diamonds: number; items?: string[] },
 ) {
   return grant(sb, playerId, won as ReturnType<typeof rollChest>);
 }
@@ -158,6 +197,19 @@ export async function grantChest(
 async function grant(sb: SupabaseClient, playerId: string, won: ReturnType<typeof rollChest>) {
   // Whatever else happens below, this album is about to be worth more.
   queueMicrotask(() => refreshAlbumPowerSoon(sb, playerId));
+  /*
+   * Anything from the shop that was in it.
+   *
+   * `ignoreDuplicates` rather than a check: opening a chest is one request and
+   * a retried one must not fail on a row it already wrote. `source` says it
+   * came from a chest, which is the question "what did we give away" that
+   * player_items exists to answer.
+   */
+  if (won.items?.length)
+    await sb.from("player_items").upsert(
+      won.items.map((item_id) => ({ player_id: playerId, item_id, source: "chest" })),
+      { onConflict: "player_id,item_id", ignoreDuplicates: true },
+    );
   const counts = new Map<string, number>();
   for (const id of won.cards) counts.set(id, (counts.get(id) ?? 0) + 1);
   for (const [cardId, copies] of counts) {

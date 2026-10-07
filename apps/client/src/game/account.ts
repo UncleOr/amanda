@@ -404,6 +404,14 @@ export interface Chest {
   kind: string;
   cards: string[];
   diamonds: number;
+  /**
+   * Shop items that were in it — an emoji pack or a catchphrase.
+   *
+   * Or asked for both ways in: *"something you buy in the shop or win in a
+   * chest."* Usually absent; a wooden chest never holds one, which is what
+   * makes a silver one worth counting towards.
+   */
+  items?: string[];
   earnedAt: string;
 }
 
@@ -482,6 +490,7 @@ export async function openChest(chestId: string): Promise<Chest | null> {
       kind?: string;
       cards?: string[];
       diamonds?: number;
+      items?: string[];
     };
     if (!body.ok) return null;
     return {
@@ -489,6 +498,7 @@ export async function openChest(chestId: string): Promise<Chest | null> {
       kind: body.kind ?? "wood",
       cards: body.cards ?? [],
       diamonds: body.diamonds ?? 0,
+      ...(body.items?.length ? { items: body.items } : {}),
       earnedAt: new Date().toISOString(),
     };
   } catch {
@@ -626,6 +636,16 @@ export async function saveProfile(patch: {
   avatar?: string;
   birthDate?: string;
   gender?: "boy" | "girl";
+  /**
+   * An id from catchphrases.ts, or "" to stop saying anything.
+   *
+   * Writable by the player like their nickname and their face, and for the
+   * same reason: choosing among lines they already own is not worth anything.
+   * Which lines those ARE is checked where ownership lives (player_items) —
+   * the worst a crafted request here can do is set a line to one of the eight
+   * in the catalogue, and a line is a line.
+   */
+  catchphrase?: string;
 }): Promise<string | null> {
   const sb = db();
   if (!sb) return "אין חיבור לשרת";
@@ -640,6 +660,7 @@ export async function saveProfile(patch: {
     if (patch.avatar !== undefined) row.avatar = patch.avatar;
     if (patch.birthDate !== undefined) row.birth_date = patch.birthDate;
     if (patch.gender !== undefined) row.gender = patch.gender;
+    if (patch.catchphrase !== undefined) row.catchphrase = patch.catchphrase;
     const { error } = await sb.from("players").update(row).eq("id", id);
     // The age floor is also a CHECK on the row, so a client that skipped the
     // test above still cannot write a birthday that is too recent.
@@ -797,7 +818,7 @@ export async function friendAction(
 
 export interface ShopItem {
   id: string;
-  kind: "avatar" | "emoji" | "skin" | "card" | "chest";
+  kind: "avatar" | "emoji" | "skin" | "card" | "chest" | "phrase";
   name: { he: string; en?: string };
   blurb?: { he: string; en?: string } | null;
   grants: Record<string, unknown>;

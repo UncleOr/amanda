@@ -143,8 +143,18 @@ async function openChest(req: IncomingMessage, res: ServerResponse): Promise<voi
     .maybeSingle();
   if (!chest) return send(res, 404, { error: "no such chest" });
 
-  const won = (chest.contents ?? {}) as { cards?: string[]; diamonds?: number };
-  const contents = { cards: won.cards ?? [], diamonds: won.diamonds ?? 0 };
+  const won = (chest.contents ?? {}) as {
+    cards?: string[];
+    diamonds?: number;
+    items?: string[];
+  };
+  // `items` only when there are any, so a chest without one does not send an
+  // empty array that the reveal would have to know to ignore.
+  const contents = {
+    cards: won.cards ?? [],
+    diamonds: won.diamonds ?? 0,
+    ...(won.items?.length ? { items: won.items } : {}),
+  };
 
   if (chest.opened_at) {
     // Already open. Say what was in it and grant nothing.

@@ -16,6 +16,8 @@ import { useEffect, useState } from "react";
 import { CATALOG } from "../data/catalog";
 import { CardView, CardBack } from "./CardView";
 import { Icon } from "./Icon";
+import { EmojiFace } from "./EmojiFace";
+import { CATCHPHRASES, EMOJI, EMOJI_PACKS } from "@amanda/shared";
 import type { Chest } from "../game/account";
 import * as V from "../data/voice";
 
@@ -117,12 +119,54 @@ export function ChestReveal({ chest, onClose }: Props) {
                 <Icon name="gem" size={22} /> +{chest.diamonds}
               </p>
             )}
+            {/*
+              And the thing that is not a card.
+
+              Or wanted emoji and catchphrases winnable as well as buyable, so
+              this is the moment that has to land. It comes LAST, after every
+              card has turned and the diamonds have landed — it is the rarest
+              thing in the chest and it should be the last thing you see, not
+              one more tile in a row.
+            */}
+            {allShown && chest.items?.map((id) => <Prize key={id} id={id} />)}
             <button className="btn-fight" disabled={!allShown} onClick={onClose}>
               {allShown ? "יפה" : "…"}
             </button>
           </>
         )}
       </div>
+    </div>
+  );
+}
+
+/**
+ * One shop item found in a chest, drawn as the thing itself.
+ *
+ * An emoji pack shows its four faces; a catchphrase shows the line in the
+ * treatment you have just won. Neither is a name and a gem icon, because what
+ * makes both of them worth owning is what they LOOK like — the same reason
+ * they are worth buying (Or: "it is something you SEE").
+ */
+function Prize({ id }: { id: string }) {
+  const pack = EMOJI_PACKS.find((p) => p.id === id);
+  const phrase = CATCHPHRASES.find((p) => p.item === id);
+  if (!pack && !phrase) return null;
+
+  return (
+    <div className="chest__prize">
+      <span className="chest__prize-tag">חדש אצלך</span>
+      {pack ? (
+        <>
+          <span className="chest__prize-faces">
+            {EMOJI.filter((e) => e.pack === pack.id).map((e) => (
+              <EmojiFace key={e.id} id={e.id} size={34} />
+            ))}
+          </span>
+          <b>{pack.he}</b>
+        </>
+      ) : (
+        <span className={`phrase phrase--${phrase!.style}`}>{phrase!.he}</span>
+      )}
     </div>
   );
 }

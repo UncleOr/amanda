@@ -507,15 +507,25 @@ function Game() {
    * on the home screen, and never during a match.
    */
   const [promo, setPromo] = useState<ShopItem | null>(null);
+  /*
+   * And what this player already holds, which the emoji picker needs.
+   *
+   * It comes from the same call, on the home screen, and NOT during a match:
+   * the picker opens mid-battle and must not be waiting on a fetch to know
+   * what it may offer. Re-read whenever the account is, which is what the
+   * shop does after a purchase.
+   */
+  const [ownedItems, setOwnedItems] = useState<string[]>([]);
   useEffect(() => {
     if (m.phase !== "intro") return;
-    void loadShop().then(({ items }) => {
+    void loadShop().then(({ items, owned }) => {
       // Highest `sort` wins: it is the field Or already uses to put something
       // at the front of a shelf, so "featured" needs no second concept.
       const best = [...items].sort((a, b) => b.sort - a.sort)[0];
       setPromo(best ?? null);
+      setOwnedItems(owned);
     });
-  }, [m.phase]);
+  }, [m.phase, m.account]);
 
   /*
    * Everything a guest may not do.
@@ -872,7 +882,36 @@ function Game() {
                   />
                 ) : (
                   <>
-                    <span className="side__way">⟶</span> {m.coop ? "אמנדה" : "היריב"}{" "}
+                    {/*
+                      Who it is, not just that it is somebody.
+
+                      Or: *"and during the battle you need to see your
+                      opponent's profile picture and name."* It was the word
+                      "היריב" over an anonymous grid — which is who you are
+                      playing against in the abstract, and nobody in
+                      particular. The face is small on purpose: it belongs
+                      beside the label, not over the board.
+                    */}
+                    <span className="side__way">⟶</span>{" "}
+                    {m.coop ? (
+                      "אמנדה"
+                    ) : (
+                      <span className="side__who">
+                        {m.rival?.avatar && (
+                          <img
+                            className="side__face"
+                            src={`${BASE}brand/${m.rival.avatar}.webp`}
+                            alt=""
+                          />
+                        )}
+                        {m.rival?.nickname ?? "היריב"}
+                        {m.rival && (
+                          <span className="side__cups">
+                            <Icon name="win" size={11} /> {m.rival.trophies}
+                          </span>
+                        )}
+                      </span>
+                    )}{" "}
                     {m.phase !== "build" && <span className="side__revealed">נחשף!</span>}
                   </>
                 )}
@@ -909,7 +948,13 @@ function Game() {
             {/* Only against a person. Saying "nice move" to a bot, or to
                 Amanda, is a button that does nothing. */}
             {m.online && !m.playground && (
-              <SayButton onSay={m.say} hearing={m.hearing} onToggleHearing={m.toggleHearing} />
+              <SayButton
+                onSay={m.say}
+                hearing={m.hearing}
+                onToggleHearing={m.toggleHearing}
+                owned={ownedItems}
+                onWantMore={() => panel.show("shop")}
+              />
             )}
           </div>
 

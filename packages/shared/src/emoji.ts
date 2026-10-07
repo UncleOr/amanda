@@ -26,6 +26,38 @@
  * move one from a paid pack to the free set without regenerating anything.
  */
 
+/**
+ * How an emoji MOVES when it is sent.
+ *
+ * Or: *"the emoji you send during a match should be a sort of gif, with
+ * animation."* They are — but the movement is CSS over the still drawing
+ * rather than sixteen video files, and that is a deliberate trade:
+ *
+ *   SIXTEEN ANIMATED WEBPS IS MEGABYTES. This is a game a seven-year-old
+ *   opens on a phone, over whatever connection is going, and the whole client
+ *   bundle is currently 630KB. A set of looping clips would be several times
+ *   the game.
+ *
+ *   AND IT WOULD STILL ONLY MOVE ONE WAY. A still drawing plus a motion is
+ *   two independent things: the picture can be redrawn without re-animating
+ *   it, and the movement can be retimed without regenerating art.
+ *
+ * Each one is matched to what the emoji MEANS, which is the part that makes
+ * it read as alive rather than as a thing jiggling: a laugh shakes, a shock
+ * snaps in, a flame flickers. If Or wants real frame animation later, the
+ * pipeline for it exists (packages/art/src/animate.ts) and this field becomes
+ * the fallback for anything not yet filmed.
+ */
+export type EmojiMotion =
+  | "pop"
+  | "shake"
+  | "bob"
+  | "swing"
+  | "flicker"
+  | "beat"
+  | "wobble"
+  | "spin";
+
 export interface Emoji {
   /** What travels over the wire, and the name of the picture file. */
   id: string;
@@ -36,6 +68,8 @@ export interface Emoji {
   free?: boolean;
   /** Which pack it is sold in. Absent on the free ones. */
   pack?: string;
+  /** How it moves when it is sent. See EmojiMotion. */
+  motion: EmojiMotion;
 }
 
 /**
@@ -49,26 +83,26 @@ export interface Emoji {
  */
 export const EMOJI: readonly Emoji[] = [
   // ── everybody has these ──
-  { id: "wave", he: "היי", en: "Hi", free: true },
-  { id: "flex", he: "אני מוכן", en: "Ready", free: true },
-  { id: "shock", he: "ואו", en: "Whoa", free: true },
-  { id: "laugh", he: "חחח", en: "Haha", free: true },
-  { id: "think", he: "רגע, חושב", en: "Thinking", free: true },
-  { id: "scared", he: "מפחיד", en: "Scary", free: true },
-  { id: "crown", he: "כתר", en: "Crown", free: true },
-  { id: "crumb", he: "פירורים", en: "Crumbs", free: true },
+  { id: "wave", he: "היי", en: "Hi", free: true, motion: "swing" },
+  { id: "flex", he: "אני מוכן", en: "Ready", free: true, motion: "beat" },
+  { id: "shock", he: "ואו", en: "Whoa", free: true, motion: "pop" },
+  { id: "laugh", he: "חחח", en: "Haha", free: true, motion: "shake" },
+  { id: "think", he: "רגע, חושב", en: "Thinking", free: true, motion: "bob" },
+  { id: "scared", he: "מפחיד", en: "Scary", free: true, motion: "wobble" },
+  { id: "crown", he: "כתר", en: "Crown", free: true, motion: "bob" },
+  { id: "crumb", he: "פירורים", en: "Crumbs", free: true, motion: "wobble" },
 
   // ── the monsters pack ──
-  { id: "fireskull", he: "גולגולת בוערת", en: "Burning skull", pack: "emoji.monsters" },
-  { id: "monsterheart", he: "לב מפלצת", en: "Monster heart", pack: "emoji.monsters" },
-  { id: "wink", he: "קריצה", en: "Wink", pack: "emoji.monsters" },
-  { id: "babydragon", he: "דרקונצ'יק", en: "Baby dragon", pack: "emoji.monsters" },
+  { id: "fireskull", he: "גולגולת בוערת", en: "Burning skull", pack: "emoji.monsters", motion: "flicker" },
+  { id: "monsterheart", he: "לב מפלצת", en: "Monster heart", pack: "emoji.monsters", motion: "beat" },
+  { id: "wink", he: "קריצה", en: "Wink", pack: "emoji.monsters", motion: "pop" },
+  { id: "babydragon", he: "דרקונצ'יק", en: "Baby dragon", pack: "emoji.monsters", motion: "bob" },
 
   // ── the Amanda pack ──
-  { id: "smirk", he: "החיוך של אמנדה", en: "Amanda's smirk", pack: "emoji.amanda" },
-  { id: "firelion", he: "אריה אש", en: "Fire lion", pack: "emoji.amanda" },
-  { id: "slimeblob", he: "ריר שמח", en: "Happy slime", pack: "emoji.amanda" },
-  { id: "crumbdemon", he: "שד פירורים", en: "Crumb demon", pack: "emoji.amanda" },
+  { id: "smirk", he: "החיוך של אמנדה", en: "Amanda's smirk", pack: "emoji.amanda", motion: "flicker" },
+  { id: "firelion", he: "אריה אש", en: "Fire lion", pack: "emoji.amanda", motion: "shake" },
+  { id: "slimeblob", he: "ריר שמח", en: "Happy slime", pack: "emoji.amanda", motion: "wobble" },
+  { id: "crumbdemon", he: "שד פירורים", en: "Crumb demon", pack: "emoji.amanda", motion: "spin" },
 ];
 
 /**

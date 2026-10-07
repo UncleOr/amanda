@@ -194,7 +194,7 @@ export function SaidBubble({
   if (loneEmoji)
     return (
       <div className={`bubble bubble--face${mine ? " bubble--mine" : ""}`} role="status">
-        <EmojiFace id={loneEmoji.id} size={52} label={loneEmoji.he} />
+        <EmojiFace id={loneEmoji.id} size={56} label={loneEmoji.he} alive />
       </div>
     );
 
@@ -205,7 +205,7 @@ export function SaidBubble({
   return (
     <div className={`bubble${mine ? " bubble--mine" : ""}`} role="status">
       <span className="bubble__emoji">
-        <EmojiFace id={taunt.face} size={30} label={face?.he} />
+        <EmojiFace id={taunt.face} size={30} label={face?.he} alive />
       </span>
       <span className="bubble__words">{taunt.he}</span>
     </div>

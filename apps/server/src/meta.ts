@@ -240,6 +240,13 @@ async function addNachos(
   const kinds: string[] = [];
   for (let i = 0; i < owed; i++) kinds.push(nachoChestKind(paid + i));
   /*
+   * Read once, not once per chest. Both are only needed when a chest is
+   * actually being minted, which is one match in five — and the album one
+   * was being fetched inside the loop below, so filling three bars at once
+   * read it three times.
+   */
+  const [album, items] = owed > 0 ? await Promise.all([albumOf(sb, playerId), itemsOf(sb, playerId)]) : [undefined, undefined];
+  /*
    * The count is written BEFORE the chests are handed over, and that order is
    * the idempotency. If this process dies halfway, the player is short a chest
    * — annoying, fixable, and visible in the logs. The other order would mint
@@ -251,7 +258,7 @@ async function addNachos(
       player_id: playerId,
       kind,
       opened_at: null,
-      contents: rollChest(kind, await albumOf(sb, playerId)),
+      contents: rollChest(kind, album, items),
     });
   }
   return { chests: kinds, total: nachos };
@@ -261,6 +268,12 @@ async function addNachos(
 async function albumOf(sb: SupabaseClient, playerId: string): Promise<Set<string>> {
   const { data } = await sb.from("player_cards").select("card_id").eq("player_id", playerId);
   return new Set((data ?? []).map((r) => r.card_id as string));
+}
+
+/** And which shop items, so a chest never hands over one they already hold. */
+async function itemsOf(sb: SupabaseClient, playerId: string): Promise<Set<string>> {
+  const { data } = await sb.from("player_items").select("item_id").eq("player_id", playerId);
+  return new Set((data ?? []).map((r) => r.item_id as string));
 }
 
 /** Move every live challenge this match satisfied. */

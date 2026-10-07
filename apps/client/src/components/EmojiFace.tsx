@@ -1,3 +1,5 @@
+import { emojiById } from "@amanda/shared";
+
 /**
  * One drawn emoji.
  *
@@ -17,16 +19,27 @@ export function EmojiFace({
   size = 32,
   label,
   className,
+  /**
+   * Move, the way it does when it is sent.
+   *
+   * Off by default, because a picker full of jiggling faces is noise — the
+   * movement is what makes a message land, and a message is one thing at a
+   * time. Each emoji carries its own motion, matched to what it means (see
+   * EmojiMotion in emoji.ts).
+   */
+  alive = false,
 }: {
   id: string;
   size?: number;
   /** Give this when nothing nearby says the same thing in words. */
   label?: string;
   className?: string;
+  alive?: boolean;
 }) {
+  const motion = alive ? emojiById(id)?.motion : undefined;
   return (
     <img
-      className={`emoji${className ? ` ${className}` : ""}`}
+      className={`emoji${motion ? ` emoji--${motion}` : ""}${className ? ` ${className}` : ""}`}
       src={`${import.meta.env.BASE_URL}emoji/${id}.png`}
       width={size}
       height={size}
