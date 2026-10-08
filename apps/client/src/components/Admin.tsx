@@ -4,6 +4,7 @@ import { ARENAS } from "@amanda/shared";
 import { GiftsTab } from "./AdminGifts";
 import { ShopTab } from "./AdminShop";
 import { DialsTab, PhrasesTab, SeriesTab } from "./AdminContent";
+import { TutorialTab } from "./AdminTutorial";
 import { PlayerStats, StatsTab } from "./AdminStats";
 import { LiveTab } from "./AdminLive";
 import { CardEditor } from "./CardEditor";
@@ -95,6 +96,7 @@ export function Admin() {
     | "gifts"
     | "phrases"
     | "series"
+    | "tutorial"
     | "dials"
     | "stats"
     | "live"
@@ -218,6 +220,9 @@ export function Admin() {
           <button className={tab === "series" ? "on" : ""} onClick={() => setTab("series")}>
             סדרות
           </button>
+          <button className={tab === "tutorial" ? "on" : ""} onClick={() => setTab("tutorial")}>
+            טוטוריאל
+          </button>
           <button className={tab === "dials" ? "on" : ""} onClick={() => setTab("dials")}>
             מספרים
           </button>
@@ -249,6 +254,8 @@ export function Admin() {
         <PhrasesTab call={call} say={setNote} />
       ) : tab === "series" ? (
         <SeriesTab call={call} say={setNote} />
+      ) : tab === "tutorial" ? (
+        <TutorialTab call={call} say={setNote} />
       ) : tab === "dials" ? (
         <DialsTab call={call} say={setNote} />
       ) : (

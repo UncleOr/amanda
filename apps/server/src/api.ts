@@ -25,7 +25,7 @@ import { awardMatch, claim, factsFor, standings } from "./meta.js";
 import { soloResult } from "./solo.js";
 
 import { SUPABASE_URL as URL, db, keyHasWhitespace, keyLength, keyStartsWith } from "./supabase.js";
-import { phraseOverrides, seriesOverrides, tunableValues } from "./live.js";
+import { phraseOverrides, seriesOverrides, tunableValues, tutorialOverrides } from "./live.js";
 import { MAX_EVENT_BYTES, track, type EventKind } from "./events.js";
 
 /**
@@ -546,6 +546,7 @@ export async function handleApi(req: IncomingMessage, res: ServerResponse): Prom
       phrases: phraseOverrides(),
       series: seriesOverrides(),
       tunables: tunableValues(),
+      tutorial: tutorialOverrides(),
     });
     return true;
   }

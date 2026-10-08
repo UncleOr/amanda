@@ -64,6 +64,18 @@ export function tunableValues(): Record<string, number> {
 }
 
 /**
+ * The lines Amanda says while she is teaching, where one has been rewritten.
+ *
+ * Or: *"in the admin panel give me an option to edit it too."* The shipped
+ * words live in the client (data/tutorialLines.ts); a row here replaces one
+ * of them and nothing else, so an empty table is the game exactly as built.
+ */
+let tutorialRows: Array<{ id: string; he: string }> = [];
+export function tutorialOverrides(): Array<{ id: string; he: string }> {
+  return tutorialRows;
+}
+
+/**
  * Pull all three and apply the two that belong to this process.
  *
  * Every failure is swallowed on purpose. With no database, a broken table or
@@ -76,10 +88,11 @@ export async function refreshLive(): Promise<void> {
   const sb = db();
   if (!sb) return;
   try {
-    const [phrases, series, tunables] = await Promise.all([
+    const [phrases, series, tunables, tutorial] = await Promise.all([
       sb.from("phrase_overrides").select("id, active, data"),
       sb.from("series_overrides").select("id, active, data, sort").order("sort"),
       sb.from("tunables").select("id, value"),
+      sb.from("tutorial_overrides").select("id, active, he"),
     ]);
 
     phraseRows = (phrases.data ?? []) as PhraseOverride[];
@@ -95,6 +108,12 @@ export async function refreshLive(): Promise<void> {
       (tunables.data ?? []).map((r) => [String(r.id), Number(r.value)]),
     );
     liveState.tunables = applyTunables(tunableRows);
+
+    // Only the switched-on ones travel. A row left in place but turned off is
+    // how you put the shipped line back for an evening without losing a draft.
+    tutorialRows = ((tutorial.data ?? []) as Array<{ id: string; active: boolean; he: string }>)
+      .filter((r) => r.active !== false && typeof r.he === "string" && r.he.trim() !== "")
+      .map((r) => ({ id: String(r.id), he: r.he }));
 
     liveState.lastError = null;
     liveState.loadedAt = new Date().toISOString();

@@ -29,6 +29,7 @@
  * sharper reason that the BATTLE maths is not on that list.
  */
 import { applyPhraseOverrides, applyTunables, type PhraseOverride } from "@amanda/shared";
+import { setTutorialOverrides } from "../data/tutorialLines";
 import { SERIES } from "../data/catalog";
 
 const SERVER_HTTP = (
@@ -108,10 +109,17 @@ export async function loadLiveContent(): Promise<void> {
       phrases?: PhraseOverride[];
       series?: SeriesRow[];
       tunables?: Record<string, number>;
+      tutorial?: Array<{ id: string; he: string }>;
     };
     liveState.phrases = applyPhraseOverrides(body.phrases ?? []);
     liveState.series = applySeries(body.series ?? []);
     liveState.tunables = applyTunables(body.tunables ?? {});
+    /*
+     * Not part of `liveState`: the tutorial lines are read by a pure function
+     * (coach.ts) called from an effect, not by a component that re-renders
+     * when this arrives. They go straight into the module that serves them.
+     */
+    setTutorialOverrides(body.tutorial ?? []);
     liveState.loaded = true;
     if (liveState.phrases || liveState.series || liveState.tunables)
       for (const fn of listeners) fn();

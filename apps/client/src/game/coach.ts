@@ -11,6 +11,7 @@
  * worse than no tutorial at all.
  */
 import { CATALOG, SERIES_BY_ID, synergyGroups } from "../data/catalog";
+import { line } from "../data/tutorialLines";
 import type { Card } from "@amanda/shared";
 
 export interface Cue {
@@ -78,7 +79,7 @@ const MEDIAN_WORTH = (() => {
 function synergyLine(seriesId: string): string | null {
   const s = SERIES_BY_ID.get(seriesId);
   if (!s?.synergy) return null;
-  return `שלושה מאותה סדרה צמודים זה לזה — ${s.synergy.name.he} נדלק. ${s.synergy.description.he}`;
+  return line("synergy", { bonus: s.synergy.name.he, what: s.synergy.description.he });
 }
 
 /** Which series has a touching group big enough, using the engine's own rule. */
@@ -189,7 +190,7 @@ function counterCues(view: CoachView, inHand: Card | null): Array<() => Cue | nu
       return has(inHand, "stackingDot") && wall
         ? {
             id: "x-poison",
-            text: `ל${wall.name.he} יש ערימת חיים. ${inHand!.name.he} לא מנסה לנצח אותו במכות — הארס שלו מצטבר בכל פגיעה וממשיך לשרוף גם אחרי שהוא מת. שים אותו מולו.`,
+            text: line("x-poison", { enemy: wall.name.he, card: inHand!.name.he }),
             target: board,
           }
         : null;
@@ -203,7 +204,7 @@ function counterCues(view: CoachView, inHand: Card | null): Array<() => Cue | nu
       return has(inHand, "aoeRowAttack") && multiplies
         ? {
             id: "x-wide",
-            text: `הוא שם משהו שמתפצל כשהוא מת — תהרוג אחד ויהיו שניים. ${inHand!.name.he} מכה כמה נתיבים בבת אחת, וזה בדיוק מה שמבטל את זה. רק אל תשים אותו בקצה, שם חצי מהמכה הולכת לאוויר.`,
+            text: line("x-wide", { card: inHand!.name.he }),
             target: board,
           }
         : null;
@@ -214,7 +215,7 @@ function counterCues(view: CoachView, inHand: Card | null): Array<() => Cue | nu
       return has(inHand, "lineDenialDot") && deepestLane(view) >= 2
         ? {
             id: "x-lane",
-            text: `הוא ערם קלפים בטור אחד. ${inHand!.name.he} מבעיר את הנתיב שלפניו — כולם שם משלמים כל שנייה, ושריון לא עוזר. שים אותו מול הטור הזה.`,
+            text: line("x-lane", { card: inHand!.name.he }),
             target: board,
           }
         : null;
@@ -228,7 +229,7 @@ function counterCues(view: CoachView, inHand: Card | null): Array<() => Cue | nu
       return has(inHand, "pullVacuum") && keepsDistance
         ? {
             id: "x-pull",
-            text: `הוא בנה משהו שיורה מרחוק ולא מתקרב. ${inHand!.name.he} גורר את כל הקו שלו אליך — ישר לתוך הטווח של השומרים שלך.`,
+            text: line("x-pull", { card: inHand!.name.he }),
             target: board,
           }
         : null;
@@ -240,7 +241,7 @@ function counterCues(view: CoachView, inHand: Card | null): Array<() => Cue | nu
       return has(inHand, "damageShareAdjacent") && fragile
         ? {
             id: "x-shield",
-            text: `${fragile.name.he} מכה חזק ושובר בקלות. ${inHand!.name.he} סופג חצי מכל מכה שמכוונת לשכן שלו — שים אותו ממש לידו ותן לו לחיות קצת.`,
+            text: line("x-shield", { ally: fragile.name.he, card: inHand!.name.he }),
             target: ".side--me .board",
           }
         : null;
@@ -287,7 +288,11 @@ export function nextCue(view: CoachView, said: Set<string>): Cue | null {
       down === 0 && inHand && !view.handIsAction
         ? {
             id: "first",
-            text: `נתחיל בהדבקות. הנה הקלף הראשון — ${inHand.name.he}. ${trait(inHand)}. ${wants(inHand)}.`,
+            text: line("first", {
+              card: inHand.name.he,
+              trait: trait(inHand),
+              where: wants(inHand),
+            }),
             target: ".side--me .board",
             awaits: "placed",
           }
@@ -297,7 +302,11 @@ export function nextCue(view: CoachView, said: Set<string>): Cue | null {
       down === 1 && inHand && !view.handIsAction
         ? {
             id: "second",
-            text: `עוד אחד: ${inHand.name.he}. ${trait(inHand)}. ${wants(inHand)}.`,
+            text: line("second", {
+              card: inHand.name.he,
+              trait: trait(inHand),
+              where: wants(inHand),
+            }),
             target: ".side--me .board",
           }
         : null,
@@ -307,7 +316,7 @@ export function nextCue(view: CoachView, said: Set<string>): Cue | null {
       !view.king && down >= 2 && inHand && !view.handIsAction
         ? {
             id: "king",
-            text: "ועכשיו המלך. הוא לא זז, הוא חזק פי שלושה, ואם הוא נופל — נגמר.",
+            text: line("king"),
             target: ".side--me .slot--king",
             // She waits. The board cannot do anything without one.
             awaits: "king",
@@ -319,7 +328,7 @@ export function nextCue(view: CoachView, said: Set<string>): Cue | null {
       view.king && inHand && inHand.stats.moveSpeed === 0 && inHand.stats.hp >= 800
         ? {
             id: "tank",
-            text: `${inHand.name.he}? סטטי, הרבה חיים. הוא לא ילך לשום מקום — שים אותו מול המלך, שם עוצרים את מי שבא אליו.`,
+            text: line("tank", { card: inHand.name.he }),
             target: ".side--me .slot--guard",
             // Put something down. Anywhere — the point is the hands move.
             awaits: "placed",
@@ -330,7 +339,10 @@ export function nextCue(view: CoachView, said: Set<string>): Cue | null {
       view.king && inHand && (inHand.flying || inHand.stats.range === "sniper")
         ? {
             id: "flyer",
-            text: `${inHand.name.he} ${inHand.flying ? "עף" : "צלף"} — הוא לא צריך שהדרך תהיה פנויה. שים אותו מאחורה ושיירה משם.`,
+            text: line("flyer", {
+              card: inHand.name.he,
+              moves: inHand.flying ? "עף" : "צלף",
+            }),
             target: ".side--me .board",
           }
         : null,
@@ -342,7 +354,7 @@ export function nextCue(view: CoachView, said: Set<string>): Cue | null {
       view.handIsAction && view.king
         ? {
             id: "action",
-            text: "קלף פעולה. לא מניחים אותו על הלוח — לוקחים אותו לבר ומפעילים כשצריך.",
+            text: line("action"),
             target: ".hand",
           }
         : null,
@@ -352,7 +364,7 @@ export function nextCue(view: CoachView, said: Set<string>): Cue | null {
       view.king && inHand && worth(inHand) < MEDIAN_WORTH * 0.6
         ? {
             id: "weak",
-            text: `${inHand.name.he} חלש. יגיעו טובים יותר — לפח איתו.`,
+            text: line("weak", { card: inHand.name.he }),
             target: ".hand",
           }
         : null,
@@ -362,7 +374,7 @@ export function nextCue(view: CoachView, said: Set<string>): Cue | null {
       view.discardCount > 0
         ? {
             id: "bin",
-            text: "התחרטת? הקלף העליון בפח חוזר. רק הוא, ומה שתיתן במקומו נקבר.",
+            text: line("bin"),
             target: ".hand",
           }
         : null,
@@ -379,7 +391,7 @@ export function nextCue(view: CoachView, said: Set<string>): Cue | null {
       view.phase === "panic"
         ? {
             id: "fog",
-            text: "נגמר הערפל — עכשיו רואים מה היריב שם. שינויים של הרגע האחרון?",
+            text: line("fog"),
             target: ".side--enemy",
           }
         : null,
@@ -387,7 +399,7 @@ export function nextCue(view: CoachView, said: Set<string>): Cue | null {
     // 9. "right, let's see what happens"
     () =>
       view.phase === "panic" && said.has("fog")
-        ? { id: "go", text: "יאללה, בוא נראה מה קורה.", target: ".hand .btn-fight" }
+        ? { id: "go", text: line("go"), target: ".hand .btn-fight" }
         : null,
   ];
 

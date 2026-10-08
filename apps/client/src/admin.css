@@ -767,3 +767,19 @@
    evidence, not an offer. */
 .live__list--actions code { color: var(--text); opacity: 0.85; }
 .live__quiet { margin: 0; color: var(--muted); font-size: var(--t-3); }
+
+/* ──────────────── the tutorial's own words ────────────────
+ *
+ * The lines are sentences, not values, so the box is a textarea and it gets
+ * the width. `.admin__preview` already styles the read-only preview beside a
+ * card; a textarea wearing it needs a height and a font that wraps.
+ */
+textarea.admin__preview {
+  width: 100%;
+  min-height: 56px;
+  resize: vertical;
+  font: inherit;
+  font-size: var(--t-3);
+  line-height: 1.45;
+  padding: 8px 10px;
+}

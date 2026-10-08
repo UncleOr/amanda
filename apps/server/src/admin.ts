@@ -796,6 +796,72 @@ async function adminRoutes(
       return true;
     }
 
+    /*
+     * ═══ THE WORDS SHE TEACHES WITH ═══
+     *
+     * Or: *"in the admin panel give me an option to edit it too."* Same shape
+     * as the catchphrases: the row replaces ONE line, deleting it puts the
+     * shipped words back, and `active: false` parks a draft without losing
+     * it. The braces (`{card}`, `{trait}`) are filled in by the client from
+     * the card actually in hand — see data/tutorialLines.ts, which is also
+     * where the list of which line may use which slot lives.
+     */
+    case "/api/admin/tutorial": {
+      const { data, error } = await sb
+        .from("tutorial_overrides")
+        .select("id, active, he, updated_at")
+        .order("id");
+      deps.send(res, error ? 500 : 200, error ? { error: error.message } : { rows: data ?? [] });
+      return true;
+    }
+
+    case "/api/admin/tutorial/save": {
+      const id = str("id");
+      const he = typeof body.he === "string" ? body.he.trim() : "";
+      if (!id) {
+        deps.send(res, 400, { error: "איזו שורה" });
+        return true;
+      }
+      if (!he) {
+        deps.send(res, 400, { error: "צריך טקסט. כדי להחזיר את המקור — מחיקה." });
+        return true;
+      }
+      const { error } = await sb.from("tutorial_overrides").upsert(
+        {
+          id,
+          he,
+          active: body.active !== false,
+          updated_at: new Date().toISOString(),
+          updated_by: userId,
+        },
+        { onConflict: "id" },
+      );
+      if (error) {
+        deps.send(res, 500, { error: error.message });
+        return true;
+      }
+      await refreshLive();
+      deps.send(res, 200, { ok: true, live: liveState });
+      return true;
+    }
+
+    /** Forget the override, which puts the shipped line back as it was. */
+    case "/api/admin/tutorial/revert": {
+      const id = str("id");
+      if (!id) {
+        deps.send(res, 400, { error: "איזו שורה" });
+        return true;
+      }
+      const { error } = await sb.from("tutorial_overrides").delete().eq("id", id);
+      if (error) {
+        deps.send(res, 500, { error: error.message });
+        return true;
+      }
+      await refreshLive();
+      deps.send(res, 200, { ok: true, live: liveState });
+      return true;
+    }
+
     case "/api/admin/series": {
       const { data, error } = await sb
         .from("series_overrides")

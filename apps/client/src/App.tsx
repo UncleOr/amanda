@@ -10,6 +10,7 @@ import { ChestReveal } from "./components/ChestReveal";
 import { loadInbox, loadShop, markChestSeen, openChest, unopenedChests, type Chest, type ShopItem } from "./game/account";
 import { track } from "./game/track";
 import { markTutorialDone, tutorialSeenLocally } from "./game/account";
+import { line } from "./data/tutorialLines";
 import { COOP_LANES, PHASES, arenaFor } from "@amanda/shared";
 import type { BattleResult } from "@amanda/engine";
 import { useMatch } from "./game/useMatch";
@@ -1461,15 +1462,8 @@ function Game() {
       {teaching && !metAmanda && (
         <Tutorial
           steps={[
-            {
-              target: null,
-              text: "היי, אני אמנדה. באת להילחם מולי, ילד? בוא נלמד איך עושים את זה.",
-              cta: "בוא",
-            },
-            {
-              target: null,
-              text: "אנחנו בחדר המשחקים. אם תנצח אותי פה תוכל להתקדם למקומות אחרים. זה האלבום שלי, זה האלבום שלך. אנחנו מדביקים מדבקות, ובסוף הן ילחמו.",
-            },
+            { target: null, text: line("hello-1"), cta: "בוא" },
+            { target: null, text: line("hello-2") },
           ]}
           onDone={() => setMetAmanda(true)}
           onQuit={() => {
