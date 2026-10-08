@@ -22,7 +22,17 @@ import { fileURLToPath } from "node:url";
  */
 const PACKAGE_ID = "com.asulins.amanda";
 
-const file = fileURLToPath(new URL("../public/.well-known/assetlinks.json", import.meta.url));
+/*
+ * At the ORIGIN root, not inside the app.
+ *
+ * It used to live in the client's public/ folder, which was right while the
+ * game was the whole site. The game is under /play/ now, and from there this
+ * file would be published at /play/.well-known/assetlinks.json — a path
+ * Chrome never looks at. It verifies nothing and says nothing; the app just
+ * quietly grows a browser toolbar. So it lives with the landing page, and the
+ * deploy workflow asserts it reaches the root.
+ */
+const file = fileURLToPath(new URL("../../../web/.well-known/assetlinks.json", import.meta.url));
 
 describe("digital asset links", () => {
   const links = JSON.parse(readFileSync(file, "utf8")) as Array<{

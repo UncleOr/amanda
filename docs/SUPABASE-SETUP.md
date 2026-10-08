@@ -41,12 +41,12 @@
 
 | שדה | מה לשים |
 | --- | --- |
-| **Site URL** | `https://playamanda.com` |
-| **Redirect URLs** | `https://playamanda.com/**` |
+| **Site URL** | `https://playamanda.com/play` |
+| **Redirect URLs** | `https://playamanda.com/play/**` |
 | | `http://localhost:5173/**` |
 | | `https://uncleor.github.io/amanda/**` ← אפשר למחוק אחרי שהדומיין יתייצב |
 
-> ⚠️ **עודכן כשעברנו ל-`playamanda.com`.** הקוד מחשב את כתובת החזרה מהמקור
+> ⚠️ **עודכן פעמיים: כשעברנו ל-`playamanda.com`, ושוב כשהמשחק ירד ל-`/play/`.** הקוד מחשב את כתובת החזרה מהמקור
 > שממנו נטענת (`comeBackTo()` ב-account.ts), אז ברגע שהאתר יושב על הדומיין
 > החדש הוא מבקש לחזור אליו — וסופבייס **מתעלם** מכל כתובת שאינה ברשימה
 > ונופל ל-Site URL. בלי העדכון הזה כל התחברות עם גוגל תיגמר במקום הלא נכון.

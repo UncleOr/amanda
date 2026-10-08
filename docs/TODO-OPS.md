@@ -20,8 +20,12 @@
 
 **Authentication → URL Configuration**
 
-- **Site URL:** `https://playamanda.com`
-- **Redirect URLs:** להוסיף `https://playamanda.com/**`
+- **Site URL:** `https://playamanda.com/play`
+- **Redirect URLs:** להוסיף `https://playamanda.com/play/**`
+
+⚠️ **עודכן שוב** כשהמשחק ירד ל-`/play/` והדף הראשי הפך לעמוד נחיתה.
+המקור (`playamanda.com`) לא השתנה, אז ההגדרות של גוגל בענן נשארות; רק
+הנתיב אצל סופבייס.
 
 הקוד מחשב את כתובת החזרה **מהמקור שממנו נטענת** (`comeBackTo()`), אז מרגע
 שהאתר על הדומיין החדש הוא מבקש לחזור אליו. סופבייס מתעלם מכתובת שאינה

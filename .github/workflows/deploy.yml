@@ -58,10 +58,32 @@ jobs:
           # workflow replaces the published site wholesale every time, and a
           # domain set only in Settings has a habit of coming back as a blank
           # field after one of those.
-          VITE_BASE_PATH: /
+          VITE_BASE_PATH: /play/
+      # ═══ TWO THINGS AT ONE ORIGIN ═══
+      #
+      # The domain's front door is a landing page; the game lives under
+      # /play/. They are published together as one site, so the artifact is
+      # assembled rather than taken straight from the Vite build.
+      #
+      # web/.well-known/assetlinks.json HAS to end up at the ROOT. Chrome
+      # fetches it from https://playamanda.com/.well-known/assetlinks.json and
+      # nowhere else, whatever path the app itself is served from — which is
+      # exactly why those files were moved out of the client's public/ folder,
+      # where they would now be published under /play/ and verify nothing.
+      - name: Assemble the site
+        run: |
+          mkdir -p site
+          cp -r web/. site/
+          mkdir -p site/play
+          cp -r apps/client/dist/. site/play/
+          test -f site/.well-known/assetlinks.json
+          test -f site/CNAME
+          test -f site/index.html
+          test -f site/play/index.html
+
       - uses: actions/upload-pages-artifact@v3
         with:
-          path: apps/client/dist
+          path: site
 
   deploy:
     needs: build

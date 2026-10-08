@@ -135,7 +135,7 @@
 ### App content → Privacy policy
 
 ```
-https://playamanda.com/?legal=privacy
+https://playamanda.com/play/?legal=privacy
 ```
 
 🤖 הכתובת הזו כבר עובדת — הוספתי אותה היום. היא פותחת את מדיניות הפרטיות
