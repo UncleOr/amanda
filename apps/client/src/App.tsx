@@ -322,6 +322,30 @@ function Game() {
     m.startLesson(1);
   }, [m.phase, m.account, m.playground, m]);
 
+  /**
+   * Teach it again, on purpose.
+   *
+   * Or: *"give me a small button somewhere in a menu that lets me get back
+   * into the tutorial — for testing, and in case somebody suddenly decides
+   * they want to learn even though they pressed skip at the start. Call it
+   * 'how you play'."*
+   *
+   * Both halves matter and the second is the real one: skipping a tutorial
+   * is a decision a seven-year-old makes in the first ten seconds, before
+   * they know whether they needed it, and until now it was irreversible.
+   *
+   * `taughtRef` is set so the automatic trigger does not treat this as its
+   * own doing, and the lesson counter is wound back so finishing lesson one
+   * leads into two as it does the first time.
+   */
+  const replayTutorial = useCallback(() => {
+    taughtRef.current = true;
+    lessonSeenRef.current = 0;
+    setLessonDone(false);
+    setTeaching(true);
+    m.startLesson(1);
+  }, [m]);
+
   /*
    * Finishing a lesson moves to the next one, and finishing the last one ends
    * the teaching for good. Before this the tutorial simply stopped talking and
@@ -730,6 +754,7 @@ function Game() {
           signedIn={signedIn}
           promo={promo}
           onChest={setChest}
+          onTutorial={replayTutorial}
           viewport={viewport}
         />
       )}

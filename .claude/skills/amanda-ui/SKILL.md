@@ -143,6 +143,59 @@ deleted. Prefer deleting it.
 
 ---
 
+## 5b. Composition: where the eye goes, and what sits next to what
+
+Or, after the type and colour were fixed: *"one of the things you fail at
+most is the division of the screen. There are loads of empty areas and loads
+of crowded areas, there's no correct hierarchy of what's important and what
+isn't, what should be next to what, where the user's eye goes — the basics of
+UI/UX."*
+
+This is the section that was missing, and it is the one I get wrong by eye.
+So it is measured: **paste `layout-probe.js` into the browser pane.**
+
+It reports four things, and here is what each one means and what good looks
+like. The numbers are from the home screen, before and after:
+
+| | before | after | aim for |
+|---|---|---|---|
+| empty cells | 41% | **20%** | 15–30% — some air is breathing, a lot is a hole |
+| biggest dead block | **36%** in one piece | 16% | **under 20%.** One big hole is a layout problem |
+| hero in the eye path | 234×58, 14px type | **234×125, 18px** | first in the list AND biggest |
+| distinct edges | 15 | 18 | few. Many edges = assembled piece by piece |
+
+**THE RULES THAT CAME OUT OF IT**
+
+1. **Use the whole width.** The home screen confined everything to 56% so a
+   background illustration could have the rest; the result was five bands
+   crushed into a short column beside a 36% vacant lot. A picture does not
+   need an empty lot — content can sit over the part of it that is not the
+   subject. Only the HERO row stands aside for art.
+
+2. **One big hole is worse than several small gaps.** Evenly distributed air
+   reads as spacing. A single dead block over 20% reads as a mistake, and the
+   probe finds it.
+
+3. **A thing that needed two rows in half the width does not need two rows in
+   all of it.** The progress strip was split onto two lines because four
+   items wanted 489px in a 473px column. Given 816 it went back to one and
+   gave back 50px — the single biggest reason the screen did not fit.
+   Re-check every stacked thing when a container gets wider.
+
+4. **Nothing in a flow should be a badge.** A padlock sitting in a column
+   between an icon and a word made every door 70px instead of 48 — and
+   because they shared a grid row, the doors WITHOUT padlocks took 70 too.
+   A mark belongs in a corner, absolutely positioned.
+
+5. **`align-items: stretch` is a default, not a decision.** A row of equal
+   things is not a row that has to fill a height.
+
+6. **Reading order is the eye path.** The probe lists blocks top→bottom then
+   right→left, which is how Hebrew reads. **The first entry must be the
+   hero.** If the hero is third, no amount of colour will fix it.
+
+---
+
 ## 6. Words: the rule Or has asked for a thousand times
 
 > **Nothing on a screen explains that screen.**
@@ -175,6 +228,9 @@ bash .claude/skills/amanda-ui/audit.sh
 ```
 
 It reports the four numbers at the top of this file. **They must not go up.**
+
+Then paste `layout-probe.js` into the browser pane at 844×390 and read §5b's
+table. Density and the eye path are the two that catch real mistakes.
 
 Then, by eye, on a real screenshot at **844×390** (the landscape phone — that
 is what a child actually plays on):

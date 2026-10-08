@@ -92,6 +92,7 @@ export function HomeScreen({
   signedIn,
   promo,
   onChest,
+  onTutorial,
   viewport,
 }: {
   m: MatchApi;
@@ -102,6 +103,8 @@ export function HomeScreen({
   /** What the shop corner advertises, or null. */
   promo: ShopItem | null;
   onChest: (chest: Chest) => void;
+  /** Run the lessons again, from the start. See replayTutorial in App. */
+  onTutorial: () => void;
   /** "1024×768", for the version line. */
   viewport: string;
 }) {
@@ -349,6 +352,16 @@ export function HomeScreen({
               title="בלי שעון, שני הצדדים שלך"
             >
               <Icon name="stacked" size={15} /> מגרש המשחקים
+            </button>
+            {/*
+              Or: *"a small button that lets me get back into the tutorial…
+              in case somebody suddenly decides they want to learn even
+              though they pressed skip."* Here rather than in the small
+              print, because it is about playing — it sits with the other two
+              ways in, not with the privacy policy.
+            */}
+            <button className="btn-lab" onClick={onTutorial}>
+              <Icon name="info" size={15} /> איך משחקים
             </button>
           </div>
           {/* Told, and told until when. */}
