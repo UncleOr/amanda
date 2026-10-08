@@ -319,6 +319,14 @@ function Game() {
    * taught the game on every visit.
    */
   const [teaching, setTeaching] = useState(false);
+  /*
+   * Whether she has said hello yet.
+   *
+   * Or: *"and it needs a little introduction there."* The tutorial used to
+   * open mid-sentence, pointing at a board, to a child who had not been told
+   * what the board was. Three lines, his words, before any of it.
+   */
+  const [metAmanda, setMetAmanda] = useState(false);
   const taughtRef = useRef(false);
   /*
    * The tutorial starts its OWN match now, rather than attaching itself to
@@ -342,6 +350,7 @@ function Game() {
     if (seen) return;
     if (m.phase !== "intro") return;
     taughtRef.current = true;
+    setMetAmanda(false);
     setTeaching(true);
     m.startLesson(1);
   }, [m.phase, m.account, m.playground, m]);
@@ -366,6 +375,7 @@ function Game() {
     taughtRef.current = true;
     lessonSeenRef.current = 0;
     setLessonDone(false);
+    setMetAmanda(false);
     setTeaching(true);
     m.startLesson(1);
   }, [m]);
@@ -1437,7 +1447,41 @@ function Game() {
         </Overlay>
       )}
 
-      {teaching && cue && (
+      {/*
+        ═══ HELLO, BEFORE ANY POINTING ═══
+
+        Or's words, as he wrote them. She introduces herself, says where you
+        are and what the two albums are for, and only then starts teaching —
+        which is the order a person uses and the order the tutorial did not.
+
+        These carry no target: there is nothing to circle while she is talking
+        about what the game IS. Tutorial.tsx renders a line with no target
+        centred and with a button, because reading is the only thing to do.
+      */}
+      {teaching && !metAmanda && (
+        <Tutorial
+          steps={[
+            {
+              target: null,
+              text: "היי, אני אמנדה. באת להילחם מולי, ילד? בוא נלמד איך עושים את זה.",
+              cta: "בוא",
+            },
+            {
+              target: null,
+              text: "אנחנו בחדר המשחקים. אם תנצח אותי פה תוכל להתקדם למקומות אחרים. זה האלבום שלי, זה האלבום שלך. אנחנו מדביקים מדבקות, ובסוף הן ילחמו.",
+            },
+          ]}
+          onDone={() => setMetAmanda(true)}
+          onQuit={() => {
+            setMetAmanda(true);
+            setTeaching(false);
+            setCue(null);
+            void markTutorialDone();
+          }}
+        />
+      )}
+
+      {teaching && metAmanda && cue && (
         <Tutorial
           steps={[
             {

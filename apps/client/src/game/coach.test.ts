@@ -23,14 +23,42 @@ const staticTank = [...CATALOG.values()].find(
 )!.id;
 const flyer = [...CATALOG.values()].find((c) => c.launch && c.flying)!.id;
 
+/*
+ * Two cards already placed.
+ *
+ * Or, after playing the tutorial: *"only after one more card should you show
+ * the King. And then the guard. That's how it makes sense."* So the lines
+ * about a card in your hand now sit BEHIND two placements, and a view with an
+ * empty board gets the opening "let's start sticking" line instead. Most of
+ * these tests are about what she says next, not about the opening, so they
+ * start from a board that has already begun.
+ */
+const started = { "0,0": flyer, "0,1": flyer };
+
 describe("the coach", () => {
-  it("asks for a King before anything else", () => {
+  it("opens on the card in your hand, not on a rule", () => {
     const cue = nextCue({ ...base, hand: staticTank }, new Set());
+    expect(cue?.id).toBe("first");
+    // It names the card rather than describing the game.
+    expect(cue?.text).toContain(CATALOG.get(staticTank)!.name.he);
+  });
+
+  it("asks for the King once two cards are down", () => {
+    const cue = nextCue({ ...base, hand: staticTank, placements: started }, new Set(["first", "second"]));
     expect(cue?.id).toBe("king");
+    expect(cue?.target).toContain("king");
+  });
+
+  it("does not ask for the King on an empty board", () => {
+    const cue = nextCue({ ...base, hand: staticTank }, new Set());
+    expect(cue?.id).not.toBe("king");
   });
 
   it("names a static card and points at the guard posts", () => {
-    const cue = nextCue({ ...base, hand: staticTank, king: flyer }, new Set());
+    const cue = nextCue(
+      { ...base, hand: staticTank, king: flyer, placements: started },
+      new Set(["first", "second"]),
+    );
     expect(cue?.id).toBe("tank");
     expect(cue?.target).toContain("guard");
   });
@@ -70,14 +98,25 @@ describe("the coach", () => {
   });
 
   it("sends a flyer to the back instead", () => {
-    const cue = nextCue({ ...base, hand: flyer, king: staticTank }, new Set());
+    const cue = nextCue(
+      { ...base, hand: flyer, king: staticTank, placements: started },
+      new Set(["first", "second"]),
+    );
     expect(cue?.id).toBe("flyer");
   });
 
   it("explains an action card as a thing you take, not place", () => {
-    const cue = nextCue({ ...base, hand: "energy_boost", handIsAction: true }, new Set());
+    const cue = nextCue(
+      { ...base, hand: "energy_boost", handIsAction: true, king: staticTank },
+      new Set(),
+    );
     expect(cue?.id).toBe("action");
     expect(cue?.text).toContain("לא מניחים");
+  });
+
+  it("leaves action cards until there is a King to not-place them beside", () => {
+    const cue = nextCue({ ...base, hand: "energy_boost", handIsAction: true }, new Set());
+    expect(cue?.id).not.toBe("action");
   });
 
   it("says each thing only once", () => {
@@ -123,17 +162,20 @@ describe("the coach", () => {
  * not an accident of which condition happened to be checked first.
  */
 describe("the walkthrough order", () => {
-  it("asks for a King before commenting on the card in hand", () => {
-    // both are true at once: no King, and a static tank in hand
-    const cue = nextCue({ ...base, hand: staticTank }, new Set());
+  it("asks for the King before commenting on the card in hand", () => {
+    // both true at once: two cards down with no King, and a tank in hand
+    const cue = nextCue(
+      { ...base, hand: staticTank, placements: started },
+      new Set(["first", "second"]),
+    );
     expect(cue?.id).toBe("king");
   });
 
   it("talks about the card before the bin", () => {
     // both true: a tank in hand AND something already thrown away
     const cue = nextCue(
-      { ...base, hand: staticTank, king: flyer, discardCount: 2 },
-      new Set(["king"]),
+      { ...base, hand: staticTank, king: flyer, discardCount: 2, placements: started },
+      new Set(["first", "second", "king"]),
     );
     expect(cue?.id).toBe("tank");
   });

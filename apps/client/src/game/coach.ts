@@ -154,6 +154,30 @@ function glassCannon(view: CoachView): Card | null {
   return mine.find((c) => c.stats.power >= c.stats.hp) ?? null;
 }
 
+/**
+ * What to say about a card you are holding, in Or's shape.
+ *
+ * He wrote the first line as *"what is it? a dragon. it's strong. it flies.
+ * let's put it at the back"* — a name, a trait, a place. The hand is random,
+ * so the trait and the place are read off the card that actually turned up
+ * rather than hoped for.
+ */
+function trait(c: Card): string {
+  if (c.flying) return "הוא מעופף";
+  if (c.stats.range === "sniper") return "הוא צלף";
+  if (c.stats.hp >= 800) return "הוא עבה";
+  if (c.stats.power >= c.stats.hp) return "הוא חזק";
+  if (c.stats.moveSpeed === 0) return "הוא לא זז";
+  return "הוא בסדר גמור";
+}
+
+/** Where that card wants to stand, and why in one clause. */
+function wants(c: Card): string {
+  if (c.flying || c.stats.range === "sniper") return "נמקם אותו מאחורה";
+  if (c.stats.moveSpeed === 0 && c.stats.hp >= 800) return "נמקם אותו מקדימה";
+  return "נמקם אותו באמצע";
+}
+
 function counterCues(view: CoachView, inHand: Card | null): Array<() => Cue | null> {
   const theirs = enemyCards(view);
   const board = ".side--enemy";
@@ -245,20 +269,52 @@ export function nextCue(view: CoachView, said: Set<string>): Cue | null {
    * the whole sequence behind it — you cannot make someone draw a dragon.
    */
   const inHand = card(view.hand);
+  const down = Object.keys(view.placements).length;
   const steps: Array<() => Cue | null> = [
-    // 1. a King, before anything else
+    /*
+     * ═══ STICKERS FIRST, THE KING THIRD ═══
+     *
+     * Or, after playing it: *"only after one more card should you show the
+     * King. And then the guard. That's how it makes sense."*
+     *
+     * He is right, and the old order was mine: the King came first because it
+     * is the most important rule. But the first thing a child sees is a card
+     * in their hand, and the first thing they want to do is put it somewhere.
+     * Opening with a rule about a piece they have not met yet teaches the rule
+     * to nobody. Two cards down, and now the King means something.
+     */
     () =>
-      !view.king && inHand && !view.handIsAction
+      down === 0 && inHand && !view.handIsAction
+        ? {
+            id: "first",
+            text: `נתחיל בהדבקות. הנה הקלף הראשון — ${inHand.name.he}. ${trait(inHand)}. ${wants(inHand)}.`,
+            target: ".side--me .board",
+            awaits: "placed",
+          }
+        : null,
+
+    () =>
+      down === 1 && inHand && !view.handIsAction
+        ? {
+            id: "second",
+            text: `עוד אחד: ${inHand.name.he}. ${trait(inHand)}. ${wants(inHand)}.`,
+            target: ".side--me .board",
+          }
+        : null,
+
+    // Now the King, with two of your own cards already on the board.
+    () =>
+      !view.king && down >= 2 && inHand && !view.handIsAction
         ? {
             id: "king",
-            text: "קודם כול מלך. הוא לא זז, הוא חזק פי שלושה, ואם הוא נופל — נגמר.",
+            text: "ועכשיו המלך. הוא לא זז, הוא חזק פי שלושה, ואם הוא נופל — נגמר.",
             target: ".side--me .slot--king",
             // She waits. The board cannot do anything without one.
             awaits: "king",
           }
         : null,
 
-    // 2. "a giant? he is static, shoots hard, lots of health — guard the King"
+    // Then the one who stands in front of him.
     () =>
       view.king && inHand && inHand.stats.moveSpeed === 0 && inHand.stats.hp >= 800
         ? {
@@ -270,7 +326,6 @@ export function nextCue(view: CoachView, said: Set<string>): Cue | null {
           }
         : null,
 
-    // 3. "a dragon? light, it flies — to the back, and let it shoot"
     () =>
       view.king && inHand && (inHand.flying || inHand.stats.range === "sniper")
         ? {
@@ -280,9 +335,11 @@ export function nextCue(view: CoachView, said: Set<string>): Cue | null {
           }
         : null,
 
-    // 4. "an action card. we'll use it later"
+    // Action cards last: "ואז קלפי פעולה". They are a different kind of
+    // object, and a different kind of object before the first one is
+    // understood is just noise.
     () =>
-      view.handIsAction
+      view.handIsAction && view.king
         ? {
             id: "action",
             text: "קלף פעולה. לא מניחים אותו על הלוח — לוקחים אותו לבר ומפעילים כשצריך.",

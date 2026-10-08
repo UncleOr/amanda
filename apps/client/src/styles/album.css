@@ -489,14 +489,33 @@
   animation: tut-pulse 1.5s ease-in-out infinite alternate;
   pointer-events: none;
 }
+/*
+ * A pointing bubble is placed in JS, because where it can go depends on where
+ * the hole is and how tall the bubble turned out — neither of which CSS can
+ * ask about. A narrative line has nothing to avoid and simply sits in the
+ * middle.
+ */
+.tut__bubble--mid {
+  inset-inline: 0;
+  margin-inline: auto;
+  top: 50%;
+  transform: translateY(-50%);
+}
+/* Measured before it is placed: on screen so fonts and wrapping are real,
+   invisible so nobody sees it land in the wrong spot first. */
+.tut__bubble--measuring {
+  top: 0;
+  inset-inline-start: 0;
+  opacity: 0;
+  pointer-events: none;
+  animation: none;
+}
 @keyframes tut-pulse {
   from { box-shadow: 0 0 0 3px rgba(255,176,32,0.65), 0 0 20px 4px rgba(255,176,32,0.25), 0 0 0 9999px rgba(4,7,14,0.78); }
   to   { box-shadow: 0 0 0 5px rgba(255,176,32,1),    0 0 34px 8px rgba(255,176,32,0.45), 0 0 0 9999px rgba(4,7,14,0.78); }
 }
 .tut__bubble {
   position: fixed;
-  inset-inline: 0;
-  margin-inline: auto;
   width: min(440px, calc(100vw - 32px));
   pointer-events: auto;
   background: rgba(12, 17, 29, 0.97);
