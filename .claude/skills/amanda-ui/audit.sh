@@ -14,6 +14,10 @@ CSS="apps/client/src/styles"
 TSX="apps/client/src/components apps/client/src/App.tsx"
 # Screens a child plays. The admin panel is a tool for one adult and is
 # allowed to explain itself — see SKILL.md §6.
+#
+# ADD A SCREEN HERE THE DAY YOU TOUCH IT. The inbox was missing, and the empty
+# state SKILL.md itself quotes as the example of the offence sat in it unread
+# by this script for a week.
 PLAY="apps/client/src/components/HomeScreen.tsx
 apps/client/src/components/ResultScreen.tsx
 apps/client/src/components/BattleScreen.tsx
@@ -24,7 +28,9 @@ apps/client/src/components/ChestReveal.tsx
 apps/client/src/components/Challenges.tsx
 apps/client/src/components/ArenaTrack.tsx
 apps/client/src/components/MoreModes.tsx
-apps/client/src/components/Profile.tsx"
+apps/client/src/components/Profile.tsx
+apps/client/src/components/Friends.tsx
+apps/client/src/components/Inbox.tsx"
 
 bar() { printf '%s\n' "────────────────────────────────────────────────────────"; }
 line() { printf '  %-46s %s\n' "$1" "$2"; }

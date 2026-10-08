@@ -124,15 +124,29 @@ export function Album({ account, onClose, onCardInfo, onChanged }: Props) {
                    * now: the percentage is the number, the count is the small
                    * line under it, and nothing is lost.
                    */
+                  /*
+                   * ═══ THE CUP MEANS GAVI'IM, EVERYWHERE ═══
+                   *
+                   * Or: "why is the logo for שיא גביעים a crown, and for
+                   * ניצחונות a cup?" Because I picked them by feel. The cup
+                   * (`win`) is what a trophy looks like in the purse, on the
+                   * arena track, in the payout and on the versus screen — so
+                   * it was next to the ONE word in this panel that is not
+                   * גביעים, while גביעים got a crown. And the crown means the
+                   * King piece in eleven other places in this game.
+                   *
+                   * The cup goes back to trophies, the crown goes back to the
+                   * board, and a win is a tick.
+                   */
                   {
-                    icon: "win",
+                    icon: "ready",
                     n: `${stats.played ? Math.round((stats.wins / stats.played) * 100) : 0}%`,
                     k: "ניצחונות",
                     sub: stats.played ? `${stats.wins} מתוך ${stats.played}` : null,
                     tone: "good",
                   },
                   { icon: "lose", n: stats.losses, k: "הפסדים", tone: "bad" },
-                  { icon: "king", n: stats.bestTrophies, k: "שיא גביעים", tone: "gold" },
+                  { icon: "win", n: stats.bestTrophies, k: "שיא גביעים", tone: "gold" },
                   { icon: "chest", n: stats.chestsOpened, k: "תיבות", tone: "" },
                   { icon: "deck", n: stats.copiesOwned, k: "עותקים", tone: "" },
                 ] as const

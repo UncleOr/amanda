@@ -40,9 +40,10 @@ export function Friends({
   canInvite: boolean;
 }) {
   const [friends, setFriends] = useState<Friend[] | null>(null);
-  const [addable, setAddable] = useState<Array<{ id: string; nickname: string | null }> | null>(
-    null,
-  );
+  const [addable, setAddable] = useState<Array<{
+    id: string;
+    nickname: string | null;
+  }> | null>(null);
   const [adding, setAdding] = useState(false);
   const [busy, setBusy] = useState<string | null>(null);
   const [note, setNote] = useState<string | null>(null);
@@ -68,7 +69,8 @@ export function Friends({
     setBusy(null);
     setNote(err);
     await refresh();
-    if (!err && action === "ask") setAddable((list) => (list ?? []).filter((o) => o.id !== id));
+    if (!err && action === "ask")
+      setAddable((list) => (list ?? []).filter((o) => o.id !== id));
   }
 
   async function openAdd() {
@@ -80,7 +82,10 @@ export function Friends({
 
   return (
     <Overlay onClick={onClose}>
-      <div className="modal modal--friends" onClick={(e) => e.stopPropagation()}>
+      <div
+        className="modal modal--friends"
+        onClick={(e) => e.stopPropagation()}
+      >
         <button className="modal__close" onClick={onClose} title="סגירה">
           <Icon name="exit" size={15} />
         </button>
@@ -88,16 +93,23 @@ export function Friends({
 
         {friends === null ? (
           <p className="friends__hint">רגע…</p>
-        ) : friends.length === 0 ? (
-          <p className="friends__hint">
-            עוד אין כאן אף אחד. אפשר להוסיף רק מישהו ששיחקת מולו — שחק, ואז תוכל
-            להוסיף אותו.
-          </p>
+        ) : friends.length === 0 && !adding ? (
+          // Was three clauses: "nobody here yet. you can only add someone you
+          // have played — play, and then you can add them." The rule it spent
+          // two of them on is the same rule the add panel states when you get
+          // there, which is the only place it is any use.
+          <p className="friends__hint">עוד אין כאן אף אחד.</p>
         ) : (
           <ul className="friends__list">
             {friends.map((f) => (
-              <li key={f.id} className={`friends__row${f.online ? " is-online" : ""}`}>
-                <span className={`friends__dot${f.online ? " is-on" : ""}`} aria-hidden="true" />
+              <li
+                key={f.id}
+                className={`friends__row${f.online ? " is-online" : ""}`}
+              >
+                <span
+                  className={`friends__dot${f.online ? " is-on" : ""}`}
+                  aria-hidden="true"
+                />
                 <span className="friends__who">
                   <b>{name(f)}</b>
                   <small>
@@ -126,7 +138,9 @@ export function Friends({
                       <button
                         className="btn-fight btn-small"
                         disabled={!canInvite}
-                        title={canInvite ? "להזמין למשחק" : "אפשר להזמין ממסך הבית"}
+                        title={
+                          canInvite ? "להזמין למשחק" : "אפשר להזמין ממסך הבית"
+                        }
                         onClick={() => onInvite(f.id)}
                       >
                         <Icon name="play" size={14} /> שחק
@@ -150,30 +164,40 @@ export function Friends({
         {note && <p className="friends__note">{note}</p>}
 
         {!adding ? (
-          <button className="btn-fight btn-ghost" onClick={() => void openAdd()}>
+          <button
+            className="btn-fight btn-ghost"
+            onClick={() => void openAdd()}
+          >
             <Icon name="plus" size={15} /> להוסיף חבר
           </button>
         ) : (
           <div className="friends__add">
-            <p className="friends__hint">
-              אפשר להוסיף רק מישהו ששיחקת מולו, ורק אם יש לו חשבון.
-            </p>
+            {/*
+              ONE line, whichever state this is in. Opening the add panel on an
+              empty list used to stack three of them: "nobody here yet", "only
+              someone you have played", "nobody to add right now" — three
+              sentences for one fact, which is the thing §6 is about even when
+              each of them is four words long.
+            */}
             {addable === null ? (
               <p className="friends__hint">רגע…</p>
             ) : addable.length === 0 ? (
-              <p className="friends__hint">אין כרגע אף אחד להוסיף.</p>
+              <p className="friends__hint">עוד לא שיחקת מול אף אחד.</p>
             ) : (
-              <div className="friends__candidates">
-                {addable.map((o) => (
-                  <button
-                    key={o.id}
-                    disabled={busy === o.id}
-                    onClick={() => void act("ask", o.id)}
-                  >
-                    <Icon name="plus" size={13} /> {name(o)}
-                  </button>
-                ))}
-              </div>
+              <>
+                <p className="friends__hint">רק מי ששיחקת מולו.</p>
+                <div className="friends__candidates">
+                  {addable.map((o) => (
+                    <button
+                      key={o.id}
+                      disabled={busy === o.id}
+                      onClick={() => void act("ask", o.id)}
+                    >
+                      <Icon name="plus" size={13} /> {name(o)}
+                    </button>
+                  ))}
+                </div>
+              </>
             )}
           </div>
         )}

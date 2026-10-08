@@ -278,7 +278,7 @@
   background: rgba(10, 14, 24, 0.72);
   color: var(--text);
   font: inherit;
-  font-size: 10.5px;
+  font-size: var(--t-2);
   font-weight: 700;
   cursor: pointer;
   white-space: nowrap;
@@ -399,7 +399,7 @@
   align-items: center;
   gap: 6px;
   margin: 0;
-  font-size: 15px;
+  font-size: var(--t-4);
 }
 .quests__tabs { display: flex; gap: 3px; padding: 3px; border-radius: 999px; background: rgba(0, 0, 0, 0.4); }
 .quests__tabs button {
@@ -408,14 +408,17 @@
   border: 0;
   border-radius: 999px;
   background: none;
-  color: var(--muted);
+  /* A tab is a control, and a control's label is not grey (§3). The
+     unselected days read as disabled days. */
+  color: var(--text);
   font: inherit;
-  font-size: 11.5px;
+  font-size: var(--t-3);
   font-weight: 700;
   cursor: pointer;
   white-space: nowrap;
 }
-.quests__tabs button:hover { color: var(--text); }
+.quests__tabs button:not(.is-on) { opacity: 0.68; }
+.quests__tabs button:hover { opacity: 1; }
 .quests__tabs button.is-on { background: var(--accent); color: #241a05; }
 /* "There is something here" is the whole message, so it is a dot and not a
    number — a badge that counts invites counting. */
@@ -429,7 +432,7 @@
   background: #4ade80;
   box-shadow: 0 0 6px rgba(74, 222, 128, 0.8);
 }
-.quests__clock { margin: 0; color: var(--muted); font-size: 11px; }
+.quests__clock { margin: 0; color: var(--muted); font-size: var(--t-2); }
 .quests__list { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 6px; }
 .quests__list li {
   display: grid;
@@ -449,7 +452,11 @@
   padding: 6px 8px;
 }
 .quests__list li.is-done { opacity: 0.5; }
-.quests__what { grid-area: what; font-size: 12.5px; line-height: 1.35; }
+/*
+ * The challenge. It is what this panel is FOR, and it was 12.5px — smaller
+ * than the panel's own title and the same size as the count beside it.
+ */
+.quests__what { grid-area: what; font-size: var(--t-3); line-height: 1.35; }
 .quests__bar {
   grid-area: bar;
   display: block;
@@ -465,8 +472,18 @@
   background: linear-gradient(90deg, #ffb020, #ffd36b);
   transition: width 0.4s ease-out;
 }
-.quests__count { grid-area: count; color: var(--muted); font-size: 11px; font-variant-numeric: tabular-nums; }
-.quests__pay { grid-area: pay; display: inline-flex; align-items: center; gap: 3px; font-size: 12px; font-weight: 700; }
+.quests__count { grid-area: count; color: var(--muted); font-size: var(--t-2); font-variant-numeric: tabular-nums; }
+/* What it pays — the reason to do it — in the colour this game spends on
+   the thing being offered. */
+.quests__pay {
+  grid-area: pay;
+  display: inline-flex;
+  align-items: center;
+  gap: 3px;
+  font-size: var(--t-3);
+  font-weight: 800;
+  color: var(--accent);
+}
 .quests__take {
   grid-area: take;
   padding: 5px 12px;
@@ -475,12 +492,12 @@
   background: linear-gradient(180deg, #ffe9a8, #f0c24a);
   color: #241a05;
   font: inherit;
-  font-size: 12px;
+  font-size: var(--t-3);
   font-weight: 800;
   cursor: pointer;
 }
 .quests__take:disabled { opacity: 0.25; cursor: default; filter: grayscale(1); }
-.quests__taken { grid-area: take; color: var(--muted); font-size: 11px; }
+.quests__taken { grid-area: take; color: var(--muted); font-size: var(--t-2); }
 
 /* The purse gained a third number that is not the album size. */
 .purse__item--nacho { color: #ffd36b; }
@@ -620,7 +637,7 @@
   85% { transform: scale(1.35); opacity: 0.75; }
 }
 
-.modal--news { max-width: 470px; }
+.modal--news { width: min(470px, 100%); }
 .news__title { display: flex; align-items: center; gap: 8px; margin: 0 0 4px; font-size: 20px; }
 .news__lead { color: var(--muted); font-size: 13px; margin: 0; }
 .news__list {
@@ -738,7 +755,7 @@
   .quests { padding: 7px 9px; gap: 4px; }
   .quests__list { gap: 4px; }
   .quests__list li { padding: 4px 7px; gap: 2px 7px; }
-  .quests__what { font-size: 12px; line-height: 1.25; }
+  .quests__what { line-height: 1.25; }
   .quests__clock { display: none; }
   .nachos { padding: 7px 9px; gap: 3px; }
   .nachos__row > i { width: 24px; height: 24px; }
@@ -1587,11 +1604,18 @@
     gap: 6px;
     max-width: none;
   }
+  /*
+   * ═══ THE FOUR WAYS TO PLAY WITH A FRIEND ═══
+   *
+   * Or: *"the friend-match options don't look good on mobile."* Measured:
+   * four buttons at 234x34 with 11.5px labels — the four choices behind the
+   * home screen's main action, set smaller than the small print under them.
+   */
   .intro--hero .home .pick--ways .btn-fight {
     width: 100%;
     margin: 0;
-    padding: 8px 10px;
-    font-size: 11.5px;
+    padding: var(--sp-2) var(--sp-3);
+    font-size: var(--t-3);
     text-align: center;
   }
   /*
@@ -1603,10 +1627,13 @@
    * Her emphasis is her COLOUR — `.btn-amanda` is a different button
    * already — and that reads at any width.
    */
+  /* The only way back out of the four choices, at 10.5px and grey: quieter
+     than the version number in the footer. A door is a control. */
   .intro--hero .home .pick--ways .btn-link {
     grid-column: 1 / -1;
-    font-size: 10.5px;
-    padding: 2px;
+    font-size: var(--t-3);
+    color: var(--text);
+    padding: var(--sp-1);
   }
 
   /*
@@ -1707,7 +1734,9 @@
   .home__progress .track__art { width: clamp(44px, 13vh, 64px); height: clamp(34px, 10vh, 48px); }
   .home__progress .track__text b { font-size: var(--t-3); }
   .home__progress .track__text small { font-size: var(--t-2); }
-  .home__progress .quests__open { padding: 4px 7px; font-size: 9.5px; }
+  /* 50x61 at 9.5px, with the word turned into a stripe down the side of a
+     badge. --t-2 is the floor for a caption under an icon. */
+  .home__progress .quests__open { padding: var(--sp-1) var(--sp-2); font-size: var(--t-2); }
   .home__progress .quests__open .icon { width: clamp(15px, 4vh, 19px); height: clamp(15px, 4vh, 19px); }
   .home__progress .track__text b,
   .home__progress .track__text small { white-space: nowrap; }
@@ -2199,3 +2228,4 @@
   .profile__scroll > .panel,
   .profile__faces { margin-bottom: 0; }
 }
+

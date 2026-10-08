@@ -64,7 +64,11 @@ export function Inbox({ onClose, onAction }: { onClose: () => void; onAction: (a
         {notices === null ? (
           <p className="friends__hint">רגע…</p>
         ) : notices.length === 0 ? (
-          <p className="friends__hint">אין כלום חדש. כשתהיה מתנה, היא תופיע כאן.</p>
+          // SKILL.md §6 quotes the line this replaces as its example of an
+          // empty state doing two sentences' work. It then sat here for a
+          // week, because the audit only read the screens a child plays and
+          // this was not on that list. It is now.
+          <p className="friends__hint">שקט כאן. זה בסדר.</p>
         ) : (
           <ul className="inbox__list">
             {notices.map((n) => (

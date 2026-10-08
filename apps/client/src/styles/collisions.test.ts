@@ -32,7 +32,7 @@ function bareClasses(css: string): Set<string> {
   const withoutComments = css.replace(/\/\*[\s\S]*?\*\//g, "");
   const names = new Set<string>();
   for (const [, selector] of withoutComments.matchAll(/([^{}]+)\{/g)) {
-    for (const part of selector.split(",")) {
+    for (const part of (selector ?? "").split(",")) {
       const match = /^\.([A-Za-z][\w-]*)$/.exec(part.trim());
       if (match) names.add(match[1]!);
     }
