@@ -59,20 +59,54 @@ Please cancel 6d45c139046b975ab1a88a0822eb5261286cb9a0 first.
 
 > קומיטים ישנים נשארים על שם המשרד. זו היסטוריה, לא מתקנים אותה.
 
+### ⚠️ `gh auth login` לא פותר את זה — וזה לקח זמן להבין
+
+אור התחבר ב-`gh` כ-UncleOr, והטרמינל ענה `✓ Logged in as UncleOr`. ואז
+הדחיפה הבאה עדיין נרשמה על שם `or-42creative`.
+
+**כי git לא משתמש ב-gh.** שני מחסני סודות נפרדים לגמרי:
+
+| מי | מאיפה לוקח סוד | היה |
+| --- | --- | --- |
+| `gh` (ה-API) | `~/AppData/Roaming/GitHub CLI/hosts.yml` + keyring | or-42creative |
+| **`git push`** | `credential.helper = manager` → **Git Credential Manager** | or-42creative |
+
+בדיקה שמסיימת את הוויכוח:
+
+```
+printf 'protocol=https\nhost=github.com\n\n' | git credential fill
+```
+
+החזיר `username=or-42creative`. וה-API של GitHub אישר: `actor=or-42creative`
+בכל שלוש הריצות האחרונות.
+
+### ✅ מה כבר תוקן
+
+- זהות הקומיטים: `UncleOr <62895345+UncleOr@users.noreply.github.com>`
+- ה-remote של המשרד הוסר; `origin` הוא `UncleOr/amanda` בלבד
+- **`credential.https://github.com.username = UncleOr`** בריפו הזה בלבד —
+  כך ש-GCM יחפש סוד של החשבון האישי, והריפואים של העבודה לא מושפעים
+
+> קומיטים ישנים נשארים על שם המשרד. זו היסטוריה, לא מתקנים אותה.
+
 ### 👤 מה רק אתה יכול — **בסדר הזה**
 
-1. [ ] **להתחבר ב-`gh` כחשבון האישי:**
+1. [ ] **דחיפה אחת מהטרמינל שלך:**
        ```
-       gh auth login
+       git push origin main
        ```
-       לבחור GitHub.com → HTTPS → Login with a web browser, ולהיכנס כ-**UncleOr**.
-       בלי זה הדחיפות ממשיכות להתבצע על ידי חשבון המשרד.
+       ייפתח חלון התחברות של GitHub — **להיכנס כ-UncleOr**. פעם אחת בלבד;
+       מכאן והלאה GCM זוכר. (אני לא יכול לעשות את זה — זו התחברות.)
 
 2. [ ] **ואז** להסיר את `or-42creative` מה-collaborators:
        `UncleOr/amanda` → Settings → Collaborators → להסיר.
        ⚠️ **רק אחרי שלב 1** — אחרת הדחיפה הבאה תיכשל.
 
 3. [ ] לכבות Pages ולמחוק/לארכב את `or-42creative/amanda` (ראה למטה).
+
+4. [ ] **פתרון מיידי לסימפטום, בלי קשר לכל השאר:** בחשבון המשרד,
+       Settings → Notifications → Actions → להוריד את הסימון מ-Email.
+       זה מכבה את מיילי ה-CI לכתובת העבודה בלחיצה אחת.
 
 ## ניקיונות
 
