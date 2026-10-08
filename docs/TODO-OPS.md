@@ -52,8 +52,13 @@ Caused by: java.net.SocketException: Invalid argument: connect
 
 **Authentication → URL Configuration**
 
-- **Site URL:** `https://playamanda.com/play`
-- **Redirect URLs:** להוסיף `https://playamanda.com/play/**`
+✅ **מסתבר שלא צריך לעשות כלום.** הרשומה שכבר הוספת,
+`https://playamanda.com/**`, מכסה גם את `/play/` — ב-Supabase `**` חוצה
+לוכסנים. אמרתי לך לשנות ל-`/play`, וזה היה מיותר.
+
+- **Site URL:** `https://playamanda.com` — נשאר. הוא רק הנפילה־לאחור
+  לכתובת שלא נמצאת ברשימה, ו-`/play/` כן נמצאת.
+- **Redirect URLs:** `https://playamanda.com/**` — מספיק כמו שהוא.
 
 ⚠️ **עודכן שוב** כשהמשחק ירד ל-`/play/` והדף הראשי הפך לעמוד נחיתה.
 המקור (`playamanda.com`) לא השתנה, אז ההגדרות של גוגל בענן נשארות; רק

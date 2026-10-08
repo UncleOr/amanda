@@ -41,8 +41,8 @@
 
 | שדה | מה לשים |
 | --- | --- |
-| **Site URL** | `https://playamanda.com/play` |
-| **Redirect URLs** | `https://playamanda.com/play/**` |
+| **Site URL** | `https://playamanda.com` |
+| **Redirect URLs** | `https://playamanda.com/**` ← `**` חוצה לוכסנים, אז זה מכסה גם את `/play/` |
 | | `http://localhost:5173/**` |
 | | `https://uncleor.github.io/amanda/**` ← אפשר למחוק אחרי שהדומיין יתייצב |
 
