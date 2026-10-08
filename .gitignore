@@ -24,8 +24,13 @@ Thumbs.db
 npm-debug.log*
 pnpm-debug.log*
 
-# native mobile build artifacts (Capacitor, later)
-android/
+# native mobile build artifacts
+#
+# `android/` as a whole used to be ignored, which also made it impossible to
+# re-include anything inside it: git does not descend into an excluded
+# DIRECTORY, so a later `!android/twa-manifest.json` is never even considered.
+# Excluding the contents instead leaves that door open.
+android/*
 ios/
 
 # full-length source soundtracks (~17MB) — kept local; the trimmed, compressed
@@ -44,3 +49,9 @@ assets/raw/
 # Skills Or downloaded to look at — not part of the game.
 /SKILL.md
 /SKILL (1).md
+
+# The TWA wrapper's config IS committed — it is what makes a rebuild
+# reproducible. Everything else bubblewrap generates stays out, and two of
+# those files are secrets that must never reach a public repository:
+# android.keystore is the upload key, and the file beside it is its password.
+!android/twa-manifest.json
