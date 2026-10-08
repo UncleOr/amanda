@@ -1,4 +1,5 @@
 import { Component, type ReactNode } from "react";
+import { track } from "../game/track";
 
 interface Props {
   children: ReactNode;
@@ -52,11 +53,25 @@ export class ErrorBoundary extends Component<Props, State> {
   }
 
   override componentDidCatch(error: unknown): void {
-    last = {
-      at: new Date().toISOString(),
-      message: error instanceof Error ? (error.stack ?? error.message) : String(error),
-    };
+    const detail = error instanceof Error ? (error.stack ?? error.message) : String(error);
+    last = { at: new Date().toISOString(), message: detail };
     console.error("render error:", error);
+    /*
+     * And tell the server, so it lands on a screen Or can read.
+     *
+     * A console message on a child's phone is not a bug report — it is why
+     * the same crash has now been described to me twice as "it did the thing
+     * again" with nothing else to go on.
+     *
+     * Trimmed, because the event bag is capped at 800 bytes and the useful
+     * part of a stack is the top of it. `where` is the screen, which is the
+     * first thing anybody wants to know.
+     */
+    track("crash", {
+      where: window.location.hash || "app",
+      message: detail.slice(0, 500),
+      screen: `${window.innerWidth}x${window.innerHeight}`,
+    });
   }
 
   override render(): ReactNode {

@@ -35,6 +35,10 @@ import { MAX_EVENT_BYTES, track, type EventKind } from "./events.js";
  * the server from what it did itself, so there is nothing here anyone could
  * claim that would be worth claiming.
  *
+ * `crash` is here because a screen that has just fallen over is the one thing
+ * only the browser can report, and the alternative — a message in a console
+ * on a child's phone — is no report at all.
+ *
  * `playground` is its own kind rather than a `match` with a mode, which it
  * nearly was. A browser allowed to report matches is a browser allowed to
  * report WON matches, and a leaderboard of made-up wins is the one statistic
@@ -43,7 +47,7 @@ import { MAX_EVENT_BYTES, track, type EventKind } from "./events.js";
  * it — and keeping it a separate word is what makes that true by
  * construction rather than by a check somebody has to remember.
  */
-const FROM_BROWSER = ["open", "quit", "playground"] as const;
+const FROM_BROWSER = ["open", "quit", "playground", "crash"] as const;
 
 export { db };
 

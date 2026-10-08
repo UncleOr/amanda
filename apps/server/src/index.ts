@@ -8,13 +8,14 @@ import {
   type RoomError,
 } from "@amanda/shared";
 import { Match } from "./match.js";
-import { arrived, deliver, left as presenceLeft } from "./presence.js";
+import { arrived, deliver, left as presenceLeft, presenceCounts } from "./presence.js";
 import { areFriends } from "./friends.js";
 import { PROGRESS_ENABLED } from "./progress.js";
 import { handleApi } from "./api.js";
 import { cardOf, forget, loadProfile, profileOf } from "./profiles.js";
 import { refreshCards } from "./cards.js";
 import { refreshLive } from "./live.js";
+import { reportLiveWith } from "./liveops.js";
 import { startScheduler } from "./schedule.js";
 import { findPair, type Waiting } from "./matchmaking.js";
 import { db } from "./supabase.js";
@@ -81,6 +82,22 @@ void refreshCards();
  */
 void refreshLive();
 
+/*
+ * Hand the admin panel a window onto this process.
+ *
+ * Everything it reads is a plain variable a few lines below — the queue, the
+ * rooms, the matches. None of it was visible anywhere, which meant the first
+ * sign of broken matchmaking would have been a child saying "it is stuck".
+ * See liveops.ts for why it is a registered reader rather than an import.
+ */
+reportLiveWith(() => ({
+  ...presenceCounts(),
+  queue: queue.length,
+  rooms: rooms.size,
+  // One Match object is one match, however many sockets are attached to it.
+  matches: new Set(liveMatches).size,
+}));
+
 const wss = new WebSocketServer({ server: http });
 
 /**
@@ -103,6 +120,16 @@ const queue: Array<Waiting<WebSocket>> = [];
  *  give both of them the wrong game. */
 let waitingCoop: WebSocket | null = null;
 const matchOf = new WeakMap<WebSocket, Match>();
+/*
+ * The same matches, countable.
+ *
+ * `matchOf` is a WeakMap keyed by socket, which is right for "which match is
+ * this socket in" and useless for "how many matches are running" — a WeakMap
+ * cannot be enumerated, by design. The admin panel needs the second question
+ * answered, so the matches are also held here and removed when both sockets
+ * have gone. See liveops.ts.
+ */
+const liveMatches = new Set<Match>();
 
 /** Open private rooms, by code. */
 interface Room {
@@ -149,6 +176,7 @@ function beginMatch(a: WebSocket, b: WebSocket, how: string, coop = false): void
   );
   matchOf.set(a, m);
   matchOf.set(b, m);
+  liveMatches.add(m);
   console.log(`[server] match started (${how})`);
 }
 
@@ -398,6 +426,9 @@ wss.on("connection", (ws) => {
     if (match) {
       match.leave(ws);
       matchOf.delete(ws);
+      // Forgotten once NEITHER socket is still in it — a match with one
+      // player still connected is a match somebody is still looking at.
+      if (!match.anyoneLeft()) liveMatches.delete(match);
     }
   });
 

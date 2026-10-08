@@ -372,7 +372,9 @@ export function HomeScreen({
                   : "החדר מלא. שניים מספיקים לי."}
             </p>
           )}
-          {!m.onlineAvailable && <p className="intro__hint">(מצב אונליין דורש שרת פעיל)</p>}
+          {/* No sentence here. The friends card is already disabled with
+              "לא בגרסה הזאת" on it, which says the same thing in the place
+              somebody is actually looking when they wonder. */}
         </section>
 
         {/* ─────────────── progress ─────────────── */}

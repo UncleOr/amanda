@@ -70,7 +70,9 @@ export function MoreModes({
           <Icon name="exit" size={15} />
         </button>
         <h2 className="modes__title">עוד מודים</h2>
-        <p className="modes__lead">מה שכבר מוכן, ומה שאני עוד מבשלת.</p>
+        {/* The list says it itself: a mode you can play has a "שחק" button
+            and one that is not ready says "בקרוב". A line above it
+            describing that is a line describing the obvious. */}
         <ul className="modes__list">
           {modes.map((mode) => (
             <li key={mode.id} className={`modes__row${mode.soon ? " modes__row--soon" : ""}`}>

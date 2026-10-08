@@ -17,6 +17,66 @@
   --accent: #ffb020;
   --danger: #ff5a5a;
   color-scheme: dark;
+
+  /*
+   * ════════ THE DESIGN SYSTEM ════════
+   *
+   * Or: *"this goes beyond fitting pixels to screens. All our screens don't
+   * look good… there's no hierarchy."*
+   *
+   * He was right, and the cause was sitting right here: this file had
+   * COLOURS and nothing else. No type scale, no space scale, no elevation.
+   * So every component invented its own, and the measurements of what that
+   * produced were:
+   *
+   *   23 distinct font sizes, 176 rules of them between 11px and 13px
+   *   84 uses of --muted against 31 of --text
+   *   ~20 panel backgrounds differing by 1–3% opacity
+   *
+   * Nothing could be bigger, brighter or higher than anything else, because
+   * everything was within a rounding error of everything else. The rules and
+   * the audit are in .claude/skills/amanda-ui/.
+   */
+
+  /*
+   * ── type: six steps, and nothing between them ──
+   *
+   * Measured in VIEWPORT HEIGHT, because the thing that decides whether this
+   * game is readable is height: a child plays it on a landscape phone that is
+   * 390px tall. The floors are the smallest size still readable there; the
+   * ceilings stop a desktop shouting. At 390: 10, 11.7, 14, 17.9, 23.4, 33.
+   */
+  --t-1: clamp(10px, 2.6vh, 12px);     /* a number on a badge. Nothing else. */
+  --t-2: clamp(11.5px, 3vh, 14px);     /* captions, meta, a unit beside a value */
+  --t-3: clamp(13px, 3.6vh, 16px);     /* BODY AND EVERY CONTROL — the default */
+  --t-4: clamp(16px, 4.6vh, 21px);     /* section titles */
+  --t-5: clamp(21px, 6vh, 28px);       /* screen titles */
+  --t-6: clamp(28px, 8.5vh, 44px);     /* the hero, once a screen */
+
+  /*
+   * ── space: proximity is the grouping ──
+   *
+   * The rule that does the work: the gap BETWEEN groups is at least twice
+   * the gap INSIDE one. Things that belong together then look like it, and
+   * most of the boxes drawn around things can be deleted.
+   */
+  --sp-1: 4px;
+  --sp-2: 8px;
+  --sp-3: 14px;
+  --sp-4: 22px;
+
+  /*
+   * ── elevation: three, not twenty ──
+   *
+   * A panel, a card raised above panels, and the one thing being offered. If
+   * something needs to look different from a panel it is a different TIER,
+   * not a different 2% of white — which is how eleven near-identical
+   * surfaces happened.
+   */
+  --sur-1: rgba(255, 255, 255, 0.04);
+  --sur-2: rgba(16, 22, 38, 0.88);
+  --sur-lit: linear-gradient(180deg, rgba(255, 176, 32, 0.18), rgba(255, 176, 32, 0.07));
+  --line-lit: rgba(255, 176, 32, 0.5);
 }
 
 * {

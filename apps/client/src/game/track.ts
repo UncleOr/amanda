@@ -10,6 +10,10 @@ import { db } from "./account";
  * would have ended it, and the playground is played entirely in the browser
  * and has no result to report.
  *
+ * And `crash`, which is the fourth: a screen that has just fallen over is
+ * something only the browser knows, and the alternative — `console.error` on
+ * a child's phone — is no report at all.
+ *
  * Everything else that gets counted — a purchase, a chest, what a match paid
  * — is written by the server from what it did itself, and deliberately is not
  * reportable from here. See FROM_BROWSER in the server's api.ts.
@@ -26,7 +30,7 @@ const SERVER_HTTP = (
   .replace(/^ws:/, "http:")
   .replace(/^wss:/, "https:");
 
-export type ClientEvent = "open" | "quit" | "playground";
+export type ClientEvent = "open" | "quit" | "playground" | "crash";
 
 export function track(kind: ClientEvent, data: Record<string, unknown> = {}): void {
   if (!SERVER_HTTP) return;

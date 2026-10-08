@@ -5,6 +5,7 @@ import { GiftsTab } from "./AdminGifts";
 import { ShopTab } from "./AdminShop";
 import { DialsTab, PhrasesTab, SeriesTab } from "./AdminContent";
 import { PlayerStats, StatsTab } from "./AdminStats";
+import { LiveTab } from "./AdminLive";
 import { CardEditor } from "./CardEditor";
 // The panel's own sheet, loaded with the panel. It used to be in the entry
 // file, so every child downloaded the admin styles to play a card game.
@@ -96,9 +97,10 @@ export function Admin() {
     | "series"
     | "dials"
     | "stats"
-  >(
-    "cards",
-  );
+    | "live"
+    // "Is it all right" is the question you have before you have any other
+    // question, so it is the one the panel opens on.
+  >("live");
   const [note, setNote] = useState<string | null>(null);
 
   const check = useCallback(async () => {
@@ -183,8 +185,12 @@ export function Admin() {
       <header className="admin__bar">
         <h1>ניהול אמנדה</h1>
         <nav>
-          {/* First, because it is the only tab that answers a question rather
-              than changing something. */}
+          {/* First, and it opens first: it is the only screen that answers
+              "is the game all right right now", which is the question you
+              have before you have any other question. */}
+          <button className={tab === "live" ? "on" : ""} onClick={() => setTab("live")}>
+            עכשיו
+          </button>
           <button className={tab === "stats" ? "on" : ""} onClick={() => setTab("stats")}>
             נתונים
           </button>
@@ -225,7 +231,9 @@ export function Admin() {
           {note}
         </p>
       )}
-      {tab === "stats" ? (
+      {tab === "live" ? (
+        <LiveTab call={call} />
+      ) : tab === "stats" ? (
         <StatsTab call={call} />
       ) : tab === "cards" ? (
         <CardEditor call={call} say={setNote} />

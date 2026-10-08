@@ -138,6 +138,18 @@ export class Match {
     return ownedEmoji(itemsOf(p.ws)).some((e) => e.id === emoji.id);
   }
 
+  /**
+   * Is anybody still connected to this match?
+   *
+   * Asked by the lobby so a finished match can stop being counted as running
+   * (see liveMatches in index.ts). A method rather than the lobby reaching
+   * into `a` and `b`, which are private for the good reason that everything
+   * about who is in a match is this class's business.
+   */
+  anyoneLeft(): boolean {
+    return this.a.ws.readyState === this.a.ws.OPEN || this.b.ws.readyState === this.b.ws.OPEN;
+  }
+
   private send(p: PlayerConn, msg: ServerMessage): void {
     if (p.ws.readyState === p.ws.OPEN) p.ws.send(encode(msg));
   }

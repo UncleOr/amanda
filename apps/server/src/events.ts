@@ -52,7 +52,25 @@ export type EventKind =
   /** A chest was opened. */
   | "chest"
   /** A challenge reward was taken. */
-  | "claim";
+  | "claim"
+  /**
+   * A screen crashed on somebody's phone.
+   *
+   * Or has hit "error showing the battle" twice, and both times the actual
+   * error went to `console.error` — which on the phone a child is playing on
+   * is nowhere. A crash nobody can read is a crash that gets reported as "it
+   * did the thing again".
+   */
+  | "crash"
+  /**
+   * Somebody used the admin panel.
+   *
+   * There are endpoints behind that panel which mint currency, suspend a
+   * child and delete an account, and until now none of them left a trace. A
+   * tool that can do those things without a record of who did them is not a
+   * tool anybody should be comfortable handing to a second person.
+   */
+  | "admin";
 
 /** How big a `data` bag may be. See the client-facing endpoint. */
 export const MAX_EVENT_BYTES = 800;

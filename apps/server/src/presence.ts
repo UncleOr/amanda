@@ -54,3 +54,16 @@ export function deliver(playerId: string, payload: string): number {
   }
   return sent;
 }
+
+/**
+ * How many people, and how many sockets.
+ *
+ * Two different numbers and both are worth seeing: one person with a phone
+ * and a laptop open is one player and two sockets, and a gap between them
+ * that keeps growing is sockets that are not being cleaned up.
+ */
+export function presenceCounts(): { online: number; sockets: number } {
+  let open = 0;
+  for (const set of sockets.values()) open += set.size;
+  return { online: sockets.size, sockets: open };
+}

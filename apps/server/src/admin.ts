@@ -29,6 +29,8 @@ import {
 import { cardState, refreshCards } from "./cards.js";
 import { liveState, refreshLive } from "./live.js";
 import { aboutPlayer, overview } from "./stats.js";
+import { liveCounts, startedAt } from "./liveops.js";
+import { track } from "./events.js";
 import { TUNABLES } from "@amanda/shared";
 import { listReports } from "./reports.js";
 import { audienceOf, deliver, runGrant } from "./shop.js";
@@ -135,6 +137,47 @@ async function adminRoutes(
 
   const body = (await deps.readBody(req)) as Record<string, unknown>;
   const str = (k: string) => (typeof body[k] === "string" ? (body[k] as string) : "");
+
+  /*
+   * ═══ EVERY ACTION THAT CHANGES SOMETHING IS WRITTEN DOWN ═══
+   *
+   * There are endpoints below that mint diamonds, suspend a child, make
+   * somebody an admin and delete an account, and until now not one of them
+   * left a trace. That was fine while there was exactly one admin who
+   * remembered what he did; it stops being fine the moment there are two, or
+   * the moment somebody asks "when did this account lose its trophies".
+   *
+   * Reads are not logged — a log that records looking at a list is a log
+   * nobody scrolls. Anything that is not a GET-shaped question is.
+   */
+  const READ_ONLY = new Set([
+    "/api/admin/whoami",
+    "/api/admin/users",
+    "/api/admin/reports",
+    "/api/admin/grants",
+    "/api/admin/grants/preview",
+    "/api/admin/shop",
+    "/api/admin/cards",
+    "/api/admin/copy",
+    "/api/admin/phrases",
+    "/api/admin/series",
+    "/api/admin/tunables",
+    "/api/admin/stats",
+    "/api/admin/stats/player",
+    "/api/admin/live",
+    "/api/admin/user/cards",
+  ]);
+  if (!READ_ONLY.has(path)) {
+    track(sb, userId, "admin", {
+      // The path IS the action, in the only vocabulary that cannot drift
+      // from what the code actually does.
+      action: path.replace("/api/admin/", ""),
+      // Who or what it was done to, where there is one. Never the whole
+      // body: a saved card is four kilobytes of JSON and the question this
+      // answers is "what was touched", not "what did it become".
+      target: str("userId") || str("id") || str("email") || null,
+    });
+  }
 
   switch (path) {
     /** Am I an admin? Asked by the client before it shows the panel at all. */
@@ -617,6 +660,51 @@ async function adminRoutes(
       // This process fights with these cards, so it reloads immediately.
       await refreshCards();
       deps.send(res, 200, { ok: true, saved, cards: cardState });
+      return true;
+    }
+
+    /*
+     * ── is the game all right, right now ─────────────────────────────
+     *
+     * Or: *"zero thinking ahead from you about what should be in an
+     * interface that has to run a fucking online game."*
+     *
+     * This is the answer to that. Everything here was already known by the
+     * running process or sitting in a table, and none of it was on a screen:
+     * how many people are connected, how many are waiting to be paired, how
+     * many matches are being played, whether the database can be written to,
+     * what has crashed on somebody's phone lately, and what was changed from
+     * this panel.
+     *
+     * One request, because the question is one question — "is it all right" —
+     * and a screen that answers it in six round trips is a screen that is
+     * half-answered most of the time.
+     */
+    case "/api/admin/live": {
+      const since = new Date(Date.now() - 7 * 86_400_000).toISOString();
+      const [crashes, actions] = await Promise.all([
+        sb
+          .from("events")
+          .select("player_id, at, data")
+          .eq("kind", "crash")
+          .gte("at", since)
+          .order("at", { ascending: false })
+          .limit(40),
+        sb
+          .from("events")
+          .select("player_id, at, data")
+          .eq("kind", "admin")
+          .order("at", { ascending: false })
+          .limit(30),
+      ]);
+      deps.send(res, 200, {
+        now: liveCounts(),
+        upSince: new Date(startedAt).toISOString(),
+        content: liveState,
+        cards: cardState,
+        crashes: crashes.data ?? [],
+        actions: actions.data ?? [],
+      });
       return true;
     }
 

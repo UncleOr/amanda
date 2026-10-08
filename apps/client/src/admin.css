@@ -657,3 +657,113 @@
 /* The one view here that is a story rather than a number. */
 .stats__recent { list-style: none; margin: 0; padding: 0; font-size: 12.5px; line-height: 1.9; }
 .stats__recent li { border-bottom: 1px solid rgba(255, 255, 255, 0.05); }
+
+/* ════════ "is the game all right, right now" ════════ */
+/*
+ * The first screen built on the design system in
+ * .claude/skills/amanda-ui/SKILL.md, and a demonstration of what it is for.
+ *
+ *   HERO    the verdict. One line, --t-5, and the only coloured thing when
+ *           something is wrong. You read it and you are done.
+ *   PATH    five counts and three boxes. --t-3, one surface, no borders
+ *           between them — they are grouped by SPACE.
+ *   MARGIN  timestamps at --t-2 in muted, which is what muted is for: a
+ *           unit beside a value, never a sentence.
+ *
+ * Nothing here is two steps from anything else in its own tier, and the hero
+ * is five steps above the margin. That is the whole trick.
+ */
+.live { display: flex; flex-direction: column; gap: var(--sp-4); padding: var(--sp-4); }
+
+.live__verdict {
+  margin: 0;
+  /*
+   * --t-6, and the counts below are --t-4: two full steps, which is the
+   * rule. The first version had both at --t-5 and the squint test failed
+   * immediately — the verdict and five numbers all shouted at once, which is
+   * precisely the "no hierarchy" this system exists to stop. Caught by
+   * measuring the rendered sizes rather than by looking at it.
+   */
+  font-size: var(--t-6);
+  font-weight: 900;
+  color: #6ee78c;
+  letter-spacing: -0.01em;
+}
+.live__verdict--bad { color: var(--accent); }
+
+/* The counts. One group, so the gap inside is --sp-2 and the gap to the next
+   group is --sp-4 — the 2x rule, which is what makes them read as a set. */
+.live__counts {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(96px, 1fr));
+  gap: var(--sp-2);
+}
+.live__count {
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+  padding: var(--sp-2) var(--sp-3);
+  border-radius: 12px;
+  background: var(--sur-1);
+}
+/* A number that is not zero is a number worth looking at. The only accent on
+   this screen besides the verdict. */
+.live__count.is-lit { background: var(--sur-lit); border: 1px solid var(--line-lit); }
+.live__count b { font-size: var(--t-4); font-weight: 900; font-variant-numeric: tabular-nums; }
+.live__count span { font-size: var(--t-2); color: var(--muted); }
+
+.live__pair {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: var(--sp-3);
+}
+.live__box {
+  padding: var(--sp-3);
+  border-radius: 14px;
+  background: var(--sur-1);
+}
+/* A heading is distinct by WEIGHT, not by size: it ties with the facts under
+   it at --t-3 and is told apart by being 800 against their 400. Making it
+   bigger would put it in the counts' tier, where it does not belong. */
+.live__box h2 {
+  margin: 0 0 var(--sp-2);
+  font-size: var(--t-3);
+  font-weight: 800;
+  letter-spacing: 0.01em;
+}
+
+.live__facts {
+  display: grid;
+  grid-template-columns: 1fr auto;
+  gap: var(--sp-1) var(--sp-3);
+  margin: 0;
+  font-size: var(--t-3);
+}
+.live__facts dt { color: var(--muted); }
+.live__facts dd { margin: 0; font-weight: 700; font-variant-numeric: tabular-nums; }
+.live__facts dd.is-bad { color: var(--danger); }
+
+.live__list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: var(--sp-2);
+  font-size: var(--t-2);
+}
+.live__list li { display: flex; flex-direction: column; gap: 1px; }
+.live__list code {
+  direction: ltr;
+  text-align: start;
+  font-size: var(--t-2);
+  color: var(--text);
+  word-break: break-word;
+}
+.live__when { color: var(--muted); font-size: var(--t-1); }
+.live__where { color: var(--muted); font-size: var(--t-1); direction: ltr; text-align: start; }
+/* Deliberately NOT accent. Accent is a currency and it is spent on the
+   verdict and on a count that is not zero; a log of what was changed is
+   evidence, not an offer. */
+.live__list--actions code { color: var(--text); opacity: 0.85; }
+.live__quiet { margin: 0; color: var(--muted); font-size: var(--t-3); }

@@ -430,7 +430,11 @@ export function Profile({ account, onClose, onChanged }: Props) {
           <h3>החשבון שלך</h3>
           {account?.linked ? (
             <>
-              <p className="profile__note">מחובר. האלבום שלך שמור גם אם תחליף מכשיר.</p>
+              {/* "מחובר" is the whole message. What being connected buys
+                  was the reason to sign in and that argument was already
+                  made and won on the way in — repeating it here is a
+                  salesman still talking after the sale. */}
+              <p className="profile__note">מחובר</p>
               {/*
                 Leaving, which was not possible before. A signed-in player on a
                 shared machine had no way to hand it to anyone else.
