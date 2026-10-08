@@ -79,12 +79,22 @@ const TABS: Array<{ id: Page; he: string }> = [
 export function About({
   onClose,
   birthDate,
+  start,
 }: {
   onClose: () => void;
   /** The account's birth date, or null when nobody has said. */
   birthDate?: string | null;
+  /**
+   * Which page to open on.
+   *
+   * Play Console asks for a privacy policy URL, and "open the app, tap
+   * אודות, tap פרטיות" is not a URL. `?legal=privacy` is one, and it
+   * points at the policy the game actually shows rather than a second copy
+   * kept somewhere else that drifts from it.
+   */
+  start?: Page;
 }) {
-  const [page, setPage] = useState<Page>("about");
+  const [page, setPage] = useState<Page>(start ?? "about");
   // Nobody has said = not an adult. The default has to fall that way.
   const grown = mayFollowLinks(birthDate);
 

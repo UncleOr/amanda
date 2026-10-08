@@ -171,6 +171,21 @@ const AMANDA_DEV = new URLSearchParams(location.search).get("amanda");
  */
 const CHEST_DEV = new URLSearchParams(location.search).get("chest");
 
+/**
+ * `?legal=privacy` — a URL that lands on the privacy policy.
+ *
+ * Google Play will not accept an app without a reachable policy URL, and the
+ * policy lives inside the app. Rather than keeping a second copy on a static
+ * page — which is a copy that will one day disagree with the first — the
+ * panel takes a starting page and the URL names it.
+ */
+const LEGAL = (() => {
+  const want = new URLSearchParams(location.search).get("legal");
+  return want === "privacy" || want === "terms" || want === "a11y" || want === "about"
+    ? want
+    : null;
+})();
+
 const REVIEW = new URLSearchParams(location.search).has("gallery")
   ? "gallery"
   : new URLSearchParams(location.search).has("arena")
@@ -212,6 +227,15 @@ function Game() {
    * See useOverlay.ts for why that matters.
    */
   const panel = useOverlay();
+  /*
+   * Landing straight on the policy, for the URL Play Console is given. Once,
+   * on the first render — after that it is an ordinary panel the player can
+   * close, and re-opening it on every render would make it impossible to.
+   */
+  useEffect(() => {
+    if (LEGAL) panel.show("about");
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
   /** Set when a guest reaches for something that needs an account. */
   const [unread, setUnread] = useState(0);
   /** Turned off for the session the moment the clip fails to load. */
@@ -1445,7 +1469,11 @@ function Game() {
       )}
 
       {panel.is("about") && (
-        <About onClose={() => panel.close()} birthDate={m.account?.birthDate} />
+        <About
+          onClose={() => panel.close()}
+          birthDate={m.account?.birthDate}
+          start={LEGAL ?? undefined}
+        />
       )}
 
       {panel.is("updates") && <Updates onClose={() => panel.close()} />}
