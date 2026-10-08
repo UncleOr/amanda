@@ -2,17 +2,29 @@
 REM ============================================================
 REM  Build the Android App Bundle (.aab) for Google Play.
 REM
-REM  WHY THIS IS A SCRIPT AND NOT A COMMAND I RUN FOR YOU
+REM  WHY THE BUILD HAPPENS OUTSIDE THE REPOSITORY
+REM
+REM  The Android Gradle Plugin stops before it compiles anything:
+REM
+REM    Your project path contains non-ASCII characters. This will most
+REM    likely cause the build to fail on Windows. Please move your project.
+REM
+REM  The repository lives at C:\Users\אור\Downloads\Amanda, and the Hebrew
+REM  letter in the user name is the whole problem. There is no fixing it in
+REM  place: android.overridePathCheck only silences the warning, and the tools
+REM  underneath -- aapt2 especially -- are the ones that then break, later and
+REM  less clearly. GRADLE_USER_HOME defaults to ~/.gradle, which is behind the
+REM  same letter, so that moves too.
+REM
+REM  So the wrapper is generated at an ASCII path from the one file that is
+REM  committed, android\twa-manifest.json, built there, and the .aab comes
+REM  back. Nothing of value lives in the build directory; it is thrown away
+REM  and rebuilt every run.
+REM
+REM  WHY YOU RUN THIS AND NOT CLAUDE
 REM
 REM  Gradle talks to itself over a loopback socket, even with the daemon
-REM  disabled -- "Unable to establish loopback connection" is what it says
-REM  when it cannot. My shell runs sandboxed and local sockets are blocked
-REM  there, so the build dies before it compiles anything. Yours is not
-REM  sandboxed, so it just works.
-REM
-REM  Everything else is already done: the keystore exists, twa-manifest.json
-REM  is generated from the live web manifest, and the Android project is
-REM  written. This only runs the compile and the signing.
+REM  disabled, and local sockets are blocked in Claude's sandbox.
 REM
 REM  Run it from the repository root:   scripts\build-android.cmd
 REM ============================================================
@@ -21,26 +33,24 @@ setlocal
 
 set "JAVA_HOME=C:\Program Files\Microsoft\jdk-17.0.20.101-hotspot"
 set "ANDROID_HOME=C:\Users\Public\android-sdk"
+set "GRADLE_USER_HOME=C:\Users\Public\.gradle"
+set "WORK=C:\Users\Public\amanda-android"
 
-cd /d "%~dp0..\android" || exit /b 1
+cd /d "%~dp0.." || exit /b 1
 
-if not exist "keystore-password.txt" (
-  echo.
-  echo   keystore-password.txt is missing from the android folder.
-  echo   Without it nothing can be signed. Ask Claude to regenerate the key,
-  echo   or restore the file from your password manager.
-  echo.
-  exit /b 1
-)
+echo.
+echo   Preparing the wrapper at %WORK% ...
+call node scripts\android-prepare.cjs "%WORK%"
+if errorlevel 1 exit /b 1
 
-REM The upload key's password, kept in a gitignored file beside the keystore.
-for /f "usebackq delims=" %%P in ("keystore-password.txt") do set "KEYPASS=%%P"
-
+for /f "usebackq delims=" %%P in ("%WORK%\keystore-password.txt") do set "KEYPASS=%%P"
 set "BUBBLEWRAP_KEYSTORE_PASSWORD=%KEYPASS%"
 set "BUBBLEWRAP_KEY_PASSWORD=%KEYPASS%"
 
-REM gradlew.bat lives in this folder, and bubblewrap invokes it by bare name.
-set "PATH=%CD%;%PATH%"
+cd /d "%WORK%" || exit /b 1
+REM bubblewrap invokes gradlew.bat by bare name, and cmd will not find it
+REM unless the folder it lives in is on PATH.
+set "PATH=%WORK%;%PATH%"
 
 echo.
 echo   Building. The first run downloads Gradle and takes a few minutes.
@@ -55,9 +65,15 @@ if errorlevel 1 (
   exit /b 1
 )
 
+cd /d "%~dp0.."
+if exist "%WORK%\app-release-bundle.aab" copy /y "%WORK%\app-release-bundle.aab" "android\app-release-bundle.aab" >nul
+if exist "%WORK%\app-release-signed.apk" copy /y "%WORK%\app-release-signed.apk" "android\app-release-signed.apk" >nul
+
 echo.
 echo   Done. Upload this file to Play Console:
 echo.
 echo       android\app-release-bundle.aab
+echo.
+echo   (The .apk beside it is for sideloading onto a phone to try it.)
 echo.
 endlocal
