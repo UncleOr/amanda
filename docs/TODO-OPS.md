@@ -2,6 +2,39 @@
 
 דברים שהוחלט לדחות, לא לשכוח.
 
+## ⚠️ פריסת Pages תקועה — 2026-10-08
+
+**האתר חי** ומגיש את הבנייה האחרונה שהצליחה (`6d45c13`). שני הקומיטים שאחריה
+לא עלו, ושלוש פריסות נכשלו באותה שגיאה:
+
+```
+Deployment request failed ... due to in progress deployment.
+Please cancel 6d45c139046b975ab1a88a0822eb5261286cb9a0 first.
+```
+
+זה מצב תקוע **בצד של גיטהאב**, לא באג אצלנו, והוא סותר את עצמו:
+
+| מה שאלנו | מה ענה |
+| --- | --- |
+| `deployments/.../statuses` | `success` — הסתיים |
+| `POST .../pages/deployments/<sha>/cancel` | `400 — Unable to cancel, it's finished` |
+| `actions/deploy-pages` בריצה חדשה | `in progress, cancel it first` |
+
+לא ה-`concurrency` שלנו: הריצות היו במרווח של 16 דקות.
+
+### מה לעשות
+
+1. פשוט לנסות שוב מאוחר יותר — Actions → Deploy to GitHub Pages → Re-run.
+   בדרך כלל זה משתחרר לבד.
+2. אם זה עדיין תקוע **כשעושים את המעבר לדומיין** — זה בדיוק הרגע לאפס,
+   כי ממילא מגדירים את הדומיין מחדש:
+   ```
+   gh api -X DELETE repos/UncleOr/amanda/pages
+   ```
+   ואז Settings → Pages → Source: GitHub Actions, ולהגדיר שוב את
+   `playamanda.com` כ-Custom domain.
+   ⚠️ **לא לעשות את זה לפני המעבר** — זה מוחק את הגדרת הדומיין.
+
 ## הזהות — למה מיילים על הפרויקט מגיעים למייל של העבודה
 
 אור, כשהגיעה הודעת כישלון של GitHub Actions למייל המשרד: *"לא העברנו הכל
