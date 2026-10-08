@@ -2,6 +2,38 @@
 
 דברים שהוחלט לדחות, לא לשכוח.
 
+## ⚠️ שתי פקודות שרק אור יכול להריץ
+
+לא אי-נוחות זמנית — זה מבני, ושווה לדעת כדי לא לנסות שוב בכל פעם.
+
+### `git push`
+
+Git Credential Manager שומר את הסוד ב-**Windows Credential Manager**. הטרמינל
+של אור קורא אותו; הטרמינל של Claude רץ מוגבל ולא מצליח — גם לא אחרי שאור דחף
+בהצלחה והסוד כבר שם:
+
+```
+$ printf 'protocol=https\nhost=github.com\nusername=UncleOr\n\n' \
+    | git -c credential.interactive=never credential fill
+fatal: unable to get password from user
+```
+
+**פתרון קבוע אפשרי, אם נמאס:** מפתח SSH. אני מייצר את הזוג, אור מדביק את
+המפתח הציבורי ב-GitHub → Settings → SSH keys, וה-remote עובר ל-`git@github.com`.
+מאותו רגע הדחיפות עוברות מכאן. (אין כרגע מפתח: `~/.ssh` ריק.)
+
+### `scripts\build-android.cmd`
+
+Gradle מדבר עם עצמו דרך סוקט loopback, גם עם `--no-daemon`:
+
+```
+java.io.IOException: Unable to establish loopback connection
+Caused by: java.net.SocketException: Invalid argument: connect
+```
+
+ארגז החול חוסם סוקטים מקומיים. הבנייה מתה לפני שהיא מקמפלת שורה — **אין שום
+דבר שבור בפרויקט.**
+
 ## 🔴 המעבר ל-playamanda.com — מה עוד מצביע לכתובת הישנה
 
 אור שאל: *"אני חושב שאני צריך להזין את הדומיין החדש בכל מיני מקומות? סופבייס
