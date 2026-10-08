@@ -70,7 +70,13 @@ for f in $PLAY; do
   # "המדפים עוד ריקים. בקרוב." (43) all sit under it, and every sentence
   # that has had to be deleted from this game for explaining itself has been
   # well over — the two cut today were 60 and 74.
-  n=$(grep -ohE '<p[^>]*>[^<{]{46,}</p>' "$f" 2>/dev/null | wc -l | tr -d ' ')
+  # `tr` first: JSX wraps, and a sentence long enough to be an explanation is
+  # exactly the kind that prettier breaks over three lines. Reading the file
+  # line by line reported ZERO prose on screens that had two — the album's
+  # "you are playing from the full deck" and the profile's age note both sat
+  # across line breaks and were invisible to this check for a week.
+  n=$(tr '
+' ' ' < "$f" | grep -ohE '<p[^>]*>[^<{]{46,}</p>' | wc -l | tr -d ' ')
   if [ "${n:-0}" -gt 0 ]; then
     prose=$((prose + n))
     offenders="$offenders\n      ${n}  $(basename "$f")"

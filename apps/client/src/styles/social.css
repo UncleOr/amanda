@@ -247,7 +247,7 @@
 /* ---- friends ---- */
 .modal--friends { max-width: 440px; }
 .friends__title { margin: 0 0 10px; font-size: 20px; }
-.friends__hint { color: var(--muted); font-size: 13px; margin: 6px 0; line-height: 1.5; }
+.friends__hint { color: var(--text); font-size: var(--t-3); margin: 6px 0; line-height: 1.5; }
 .friends__note { color: var(--accent); font-size: 13px; margin: 6px 0; }
 .friends__list {
   list-style: none;
@@ -345,14 +345,21 @@
   position: relative;
   display: flex;
   align-items: center;
-  justify-content: space-between;
-  gap: 10px;
+  /*
+   * The purse sits BESIDE the sign, not at the far end of it. `space-between`
+   * threw it into the opposite corner — which is the corner the close button
+   * is absolutely positioned into, so the number that decides every purchase
+   * in here was tucked under an X. §5: what belongs together goes together,
+   * and what you can spend belongs with the shop, not with the door.
+   */
+  justify-content: flex-start;
+  gap: var(--sp-4);
   padding: 10px 14px 12px;
   margin: -4px -4px 12px;
   border-radius: 12px;
   background: linear-gradient(180deg, rgba(255, 211, 107, 0.14), transparent 70%);
 }
-.shop__sign h2 { margin: 0; font-size: 21px; letter-spacing: 0.01em; }
+.shop__sign h2 { margin: 0; font-size: var(--t-5); letter-spacing: 0.01em; }
 /* the fluorescent tube over the shelves */
 .shop__strip {
   position: absolute;
@@ -368,25 +375,43 @@
   align-items: center;
   gap: 5px;
   font-weight: 800;
-  font-size: 14px;
-  padding: 5px 10px;
+  /* What you can afford is half of every decision in here, and it was 14px
+     tucked beside the close button. */
+  font-size: var(--t-4);
+  padding: 5px 12px;
   border-radius: 999px;
   border: 1px solid var(--line);
   background: rgba(0, 0, 0, 0.3);
 }
 .shop__shelves { display: flex; flex-direction: column; gap: 16px; max-height: 62vh; overflow-y: auto; }
-.shelf { position: relative; padding-bottom: 10px; }
-.shelf__label {
-  margin: 0 0 7px;
-  font-size: 12px;
+/*
+ * ═══ IT WAS CALLED .shelf, AND SO WAS SOMETHING ELSE ═══
+ *
+ * lab.css has its own bare `.shelf` for the row of chests on the home screen
+ * — `display: flex; justify-content: center; flex-wrap: wrap` — and it loads
+ * after this one, so every shop shelf has silently been a centred flex row
+ * belonging to a different component. The first thing that made it visible
+ * was putting a grid on `.aisle__row`, which then shrank to one column
+ * because its parent had turned into a flex container behind my back.
+ *
+ * A shop has aisles. Nothing else in this game does.
+ */
+.aisle { position: relative; padding-bottom: 10px; }
+/*
+ * Which shelf you are standing at. It was 12px grey while the shop's own name
+ * — which you knew, because you tapped it to get here — was 21px white. The
+ * sign over the door outranked the aisle markers.
+ */
+.aisle__label {
+  margin: 0 0 var(--sp-2);
+  font-size: var(--t-4);
   font-weight: 800;
-  letter-spacing: 0.06em;
-  color: var(--muted);
-  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  color: var(--text);
 }
-.shelf__row { display: flex; gap: 9px; overflow-x: auto; padding-bottom: 4px; }
+.aisle__row { display: flex; gap: 9px; overflow-x: auto; padding-bottom: 4px; }
 /* the shelf board the goods are standing on */
-.shelf__edge {
+.aisle__edge {
   position: absolute;
   inset-inline: 0;
   bottom: 0;
@@ -405,7 +430,7 @@
   padding: 9px 7px 10px;
   border-radius: 11px;
   border: 1px solid var(--line);
-  background: rgba(255, 255, 255, 0.035);
+  background: var(--sur-1);
   text-align: center;
 }
 .good.is-mine { border-color: rgba(74, 222, 128, 0.5); }
@@ -419,9 +444,11 @@
   background: rgba(0, 0, 0, 0.3);
 }
 .good__art img { width: 100%; height: 100%; object-fit: cover; }
-.good__name { font-size: 13px; line-height: 1.25; }
-.good__blurb { color: var(--muted); font-size: 11px; line-height: 1.3; }
-.good__mine { color: #4ade80; font-size: 12px; font-weight: 700; display: flex; align-items: center; gap: 4px; }
+.good__name { font-size: var(--t-3); line-height: 1.25; font-weight: 800; }
+/* Amanda's line about the thing, beside its name. Flavour, so --muted is
+   right; it is the one thing on a tile that is not part of the decision. */
+.good__blurb { color: var(--muted); font-size: var(--t-2); line-height: 1.3; }
+.good__mine { color: #4ade80; font-size: var(--t-3); font-weight: 700; display: flex; align-items: center; gap: 4px; }
 /* the price tag, clipped to the shelf rather than printed on the item */
 .good__buy {
   display: flex;
@@ -434,7 +461,8 @@
   background: linear-gradient(180deg, #ffe9a8, #f0c24a);
   color: #241a05;
   font: inherit;
-  font-size: 12px;
+  /* The thing you came here to press. --t-3 is the floor for a control. */
+  font-size: var(--t-3);
   font-weight: 800;
   cursor: pointer;
 }

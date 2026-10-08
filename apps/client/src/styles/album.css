@@ -37,11 +37,26 @@
   font-variant-numeric: tabular-nums;
 }
 .album__count--gem { color: #9fe6ff; }
+/*
+ * ═══ THE ONE NUMBER THE ALBUM EXISTS TO ANSWER ═══
+ *
+ * How far along am I. It is the hero of this screen and it is two steps of the
+ * scale above every control on it, which is what §1 means by "not close" — at
+ * --t-4 beside a --t-3 back button it would have been a slightly larger path.
+ */
+.album__count--cards {
+  font-size: var(--t-5);
+  color: var(--accent);
+  font-weight: 900;
+  gap: var(--sp-2);
+}
 .album__none {
   margin: 0;
-  padding: 10px 16px;
-  color: var(--muted);
-  font-size: 13px;
+  padding: var(--sp-2) var(--sp-4);
+  /* A line a player reads is --text. It is the only thing in its box, which
+     §3 names as the one place --muted must never be. */
+  color: var(--text);
+  font-size: var(--t-3);
   text-align: center;
 }
 /* min-height:0 so this scrolls instead of pushing the bar off the screen */
@@ -51,10 +66,11 @@
   display: flex;
   align-items: baseline;
   gap: 8px;
-  margin: 0 0 8px;
-  font-size: 15px;
+  margin: 0 0 var(--sp-2);
+  font-size: var(--t-4);
 }
-.album__series-count { color: var(--muted); font-size: 12px; font-variant-numeric: tabular-nums; }
+/* A count BESIDE the name it counts — the one shape --muted is for. */
+.album__series-count { color: var(--muted); font-size: var(--t-2); font-variant-numeric: tabular-nums; }
 .album__grid {
   display: grid;
   /* roomy enough that a card's name and numbers are legible rather than
@@ -87,7 +103,10 @@
   position: relative;
   aspect-ratio: 3 / 4;
 }
-.album__cell--missing { opacity: 0.4; filter: grayscale(0.8); }
+/* A gap should read as a card you have not got, not as a hole where one
+   failed to load. At 0.4 on an already-dark back, eight of the ten cells in
+   a series were a loading skeleton. */
+.album__cell--missing { opacity: 0.58; filter: grayscale(0.7); }
 .album__copies {
   position: absolute;
   inset-block-end: 4px;
@@ -97,7 +116,7 @@
   color: var(--accent);
   border-radius: 999px;
   padding: 0 6px;
-  font-size: 11px;
+  font-size: var(--t-1);
   font-weight: 800;
 }
 .album__level {
@@ -108,7 +127,7 @@
   color: #052;
   border-radius: 999px;
   padding: 0 6px;
-  font-size: 10px;
+  font-size: var(--t-1);
   font-weight: 800;
 }
 
@@ -121,7 +140,7 @@
   padding: 10px 16px;
   border-bottom: 1px solid var(--line);
 }
-.album__link-note { color: var(--muted); font-size: 12px; }
+.album__link-note { color: var(--muted); font-size: var(--t-2); }
 
 /* ════════ the menu, as a game rather than an app ════════
  * Was: a rounded card centred in an empty void, with the game's name set as a

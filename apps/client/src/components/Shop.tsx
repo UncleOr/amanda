@@ -7,6 +7,20 @@ import { buyItem, loadShop, type ShopItem } from "../game/account";
 import { Overlay } from "./Overlay";
 
 /**
+ * ═══ WHAT THIS SCREEN IS FOR ═══
+ *
+ * **Finding a thing worth having and paying for it.** The goods are the hero;
+ * the shop's own name is a sign over the door.
+ *
+ * Measured at 844x390 before that was true: the modal was 620x324 inside an
+ * 844x390 screen, so a QUARTER OF THE WIDTH was margin on a screen that is
+ * already short; the shelves showed 242px of a 693px stack AND each shelf
+ * scrolled sideways on top of that (563 visible of 717) — two scroll axes for
+ * a seven-year-old. The picture of the thing being sold was 66x66, smaller
+ * than the three rows of text under it, the price was 12px, and the shelf you
+ * were standing at was labelled in 12px grey while "חנות נוחות", which you
+ * already knew because you tapped it, was 21.
+ *
  * The shop.
  *
  * Or: "let's add a shop too (free for now) where you can buy avatars, emoji,
@@ -124,9 +138,9 @@ export function Shop({
               const row = items.filter((i) => i.kind === kind);
               if (!row.length) return null;
               return (
-                <section className="shelf" key={kind}>
-                  <h3 className="shelf__label">{he}</h3>
-                  <div className="shelf__row">
+                <section className="aisle" key={kind}>
+                  <h3 className="aisle__label">{he}</h3>
+                  <div className="aisle__row">
                     {row.map((item) => {
                       const mine = owned.includes(item.id);
                       const art = shopItemArt(item);
@@ -192,7 +206,7 @@ export function Shop({
                       );
                     })}
                   </div>
-                  <span className="shelf__edge" aria-hidden="true" />
+                  <span className="aisle__edge" aria-hidden="true" />
                 </section>
               );
             })}

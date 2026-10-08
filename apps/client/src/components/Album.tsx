@@ -1,5 +1,14 @@
 /**
- * The album: every card in the game, and what you have of it.
+ * ═══ WHAT THIS SCREEN IS FOR ═══
+ *
+ * **Seeing what you have, and what you are missing.** The cards are the hero;
+ * everything else here is furniture.
+ *
+ * Measured at 844x390 before this was true: the bar took 67px, a drawn cover
+ * took 44 and the battle record took 110, so the FIRST CARD began at y=277 of
+ * a 390px screen. Seventy-one per cent of the album was spent before the album
+ * started, and exactly one row of cards was on screen — on the screen whose
+ * whole job is a collection of fifty-two.
  *
  * Deliberately shows the cards you do NOT own as well, face down. An album
  * with gaps is the point — the empty slots are the reason to play another
@@ -57,14 +66,18 @@ export function Album({ account, onClose, onCardInfo, onChanged }: Props) {
 
   return (
     <div className="album">
+      {/*
+        The header carries the one number this screen exists to answer — how
+        far along am I — and the way out. It used to carry them the other way
+        round: the back button was a blue gradient at 17px and the count was a
+        16px chip beside it, so the loudest thing on the album, and the first
+        thing in the eye path, was the door.
+      */}
       <header className="album__bar">
-        <button className="btn-fight btn-online" onClick={onClose}>
-          ← חזרה
-        </button>
+        <span className="album__count album__count--cards">
+          <Icon name="monster" size={22} /> {owned}/{total}
+        </span>
         <div className="album__counts">
-          <span className="album__count">
-            <Icon name="monster" size={16} /> {owned}/{total}
-          </span>
           {account && (
             <>
               <span className="album__count">
@@ -75,15 +88,16 @@ export function Album({ account, onClose, onCardInfo, onChanged }: Props) {
               </span>
             </>
           )}
+          <button className="btn-fight btn-ghost album__back" onClick={onClose}>
+            ← חזרה
+          </button>
         </div>
       </header>
 
-      {!account && (
-        <p className="album__none">
-          אין לך עדיין אלבום משלך — אתה משחק מהחפיסה המלאה. כשיהיה חשבון, מה
-          שתאסוף יישמר כאן.
-        </p>
-      )}
+      {/* Five words, not two sentences. Or has asked for this more times than
+          any other thing in this game, and the audit now reads multi-line JSX
+          so it can no longer be slipped past by pressing Enter. */}
+      {!account && <p className="album__none">אתה משחק מהחפיסה המלאה</p>}
 
       {note && <p className="album__none album__none--warn">{note}</p>}
 

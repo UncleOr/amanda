@@ -781,12 +781,15 @@
 /* How Amanda should address you — changeable after onboarding, not only in it. */
 .profile__gender { display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 8px; }
 .profile__gender button {
-  padding: 8px 18px;
+  padding: var(--sp-2) 18px;
   border-radius: 11px;
   border: 1px solid var(--line);
   background: transparent;
-  color: var(--muted);
+  /* A control's own label, which §3 names as the second place --muted must
+     never be: "בן" in grey reads as a choice already ruled out. */
+  color: var(--text);
   font: inherit;
+  font-size: var(--t-3);
   font-weight: 700;
   cursor: pointer;
 }

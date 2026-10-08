@@ -1106,7 +1106,7 @@
 }
 .phrases__one:hover { border-color: var(--line); }
 .phrases__one.is-picked { border-color: var(--accent); background: rgba(255, 176, 32, 0.12); }
-.phrases__silent { display: inline-block; padding: 6px 16px; color: var(--muted); font-size: 13px; }
+.phrases__silent { display: inline-block; padding: 6px 16px; color: var(--text); font-size: var(--t-3); }
 
 /* ════════ who you are fighting, during the fight ════════ */
 /*
@@ -1985,28 +1985,68 @@
  */
 @media (max-width: 860px), (max-height: 560px) {
   /*
-   * ═══ THE FURNITURE GIVES WAY FIRST ═══
+   * ═══ 71% OF THE ALBUM WAS SPENT BEFORE THE ALBUM ═══
    *
-   * Measured at 844x390: the bar is 67px and the drawn cover is 128, so 195
-   * of a 390px screen was spent before the first card — and then the battle
-   * record below it took the rest. The album opened on a picture of an album
-   * and a table of numbers, and you had to scroll to find out that it had any
-   * cards in it.
+   * Measured again at 844x390 after the first pass at this, which only made
+   * the furniture smaller: bar 67 + cover 44 + record 110, so the FIRST CARD
+   * began at y=277 and exactly one row was on screen. Shrinking three things
+   * that should not all have been there was never going to fix it.
    *
-   * Both of them stay, because both are good, and both are the wrong size for
-   * a screen that is 390 tall and exists to show a collection. The cover
-   * becomes a band rather than a poster, and the record becomes the
-   * last-but-one thing you scroll to rather than the first thing you see.
+   * So the cover stops being a band and becomes the HEADER'S BACKGROUND — the
+   * picture is still there, behind the one number this screen exists to
+   * answer, and it costs nothing. And the record stops being a panel: five
+   * figures that each say their own name need no section title and no box
+   * drawn round them (§5 — a box round things already grouped can go).
+   *
+   * First card now at ~134: two full rows, and the third peeking, which is
+   * also what tells a child there is more.
    */
-  .album__cover { height: clamp(44px, 11vh, 68px); margin-bottom: 8px; }
-  .album__scroll { padding: 8px 10px 20px; }
-  .record { margin-bottom: 12px; padding: 9px 10px 8px; }
-  .record__title { font-size: 12px; margin-bottom: 6px; }
-  .record__grid { gap: 6px; grid-template-columns: repeat(auto-fit, minmax(74px, 1fr)); }
-  .record__cell { padding: 6px 4px 5px; border-radius: 10px; }
-  .record__n { font-size: 17px; }
+  .album__bar {
+    padding: var(--sp-2) var(--sp-3);
+    background:
+      linear-gradient(180deg, rgba(10, 15, 27, 0.5), rgba(10, 15, 27, 0.86)),
+      var(--scene-album) center / cover no-repeat;
+  }
+  .album__back { padding: 7px 14px; font-size: var(--t-3); }
+  .album__cover { display: none; }
+  .album__scroll { padding: var(--sp-2) var(--sp-3) 20px; }
+
+  .record {
+    margin-bottom: var(--sp-3);
+    padding: 0;
+    border: 0;
+    background: none;
+    box-shadow: none;
+  }
+  .record__title,
+  .record__sub,
+  .record__streak { display: none; }
+  .record__grid { gap: var(--sp-1); grid-template-columns: repeat(5, minmax(0, 1fr)); }
+  .record__cell {
+    flex-direction: row;
+    justify-content: center;
+    gap: var(--sp-1);
+    padding: var(--sp-1) var(--sp-2);
+    border-radius: 999px;
+  }
   .record__icon img,
-  .record__icon svg { width: 18px; height: 18px; }
+  .record__icon svg { width: 16px; height: 16px; }
+  .record__n { font-size: var(--t-4); }
+}
+
+/*
+ * ═══ A SERIES IS TEN CARDS ═══
+ *
+ * `auto-fill` fitted nine across and orphaned the tenth onto a row of its own
+ * beside EIGHT EMPTY COLUMNS — 110px x 660 of nothing, one single dead block,
+ * which §5b names as the worst shape air can take. The grid was asking the
+ * container how many fit instead of asking the data how many there are.
+ *
+ * Landscape only: ten columns on a 390px-wide portrait phone would be 35px
+ * cards, so that stays on `auto-fill` above.
+ */
+@media (max-height: 560px) and (min-width: 640px) {
+  .album__grid { grid-template-columns: repeat(10, minmax(0, 1fr)); gap: 5px; }
 }
 
 /* ════════ the profile, on a phone ════════ */
@@ -2026,15 +2066,136 @@
  * learned this the expensive way.
  */
 @media (max-width: 860px), (max-height: 560px) {
+  /*
+   * ═══ EMPTY ACROSS, CROWDED DOWN — BOTH AT ONCE ═══
+   *
+   * The pair Or named in one sentence, on one screen. Measured at 844x390:
+   * the gender panel was 779px wide round three buttons totalling 170, the
+   * birthday panel 779 round one date field — and stacked, those five panels
+   * made a 766px scroll inside a 353px window. Four fifths of the width
+   * unused, and four fifths of the content below the fold.
+   *
+   * Landscape has width. The identity card takes the first column; the things
+   * you came here to CHANGE run down the second. One column of furniture
+   * instead of five bands of it.
+   */
+  .profile__top { padding: 6px 12px; }
+  /* The only way out of this screen was a 13px grey link. */
+  .profile__top .btn-link { font-size: var(--t-3); color: var(--text); }
+
+  .profile__scroll { padding: 0 12px 20px; }
+  /* Picking a face replaces the whole row — it is the one thing here that
+     wants the width. */
+  .profile__faces { grid-template-columns: repeat(auto-fill, minmax(56px, 1fr)); }
+
   .profile__hero {
-    min-height: clamp(76px, 24vh, 120px);
-    gap: 12px;
-    padding: 10px 14px;
-    margin-bottom: 10px;
+    flex-direction: column;
+    justify-content: center;
+    text-align: center;
+    min-height: 0;
+    gap: var(--sp-2);
+    padding: var(--sp-3);
+    margin-bottom: var(--sp-3);
     border-radius: 14px;
   }
-  .profile__top { padding: 6px 12px; }
-  .profile__scroll { padding: 0 12px 20px; }
-  .panel { padding: 10px 12px; margin-bottom: 10px; border-radius: 12px; }
-  .panel h3 { margin-bottom: 7px; font-size: 13.5px; }
+  /*
+   * The face is how you recognise yourself, and it was 84x84 against a 679x47
+   * EMPTY TEXT BOX at 28px — the biggest, loudest thing on the screen was a
+   * field with nothing in it. The box is a control now (--t-3 is the floor
+   * for one, and a nickname is sixteen characters, not a headline).
+   */
+  .profile__face { width: clamp(76px, 26vh, 104px); height: clamp(76px, 26vh, 104px); }
+  .profile__who { flex: none; width: 100%; }
+  .profile__name { font-size: var(--t-4); padding-bottom: var(--sp-1); }
+  .profile__stats { margin-top: var(--sp-2); font-size: var(--t-3); gap: var(--sp-2); }
+
+  .panel { padding: 10px 12px; margin-bottom: var(--sp-3); border-radius: 12px; }
+  .profile__wide { width: 100%; }
+}
+
+/* ════════ the shop, on a phone ════════ */
+/*
+ * ═══ TWO SCROLL AXES, AND A QUARTER OF THE WIDTH THROWN AWAY ═══
+ *
+ * Measured at 844x390: the shop modal was 620x324 inside an 844x390 screen —
+ * 224px of margin on a screen that is already short — and inside it the
+ * shelves showed 242px of a 693px stack while EACH SHELF ALSO SCROLLED
+ * SIDEWAYS (563 of 717 visible). A seven-year-old had to scroll down to find
+ * the shelf and then sideways to find the thing on it, and four of every six
+ * things for sale were off the side of a box with 224 spare pixels.
+ *
+ * So: the shop takes the screen, and a shelf WRAPS. One axis.
+ */
+@media (max-width: 860px), (max-height: 560px) {
+  .modal-overlay:has(.modal--shop) { padding: 0; }
+  .modal--shop {
+    width: 100%;
+    max-width: none;
+    height: 100dvh;
+    max-height: 100dvh;
+    display: flex;
+    flex-direction: column;
+    border: 0;
+    border-radius: 0;
+    padding: 0 var(--sp-3) var(--sp-2);
+  }
+  .shop__sign {
+    flex: none;
+    margin: 0 calc(var(--sp-3) * -1) var(--sp-2);
+    padding: var(--sp-2) var(--sp-4) var(--sp-2) var(--sp-3);
+  }
+  .shop__shelves { flex: 1; min-height: 0; max-height: none; gap: var(--sp-3); }
+  .aisle__row {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(104px, 1fr));
+    gap: var(--sp-2);
+    overflow: visible;
+    padding-bottom: var(--sp-1);
+  }
+  .good { width: auto; gap: var(--sp-1); padding: var(--sp-2) var(--sp-1); }
+  .good__art { width: 60px; height: 60px; }
+  /* Amanda's line survives, at a size it can be read at, and stops deciding
+     how tall the tile is. */
+  .good__blurb {
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+  }
+}
+
+
+/* ════════ the profile in two columns, landscape only ════════ */
+/*
+ * LAST IN THE FILE ON PURPOSE. It clears margins that the phone block above
+ * sets, and `@media` adds no specificity — written any earlier, every one of
+ * these rules loses to the plain phone block and the gaps double.
+ *
+ * Landscape only: two columns on a 390px-wide portrait phone would be 180px
+ * each, which is narrower than the thing they were too wide for.
+ *
+ * Everything flows, the identity card included. Pinning the hero to a column
+ * of its own left 286px x 570 of EMPTY COLUMN running the whole length of the
+ * scroll — the same mistake rotated: five bands of dead width traded for one
+ * tall strip of it. RTL reading order then falls out right: identity
+ * top-right, the line you say beside it, then how to address you, then your
+ * birthday. Four of the six blocks are on screen at once; it was one and a
+ * half, down a 766px scroll inside a 353px window.
+ */
+@media (max-height: 560px) and (min-width: 640px) {
+  .profile__scroll {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: var(--sp-3);
+    align-content: start;
+  }
+  .profile__scroll > * { min-width: 0; }
+  .profile__scroll > .btn-fight,
+  .profile__trace,
+  .profile__note,
+  .profile__faces { grid-column: 1 / -1; }
+  /* The grid gap does the spacing now; a margin on top of it would double it. */
+  .profile__hero,
+  .profile__scroll > .panel,
+  .profile__faces { margin-bottom: 0; }
 }

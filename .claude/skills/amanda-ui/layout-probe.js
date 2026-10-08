@@ -23,8 +23,21 @@
  *             that is not the hero, the hierarchy is a lie.
  *
  * It reports; it does not judge. The thresholds are in SKILL.md §5b.
+ *
+ * ═══ MEASURE ONE SCREEN, NOT THE PILE ═══
+ *
+ * Almost every screen in this game is drawn OVER the home screen, which stays
+ * in the DOM behind it. Measured without a root the album came back "0% empty,
+ * no dead air" — a perfect score, assembled out of the home screen's buttons
+ * showing through. Call it with the screen's own selector:
+ *
+ *     window.__probe(".album")     window.__probe(".modal--shop")
+ *
+ * The grid is still the whole VIEWPORT, because that is what the player sees;
+ * only the content counted is the screen's own.
  */
-(() => {
+window.__probe = (rootSel) => {
+  const root = (rootSel && document.querySelector(rootSel)) || document.body;
   const W = innerWidth;
   const H = innerHeight;
   const COLS = 12;
@@ -53,9 +66,9 @@
   const SCENERY = /intro__art|intro__room|intro__wash|intro__motes|app$|^$/;
 
   const boxes = [];
-  for (const el of document.querySelectorAll("body *")) {
+  for (const el of root.querySelectorAll("*")) {
     const cls = String(el.className || "");
-    if (SCENERY.test(cls)) continue;
+    if (!rootSel && SCENERY.test(cls)) continue;
     if (!draws(el)) continue;
     const r = el.getBoundingClientRect();
     if (r.width < 4 || r.height < 4) continue;
@@ -132,8 +145,18 @@
       text: (b.el.textContent || "").trim().slice(0, 22),
     }));
 
+  /* ── anything a player is asked to read below the scale's floor ── */
+  const belowFloor = [];
+  for (const b of boxes) {
+    const size = parseFloat(getComputedStyle(b.el).fontSize) || 0;
+    const hasText = [...b.el.childNodes].some((n) => n.nodeType === 3 && n.textContent.trim().length > 0);
+    if (hasText && size > 0 && size < 11.5)
+      belowFloor.push({ what: b.cls, px: Math.round(size * 10) / 10, text: (b.el.textContent || "").trim().slice(0, 18) });
+  }
+
   const pct = (n) => Math.round((n / flat.length) * 100);
   return {
+    root: rootSel || "(whole page)",
     viewport: `${W}x${H}`,
     blocks: boxes.length,
     density: {
@@ -147,5 +170,6 @@
       : null,
     edges: { distinctLeft: lefts.size, distinctRight: rights.size },
     eyePath: weighty,
+    belowFloor,
   };
-})();
+};

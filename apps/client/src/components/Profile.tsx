@@ -1,4 +1,17 @@
 /**
+ * ═══ WHAT THIS SCREEN IS FOR ═══
+ *
+ * **This is me.** The face, the name and the one line thrown across the versus
+ * screen — the three things another player will see. The rest (birthday, how
+ * to address you, the account) is settings, and settings are furniture.
+ *
+ * Measured at 844x390 before that was true: the biggest thing on the screen
+ * was an EMPTY TEXT BOX — the nickname field at 679x47 and 28px type, eight
+ * times the area of the face at 84x84. The way out was a 13px grey link. And
+ * five full-width panels stacked down a 766px scroll on a 353px window, each
+ * one holding a row of content a fifth of its width: the gender panel was 779
+ * wide round three buttons totalling 170.
+ *
  * The player's own corner.
  *
  * This used to be a stack of inputs with a save button, which is what Or
@@ -267,10 +280,11 @@ export function Profile({ account, onClose, onChanged }: Props) {
           <Overlay onClick={() => setLeaving(false)}>
             <div className="modal modal--confirm" onClick={(e) => e.stopPropagation()}>
               <h2>לצאת מהחשבון?</h2>
-              <p>
-                האלבום, הגביעים והקלפים שלך נשמרים. אפשר לחזור אליהם בכל רגע עם
-                אותה התחברות. המכשיר יתחיל מחשבון אורח חדש.
-              </p>
+              {/* One sentence. The other two said the same thing in
+                  implementation detail — which login, which device — and §6's
+                  own example of the offence is two sentences doing one
+                  sentence's job. */}
+              <p>הכול נשמר, ואפשר לחזור.</p>
               <div className="result__buttons">
                 <button
                   className="btn-fight"
@@ -403,11 +417,11 @@ export function Profile({ account, onClose, onChanged }: Props) {
             value={birthDate}
             onChange={(e) => setBirthDate(e.target.value)}
           />
-          <p className="profile__note">
-            {tooYoung
-              ? `בשביל לשחק נגד אנשים אחרים צריך להיות בן ${MIN_AGE} לפחות. נגד הבוט — תמיד אפשר.`
-              : "זה רק בשביל הגיל."}
-          </p>
+          {/* "This is only for your age" explained the field above it, which
+              is the offence Or has named most often. The warning stays,
+              because being turned away from online play without being told
+              why is worse than a line of text — but it is four words. */}
+          {tooYoung && <p className="profile__note profile__note--loud">נגד אנשים — מגיל {MIN_AGE}</p>}
         </section>
 
         {dirty && (

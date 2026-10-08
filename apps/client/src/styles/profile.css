@@ -31,8 +31,8 @@
   font: inherit;
   font-size: 15px;
 }
-.profile__note { color: var(--muted); font-size: 12px; margin: 6px 0 0; }
-.profile__note--loud { color: var(--accent); font-size: 14px; }
+.profile__note { color: var(--muted); font-size: var(--t-2); margin: 6px 0 0; }
+.profile__note--loud { color: var(--accent); font-size: var(--t-3); }
 .profile__avatars {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(72px, 1fr));
@@ -476,19 +476,19 @@
   padding: 14px 16px;
   border-radius: 16px;
   border: 1px solid var(--line);
-  background: rgba(255, 255, 255, 0.03);
+  background: var(--sur-1);
   margin-bottom: 14px;
 }
-.panel h3 { margin: 0 0 10px; font-size: 15px; }
+.panel h3 { margin: 0 0 var(--sp-2); font-size: var(--t-4); }
 .profile__wide { width: min(320px, 100%); margin-top: 8px; }
-.profile__or { color: var(--muted); font-size: 12px; margin: 12px 0 8px; }
+.profile__or { color: var(--muted); font-size: var(--t-2); margin: 12px 0 8px; }
 .profile__save { margin: 4px 0 16px; }
 /* The sign-in trace. Deliberately tiny and grey: a player should be able to
    look straight past it, and somebody debugging should be able to read it
    off a photograph of the screen. */
 .profile__trace {
   margin: 4px 0 0 !important;
-  font-size: 10px;
+  font-size: var(--t-1);
   color: var(--muted);
   opacity: 0.55;
   letter-spacing: 0.02em;
