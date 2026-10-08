@@ -45,9 +45,20 @@ jobs:
           # Variables) to your deployed server, e.g. wss://amanda-server.onrender.com,
           # to enable the "Online" button on the public site.
           VITE_SERVER_URL: ${{ vars.VITE_SERVER_URL }}
-          # GitHub Pages serves this project from a subpath; Vercel and any
-          # root domain serve it from /, which is the config default.
-          VITE_BASE_PATH: /amanda/
+          # ═══ / AND NOT /amanda/ ═══
+          #
+          # The site answers on playamanda.com now, and a TWA is verified
+          # against a whole ORIGIN: Chrome fetches
+          # https://playamanda.com/.well-known/assetlinks.json and nothing
+          # else will do. On uncleor.github.io/amanda/ that file would have to
+          # live at the root of uncleor.github.io — a different repository,
+          # shared with every other project on the account.
+          #
+          # public/CNAME is what keeps the custom domain across deploys: this
+          # workflow replaces the published site wholesale every time, and a
+          # domain set only in Settings has a habit of coming back as a blank
+          # field after one of those.
+          VITE_BASE_PATH: /
       - uses: actions/upload-pages-artifact@v3
         with:
           path: apps/client/dist
