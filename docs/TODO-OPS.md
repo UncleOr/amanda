@@ -2,6 +2,32 @@
 
 דברים שהוחלט לדחות, לא לשכוח.
 
+## 🔴 המעבר ל-playamanda.com — מה עוד מצביע לכתובת הישנה
+
+אור שאל: *"אני חושב שאני צריך להזין את הדומיין החדש בכל מיני מקומות? סופבייס
+עניינים?"* — כן, ובמקום אחד זה שובר התחברות בשקט.
+
+| איפה | מה | מי |
+| --- | --- | --- |
+| **GitHub → Settings → Pages → Custom domain** | `playamanda.com` | 👤 **חוסם הכל** |
+| **Supabase → Authentication → URL Configuration** | Site URL + Redirect URLs | 👤 ראה למטה |
+| Google Cloud → OAuth client | **כנראה לא צריך** — ה-redirect הוא לכתובת של סופבייס, לא של האתר. לבדוק שאין את הכתובת הישנה תחת *Authorized JavaScript origins* | 👤 |
+| CORS של השרת | ✅ `access-control-allow-origin: *` — לא צריך כלום | 🤖 נבדק |
+| `VITE_SERVER_URL` | ✅ לא קשור לדומיין של הקליינט | — |
+| Play Console → Privacy policy | ✅ כבר `https://playamanda.com/?legal=privacy` | 🤖 |
+
+### 👤 סופבייס — זה זה ששובר התחברות
+
+**Authentication → URL Configuration**
+
+- **Site URL:** `https://playamanda.com`
+- **Redirect URLs:** להוסיף `https://playamanda.com/**`
+
+הקוד מחשב את כתובת החזרה **מהמקור שממנו נטענת** (`comeBackTo()`), אז מרגע
+שהאתר על הדומיין החדש הוא מבקש לחזור אליו. סופבייס מתעלם מכתובת שאינה
+ברשימה ונופל ל-Site URL — כלומר התחברות עם גוגל פשוט תנחת במקום הלא נכון,
+בלי שגיאה שמסבירה למה. את הכתובת הישנה אפשר להשאיר ברשימה ולמחוק בעוד שבוע.
+
 ## ⚠️ פריסת Pages תקועה — 2026-10-08
 
 **האתר חי** ומגיש את הבנייה האחרונה שהצליחה (`6d45c13`). שני הקומיטים שאחריה

@@ -41,9 +41,15 @@
 
 | שדה | מה לשים |
 | --- | --- |
-| **Site URL** | `https://uncleor.github.io/amanda/` |
-| **Redirect URLs** | `https://uncleor.github.io/amanda/**` |
+| **Site URL** | `https://playamanda.com` |
+| **Redirect URLs** | `https://playamanda.com/**` |
 | | `http://localhost:5173/**` |
+| | `https://uncleor.github.io/amanda/**` ← אפשר למחוק אחרי שהדומיין יתייצב |
+
+> ⚠️ **עודכן כשעברנו ל-`playamanda.com`.** הקוד מחשב את כתובת החזרה מהמקור
+> שממנו נטענת (`comeBackTo()` ב-account.ts), אז ברגע שהאתר יושב על הדומיין
+> החדש הוא מבקש לחזור אליו — וסופבייס **מתעלם** מכל כתובת שאינה ברשימה
+> ונופל ל-Site URL. בלי העדכון הזה כל התחברות עם גוגל תיגמר במקום הלא נכון.
 
 > השגיאה שראית: נחיתה על `http://localhost:3000/?error=...`
 
