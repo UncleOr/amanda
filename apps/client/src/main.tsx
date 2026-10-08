@@ -1,6 +1,7 @@
 import { StrictMode } from "react";
 import { createRoot } from "react-dom/client";
 import App from "./App";
+import { AppCrash } from "./components/ErrorBoundary";
 import "./styles.css";
 // The playground has its own sheet — it is a workbench bolted to the side of
 // the game, and keeping it separate keeps that visible.
@@ -64,7 +65,13 @@ for (const [name, file] of SURFACES) {
 
 createRoot(document.getElementById("root")!).render(
   <StrictMode>
-    <App />
+    {/*
+      One crash anywhere used to take the whole game to a blank screen —
+      only the Arena had a boundary round it. See AppCrash.
+    */}
+    <AppCrash>
+      <App />
+    </AppCrash>
   </StrictMode>,
 );
 

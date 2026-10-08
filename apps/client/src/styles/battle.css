@@ -195,3 +195,33 @@
   direction: ltr;
   word-break: break-word;
 }
+
+/* ════════ when the whole game falls over ════════ */
+/*
+ * A crash anywhere outside the arena used to unmount everything and leave a
+ * child looking at the background colour. See AppCrash in ErrorBoundary.tsx.
+ *
+ * Laid out on the design system: the title is the hero at --t-6, the way out
+ * is the only control, and the technical line is margin — small, grey, and
+ * there so a screenshot is a bug report.
+ */
+.crash {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: var(--sp-3);
+  height: 100%;
+  padding: var(--sp-4);
+  text-align: center;
+}
+.crash__title { margin: 0; font-size: var(--t-6); font-weight: 900; }
+.crash__says { margin: 0; font-size: var(--t-3); color: var(--text); }
+.crash__why {
+  margin: 0;
+  max-width: 44ch;
+  font-size: var(--t-1);
+  color: var(--muted);
+  direction: ltr;
+  word-break: break-word;
+}

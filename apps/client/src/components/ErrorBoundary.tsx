@@ -80,3 +80,47 @@ export class ErrorBoundary extends Component<Props, State> {
     return typeof fallback === "function" ? fallback(this.state.message) : fallback;
   }
 }
+
+/**
+ * The whole game, so that one broken component is not a black rectangle.
+ *
+ * ═══ WHY THIS EXISTS ═══
+ *
+ * The Arena has had a boundary round it since the first PixiJS crash. Nothing
+ * else did — so a throw anywhere else (a panel, the onboarding, the home
+ * screen) unmounted the entire tree and left a child looking at the
+ * background colour with no way out and nothing to report.
+ *
+ * Found while testing: a stray DOM edit made React throw inside
+ * `<Onboarding>`, and the game went to a blank screen. The cause was mine and
+ * the consequence was not — any crash does that.
+ *
+ * ═══ WHAT IT OFFERS ═══
+ *
+ * Reloading, and nothing else. There is no "try again" worth having here:
+ * whatever state produced the crash is still in memory, and a child pressing
+ * a button that does the same thing again is a child pressing it four times.
+ * A reload is the one action that reliably works, and nothing is lost by it —
+ * the album, the trophies and the chests are all on the server.
+ */
+export function AppCrash({ children }: { children: ReactNode }) {
+  return (
+    <ErrorBoundary
+      fallback={(why) => (
+        <main className="crash">
+          <h1 className="crash__title">משהו נשבר</h1>
+          {/* Amanda's voice, not an apology and not an explanation. */}
+          <p className="crash__says">זה קורה. האוסף שלך שמור.</p>
+          <button className="btn-fight" onClick={() => window.location.reload()}>
+            לטעון מחדש
+          </button>
+          {/* The real error, small, for a screenshot. Same reasoning as the
+              battle screen: a message in a console on a phone is no report. */}
+          <p className="crash__why">{why}</p>
+        </main>
+      )}
+    >
+      {children}
+    </ErrorBoundary>
+  );
+}

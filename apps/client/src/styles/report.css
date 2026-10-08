@@ -53,12 +53,39 @@
   gap: 10px;
   justify-items: stretch;
 }
-.result__buttons > :nth-child(3) {
+/*
+ * ═══ THE WIDE ONE IS THE ACCENT ONE ═══
+ *
+ * This used to be `:nth-child(3)`, which made whichever button happened to
+ * be third span the card — and with a rematch offer or a report button in
+ * the list, that was a different button every time. It landed on the battle
+ * report, so the biggest, loudest control after a match was "shall I explain
+ * what happened?".
+ *
+ * Said by ROLE instead: the one button that is not a ghost is the primary
+ * action, and it is the one that gets the width. Position-independent, and
+ * it states the hierarchy rather than coinciding with it.
+ */
+.result__buttons > .btn-fight:not(.btn-ghost):not(.btn-online) {
   grid-column: 1 / -1;
 }
 .result__buttons .btn-fight {
   width: 100%;
   justify-content: center;
+}
+/*
+ * The two secondary buttons share a row, so their labels have half the width
+ * the primary has — and "שאסביר לך מה קרה?" wrapped to two lines in it. The
+ * words are Or's and stay; the type steps down to --t-3, which is where a
+ * secondary control belongs anyway.
+ *
+ * And they sit on painted artwork, so a 55% panel is a button you have to
+ * look for. Opaque enough to read against a monster's face.
+ */
+.result__buttons .btn-ghost {
+  font-size: var(--t-3);
+  background: rgba(8, 12, 22, 0.82);
+  white-space: nowrap;
 }
 @media (max-width: 420px) {
   .result__buttons {
@@ -375,10 +402,22 @@
     padding: 4px 10px;
     gap: 8px;
   }
-  .topbar__title { font-size: 14px; }
-  .topbar__phase { font-size: 11px; }
-  .topbar__timer { font-size: 16px; }
-  .topbar__exit { padding: 2px 7px; font-size: 11px; }
+  /*
+   * ═══ ON THE SCALE, INCLUDING THE SMALL THINGS ═══
+   *
+   * The build screen measured ten separate elements below --t-2, which is
+   * the floor of the type scale and the smallest size anything a player
+   * reads may be. Two of them were "אתה ⟵" and "הבוט 300" at 10px — the
+   * labels that say WHO YOU ARE FIGHTING, which is a thing Or asked to be
+   * visible and which was set smaller than almost anything else on screen.
+   *
+   * Composition on this screen was already fine: 0% dead air, no dead block.
+   * It was readability, which is the other half of the same complaint.
+   */
+  .topbar__title { font-size: var(--t-3); }
+  .topbar__phase { font-size: var(--t-2); }
+  .topbar__timer { font-size: var(--t-4); }
+  .topbar__exit { padding: 2px 7px; font-size: var(--t-2); }
   .mute { padding: 4px 7px; }
 
   /*
@@ -408,7 +447,10 @@
     min-height: 0;
     min-width: 0;
   }
-  .side__label { font-size: 10px; }
+  /* Who you are fighting. It was 10px. */
+  .side__label { font-size: var(--t-2); }
+  .side__who { font-size: var(--t-2); }
+  .side__cups { font-size: var(--t-2); }
 
   /*
    * On a phone the action cards are a DRAWER. Closed they cost one 24px
@@ -440,7 +482,7 @@
     border-top: 1px solid rgba(255, 176, 32, 0.35);
     border-radius: 0;
     color: var(--accent);
-    font-size: 13px;
+    font-size: var(--t-3);
     font-weight: 800;
     padding: 7px 8px;
   }
@@ -449,7 +491,7 @@
     color: #101010;
     border-radius: 999px;
     padding: 0 7px;
-    font-size: 11px;
+    font-size: var(--t-1);
     line-height: 16px;
   }
   /* holding cards you have not played yet: pulse until they are looked at */
@@ -478,7 +520,7 @@
   .actions--open .actions__empty {
     display: block;
     flex: 1 0 100%;
-    font-size: 11px;
+    font-size: var(--t-2);
     text-align: center;
     padding: 0 8px 4px;
   }
@@ -494,10 +536,10 @@
   .build--drawer .boards { padding-bottom: 104px; }
   .actions--open .action-chip__card { width: 52px; height: 68px; }
   .actions__title,
-  .actions__empty { font-size: 10px; }
+  .actions__empty { font-size: var(--t-2); }
   .action-chip__card { width: 40px; height: 52px; }
   .action-chip__main,
-  .action-chip__info { font-size: 9px; padding: 1px 5px; }
+  .action-chip__info { font-size: var(--t-1); padding: 1px 5px; }
 
   /* the hand: a fixed-width column on the trailing edge */
   .hand {
@@ -527,10 +569,10 @@
     align-self: center;
   }
   .hand__counts { margin-bottom: 0; gap: 5px; }
-  .count { font-size: 11px; padding: 1px 7px; }
+  .count { font-size: var(--t-2); padding: 1px 7px; }
   .hand__buttons {
     justify-content: center;
-    gap: 5px;
+    gap: var(--sp-1);
   }
   .hand__buttons button {
     font-size: 11px;
@@ -538,7 +580,7 @@
   }
   /* the long explainer has no room here and the icons already say it */
   .hand__hint { display: none; }
-  .warn { font-size: 11px; text-align: center; }
+  .warn { font-size: var(--t-2); text-align: center; }
   .hand .btn-fight {
     margin-inline-start: 0;
     font-size: 14px;
@@ -555,7 +597,9 @@
 
   .result { padding: 6px 0; }
   .result__card { padding: 14px 18px; }
-  .result__card h1 { font-size: 26px; margin: 0 0 4px; }
+  /* The news is the hero, and it was one step above the buttons where the
+     rule says two: 23px against 17. At --t-6 it is 33 against 17. */
+  .result__card h1 { font-size: var(--t-6); margin: 0 0 var(--sp-1); line-height: 1.1; }
 
   /*
    * Sideways, the screen is wide and short. Stacking everything in one narrow
@@ -588,14 +632,14 @@
   }
   .intro__buttons { flex-direction: column; gap: 8px; }
   .intro__secondary { margin-top: 0; }
-  .intro__card h1 { font-size: 30px; }
-  .intro__tag { font-size: 11px; margin: 2px 0 0; }
+  .intro__card h1 { font-size: var(--t-6); }
+  .intro__tag { font-size: var(--t-2); margin: 2px 0 0; }
   .versus { gap: 14px; margin-bottom: 10px; margin-top: 6px; }
   .who__avatar { width: 44px; height: 44px; font-size: 22px; border-width: 2px; }
-  .who__name { font-size: 11px; }
-  .versus__x { font-size: 16px; }
+  .who__name { font-size: var(--t-2); }
+  .versus__x { font-size: var(--t-4); }
   .intro__buttons { gap: 8px; }
-  .intro .btn-fight { font-size: 14px; padding: 8px 14px; }
+  .intro .btn-fight { font-size: var(--t-3); padding: 8px 14px; }
   .intro__secondary { margin-top: 6px; gap: 10px; }
   .btn-link { font-size: 11px; }
   .intro__hint { font-size: 10px; margin-top: 8px; }

@@ -151,8 +151,15 @@ export function ResultScreen({
                 <Icon name="warning" size={15} /> דיווח על היריב
               </button>
             )}
+            {/*
+              A quiet button, not a blue gradient across the whole card.
+              Measured: it was 442x46 against "משחק חדש" at 216x48 — twice
+              the area, and both of them gradients — so the loudest thing on
+              the screen after a match was "shall I explain what happened?"
+              rather than "play again". Curiosity is secondary to carrying on.
+            */}
             {m.result && (
-              <button className="btn-fight btn-online" onClick={() => setShowLog((v) => !v)}>
+              <button className="btn-fight btn-ghost" onClick={() => setShowLog((v) => !v)}>
                 {showLog ? (
                   "מספיק, הבנתי"
                 ) : (
