@@ -55,10 +55,45 @@ export const STATION = P("apps", "client", "public", "arena", "fuel.webp");
  */
 export const WHO = {
   dragon: P("apps", "client", "public", "cards", "dragons_01_flame_dragon.webp"),
-  titan: P("apps", "client", "public", "cards", "giants_10_titan_king.webp"),
+  /*
+   * ═══ NOT THE TITAN KING ═══
+   *
+   * The first round used giants_10_titan_king and got three different giants
+   * across three shots: a smooth armoured runed thing in shot 2, a mossy
+   * boulder in shot 6, neither of them the card.
+   *
+   * The card is the reason. The Titan King SITS — he is a crowned giant on a
+   * stone throne with waterfalls running off it. Asking for his foot landing
+   * in a puddle asks a model to invent how he looks standing up, and it
+   * invented differently every time.
+   *
+   * The Stone Colossus already stands. Or approved the swap: same series,
+   * same lava-cracked rock, and it is close to what shot 6 produced on its
+   * own — which is the clue that this was always the right giant for a shot
+   * about walking.
+   */
+  giant: P("apps", "client", "public", "cards", "giants_01_stone_colossus.webp"),
   chuppy: P("apps", "client", "public", "cards", "furries_01_chuppy.webp"),
   bread: P("assets", "reference", "fried-bread-card.png"),
   amanda: P("assets", "raw", "brand", "amanda_banner.png"),
+  /*
+   * ═══ THE LION IS ONE OF HER HEADS ═══
+   *
+   * Or, on the first round: *"notice there's some lion next to Amanda — did
+   * you mean it to be Amanda's head? It didn't come out that way."*
+   *
+   * He is right on both counts. Amanda is a THREE-HEADED spirit queen: a
+   * teal spirit-fire face in the centre, a serpent-dragon head on her left,
+   * a burning lion head on her right — all three on necks growing from her
+   * own shoulders. It is canon, from page 8 of Hod's deck, and it is written
+   * out in AMANDA in brandLooks.ts.
+   *
+   * Every image of her so far renders those heads as two ANIMALS STANDING
+   * BESIDE HER, because no prompt ever said where the necks attach. This
+   * painting is the one picture that shows it, so it goes in beside the
+   * banner and the prompt points at it.
+   */
+  amandaCanon: P("assets", "reference", "amanda-canon.png"),
 } as const;
 
 /**
@@ -132,18 +167,19 @@ export const SHOTS: Shot[] = [
   },
   {
     id: "02-titan",
-    he: "כף רגל של אבן נוחתת. שלולית מתפוצצת. מלך הטיטאנים הולך.",
+    he: "כף רגל של אבן נוחתת. שלולית מתפוצצת. קולוסוס האבן הולך.",
     hold: 1.4,
-    refs: [WHO.titan, STATION],
+    refs: [WHO.giant, STATION],
     prompt: [
       LOOK,
       PLACE,
-      "Very low camera, almost at ground level. The enormous STONE GIANT KING from",
-      "the first reference image is walking through the forecourt, and the frame is",
-      "filled by his foot and lower leg as it lands in a puddle, water bursting",
-      "upward around it, the asphalt cracking beneath. His body and crowned head are",
-      "above, huge and partly out of frame. The orange lava glowing inside his stone",
-      "cracks lights the water from within.",
+      "Very low camera, almost at ground level. The enormous STONE COLOSSUS from",
+      "the first reference image — a mossy boulder-bodied giant with orange lava",
+      "glowing in the cracks between his stones — is walking through the forecourt.",
+      "The frame is filled by his foot and lower leg as it lands in a puddle, water",
+      "bursting upward around it, the asphalt cracking beneath. His body and head are",
+      "above, huge and partly out of frame. The lava inside his cracks lights the",
+      "water from within.",
       KEEP,
     ].join(" "),
     motion: [
@@ -229,13 +265,13 @@ export const SHOTS: Shot[] = [
     id: "06-charge",
     he: "ארבעתם מסתערים יחד. רחב, נמוך, קולנועי.",
     hold: 1.6,
-    refs: [WHO.titan, WHO.dragon, WHO.chuppy, WHO.bread, STATION],
+    refs: [WHO.giant, WHO.dragon, WHO.chuppy, WHO.bread, STATION],
     prompt: [
       LOOK,
       PLACE,
       "Wide low cinematic shot across the forecourt. All four creatures from the",
       "reference images are charging together toward something off-frame to the",
-      "right: the STONE GIANT KING striding at the back, the FIRE DRAGON flying low",
+      "right: the STONE COLOSSUS striding at the back, the FIRE DRAGON flying low",
       "above him trailing flame, the small YELLOW FURRY creature sprinting ahead",
       "throwing lightning, and the tiny FURIOUS FRIED BREAD running last with his",
       "fists up. They are lit from the right by a cold teal light that is not yet in",
@@ -257,24 +293,34 @@ export const SHOTS: Shot[] = [
     id: "07-amanda",
     he: "אמנדה עולה מאחורי הגגון. ענקית. הם קופאים.",
     hold: 1.8,
-    refs: [WHO.amanda, STATION],
+    refs: [WHO.amanda, WHO.amandaCanon, STATION],
     prompt: [
       LOOK,
       PLACE,
-      "AMANDA from the first reference image rises behind the petrol station,",
-      "colossal — her shoulders above the canopy, the whole station tiny beneath her.",
-      "KEEP HER EXACT DESIGN: the green skin, the teal flame burning above her head,",
-      "the long dark blue hair, the glowing runes circling her, the serpent and the",
-      "fiery lion at her sides. Rendered in 3D with real volume and real flame. Her",
-      "teal light floods the forecourt from behind and throws enormous shadows forward",
-      "across the wet asphalt toward the camera. Four small creatures are silhouettes",
-      "far below her, frozen mid-charge, looking up.",
+      "AMANDA rises behind the petrol station, colossal — her shoulders above the",
+      "canopy, the whole station tiny beneath her. She is the creature in the first",
+      "two reference images.",
+      "SHE HAS THREE HEADS, ALL THREE GROWING ON NECKS FROM HER OWN SHOULDERS, as in",
+      "the second reference image. CENTRE: a face of glowing teal spirit-fire with",
+      "big glowing eyes and a wide knowing grin, a crown of ghost flame rising off",
+      "it. LEFT: a teal serpent-dragon head on a long neck. RIGHT: a lion head with a",
+      "mane of living orange fire. The serpent and the lion are PART OF HER BODY —",
+      "they are NOT separate animals, they do NOT stand on the ground beside her,",
+      "and they are not pets. Three necks, one body.",
+      "Her body is tall and flowing, deep navy, draped like smoke and trailing off",
+      "into mist and embers instead of legs, with long clawed arms. Golden runes float",
+      "around her. Rendered in 3D with real volume and real flame.",
+      "Her teal light floods the forecourt from behind and throws enormous shadows",
+      "forward across the wet asphalt toward the camera. Far below her, tiny and",
+      "backlit, four silhouettes are frozen mid-charge looking up: a winged dragon, a",
+      "boulder-shouldered giant, a small round furry one and a tiny square one.",
       "Backlit, high contrast, volumetric god-rays through the haze.",
     ].join(" "),
     motion: [
       "Amanda rises a little further and her teal flame flares; her light brightens",
-      "across the whole station and the shadows sweep forward. Her hair and the",
-      "floating runes drift. The four small creatures below stop and look up at her.",
+      "across the whole station and the shadows sweep forward. Her serpent head and",
+      "her lion head turn slowly, STILL ATTACHED TO HER SHOULDERS, and the floating",
+      "runes drift. The four small creatures below stop and look up at her.",
       "The camera tilts slowly upward to follow her.",
       "SHE DOES NOT WALK, ATTACK, SPEAK OR LOOK AT THE CAMERA. Nothing new enters the",
       "frame. NO TEXT APPEARS. One continuous shot.",
