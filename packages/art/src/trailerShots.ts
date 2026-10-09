@@ -136,6 +136,23 @@ export interface Shot {
   hold: number;
   /** Reference images, in the order the prompt refers to them. */
   refs: string[];
+  /**
+   * Other shots' APPROVED STILLS, used as references ahead of `refs`.
+   *
+   * ═══ A GROUP SHOT REFERENCES THE SOLO SHOTS ═══
+   *
+   * Shot 6 holds all four creatures, and the first two attempts rendered two
+   * of them as flat cartoon stickers beside two photoreal ones. Five
+   * references, three of them drawn cards, and the model took the cards'
+   * STYLE along with their characters — so the fried bread was a rendered
+   * crust in shot 5 and a yellow square with eyes 1.1 seconds later.
+   *
+   * The fix is to stop showing it the cards. By the time shot 6 is made,
+   * shots 2 to 5 already contain each creature built in 3D and standing in
+   * this exact petrol station under this exact light. Those frames are a
+   * better brief than the cards ever were.
+   */
+  refShots?: string[];
   /** The still. */
   prompt: string;
   /** The five seconds of movement, once the still is approved. */
@@ -265,18 +282,27 @@ export const SHOTS: Shot[] = [
     id: "06-charge",
     he: "ארבעתם מסתערים יחד. רחב, נמוך, קולנועי.",
     hold: 1.6,
-    refs: [WHO.giant, WHO.dragon, WHO.chuppy, WHO.bread, STATION],
+    refShots: ["02-titan", "03-dragon", "04-chuppy", "05-bread"],
+    refs: [],
     prompt: [
       LOOK,
       PLACE,
-      "Wide low cinematic shot across the forecourt. All four creatures from the",
-      "reference images are charging together toward something off-frame to the",
-      "right: the STONE COLOSSUS striding at the back, the FIRE DRAGON flying low",
-      "above him trailing flame, the small YELLOW FURRY creature sprinting ahead",
-      "throwing lightning, and the tiny FURIOUS FRIED BREAD running last with his",
-      "fists up. They are lit from the right by a cold teal light that is not yet in",
-      "frame, which throws four long shadows back toward the camera.",
-      KEEP,
+      "Wide low cinematic shot across the forecourt, at the same petrol station as",
+      "the four reference images and lit the same way.",
+      "The four creatures from those reference images are charging together toward",
+      "something off-frame to the right: the mossy lava-cracked STONE COLOSSUS from",
+      "the first image striding at the back, the FIRE DRAGON from the second flying",
+      "low above him trailing flame, the small YELLOW FURRY creature from the third",
+      "sprinting ahead throwing lightning into the puddles, and the tiny FURIOUS",
+      "FRIED BREAD from the fourth running last with his fists up. They are seen",
+      "from behind and three-quarters, moving away to the right.",
+      "EVERY ONE OF THEM IS RENDERED EXACTLY AS IT APPEARS IN ITS REFERENCE IMAGE:",
+      "the same photoreal 3D, the same volume, the same materials — real stone, real",
+      "scales, real fur, real fried crust. NOT ONE OF THEM IS A FLAT CARTOON, a",
+      "sticker, a drawing or a toy. All four belong to the same film as the",
+      "reference frames.",
+      "They are lit from the right by a cold teal light that is not yet in frame,",
+      "which throws four long shadows back toward the camera.",
       "FOUR CREATURES ONLY. Do not add a fifth. Keep them small in the frame — the",
       "station and the empty asphalt are most of the picture.",
     ].join(" "),

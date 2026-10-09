@@ -79,7 +79,11 @@ async function cmdStills(only?: string): Promise<void> {
   const named = shots[0];
   if (only && named) rmSync(stillPath(named), { force: true });
 
-  const todo = shots.filter((s) => !existsSync(stillPath(s)));
+  // Shots that borrow another shot's still go last, so a full run from empty
+  // generates the solos first and the group shot sees them.
+  const todo = shots
+    .filter((s) => !existsSync(stillPath(s)))
+    .sort((a, b) => (a.refShots?.length ?? 0) - (b.refShots?.length ?? 0));
   console.log(`\n🎬 Stills — ${todo.length} to generate, ${shots.length - todo.length} already on disk\n`);
   if (todo.length === 0) {
     console.log("   Nothing to do. Delete a png from assets/raw/trailer/stills to redo it.\n");
@@ -88,7 +92,22 @@ async function cmdStills(only?: string): Promise<void> {
 
   for (const shot of todo) {
     process.stdout.write(`   ${shot.id.padEnd(12)} `);
-    const urls = await Promise.all(shot.refs.map(refUrl));
+
+    /*
+     * A shot may reference other shots' approved stills — see refShots. Those
+     * have to exist, and saying so here beats letting the upload fail with a
+     * path: "needs 03-dragon" tells you to generate it, a missing-file error
+     * tells you to go looking.
+     */
+    const borrowed = (shot.refShots ?? []).map((id) => {
+      const from = SHOTS.find((other) => other.id === id);
+      if (!from) throw new Error(`${shot.id} references unknown shot "${id}"`);
+      const path = stillPath(from);
+      if (!existsSync(path)) throw new Error(`${shot.id} needs ${id} — generate that first`);
+      return path;
+    });
+
+    const urls = await Promise.all([...borrowed, ...shot.refs].map(refUrl));
     const images = await generateWithReference(shot.prompt, urls, { aspectRatio: "16:9" });
     const image = images[0];
     if (!image) {
