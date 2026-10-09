@@ -46,7 +46,7 @@
       * { box-sizing: border-box; }
       html, body { margin: 0; height: 100%; }
       body {
-        min-height: 100%;
+        min-height: 100dvh;
         background: var(--bg);
         color: var(--text);
         font-family: Rubik, system-ui, sans-serif;
@@ -55,6 +55,9 @@
         padding: 24px 16px;
       }
       .wrap { width: min(680px, 100%); text-align: center; }
+      /* Stacked, the picture is capped so the button is never pushed under
+         the fold — it is the only thing on this page that has to be found. */
+      .art { max-height: 46dvh; }
       .art {
         width: 100%;
         aspect-ratio: 1376 / 768;
@@ -98,6 +101,38 @@
       footer { margin-top: 22px; font-size: var(--t-2); }
       footer a { color: var(--muted); text-decoration: none; }
       footer a:hover { color: var(--text); }
+      /*
+       * ═══ A PHONE HELD SIDEWAYS ═══
+       *
+       * Or, on his: *"Amanda's picture fills the whole screen, and then I
+       * scrolled down and saw buttons. A reasonable person would just assume
+       * it was stuck."* Measured at 844x390: the art came out 680x380 — the
+       * entire screen — and "play now" sat at y=521, a hundred and thirty-one
+       * pixels below the fold. I checked this page at 900x720 and never once
+       * on a phone, which is the exact thing I measure every other screen for.
+       *
+       * Landscape is WIDE. Below 560px of height it stops stacking and stands
+       * the art beside the words, and nothing scrolls at any size.
+       */
+      @media (max-height: 560px) and (min-width: 640px) {
+        body { padding: 14px 18px; }
+        .wrap {
+          width: min(980px, 100%);
+          display: grid;
+          grid-template-columns: minmax(0, 1.15fr) minmax(0, 1fr);
+          align-items: center;
+          column-gap: 24px;
+          text-align: start;
+        }
+        .art { grid-row: 1 / span 5; max-height: none; }
+        /* A grid item stretches; an inline-flex button in a column becomes a
+           bar the width of the column. It wants to be button-shaped. */
+        .play { justify-self: start; }
+        h1 { margin: 0; }
+        .tag { margin: 6px 0 16px; }
+        .soon { margin: 14px 0 0; }
+        footer { margin-top: 10px; }
+      }
       @media (prefers-reduced-motion: no-preference) {
         .wrap { animation: rise 0.5s ease-out; }
         @keyframes rise {
