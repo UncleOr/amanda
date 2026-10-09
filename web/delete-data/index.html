@@ -2,117 +2,35 @@
 <html lang="he" dir="rtl">
   <head>
     <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
-    <title>מחיקת החשבון | אמנדה</title>
-    <meta name="description" content="איך מוחקים חשבון ואת כל המידע שנשמר עליו במשחק אמנדה." />
-    <link rel="icon" href="/play/favicon-32.png" />
-    <link rel="preconnect" href="https://fonts.googleapis.com" />
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <link href="https://fonts.googleapis.com/css2?family=Rubik:wght@400;700;900&display=swap" rel="stylesheet" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>מחיקת מידע | אמנדה</title>
     <!--
-      ═══ GOOGLE PLAY WANTS THIS AT A URL, NOT IN THE APP ═══
+      /delete is the one address for both answers — account deletion and
+      data deletion without it. This path was in Play Console for an hour, so
+      it stays rather than dead-ending.
 
-      Lives at /delete-data because that is the address Or typed into Play
-      Console. /delete redirects here rather than the other way round: a URL
-      in a store listing is read by Google's reviewers and by parents, and it
-      is much harder to change than a file in this folder.
-
-      The in-app route has existed since the day accounts did — Profile →
-      delete my account — and Play requires that. It ALSO requires a page
-      anyone can reach without installing anything, because the person who
-      wants their data gone is often the person who already uninstalled.
-
-      So this says the same thing the app does and the About screen does, and
-      the three have to keep agreeing. What it describes is what the server
-      actually does: auth.admin.deleteUser, with players, chests, player_cards
-      and matches cascading off it — see deleteSelf in apps/server/src/api.ts.
-
-      Static, no build step, no JavaScript. A deletion page that needs a
-      framework to render is a deletion page that can be down.
+      A meta refresh, not JavaScript: GitHub Pages serves static files and
+      cannot send a 301, and a page about deleting your data should not need
+      scripting to work.
     -->
+    <link rel="canonical" href="https://playamanda.com/delete/" />
+    <meta http-equiv="refresh" content="0; url=/delete/" />
     <style>
-      :root {
-        --bg: #070a12;
-        --panel: rgba(255, 255, 255, 0.04);
-        --text: #e7ecf5;
-        --muted: #93a0bd;
-        --accent: #ffb020;
-        --line: rgba(255, 255, 255, 0.12);
-      }
-      * { box-sizing: border-box; }
-      html, body { margin: 0; }
       body {
+        margin: 0;
         min-height: 100dvh;
-        background: var(--bg);
-        color: var(--text);
+        display: grid;
+        place-items: center;
+        background: #070a12;
+        color: #e7ecf5;
         font-family: Rubik, system-ui, sans-serif;
-        line-height: 1.6;
-        padding: 28px 18px 48px;
+        padding: 24px;
+        text-align: center;
       }
-      main { width: min(680px, 100%); margin: 0 auto; }
-      h1 { font-size: clamp(24px, 6vw, 34px); margin: 0 0 6px; color: var(--accent); }
-      .sub { margin: 0 0 28px; color: var(--muted); }
-      h2 { font-size: clamp(17px, 4.4vw, 21px); margin: 28px 0 10px; }
-      ol, ul { padding-inline-start: 22px; margin: 0; }
-      li { margin-bottom: 8px; }
-      .panel {
-        background: var(--panel);
-        border: 1px solid var(--line);
-        border-radius: 14px;
-        padding: 16px 18px;
-      }
-      .warn { border-color: rgba(255, 110, 110, 0.45); }
-      b.hot { color: var(--accent); }
-      a { color: var(--accent); }
-      footer { margin-top: 34px; color: var(--muted); font-size: 14px; }
+      a { color: #ffb020; }
     </style>
   </head>
   <body>
-    <main>
-      <h1>מחיקת החשבון</h1>
-      <p class="sub">אמנדה — משחק קלפים מפלצתי</p>
-
-      <h2>מתוך המשחק, בארבע נגיעות</h2>
-      <div class="panel">
-        <ol>
-          <li>לפתוח את <a href="/play/">playamanda.com/play</a></li>
-          <li>ללחוץ על הפרצוף למעלה — זה האזור האישי</li>
-          <li>לגלול ל<b>החשבון שלך</b> וללחוץ <b class="hot">מחיקת החשבון שלי</b></li>
-          <li>לאשר</li>
-        </ol>
-      </div>
-
-      <h2>מה נמחק</h2>
-      <div class="panel">
-        <ul>
-          <li>החשבון וההתחברות אליו</li>
-          <li>הכינוי, הפרצוף, תאריך הלידה ומשפט המחץ</li>
-          <li>האלבום, הקלפים והרמות שלהם</li>
-          <li>הגביעים, היהלומים והנאצ׳וס</li>
-          <li>היסטוריית המשחקים, התיבות, האתגרים וההודעות</li>
-        </ul>
-      </div>
-
-      <h2>כמה זמן זה לוקח</h2>
-      <div class="panel warn">
-        <p style="margin: 0">
-          <b class="hot">מיד.</b> בלי תקופת המתנה, בלי אימייל אישור, ובלי שום
-          עותק שנשאר אצלנו. <b>אי אפשר לבטל.</b>
-        </p>
-      </div>
-
-      <h2>אם אין לך גישה למשחק</h2>
-      <div class="panel">
-        <p style="margin: 0">
-          אפשר לבקש מחיקה דרך כתובת האימייל שבדף האפליקציה בגוגל פליי. נבקש רק
-          את הכינוי או כתובת ההתחברות — כדי לדעת איזה חשבון למחוק — ונמחק תוך
-          שבעה ימים.
-        </p>
-      </div>
-
-      <footer>
-        <a href="/">לעמוד הראשי</a> · <a href="/play/?legal=privacy">מדיניות פרטיות</a>
-      </footer>
-    </main>
+    <p>הדף נמצא ב<a href="/delete/">playamanda.com/delete</a></p>
   </body>
 </html>

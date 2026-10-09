@@ -28,6 +28,7 @@ import {
   MIN_AGE,
   ageFrom,
   deleteAccount,
+  scrubMyData,
   isAdmin,
   linkEmail,
   linkGoogle,
@@ -127,6 +128,9 @@ export function Profile({ account, onClose, onChanged }: Props) {
   const [leaving, setLeaving] = useState(false);
   const [deleting, setDeleting] = useState(false);
   const [reallyDeleting, setReallyDeleting] = useState(false);
+  /** The gentler one: erase who you are, keep what you collected. */
+  const [scrubbing, setScrubbing] = useState(false);
+  const [reallyScrubbing, setReallyScrubbing] = useState(false);
   /** Whether to draw the admin link. The server decides; this only shows it. */
   const [admin, setAdmin] = useState(false);
   useEffect(() => {
@@ -269,6 +273,49 @@ export function Profile({ account, onClose, onChanged }: Props) {
                   {reallyDeleting ? "מוחק…" : "כן, למחוק הכול"}
                 </button>
                 <button className="btn-fight btn-ghost" onClick={() => setDeleting(false)}>
+                  ביטול
+                </button>
+              </div>
+            </div>
+          </Overlay>
+        )}
+
+        {/*
+          ═══ THE GENTLER ERASURE ═══
+
+          Google Play asks, separately from account deletion: "do you provide
+          a way for users to request that some or all of their data be deleted
+          WITHOUT requiring them to delete their account?" This is it, and it
+          is the better offer of the two: a child who is uncomfortable should
+          not have to burn a year of stickers to stop being findable.
+        */}
+        {scrubbing && (
+          <Overlay onClick={() => setScrubbing(false)}>
+            <div className="modal modal--confirm" onClick={(e) => e.stopPropagation()}>
+              <h2>למחוק את הפרטים שלך?</h2>
+              <p>
+                הכינוי, הפרצוף, יום ההולדת, משפט המחץ, רשימת החברים וכל
+                המשחקים שלך — נמחקים. <b>האלבום, הקלפים, הגביעים והיהלומים
+                נשארים.</b>
+              </p>
+              <div className="result__buttons">
+                <button
+                  className="btn-fight profile__delete"
+                  disabled={reallyScrubbing}
+                  onClick={() => {
+                    setReallyScrubbing(true);
+                    void scrubMyData().then((err) => {
+                      setReallyScrubbing(false);
+                      setScrubbing(false);
+                      if (err) return setNote(err);
+                      // Everything on this screen just changed underneath it.
+                      window.location.reload();
+                    });
+                  }}
+                >
+                  {reallyScrubbing ? "מוחק…" : "כן, למחוק את הפרטים"}
+                </button>
+                <button className="btn-fight btn-ghost" onClick={() => setScrubbing(false)}>
                   ביטול
                 </button>
               </div>
@@ -464,6 +511,12 @@ export function Profile({ account, onClose, onChanged }: Props) {
                 have required this since 2022 and the route to it must not be
                 hidden — so it sits here, in plain sight, under the account.
               */}
+              <button
+                className="btn-fight btn-ghost profile__wide"
+                onClick={() => setScrubbing(true)}
+              >
+                מחיקת הפרטים שלי
+              </button>
               <button
                 className="btn-fight profile__wide profile__delete"
                 onClick={() => setDeleting(true)}

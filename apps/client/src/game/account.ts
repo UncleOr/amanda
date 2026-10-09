@@ -938,6 +938,37 @@ export async function markInboxRead(): Promise<void> {
  * the same way. Match rows survive with the player set to null, so somebody
  * else's history does not develop holes.
  */
+/**
+ * Erasing who you are, and keeping what you collected.
+ *
+ * The other half of the Play question, and the half that is actually kind:
+ * the nickname, the face, the birth date, the catchphrase, the friends, the
+ * match history and the activity log all go — the album, the cards, the
+ * trophies and the diamonds stay. A seven-year-old should not have to choose
+ * between privacy and a year of stickers.
+ *
+ * No sign-out afterwards: the account is still theirs. It comes back looking
+ * like a brand new one, which is the point.
+ */
+export async function scrubMyData(): Promise<string | null> {
+  const sb = db();
+  if (!sb || !SERVER_HTTP) return "אין חיבור לשרת";
+  try {
+    const { data } = await sb.auth.getSession();
+    const token = data.session?.access_token;
+    if (!token) return "אין חשבון";
+    const res = await fetch(`${SERVER_HTTP}/api/account/scrub`, {
+      method: "POST",
+      headers: { authorization: `Bearer ${token}`, "content-type": "application/json" },
+      body: "{}",
+    });
+    const body = (await res.json()) as { ok?: boolean; error?: string };
+    return body.ok ? null : (body.error ?? "לא הצליח");
+  } catch {
+    return "לא הצליח";
+  }
+}
+
 export async function deleteAccount(): Promise<string | null> {
   const sb = db();
   if (!sb || !SERVER_HTTP) return "אין חיבור לשרת";

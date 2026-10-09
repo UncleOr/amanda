@@ -2,37 +2,148 @@
 <html lang="he" dir="rtl">
   <head>
     <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <title>מחיקת החשבון | אמנדה</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+    <title>מחיקת מידע | אמנדה</title>
+    <meta
+      name="description"
+      content="איך מוחקים את הפרטים שלך, או את החשבון כולו, במשחק אמנדה."
+    />
+    <link rel="icon" href="/play/favicon-32.png" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Rubik:wght@400;700;900&display=swap" rel="stylesheet" />
     <!--
-      The page moved to /delete-data, because that is the address Or entered
-      in Play Console and a URL in a store listing is harder to change than a
-      file here. This stays so the shorter one never dead-ends: it was live
-      and linked for an hour, and a deletion page that 404s is worse than one
-      that never existed.
+      ═══ ONE URL, BOTH ANSWERS ═══
 
-      A meta refresh rather than a JavaScript redirect — GitHub Pages serves
-      static files and cannot send a 301, and a page about deleting your data
-      should not need scripting to work.
+      Or: *"https://playamanda.com/delete — that's the address for deleting an
+      account AND for deleting all the data without deleting the account."*
+      Play asks about those as two separate things, and both questions take a
+      URL; this is the page both of them point at. /delete-data redirects here
+      because it was in the Console for an hour.
+
+      It describes what the server actually does, not what would sound
+      reassuring — see deleteSelf and scrubSelf in apps/server/src/api.ts. The
+      interesting line is that match rows are ANONYMISED rather than deleted:
+      a match holds both players, and removing the row would quietly take a
+      win off another child's record.
+
+      Static, no build step, no JavaScript. A deletion page that needs a
+      framework to render is a deletion page that can be down.
     -->
-    <link rel="canonical" href="https://playamanda.com/delete-data/" />
-    <meta http-equiv="refresh" content="0; url=/delete-data/" />
     <style>
-      body {
-        margin: 0;
-        min-height: 100dvh;
-        display: grid;
-        place-items: center;
-        background: #070a12;
-        color: #e7ecf5;
-        font-family: Rubik, system-ui, sans-serif;
-        padding: 24px;
-        text-align: center;
+      :root {
+        --bg: #070a12;
+        --panel: rgba(255, 255, 255, 0.04);
+        --text: #e7ecf5;
+        --muted: #93a0bd;
+        --accent: #ffb020;
+        --line: rgba(255, 255, 255, 0.12);
       }
-      a { color: #ffb020; }
+      * { box-sizing: border-box; }
+      html, body { margin: 0; }
+      body {
+        min-height: 100dvh;
+        background: var(--bg);
+        color: var(--text);
+        font-family: Rubik, system-ui, sans-serif;
+        line-height: 1.6;
+        padding: 28px 18px 48px;
+      }
+      main { width: min(680px, 100%); margin: 0 auto; }
+      h1 { font-size: clamp(24px, 6vw, 34px); margin: 0 0 6px; color: var(--accent); }
+      .sub { margin: 0 0 26px; color: var(--muted); }
+      h2 { font-size: clamp(17px, 4.4vw, 21px); margin: 30px 0 4px; }
+      .lede { margin: 0 0 10px; color: var(--muted); font-size: 15px; }
+      ol, ul { padding-inline-start: 22px; margin: 0; }
+      li { margin-bottom: 8px; }
+      .panel {
+        background: var(--panel);
+        border: 1px solid var(--line);
+        border-radius: 14px;
+        padding: 16px 18px;
+      }
+      .panel + .panel { margin-top: 12px; }
+      .warn { border-color: rgba(255, 110, 110, 0.45); }
+      .keep { border-color: rgba(110, 231, 140, 0.4); }
+      b.hot { color: var(--accent); }
+      a { color: var(--accent); }
+      footer { margin-top: 34px; color: var(--muted); font-size: 14px; }
     </style>
   </head>
   <body>
-    <p>הדף עבר ל<a href="/delete-data/">playamanda.com/delete-data</a></p>
+    <main>
+      <h1>מחיקת מידע</h1>
+      <p class="sub">אמנדה — משחק קלפים מפלצתי</p>
+      <p>שתי אפשרויות, ושתיהן בתוך המשחק, באזור האישי.</p>
+
+      <h2>1 · מחיקת הפרטים שלך</h2>
+      <p class="lede">בלי למחוק את החשבון, ובלי לאבד את האוסף.</p>
+      <div class="panel">
+        <b>נמחק:</b>
+        <ul>
+          <li>הכינוי והפרצוף</li>
+          <li>תאריך הלידה ואיך לפנות אליך</li>
+          <li>משפט המחץ</li>
+          <li>רשימת החברים</li>
+          <li>היסטוריית המשחקים ויומן הפעילות</li>
+        </ul>
+      </div>
+      <div class="panel keep">
+        <b>נשאר:</b>
+        <ul style="margin-bottom: 0">
+          <li>האלבום, הקלפים והרמות שלהם</li>
+          <li>הגביעים, היהלומים והנאצ׳וס</li>
+          <li>החשבון עצמו — אפשר להמשיך לשחק</li>
+        </ul>
+      </div>
+      <div class="panel" style="margin-top: 12px">
+        האזור האישי ← <b>החשבון שלך</b> ← <b class="hot">מחיקת הפרטים שלי</b>
+      </div>
+
+      <h2>2 · מחיקת החשבון</h2>
+      <p class="lede">הכול, בבת אחת.</p>
+      <div class="panel">
+        <ol>
+          <li>לפתוח את <a href="/play/">playamanda.com/play</a></li>
+          <li>ללחוץ על הפרצוף למעלה — זה האזור האישי</li>
+          <li>לגלול ל<b>החשבון שלך</b> וללחוץ <b class="hot">מחיקת החשבון שלי</b></li>
+          <li>לאשר</li>
+        </ol>
+        נמחקים גם האלבום, הקלפים, הגביעים, היהלומים, התיבות וההודעות.
+      </div>
+      <div class="panel warn">
+        <p style="margin: 0">
+          <b class="hot">מיד.</b> בלי תקופת המתנה, בלי אימייל אישור ובלי עותק
+          שנשאר אצלנו. <b>אי אפשר לבטל.</b>
+        </p>
+      </div>
+
+      <h2>מה לא נמחק, ולמה</h2>
+      <div class="panel">
+        <p style="margin: 0 0 10px">
+          <b>משחקים מול שחקן אחר</b> נשמרים — בלי השם שלך. שורת משחק מחזיקה את
+          שני הצדדים, ולמחוק אותה הייתה מורידה ניצחון מהתוצאות של ילד אחר
+          שלא ביקש כלום. השם שלך יורד מהשורה; השורה נשארת.
+        </p>
+        <p style="margin: 0">
+          <b>השעיה</b>, אם יש כזו, נשמרת גם היא. היא רישום על התנהגות כלפי
+          ילדים אחרים, ושליטה בפרטיות שאפשר גם לנקות בה חסימה היא לא שליטה
+          בפרטיות.
+        </p>
+      </div>
+
+      <h2>אם אין לך גישה למשחק</h2>
+      <div class="panel">
+        <p style="margin: 0">
+          אפשר לבקש מחיקה דרך כתובת האימייל שבדף האפליקציה בגוגל פליי. נבקש רק
+          את הכינוי או כתובת ההתחברות — כדי לדעת איזה חשבון — ונמחק תוך שבעה
+          ימים.
+        </p>
+      </div>
+
+      <footer>
+        <a href="/">לעמוד הראשי</a> · <a href="/play/?legal=privacy">מדיניות פרטיות</a>
+      </footer>
+    </main>
   </body>
 </html>

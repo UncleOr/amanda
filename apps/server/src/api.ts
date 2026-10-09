@@ -250,6 +250,67 @@ async function deleteSelf(req: IncomingMessage, res: ServerResponse): Promise<vo
   send(res, 200, { ok: true });
 }
 
+/**
+ * Erasing who you are without erasing what you collected.
+ *
+ * Play asks, as a separate question from account deletion: *"do you provide a
+ * way for users to request that some or all of their data be deleted, without
+ * requiring them to delete their account?"* Answering yes is a commitment, so
+ * this is the thing being committed to.
+ *
+ * The split is the one a child would make. WHO YOU ARE goes — the nickname,
+ * the face, the birth date, how to address you, the line you throw across the
+ * versus screen, who your friends are, every match you played and every
+ * action the game logged. WHAT YOU COLLECTED stays: the album, the cards,
+ * their levels, the trophies, the diamonds, the nachos. Nobody should have to
+ * choose between privacy and a year of stickers.
+ *
+ * ═══ MATCHES ARE ANONYMISED, NOT DELETED ═══
+ *
+ * A match row holds BOTH players. Deleting it would quietly take a win off
+ * another child's record — somebody who did not ask for anything. So this
+ * nulls out only this player's own columns and leaves the row standing, which
+ * is what "my data" honestly means when the data is shared.
+ *
+ * ═══ A SUSPENSION IS NOT PERSONAL DATA ═══
+ *
+ * `suspended_until` and `suspended_reason` are deliberately NOT cleared. They
+ * are a moderation record about behaviour towards other children, and a
+ * privacy control that doubles as a way to wipe your own ban is not a privacy
+ * control.
+ */
+async function scrubSelf(req: IncomingMessage, res: ServerResponse): Promise<void> {
+  const sb = db();
+  if (!sb) return send(res, 503, { error: "no database" });
+  const playerId = await playerFrom(req);
+  if (!playerId) return send(res, 401, { error: "who are you" });
+
+  const who = await sb
+    .from("players")
+    .update({
+      display_name: null,
+      nickname: null,
+      avatar: null,
+      birth_date: null,
+      gender: null,
+      catchphrase: null,
+    })
+    .eq("id", playerId);
+  if (who.error) return send(res, 500, { error: who.error.message });
+
+  // The activity log, which is the behavioural half and is ours alone.
+  await sb.from("events").delete().eq("player_id", playerId);
+  // Friendship is a row per direction; both sides of theirs go.
+  await sb.from("friends").delete().eq("player_id", playerId);
+  await sb.from("friends").delete().eq("friend_id", playerId);
+  // Shared rows: leave the match, remove the person.
+  await sb.from("matches").update({ player_a: null }).eq("player_a", playerId);
+  await sb.from("matches").update({ player_b: null }).eq("player_b", playerId);
+  await sb.from("matches").update({ winner: null }).eq("winner", playerId);
+
+  send(res, 200, { ok: true });
+}
+
 /** File a report, or ask who there is to report. */
 async function handleReports(req: IncomingMessage, res: ServerResponse, path: string): Promise<void> {
   const sb = db();
@@ -598,6 +659,18 @@ export async function handleApi(req: IncomingMessage, res: ServerResponse): Prom
     }
     try {
       await handleReports(req, res, path);
+    } catch (err) {
+      send(res, 500, { error: (err as Error).message });
+    }
+    return true;
+  }
+  if (path === "/api/account/scrub") {
+    if (req.method === "OPTIONS") {
+      send(res, 204, {});
+      return true;
+    }
+    try {
+      await scrubSelf(req, res);
     } catch (err) {
       send(res, 500, { error: (err as Error).message });
     }
