@@ -62,3 +62,9 @@ assets/raw/
 # captures before scripts/screenshots.sh converted them.
 store/trailer.mp4
 store/raw/
+
+# Screen recordings. Source footage is tens of megabytes and this repo is
+# public; scripts/cut-gameplay.sh turns one into the few seconds that ship.
+/*.mp4
+/*.mov
+store/gameplay.mp4
