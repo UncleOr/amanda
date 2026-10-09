@@ -23,8 +23,27 @@ REM  and rebuilt every run.
 REM
 REM  WHY YOU RUN THIS AND NOT CLAUDE
 REM
-REM  Gradle talks to itself over a loopback socket, even with the daemon
-REM  disabled, and local sockets are blocked in Claude's sandbox.
+REM  Gradle talks to itself over a loopback socket and local sockets are
+REM  blocked where Claude's commands run. Asked to run it anyway, Claude
+REM  tried four times; all four died in the same place, so the list is here
+REM  to stop anyone trying a fifth:
+REM
+REM    1. As-is.                      Unable to establish loopback connection
+REM    2. With the sandbox flag off.  Identical -- so the block is not the
+REM                                   Bash sandbox but the environment's
+REM                                   network policy, which the flag does
+REM                                   not lift.
+REM    3. --no-daemon, with
+REM       org.gradle.jvmargs removed. "To honour the JVM settings for this
+REM                                   build a single-use Daemon process will
+REM                                   be forked." Then the same failure.
+REM    4. Same, plus GRADLE_OPTS set
+REM       to match jvmargs exactly.   Still forked. Same failure.
+REM
+REM  The root cause is below Gradle: java.nio.channels.Selector.open() fails
+REM  here, because on Windows it is built on a socket pair. Everything using
+REM  NIO selectors fails, and that includes the Android Gradle Plugin's aapt2
+REM  worker -- so beating the daemon would only move the failure later.
 REM
 REM  Run it from the repository root:   scripts\build-android.cmd
 REM ============================================================
