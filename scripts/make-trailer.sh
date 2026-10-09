@@ -42,11 +42,33 @@ W=1920
 H=1080
 FPS=25
 BG=0x070a12
+# The colour the opening fades out through and the cards fade in from. It is
+# Amanda's teal, washed almost to white — the last thing in shot 7 is her
+# light flooding the station, so that is what the cards come out of.
+FLASH=0xdff6f2
 
-# Shot, and how much of its five seconds is used. Sums to 11.2.
+# Shot, and how much of its five seconds is used. Sums to 9.8.
+#
+# ═══ 08-fold IS NOT IN THE CUT ═══
+#
+# Or: *"and then of course they walk to Amanda and it ends there with a fade
+# to the game — we don't need the last shot of the split Amanda."*
+#
+# The clip exists and it is fixed; the split Amanda he is describing is the
+# OLD shot 8, which is still in the forty-second review reel because that
+# reel was built before the frame was regenerated. The note stands anyway,
+# and it is the better edit: the opening peaks when she rises, and holding
+# on a dissolve afterwards is a second ending. Add "08-fold 1.4" back to put
+# it in.
+#
+# Two of his other notes were already handled by these numbers — the thing
+# that falls on the fried bread happens at 4.6 seconds and he is cut at 1.1,
+# and the four only change direction after 2 seconds and they are cut at
+# 1.6. That is what the holds are for: the usable part of a generated clip
+# is its first second or two.
 SHOTS=(
   "01-pump 1.2" "02-titan 1.4" "03-dragon 1.4" "04-chuppy 1.3"
-  "05-bread 1.1" "06-charge 1.6" "07-amanda 1.8" "08-fold 1.4"
+  "05-bread 1.1" "06-charge 1.6" "07-amanda 1.8"
 )
 
 # The four that drop. Amanda last, because she is who you just met.
@@ -92,21 +114,27 @@ for s in "${SHOTS[@]}"; do
   i=$((i + 1))
 done
 concat=$(for ((j = 0; j < i; j++)); do printf '[s%d]' "$j"; done)
+
+# The opening ends by fading UP into Amanda's own light rather than down to
+# black, and the cards fade in out of the same colour — so her light is what
+# becomes them. Or: "it ends there with a fade to the game."
+OPEN_LEN=$(for s in "${SHOTS[@]}"; do set -- $s; echo "$2"; done | awk '{t+=$1} END{printf "%.2f", t}')
+OPEN_OUT=$(awk -v t="$OPEN_LEN" 'BEGIN{printf "%.2f", t-0.26}')
+
 ffmpeg -y -v error "${inputs[@]}" \
-  -filter_complex "$(IFS=';'; echo "${filters[*]}");${concat}concat=n=${i}:v=1:a=0,fade=t=in:st=0:d=0.7[v]" \
+  -filter_complex "$(IFS=';'; echo "${filters[*]}");${concat}concat=n=${i}:v=1:a=0,fade=t=in:st=0:d=0.7,fade=t=out:st=${OPEN_OUT}:d=0.26:color=${FLASH}[v]" \
   -map "[v]" "${ENC[@]}" "$SEG/1-opening.mp4"
 
 # ── 2 · the cards ─────────────────────────────────────────────────────
 #
-# Shot 8 ends on the four of them catching fire and rising as embers, so
-# this opens on a warm flash and lets the dark come up behind it. The four
-# cards fall in staggered, land in a row, and hold just long enough to read:
-# shot 8 said they were becoming something, and this says what.
+# The opening now ends on Amanda at her largest, fading up into her own
+# teal light. This picks that light up and lets the dark come up behind it,
+# and the four cards fall in staggered and land in a row.
 #
-# The flash is ember-coloured and not white. An earlier cut of shot 8 blew
-# out to white and this was white to match it; that frame was regenerated
-# (it had split Amanda into three creatures) and the new one ends on fire.
-# A white flash off an orange frame reads as a mistake in the edit.
+# This is the beat Or asked for at the very start: *"and then they go into
+# the cards and you start seeing a screen recording of a battle."* The
+# cinematic does not explain itself and there is no caption — four cards
+# fall out of her light, and the next thing on screen is a board of them.
 echo "  cards"
 CARD_H=420
 CARD_W=315          # the art is 384x512, so 3:4
@@ -140,7 +168,9 @@ for idx in "${!CARDS[@]}"; do
   prev="[bg$idx]"
   k=$((k + 1))
 done
-ffmpeg -y -v error "${cinputs[@]}"   -filter_complex "$(IFS=';'; echo "${cfilters[*]}");${prev}fade=t=in:st=0:d=0.30:color=0xfff0dc,format=yuv420p[v]"   -map "[v]" "${ENC[@]}" "$SEG/2-cards.mp4"
+ffmpeg -y -v error "${cinputs[@]}" \
+  -filter_complex "$(IFS=';'; echo "${cfilters[*]}");${prev}fade=t=in:st=0:d=0.26:color=${FLASH},format=yuv420p[v]" \
+  -map "[v]" "${ENC[@]}" "$SEG/2-cards.mp4"
 
 # ── 3 · gameplay ──────────────────────────────────────────────────────
 echo "  gameplay"
