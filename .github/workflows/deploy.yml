@@ -79,6 +79,7 @@ jobs:
           test -f site/.well-known/assetlinks.json
           test -f site/CNAME
           test -f site/index.html
+          test -f site/delete-data/index.html
           test -f site/delete/index.html
           test -f site/play/index.html
 
