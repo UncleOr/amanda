@@ -356,21 +356,50 @@ export const SHOTS: Shot[] = [
     id: "08-fold",
     he: "האור שוטף אותם. הם מתפרקים לגחלים ונכנסים לקלפים.",
     hold: 1.4,
-    refs: [WHO.amanda, STATION],
+    /*
+     * ═══ THE SAME FRAME, AN INSTANT LATER ═══
+     *
+     * Or: *"look at shot 8. There are 3 different characters there instead
+     * of one Amanda with 3 heads."*
+     *
+     * He is right, and this is the shot-7 bug surviving in the one shot that
+     * never got the fix. Shot 7's prompt was rewritten to say the serpent and
+     * the lion grow on necks from her shoulders; shot 8's was not, because it
+     * reads as a shot about light rather than about her. It still had to draw
+     * her, so it drew the banner the only way a prompt that never mentions
+     * her anatomy allows: as three creatures standing in a row.
+     *
+     * Describing her again would be the third place her anatomy is written
+     * down and the third place it can rot. Shot 7's approved frame already
+     * holds her, correctly, in this station under this light — so this shot
+     * borrows it and asks only for the next instant.
+     */
+    refShots: ["07-amanda"],
+    refs: [STATION],
     prompt: [
       LOOK,
       PLACE,
-      "The same shot an instant later: Amanda's teal light has flooded the whole",
-      "forecourt white-teal, and the four creatures below are dissolving upward into",
-      "streams of glowing embers and sparks that spiral toward the camera. Their",
-      "silhouettes are half gone. The station is bleached by the light. Long god-rays,",
-      "heavy haze, lens bloom.",
-      "NO CARDS ARE VISIBLE YET and NO TEXT APPEARS — the embers are the whole shot.",
+      "THE IDENTICAL FRAME TO THE FIRST REFERENCE IMAGE, one instant later — same",
+      "camera, same composition, same petrol station, the same single figure of",
+      "AMANDA standing exactly where she stands in it.",
+      "SHE IS ONE CREATURE WITH THREE HEADS ON NECKS FROM HER OWN SHOULDERS, exactly",
+      "as in the reference image: the teal spirit-fire face in the centre, the",
+      "serpent-dragon head on her left, the fire-maned lion head on her right. THERE",
+      "IS NOT A SEPARATE SERPENT AND THERE IS NOT A SEPARATE LION. Do not split her",
+      "into several figures. Do not put a dragon or a lion on the ground. ONE BODY,",
+      "ONE FIGURE, THREE HEADS.",
+      "What has changed: her teal light has flooded the forecourt white-teal, and the",
+      "four small creatures at her feet are dissolving upward into streams of glowing",
+      "embers and sparks that spiral toward the camera. Their silhouettes are half",
+      "gone. The station is bleached by the light. Long god-rays, heavy haze, bloom.",
+      "NO NEW CREATURE APPEARS. NO CARDS ARE VISIBLE and NO TEXT APPEARS.",
     ].join(" "),
     motion: [
       "The embers spiral up and toward the camera and the teal light grows until it",
-      "fills the frame. The creatures finish dissolving. The camera pushes straight in",
-      "to the light.",
+      "fills the frame. The small creatures finish dissolving. The camera pushes",
+      "straight in to the light.",
+      "AMANDA STAYS ONE FIGURE WITH THREE HEADS ON HER SHOULDERS. She does not split",
+      "apart, and the serpent and the lion never leave her body.",
       "NOTHING FORMS OUT OF THE EMBERS. No cards, no shapes, NO TEXT. One continuous",
       "shot ending in near-white.",
     ].join(" "),
