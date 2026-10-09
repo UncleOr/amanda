@@ -51,6 +51,26 @@ REM ============================================================
 setlocal
 
 set "JAVA_HOME=C:\Program Files\Microsoft\jdk-17.0.20.101-hotspot"
+
+REM ============================================================
+REM  JAVA_HOME IS CONVERTED TO ITS 8.3 SHORT NAME. DO NOT REMOVE.
+REM
+REM  Gradle quotes the paths it runs. Bubblewrap does not: it hands the
+REM  shell one concatenated string, so the first run got all the way through
+REM  the Gradle build and then died on its own signing step with
+REM
+REM    'C:\Program' is not recognized as an internal or external command
+REM
+REM  because "C:\Program Files\...\java.exe" went to cmd unquoted and the
+REM  space ended the command name. Both of bubblewrap's signing calls --
+REM  apksigner for the apk and jarsigner for the bundle -- are built that
+REM  way, so fixing one would only move the failure.
+REM
+REM  C:\PROGRA~1\MIE74D~1\JDK-17~1.101 has no spaces and is the same JDK.
+REM  The alternative is installing a second JDK somewhere ASCII and
+REM  space-free, which is a lot of disk to avoid a pair of quotes.
+REM ============================================================
+for %%I in ("%JAVA_HOME%") do set "JAVA_HOME=%%~sI"
 set "ANDROID_HOME=C:\Users\Public\android-sdk"
 set "GRADLE_USER_HOME=C:\Users\Public\.gradle"
 set "WORK=C:\Users\Public\amanda-android"
