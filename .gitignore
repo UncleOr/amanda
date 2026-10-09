@@ -55,3 +55,10 @@ assets/raw/
 # those files are secrets that must never reach a public repository:
 # android.keystore is the upload key, and the file beside it is its password.
 !android/twa-manifest.json
+
+# Generated store assets. scripts/make-trailer.sh rebuilds the video from the
+# screenshots and the score in under a minute, so a 7MB binary does not need
+# to live in a public repository; store/raw/ is wherever you dropped the phone
+# captures before scripts/screenshots.sh converted them.
+store/trailer.mp4
+store/raw/
