@@ -79,6 +79,18 @@ export const TUTORIAL_LINES: readonly TutorialLine[] = [
     when: "קלף פעולה ביד, אחרי שיש מלך",
   },
   {
+    id: "any",
+    he: "{card}. {where}.",
+    vars: ["card", "where"],
+    when: "כל קלף אחר ביד — שלא נאמר עליו משהו ספציפי יותר",
+  },
+  {
+    id: "action-early",
+    he: "זה קלף פעולה — הוא לא יושב על הלוח. קח אותו לבר שמתחת.",
+    vars: [],
+    when: "קלף פעולה ביד לפני שיש מלך",
+  },
+  {
     id: "weak",
     he: "{card} חלש. יגיעו טובים יותר — לפח איתו.",
     vars: ["card"],

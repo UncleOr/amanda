@@ -29,6 +29,7 @@
  * after the player had already done the thing it asked for.
  */
 import { useCallback, useEffect, useLayoutEffect, useRef, useState } from "react";
+import type { Awaits } from "../game/coach";
 
 export interface Step {
   /**
@@ -52,7 +53,7 @@ export interface Step {
    * caller can turn it into `done` on every render; this component never reads
    * it — a gate frozen at the moment a step appeared is the bug it replaced.
    */
-  awaits?: "king" | "placed";
+  awaits?: Awaits;
   cta?: string;
 }
 
@@ -240,7 +241,14 @@ export function Tutorial({ steps, onDone, onQuit }: Props) {
   }
 
   return (
-    <div className="tut" role="dialog" aria-live="polite">
+    <div
+      className={`tut${pointing ? "" : " tut--talking"}`}
+      role="dialog"
+      aria-live="polite"
+      /* A line with nothing to point at is dismissed by tapping anywhere —
+         the overlay itself is the button, so there does not have to be one. */
+      onClick={pointing ? undefined : next}
+    >
       {spot && (
         <div
           className="tut__spot"
@@ -265,13 +273,22 @@ export function Tutorial({ steps, onDone, onQuit }: Props) {
               ))}
             </span>
           )}
-          {/* No button on a step that is waiting for the player to act: she
-              has asked for something, and the doing of it is the answer. */}
-          {step.done === undefined && (!pointing || step.cta !== undefined) && (
-            <button className="btn-fight" onClick={next}>
-              {step.cta ?? "הבנתי"}
-            </button>
-          )}
+          {/*
+            ═══ NO "GOT IT" ═══
+
+            Or: *"there shouldn't be a 'got it' button at all. You could have
+            a button to leave the tutorial, but the taps should just be Amanda
+            telling you which card to put down next."*
+
+            He is right, and the button was me hedging. Being told to do
+            something, doing it, and then confirming that you were told is the
+            shape of a form. A pointing step is answered by doing the thing; a
+            line where she is only talking is answered by tapping anywhere,
+            which is what the whole overlay is for.
+
+            The way OUT stays, because that one is a real choice.
+          */}
+          {!pointing && <span className="tut__go">המשך ←</span>}
           <button className="btn-link tut__skip" onClick={onQuit ?? onDone}>
             אני יודע לשחק
           </button>

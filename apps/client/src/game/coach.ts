@@ -32,8 +32,27 @@ export interface Cue {
    * start without one, and a tutorial that lets you skip past it has taught
    * nothing.
    */
-  awaits?: "king" | "placed";
+  awaits?: Awaits;
 }
+
+/**
+ * What has to become true before she moves on.
+ *
+ * Or: *"there shouldn't be a 'got it' button at all. The taps should just be
+ * Amanda telling you which card to put down next."* So a step is never read
+ * and dismissed — it is answered by doing the thing, and this is the thing,
+ * described rather than captured.
+ *
+ * DESCRIBED, because a callback would close over the board as it was when the
+ * step appeared and answer "is a King down?" with whatever was true then,
+ * forever. `{ kind: "placements", atLeast: 2 }` is a question the caller asks
+ * the LIVE match on every render, which is the only kind that can be right.
+ */
+export type Awaits =
+  | { kind: "king" }
+  | { kind: "placements"; atLeast: number }
+  | { kind: "bar"; atLeast: number }
+  | { kind: "discard"; atLeast: number };
 
 /** Everything the coach is allowed to look at. */
 export interface CoachView {
@@ -294,7 +313,7 @@ export function nextCue(view: CoachView, said: Set<string>): Cue | null {
               where: wants(inHand),
             }),
             target: ".side--me .board",
-            awaits: "placed",
+            awaits: { kind: "placements", atLeast: 1 },
           }
         : null,
 
@@ -308,6 +327,7 @@ export function nextCue(view: CoachView, said: Set<string>): Cue | null {
               where: wants(inHand),
             }),
             target: ".side--me .board",
+            awaits: { kind: "placements", atLeast: 2 },
           }
         : null,
 
@@ -319,7 +339,7 @@ export function nextCue(view: CoachView, said: Set<string>): Cue | null {
             text: line("king"),
             target: ".side--me .slot--king",
             // She waits. The board cannot do anything without one.
-            awaits: "king",
+            awaits: { kind: "king" },
           }
         : null,
 
@@ -330,8 +350,9 @@ export function nextCue(view: CoachView, said: Set<string>): Cue | null {
             id: "tank",
             text: line("tank", { card: inHand.name.he }),
             target: ".side--me .slot--guard",
-            // Put something down. Anywhere — the point is the hands move.
-            awaits: "placed",
+            // One more than is on the board right now: "something is placed"
+            // was already true, so the step answered itself instantly.
+            awaits: { kind: "placements", atLeast: down + 1 },
           }
         : null,
 
@@ -344,6 +365,7 @@ export function nextCue(view: CoachView, said: Set<string>): Cue | null {
               moves: inHand.flying ? "עף" : "צלף",
             }),
             target: ".side--me .board",
+            awaits: { kind: "placements", atLeast: down + 1 },
           }
         : null,
 
@@ -356,6 +378,7 @@ export function nextCue(view: CoachView, said: Set<string>): Cue | null {
             id: "action",
             text: line("action"),
             target: ".hand",
+            awaits: { kind: "bar", atLeast: view.actionBarCount + 1 },
           }
         : null,
 
@@ -366,6 +389,7 @@ export function nextCue(view: CoachView, said: Set<string>): Cue | null {
             id: "weak",
             text: line("weak", { card: inHand.name.he }),
             target: ".hand",
+            awaits: { kind: "discard", atLeast: view.discardCount + 1 },
           }
         : null,
 
@@ -401,6 +425,40 @@ export function nextCue(view: CoachView, said: Set<string>): Cue | null {
       view.phase === "panic" && said.has("fog")
         ? { id: "go", text: line("go"), target: ".hand .btn-fight" }
         : null,
+
+    /*
+     * ═══ SHE IS NEVER SILENT WHILE YOU ARE HOLDING SOMETHING ═══
+     *
+     * Or: *"the second card that shows up — Amanda doesn't say what to do
+     * with it."* She did not, and here is why: every line above has a
+     * CONDITION, and when a card matches none of them — not heavy, not
+     * flying, not weak, not the second — nothing fired at all. An action card
+     * drawn before the King was the worst case: the action line waits for a
+     * King, and the card lines skip actions, so the tutorial simply stopped
+     * talking with a card in your hand and no way to know what to do.
+     *
+     * So this is last, it has no condition beyond "you are holding
+     * something", and its id counts the board — which makes it fire once per
+     * card rather than once per match. In a walkthrough that is the point:
+     * every single card gets told where it goes.
+     */
+    () => {
+      if (view.handIsAction)
+        return {
+          id: `any-bar-${view.actionBarCount}`,
+          text: line("action-early"),
+          target: ".hand",
+          awaits: { kind: "bar", atLeast: view.actionBarCount + 1 },
+        };
+      return inHand
+        ? {
+            id: `any-${down}`,
+            text: line("any", { card: inHand.name.he, where: wants(inHand) }),
+            target: ".side--me .board",
+            awaits: { kind: "placements", atLeast: down + 1 },
+          }
+        : null;
+    },
   ];
 
   if (view.phase !== "build" && view.phase !== "panic") return null;

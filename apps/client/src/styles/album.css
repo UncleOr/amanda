@@ -478,6 +478,15 @@
   /* the dim is on the spotlight's shadow, so clicks still reach the board */
   pointer-events: none;
 }
+/*
+ * A line with nothing to point at swallows clicks, because tapping anywhere
+ * is how you move past it. A POINTING step must not: the board underneath is
+ * the thing you are being asked to touch, and `.tut` stays transparent to
+ * clicks for exactly that reason.
+ */
+.tut--talking { pointer-events: auto; cursor: pointer; }
+/* "tap to go on", without a button to press. */
+.tut__go { color: var(--muted); font-size: var(--t-2); }
 .tut__spot {
   position: fixed;
   border-radius: 14px;

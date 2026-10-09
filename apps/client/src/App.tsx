@@ -352,6 +352,7 @@ function Game() {
     if (m.phase !== "intro") return;
     taughtRef.current = true;
     setMetAmanda(false);
+    saidRef.current = new Set();
     setTeaching(true);
     m.startLesson(1);
   }, [m.phase, m.account, m.playground, m]);
@@ -377,6 +378,17 @@ function Game() {
     lessonSeenRef.current = 0;
     setLessonDone(false);
     setMetAmanda(false);
+    /*
+     * She has to be allowed to say it all again.
+     *
+     * `said` is only cleared when a lesson ENDS, so pressing "how you play" a
+     * second time in one session started a walkthrough that silently skipped
+     * every line it had already given — the opening, the King, the guard —
+     * and fell through to the generic "put it there" for every card. Which is
+     * exactly what it looks like from outside: a tutorial that never
+     * introduces itself.
+     */
+    saidRef.current = new Set();
     setTeaching(true);
     m.startLesson(1);
   }, [m]);
@@ -453,7 +465,33 @@ function Game() {
     saidRef.current = new Set();
   }, [teaching, m.phase]);
   useEffect(() => {
-    if (!teaching) return;
+    /*
+     * ═══ NOT WHILE SHE IS STILL SAYING HELLO ═══
+     *
+     * This ran from the moment teaching started, including through the two
+     * introduction lines — and every cue it produced went into `said`. So
+     * "let's start sticking, here is the first card" was spoken to an empty
+     * room behind the introduction, marked as said, and by the time the
+     * player was actually looking they got the generic fallback instead. Or
+     * saw it as the walkthrough skipping its own opening and never mentioning
+     * the King.
+     */
+    if (!teaching || !metAmanda) return;
+    /*
+     * ═══ DO NOT INTERRUPT YOURSELF ═══
+     *
+     * One instruction at a time, and it stays until it is carried out.
+     *
+     * This effect runs on every change to the hand, the board and the phase.
+     * It used to be safe to re-ask on each one, because `nextCue` returned
+     * null once it had run out of things to say — so the line already on
+     * screen survived. Then she stopped running out (there is a catch-all
+     * now, so that a card is never met with silence), and the two together
+     * meant every render REPLACED the standing instruction with the next one:
+     * "let's start sticking, here is the first card" was swapped for the
+     * generic "put it there" before the player had moved.
+     */
+    if (cue) return;
     const next = nextCue(
       {
         phase: m.phase,
@@ -491,6 +529,8 @@ function Game() {
     });
   }, [
     teaching,
+    metAmanda,
+    cue,
     m.phase,
     m.hand,
     m.handIsAction,
@@ -1462,7 +1502,7 @@ function Game() {
       {teaching && !metAmanda && (
         <Tutorial
           steps={[
-            { target: null, text: line("hello-1"), cta: "בוא" },
+            { target: null, text: line("hello-1") },
             { target: null, text: line("hello-2") },
           ]}
           onDone={() => setMetAmanda(true)}
@@ -1480,13 +1520,23 @@ function Game() {
           steps={[
             {
               ...cue,
-              // Recomputed here, every render, from the match as it is now.
-              done:
-                cue.awaits === "king"
+              /*
+               * Recomputed here, every render, from the match as it is now.
+               *
+               * The cue describes what it is waiting for rather than carrying
+               * a callback, so this is the one place that looks at the live
+               * board — and it cannot go stale, because there is nothing held
+               * from the render that produced the step.
+               */
+              done: !cue.awaits
+                ? undefined
+                : cue.awaits.kind === "king"
                   ? m.hasKing
-                  : cue.awaits === "placed"
-                    ? Object.keys(m.placements).length > 0
-                    : undefined,
+                  : cue.awaits.kind === "placements"
+                    ? Object.keys(m.placements).length >= cue.awaits.atLeast
+                    : cue.awaits.kind === "bar"
+                      ? m.actionBar.length >= cue.awaits.atLeast
+                      : m.discardCount >= cue.awaits.atLeast,
             },
           ]}
           onDone={() => setCue(null)}

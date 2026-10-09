@@ -161,6 +161,56 @@ describe("the coach", () => {
  * Or wrote the tutorial as a walkthrough, so the ORDER is part of the spec,
  * not an accident of which condition happened to be checked first.
  */
+/**
+ * Or, after playing it: *"the second card that shows up — Amanda doesn't say
+ * what to do with it."*
+ *
+ * Every line has a condition, so a card matching none of them produced
+ * nothing at all. The worst case was an action card drawn before the King:
+ * the action line waits for a King and the card lines skip actions, so the
+ * tutorial went quiet with a card in your hand and no way to know what to do
+ * with it. A walkthrough that stops walking is worse than none.
+ */
+describe("she is never silent while you are holding something", () => {
+  const boards: Array<{ placements: Record<string, string>; king: string | null }> = [
+    { placements: {}, king: null },
+    { placements: { "0,0": flyer }, king: null },
+    { placements: started, king: null },
+    { placements: started, king: staticTank },
+  ];
+
+  it("has something to say about every card, on every board", () => {
+    for (const card of CATALOG.values()) {
+      for (const board of boards) {
+        const view = { ...base, ...board, hand: card.id, handIsAction: !card.launch };
+        const cue = nextCue(view, new Set());
+        expect(cue, `${card.id} on a board with ${Object.keys(board.placements).length}`).not.toBeNull();
+        expect(cue?.text.trim()).not.toBe("");
+      }
+    }
+  });
+
+  it("tells you where to take an action card even before there is a King", () => {
+    const cue = nextCue({ ...base, hand: "energy_boost", handIsAction: true }, new Set());
+    expect(cue?.id).toContain("any-bar");
+    expect(cue?.text).toContain("בר");
+  });
+
+  it("waits for the card to actually land, not for a tap", () => {
+    const cue = nextCue({ ...base, hand: flyer }, new Set());
+    expect(cue?.awaits).toEqual({ kind: "placements", atLeast: 1 });
+  });
+
+  it("asks for one MORE than is already down, never for what is already true", () => {
+    const cue = nextCue(
+      { ...base, hand: staticTank, king: flyer, placements: started },
+      new Set(["first", "second"]),
+    );
+    // Two are down; waiting for "at least one" would be answered instantly.
+    expect(cue?.awaits).toEqual({ kind: "placements", atLeast: 3 });
+  });
+});
+
 describe("the walkthrough order", () => {
   it("asks for the King before commenting on the card in hand", () => {
     // both true at once: two cards down with no King, and a tank in hand
