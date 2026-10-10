@@ -1,0 +1,57 @@
+/*
+ * The opening film.
+ *
+ * z-index 200 — above everything. The highest the game itself goes is 100
+ * (the board's and the report's own layers), and this sits over all of it
+ * including the top bar at 60.
+ */
+.intro {
+  position: fixed;
+  inset: 0;
+  z-index: 200;
+  background: var(--bg, #070a12);
+  display: grid;
+  place-items: center;
+  /* The whole surface is the skip button. */
+  cursor: pointer;
+}
+
+/*
+ * `contain`, not `cover`.
+ *
+ * The film is 16:9 and a landscape phone is 844x390 — 2.17:1. `cover` would
+ * take a third of the height off every shot, and the thing it would cut is
+ * the top: the canopy, the flickering strip lights, and Amanda's three heads
+ * rising above them. The bars are the game's own background and invisible.
+ */
+.intro__film {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  display: block;
+}
+
+/*
+ * A child who wants to play presses the first thing they see, so this is
+ * deliberately quiet: it is the way out for someone who has already decided,
+ * not an offer. The whole screen does the same job.
+ */
+.intro__skip {
+  position: absolute;
+  inset-block-end: max(14px, env(safe-area-inset-bottom));
+  inset-inline-end: max(14px, env(safe-area-inset-right));
+  padding: var(--sp-1) var(--sp-3);
+  font-size: var(--t-2);
+  font-family: inherit;
+  color: var(--text);
+  background: rgba(0, 0, 0, 0.45);
+  border: 1px solid var(--line);
+  border-radius: 999px;
+  backdrop-filter: blur(4px);
+  cursor: pointer;
+}
+
+/* The way back to the film, in the About screen. */
+.about__replay {
+  margin-block-start: var(--sp-3);
+}

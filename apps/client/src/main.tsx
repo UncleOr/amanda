@@ -1,6 +1,7 @@
 import { StrictMode } from "react";
 import { createRoot } from "react-dom/client";
 import App from "./App";
+import { Intro } from "./components/Intro";
 import { AppCrash } from "./components/ErrorBoundary";
 import "./styles.css";
 // The playground has its own sheet — it is a workbench bolted to the side of
@@ -62,6 +63,24 @@ const SURFACES: Array<[string, string]> = [
 for (const [name, file] of SURFACES) {
   document.documentElement.style.setProperty(name, `url("${import.meta.env.BASE_URL}${file}")`);
 }
+
+/*
+ * The opening film, on its own root.
+ *
+ * ═══ BESIDE THE GAME, NOT INSIDE IT ═══
+ *
+ * It could have been a component at the top of <App/>. It is not, because a
+ * broken video would then be a broken game: inside AppCrash a throw here
+ * replaces the whole screen with the crash page, and outside it a throw takes
+ * everything down. On its own root it can fail alone — React unmounts that
+ * tree and the game, which never knew about it, keeps booting.
+ *
+ * It is rendered BEFORE the game so its div is already in the document, and
+ * it waits for nothing: the game loads behind it the entire time.
+ */
+const film = document.createElement("div");
+document.body.appendChild(film);
+createRoot(film).render(<Intro />);
 
 createRoot(document.getElementById("root")!).render(
   <StrictMode>

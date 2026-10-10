@@ -2,6 +2,7 @@ import { useState } from "react";
 import { Icon } from "./Icon";
 import { ageFrom } from "../game/account";
 import { Overlay } from "./Overlay";
+import { replayIntro } from "../game/intro";
 
 /**
  * About, and the legal pages the stores will not publish us without.
@@ -198,6 +199,15 @@ function AboutUs({ grown }: { grown: boolean }) {
         הצפיות. תיהנו!
       </p>
       <WayOut href={FILM} search={FILM_SEARCH} label="הסרט המלא" grown={grown} />
+
+      {/*
+        The opening film plays once, on a first visit, and then never again on
+        its own. This is the way back to it — for the time Hod wants to show
+        somebody, which is the only reason it is worth keeping at all.
+      */}
+      <button className="btn-fight btn-ghost about__replay" onClick={replayIntro}>
+        לראות שוב את הפתיח
+      </button>
 
       {SONG_YOUTUBE && (
         <>
