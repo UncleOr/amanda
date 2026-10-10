@@ -36,7 +36,30 @@ cd "$(dirname "$0")/.."
 OUT=store/trailer.mp4
 SEG=assets/raw/trailer/segments
 CLIPS=assets/raw/trailer/clips
-MUSIC="apps/client/public/music/score.mp3"
+MUSIC="apps/client/public/music/track1.mp3"
+
+# ═══ WHERE THE MUSIC STARTS, AND WHY NOT AT ZERO ═══
+#
+# Or, watching the first cut: *"after 10 seconds the melody suddenly
+# changes"* — and *"in the clip certainly don't switch between two pieces
+# inside 30 seconds."*
+#
+# The old score.mp3 was a montage and did exactly that. It is gone; the game
+# ships two whole songs now (scripts/make-music.sh). But a whole song still
+# has an intro and a chorus, and dropping 31 seconds anywhere inside one can
+# land on the seam between them.
+#
+# So the window was measured rather than guessed: per-second RMS across both
+# songs, scanning every 32-second window for the smallest spread and the
+# smallest single jump within it.
+#
+#   track1 @ 91s    spread 3.1 dB   largest jump 1.8 dB   <- this one
+#   track2 @ 177s   spread 5.9 dB   largest jump 5.8 dB
+#
+# 1.8 dB across half a minute is a passage, not a change. The check further
+# down keeps the cut inside it.
+MUSIC_START=91
+MUSIC_WINDOW=32
 GAMEPLAY=store/gameplay.mp4
 W=1920
 H=1080
@@ -47,29 +70,11 @@ BG=0x070a12
 # light flooding the station, so that is what the cards come out of.
 FLASH=0xdff6f2
 
-# Shot, and how much of its five seconds is used. Sums to 9.8.
-#
-# ═══ 08-fold IS NOT IN THE CUT ═══
-#
-# Or: *"and then of course they walk to Amanda and it ends there with a fade
-# to the game — we don't need the last shot of the split Amanda."*
-#
-# The clip exists and it is fixed; the split Amanda he is describing is the
-# OLD shot 8, which is still in the forty-second review reel because that
-# reel was built before the frame was regenerated. The note stands anyway,
-# and it is the better edit: the opening peaks when she rises, and holding
-# on a dissolve afterwards is a second ending. Add "08-fold 1.4" back to put
-# it in.
-#
-# Two of his other notes were already handled by these numbers — the thing
-# that falls on the fried bread happens at 4.6 seconds and he is cut at 1.1,
-# and the four only change direction after 2 seconds and they are cut at
-# 1.6. That is what the holds are for: the usable part of a generated clip
-# is its first second or two.
-SHOTS=(
-  "01-pump 1.2" "02-titan 1.4" "03-dragon 1.4" "04-chuppy 1.3"
-  "05-bread 1.1" "06-charge 1.6" "07-amanda 1.8"
-)
+# The shot list lives in its own file: scripts/make-intro.sh builds the same
+# opening for the game's first-launch splash, and two copies of these numbers
+# would drift. It also carries the reasoning for why they are so short, and
+# for why 08-fold is not among them.
+. "$(dirname "$0")/trailer-shots.sh"
 
 # The four that drop. Amanda last, because she is who you just met.
 CARDS=(
@@ -239,9 +244,15 @@ TOTAL=$(for f in "$SEG"/[1-4]-*.mp4; do
 done | awk '{t+=$1} END{printf "%.3f", t}')
 FADEOUT=$(awk -v t="$TOTAL" 'BEGIN{printf "%.3f", t-1.4}')
 
+awk -v t="$TOTAL" -v w="$MUSIC_WINDOW" 'BEGIN{if (t > w) exit 1}' || {
+  echo "The cut is ${TOTAL}s but the steady stretch of music is only ${MUSIC_WINDOW}s." >&2
+  echo "Shorten a segment, or measure a longer window — see MUSIC_START." >&2
+  exit 1
+}
+
 ffmpeg -y -v warning -stats \
   -f concat -safe 0 -i "$SEG/list.txt" \
-  -i "$MUSIC" \
+  -ss "$MUSIC_START" -i "$MUSIC" \
   -filter_complex "[0:v]fade=t=out:st=${FADEOUT}:d=1.4[v];\
 [1:a]atrim=0:${TOTAL},afade=t=in:st=0:d=1.2,afade=t=out:st=${FADEOUT}:d=1.4,\
 loudnorm=I=-16:TP=-1.5:LRA=11[a]" \

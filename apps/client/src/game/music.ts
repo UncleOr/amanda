@@ -1,22 +1,28 @@
 /**
  * The soundtrack.
  *
- * ═══ ONE SCORE, NOT SIX CLIPS ═══
+ * ═══ TWO WHOLE SONGS, ONE AT A TIME ═══
  *
- * Or: "assemble a soundtrack out of everything I gave you, with as much
- * instrumental as possible, no words at all — that will be the game's
- * continuous soundtrack."
+ * It used to be a single score.mp3: eleven stretches cut out of four songs,
+ * levelled, crossfaded together, and with the tail folded over the head so
+ * the loop would not be heard. That was what Or asked for — "assemble a
+ * soundtrack out of everything I gave you" — and it was wrong, which only
+ * became obvious under the trailer: *"after 10 seconds the melody suddenly
+ * changes."*
  *
- * So it is one track that starts when the music is switched on and keeps
- * playing, across the menu, the build, the battle and the result. It does NOT
- * restart or crossfade on a phase change: music that resets every time you
- * change screen is what made the old six-clip version feel like six clips.
+ * It did. The file changed song underneath you, and the first five seconds
+ * of it were the END of one song mixed over the BEGINNING of another, which
+ * is what a loop fold is.
  *
- * `music/score.mp3` is built from the four tracks in `soundtracks/` by
- * scripts recorded in the commit: the stretches where nobody is singing are
- * cut out, levelled to the same loudness, crossfaded together, and the tail is
- * folded onto the head so it loops with no gap. The timestamps that went in
- * are in docs/SOUNDTRACK.md, so any of them can be dropped by ear.
+ * Or: *"then let there not be one. Take a single track and use it in the
+ * game. It can vary — start one of the two each time. And if one ends you
+ * can start the other."*
+ *
+ * So: two complete songs, built by scripts/make-music.sh, matched in level
+ * and otherwise untouched. One is picked at random when the music starts and
+ * the other follows it. Nothing restarts on a phase change — music that
+ * resets every time you change screen is what made the old six-clip version
+ * feel like six clips.
  *
  * Volume sits under the SFX so the game sounds still read clearly. Must be
  * started from a user gesture — pre-gesture play() is blocked and ignored.
@@ -24,14 +30,15 @@
 export type MusicName = "menu" | "build" | "panic" | "battle" | "win" | "lose";
 
 const BASE = import.meta.env.BASE_URL;
+
 /**
- * Every name points at the same score.
+ * The two songs, in no particular order — which is the point.
  *
- * The callers still say which phase they are in, because one day a phase may
- * want to duck the music or lift it — and because deleting those calls would
- * throw away the only place that knows. Today they all mean "keep playing".
+ * Hod hears the first few seconds of this every single time he opens the
+ * game. Two openings is not variety, but it is twice as much as one, and it
+ * costs nothing.
  */
-const SCORE = `${BASE}music/score.mp3`;
+const TRACKS = [`${BASE}music/track1.mp3`, `${BASE}music/track2.mp3`] as const;
 
 interface Ramping extends HTMLAudioElement {
   __ramp?: number;
@@ -74,6 +81,8 @@ class Music {
   private muted = false;
   private enabled = loadEnabled();
   private baseVolume = 0.35;
+  /** Which of the two is playing. Chosen once per session, then alternates. */
+  private track = Math.floor(Math.random() * TRACKS.length);
 
   isEnabled(): boolean {
     return this.enabled;
@@ -93,7 +102,30 @@ class Music {
   }
 
   /**
-   * Keep the score playing. The phase name is noted and otherwise ignored:
+   * Build the element for whichever track is up, and hand over to the other
+   * one when it ends.
+   *
+   * The successor starts at full volume rather than ramping in: the previous
+   * track has genuinely finished, so there is nothing to fade against and a
+   * ramp would just sound like the music arriving late.
+   */
+  private open(volume: number): Ramping {
+    const el = new Audio(TRACKS[this.track]) as Ramping;
+    el.volume = volume;
+    el.addEventListener("ended", () => {
+      // Only if this is still the element in play — a restart or a stop
+      // replaces it, and the old one firing `ended` must not start anything.
+      if (this.el !== el || !this.enabled) return;
+      this.track = (this.track + 1) % TRACKS.length;
+      const next = this.open(this.muted ? 0 : this.baseVolume);
+      this.el = next;
+      void next.play().catch(() => {});
+    });
+    return el;
+  }
+
+  /**
+   * Keep the music playing. The phase name is noted and otherwise ignored:
    * the whole point is that changing screen does not change the music.
    */
   play(name: MusicName, opts: { restart?: boolean } = {}): void {
@@ -101,7 +133,7 @@ class Music {
     if (!this.enabled) return;
 
     // Already going — leave it alone. This is the line that makes it one
-    // continuous score rather than a clip per screen.
+    // continuous soundtrack rather than a clip per screen.
     if (this.el && !this.el.paused && !opts.restart) return;
 
     if (this.el && !opts.restart) {
@@ -112,9 +144,7 @@ class Music {
     }
 
     const prev = opts.restart ? this.el : null;
-    const next = new Audio(SCORE) as Ramping;
-    next.loop = true;
-    next.volume = 0;
+    const next = this.open(0);
     next.play().catch(() => {
       /* autoplay blocked until the first user gesture — ignored */
     });
