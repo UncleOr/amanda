@@ -25,6 +25,41 @@ const path = require("node:path");
 const REPO = path.resolve(__dirname, "..");
 const SRC = path.join(REPO, "android");
 const OUT = process.argv[2] || "C:\\Users\\Public\\amanda-android";
+/** The 8.3 short form of JAVA_HOME, computed by the .cmd. See writeBubblewrapConfig. */
+const JDK = process.argv[3];
+
+/**
+ * Point bubblewrap's own config at a JDK path with no spaces in it.
+ *
+ * ═══ BUBBLEWRAP DOES NOT READ JAVA_HOME ═══
+ *
+ * It keeps its own ~/.bubblewrap/config.json, written once by `doctor`, and
+ * every java it launches comes from the jdkPath in there. Setting JAVA_HOME
+ * in the build script changed nothing at all — the second run failed with
+ * the identical message as the first:
+ *
+ *   'C:\Program' is not recognized as an internal or external command
+ *
+ * because bubblewrap concatenates that path into a command string and hands
+ * it to a shell unquoted, and "C:\Program Files" loses everything after the
+ * space. The short name is the same JDK with no space to lose.
+ *
+ * This is rewritten on every prepare rather than fixed once by hand: running
+ * `bubblewrap doctor` puts the long path straight back.
+ */
+function writeBubblewrapConfig() {
+  if (!JDK) return;
+  const dir = path.join(require("node:os").homedir(), ".bubblewrap");
+  const file = path.join(dir, "config.json");
+  const current = fs.existsSync(file) ? JSON.parse(fs.readFileSync(file, "utf8")) : {};
+  if (current.jdkPath === JDK) return;
+  fs.mkdirSync(dir, { recursive: true });
+  fs.writeFileSync(
+    file,
+    JSON.stringify({ ...current, jdkPath: JDK }, null, 2) + "\n",
+  );
+  console.log(`   bubblewrap jdkPath -> ${JDK}`);
+}
 
 /** Where npx unpacked @bubblewrap/core, whatever hash it chose this time. */
 function findCore() {
@@ -49,6 +84,8 @@ if (!core) {
 const { TwaGenerator, TwaManifest, ConsoleLog } = require(core);
 
 (async () => {
+  writeBubblewrapConfig();
+
   fs.rmSync(OUT, { recursive: true, force: true });
   fs.mkdirSync(OUT, { recursive: true });
 

@@ -67,8 +67,12 @@ REM  apksigner for the apk and jarsigner for the bundle -- are built that
 REM  way, so fixing one would only move the failure.
 REM
 REM  C:\PROGRA~1\MIE74D~1\JDK-17~1.101 has no spaces and is the same JDK.
-REM  The alternative is installing a second JDK somewhere ASCII and
-REM  space-free, which is a lot of disk to avoid a pair of quotes.
+REM
+REM  SETTING JAVA_HOME IS NOT ENOUGH, which cost a second failed run with an
+REM  identical error message. Bubblewrap never reads JAVA_HOME -- it uses the
+REM  jdkPath in its own ~/.bubblewrap/config.json. The short path is passed
+REM  to android-prepare.cjs below, which writes it there on every run,
+REM  because `bubblewrap doctor` puts the long one straight back.
 REM ============================================================
 for %%I in ("%JAVA_HOME%") do set "JAVA_HOME=%%~sI"
 set "ANDROID_HOME=C:\Users\Public\android-sdk"
@@ -79,7 +83,7 @@ cd /d "%~dp0.." || exit /b 1
 
 echo.
 echo   Preparing the wrapper at %WORK% ...
-call node scripts\android-prepare.cjs "%WORK%"
+call node scripts\android-prepare.cjs "%WORK%" "%JAVA_HOME%"
 if errorlevel 1 exit /b 1
 
 for /f "usebackq delims=" %%P in ("%WORK%\keystore-password.txt") do set "KEYPASS=%%P"
