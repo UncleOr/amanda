@@ -67,3 +67,18 @@
   font-weight: 800;
   font-size: 22px;
 }
+
+/*
+ * The language switch.
+ *
+ * It sits among the icon buttons but carries two letters instead of an
+ * icon, so it needs the type size the rest of the bar's controls use —
+ * an icon button's own sizing would render "EN" at whatever height the
+ * glyphs happened to be.
+ */
+.mute--lang {
+  font-family: inherit;
+  font-size: var(--t-2);
+  font-weight: 800;
+  letter-spacing: 0.04em;
+}

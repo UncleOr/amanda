@@ -5,6 +5,7 @@ import { ABILITY_LABEL, ELEMENT_META, RANGE_META, RARITY_META } from "../data/ca
 import { LEVELS, levelCost, levelMultiplier } from "@amanda/shared";
 import { Overlay } from "./Overlay";
 import { spriteFor } from "../game/skins";
+import { say } from "../game/lang";
 
 export function CardDetailModal({
   cardId,
@@ -61,18 +62,18 @@ export function CardDetailModal({
             style={art ? { backgroundImage: `url("${art}")` } : undefined}
           />
           <div className="modal__title">
-            <h2>{card.name.he}</h2>
+            <h2>{say(card.name)}</h2>
             <p className="modal__subtitle">{card.name.en}</p>
             <div className="modal__badges">
               <span className="badge" style={{ borderColor: rarity.color, color: rarity.color }}>
-                {rarity.he}
+                {say(rarity)}
               </span>
               {card.elements.map((e) => (
                 <span key={e} className="badge">
-                  <Icon name={ELEMENT_META[e].icon} size={14} /> {ELEMENT_META[e].he}
+                  <Icon name={ELEMENT_META[e].icon} size={14} /> {say(ELEMENT_META[e])}
                 </span>
               ))}
-              {series && <span className="badge">{series.name.he}</span>}
+              {series && <span className="badge">{say(series.name)}</span>}
               {card.midBoss && (
                 <span className="badge badge--king">
                   <Icon name="king" size={13} /> ענק אמצע
@@ -113,7 +114,7 @@ export function CardDetailModal({
           <Stat
             icon={RANGE_META[card.stats.range].icon}
             label="טווח"
-            value={RANGE_META[card.stats.range].he}
+            value={say(RANGE_META[card.stats.range])}
           />
         </div>
 
@@ -123,27 +124,27 @@ export function CardDetailModal({
             <ul className="ability-list">
               {card.abilities.map((ab, i) => (
                 <li key={i}>
-                  <b>{ABILITY_LABEL[ab.type] ?? ab.type}</b>
-                  {ab.description?.he && <span> — {ab.description.he}</span>}
+                  <b>{say(ABILITY_LABEL[ab.type]) || ab.type}</b>
+                  {ab.description && <span> — {say(ab.description)}</span>}
                 </li>
               ))}
             </ul>
           </div>
         )}
 
-        {card.role?.he && (
+        {card.role && (
           <div className="modal__section">
             <h3>תפקיד</h3>
-            <p className="modal__role">{card.role.he}</p>
+            <p className="modal__role">{say(card.role)}</p>
           </div>
         )}
 
         {series && (
           <div className="modal__section modal__synergy">
             <h3>
-              סינרגיית סדרה: {series.synergy.name.he} (×{series.synergy.threshold})
+              סינרגיית סדרה: {say(series.synergy.name)} (×{series.synergy.threshold})
             </h3>
-            <p>{series.synergy.description.he}</p>
+            <p>{say(series.synergy.description)}</p>
           </div>
         )}
       </div>

@@ -70,7 +70,8 @@
     "name",
     "he"
    ]
-  }
+  },
+  "en": "The Dragons"
  },
  {
   "id": "d8",
@@ -83,7 +84,8 @@
     "specialty",
     "he"
    ]
-  }
+  },
+  "en": "Clearing line of sight, area damage, and ticking bombs"
  },
  {
   "id": "d9",
@@ -97,7 +99,8 @@
     "name",
     "he"
    ]
-  }
+  },
+  "en": "Dragon Scales"
  },
  {
   "id": "d10",
@@ -111,7 +114,8 @@
     "description",
     "he"
    ]
-  }
+  },
+  "en": "All your dragons gain a passive 20% reduction to all incoming damage."
  },
  {
   "id": "d11",
@@ -126,7 +130,8 @@
     "name",
     "he"
    ]
-  }
+  },
+  "en": "Flame Dragon"
  },
  {
   "id": "d12",
@@ -141,7 +146,8 @@
     "role",
     "he"
    ]
-  }
+  },
+  "en": "Fast initiative: knocks the enemy back, advances into enemy territory and clears line of sight for your snipers."
  },
  {
   "id": "d13",
@@ -156,7 +162,8 @@
     "name",
     "he"
    ]
-  }
+  },
+  "en": "Obsidian Egg"
  },
  {
   "id": "d14",
@@ -173,7 +180,8 @@
     "description",
     "he"
    ]
-  }
+  },
+  "en": "After 10 seconds a destructive dragon hatches with +1500 power."
  },
  {
   "id": "d15",
@@ -188,7 +196,8 @@
     "role",
     "he"
    ]
-  }
+  },
+  "en": "Ground-floor ticking bomb: place it under a tank; by the time the tank breaks, its timer is up."
  },
  {
   "id": "d16",
@@ -203,7 +212,8 @@
     "name",
     "he"
    ]
-  }
+  },
+  "en": "Thunderwing"
  },
  {
   "id": "d17",
@@ -218,7 +228,8 @@
     "role",
     "he"
    ]
-  }
+  },
+  "en": "Conditional sniper: fires at the last card in its lane, requires a clear line of sight."
  },
  {
   "id": "d18",
@@ -233,7 +244,8 @@
     "name",
     "he"
    ]
-  }
+  },
+  "en": "Lava"
  },
  {
   "id": "d19",
@@ -250,7 +262,8 @@
     "description",
     "he"
    ]
-  }
+  },
+  "en": "Leaves a lava stream in the lane; any advancer walks into the pool and burns."
  },
  {
   "id": "d20",
@@ -265,7 +278,8 @@
     "role",
     "he"
    ]
-  }
+  },
+  "en": "Lane control / advance-denial with damage over time."
  },
  {
   "id": "d21",
@@ -280,7 +294,8 @@
     "name",
     "he"
    ]
-  }
+  },
+  "en": "Spike"
  },
  {
   "id": "d22",
@@ -295,7 +310,8 @@
     "role",
     "he"
    ]
-  }
+  },
+  "en": "Damage-reflect wall for the ground floor: returns 30% of damage taken, great under a bomb card."
  },
  {
   "id": "d23",
@@ -310,7 +326,8 @@
     "name",
     "he"
    ]
-  }
+  },
+  "en": "Frost Breath"
  },
  {
   "id": "d24",
@@ -325,7 +342,8 @@
     "role",
     "he"
    ]
-  }
+  },
+  "en": "Crowd control: freezes an advancing enemy for 2s and resets its attack cooldown."
  },
  {
   "id": "d25",
@@ -340,7 +358,8 @@
     "name",
     "he"
    ]
-  }
+  },
+  "en": "Gold-Horn"
  },
  {
   "id": "d26",
@@ -357,7 +376,8 @@
     "description",
     "he"
    ]
-  }
+  },
+  "en": "Crushes a weak adjacent ally for armor, then advances as a protected tank."
  },
  {
   "id": "d27",
@@ -372,7 +392,8 @@
     "role",
     "he"
    ]
-  }
+  },
+  "en": "Heavy tank fueled by sacrifice."
  },
  {
   "id": "d28",
@@ -387,7 +408,8 @@
     "name",
     "he"
    ]
-  }
+  },
+  "en": "Ghost Dragon"
  },
  {
   "id": "d29",
@@ -402,7 +424,8 @@
     "role",
     "he"
    ]
-  }
+  },
+  "en": "Bursting swarm: meant to die fast, then 3 spirits hatch and keep charging."
  },
  {
   "id": "d30",
@@ -417,7 +440,8 @@
     "name",
     "he"
    ]
-  }
+  },
+  "en": "Typhoon Dragon"
  },
  {
   "id": "d31",
@@ -434,7 +458,8 @@
     "description",
     "he"
    ]
-  }
+  },
+  "en": "Pushes the enemy sideways between columns, moving snipers out of the lane."
  },
  {
   "id": "d32",
@@ -449,7 +474,8 @@
     "role",
     "he"
    ]
-  }
+  },
+  "en": "Spatial control / lateral knockback."
  },
  {
   "id": "d33",
@@ -464,7 +490,8 @@
     "name",
     "he"
    ]
-  }
+  },
+  "en": "Sky King"
  },
  {
   "id": "d34",
@@ -481,7 +508,8 @@
     "description",
     "he"
    ]
-  }
+  },
+  "en": "A wing sweep across 3 lanes every 5 seconds with knockback."
  },
  {
   "id": "d35",
@@ -496,7 +524,8 @@
     "role",
     "he"
    ]
-  }
+  },
+  "en": "Mid-boss for the 2×2 King slot: total front control with area damage."
  },
  {
   "id": "d36",
@@ -509,7 +538,8 @@
     "name",
     "he"
    ]
-  }
+  },
+  "en": "The Giants"
  },
  {
   "id": "d37",
@@ -522,7 +552,8 @@
     "specialty",
     "he"
    ]
-  }
+  },
+  "en": "Tanks, taunts and damage reflection"
  },
  {
   "id": "d38",
@@ -536,7 +567,8 @@
     "name",
     "he"
    ]
-  }
+  },
+  "en": "Thick Hide"
  },
  {
   "id": "d39",
@@ -550,7 +582,8 @@
     "description",
     "he"
    ]
-  }
+  },
+  "en": "All your giants gain passive armor that blocks part of every incoming hit."
  },
  {
   "id": "d40",
@@ -565,7 +598,8 @@
     "name",
     "he"
    ]
-  }
+  },
+  "en": "Stone Colossus"
  },
  {
   "id": "d41",
@@ -580,7 +614,8 @@
     "role",
     "he"
    ]
-  }
+  },
+  "en": "A walking tank that reflects damage."
  },
  {
   "id": "d42",
@@ -595,7 +630,8 @@
     "name",
     "he"
    ]
-  }
+  },
+  "en": "Steel Warden"
  },
  {
   "id": "d43",
@@ -610,7 +646,8 @@
     "role",
     "he"
    ]
-  }
+  },
+  "en": "Grants armor to nearby allies."
  },
  {
   "id": "d44",
@@ -625,7 +662,8 @@
     "name",
     "he"
    ]
-  }
+  },
+  "en": "Hill Giant"
  },
  {
   "id": "d45",
@@ -640,7 +678,8 @@
     "role",
     "he"
    ]
-  }
+  },
+  "en": "Heavy blows that knock enemies back."
  },
  {
   "id": "d46",
@@ -655,7 +694,8 @@
     "name",
     "he"
    ]
-  }
+  },
+  "en": "Rock Troll"
  },
  {
   "id": "d47",
@@ -670,7 +710,8 @@
     "role",
     "he"
    ]
-  }
+  },
+  "en": "Regenerates its own health during battle."
  },
  {
   "id": "d48",
@@ -685,7 +726,8 @@
     "name",
     "he"
    ]
-  }
+  },
+  "en": "Wall Breaker"
  },
  {
   "id": "d49",
@@ -700,7 +742,8 @@
     "role",
     "he"
    ]
-  }
+  },
+  "en": "A slow blow that shatters armor."
  },
  {
   "id": "d50",
@@ -715,7 +758,8 @@
     "name",
     "he"
    ]
-  }
+  },
+  "en": "Frost Giant"
  },
  {
   "id": "d51",
@@ -730,7 +774,8 @@
     "role",
     "he"
    ]
-  }
+  },
+  "en": "Each hit briefly freezes the enemy."
  },
  {
   "id": "d52",
@@ -745,7 +790,8 @@
     "name",
     "he"
    ]
-  }
+  },
+  "en": "Iron Bulwark"
  },
  {
   "id": "d53",
@@ -760,7 +806,8 @@
     "role",
     "he"
    ]
-  }
+  },
+  "en": "A near-impenetrable wall reflecting 40% damage."
  },
  {
   "id": "d54",
@@ -775,7 +822,8 @@
     "name",
     "he"
    ]
-  }
+  },
+  "en": "Vengeful Rok"
  },
  {
   "id": "d55",
@@ -790,7 +838,8 @@
     "role",
     "he"
    ]
-  }
+  },
+  "en": "Punishes anyone who dares strike it."
  },
  {
   "id": "d56",
@@ -805,7 +854,8 @@
     "name",
     "he"
    ]
-  }
+  },
+  "en": "Thunder Giant"
  },
  {
   "id": "d57",
@@ -820,7 +870,8 @@
     "role",
     "he"
    ]
-  }
+  },
+  "en": "A thunderclap that strikes two lanes."
  },
  {
   "id": "d58",
@@ -835,7 +886,8 @@
     "name",
     "he"
    ]
-  }
+  },
+  "en": "Titan King"
  },
  {
   "id": "d59",
@@ -850,7 +902,8 @@
     "role",
     "he"
    ]
-  }
+  },
+  "en": "Mid-boss for the 2×2 King slot: a colossal tank that shields the whole board."
  },
  {
   "id": "d60",
@@ -863,7 +916,8 @@
     "name",
     "he"
    ]
-  }
+  },
+  "en": "The Furries"
  },
  {
   "id": "d61",
@@ -876,7 +930,8 @@
     "specialty",
     "he"
    ]
-  }
+  },
+  "en": "Fast electric strikes — little health, a lot of power"
  },
  {
   "id": "d62",
@@ -890,7 +945,8 @@
     "name",
     "he"
    ]
-  }
+  },
+  "en": "Charged Fur"
  },
  {
   "id": "d63",
@@ -904,7 +960,8 @@
     "description",
     "he"
    ]
-  }
+  },
+  "en": "All your Furries attack 20% faster."
  },
  {
   "id": "d64",
@@ -919,7 +976,8 @@
     "name",
     "he"
    ]
-  }
+  },
+  "en": "Chuppy"
  },
  {
   "id": "d65",
@@ -934,7 +992,8 @@
     "role",
     "he"
    ]
-  }
+  },
+  "en": "Your friend from the start. Hits hard at range and breaks armour, but takes almost nothing, so he does not belong in the front row."
  },
  {
   "id": "d66",
@@ -947,7 +1006,8 @@
     "name",
     "he"
    ]
-  }
+  },
+  "en": "The Insects"
  },
  {
   "id": "d67",
@@ -960,7 +1020,8 @@
     "specialty",
     "he"
    ]
-  }
+  },
+  "en": "Traps, poison and striking straight at the center"
  },
  {
   "id": "d68",
@@ -974,7 +1035,8 @@
     "name",
     "he"
    ]
-  }
+  },
+  "en": "The Swarm"
  },
  {
   "id": "d69",
@@ -988,7 +1050,8 @@
     "description",
     "he"
    ]
-  }
+  },
+  "en": "All your insects gain +20% attack speed when fighting together."
  },
  {
   "id": "d70",
@@ -1003,7 +1066,8 @@
     "name",
     "he"
    ]
-  }
+  },
+  "en": "Ant Soldier"
  },
  {
   "id": "d71",
@@ -1018,7 +1082,8 @@
     "role",
     "he"
    ]
-  }
+  },
+  "en": "A cheap, fast rusher to flood lanes."
  },
  {
   "id": "d72",
@@ -1033,7 +1098,8 @@
     "name",
     "he"
    ]
-  }
+  },
+  "en": "Ant Queen"
  },
  {
   "id": "d73",
@@ -1048,7 +1114,8 @@
     "role",
     "he"
    ]
-  }
+  },
+  "en": "On death hatches 3 fresh ants."
  },
  {
   "id": "d74",
@@ -1063,7 +1130,8 @@
     "name",
     "he"
    ]
-  }
+  },
+  "en": "Venom Scorpion"
  },
  {
   "id": "d75",
@@ -1078,7 +1146,8 @@
     "role",
     "he"
    ]
-  }
+  },
+  "en": "Stings and poisons; the venom stacks."
  },
  {
   "id": "d76",
@@ -1093,7 +1162,8 @@
     "name",
     "he"
    ]
-  }
+  },
+  "en": "Toxic Moth"
  },
  {
   "id": "d77",
@@ -1108,7 +1178,8 @@
     "role",
     "he"
    ]
-  }
+  },
+  "en": "Flies over the ground spreading toxic dust."
  },
  {
   "id": "d78",
@@ -1123,7 +1194,8 @@
     "name",
     "he"
    ]
-  }
+  },
+  "en": "Armored Beetle"
  },
  {
   "id": "d79",
@@ -1138,7 +1210,8 @@
     "role",
     "he"
    ]
-  }
+  },
+  "en": "A hard shell that reflects some damage."
  },
  {
   "id": "d80",
@@ -1153,7 +1226,8 @@
     "name",
     "he"
    ]
-  }
+  },
+  "en": "Ambush Spider"
  },
  {
   "id": "d81",
@@ -1168,7 +1242,8 @@
     "role",
     "he"
    ]
-  }
+  },
+  "en": "Ground-floor trap: roots the enemy when revealed."
  },
  {
   "id": "d82",
@@ -1183,7 +1258,8 @@
     "name",
     "he"
    ]
-  }
+  },
+  "en": "Aggressive Wasp"
  },
  {
   "id": "d83",
@@ -1198,7 +1274,8 @@
     "role",
     "he"
    ]
-  }
+  },
+  "en": "Flies fast, stings and knocks back."
  },
  {
   "id": "d84",
@@ -1213,7 +1290,8 @@
     "name",
     "he"
    ]
-  }
+  },
+  "en": "Firefly"
  },
  {
   "id": "d85",
@@ -1228,7 +1306,8 @@
     "role",
     "he"
    ]
-  }
+  },
+  "en": "Speeds up the attack rate of the nearby swarm."
  },
  {
   "id": "d86",
@@ -1243,7 +1322,8 @@
     "name",
     "he"
    ]
-  }
+  },
+  "en": "Bombardier"
  },
  {
   "id": "d87",
@@ -1258,7 +1338,8 @@
     "role",
     "he"
    ]
-  }
+  },
+  "en": "Explodes on death into two small bugs."
  },
  {
   "id": "d88",
@@ -1273,7 +1354,8 @@
     "name",
     "he"
    ]
-  }
+  },
+  "en": "Insect Empress"
  },
  {
   "id": "d89",
@@ -1288,7 +1370,8 @@
     "role",
     "he"
    ]
-  }
+  },
+  "en": "Mid-boss for the 2×2 King slot: poisons from afar and bursts a swarm on death."
  },
  {
   "id": "d90",
@@ -1301,7 +1384,8 @@
     "name",
     "he"
    ]
-  }
+  },
+  "en": "The Plants"
  },
  {
   "id": "d91",
@@ -1314,7 +1398,8 @@
     "specialty",
     "he"
    ]
-  }
+  },
+  "en": "Spreading across the board, growth and added health"
  },
  {
   "id": "d92",
@@ -1328,7 +1413,8 @@
     "name",
     "he"
    ]
-  }
+  },
+  "en": "Photosynthesis"
  },
  {
   "id": "d93",
@@ -1342,7 +1428,8 @@
     "description",
     "he"
    ]
-  }
+  },
+  "en": "All your plants slowly heal throughout the battle."
  },
  {
   "id": "d94",
@@ -1357,7 +1444,8 @@
     "name",
     "he"
    ]
-  }
+  },
+  "en": "Thorn Sprout"
  },
  {
   "id": "d95",
@@ -1372,7 +1460,8 @@
     "role",
     "he"
    ]
-  }
+  },
+  "en": "Thorns that prick whoever touches it."
  },
  {
   "id": "d96",
@@ -1387,7 +1476,8 @@
     "name",
     "he"
    ]
-  }
+  },
+  "en": "Ancient Tree"
  },
  {
   "id": "d97",
@@ -1402,7 +1492,8 @@
     "role",
     "he"
    ]
-  }
+  },
+  "en": "A living wall that constantly regenerates."
  },
  {
   "id": "d98",
@@ -1417,7 +1508,8 @@
     "name",
     "he"
    ]
-  }
+  },
+  "en": "Healing Bloom"
  },
  {
   "id": "d99",
@@ -1432,7 +1524,8 @@
     "role",
     "he"
    ]
-  }
+  },
+  "en": "Heals all nearby allies."
  },
  {
   "id": "d100",
@@ -1447,7 +1540,8 @@
     "name",
     "he"
    ]
-  }
+  },
+  "en": "Venus Trap"
  },
  {
   "id": "d101",
@@ -1462,7 +1556,8 @@
     "role",
     "he"
    ]
-  }
+  },
+  "en": "Bites and injects stacking poison."
  },
  {
   "id": "d102",
@@ -1477,7 +1572,8 @@
     "name",
     "he"
    ]
-  }
+  },
+  "en": "Creeping Vine"
  },
  {
   "id": "d103",
@@ -1492,7 +1588,8 @@
     "role",
     "he"
    ]
-  }
+  },
+  "en": "Spreads: on death two new vines grow."
  },
  {
   "id": "d104",
@@ -1507,7 +1604,8 @@
     "name",
     "he"
    ]
-  }
+  },
+  "en": "Toxic Mushroom"
  },
  {
   "id": "d105",
@@ -1522,7 +1620,8 @@
     "role",
     "he"
    ]
-  }
+  },
+  "en": "Fires poison spores from afar."
  },
  {
   "id": "d106",
@@ -1537,7 +1636,8 @@
     "name",
     "he"
    ]
-  }
+  },
+  "en": "Dandelion"
  },
  {
   "id": "d107",
@@ -1552,7 +1652,8 @@
     "role",
     "he"
    ]
-  }
+  },
+  "en": "On death scatters seeds that fight on."
  },
  {
   "id": "d108",
@@ -1567,7 +1668,8 @@
     "name",
     "he"
    ]
-  }
+  },
+  "en": "Cactus"
  },
  {
   "id": "d109",
@@ -1582,7 +1684,8 @@
     "role",
     "he"
    ]
-  }
+  },
+  "en": "Spiky and hardy — pricks and regenerates."
  },
  {
   "id": "d110",
@@ -1597,7 +1700,8 @@
     "name",
     "he"
    ]
-  }
+  },
+  "en": "Sunflower"
  },
  {
   "id": "d111",
@@ -1612,7 +1716,8 @@
     "role",
     "he"
    ]
-  }
+  },
+  "en": "Stores sunlight and heals those around it."
  },
  {
   "id": "d112",
@@ -1627,7 +1732,8 @@
     "name",
     "he"
    ]
-  }
+  },
+  "en": "Great Mother Tree"
  },
  {
   "id": "d113",
@@ -1642,7 +1748,8 @@
     "role",
     "he"
    ]
-  }
+  },
+  "en": "Mid-boss for the 2×2 King slot: self-regenerates and heals all plants."
  },
  {
   "id": "d114",
@@ -1655,7 +1762,8 @@
     "name",
     "he"
    ]
-  }
+  },
+  "en": "The Slimes"
  },
  {
   "id": "d115",
@@ -1668,7 +1776,8 @@
     "specialty",
     "he"
    ]
-  }
+  },
+  "en": "Leaving a slime trail that slows the enemy"
  },
  {
   "id": "d116",
@@ -1682,7 +1791,8 @@
     "name",
     "he"
    ]
-  }
+  },
+  "en": "Stickiness"
  },
  {
   "id": "d117",
@@ -1696,7 +1806,8 @@
     "description",
     "he"
    ]
-  }
+  },
+  "en": "Any enemy advancing in a lane containing a slime suffers a 50% movement slow."
  },
  {
   "id": "d118",
@@ -1711,7 +1822,8 @@
     "name",
     "he"
    ]
-  }
+  },
+  "en": "Basic Slime"
  },
  {
   "id": "d119",
@@ -1726,7 +1838,8 @@
     "role",
     "he"
    ]
-  }
+  },
+  "en": "Shock absorber: its gelatinous body soaks knockback — it cannot be pushed back."
  },
  {
   "id": "d120",
@@ -1741,7 +1854,8 @@
     "name",
     "he"
    ]
-  }
+  },
+  "en": "Gelatinous Cube"
  },
  {
   "id": "d121",
@@ -1758,7 +1872,8 @@
     "description",
     "he"
    ]
-  }
+  },
+  "en": "Swallows the enemy's advancing card, stunning it for 3 seconds."
  },
  {
   "id": "d122",
@@ -1773,7 +1888,8 @@
     "role",
     "he"
    ]
-  }
+  },
+  "en": "Digestion / crowd control: breaks the enemy's attack timer."
  },
  {
   "id": "d123",
@@ -1788,7 +1904,8 @@
     "name",
     "he"
    ]
-  }
+  },
+  "en": "Acid Ooze"
  },
  {
   "id": "d124",
@@ -1805,7 +1922,8 @@
     "description",
     "he"
    ]
-  }
+  },
+  "en": "Every hit melts the enemy's armor, even if it would have blocked more."
  },
  {
   "id": "d125",
@@ -1820,7 +1938,8 @@
     "role",
     "he"
    ]
-  }
+  },
+  "en": "Armor melter."
  },
  {
   "id": "d126",
@@ -1835,7 +1954,8 @@
     "name",
     "he"
    ]
-  }
+  },
+  "en": "Splitting Blob"
  },
  {
   "id": "d127",
@@ -1852,7 +1972,8 @@
     "description",
     "he"
    ]
-  }
+  },
+  "en": "On death splits into two small blobs that leap to adjacent lanes and keep fighting."
  },
  {
   "id": "d128",
@@ -1867,7 +1988,8 @@
     "role",
     "he"
    ]
-  }
+  },
+  "en": "Swarm on death."
  },
  {
   "id": "d129",
@@ -1882,7 +2004,8 @@
     "name",
     "he"
    ]
-  }
+  },
+  "en": "Sticky Rug"
  },
  {
   "id": "d130",
@@ -1899,7 +2022,8 @@
     "description",
     "he"
    ]
-  }
+  },
+  "en": "When revealed under a dead card, glues the enemy in front so it cannot move for the rest of the battle."
  },
  {
   "id": "d131",
@@ -1914,7 +2038,8 @@
     "role",
     "he"
    ]
-  }
+  },
+  "en": "Ground-floor trap."
  },
  {
   "id": "d132",
@@ -1929,7 +2054,8 @@
     "name",
     "he"
    ]
-  }
+  },
+  "en": "Toxic Sludge"
  },
  {
   "id": "d133",
@@ -1946,7 +2072,8 @@
     "description",
     "he"
    ]
-  }
+  },
+  "en": "Fires poison bubbles; poison stacks and each hit raises the damage per second."
  },
  {
   "id": "d134",
@@ -1961,7 +2088,8 @@
     "role",
     "he"
    ]
-  }
+  },
+  "en": "Ranged damage over time."
  },
  {
   "id": "d135",
@@ -1976,7 +2104,8 @@
     "name",
     "he"
    ]
-  }
+  },
+  "en": "Floating Brain"
  },
  {
   "id": "d136",
@@ -1993,7 +2122,8 @@
     "description",
     "he"
    ]
-  }
+  },
+  "en": "Emits electric pulses granting +25% attack speed to monsters in range."
  },
  {
   "id": "d137",
@@ -2008,7 +2138,8 @@
     "role",
     "he"
    ]
-  }
+  },
+  "en": "Area buffer."
  },
  {
   "id": "d138",
@@ -2023,7 +2154,8 @@
     "name",
     "he"
    ]
-  }
+  },
+  "en": "Assimilator"
  },
  {
   "id": "d139",
@@ -2040,7 +2172,8 @@
     "description",
     "he"
    ]
-  }
+  },
+  "en": "On its first hit copies the enemy's element, letting it slot into synergies."
  },
  {
   "id": "d140",
@@ -2055,7 +2188,8 @@
     "role",
     "he"
    ]
-  }
+  },
+  "en": "Element thief."
  },
  {
   "id": "d141",
@@ -2070,7 +2204,8 @@
     "name",
     "he"
    ]
-  }
+  },
+  "en": "Pudding Shield"
  },
  {
   "id": "d142",
@@ -2087,7 +2222,8 @@
     "description",
     "he"
    ]
-  }
+  },
+  "en": "Absorbs half the damage aimed at the cards directly to its left and right."
  },
  {
   "id": "d143",
@@ -2102,7 +2238,8 @@
     "role",
     "he"
    ]
-  }
+  },
+  "en": "Perimeter guard / bodyguard."
  },
  {
   "id": "d144",
@@ -2117,7 +2254,8 @@
     "name",
     "he"
    ]
-  }
+  },
+  "en": "Zelig the Giant Ooze"
  },
  {
   "id": "d145",
@@ -2134,7 +2272,8 @@
     "description",
     "he"
    ]
-  }
+  },
+  "en": "Every 6 seconds pulls all advancing enemy cards one slot inward, disrupting lanes."
  },
  {
   "id": "d146",
@@ -2149,7 +2288,8 @@
     "role",
     "he"
    ]
-  }
+  },
+  "en": "Mid-boss for the 2×2 King slot: a slow but lethal world-sucker."
  },
  {
   "id": "d147",
@@ -2162,7 +2302,8 @@
     "name",
     "he"
    ]
-  }
+  },
+  "en": "The Legends"
  },
  {
   "id": "d148",
@@ -2175,7 +2316,8 @@
     "specialty",
     "he"
    ]
-  }
+  },
+  "en": "Not collected, not built. They arrive."
  },
  {
   "id": "d149",
@@ -2189,7 +2331,8 @@
     "name",
     "he"
    ]
-  }
+  },
+  "en": "Chaos"
  },
  {
   "id": "d150",
@@ -2203,7 +2346,8 @@
     "description",
     "he"
    ]
-  }
+  },
+  "en": "None. They do not come in threes."
  },
  {
   "id": "d151",
@@ -2218,7 +2362,8 @@
     "name",
     "he"
    ]
-  }
+  },
+  "en": "Amanda"
  },
  {
   "id": "d152",
@@ -2233,7 +2378,8 @@
     "role",
     "he"
    ]
-  }
+  },
+  "en": "Queen of her side. Never moves, shoots far, reflects damage and heals what stands near her. She is not meant to be fair — that is why there are two of you."
  },
  {
   "id": "d153",
@@ -2247,7 +2393,8 @@
     "name",
     "he"
    ]
-  }
+  },
+  "en": "Triple Draw"
  },
  {
   "id": "d154",
@@ -2261,670 +2408,697 @@
     "description",
     "he"
    ]
-  }
+  },
+  "en": "Draws 3 cards to hand at once. Great for saving build time."
  },
  {
   "id": "d155",
-  "section": "קלפי פעולה",
-  "text": "פח מחזור",
-  "where": {
-   "kind": "json",
-   "file": "data/action-cards.json",
-   "path": [
-    1,
-    "name",
-    "he"
-   ]
-  }
- },
- {
-  "id": "d156",
-  "section": "קלפי פעולה",
-  "text": "מחזיר ליד את הקלף האחרון שזרקת לפח.",
-  "where": {
-   "kind": "json",
-   "file": "data/action-cards.json",
-   "path": [
-    1,
-    "description",
-    "he"
-   ]
-  }
- },
- {
-  "id": "d157",
   "section": "קלפי פעולה",
   "text": "בוסט אנרגיה",
   "where": {
    "kind": "json",
    "file": "data/action-cards.json",
    "path": [
-    2,
+    1,
     "name",
     "he"
    ]
-  }
+  },
+  "en": "Energy Boost"
  },
  {
-  "id": "d158",
+  "id": "d156",
   "section": "קלפי פעולה",
   "text": "מעניק +50 עוצמה לכל הקלפים שמונחים כרגע על הלוח שלך.",
   "where": {
    "kind": "json",
    "file": "data/action-cards.json",
    "path": [
-    2,
+    1,
     "description",
     "he"
    ]
-  }
+  },
+  "en": "Grants +50 power to all cards currently on your board."
  },
  {
-  "id": "d159",
+  "id": "d157",
   "section": "קלפי פעולה",
   "text": "מחק רדיואקטיבי",
   "where": {
    "kind": "json",
    "file": "data/action-cards.json",
    "path": [
-    3,
+    2,
     "name",
     "he"
    ]
-  }
+  },
+  "en": "Radioactive Eraser"
  },
  {
-  "id": "d160",
+  "id": "d158",
   "section": "קלפי פעולה",
   "text": "מוחק קלף אחד שהיריב הניח (אם הופעל על המלך - מוריד לו נזק כבד במקום למחוק).",
   "where": {
    "kind": "json",
    "file": "data/action-cards.json",
    "path": [
-    3,
+    2,
     "description",
     "he"
    ]
-  }
+  },
+  "en": "Erases one enemy card (if used on the King, deals heavy damage instead of erasing)."
  },
  {
-  "id": "d161",
+  "id": "d159",
   "section": "קלפי פעולה",
   "text": "הקפאת זמן",
   "where": {
    "kind": "json",
    "file": "data/action-cards.json",
    "path": [
-    4,
+    3,
     "name",
     "he"
    ]
-  }
+  },
+  "en": "Time Freeze"
  },
  {
-  "id": "d162",
+  "id": "d160",
   "section": "קלפי פעולה",
   "text": "מקפיא את המסך של היריב לחלוטין ל-3 שניות.",
   "where": {
    "kind": "json",
    "file": "data/action-cards.json",
    "path": [
-    4,
+    3,
     "description",
     "he"
    ]
-  }
+  },
+  "en": "Completely freezes the opponent's screen for 3 seconds."
  },
  {
-  "id": "d163",
+  "id": "d161",
   "section": "קלפי פעולה",
   "text": "החלפת מקומות",
   "where": {
    "kind": "json",
    "file": "data/action-cards.json",
    "path": [
-    5,
+    4,
     "name",
     "he"
    ]
-  }
+  },
+  "en": "Swap Places"
  },
  {
-  "id": "d164",
+  "id": "d162",
   "section": "קלפי פעולה",
   "text": "מחליף מיקומים בין שני קלפים שכבר הנחת על הלוח שלך.",
   "where": {
    "kind": "json",
    "file": "data/action-cards.json",
    "path": [
-    5,
+    4,
     "description",
     "he"
    ]
-  }
+  },
+  "en": "Swaps the positions of two cards you have already placed on your board."
  },
  {
-  "id": "d165",
+  "id": "d163",
   "section": "קלפי פעולה",
   "text": "רנטגן",
   "where": {
    "kind": "json",
    "file": "data/action-cards.json",
    "path": [
-    6,
+    5,
     "name",
     "he"
    ]
-  }
+  },
+  "en": "X-Ray"
  },
  {
-  "id": "d166",
+  "id": "d164",
   "section": "קלפי פעולה",
   "text": "חושף את כל הלוח של היריב (כולל שורת ההפתעה האחורית) למשך 5 שניות.",
   "where": {
    "kind": "json",
    "file": "data/action-cards.json",
    "path": [
-    6,
+    5,
     "description",
     "he"
    ]
-  }
+  },
+  "en": "Reveals the entire enemy board (including the back Surprise Row) for 5 seconds."
  },
  {
-  "id": "d167",
+  "id": "d165",
   "section": "קלפי פעולה",
   "text": "קומת קרקע",
   "where": {
    "kind": "json",
    "file": "data/action-cards.json",
    "path": [
-    7,
+    6,
     "name",
     "he"
    ]
-  }
+  },
+  "en": "Ground Floor (Stacking)"
  },
  {
-  "id": "d168",
+  "id": "d166",
   "section": "קלפי פעולה",
   "text": "מאפשר לבחור 4 משבצות בלוח ולהניח בהן קלף על גבי קלף. כשהעליון מת בקרב, התחתון נחשף.",
   "where": {
    "kind": "json",
    "file": "data/action-cards.json",
    "path": [
-    7,
+    6,
     "description",
     "he"
    ]
-  }
+  },
+  "en": "Lets you pick 4 slots and stack a card on top of another. When the top dies in battle, the bottom is revealed."
  },
  {
-  "id": "d169",
+  "id": "d167",
   "section": "קלפי פעולה",
   "text": "פינות אפלות",
   "where": {
    "kind": "json",
    "file": "data/action-cards.json",
    "path": [
-    8,
+    7,
     "name",
     "he"
    ]
-  }
+  },
+  "en": "Dark Corners"
  },
  {
-  "id": "d170",
+  "id": "d168",
   "section": "קלפי פעולה",
   "text": "מאפשר אוטומטית הנחת קלף כפול (Stack) בכל 4 הפינות החיצוניות של הלוח שלך.",
   "where": {
    "kind": "json",
    "file": "data/action-cards.json",
    "path": [
-    8,
+    7,
     "description",
     "he"
    ]
-  }
+  },
+  "en": "Automatically enables stacking a double card on all 4 outer corners of your board."
  },
  {
-  "id": "d171",
+  "id": "d169",
   "section": "קלפי פעולה",
   "text": "סופת חול",
   "where": {
    "kind": "json",
    "file": "data/action-cards.json",
    "path": [
-    9,
+    8,
     "name",
     "he"
    ]
-  }
+  },
+  "en": "Sandstorm"
  },
  {
-  "id": "d172",
+  "id": "d170",
   "section": "קלפי פעולה",
-  "text": "מערבב רנדומלית את המיקומים של כל הקלפים שהיריב הניח בשורה הקדמית שלו.",
+  "text": "מחליפה בין שני שומרי המלך של היריב, ובין שני הקלפים שבקצוות — השורה הקדמית נשארת, הסדר שלה לא.",
   "where": {
    "kind": "json",
    "file": "data/action-cards.json",
    "path": [
-    9,
+    8,
     "description",
     "he"
    ]
-  }
+  },
+  "en": "Swaps the enemy's two King guards with each other, and its two outer front cards with each other."
  },
  {
-  "id": "d173",
+  "id": "d171",
   "section": "קלפי פעולה",
   "text": "חומת פלדה",
   "where": {
    "kind": "json",
    "file": "data/action-cards.json",
    "path": [
-    10,
+    9,
     "name",
     "he"
    ]
-  }
+  },
+  "en": "Steel Wall"
  },
  {
-  "id": "d174",
+  "id": "d172",
   "section": "קלפי פעולה",
   "text": "מניח מגן פסיבי שחוסם לחלוטין את קלף המערכת הבא שהיריב ינסה להפעיל עליך.",
   "where": {
    "kind": "json",
    "file": "data/action-cards.json",
    "path": [
-    10,
+    9,
     "description",
     "he"
    ]
-  }
+  },
+  "en": "Places a passive shield that fully blocks the next Action Card the enemy tries to use on you."
  },
  {
-  "id": "d175",
+  "id": "d173",
   "section": "קלפי פעולה",
   "text": "תדלוק מלא",
   "where": {
    "kind": "json",
    "file": "data/action-cards.json",
    "path": [
-    11,
+    10,
     "name",
     "he"
    ]
-  }
+  },
+  "en": "Full Refuel"
  },
  {
-  "id": "d176",
+  "id": "d174",
   "section": "קלפי פעולה",
   "text": "משדרג מיידית קלף שהנחת על הלוח לגרסה החזקה יותר שלו (רמה 2) למשך המשחקון.",
   "where": {
    "kind": "json",
    "file": "data/action-cards.json",
    "path": [
-    11,
+    10,
     "description",
     "he"
    ]
-  }
+  },
+  "en": "Instantly upgrades a placed card to its stronger version (level 2) for the match."
  },
  {
-  "id": "d177",
+  "id": "d175",
   "section": "קלפי פעולה",
   "text": "זימון אמנדה",
   "where": {
    "kind": "json",
    "file": "data/action-cards.json",
    "path": [
-    12,
+    11,
     "name",
     "he"
    ]
-  }
+  },
+  "en": "Amanda's Awakening"
  },
  {
-  "id": "d178",
+  "id": "d176",
   "section": "קלפי פעולה",
   "text": "עוצר את המשחק התחרותי, מאחד את הלוחות ומכניס את שני השחקנים לקרב Co-Op משותף מול אמנדה.",
   "where": {
    "kind": "json",
    "file": "data/action-cards.json",
    "path": [
-    12,
+    11,
     "description",
     "he"
    ]
-  }
+  },
+  "en": "Halts the competitive match, merges the boards and drops both players into a co-op battle against Amanda."
  },
  {
-  "id": "d179",
+  "id": "d177",
   "section": "קלפי פעולה",
   "text": "פינוי קלף",
   "where": {
    "kind": "json",
    "file": "data/action-cards.json",
    "path": [
-    13,
+    12,
     "name",
     "he"
    ]
-  }
+  },
+  "en": "Recall Card"
  },
  {
-  "id": "d180",
+  "id": "d178",
   "section": "קלפי פעולה",
   "text": "בלחיצה: בחר קלף שהנחת על הלוח והורד אותו (המשבצת מתפנה). מנטרל את ההדבקה.",
   "where": {
    "kind": "json",
    "file": "data/action-cards.json",
    "path": [
-    13,
+    12,
     "description",
     "he"
    ]
-  }
+  },
+  "en": "On use: pick a card you placed and remove it (its slot frees up). Undoes the glue."
  },
  {
-  "id": "d181",
+  "id": "d179",
   "section": "קלפי פעולה",
   "text": "מילוי לאבה",
   "where": {
    "kind": "json",
    "file": "data/action-cards.json",
    "path": [
-    14,
+    13,
     "name",
     "he"
    ]
-  }
+  },
+  "en": "Lava Fill"
  },
  {
-  "id": "d182",
+  "id": "d180",
   "section": "קלפי פעולה",
   "text": "פסיבי: בסוף הבנייה ממלא עד 3 משבצות ריקות ב'לאבה' (במקום מפלצת פירורים) במיקומים אקראיים.",
   "where": {
    "kind": "json",
    "file": "data/action-cards.json",
    "path": [
-    14,
+    13,
     "description",
     "he"
    ]
-  }
+  },
+  "en": "Passive: at the end of building, fills up to 3 empty slots with Lava (instead of Crumb Demons) at random positions."
  },
  {
-  "id": "d183",
+  "id": "d181",
   "section": "קלפי פעולה",
   "text": "מילוי גולם אבן",
   "where": {
    "kind": "json",
    "file": "data/action-cards.json",
    "path": [
-    15,
+    14,
     "name",
     "he"
    ]
-  }
+  },
+  "en": "Colossus Fill"
  },
  {
-  "id": "d184",
+  "id": "d182",
   "section": "קלפי פעולה",
   "text": "פסיבי: בסוף הבנייה ממלא עד 3 משבצות ריקות ב'גולם אבן' במיקומים אקראיים.",
   "where": {
    "kind": "json",
    "file": "data/action-cards.json",
    "path": [
-    15,
+    14,
     "description",
     "he"
    ]
-  }
+  },
+  "en": "Passive: at the end of building, fills up to 3 empty slots with Stone Colossus at random positions."
  },
  {
-  "id": "d185",
+  "id": "d183",
   "section": "קלפי פעולה",
   "text": "מילוי דרקון אש",
   "where": {
    "kind": "json",
    "file": "data/action-cards.json",
    "path": [
-    16,
+    15,
     "name",
     "he"
    ]
-  }
+  },
+  "en": "Flame Fill"
  },
  {
-  "id": "d186",
+  "id": "d184",
   "section": "קלפי פעולה",
   "text": "פסיבי: בסוף הבנייה ממלא עד 3 משבצות ריקות ב'פליים דראגון' במיקומים אקראיים.",
   "where": {
    "kind": "json",
    "file": "data/action-cards.json",
    "path": [
-    16,
+    15,
     "description",
     "he"
    ]
-  }
+  },
+  "en": "Passive: at the end of building, fills up to 3 empty slots with Flame Dragon at random positions."
  },
  {
-  "id": "d187",
+  "id": "d185",
   "section": "קלפי פעולה",
   "text": "מילוי קוביית ג'לי",
   "where": {
    "kind": "json",
    "file": "data/action-cards.json",
    "path": [
-    17,
+    16,
     "name",
     "he"
    ]
-  }
+  },
+  "en": "Cube Fill"
  },
  {
-  "id": "d188",
+  "id": "d186",
   "section": "קלפי פעולה",
   "text": "פסיבי: בסוף הבנייה ממלא עד 3 משבצות ריקות ב'קוביית ג'לי' במיקומים אקראיים.",
   "where": {
    "kind": "json",
    "file": "data/action-cards.json",
    "path": [
-    17,
+    16,
     "description",
     "he"
    ]
-  }
+  },
+  "en": "Passive: at the end of building, fills up to 3 empty slots with Gelatinous Cube at random positions."
  },
  {
-  "id": "d189",
+  "id": "d187",
   "section": "קלפי פעולה",
   "text": "ידיים קפואות",
   "where": {
    "kind": "json",
    "file": "data/action-cards.json",
    "path": [
-    18,
+    17,
     "name",
     "he"
    ]
-  }
+  },
+  "en": "Frozen Hands"
  },
  {
-  "id": "d190",
+  "id": "d188",
   "section": "קלפי פעולה",
   "text": "היריב קופא לחמש שניות. לשלוף ולזרוק הוא עוד יכול — להדביק קלפים באלבום כבר לא. אי אפשר לשחק את זה כשנותרו פחות מעשר שניות בנייה.",
   "where": {
    "kind": "json",
    "file": "data/action-cards.json",
    "path": [
-    18,
+    17,
     "description",
     "he"
    ]
-  }
+  },
+  "en": "Freezes the opponent for five seconds: they can still draw, discard and play action cards, but they cannot place a card on the board. Unplayable with under ten seconds of building left."
  },
  {
-  "id": "s191",
+  "id": "s189",
   "section": "הקול של אמנדה — שורות מתחלפות (כמה גרסאות לכל רגע)",
   "text": "כבר הולך?",
   "where": {
    "kind": "source",
    "file": "apps/client/src/data/voice.ts",
-   "line": 25
+   "line": 69
   }
  },
  {
-  "id": "s192",
+  "id": "s190",
   "section": "הקול של אמנדה — שורות מתחלפות (כמה גרסאות לכל רגע)",
   "text": "מה, זהו?",
   "where": {
    "kind": "source",
    "file": "apps/client/src/data/voice.ts",
-   "line": 26
+   "line": 70
   }
  },
  {
-  "id": "s193",
+  "id": "s191",
   "section": "הקול של אמנדה — שורות מתחלפות (כמה גרסאות לכל רגע)",
   "text": "ברצינות?",
   "where": {
    "kind": "source",
    "file": "apps/client/src/data/voice.ts",
-   "line": 27
+   "line": 71
   }
  },
  {
-  "id": "s194",
+  "id": "s192",
   "section": "הקול של אמנדה — שורות מתחלפות (כמה גרסאות לכל רגע)",
   "text": "עכשיו דווקא?",
   "where": {
    "kind": "source",
    "file": "apps/client/src/data/voice.ts",
-   "line": 28
+   "line": 72
   }
  },
  {
-  "id": "s195",
+  "id": "s193",
   "section": "הקול של אמנדה — שורות מתחלפות (כמה גרסאות לכל רגע)",
   "text": "אבל רק התחלנו",
   "where": {
    "kind": "source",
    "file": "apps/client/src/data/voice.ts",
-   "line": 29
+   "line": 73
   }
  },
  {
-  "id": "s196",
+  "id": "s194",
   "section": "הקול של אמנדה — שורות מתחלפות (כמה גרסאות לכל רגע)",
   "text": "הלוח שבנית נמחק. אשמור לך מקום בתפריט שלי, ילד.",
   "where": {
    "kind": "source",
    "file": "apps/client/src/data/voice.ts",
-   "line": 33
+   "line": 77
   }
  },
  {
-  "id": "s197",
+  "id": "s195",
+  "section": "הקול של אמנדה — שורות מתחלפות (כמה גרסאות לכל רגע)",
+  "text": "הלוח שבנית נמחק. אשמור לך מקום בתפריט שלי, ילדה.",
+  "where": {
+   "kind": "source",
+   "file": "apps/client/src/data/voice.ts",
+   "line": 77
+  }
+ },
+ {
+  "id": "s196",
   "section": "הקול של אמנדה — שורות מתחלפות (כמה גרסאות לכל רגע)",
   "text": "כל מה שבנית הולך לפח. אני אשרוד איכשהו.",
   "where": {
    "kind": "source",
    "file": "apps/client/src/data/voice.ts",
-   "line": 34
+   "line": 78
   }
  },
  {
-  "id": "s198",
+  "id": "s197",
   "section": "הקול של אמנדה — שורות מתחלפות (כמה גרסאות לכל רגע)",
   "text": "הלוח נמחק והקרב לא יקרה. אף אחד לא ידע שהיית כאן.",
   "where": {
    "kind": "source",
    "file": "apps/client/src/data/voice.ts",
-   "line": 35
+   "line": 79
   }
  },
  {
-  "id": "s199",
+  "id": "s198",
   "section": "הקול של אמנדה — שורות מתחלפות (כמה גרסאות לכל רגע)",
   "text": "אני מוחקת את הלוח. אל תדאג, אני זוכרת אותך.",
   "where": {
    "kind": "source",
    "file": "apps/client/src/data/voice.ts",
-   "line": 36
+   "line": 80
+  }
+ },
+ {
+  "id": "s199",
+  "section": "הקול של אמנדה — שורות מתחלפות (כמה גרסאות לכל רגע)",
+  "text": "זה נמחק והולך. כולם חוזרים.",
+  "where": {
+   "kind": "source",
+   "file": "apps/client/src/data/voice.ts",
+   "line": 81
   }
  },
  {
   "id": "s200",
   "section": "הקול של אמנדה — שורות מתחלפות (כמה גרסאות לכל רגע)",
-  "text": "זה נמחק והולך. אתה תחזור, כולם חוזרים.",
+  "text": "כן, אני בורח",
   "where": {
    "kind": "source",
    "file": "apps/client/src/data/voice.ts",
-   "line": 37
+   "line": 85
   }
  },
  {
   "id": "s201",
   "section": "הקול של אמנדה — שורות מתחלפות (כמה גרסאות לכל רגע)",
-  "text": "כן, אני בורח",
+  "text": "כן, מספיק לי",
   "where": {
    "kind": "source",
    "file": "apps/client/src/data/voice.ts",
-   "line": 41
+   "line": 86
   }
  },
  {
   "id": "s202",
   "section": "הקול של אמנדה — שורות מתחלפות (כמה גרסאות לכל רגע)",
-  "text": "כן, מספיק לי",
+  "text": "כן, שחרר אותי",
   "where": {
    "kind": "source",
    "file": "apps/client/src/data/voice.ts",
-   "line": 42
+   "line": 87
   }
  },
  {
   "id": "s203",
   "section": "הקול של אמנדה — שורות מתחלפות (כמה גרסאות לכל רגע)",
-  "text": "כן, שחרר אותי",
+  "text": "כן, ביי",
   "where": {
    "kind": "source",
    "file": "apps/client/src/data/voice.ts",
-   "line": 43
+   "line": 88
   }
  },
  {
   "id": "s204",
   "section": "הקול של אמנדה — שורות מתחלפות (כמה גרסאות לכל רגע)",
-  "text": "כן, ביי",
+  "text": "לא, אני נשאר",
   "where": {
    "kind": "source",
    "file": "apps/client/src/data/voice.ts",
-   "line": 44
+   "line": 92
   }
  },
  {
   "id": "s205",
   "section": "הקול של אמנדה — שורות מתחלפות (כמה גרסאות לכל רגע)",
-  "text": "לא, אני נשאר",
+  "text": "לא, בוא נשחק",
   "where": {
    "kind": "source",
    "file": "apps/client/src/data/voice.ts",
-   "line": 48
+   "line": 93
   }
  },
  {
   "id": "s206",
   "section": "הקול של אמנדה — שורות מתחלפות (כמה גרסאות לכל רגע)",
-  "text": "לא, בוא נשחק",
+  "text": "לא, בואי נשחק",
   "where": {
    "kind": "source",
    "file": "apps/client/src/data/voice.ts",
-   "line": 49
+   "line": 93
   }
  },
  {
@@ -2934,7 +3108,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/data/voice.ts",
-   "line": 50
+   "line": 94
   }
  },
  {
@@ -2944,7 +3118,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/data/voice.ts",
-   "line": 51
+   "line": 95
   }
  },
  {
@@ -2954,7 +3128,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/data/voice.ts",
-   "line": 59
+   "line": 103
   }
  },
  {
@@ -2964,7 +3138,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/data/voice.ts",
-   "line": 60
+   "line": 104
   }
  },
  {
@@ -2974,233 +3148,33 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/data/voice.ts",
-   "line": 61
+   "line": 105
   }
  },
  {
   "id": "s212",
   "section": "הקול של אמנדה — שורות מתחלפות (כמה גרסאות לכל רגע)",
-  "text": "ניצחת. אל תתרגל.",
+  "text": "יפה, ילדה.",
   "where": {
    "kind": "source",
    "file": "apps/client/src/data/voice.ts",
-   "line": 62
+   "line": 105
   }
  },
  {
   "id": "s213",
   "section": "הקול של אמנדה — שורות מתחלפות (כמה גרסאות לכל רגע)",
-  "text": "טוב. באמת טוב.",
+  "text": "ניצחת. אל תתרגל.",
   "where": {
    "kind": "source",
    "file": "apps/client/src/data/voice.ts",
-   "line": 63
+   "line": 106
   }
  },
  {
   "id": "s214",
   "section": "הקול של אמנדה — שורות מתחלפות (כמה גרסאות לכל רגע)",
-  "text": "הפסדת. טעים.",
-  "where": {
-   "kind": "source",
-   "file": "apps/client/src/data/voice.ts",
-   "line": 67
-  }
- },
- {
-  "id": "s215",
-  "section": "הקול של אמנדה — שורות מתחלפות (כמה גרסאות לכל רגע)",
-  "text": "הפסדת. היה נחמד.",
-  "where": {
-   "kind": "source",
-   "file": "apps/client/src/data/voice.ts",
-   "line": 68
-  }
- },
- {
-  "id": "s216",
-  "section": "הקול של אמנדה — שורות מתחלפות (כמה גרסאות לכל רגע)",
-  "text": "זהו. תודה על הארוחה.",
-  "where": {
-   "kind": "source",
-   "file": "apps/client/src/data/voice.ts",
-   "line": 69
-  }
- },
- {
-  "id": "s217",
-  "section": "הקול של אמנדה — שורות מתחלפות (כמה גרסאות לכל רגע)",
-  "text": "הפסדת, וידעת שזה יקרה.",
-  "where": {
-   "kind": "source",
-   "file": "apps/client/src/data/voice.ts",
-   "line": 70
-  }
- },
- {
-  "id": "s218",
-  "section": "הקול של אמנדה — שורות מתחלפות (כמה גרסאות לכל רגע)",
-  "text": "אוי. כמעט.",
-  "where": {
-   "kind": "source",
-   "file": "apps/client/src/data/voice.ts",
-   "line": 71
-  }
- },
- {
-  "id": "s219",
-  "section": "הקול של אמנדה — שורות מתחלפות (כמה גרסאות לכל רגע)",
-  "text": "היריב ברח. ניצחת בטכני.",
-  "where": {
-   "kind": "source",
-   "file": "apps/client/src/data/voice.ts",
-   "line": 76
-  }
- },
- {
-  "id": "s220",
-  "section": "הקול של אמנדה — שורות מתחלפות (כמה גרסאות לכל רגע)",
-  "text": "הוא ברח. אני לא מאשימה אותו.",
-  "where": {
-   "kind": "source",
-   "file": "apps/client/src/data/voice.ts",
-   "line": 77
-  }
- },
- {
-  "id": "s221",
-  "section": "הקול של אמנדה — שורות מתחלפות (כמה גרסאות לכל רגע)",
-  "text": "נשארת לבד. זה נחשב ניצחון.",
-  "where": {
-   "kind": "source",
-   "file": "apps/client/src/data/voice.ts",
-   "line": 78
-  }
- },
- {
-  "id": "s222",
-  "section": "הקול של אמנדה — שורות מתחלפות (כמה גרסאות לכל רגע)",
-  "text": "היריב נעלם. אכלתי אותו בדרך.",
-  "where": {
-   "kind": "source",
-   "file": "apps/client/src/data/voice.ts",
-   "line": 79
-  }
- },
- {
-  "id": "s223",
-  "section": "הקול של אמנדה — שורות מתחלפות (כמה גרסאות לכל רגע)",
-  "text": "התכונן לקרב, ילד",
-  "where": {
-   "kind": "source",
-   "file": "apps/client/src/data/voice.ts",
-   "line": 84
-  }
- },
- {
-  "id": "s224",
-  "section": "הקול של אמנדה — שורות מתחלפות (כמה גרסאות לכל רגע)",
-  "text": "תתארגן, ילד",
-  "where": {
-   "kind": "source",
-   "file": "apps/client/src/data/voice.ts",
-   "line": 85
-  }
- },
- {
-  "id": "s225",
-  "section": "הקול של אמנדה — שורות מתחלפות (כמה גרסאות לכל רגע)",
-  "text": "מתחילים. תנשום.",
-  "where": {
-   "kind": "source",
-   "file": "apps/client/src/data/voice.ts",
-   "line": 86
-  }
- },
- {
-  "id": "s226",
-  "section": "הקול של אמנדה — שורות מתחלפות (כמה גרסאות לכל רגע)",
-  "text": "קדימה, ילד",
-  "where": {
-   "kind": "source",
-   "file": "apps/client/src/data/voice.ts",
-   "line": 87
-  }
- },
- {
-  "id": "s227",
-  "section": "הקול של אמנדה — שורות מתחלפות (כמה גרסאות לכל רגע)",
-  "text": "קדימה לקרב!",
-  "where": {
-   "kind": "source",
-   "file": "apps/client/src/data/voice.ts",
-   "line": 92
-  }
- },
- {
-  "id": "s228",
-  "section": "הקול של אמנדה — שורות מתחלפות (כמה גרסאות לכל רגע)",
-  "text": "ועכשיו: לקרב!",
-  "where": {
-   "kind": "source",
-   "file": "apps/client/src/data/voice.ts",
-   "line": 93
-  }
- },
- {
-  "id": "s229",
-  "section": "הקול של אמנדה — שורות מתחלפות (כמה גרסאות לכל רגע)",
-  "text": "בואו נלחם!",
-  "where": {
-   "kind": "source",
-   "file": "apps/client/src/data/voice.ts",
-   "line": 94
-  }
- },
- {
-  "id": "s230",
-  "section": "הקול של אמנדה — שורות מתחלפות (כמה גרסאות לכל רגע)",
-  "text": "הקרב מתחיל, ילד",
-  "where": {
-   "kind": "source",
-   "file": "apps/client/src/data/voice.ts",
-   "line": 99
-  }
- },
- {
-  "id": "s231",
-  "section": "הקול של אמנדה — שורות מתחלפות (כמה גרסאות לכל רגע)",
-  "text": "ועכשיו נראה מה בנית",
-  "where": {
-   "kind": "source",
-   "file": "apps/client/src/data/voice.ts",
-   "line": 100
-  }
- },
- {
-  "id": "s232",
-  "section": "הקול של אמנדה — שורות מתחלפות (כמה גרסאות לכל רגע)",
-  "text": "מאוחר מדי לשנות",
-  "where": {
-   "kind": "source",
-   "file": "apps/client/src/data/voice.ts",
-   "line": 101
-  }
- },
- {
-  "id": "s233",
-  "section": "הקול של אמנדה — שורות מתחלפות (כמה גרסאות לכל רגע)",
-  "text": "בוא נראה אותך",
-  "where": {
-   "kind": "source",
-   "file": "apps/client/src/data/voice.ts",
-   "line": 102
-  }
- },
- {
-  "id": "s234",
-  "section": "הקול של אמנדה — שורות מתחלפות (כמה גרסאות לכל רגע)",
-  "text": "⚠️ עדיין אין מלך",
+  "text": "טוב. באמת טוב.",
   "where": {
    "kind": "source",
    "file": "apps/client/src/data/voice.ts",
@@ -3208,39 +3182,49 @@
   }
  },
  {
-  "id": "s235",
+  "id": "s215",
   "section": "הקול של אמנדה — שורות מתחלפות (כמה גרסאות לכל רגע)",
-  "text": "⚠️ בלי מלך אין ממלכה",
+  "text": "הפסדת. טעים.",
   "where": {
    "kind": "source",
    "file": "apps/client/src/data/voice.ts",
-   "line": 108
+   "line": 111
   }
  },
  {
-  "id": "s236",
+  "id": "s216",
   "section": "הקול של אמנדה — שורות מתחלפות (כמה גרסאות לכל רגע)",
-  "text": "⚠️ שכחת מלך",
+  "text": "הפסדת. היה נחמד.",
   "where": {
    "kind": "source",
    "file": "apps/client/src/data/voice.ts",
-   "line": 109
+   "line": 112
   }
  },
  {
-  "id": "s237",
+  "id": "s217",
   "section": "הקול של אמנדה — שורות מתחלפות (כמה גרסאות לכל רגע)",
-  "text": "⚠️ מי מולך פה?",
+  "text": "זהו. תודה על הארוחה.",
   "where": {
    "kind": "source",
    "file": "apps/client/src/data/voice.ts",
-   "line": 110
+   "line": 113
   }
  },
  {
-  "id": "s238",
+  "id": "s218",
   "section": "הקול של אמנדה — שורות מתחלפות (כמה גרסאות לכל רגע)",
-  "text": "מחפשת לך מישהו מתוק",
+  "text": "הפסדת, וידעת שזה יקרה.",
+  "where": {
+   "kind": "source",
+   "file": "apps/client/src/data/voice.ts",
+   "line": 114
+  }
+ },
+ {
+  "id": "s219",
+  "section": "הקול של אמנדה — שורות מתחלפות (כמה גרסאות לכל רגע)",
+  "text": "אוי. כמעט.",
   "where": {
    "kind": "source",
    "file": "apps/client/src/data/voice.ts",
@@ -3248,69 +3232,119 @@
   }
  },
  {
-  "id": "s239",
+  "id": "s220",
   "section": "הקול של אמנדה — שורות מתחלפות (כמה גרסאות לכל רגע)",
-  "text": "מחפשת לך יריב. סבלנות.",
+  "text": "היריב ברח. ניצחת בטכני.",
   "where": {
    "kind": "source",
    "file": "apps/client/src/data/voice.ts",
-   "line": 116
+   "line": 120
   }
  },
  {
-  "id": "s240",
+  "id": "s221",
   "section": "הקול של אמנדה — שורות מתחלפות (כמה גרסאות לכל רגע)",
-  "text": "מישהו יבוא. תמיד בא מישהו.",
+  "text": "הוא ברח. אני לא מאשימה אותו.",
   "where": {
    "kind": "source",
    "file": "apps/client/src/data/voice.ts",
-   "line": 117
+   "line": 121
   }
  },
  {
-  "id": "s241",
+  "id": "s222",
   "section": "הקול של אמנדה — שורות מתחלפות (כמה גרסאות לכל רגע)",
-  "text": "רגע, אני מסדרת לך משחק",
+  "text": "נשארת לבד. זה נחשב ניצחון.",
   "where": {
    "kind": "source",
    "file": "apps/client/src/data/voice.ts",
-   "line": 118
+   "line": 122
   }
  },
  {
-  "id": "s242",
+  "id": "s223",
   "section": "הקול של אמנדה — שורות מתחלפות (כמה גרסאות לכל רגע)",
-  "text": "קודם כול מלך, ילד. הוא לא זז, הוא חזק פי שלושה, ואם הוא נופל — נגמר. גרור מפלצת לאמצע. קלף פעולה ביד? לפח איתו.",
+  "text": "היריב נעלם. אכלתי אותו בדרך.",
   "where": {
    "kind": "source",
    "file": "apps/client/src/data/voice.ts",
-   "line": 133
+   "line": 123
   }
  },
  {
-  "id": "s243",
+  "id": "s224",
   "section": "הקול של אמנדה — שורות מתחלפות (כמה גרסאות לכל רגע)",
-  "text": "שתי המשבצות האלה שומרות עליו. כל עוד מישהו עומד שם, אי אפשר לגעת בו.",
+  "text": "התכונן לקרב, ילד",
   "where": {
    "kind": "source",
    "file": "apps/client/src/data/voice.ts",
-   "line": 134
+   "line": 128
   }
  },
  {
-  "id": "s244",
+  "id": "s225",
   "section": "הקול של אמנדה — שורות מתחלפות (כמה גרסאות לכל רגע)",
-  "text": "זה מה שיש לך ביד. לא מוצא חן בעיניך? לפח. אבל רק הקלף העליון חוזר, אז תחשוב.",
+  "text": "התכונני לקרב, ילדה",
   "where": {
    "kind": "source",
    "file": "apps/client/src/data/voice.ts",
-   "line": 135
+   "line": 128
   }
  },
  {
-  "id": "s245",
+  "id": "s226",
   "section": "הקול של אמנדה — שורות מתחלפות (כמה גרסאות לכל רגע)",
-  "text": "תמלא את מה שאתה יכול. מה שיישאר ריק — אני אמלא בשבילך, ולא תאהב את זה.",
+  "text": "תתארגן, ילד",
+  "where": {
+   "kind": "source",
+   "file": "apps/client/src/data/voice.ts",
+   "line": 129
+  }
+ },
+ {
+  "id": "s227",
+  "section": "הקול של אמנדה — שורות מתחלפות (כמה גרסאות לכל רגע)",
+  "text": "תתארגני, ילדה",
+  "where": {
+   "kind": "source",
+   "file": "apps/client/src/data/voice.ts",
+   "line": 129
+  }
+ },
+ {
+  "id": "s228",
+  "section": "הקול של אמנדה — שורות מתחלפות (כמה גרסאות לכל רגע)",
+  "text": "מתחילים. תנשום.",
+  "where": {
+   "kind": "source",
+   "file": "apps/client/src/data/voice.ts",
+   "line": 130
+  }
+ },
+ {
+  "id": "s229",
+  "section": "הקול של אמנדה — שורות מתחלפות (כמה גרסאות לכל רגע)",
+  "text": "קדימה, ילד",
+  "where": {
+   "kind": "source",
+   "file": "apps/client/src/data/voice.ts",
+   "line": 131
+  }
+ },
+ {
+  "id": "s230",
+  "section": "הקול של אמנדה — שורות מתחלפות (כמה גרסאות לכל רגע)",
+  "text": "קדימה, ילדה",
+  "where": {
+   "kind": "source",
+   "file": "apps/client/src/data/voice.ts",
+   "line": 131
+  }
+ },
+ {
+  "id": "s231",
+  "section": "הקול של אמנדה — שורות מתחלפות (כמה גרסאות לכל רגע)",
+  "text": "קדימה לקרב!",
   "where": {
    "kind": "source",
    "file": "apps/client/src/data/voice.ts",
@@ -3318,9 +3352,9 @@
   }
  },
  {
-  "id": "s246",
+  "id": "s232",
   "section": "הקול של אמנדה — שורות מתחלפות (כמה גרסאות לכל רגע)",
-  "text": "וכשתחשוב שאתה מוכן, תלחץ. אני כבר מוכנה.",
+  "text": "ועכשיו: לקרב!",
   "where": {
    "kind": "source",
    "file": "apps/client/src/data/voice.ts",
@@ -3328,859 +3362,969 @@
   }
  },
  {
-  "id": "s247",
+  "id": "s233",
   "section": "הקול של אמנדה — שורות מתחלפות (כמה גרסאות לכל רגע)",
-  "text": "אז הגעת. יופי. לפני שנתחיל אני רוצה לדעת את מי אני אוכלת.",
+  "text": "בואו נלחם!",
   "where": {
    "kind": "source",
    "file": "apps/client/src/data/voice.ts",
-   "line": 147
+   "line": 138
+  }
+ },
+ {
+  "id": "s234",
+  "section": "הקול של אמנדה — שורות מתחלפות (כמה גרסאות לכל רגע)",
+  "text": "הקרב מתחיל, ילד",
+  "where": {
+   "kind": "source",
+   "file": "apps/client/src/data/voice.ts",
+   "line": 143
+  }
+ },
+ {
+  "id": "s235",
+  "section": "הקול של אמנדה — שורות מתחלפות (כמה גרסאות לכל רגע)",
+  "text": "הקרב מתחיל, ילדה",
+  "where": {
+   "kind": "source",
+   "file": "apps/client/src/data/voice.ts",
+   "line": 143
+  }
+ },
+ {
+  "id": "s236",
+  "section": "הקול של אמנדה — שורות מתחלפות (כמה גרסאות לכל רגע)",
+  "text": "ועכשיו נראה מה בנית",
+  "where": {
+   "kind": "source",
+   "file": "apps/client/src/data/voice.ts",
+   "line": 144
+  }
+ },
+ {
+  "id": "s237",
+  "section": "הקול של אמנדה — שורות מתחלפות (כמה גרסאות לכל רגע)",
+  "text": "מאוחר מדי לשנות",
+  "where": {
+   "kind": "source",
+   "file": "apps/client/src/data/voice.ts",
+   "line": 145
+  }
+ },
+ {
+  "id": "s238",
+  "section": "הקול של אמנדה — שורות מתחלפות (כמה גרסאות לכל רגע)",
+  "text": "בוא נראה אותך",
+  "where": {
+   "kind": "source",
+   "file": "apps/client/src/data/voice.ts",
+   "line": 146
+  }
+ },
+ {
+  "id": "s239",
+  "section": "הקול של אמנדה — שורות מתחלפות (כמה גרסאות לכל רגע)",
+  "text": "בואי נראה אותך",
+  "where": {
+   "kind": "source",
+   "file": "apps/client/src/data/voice.ts",
+   "line": 146
+  }
+ },
+ {
+  "id": "s240",
+  "section": "הקול של אמנדה — שורות מתחלפות (כמה גרסאות לכל רגע)",
+  "text": "מחפשת לך מישהו מתוק",
+  "where": {
+   "kind": "source",
+   "file": "apps/client/src/data/voice.ts",
+   "line": 163
+  }
+ },
+ {
+  "id": "s241",
+  "section": "הקול של אמנדה — שורות מתחלפות (כמה גרסאות לכל רגע)",
+  "text": "מחפשת לך יריב. סבלנות.",
+  "where": {
+   "kind": "source",
+   "file": "apps/client/src/data/voice.ts",
+   "line": 164
+  }
+ },
+ {
+  "id": "s242",
+  "section": "הקול של אמנדה — שורות מתחלפות (כמה גרסאות לכל רגע)",
+  "text": "מישהו יבוא. תמיד בא מישהו.",
+  "where": {
+   "kind": "source",
+   "file": "apps/client/src/data/voice.ts",
+   "line": 165
+  }
+ },
+ {
+  "id": "s243",
+  "section": "הקול של אמנדה — שורות מתחלפות (כמה גרסאות לכל רגע)",
+  "text": "רגע, אני מסדרת לך משחק",
+  "where": {
+   "kind": "source",
+   "file": "apps/client/src/data/voice.ts",
+   "line": 166
+  }
+ },
+ {
+  "id": "s244",
+  "section": "הקול של אמנדה — שורות מתחלפות (כמה גרסאות לכל רגע)",
+  "text": "קודם כול מלך. הוא לא זז, הוא חזק פי שלושה, ואם הוא נופל — נגמר. גרור מפלצת לאמצע. קלף פעולה ביד? לפח איתו.",
+  "where": {
+   "kind": "source",
+   "file": "apps/client/src/data/voice.ts",
+   "line": 182
+  }
+ },
+ {
+  "id": "s245",
+  "section": "הקול של אמנדה — שורות מתחלפות (כמה גרסאות לכל רגע)",
+  "text": "שתי המשבצות האלה שומרות עליו. כל עוד מישהו עומד שם, אי אפשר לגעת בו.",
+  "where": {
+   "kind": "source",
+   "file": "apps/client/src/data/voice.ts",
+   "line": 183
+  }
+ },
+ {
+  "id": "s246",
+  "section": "הקול של אמנדה — שורות מתחלפות (כמה גרסאות לכל רגע)",
+  "text": "זה מה שיש לך ביד. לא מוצא חן בעיניך? לפח. אבל רק הקלף העליון חוזר, אז תחשוב.",
+  "where": {
+   "kind": "source",
+   "file": "apps/client/src/data/voice.ts",
+   "line": 184
+  }
+ },
+ {
+  "id": "s247",
+  "section": "הקול של אמנדה — שורות מתחלפות (כמה גרסאות לכל רגע)",
+  "text": "כל מה שאפשר למלא — למלא. מה שיישאר ריק אני אמלא, וזה לא יהיה נעים.",
+  "where": {
+   "kind": "source",
+   "file": "apps/client/src/data/voice.ts",
+   "line": 185
   }
  },
  {
   "id": "s248",
   "section": "הקול של אמנדה — שורות מתחלפות (כמה גרסאות לכל רגע)",
-  "text": "בחר לך פרצוף. זה מה שאני אזכור.",
+  "text": "וכשזה נראה מוכן — ללחוץ. אני כבר מוכנה.",
   "where": {
    "kind": "source",
    "file": "apps/client/src/data/voice.ts",
-   "line": 148
+   "line": 186
   }
  },
  {
   "id": "s249",
   "section": "הקול של אמנדה — שורות מתחלפות (כמה גרסאות לכל רגע)",
-  "text": "ואיך קוראים לך? תן שם שאפשר לצעוק.",
+  "text": "רגע. לפני הכול — אני מדברת אל ילד או אל ילדה?",
   "where": {
    "kind": "source",
    "file": "apps/client/src/data/voice.ts",
-   "line": 149
+   "line": 201
   }
  },
  {
   "id": "s250",
   "section": "הקול של אמנדה — שורות מתחלפות (כמה גרסאות לכל רגע)",
-  "text": "ומתי נולדת? זה רק בשבילי. אני אוהבת לדעת כמה זמן חיכיתי.",
+  "text": "אז הגעת. יופי. לפני שנתחיל אני רוצה לדעת את מי אני אוכלת.",
   "where": {
    "kind": "source",
    "file": "apps/client/src/data/voice.ts",
-   "line": 150
+   "line": 202
   }
  },
  {
   "id": "s251",
   "section": "הקול של אמנדה — שורות מתחלפות (כמה גרסאות לכל רגע)",
-  "text": "משהו בפנים. תפתח כבר.",
+  "text": "בחר לך פרצוף. זה מה שאני אזכור.",
   "where": {
    "kind": "source",
    "file": "apps/client/src/data/voice.ts",
-   "line": 155
+   "line": 203
   }
  },
  {
   "id": "s252",
   "section": "הקול של אמנדה — שורות מתחלפות (כמה גרסאות לכל רגע)",
-  "text": "זכית. אל תתרגש מדי.",
+  "text": "ואיך קוראים לך? תן שם שאפשר לצעוק.",
   "where": {
    "kind": "source",
    "file": "apps/client/src/data/voice.ts",
-   "line": 156
+   "line": 204
   }
  },
  {
   "id": "s253",
   "section": "הקול של אמנדה — שורות מתחלפות (כמה גרסאות לכל רגע)",
-  "text": "קח, הרווחת.",
+  "text": "ומתי נולדת? זה רק בשבילי. אני אוהבת לדעת כמה זמן חיכיתי.",
   "where": {
    "kind": "source",
    "file": "apps/client/src/data/voice.ts",
-   "line": 157
+   "line": 205
   }
  },
  {
   "id": "s254",
   "section": "הקול של אמנדה — שורות מתחלפות (כמה גרסאות לכל רגע)",
-  "text": "בוא נראה מה יצא לך.",
+  "text": "משהו בפנים. תפתח כבר.",
   "where": {
    "kind": "source",
    "file": "apps/client/src/data/voice.ts",
-   "line": 158
+   "line": 210
   }
  },
  {
   "id": "s255",
   "section": "הקול של אמנדה — שורות מתחלפות (כמה גרסאות לכל רגע)",
-  "text": "זה לא יפתח את עצמו.",
+  "text": "זכית. אל תתרגש מדי.",
   "where": {
    "kind": "source",
    "file": "apps/client/src/data/voice.ts",
-   "line": 159
+   "line": 211
   }
  },
  {
   "id": "s256",
-  "section": "מסכי המשחק — פתיחה, בנייה, קרב, תוצאה",
-  "text": "של היריב",
+  "section": "הקול של אמנדה — שורות מתחלפות (כמה גרסאות לכל רגע)",
+  "text": "קח, הרווחת.",
   "where": {
    "kind": "source",
-   "file": "apps/client/src/App.tsx",
-   "line": 38
+   "file": "apps/client/src/data/voice.ts",
+   "line": 212
   }
  },
  {
   "id": "s257",
-  "section": "מסכי המשחק — פתיחה, בנייה, קרב, תוצאה",
-  "text": "שלך",
+  "section": "הקול של אמנדה — שורות מתחלפות (כמה גרסאות לכל רגע)",
+  "text": "בוא נראה מה יצא לך.",
   "where": {
    "kind": "source",
-   "file": "apps/client/src/App.tsx",
-   "line": 38
+   "file": "apps/client/src/data/voice.ts",
+   "line": 213
   }
  },
  {
   "id": "s258",
-  "section": "מסכי המשחק — פתיחה, בנייה, קרב, תוצאה",
-  "text": "המלך ${whose} נפל — זה מסיים את הקרב מיד.",
+  "section": "הקול של אמנדה — שורות מתחלפות (כמה גרסאות לכל רגע)",
+  "text": "בואי נראה מה יצא לך.",
   "where": {
    "kind": "source",
-   "file": "apps/client/src/App.tsx",
-   "line": 42
+   "file": "apps/client/src/data/voice.ts",
+   "line": 213
   }
  },
  {
   "id": "s259",
-  "section": "מסכי המשחק — פתיחה, בנייה, קרב, תוצאה",
-  "text": "נגמר הזמן והמלכים שרדו עם אותו אחוז חיים — הוכרע לפי סך החיים על הלוח.",
+  "section": "הקול של אמנדה — שורות מתחלפות (כמה גרסאות לכל רגע)",
+  "text": "זה לא יפתח את עצמו.",
   "where": {
    "kind": "source",
-   "file": "apps/client/src/App.tsx",
-   "line": 52
+   "file": "apps/client/src/data/voice.ts",
+   "line": 214
   }
  },
  {
   "id": "s260",
   "section": "מסכי המשחק — פתיחה, בנייה, קרב, תוצאה",
-  "text": "נגמר הזמן והחיים היו שווים — הוכרע לפי מספר הקלפים ששרדו.",
+  "text": "לרוקן את ${name}",
   "where": {
    "kind": "source",
    "file": "apps/client/src/App.tsx",
-   "line": 54
+   "line": 104
   }
  },
  {
   "id": "s261",
   "section": "מסכי המשחק — פתיחה, בנייה, קרב, תוצאה",
-  "text": "נגמר הזמן והכול יצא שווה לחלוטין — הוכרע בהטלת מטבע.",
+  "text": "מתארגנת…",
   "where": {
    "kind": "source",
    "file": "apps/client/src/App.tsx",
-   "line": 56
+   "line": 123
   }
  },
  {
   "id": "s262",
   "section": "מסכי המשחק — פתיחה, בנייה, קרב, תוצאה",
-  "text": "מתארגנת…",
+  "text": "מחפשת לך יריב…",
   "where": {
    "kind": "source",
    "file": "apps/client/src/App.tsx",
-   "line": 87
+   "line": 124
   }
  },
  {
   "id": "s263",
   "section": "מסכי המשחק — פתיחה, בנייה, קרב, תוצאה",
-  "text": "מחפשת לך יריב…",
+  "text": "נועלת לוחות…",
   "where": {
    "kind": "source",
    "file": "apps/client/src/App.tsx",
-   "line": 88
+   "line": 127
   }
  },
  {
   "id": "s264",
   "section": "מסכי המשחק — פתיחה, בנייה, קרב, תוצאה",
-  "text": "נועלת לוחות…",
+  "text": "זהו",
   "where": {
    "kind": "source",
    "file": "apps/client/src/App.tsx",
-   "line": 91
+   "line": 129
   }
  },
  {
   "id": "s265",
   "section": "מסכי המשחק — פתיחה, בנייה, קרב, תוצאה",
-  "text": "זהו",
+  "text": "רגע…",
   "where": {
    "kind": "source",
    "file": "apps/client/src/App.tsx",
-   "line": 93
+   "line": 202
   }
  },
  {
   "id": "s266",
   "section": "מסכי המשחק — פתיחה, בנייה, קרב, תוצאה",
-  "text": "סובב את המכשיר",
+  "text": "רגע…",
   "where": {
    "kind": "source",
    "file": "apps/client/src/App.tsx",
-   "line": 357
+   "line": 210
   }
  },
  {
   "id": "s267",
   "section": "מסכי המשחק — פתיחה, בנייה, קרב, תוצאה",
-  "text": "אני משוחקת לרוחב, ילד. ככה אני רואה את שניכם.",
+  "text": "סובב את המכשיר",
   "where": {
    "kind": "source",
    "file": "apps/client/src/App.tsx",
-   "line": 358
+   "line": 739
   }
  },
  {
   "id": "s268",
   "section": "מסכי המשחק — פתיחה, בנייה, קרב, תוצאה",
-  "text": "מחכה לחבר שלך…",
+  "text": "אני משוחקת לרוחב, ילד. ככה אני רואה את שניכם.",
   "where": {
    "kind": "source",
    "file": "apps/client/src/App.tsx",
-   "line": 373
+   "line": 740
   }
  },
  {
   "id": "s269",
   "section": "מסכי המשחק — פתיחה, בנייה, קרב, תוצאה",
-  "text": "חזרה לתפריט",
+  "text": "מחכה לחבר שלך…",
   "where": {
    "kind": "source",
    "file": "apps/client/src/App.tsx",
-   "line": 385
+   "line": 755
   }
  },
  {
   "id": "s270",
   "section": "מסכי המשחק — פתיחה, בנייה, קרב, תוצאה",
-  "text": "כיבוי מוזיקה",
+  "text": "הודעות",
   "where": {
    "kind": "source",
    "file": "apps/client/src/App.tsx",
-   "line": 398
+   "line": 782
   }
  },
  {
   "id": "s271",
   "section": "מסכי המשחק — פתיחה, בנייה, קרב, תוצאה",
-  "text": "הפעלת מוזיקה",
+  "text": "חזרה לתפריט",
   "where": {
    "kind": "source",
    "file": "apps/client/src/App.tsx",
-   "line": 398
+   "line": 792
   }
  },
  {
   "id": "s272",
   "section": "מסכי המשחק — פתיחה, בנייה, קרב, תוצאה",
-  "text": "הפעלת צליל",
+  "text": "למעבר לעברית",
   "where": {
    "kind": "source",
    "file": "apps/client/src/App.tsx",
-   "line": 405
+   "line": 811
   }
  },
  {
   "id": "s273",
   "section": "מסכי המשחק — פתיחה, בנייה, קרב, תוצאה",
-  "text": "השתקה",
+  "text": "עב",
   "where": {
    "kind": "source",
    "file": "apps/client/src/App.tsx",
-   "line": 405
+   "line": 814
   }
  },
  {
   "id": "s274",
   "section": "מסכי המשחק — פתיחה, בנייה, קרב, תוצאה",
-  "text": "מה יש לך",
+  "text": "כיבוי מוזיקה",
   "where": {
    "kind": "source",
    "file": "apps/client/src/App.tsx",
-   "line": 424
+   "line": 818
   }
  },
  {
   "id": "s275",
   "section": "מסכי המשחק — פתיחה, בנייה, קרב, תוצאה",
-  "text": "הפרופיל שלי",
+  "text": "הפעלת מוזיקה",
   "where": {
    "kind": "source",
    "file": "apps/client/src/App.tsx",
-   "line": 441
+   "line": 818
   }
  },
  {
   "id": "s276",
   "section": "מסכי המשחק — פתיחה, בנייה, קרב, תוצאה",
-  "text": "התחברות",
+  "text": "הפעלת צליל",
   "where": {
    "kind": "source",
    "file": "apps/client/src/App.tsx",
-   "line": 441
+   "line": 825
   }
  },
  {
   "id": "s277",
   "section": "מסכי המשחק — פתיחה, בנייה, קרב, תוצאה",
-  "text": "אמנדה",
+  "text": "השתקה",
   "where": {
    "kind": "source",
    "file": "apps/client/src/App.tsx",
-   "line": 498
+   "line": 825
   }
  },
  {
   "id": "s278",
   "section": "מסכי המשחק — פתיחה, בנייה, קרב, תוצאה",
-  "text": "משחק קלפים מפלצתי",
+  "text": "השרת לא עונה",
   "where": {
    "kind": "source",
    "file": "apps/client/src/App.tsx",
-   "line": 500
+   "line": 871
   }
  },
  {
   "id": "s279",
   "section": "מסכי המשחק — פתיחה, בנייה, קרב, תוצאה",
-  "text": "שחק עם בוט",
+  "text": "מחכה לחבר שלך…",
   "where": {
    "kind": "source",
    "file": "apps/client/src/App.tsx",
-   "line": 512
+   "line": 871
   }
  },
  {
   "id": "s280",
   "section": "מסכי המשחק — פתיחה, בנייה, קרב, תוצאה",
-  "text": "לא בגרסה הזאת",
+  "text": "מחפשת לך יריב…",
   "where": {
    "kind": "source",
    "file": "apps/client/src/App.tsx",
-   "line": 518
+   "line": 871
   }
  },
  {
   "id": "s281",
   "section": "מסכי המשחק — פתיחה, בנייה, קרב, תוצאה",
-  "text": "תביא חבר",
+  "text": "שלח את הקוד למי שבא לך לאכול:",
   "where": {
    "kind": "source",
    "file": "apps/client/src/App.tsx",
-   "line": 521
+   "line": 875
   }
  },
  {
   "id": "s282",
   "section": "מסכי המשחק — פתיחה, בנייה, קרב, תוצאה",
-  "text": "קוד החדר",
+  "text": "✔ העתקתי",
   "where": {
    "kind": "source",
    "file": "apps/client/src/App.tsx",
-   "line": 560
+   "line": 887
   }
  },
  {
   "id": "s283",
   "section": "מסכי המשחק — פתיחה, בנייה, קרב, תוצאה",
-  "text": "אין חדר כזה. אולי המצאת אותו.",
+  "text": "⧉ העתק הזמנה",
   "where": {
    "kind": "source",
    "file": "apps/client/src/App.tsx",
-   "line": 575
+   "line": 887
   }
  },
  {
   "id": "s284",
   "section": "מסכי המשחק — פתיחה, בנייה, קרב, תוצאה",
-  "text": "זה הקוד שלך. אתה לא יכול לאכול את עצמך.",
+  "text": "השרת לא עונה. אני פנויה.",
   "where": {
    "kind": "source",
    "file": "apps/client/src/App.tsx",
-   "line": 577
+   "line": 893
   }
  },
  {
   "id": "s285",
   "section": "מסכי המשחק — פתיחה, בנייה, קרב, תוצאה",
-  "text": "החדר מלא. שניים מספיקים לי.",
+  "text": "חזרה",
   "where": {
    "kind": "source",
    "file": "apps/client/src/App.tsx",
-   "line": 578
+   "line": 904
   }
  },
  {
   "id": "s286",
   "section": "מסכי המשחק — פתיחה, בנייה, קרב, תוצאה",
-  "text": "מוריד אותי מחדש ומנקה גרסאות ישנות",
+  "text": "ביטול",
   "where": {
    "kind": "source",
    "file": "apps/client/src/App.tsx",
-   "line": 585
+   "line": 904
   }
  },
  {
   "id": "s287",
   "section": "מסכי המשחק — פתיחה, בנייה, קרב, תוצאה",
-  "text": "(מצב אונליין דורש שרת פעיל)",
+  "text": "הצד שלך",
   "where": {
    "kind": "source",
    "file": "apps/client/src/App.tsx",
-   "line": 592
+   "line": 931
   }
  },
  {
   "id": "s288",
   "section": "מסכי המשחק — פתיחה, בנייה, קרב, תוצאה",
-  "text": "השרת לא עונה",
+  "text": "החצי שלך",
   "where": {
    "kind": "source",
    "file": "apps/client/src/App.tsx",
-   "line": 606
+   "line": 938
   }
  },
  {
   "id": "s289",
   "section": "מסכי המשחק — פתיחה, בנייה, קרב, תוצאה",
-  "text": "מחכה לחבר שלך…",
+  "text": "אתה",
   "where": {
    "kind": "source",
    "file": "apps/client/src/App.tsx",
-   "line": 606
+   "line": 938
   }
  },
  {
   "id": "s290",
   "section": "מסכי המשחק — פתיחה, בנייה, קרב, תוצאה",
-  "text": "מחפשת לך יריב…",
+  "text": "הידיים שלך קפואות",
   "where": {
    "kind": "source",
    "file": "apps/client/src/App.tsx",
-   "line": 606
+   "line": 945
   }
  },
  {
   "id": "s291",
   "section": "מסכי המשחק — פתיחה, בנייה, קרב, תוצאה",
-  "text": "שלח את הקוד למי שבא לך לאכול:",
+  "text": "לשלוף ולזרוק אפשר. להדביק — לא.",
   "where": {
    "kind": "source",
    "file": "apps/client/src/App.tsx",
-   "line": 610
+   "line": 947
   }
  },
  {
   "id": "s292",
   "section": "מסכי המשחק — פתיחה, בנייה, קרב, תוצאה",
-  "text": "✔ העתקתי",
+  "text": "החצי של מי שאיתך",
   "where": {
    "kind": "source",
    "file": "apps/client/src/App.tsx",
-   "line": 622
+   "line": 999
   }
  },
  {
   "id": "s293",
   "section": "מסכי המשחק — פתיחה, בנייה, קרב, תוצאה",
-  "text": "⧉ העתק הזמנה",
+  "text": "הצד שמולך",
   "where": {
    "kind": "source",
    "file": "apps/client/src/App.tsx",
-   "line": 622
+   "line": 1020
   }
  },
  {
   "id": "s294",
   "section": "מסכי המשחק — פתיחה, בנייה, קרב, תוצאה",
-  "text": "השרת לא עונה. אני פנויה.",
+  "text": "היריב",
   "where": {
    "kind": "source",
    "file": "apps/client/src/App.tsx",
-   "line": 628
+   "line": 1032
   }
  },
  {
   "id": "s295",
   "section": "מסכי המשחק — פתיחה, בנייה, קרב, תוצאה",
-  "text": "חזרה",
+  "text": "אמנדה",
   "where": {
    "kind": "source",
    "file": "apps/client/src/App.tsx",
-   "line": 639
+   "line": 1039
   }
  },
  {
   "id": "s296",
   "section": "מסכי המשחק — פתיחה, בנייה, קרב, תוצאה",
-  "text": "ביטול",
+  "text": "היריב",
   "where": {
    "kind": "source",
    "file": "apps/client/src/App.tsx",
-   "line": 639
+   "line": 1049
   }
  },
  {
   "id": "s297",
   "section": "מסכי המשחק — פתיחה, בנייה, קרב, תוצאה",
-  "text": "החצי שלך",
+  "text": "נחשף!",
   "where": {
    "kind": "source",
    "file": "apps/client/src/App.tsx",
-   "line": 656
+   "line": 1057
   }
  },
  {
   "id": "s298",
   "section": "מסכי המשחק — פתיחה, בנייה, קרב, תוצאה",
-  "text": "אתה",
+  "text": "בחר קלף אצל היריב",
   "where": {
    "kind": "source",
    "file": "apps/client/src/App.tsx",
-   "line": 656
+   "line": 1108
   }
  },
  {
   "id": "s299",
   "section": "מסכי המשחק — פתיחה, בנייה, קרב, תוצאה",
-  "text": "הידיים שלך קפואות",
+  "text": "ועכשיו את השני",
   "where": {
    "kind": "source",
    "file": "apps/client/src/App.tsx",
-   "line": 661
+   "line": 1110
   }
  },
  {
   "id": "s300",
   "section": "מסכי המשחק — פתיחה, בנייה, קרב, תוצאה",
-  "text": "לשלוף ולזרוק אפשר. להדביק — לא.",
+  "text": "בחר קלף על הלוח שלך",
   "where": {
    "kind": "source",
    "file": "apps/client/src/App.tsx",
-   "line": 663
+   "line": 1111
   }
  },
  {
   "id": "s301",
   "section": "מסכי המשחק — פתיחה, בנייה, קרב, תוצאה",
-  "text": "אמנדה",
+  "text": "מאוחר. תכננת גרוע.",
   "where": {
    "kind": "source",
    "file": "apps/client/src/App.tsx",
-   "line": 693
+   "line": 1144
   }
  },
  {
   "id": "s302",
   "section": "מסכי המשחק — פתיחה, בנייה, קרב, תוצאה",
-  "text": "היריב",
+  "text": "פעיל ∞",
   "where": {
    "kind": "source",
    "file": "apps/client/src/App.tsx",
-   "line": 693
+   "line": 1148
   }
  },
  {
   "id": "s303",
   "section": "מסכי המשחק — פתיחה, בנייה, קרב, תוצאה",
-  "text": "נחשף!",
+  "text": "נוצל",
   "where": {
    "kind": "source",
    "file": "apps/client/src/App.tsx",
-   "line": 694
+   "line": 1150
   }
  },
  {
   "id": "s304",
   "section": "מסכי המשחק — פתיחה, בנייה, קרב, תוצאה",
-  "text": "בחר קלף אצל היריב",
+  "text": "מאוחר מדי",
   "where": {
    "kind": "source",
    "file": "apps/client/src/App.tsx",
-   "line": 716
+   "line": 1152
   }
  },
  {
   "id": "s305",
   "section": "מסכי המשחק — פתיחה, בנייה, קרב, תוצאה",
-  "text": "ועכשיו את השני",
+  "text": "הפעל",
   "where": {
    "kind": "source",
    "file": "apps/client/src/App.tsx",
-   "line": 718
+   "line": 1153
   }
  },
  {
   "id": "s306",
   "section": "מסכי המשחק — פתיחה, בנייה, קרב, תוצאה",
-  "text": "בחר קלף על הלוח שלך",
+  "text": "הסבר",
   "where": {
    "kind": "source",
    "file": "apps/client/src/App.tsx",
-   "line": 719
+   "line": 1157
   }
  },
  {
   "id": "s307",
   "section": "מסכי המשחק — פתיחה, בנייה, קרב, תוצאה",
-  "text": "מאוחר. תכננת גרוע.",
+  "text": "גע בקלף על הלוח כדי להוריד אותו",
   "where": {
    "kind": "source",
    "file": "apps/client/src/App.tsx",
-   "line": 752
+   "line": 1189
   }
  },
  {
   "id": "s308",
   "section": "מסכי המשחק — פתיחה, בנייה, קרב, תוצאה",
-  "text": "♾️ פעיל",
+  "text": "הבר מלא",
   "where": {
    "kind": "source",
    "file": "apps/client/src/App.tsx",
-   "line": 756
+   "line": 1198
   }
  },
  {
   "id": "s309",
   "section": "מסכי המשחק — פתיחה, בנייה, קרב, תוצאה",
-  "text": "✔ נוצל",
+  "text": "אין קלף",
   "where": {
    "kind": "source",
    "file": "apps/client/src/App.tsx",
-   "line": 758
+   "line": 1223
   }
  },
  {
   "id": "s310",
   "section": "מסכי המשחק — פתיחה, בנייה, קרב, תוצאה",
-  "text": "⏳ מאוחר מדי",
+  "text": "קלפים שנשארו בחפיסה",
   "where": {
    "kind": "source",
    "file": "apps/client/src/App.tsx",
-   "line": 760
+   "line": 1251
   }
  },
  {
   "id": "s311",
   "section": "מסכי המשחק — פתיחה, בנייה, קרב, תוצאה",
-  "text": "▶ הפעל",
+  "text": "קלפים בפח",
   "where": {
    "kind": "source",
    "file": "apps/client/src/App.tsx",
-   "line": 761
+   "line": 1255
   }
  },
  {
   "id": "s312",
   "section": "מסכי המשחק — פתיחה, בנייה, קרב, תוצאה",
-  "text": "הסבר",
+  "text": "הבר מלא",
   "where": {
    "kind": "source",
    "file": "apps/client/src/App.tsx",
-   "line": 765
+   "line": 1263
   }
  },
  {
   "id": "s313",
   "section": "מסכי המשחק — פתיחה, בנייה, קרב, תוצאה",
-  "text": "אין קלף",
+  "text": "size={14} /> אפשר להניח קלף על קלף שכבר הנחתם — נשארו{",
   "where": {
    "kind": "source",
    "file": "apps/client/src/App.tsx",
-   "line": 780
+   "line": 1282
   }
  },
  {
   "id": "s314",
   "section": "מסכי המשחק — פתיחה, בנייה, קרב, תוצאה",
-  "text": "קלפים שנשארו בחפיסה",
+  "text": "התחל קרב!",
   "where": {
    "kind": "source",
    "file": "apps/client/src/App.tsx",
-   "line": 808
+   "line": 1298
   }
  },
  {
   "id": "s315",
   "section": "מסכי המשחק — פתיחה, בנייה, קרב, תוצאה",
-  "text": "קלפים בפח",
+  "text": "מוכן — לחץ לביטול",
   "where": {
    "kind": "source",
    "file": "apps/client/src/App.tsx",
-   "line": 812
+   "line": 1300
   }
  },
  {
   "id": "s316",
   "section": "מסכי המשחק — פתיחה, בנייה, קרב, תוצאה",
-  "text": "הבר מלא",
+  "text": "אני מוכן",
   "where": {
    "kind": "source",
    "file": "apps/client/src/App.tsx",
-   "line": 819
+   "line": 1301
   }
  },
  {
   "id": "s317",
   "section": "מסכי המשחק — פתיחה, בנייה, קרב, תוצאה",
-  "text": "➕ קח לפעולה",
+  "text": "שניכם מוכנים — מתחילים",
   "where": {
    "kind": "source",
    "file": "apps/client/src/App.tsx",
-   "line": 819
+   "line": 1306
   }
  },
  {
   "id": "s318",
   "section": "מסכי המשחק — פתיחה, בנייה, קרב, תוצאה",
-  "text": "⚔️ התחל קרב!",
+  "text": "אתה מוכן. אפשר להמשיך לבנות עד שגם הוא יהיה.",
   "where": {
    "kind": "source",
    "file": "apps/client/src/App.tsx",
-   "line": 845
+   "line": 1308
   }
  },
  {
   "id": "s319",
   "section": "מסכי המשחק — פתיחה, בנייה, קרב, תוצאה",
-  "text": "✔ מוכן — לחץ לביטול",
+  "text": "היריב מוכן. אתה עדיין יכול לבנות.",
   "where": {
    "kind": "source",
    "file": "apps/client/src/App.tsx",
-   "line": 847
+   "line": 1309
   }
  },
  {
   "id": "s320",
   "section": "מסכי המשחק — פתיחה, בנייה, קרב, תוצאה",
-  "text": "⚔️ אני מוכן",
+  "text": "הלוח שלך נעול",
   "where": {
    "kind": "source",
    "file": "apps/client/src/App.tsx",
-   "line": 848
+   "line": 1325
   }
  },
  {
   "id": "s321",
   "section": "מסכי המשחק — פתיחה, בנייה, קרב, תוצאה",
-  "text": "שניכם מוכנים — מתחילים",
+  "text": "מחכה שהיריב יסיים…",
   "where": {
    "kind": "source",
    "file": "apps/client/src/App.tsx",
-   "line": 853
+   "line": 1329
   }
  },
  {
   "id": "s322",
   "section": "מסכי המשחק — פתיחה, בנייה, קרב, תוצאה",
-  "text": "אתה מוכן. אפשר להמשיך לבנות עד שגם הוא יהיה.",
+  "text": "ממלאת לך את החורים…",
   "where": {
    "kind": "source",
    "file": "apps/client/src/App.tsx",
-   "line": 855
+   "line": 1333
   }
  },
  {
   "id": "s323",
   "section": "מסכי המשחק — פתיחה, בנייה, קרב, תוצאה",
-  "text": "היריב מוכן. אתה עדיין יכול לבנות.",
+  "text": "יפה. עכשיו משהו קצת יותר מתוחכם.",
   "where": {
    "kind": "source",
    "file": "apps/client/src/App.tsx",
-   "line": 856
+   "line": 1466
   }
  },
  {
   "id": "s324",
   "section": "מסכי המשחק — פתיחה, בנייה, קרב, תוצאה",
-  "text": "הלוח שלך נעול",
+  "text": "במשחק הבא יש ליריב לוח אמיתי — ולך יש בדיוק מה שמנצח אותו.",
   "where": {
    "kind": "source",
    "file": "apps/client/src/App.tsx",
-   "line": 872
+   "line": 1467
   }
  },
  {
   "id": "s325",
   "section": "מסכי המשחק — פתיחה, בנייה, קרב, תוצאה",
-  "text": "מחכה שהיריב יסיים…",
+  "text": "זהו, אתה יודע לשחק.",
   "where": {
    "kind": "source",
    "file": "apps/client/src/App.tsx",
-   "line": 874
+   "line": 1483
   }
  },
  {
   "id": "s326",
   "section": "מסכי המשחק — פתיחה, בנייה, קרב, תוצאה",
-  "text": "ממלאת לך את החורים…",
+  "text": "עכשיו לך תאסוף קלפים. אני רעבה.",
   "where": {
    "kind": "source",
    "file": "apps/client/src/App.tsx",
-   "line": 878
+   "line": 1484
   }
  },
  {
   "id": "s327",
   "section": "מסכי המשחק — פתיחה, בנייה, קרב, תוצאה",
-  "text": "שגיאה בהצגת הקרב",
+  "text": "סגירה",
   "where": {
    "kind": "source",
    "file": "apps/client/src/App.tsx",
-   "line": 905
+   "line": 1591
   }
  },
  {
   "id": "s328",
   "section": "מסכי המשחק — פתיחה, בנייה, קרב, תוצאה",
-  "text": "מספיק, הבנתי",
+  "text": "חבר",
   "where": {
    "kind": "source",
    "file": "apps/client/src/App.tsx",
-   "line": 946
+   "line": 1663
   }
  },
  {
   "id": "s329",
-  "section": "מסכי המשחק — פתיחה, בנייה, קרב, תוצאה",
-  "text": "📋 שאסביר לך מה קרה?",
-  "where": {
-   "kind": "source",
-   "file": "apps/client/src/App.tsx",
-   "line": 946
-  }
- },
- {
-  "id": "s330",
   "section": "דוח הקרב",
   "text": "${f.name} עשה ${f.value}% מהנזק של הצד הזה",
-  "where": {
-   "kind": "source",
-   "file": "apps/client/src/components/BattleLog.tsx",
-   "line": 27
-  }
- },
- {
-  "id": "s331",
-  "section": "דוח הקרב",
-  "text": "המלך ${f.name} נשא את הקרב — ${f.value}% מהנזק",
-  "where": {
-   "kind": "source",
-   "file": "apps/client/src/components/BattleLog.tsx",
-   "line": 28
-  }
- },
- {
-  "id": "s332",
-  "section": "דוח הקרב",
-  "text": "${f.value} קלפים לא נגעו בקרב בכלל — לא תקפו ולא ספגו",
   "where": {
    "kind": "source",
    "file": "apps/client/src/components/BattleLog.tsx",
@@ -4188,9 +4332,9 @@
   }
  },
  {
-  "id": "s333",
+  "id": "s330",
   "section": "דוח הקרב",
-  "text": "${f.value} קלפים בעורף שרדו בלי לתקוף אף פעם — הלוח עמוק מדי",
+  "text": "המלך ${f.name} נשא את הקרב — ${f.value}% מהנזק",
   "where": {
    "kind": "source",
    "file": "apps/client/src/components/BattleLog.tsx",
@@ -4198,9 +4342,9 @@
   }
  },
  {
-  "id": "s334",
+  "id": "s331",
   "section": "דוח הקרב",
-  "text": "המלך ${f.name} נפל כבר בשנייה ${secs(f.value ?? 0)}",
+  "text": "${f.value} קלפים לא נגעו בקרב בכלל — לא תקפו ולא ספגו",
   "where": {
    "kind": "source",
    "file": "apps/client/src/components/BattleLog.tsx",
@@ -4208,9 +4352,9 @@
   }
  },
  {
-  "id": "s335",
+  "id": "s332",
   "section": "דוח הקרב",
-  "text": "כל הקלפים במסלול ${(f.lane ?? 0) + 1} נפלו — שם נפרצה החזית",
+  "text": "${f.value} קלפים בעורף שרדו בלי לתקוף אף פעם — הלוח עמוק מדי",
   "where": {
    "kind": "source",
    "file": "apps/client/src/components/BattleLog.tsx",
@@ -4218,9 +4362,9 @@
   }
  },
  {
-  "id": "s336",
+  "id": "s333",
   "section": "דוח הקרב",
-  "text": "בוזבז נזק על ${f.name}: ספג ${f.value}% מהחיים שלו",
+  "text": "המלך ${f.name} נפל כבר בשנייה ${secs(f.value ?? 0)}",
   "where": {
    "kind": "source",
    "file": "apps/client/src/components/BattleLog.tsx",
@@ -4228,9 +4372,9 @@
   }
  },
  {
-  "id": "s337",
+  "id": "s334",
   "section": "דוח הקרב",
-  "text": "הצד הזה נמחק לגמרי — ${f.value} קלפים",
+  "text": "כל הקלפים במסלול ${(f.lane ?? 0) + 1} נפלו — שם נפרצה החזית",
   "where": {
    "kind": "source",
    "file": "apps/client/src/components/BattleLog.tsx",
@@ -4238,9 +4382,9 @@
   }
  },
  {
-  "id": "s338",
+  "id": "s335",
   "section": "דוח הקרב",
-  "text": "קרב צמוד — הוכרע בהפרש של קלף אחד",
+  "text": "בוזבז נזק על ${f.name}: ספג ${f.value}% מהחיים שלו",
   "where": {
    "kind": "source",
    "file": "apps/client/src/components/BattleLog.tsx",
@@ -4248,9 +4392,19 @@
   }
  },
  {
-  "id": "s339",
+  "id": "s336",
   "section": "דוח הקרב",
-  "text": "${f.name} הרג את עצמו — הנזק החוזר מהיעד היה ${f.value}% מהחיים שלו",
+  "text": "הצד הזה נמחק לגמרי — ${f.value} קלפים",
+  "where": {
+   "kind": "source",
+   "file": "apps/client/src/components/BattleLog.tsx",
+   "line": 36
+  }
+ },
+ {
+  "id": "s337",
+  "section": "דוח הקרב",
+  "text": "קרב צמוד — הוכרע בהפרש של קלף אחד",
   "where": {
    "kind": "source",
    "file": "apps/client/src/components/BattleLog.tsx",
@@ -4258,39 +4412,29 @@
   }
  },
  {
-  "id": "s340",
+  "id": "s338",
+  "section": "דוח הקרב",
+  "text": "${f.name} הרג את עצמו — הנזק החוזר מהיעד היה ${f.value}% מהחיים שלו",
+  "where": {
+   "kind": "source",
+   "file": "apps/client/src/components/BattleLog.tsx",
+   "line": 39
+  }
+ },
+ {
+  "id": "s339",
   "section": "דוח הקרב",
   "text": "ניצחון סוחף — ${f.value} קלפים הפרש",
   "where": {
    "kind": "source",
    "file": "apps/client/src/components/BattleLog.tsx",
-   "line": 38
+   "line": 40
   }
  },
  {
-  "id": "s341",
+  "id": "s340",
   "section": "דוח הקרב",
   "text": "דם ראשון — ${e.actor ?? \"משהו\"} הפיל את ${e.target}",
-  "where": {
-   "kind": "source",
-   "file": "apps/client/src/components/BattleLog.tsx",
-   "line": 42
-  }
- },
- {
-  "id": "s342",
-  "section": "דוח הקרב",
-  "text": "${e.actor ?? \"משהו\"} הפיל את ${e.target}",
-  "where": {
-   "kind": "source",
-   "file": "apps/client/src/components/BattleLog.tsx",
-   "line": 43
-  }
- },
- {
-  "id": "s343",
-  "section": "דוח הקרב",
-  "text": "👑 המלך ${e.target} נפל",
   "where": {
    "kind": "source",
    "file": "apps/client/src/components/BattleLog.tsx",
@@ -4298,9 +4442,19 @@
   }
  },
  {
-  "id": "s344",
+  "id": "s341",
   "section": "דוח הקרב",
-  "text": "${e.target} ספג ${e.damage?.toLocaleString(\"he-IL\")} נזק חוזר מ${e.actor} — הוא פגע בקוצים",
+  "text": "${e.actor ?? \"משהו\"} הפיל את ${e.target}",
+  "where": {
+   "kind": "source",
+   "file": "apps/client/src/components/BattleLog.tsx",
+   "line": 45
+  }
+ },
+ {
+  "id": "s342",
+  "section": "דוח הקרב",
+  "text": "המלך ${e.target} נפל",
   "where": {
    "kind": "source",
    "file": "apps/client/src/components/BattleLog.tsx",
@@ -4308,19 +4462,9 @@
   }
  },
  {
-  "id": "s345",
+  "id": "s343",
   "section": "דוח הקרב",
-  "text": "${e.actor} התפצל",
-  "where": {
-   "kind": "source",
-   "file": "apps/client/src/components/BattleLog.tsx",
-   "line": 47
-  }
- },
- {
-  "id": "s346",
-  "section": "דוח הקרב",
-  "text": "נחשף קלף קומת קרקע: ${e.target}",
+  "text": "${e.target} ספג ${e.damage?.toLocaleString(\"he-IL\")} נזק חוזר מ${e.actor} — הוא פגע בקוצים",
   "where": {
    "kind": "source",
    "file": "apps/client/src/components/BattleLog.tsx",
@@ -4328,9 +4472,9 @@
   }
  },
  {
-  "id": "s347",
+  "id": "s344",
   "section": "דוח הקרב",
-  "text": "${e.actor ?? \"משהו\"} הקפיא את ${e.target}",
+  "text": "${e.actor} התפצל",
   "where": {
    "kind": "source",
    "file": "apps/client/src/components/BattleLog.tsx",
@@ -4338,73 +4482,103 @@
   }
  },
  {
-  "id": "s348",
+  "id": "s345",
+  "section": "דוח הקרב",
+  "text": "נחשף קלף קומת קרקע: ${e.target}",
+  "where": {
+   "kind": "source",
+   "file": "apps/client/src/components/BattleLog.tsx",
+   "line": 50
+  }
+ },
+ {
+  "id": "s346",
+  "section": "דוח הקרב",
+  "text": "${e.actor ?? \"משהו\"} הקפיא את ${e.target}",
+  "where": {
+   "kind": "source",
+   "file": "apps/client/src/components/BattleLog.tsx",
+   "line": 51
+  }
+ },
+ {
+  "id": "s347",
   "section": "דוח הקרב",
   "text": "הקרב נגמר",
   "where": {
    "kind": "source",
    "file": "apps/client/src/components/BattleLog.tsx",
-   "line": 50
+   "line": 52
   }
  },
  {
-  "id": "s349",
+  "id": "s348",
   "section": "דוח הקרב",
   "text": "תיקו. לשנינו טעם רע בפה.",
   "where": {
    "kind": "source",
    "file": "apps/client/src/components/BattleLog.tsx",
-   "line": 50
+   "line": 52
   }
  },
  {
-  "id": "s350",
+  "id": "s349",
   "section": "דוח הקרב",
   "text": "אתה",
   "where": {
    "kind": "source",
    "file": "apps/client/src/components/BattleLog.tsx",
-   "line": 76
+   "line": 81
   }
  },
  {
-  "id": "s351",
+  "id": "s350",
   "section": "דוח הקרב",
   "text": "היריב",
   "where": {
    "kind": "source",
    "file": "apps/client/src/components/BattleLog.tsx",
-   "line": 76
+   "line": 81
   }
  },
  {
-  "id": "s352",
+  "id": "s351",
   "section": "דוח הקרב",
   "text": "העתקת הדוח המלא כ-JSON",
   "where": {
    "kind": "source",
    "file": "apps/client/src/components/BattleLog.tsx",
-   "line": 112
+   "line": 146
   }
  },
  {
-  "id": "s353",
+  "id": "s352",
   "section": "דוח הקרב",
   "text": "✔ הועתק",
   "where": {
    "kind": "source",
    "file": "apps/client/src/components/BattleLog.tsx",
-   "line": 113
+   "line": 147
   }
  },
  {
-  "id": "s354",
+  "id": "s353",
   "section": "דוח הקרב",
   "text": "⧉ העתק JSON",
   "where": {
    "kind": "source",
    "file": "apps/client/src/components/BattleLog.tsx",
-   "line": 113
+   "line": 147
+  }
+ },
+ {
+  "id": "s354",
+  "section": "דוח הקרב",
+  "text": "הדפדפן לא נתן להעתיק. סמנו הכול והעתיקו ידנית.",
+  "where": {
+   "kind": "source",
+   "file": "apps/client/src/components/BattleLog.tsx",
+   "line": 162
   }
  },
  {
@@ -4414,7 +4588,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/components/BattleLog.tsx",
-   "line": 127
+   "line": 176
   }
  },
  {
@@ -4424,7 +4598,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/components/BattleLog.tsx",
-   "line": 128
+   "line": 177
   }
  },
  {
@@ -4434,7 +4608,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/components/BattleLog.tsx",
-   "line": 129
+   "line": 178
   }
  },
  {
@@ -4444,7 +4618,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/components/BattleLog.tsx",
-   "line": 130
+   "line": 179
   }
  },
  {
@@ -4454,7 +4628,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/components/BattleLog.tsx",
-   "line": 131
+   "line": 180
   }
  },
  {
@@ -4464,7 +4638,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/components/BattleLog.tsx",
-   "line": 152
+   "line": 201
   }
  },
  {
@@ -4474,7 +4648,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/components/BattleLog.tsx",
-   "line": 156
+   "line": 205
   }
  },
  {
@@ -4484,7 +4658,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/components/BattleLog.tsx",
-   "line": 160
+   "line": 209
   }
  },
  {
@@ -4494,7 +4668,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/components/BattleLog.tsx",
-   "line": 164
+   "line": 213
   }
  },
  {
@@ -4504,7 +4678,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/components/BattleLog.tsx",
-   "line": 174
+   "line": 223
   }
  },
  {
@@ -4514,7 +4688,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/components/BattleLog.tsx",
-   "line": 187
+   "line": 236
   }
  },
  {
@@ -4524,7 +4698,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/components/BattleLog.tsx",
-   "line": 201
+   "line": 250
   }
  },
  {
@@ -4534,7 +4708,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/components/BattleLog.tsx",
-   "line": 202
+   "line": 251
   }
  },
  {
@@ -4544,343 +4718,223 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/components/BattleLog.tsx",
-   "line": 203
+   "line": 252
   }
  },
  {
   "id": "s369",
   "section": "דוח הקרב",
-  "text": "💀 נפל · ✅ שרד · 🧊 לא זז",
+  "text": "size={13} /> נפל · <Icon name=",
   "where": {
    "kind": "source",
    "file": "apps/client/src/components/BattleLog.tsx",
-   "line": 204
+   "line": 254
   }
  },
  {
   "id": "s370",
   "section": "דוח הקרב",
-  "text": "לחץ על קלף ואספר לך",
+  "text": "size={13} /> שרד ·{",
   "where": {
    "kind": "source",
    "file": "apps/client/src/components/BattleLog.tsx",
-   "line": 205
+   "line": 254
   }
  },
  {
   "id": "s371",
   "section": "דוח הקרב",
-  "text": "קלף",
+  "text": "לחץ על קלף ואספר לך",
   "where": {
    "kind": "source",
    "file": "apps/client/src/components/BattleLog.tsx",
-   "line": 215
+   "line": 257
   }
  },
  {
   "id": "s372",
   "section": "דוח הקרב",
-  "text": "צד",
+  "text": "קלף",
   "where": {
    "kind": "source",
    "file": "apps/client/src/components/BattleLog.tsx",
-   "line": 216
+   "line": 267
   }
  },
  {
   "id": "s373",
   "section": "דוח הקרב",
-  "text": "נזק",
+  "text": "צד",
   "where": {
    "kind": "source",
    "file": "apps/client/src/components/BattleLog.tsx",
-   "line": 217
+   "line": 268
   }
  },
  {
   "id": "s374",
   "section": "דוח הקרב",
-  "text": "ספג",
+  "text": "נזק",
   "where": {
    "kind": "source",
    "file": "apps/client/src/components/BattleLog.tsx",
-   "line": 218
+   "line": 269
   }
  },
  {
   "id": "s375",
   "section": "דוח הקרב",
-  "text": "הפלות",
+  "text": "ספג",
   "where": {
    "kind": "source",
    "file": "apps/client/src/components/BattleLog.tsx",
-   "line": 219
+   "line": 270
   }
  },
  {
   "id": "s376",
   "section": "דוח הקרב",
-  "text": "סוף",
+  "text": "הפלות",
   "where": {
    "kind": "source",
    "file": "apps/client/src/components/BattleLog.tsx",
-   "line": 220
+   "line": 271
   }
  },
  {
   "id": "s377",
   "section": "דוח הקרב",
-  "text": "${u.name} — מילוי אוטומטי של משבצת ריקה",
+  "text": "סוף",
   "where": {
    "kind": "source",
    "file": "apps/client/src/components/BattleLog.tsx",
-   "line": 324
+   "line": 272
   }
  },
  {
   "id": "s378",
   "section": "דוח הקרב",
-  "text": "${u.name} — לחצו לפרטים",
+  "text": "${u.name} — מילוי אוטומטי של משבצת ריקה",
   "where": {
    "kind": "source",
    "file": "apps/client/src/components/BattleLog.tsx",
-   "line": 325
+   "line": 386
   }
  },
  {
   "id": "s379",
   "section": "דוח הקרב",
-  "text": "${king.name} — לחצו לפרטים",
+  "text": "${u.name} — לחצו לפרטים",
   "where": {
    "kind": "source",
    "file": "apps/client/src/components/BattleLog.tsx",
-   "line": 348
+   "line": 387
   }
  },
  {
   "id": "s380",
   "section": "דוח הקרב",
-  "text": "עורף",
+  "text": "${king.name} — לחצו לפרטים",
   "where": {
    "kind": "source",
    "file": "apps/client/src/components/BattleLog.tsx",
-   "line": 385
+   "line": 415
   }
  },
  {
   "id": "s381",
   "section": "דוח הקרב",
-  "text": "שלישית",
+  "text": "עורף",
   "where": {
    "kind": "source",
    "file": "apps/client/src/components/BattleLog.tsx",
-   "line": 385
+   "line": 456
   }
  },
  {
   "id": "s382",
   "section": "דוח הקרב",
-  "text": "שנייה",
+  "text": "שלישית",
   "where": {
    "kind": "source",
    "file": "apps/client/src/components/BattleLog.tsx",
-   "line": 385
+   "line": 456
   }
  },
  {
   "id": "s383",
   "section": "דוח הקרב",
-  "text": "חזית",
+  "text": "שנייה",
   "where": {
    "kind": "source",
    "file": "apps/client/src/components/BattleLog.tsx",
-   "line": 385
+   "line": 456
   }
  },
  {
   "id": "s384",
   "section": "דוח הקרב",
-  "text": "לא נגע בקרב. לא הגיע לאף אחד, ואף אחד לא הגיע אליו.",
+  "text": "חזית",
   "where": {
    "kind": "source",
    "file": "apps/client/src/components/BattleLog.tsx",
-   "line": 391
+   "line": 456
   }
  },
  {
   "id": "s385",
   "section": "דוח הקרב",
-  "text": "חטף ולא הספיק להחזיר אפילו מכה אחת.",
+  "text": "לא נגע בקרב. לא הגיע לאף אחד, ואף אחד לא הגיע אליו.",
   "where": {
    "kind": "source",
    "file": "apps/client/src/components/BattleLog.tsx",
-   "line": 392
+   "line": 462
   }
  },
  {
   "id": "s386",
   "section": "דוח הקרב",
-  "text": "חתך את הדרך — הפיל ${unit.kills} קלפים.",
+  "text": "חטף ולא הספיק להחזיר אפילו מכה אחת.",
   "where": {
    "kind": "source",
    "file": "apps/client/src/components/BattleLog.tsx",
-   "line": 393
+   "line": 463
   }
  },
  {
   "id": "s387",
   "section": "דוח הקרב",
-  "text": "נשא את הצד שלו: ${share}% מכל הנזק.",
+  "text": "חתך את הדרך — הפיל ${unit.kills} קלפים.",
   "where": {
    "kind": "source",
    "file": "apps/client/src/components/BattleLog.tsx",
-   "line": 394
+   "line": 464
   }
  },
  {
   "id": "s388",
   "section": "דוח הקרב",
-  "text": "תרם ${share}% מהנזק של הצד שלו.",
+  "text": "נשא את הצד שלו: ${share}% מכל הנזק.",
   "where": {
    "kind": "source",
    "file": "apps/client/src/components/BattleLog.tsx",
-   "line": 395
+   "line": 465
   }
  },
  {
   "id": "s389",
   "section": "דוח הקרב",
-  "text": "סגירה",
+  "text": "תרם ${share}% מהנזק של הצד שלו.",
   "where": {
    "kind": "source",
    "file": "apps/client/src/components/BattleLog.tsx",
-   "line": 405
+   "line": 466
   }
  },
  {
   "id": "s390",
   "section": "דוח הקרב",
-  "text": "שלך",
-  "where": {
-   "kind": "source",
-   "file": "apps/client/src/components/BattleLog.tsx",
-   "line": 423
-  }
- },
- {
-  "id": "s391",
-  "section": "דוח הקרב",
-  "text": "של היריב",
-  "where": {
-   "kind": "source",
-   "file": "apps/client/src/components/BattleLog.tsx",
-   "line": 423
-  }
- },
- {
-  "id": "s392",
-  "section": "דוח הקרב",
-  "text": "✅ שרד",
-  "where": {
-   "kind": "source",
-   "file": "apps/client/src/components/BattleLog.tsx",
-   "line": 434
-  }
- },
- {
-  "id": "s393",
-  "section": "דוח הקרב",
-  "text": "💀 נפל ב-${secs(unit.diedAtTick ?? 0)}s",
-  "where": {
-   "kind": "source",
-   "file": "apps/client/src/components/BattleLog.tsx",
-   "line": 434
-  }
- },
- {
-  "id": "s394",
-  "section": "דוח הקרב",
-  "text": "נזק שעשה",
-  "where": {
-   "kind": "source",
-   "file": "apps/client/src/components/BattleLog.tsx",
-   "line": 446
-  }
- },
- {
-  "id": "s395",
-  "section": "דוח הקרב",
-  "text": "נזק שספג",
-  "where": {
-   "kind": "source",
-   "file": "apps/client/src/components/BattleLog.tsx",
-   "line": 450
-  }
- },
- {
-  "id": "s396",
-  "section": "דוח הקרב",
-  "text": "הפלות",
-  "where": {
-   "kind": "source",
-   "file": "apps/client/src/components/BattleLog.tsx",
-   "line": 454
-  }
- },
- {
-  "id": "s397",
-  "section": "דוח הקרב",
-  "text": "מכות",
-  "where": {
-   "kind": "source",
-   "file": "apps/client/src/components/BattleLog.tsx",
-   "line": 458
-  }
- },
- {
-  "id": "s398",
-  "section": "דוח הקרב",
-  "text": "מהנזק של הצד:",
-  "where": {
-   "kind": "source",
-   "file": "apps/client/src/components/BattleLog.tsx",
-   "line": 467
-  }
- },
- {
-  "id": "s399",
-  "section": "דוח הקרב",
-  "text": "חיים:",
-  "where": {
-   "kind": "source",
-   "file": "apps/client/src/components/BattleLog.tsx",
-   "line": 470
-  }
- },
- {
-  "id": "s400",
-  "section": "דוח הקרב",
-  "text": "(כולל בונוס מלך ×3)",
-  "where": {
-   "kind": "source",
-   "file": "apps/client/src/components/BattleLog.tsx",
-   "line": 471
-  }
- },
- {
-  "id": "s401",
-  "section": "דוח הקרב",
-  "text": "תזוזה:",
-  "where": {
-   "kind": "source",
-   "file": "apps/client/src/components/BattleLog.tsx",
-   "line": 474
-  }
- },
- {
-  "id": "s402",
-  "section": "דוח הקרב",
-  "text": "לא זז מילימטר",
+  "text": "סגירה",
   "where": {
    "kind": "source",
    "file": "apps/client/src/components/BattleLog.tsx",
@@ -4888,403 +4942,523 @@
   }
  },
  {
-  "id": "s403",
+  "id": "s391",
+  "section": "דוח הקרב",
+  "text": "שלך",
+  "where": {
+   "kind": "source",
+   "file": "apps/client/src/components/BattleLog.tsx",
+   "line": 494
+  }
+ },
+ {
+  "id": "s392",
+  "section": "דוח הקרב",
+  "text": "של היריב",
+  "where": {
+   "kind": "source",
+   "file": "apps/client/src/components/BattleLog.tsx",
+   "line": 494
+  }
+ },
+ {
+  "id": "s393",
+  "section": "דוח הקרב",
+  "text": "נזק שעשה",
+  "where": {
+   "kind": "source",
+   "file": "apps/client/src/components/BattleLog.tsx",
+   "line": 525
+  }
+ },
+ {
+  "id": "s394",
+  "section": "דוח הקרב",
+  "text": "נזק שספג",
+  "where": {
+   "kind": "source",
+   "file": "apps/client/src/components/BattleLog.tsx",
+   "line": 529
+  }
+ },
+ {
+  "id": "s395",
+  "section": "דוח הקרב",
+  "text": "הפלות",
+  "where": {
+   "kind": "source",
+   "file": "apps/client/src/components/BattleLog.tsx",
+   "line": 533
+  }
+ },
+ {
+  "id": "s396",
+  "section": "דוח הקרב",
+  "text": "מכות",
+  "where": {
+   "kind": "source",
+   "file": "apps/client/src/components/BattleLog.tsx",
+   "line": 537
+  }
+ },
+ {
+  "id": "s397",
+  "section": "דוח הקרב",
+  "text": "מהנזק של הצד:",
+  "where": {
+   "kind": "source",
+   "file": "apps/client/src/components/BattleLog.tsx",
+   "line": 546
+  }
+ },
+ {
+  "id": "s398",
+  "section": "דוח הקרב",
+  "text": "חיים:",
+  "where": {
+   "kind": "source",
+   "file": "apps/client/src/components/BattleLog.tsx",
+   "line": 549
+  }
+ },
+ {
+  "id": "s399",
+  "section": "דוח הקרב",
+  "text": "(כולל בונוס מלך ×3)",
+  "where": {
+   "kind": "source",
+   "file": "apps/client/src/components/BattleLog.tsx",
+   "line": 550
+  }
+ },
+ {
+  "id": "s400",
+  "section": "דוח הקרב",
+  "text": "תזוזה:",
+  "where": {
+   "kind": "source",
+   "file": "apps/client/src/components/BattleLog.tsx",
+   "line": 553
+  }
+ },
+ {
+  "id": "s401",
+  "section": "דוח הקרב",
+  "text": "לא זז מילימטר",
+  "where": {
+   "kind": "source",
+   "file": "apps/client/src/components/BattleLog.tsx",
+   "line": 555
+  }
+ },
+ {
+  "id": "s402",
   "section": "דוח הקרב",
   "text": "התקדם ${unit.colsMoved.toFixed(1)} משבצות",
   "where": {
    "kind": "source",
    "file": "apps/client/src/components/BattleLog.tsx",
-   "line": 477
+   "line": 556
+  }
+ },
+ {
+  "id": "s403",
+  "section": "חלון פרטי מפלצת",
+  "text": "סגירה",
+  "where": {
+   "kind": "source",
+   "file": "apps/client/src/components/CardDetailModal.tsx",
+   "line": 42
   }
  },
  {
   "id": "s404",
   "section": "חלון פרטי מפלצת",
-  "text": "סגירה",
+  "text": "· הרמה הבאה עולה ${levelCost(card.rarity, level)}",
   "where": {
    "kind": "source",
    "file": "apps/client/src/components/CardDetailModal.tsx",
-   "line": 35
+   "line": 99
   }
  },
  {
   "id": "s405",
   "section": "חלון פרטי מפלצת",
-  "text": "👑 ענק אמצע",
+  "text": "· הגעת למקסימום",
   "where": {
    "kind": "source",
    "file": "apps/client/src/components/CardDetailModal.tsx",
-   "line": 54
+   "line": 100
   }
  },
  {
   "id": "s406",
   "section": "חלון פרטי מפלצת",
-  "text": "· הרמה הבאה עולה ${levelCost(card.rarity, level)}",
+  "text": "חיים",
   "where": {
    "kind": "source",
    "file": "apps/client/src/components/CardDetailModal.tsx",
-   "line": 72
+   "line": 106
   }
  },
  {
   "id": "s407",
   "section": "חלון פרטי מפלצת",
-  "text": "· הגעת למקסימום",
+  "text": "עוצמה",
   "where": {
    "kind": "source",
    "file": "apps/client/src/components/CardDetailModal.tsx",
-   "line": 73
+   "line": 107
   }
  },
  {
   "id": "s408",
   "section": "חלון פרטי מפלצת",
-  "text": "חיים",
+  "text": "קצב תקיפה",
   "where": {
    "kind": "source",
    "file": "apps/client/src/components/CardDetailModal.tsx",
-   "line": 79
+   "line": 108
   }
  },
  {
   "id": "s409",
   "section": "חלון פרטי מפלצת",
-  "text": "עוצמה",
+  "text": "${card.stats.attackSpeed}ש׳",
   "where": {
    "kind": "source",
    "file": "apps/client/src/components/CardDetailModal.tsx",
-   "line": 80
+   "line": 108
   }
  },
  {
   "id": "s410",
   "section": "חלון פרטי מפלצת",
-  "text": "קצב תקיפה",
+  "text": "תנועה",
   "where": {
    "kind": "source",
    "file": "apps/client/src/components/CardDetailModal.tsx",
-   "line": 81
+   "line": 111
   }
  },
  {
   "id": "s411",
   "section": "חלון פרטי מפלצת",
-  "text": "${card.stats.attackSpeed}ש׳",
+  "text": "${card.stats.moveSpeed}/ש׳",
   "where": {
    "kind": "source",
    "file": "apps/client/src/components/CardDetailModal.tsx",
-   "line": 81
+   "line": 112
   }
  },
  {
   "id": "s412",
   "section": "חלון פרטי מפלצת",
-  "text": "תנועה",
+  "text": "סטטי",
   "where": {
    "kind": "source",
    "file": "apps/client/src/components/CardDetailModal.tsx",
-   "line": 84
+   "line": 112
   }
  },
  {
   "id": "s413",
   "section": "חלון פרטי מפלצת",
-  "text": "${card.stats.moveSpeed}/ש׳",
+  "text": "טווח",
   "where": {
    "kind": "source",
    "file": "apps/client/src/components/CardDetailModal.tsx",
-   "line": 85
+   "line": 116
   }
  },
  {
   "id": "s414",
   "section": "חלון פרטי מפלצת",
-  "text": "סטטי",
+  "text": "יכולות",
   "where": {
    "kind": "source",
    "file": "apps/client/src/components/CardDetailModal.tsx",
-   "line": 85
+   "line": 123
   }
  },
  {
   "id": "s415",
   "section": "חלון פרטי מפלצת",
-  "text": "טווח",
-  "where": {
-   "kind": "source",
-   "file": "apps/client/src/components/CardDetailModal.tsx",
-   "line": 89
-  }
- },
- {
-  "id": "s416",
-  "section": "חלון פרטי מפלצת",
-  "text": "יכולות",
-  "where": {
-   "kind": "source",
-   "file": "apps/client/src/components/CardDetailModal.tsx",
-   "line": 96
-  }
- },
- {
-  "id": "s417",
-  "section": "חלון פרטי מפלצת",
   "text": "תפקיד",
   "where": {
    "kind": "source",
    "file": "apps/client/src/components/CardDetailModal.tsx",
-   "line": 110
+   "line": 137
   }
  },
  {
-  "id": "s418",
+  "id": "s416",
   "section": "חלון פרטי קלף פעולה",
   "text": "סגירה",
   "where": {
    "kind": "source",
    "file": "apps/client/src/components/ActionDetailModal.tsx",
-   "line": 32
+   "line": 34
+  }
+ },
+ {
+  "id": "s417",
+  "section": "חלון פרטי קלף פעולה",
+  "text": "∞ פסיבי",
+  "where": {
+   "kind": "source",
+   "file": "apps/client/src/components/ActionDetailModal.tsx",
+   "line": 54
+  }
+ },
+ {
+  "id": "s418",
+  "section": "חלון פרטי קלף פעולה",
+  "text": "בלחיצה",
+  "where": {
+   "kind": "source",
+   "file": "apps/client/src/components/ActionDetailModal.tsx",
+   "line": 54
   }
  },
  {
   "id": "s419",
   "section": "חלון פרטי קלף פעולה",
-  "text": "♾️ פסיבי",
+  "text": "מה הוא עושה (אוטומטית)",
   "where": {
    "kind": "source",
    "file": "apps/client/src/components/ActionDetailModal.tsx",
-   "line": 52
+   "line": 61
   }
  },
  {
   "id": "s420",
   "section": "חלון פרטי קלף פעולה",
-  "text": "▶ בלחיצה",
+  "text": "מה הוא עושה בלחיצה",
   "where": {
    "kind": "source",
    "file": "apps/client/src/components/ActionDetailModal.tsx",
-   "line": 52
+   "line": 61
   }
  },
  {
   "id": "s421",
   "section": "חלון פרטי קלף פעולה",
-  "text": "מה הוא עושה (אוטומטית)",
+  "text": "כבר נוצל",
   "where": {
    "kind": "source",
    "file": "apps/client/src/components/ActionDetailModal.tsx",
-   "line": 59
+   "line": 75
   }
  },
  {
   "id": "s422",
   "section": "חלון פרטי קלף פעולה",
-  "text": "מה הוא עושה בלחיצה",
+  "text": "∞ פועל מעצמו",
   "where": {
    "kind": "source",
    "file": "apps/client/src/components/ActionDetailModal.tsx",
-   "line": 59
+   "line": 75
   }
  },
  {
   "id": "s423",
-  "section": "חלון פרטי קלף פעולה",
-  "text": "✔ כבר נוצל",
-  "where": {
-   "kind": "source",
-   "file": "apps/client/src/components/ActionDetailModal.tsx",
-   "line": 73
-  }
- },
- {
-  "id": "s424",
-  "section": "חלון פרטי קלף פעולה",
-  "text": "♾️ פועל מעצמו",
-  "where": {
-   "kind": "source",
-   "file": "apps/client/src/components/ActionDetailModal.tsx",
-   "line": 73
-  }
- },
- {
-  "id": "s425",
   "section": "תווית קלף פעולה",
   "text": "פסיבי — פועל כל הזמן",
   "where": {
    "kind": "source",
    "file": "apps/client/src/components/ActionCardView.tsx",
-   "line": 46
+   "line": 47
+  }
+ },
+ {
+  "id": "s424",
+  "section": "תווית קלף פעולה",
+  "text": "קלף פעולה",
+  "where": {
+   "kind": "source",
+   "file": "apps/client/src/components/ActionCardView.tsx",
+   "line": 47
+  }
+ },
+ {
+  "id": "s425",
+  "section": "תווית קלף פעולה",
+  "text": "פרטי הקלף",
+  "where": {
+   "kind": "source",
+   "file": "apps/client/src/components/ActionCardView.tsx",
+   "line": 57
   }
  },
  {
   "id": "s426",
   "section": "תווית קלף פעולה",
-  "text": "קלף פעולה",
+  "text": "פסיבי",
   "where": {
    "kind": "source",
    "file": "apps/client/src/components/ActionCardView.tsx",
-   "line": 46
+   "line": 72
   }
  },
  {
   "id": "s427",
   "section": "תווית קלף פעולה",
-  "text": "פרטי הקלף",
-  "where": {
-   "kind": "source",
-   "file": "apps/client/src/components/ActionCardView.tsx",
-   "line": 56
-  }
- },
- {
-  "id": "s428",
-  "section": "תווית קלף פעולה",
-  "text": "פסיבי",
-  "where": {
-   "kind": "source",
-   "file": "apps/client/src/components/ActionCardView.tsx",
-   "line": 71
-  }
- },
- {
-  "id": "s429",
-  "section": "תווית קלף פעולה",
   "text": "קלף פעולה",
   "where": {
    "kind": "source",
    "file": "apps/client/src/components/ActionCardView.tsx",
-   "line": 71
+   "line": 72
   }
  },
  {
-  "id": "s430",
+  "id": "s428",
   "section": "קלף מפלצת",
   "text": "מסתער",
   "where": {
    "kind": "source",
    "file": "apps/client/src/components/CardView.tsx",
-   "line": 79
+   "line": 98
   }
  },
  {
-  "id": "s431",
+  "id": "s429",
   "section": "קלף מפלצת",
   "text": "מעופף",
   "where": {
    "kind": "source",
    "file": "apps/client/src/components/CardView.tsx",
-   "line": 80
+   "line": 103
   }
  },
  {
-  "id": "s432",
+  "id": "s430",
   "section": "קלף מפלצת",
   "text": "בונוס מלך ×3",
   "where": {
    "kind": "source",
    "file": "apps/client/src/components/CardView.tsx",
-   "line": 83
+   "line": 109
   }
  },
  {
-  "id": "s433",
+  "id": "s431",
   "section": "קלף מפלצת",
   "text": "ענק אמצע (מתאים למלך)",
   "where": {
    "kind": "source",
    "file": "apps/client/src/components/CardView.tsx",
-   "line": 86
+   "line": 112
   }
  },
  {
-  "id": "s434",
+  "id": "s432",
   "section": "קלף מפלצת",
   "text": "פרטי הקלף",
   "where": {
    "kind": "source",
    "file": "apps/client/src/components/CardView.tsx",
-   "line": 94
+   "line": 120
   }
  },
  {
-  "id": "s435",
+  "id": "s433",
   "section": "קלף מפלצת",
   "text": "חיים",
   "where": {
    "kind": "source",
    "file": "apps/client/src/components/CardView.tsx",
-   "line": 111
+   "line": 137
   }
  },
  {
-  "id": "s436",
+  "id": "s434",
   "section": "קלף מפלצת",
   "text": "עוצמה",
   "where": {
    "kind": "source",
    "file": "apps/client/src/components/CardView.tsx",
-   "line": 115
+   "line": 150
   }
  },
  {
-  "id": "s437",
+  "id": "s435",
   "section": "קלף מפלצת",
   "text": "מוסתר בערפל",
   "where": {
    "kind": "source",
    "file": "apps/client/src/components/CardView.tsx",
-   "line": 133
+   "line": 169
   }
  },
  {
-  "id": "s438",
+  "id": "s436",
+  "section": "הלוח",
+  "text": "המלך",
+  "where": {
+   "kind": "source",
+   "file": "apps/client/src/components/BoardGrid.tsx",
+   "line": 188
+  }
+ },
+ {
+  "id": "s437",
   "section": "הלוח",
   "text": "יש קלף מתחת. הוא יצוץ כשהעליון ייפול.",
   "where": {
    "kind": "source",
    "file": "apps/client/src/components/BoardGrid.tsx",
-   "line": 177
+   "line": 230
   }
  },
  {
-  "id": "s439",
+  "id": "s438",
   "section": "הלוח",
   "text": "משמר המלך. כאן עוצרים את מי שבא לאכול אותו.",
   "where": {
    "kind": "source",
    "file": "apps/client/src/components/BoardGrid.tsx",
-   "line": 182
+   "line": 235
   }
  },
  {
-  "id": "s440",
+  "id": "s439",
   "section": "זירת הקרב",
   "text": "🧑 אתה",
   "where": {
    "kind": "source",
    "file": "apps/client/src/components/Arena.tsx",
-   "line": 573
+   "line": 608
   }
  },
  {
-  "id": "s441",
+  "id": "s440",
   "section": "זירת הקרב",
   "text": "🤖 היריב",
   "where": {
    "kind": "source",
    "file": "apps/client/src/components/Arena.tsx",
-   "line": 574
+   "line": 609
   }
  },
  {
-  "id": "s442",
+  "id": "s441",
   "section": "זירת הקרב",
   "text": "⏱ נגמר הזמן!",
   "where": {
    "kind": "source",
    "file": "apps/client/src/components/Arena.tsx",
-   "line": 602
+   "line": 637
+  }
+ },
+ {
+  "id": "s442",
+  "section": "זירת הקרב",
+  "text": "נתקע אחרי ${STARTUP_GRACE_MS / 1000} שניות בלי ציור",
+  "where": {
+   "kind": "source",
+   "file": "apps/client/src/components/Arena.tsx",
+   "line": 982
   }
  },
  {
@@ -5294,7 +5468,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/components/Arena.tsx",
-   "line": 969
+   "line": 1013
   }
  },
  {
@@ -5304,7 +5478,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/components/Arena.tsx",
-   "line": 970
+   "line": 1014
   }
  },
  {
@@ -5584,7 +5758,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/data/cardMeta.ts",
-   "line": 58
+   "line": 64
   }
  },
  {
@@ -5594,7 +5768,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/data/cardMeta.ts",
-   "line": 59
+   "line": 65
   }
  },
  {
@@ -5604,7 +5778,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/data/cardMeta.ts",
-   "line": 60
+   "line": 66
   }
  },
  {
@@ -5614,7 +5788,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/data/cardMeta.ts",
-   "line": 61
+   "line": 67
   }
  },
  {
@@ -5624,7 +5798,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/data/cardMeta.ts",
-   "line": 62
+   "line": 68
   }
  },
  {
@@ -5634,7 +5808,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/data/cardMeta.ts",
-   "line": 63
+   "line": 69
   }
  },
  {
@@ -5644,7 +5818,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/data/cardMeta.ts",
-   "line": 64
+   "line": 70
   }
  },
  {
@@ -5654,7 +5828,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/data/cardMeta.ts",
-   "line": 65
+   "line": 71
   }
  },
  {
@@ -5664,7 +5838,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/data/cardMeta.ts",
-   "line": 66
+   "line": 72
   }
  },
  {
@@ -5674,7 +5848,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/data/cardMeta.ts",
-   "line": 67
+   "line": 73
   }
  },
  {
@@ -5684,7 +5858,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/data/cardMeta.ts",
-   "line": 68
+   "line": 74
   }
  },
  {
@@ -5694,7 +5868,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/data/cardMeta.ts",
-   "line": 69
+   "line": 75
   }
  },
  {
@@ -5704,7 +5878,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/data/cardMeta.ts",
-   "line": 70
+   "line": 76
   }
  },
  {
@@ -5714,7 +5888,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/data/cardMeta.ts",
-   "line": 71
+   "line": 77
   }
  },
  {
@@ -5724,7 +5898,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/data/cardMeta.ts",
-   "line": 72
+   "line": 78
   }
  },
  {
@@ -5734,7 +5908,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/data/cardMeta.ts",
-   "line": 73
+   "line": 79
   }
  },
  {
@@ -5744,7 +5918,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/data/cardMeta.ts",
-   "line": 74
+   "line": 80
   }
  },
  {
@@ -5754,7 +5928,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/data/cardMeta.ts",
-   "line": 75
+   "line": 81
   }
  },
  {
@@ -5764,7 +5938,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/data/cardMeta.ts",
-   "line": 76
+   "line": 82
   }
  },
  {
@@ -5774,7 +5948,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/data/cardMeta.ts",
-   "line": 77
+   "line": 83
   }
  },
  {
@@ -5784,7 +5958,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/data/cardMeta.ts",
-   "line": 78
+   "line": 84
   }
  },
  {
@@ -5794,7 +5968,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/data/cardMeta.ts",
-   "line": 79
+   "line": 85
   }
  },
  {
@@ -5804,7 +5978,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/data/cardMeta.ts",
-   "line": 80
+   "line": 86
   }
  },
  {
@@ -5814,7 +5988,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/data/cardMeta.ts",
-   "line": 81
+   "line": 87
   }
  },
  {
@@ -5824,7 +5998,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/data/cardMeta.ts",
-   "line": 82
+   "line": 88
   }
  },
  {
@@ -5834,7 +6008,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/data/cardMeta.ts",
-   "line": 83
+   "line": 89
   }
  },
  {
@@ -5844,23 +6018,413 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/data/catalog.ts",
-   "line": 45
+   "line": 80
   }
  },
  {
   "id": "s499",
-  "section": "components/Album.tsx",
-  "text": "ניצחונות",
+  "section": "components/About.tsx",
+  "text": "אמנדה המפלצת מסונול כצנלסון",
   "where": {
    "kind": "source",
-   "file": "apps/client/src/components/Album.tsx",
-   "line": 96
+   "file": "apps/client/src/components/About.tsx",
+   "line": 33
   }
  },
  {
   "id": "s500",
+  "section": "components/About.tsx",
+  "text": "אמנדה המפלצת מסונול כצנלסון",
+  "where": {
+   "kind": "source",
+   "file": "apps/client/src/components/About.tsx",
+   "line": 69
+  }
+ },
+ {
+  "id": "s501",
+  "section": "components/About.tsx",
+  "text": "עלינו",
+  "where": {
+   "kind": "source",
+   "file": "apps/client/src/components/About.tsx",
+   "line": 74
+  }
+ },
+ {
+  "id": "s502",
+  "section": "components/About.tsx",
+  "text": "פרטיות",
+  "where": {
+   "kind": "source",
+   "file": "apps/client/src/components/About.tsx",
+   "line": 75
+  }
+ },
+ {
+  "id": "s503",
+  "section": "components/About.tsx",
+  "text": "נגישות",
+  "where": {
+   "kind": "source",
+   "file": "apps/client/src/components/About.tsx",
+   "line": 76
+  }
+ },
+ {
+  "id": "s504",
+  "section": "components/About.tsx",
+  "text": "תנאים",
+  "where": {
+   "kind": "source",
+   "file": "apps/client/src/components/About.tsx",
+   "line": 77
+  }
+ },
+ {
+  "id": "s505",
+  "section": "components/About.tsx",
+  "text": "סגירה",
+  "where": {
+   "kind": "source",
+   "file": "apps/client/src/components/About.tsx",
+   "line": 105
+  }
+ },
+ {
+  "id": "s506",
+  "section": "components/About.tsx",
+  "text": "size={15} /> {label}: חפשו ביוטיוב{",
+  "where": {
+   "kind": "source",
+   "file": "apps/client/src/components/About.tsx",
+   "line": 161
+  }
+ },
+ {
+  "id": "s507",
+  "section": "components/About.tsx",
+  "text": "אם אתם מפחדים ממפלצות — המשחק הזה לא בשבילכם",
+  "where": {
+   "kind": "source",
+   "file": "apps/client/src/components/About.tsx",
+   "line": 184
+  }
+ },
+ {
+  "id": "s508",
+  "section": "components/About.tsx",
+  "text": "אמנדה — המפלצת מסונול כצנלסון",
+  "where": {
+   "kind": "source",
+   "file": "apps/client/src/components/About.tsx",
+   "line": 198
+  }
+ },
+ {
+  "id": "s509",
+  "section": "components/About.tsx",
+  "text": "הסרט המלא",
+  "where": {
+   "kind": "source",
+   "file": "apps/client/src/components/About.tsx",
+   "line": 201
+  }
+ },
+ {
+  "id": "s510",
+  "section": "components/About.tsx",
+  "text": "שיר הנושא",
+  "where": {
+   "kind": "source",
+   "file": "apps/client/src/components/About.tsx",
+   "line": 214
+  }
+ },
+ {
+  "id": "s511",
+  "section": "components/About.tsx",
+  "text": "המוזיקה שמתנגנת כאן היא שלנו. לשמוע אותה במלואה:",
+  "where": {
+   "kind": "source",
+   "file": "apps/client/src/components/About.tsx",
+   "line": 215
+  }
+ },
+ {
+  "id": "s512",
+  "section": "components/About.tsx",
+  "text": "השיר",
+  "where": {
+   "kind": "source",
+   "file": "apps/client/src/components/About.tsx",
+   "line": 216
+  }
+ },
+ {
+  "id": "s513",
+  "section": "components/About.tsx",
+  "text": "מדיניות פרטיות",
+  "where": {
+   "kind": "source",
+   "file": "apps/client/src/components/About.tsx",
+   "line": 226
+  }
+ },
+ {
+  "id": "s514",
+  "section": "components/About.tsx",
+  "text": "עודכן: אוקטובר 2026",
+  "where": {
+   "kind": "source",
+   "file": "apps/client/src/components/About.tsx",
+   "line": 227
+  }
+ },
+ {
+  "id": "s515",
+  "section": "components/About.tsx",
+  "text": "מה נשמר עליך",
+  "where": {
+   "kind": "source",
+   "file": "apps/client/src/components/About.tsx",
+   "line": 229
+  }
+ },
+ {
+  "id": "s516",
+  "section": "components/About.tsx",
+  "text": "כינוי, אווטאר ומגדר",
+  "where": {
+   "kind": "source",
+   "file": "apps/client/src/components/About.tsx",
+   "line": 232
+  }
+ },
+ {
+  "id": "s517",
+  "section": "components/About.tsx",
+  "text": "תאריך לידה",
+  "where": {
+   "kind": "source",
+   "file": "apps/client/src/components/About.tsx",
+   "line": 235
+  }
+ },
+ {
+  "id": "s518",
+  "section": "components/About.tsx",
+  "text": "ההתקדמות שלך",
+  "where": {
+   "kind": "source",
+   "file": "apps/client/src/components/About.tsx",
+   "line": 239
+  }
+ },
+ {
+  "id": "s519",
+  "section": "components/About.tsx",
+  "text": "חשבון",
+  "where": {
+   "kind": "source",
+   "file": "apps/client/src/components/About.tsx",
+   "line": 243
+  }
+ },
+ {
+  "id": "s520",
+  "section": "components/About.tsx",
+  "text": "מה לא נשמר",
+  "where": {
+   "kind": "source",
+   "file": "apps/client/src/components/About.tsx",
+   "line": 248
+  }
+ },
+ {
+  "id": "s521",
+  "section": "components/About.tsx",
+  "text": "איפה זה יושב",
+  "where": {
+   "kind": "source",
+   "file": "apps/client/src/components/About.tsx",
+   "line": 254
+  }
+ },
+ {
+  "id": "s522",
+  "section": "components/About.tsx",
+  "text": "איך מוחקים הכול",
+  "where": {
+   "kind": "source",
+   "file": "apps/client/src/components/About.tsx",
+   "line": 261
+  }
+ },
+ {
+  "id": "s523",
+  "section": "components/About.tsx",
+  "text": "מחיקת חשבון",
+  "where": {
+   "kind": "source",
+   "file": "apps/client/src/components/About.tsx",
+   "line": 263
+  }
+ },
+ {
+  "id": "s524",
+  "section": "components/About.tsx",
+  "text": "יצירת קשר",
+  "where": {
+   "kind": "source",
+   "file": "apps/client/src/components/About.tsx",
+   "line": 267
+  }
+ },
+ {
+  "id": "s525",
+  "section": "components/About.tsx",
+  "text": "הצהרת נגישות",
+  "where": {
+   "kind": "source",
+   "file": "apps/client/src/components/About.tsx",
+   "line": 278
+  }
+ },
+ {
+  "id": "s526",
+  "section": "components/About.tsx",
+  "text": "עודכן: אוקטובר 2026",
+  "where": {
+   "kind": "source",
+   "file": "apps/client/src/components/About.tsx",
+   "line": 279
+  }
+ },
+ {
+  "id": "s527",
+  "section": "components/About.tsx",
+  "text": "מה כבר נעשה",
+  "where": {
+   "kind": "source",
+   "file": "apps/client/src/components/About.tsx",
+   "line": 285
+  }
+ },
+ {
+  "id": "s528",
+  "section": "components/About.tsx",
+  "text": "כל הכפתורים נגישים במקלדת וסימון המיקוד נשאר גלוי.",
+  "where": {
+   "kind": "source",
+   "file": "apps/client/src/components/About.tsx",
+   "line": 287
+  }
+ },
+ {
+  "id": "s529",
+  "section": "components/About.tsx",
+  "text": "אפשר לכבות את הצלילים ואת המוזיקה בנפרד, והבחירה נשמרת.",
+  "where": {
+   "kind": "source",
+   "file": "apps/client/src/components/About.tsx",
+   "line": 292
+  }
+ },
+ {
+  "id": "s530",
+  "section": "components/About.tsx",
+  "text": "אייקונים נושאים תיאור טקסטואלי כשהם עומדים בפני עצמם.",
+  "where": {
+   "kind": "source",
+   "file": "apps/client/src/components/About.tsx",
+   "line": 293
+  }
+ },
+ {
+  "id": "s531",
+  "section": "components/About.tsx",
+  "text": "המשחק עובד לאורך ולרוחב, ובלי לנעול את גודל הטקסט.",
+  "where": {
+   "kind": "source",
+   "file": "apps/client/src/components/About.tsx",
+   "line": 294
+  }
+ },
+ {
+  "id": "s532",
+  "section": "components/About.tsx",
+  "text": "מה עוד לא",
+  "where": {
+   "kind": "source",
+   "file": "apps/client/src/components/About.tsx",
+   "line": 297
+  }
+ },
+ {
+  "id": "s533",
+  "section": "components/About.tsx",
+  "text": "נתקלתם בבעיה?",
+  "where": {
+   "kind": "source",
+   "file": "apps/client/src/components/About.tsx",
+   "line": 304
+  }
+ },
+ {
+  "id": "s534",
+  "section": "components/About.tsx",
+  "text": "ספרו לנו דרך פרטי הקשר בדף החנות, ונתקן.",
+  "where": {
+   "kind": "source",
+   "file": "apps/client/src/components/About.tsx",
+   "line": 305
+  }
+ },
+ {
+  "id": "s535",
+  "section": "components/About.tsx",
+  "text": "תנאי שימוש",
+  "where": {
+   "kind": "source",
+   "file": "apps/client/src/components/About.tsx",
+   "line": 313
+  }
+ },
+ {
+  "id": "s536",
+  "section": "components/About.tsx",
+  "text": "עודכן: אוקטובר 2026",
+  "where": {
+   "kind": "source",
+   "file": "apps/client/src/components/About.tsx",
+   "line": 314
+  }
+ },
+ {
+  "id": "s537",
+  "section": "components/About.tsx",
+  "text": "המשחק חינמי. אין רכישות בתוך האפליקציה.",
+  "where": {
+   "kind": "source",
+   "file": "apps/client/src/components/About.tsx",
+   "line": 316
+  }
+ },
+ {
+  "id": "s538",
+  "section": "components/About.tsx",
+  "text": "הגיל המינימלי הוא 7.",
+  "where": {
+   "kind": "source",
+   "file": "apps/client/src/components/About.tsx",
+   "line": 317
+  }
+ },
+ {
+  "id": "s539",
   "section": "components/Album.tsx",
-  "text": "הפסדים",
+  "text": "אתה משחק מהחפיסה המלאה",
   "where": {
    "kind": "source",
    "file": "apps/client/src/components/Album.tsx",
@@ -5868,473 +6432,3173 @@
   }
  },
  {
-  "id": "s501",
+  "id": "s540",
   "section": "components/Album.tsx",
-  "text": "אחוז ניצחון",
+  "text": "הקרבות שלך",
   "where": {
    "kind": "source",
    "file": "apps/client/src/components/Album.tsx",
-   "line": 106
+   "line": 115
   }
  },
  {
-  "id": "s502",
+  "id": "s541",
+  "section": "components/Album.tsx",
+  "text": "ניצחונות",
+  "where": {
+   "kind": "source",
+   "file": "apps/client/src/components/Album.tsx",
+   "line": 144
+  }
+ },
+ {
+  "id": "s542",
+  "section": "components/Album.tsx",
+  "text": "${stats.wins} מתוך ${stats.played}",
+  "where": {
+   "kind": "source",
+   "file": "apps/client/src/components/Album.tsx",
+   "line": 145
+  }
+ },
+ {
+  "id": "s543",
+  "section": "components/Album.tsx",
+  "text": "הפסדים",
+  "where": {
+   "kind": "source",
+   "file": "apps/client/src/components/Album.tsx",
+   "line": 148
+  }
+ },
+ {
+  "id": "s544",
   "section": "components/Album.tsx",
   "text": "שיא גביעים",
   "where": {
    "kind": "source",
    "file": "apps/client/src/components/Album.tsx",
-   "line": 110
+   "line": 149
   }
  },
  {
-  "id": "s503",
+  "id": "s545",
   "section": "components/Album.tsx",
   "text": "תיבות",
   "where": {
    "kind": "source",
    "file": "apps/client/src/components/Album.tsx",
-   "line": 114
+   "line": 150
   }
  },
  {
-  "id": "s504",
+  "id": "s546",
   "section": "components/Album.tsx",
   "text": "עותקים",
   "where": {
    "kind": "source",
    "file": "apps/client/src/components/Album.tsx",
-   "line": 118
+   "line": 151
   }
  },
  {
-  "id": "s505",
+  "id": "s547",
   "section": "components/Album.tsx",
   "text": "הקרבות האחרונים, החדש ביותר ראשון",
   "where": {
    "kind": "source",
    "file": "apps/client/src/components/Album.tsx",
-   "line": 122
+   "line": 165
   }
  },
  {
-  "id": "s506",
+  "id": "s548",
   "section": "components/Album.tsx",
   "text": "עותקים — כמה פעמים אפשר להניח אותו",
   "where": {
    "kind": "source",
    "file": "apps/client/src/components/Album.tsx",
-   "line": 155
+   "line": 200
   }
  },
  {
-  "id": "s507",
+  "id": "s549",
   "section": "components/Album.tsx",
   "text": "שדרוג לרמה ${mine.level + 1} — עולה ${levelCost(card.rarity, mine.level)} עותקים",
   "where": {
    "kind": "source",
    "file": "apps/client/src/components/Album.tsx",
-   "line": 169
+   "line": 214
   }
  },
  {
-  "id": "s508",
+  "id": "s550",
+  "section": "components/ArenaTrack.tsx",
+  "text": "כל הארנות",
+  "where": {
+   "kind": "source",
+   "file": "apps/client/src/components/ArenaTrack.tsx",
+   "line": 30
+  }
+ },
+ {
+  "id": "s551",
+  "section": "components/ArenaTrack.tsx",
+  "text": "size={12} /> {trophies} · עוד {next.from - trophies}{",
+  "where": {
+   "kind": "source",
+   "file": "apps/client/src/components/ArenaTrack.tsx",
+   "line": 44
+  }
+ },
+ {
+  "id": "s552",
+  "section": "components/ArenaTrack.tsx",
+  "text": "סגירה",
+  "where": {
+   "kind": "source",
+   "file": "apps/client/src/components/ArenaTrack.tsx",
+   "line": 61
+  }
+ },
+ {
+  "id": "s553",
+  "section": "components/ArenaTrack.tsx",
+  "text": "הדרך",
+  "where": {
+   "kind": "source",
+   "file": "apps/client/src/components/ArenaTrack.tsx",
+   "line": 64
+  }
+ },
+ {
+  "id": "s554",
+  "section": "components/ArenaTrack.tsx",
+  "text": "אתה כאן",
+  "where": {
+   "kind": "source",
+   "file": "apps/client/src/components/ArenaTrack.tsx",
+   "line": 87
+  }
+ },
+ {
+  "id": "s555",
+  "section": "components/BattleScreen.tsx",
+  "text": "שגיאה בהצגת הקרב",
+  "where": {
+   "kind": "source",
+   "file": "apps/client/src/components/BattleScreen.tsx",
+   "line": 39
+  }
+ },
+ {
+  "id": "s556",
+  "section": "components/BattleScreen.tsx",
+  "text": "רגע…",
+  "where": {
+   "kind": "source",
+   "file": "apps/client/src/components/BattleScreen.tsx",
+   "line": 62
+  }
+ },
+ {
+  "id": "s557",
+  "section": "components/BattleScreen.tsx",
+  "text": "ולעצור את הקרב בכל רגע נתון",
+  "where": {
+   "kind": "source",
+   "file": "apps/client/src/components/BattleScreen.tsx",
+   "line": 74
+  }
+ },
+ {
+  "id": "s558",
+  "section": "components/CardPicker.tsx",
+  "text": "בלי קלף ביד — נגיעה בקלף על הלוח מורידה אותו",
+  "where": {
+   "kind": "source",
+   "file": "apps/client/src/components/CardPicker.tsx",
+   "line": 59
+  }
+ },
+ {
+  "id": "s559",
+  "section": "components/CardPicker.tsx",
+  "text": "חיפוש קלף…",
+  "where": {
+   "kind": "source",
+   "file": "apps/client/src/components/CardPicker.tsx",
+   "line": 67
+  }
+ },
+ {
+  "id": "s560",
+  "section": "components/CardPicker.tsx",
+  "text": "קלפי פעולה",
+  "where": {
+   "kind": "source",
+   "file": "apps/client/src/components/CardPicker.tsx",
+   "line": 118
+  }
+ },
+ {
+  "id": "s561",
+  "section": "components/CardPicker.tsx",
+  "text": "אין קלף כזה. המצאת אותו?",
+  "where": {
+   "kind": "source",
+   "file": "apps/client/src/components/CardPicker.tsx",
+   "line": 136
+  }
+ },
+ {
+  "id": "s562",
+  "section": "components/Challenges.tsx",
+  "text": "היום",
+  "where": {
+   "kind": "source",
+   "file": "apps/client/src/components/Challenges.tsx",
+   "line": 27
+  }
+ },
+ {
+  "id": "s563",
+  "section": "components/Challenges.tsx",
+  "text": "השבוע",
+  "where": {
+   "kind": "source",
+   "file": "apps/client/src/components/Challenges.tsx",
+   "line": 28
+  }
+ },
+ {
+  "id": "s564",
+  "section": "components/Challenges.tsx",
+  "text": "החודש",
+  "where": {
+   "kind": "source",
+   "file": "apps/client/src/components/Challenges.tsx",
+   "line": 29
+  }
+ },
+ {
+  "id": "s565",
+  "section": "components/Challenges.tsx",
+  "text": "עוד פחות משעה",
+  "where": {
+   "kind": "source",
+   "file": "apps/client/src/components/Challenges.tsx",
+   "line": 36
+  }
+ },
+ {
+  "id": "s566",
+  "section": "components/Challenges.tsx",
+  "text": "עוד ${hours} שעות",
+  "where": {
+   "kind": "source",
+   "file": "apps/client/src/components/Challenges.tsx",
+   "line": 37
+  }
+ },
+ {
+  "id": "s567",
+  "section": "components/Challenges.tsx",
+  "text": "עוד יום",
+  "where": {
+   "kind": "source",
+   "file": "apps/client/src/components/Challenges.tsx",
+   "line": 39
+  }
+ },
+ {
+  "id": "s568",
+  "section": "components/Challenges.tsx",
+  "text": "עוד ${days} ימים",
+  "where": {
+   "kind": "source",
+   "file": "apps/client/src/components/Challenges.tsx",
+   "line": 39
+  }
+ },
+ {
+  "id": "s569",
+  "section": "components/Challenges.tsx",
+  "text": "אתגרים",
+  "where": {
+   "kind": "source",
+   "file": "apps/client/src/components/Challenges.tsx",
+   "line": 93
+  }
+ },
+ {
+  "id": "s570",
+  "section": "components/Challenges.tsx",
+  "text": "יש פרס לקחת",
+  "where": {
+   "kind": "source",
+   "file": "apps/client/src/components/Challenges.tsx",
+   "line": 111
+  }
+ },
+ {
+  "id": "s571",
+  "section": "components/Challenges.tsx",
+  "text": "נלקח",
+  "where": {
+   "kind": "source",
+   "file": "apps/client/src/components/Challenges.tsx",
+   "line": 142
+  }
+ },
+ {
+  "id": "s572",
+  "section": "components/Challenges.tsx",
+  "text": "לקחת",
+  "where": {
+   "kind": "source",
+   "file": "apps/client/src/components/Challenges.tsx",
+   "line": 159
+  }
+ },
+ {
+  "id": "s573",
+  "section": "components/Challenges.tsx",
+  "text": "אתגרים",
+  "where": {
+   "kind": "source",
+   "file": "apps/client/src/components/Challenges.tsx",
+   "line": 204
+  }
+ },
+ {
+  "id": "s574",
   "section": "components/ChestReveal.tsx",
   "text": "תיבת עץ",
   "where": {
    "kind": "source",
    "file": "apps/client/src/components/ChestReveal.tsx",
-   "line": 21
+   "line": 47
   }
  },
  {
-  "id": "s509",
+  "id": "s575",
   "section": "components/ChestReveal.tsx",
   "text": "תיבת כסף",
   "where": {
    "kind": "source",
    "file": "apps/client/src/components/ChestReveal.tsx",
-   "line": 22
+   "line": 48
   }
  },
  {
-  "id": "s510",
+  "id": "s576",
   "section": "components/ChestReveal.tsx",
   "text": "תיבת זהב",
   "where": {
    "kind": "source",
    "file": "apps/client/src/components/ChestReveal.tsx",
-   "line": 23
+   "line": 49
   }
  },
  {
-  "id": "s511",
+  "id": "s577",
   "section": "components/ChestReveal.tsx",
-  "text": "פתח",
+  "text": "פתח ${look.he}",
   "where": {
    "kind": "source",
    "file": "apps/client/src/components/ChestReveal.tsx",
-   "line": 55
+   "line": 178
   }
  },
  {
-  "id": "s512",
+  "id": "s578",
   "section": "components/ChestReveal.tsx",
   "text": "יפה",
   "where": {
    "kind": "source",
    "file": "apps/client/src/components/ChestReveal.tsx",
-   "line": 84
+   "line": 215
   }
  },
  {
-  "id": "s513",
+  "id": "s579",
+  "section": "components/ChestReveal.tsx",
+  "text": ">{many ? `${ids.length} קלפים חדשים!` :",
+  "where": {
+   "kind": "source",
+   "file": "apps/client/src/components/ChestReveal.tsx",
+   "line": 258
+  }
+ },
+ {
+  "id": "s580",
+  "section": "components/ChestReveal.tsx",
+  "text": "חדש אצלך",
+  "where": {
+   "kind": "source",
+   "file": "apps/client/src/components/ChestReveal.tsx",
+   "line": 298
+  }
+ },
+ {
+  "id": "s581",
+  "section": "components/ChestShelf.tsx",
+  "text": "תיבות שמחכות לך",
+  "where": {
+   "kind": "source",
+   "file": "apps/client/src/components/ChestShelf.tsx",
+   "line": 52
+  }
+ },
+ {
+  "id": "s582",
+  "section": "components/ChestShelf.tsx",
+  "text": "פתח",
+  "where": {
+   "kind": "source",
+   "file": "apps/client/src/components/ChestShelf.tsx",
+   "line": 58
+  }
+ },
+ {
+  "id": "s583",
+  "section": "components/ErrorBoundary.tsx",
+  "text": "משהו נשבר",
+  "where": {
+   "kind": "source",
+   "file": "apps/client/src/components/ErrorBoundary.tsx",
+   "line": 111
+  }
+ },
+ {
+  "id": "s584",
+  "section": "components/ErrorBoundary.tsx",
+  "text": "זה קורה. האוסף שלך שמור.",
+  "where": {
+   "kind": "source",
+   "file": "apps/client/src/components/ErrorBoundary.tsx",
+   "line": 113
+  }
+ },
+ {
+  "id": "s585",
+  "section": "components/Friends.tsx",
+  "text": "בלי שם",
+  "where": {
+   "kind": "source",
+   "file": "apps/client/src/components/Friends.tsx",
+   "line": 81
+  }
+ },
+ {
+  "id": "s586",
+  "section": "components/Friends.tsx",
+  "text": "סגירה",
+  "where": {
+   "kind": "source",
+   "file": "apps/client/src/components/Friends.tsx",
+   "line": 89
+  }
+ },
+ {
+  "id": "s587",
+  "section": "components/Friends.tsx",
+  "text": "חברים",
+  "where": {
+   "kind": "source",
+   "file": "apps/client/src/components/Friends.tsx",
+   "line": 92
+  }
+ },
+ {
+  "id": "s588",
+  "section": "components/Friends.tsx",
+  "text": "רגע…",
+  "where": {
+   "kind": "source",
+   "file": "apps/client/src/components/Friends.tsx",
+   "line": 95
+  }
+ },
+ {
+  "id": "s589",
+  "section": "components/Friends.tsx",
+  "text": "עוד אין כאן אף אחד.",
+  "where": {
+   "kind": "source",
+   "file": "apps/client/src/components/Friends.tsx",
+   "line": 101
+  }
+ },
+ {
+  "id": "s590",
+  "section": "components/Friends.tsx",
+  "text": "רוצה להיות חבר שלך",
+  "where": {
+   "kind": "source",
+   "file": "apps/client/src/components/Friends.tsx",
+   "line": 117
+  }
+ },
+ {
+  "id": "s591",
+  "section": "components/Friends.tsx",
+  "text": "מחכה שיאשר",
+  "where": {
+   "kind": "source",
+   "file": "apps/client/src/components/Friends.tsx",
+   "line": 119
+  }
+ },
+ {
+  "id": "s592",
+  "section": "components/Friends.tsx",
+  "text": "מחובר",
+  "where": {
+   "kind": "source",
+   "file": "apps/client/src/components/Friends.tsx",
+   "line": 121
+  }
+ },
+ {
+  "id": "s593",
+  "section": "components/Friends.tsx",
+  "text": "לא מחובר",
+  "where": {
+   "kind": "source",
+   "file": "apps/client/src/components/Friends.tsx",
+   "line": 122
+  }
+ },
+ {
+  "id": "s594",
+  "section": "components/Friends.tsx",
+  "text": "להזמין למשחק",
+  "where": {
+   "kind": "source",
+   "file": "apps/client/src/components/Friends.tsx",
+   "line": 142
+  }
+ },
+ {
+  "id": "s595",
+  "section": "components/Friends.tsx",
+  "text": "אפשר להזמין ממסך הבית",
+  "where": {
+   "kind": "source",
+   "file": "apps/client/src/components/Friends.tsx",
+   "line": 142
+  }
+ },
+ {
+  "id": "s596",
+  "section": "components/Friends.tsx",
+  "text": "להסיר",
+  "where": {
+   "kind": "source",
+   "file": "apps/client/src/components/Friends.tsx",
+   "line": 152
+  }
+ },
+ {
+  "id": "s597",
+  "section": "components/Friends.tsx",
+  "text": "לבטל",
+  "where": {
+   "kind": "source",
+   "file": "apps/client/src/components/Friends.tsx",
+   "line": 152
+  }
+ },
+ {
+  "id": "s598",
+  "section": "components/Friends.tsx",
+  "text": "רגע…",
+  "where": {
+   "kind": "source",
+   "file": "apps/client/src/components/Friends.tsx",
+   "line": 183
+  }
+ },
+ {
+  "id": "s599",
+  "section": "components/Friends.tsx",
+  "text": "עוד לא שיחקת מול אף אחד.",
+  "where": {
+   "kind": "source",
+   "file": "apps/client/src/components/Friends.tsx",
+   "line": 185
+  }
+ },
+ {
+  "id": "s600",
+  "section": "components/Friends.tsx",
+  "text": "רק מי ששיחקת מולו.",
+  "where": {
+   "kind": "source",
+   "file": "apps/client/src/components/Friends.tsx",
+   "line": 188
+  }
+ },
+ {
+  "id": "s601",
+  "section": "components/HomeScreen.tsx",
+  "text": "קליל",
+  "where": {
+   "kind": "source",
+   "file": "apps/client/src/components/HomeScreen.tsx",
+   "line": 63
+  }
+ },
+ {
+  "id": "s602",
+  "section": "components/HomeScreen.tsx",
+  "text": "לוח דליל, קלפים חלשים. מנצח ב-17% מהקרבות.",
+  "where": {
+   "kind": "source",
+   "file": "apps/client/src/components/HomeScreen.tsx",
+   "line": 63
+  }
+ },
+ {
+  "id": "s603",
+  "section": "components/HomeScreen.tsx",
+  "text": "רגיל",
+  "where": {
+   "kind": "source",
+   "file": "apps/client/src/components/HomeScreen.tsx",
+   "line": 64
+  }
+ },
+ {
+  "id": "s604",
+  "section": "components/HomeScreen.tsx",
+  "text": "בונה כמו שהוא יודע. חצי-חצי.",
+  "where": {
+   "kind": "source",
+   "file": "apps/client/src/components/HomeScreen.tsx",
+   "line": 64
+  }
+ },
+ {
+  "id": "s605",
+  "section": "components/HomeScreen.tsx",
+  "text": "קשה",
+  "where": {
+   "kind": "source",
+   "file": "apps/client/src/components/HomeScreen.tsx",
+   "line": 65
+  }
+ },
+ {
+  "id": "s606",
+  "section": "components/HomeScreen.tsx",
+  "text": "בוחר מתוך אוסף גדול בהרבה. מנצח בערך ב-58%.",
+  "where": {
+   "kind": "source",
+   "file": "apps/client/src/components/HomeScreen.tsx",
+   "line": 65
+  }
+ },
+ {
+  "id": "s607",
+  "section": "components/HomeScreen.tsx",
+  "text": "הפרופיל שלי",
+  "where": {
+   "kind": "source",
+   "file": "apps/client/src/components/HomeScreen.tsx",
+   "line": 181
+  }
+ },
+ {
+  "id": "s608",
+  "section": "components/HomeScreen.tsx",
+  "text": "התחברות",
+  "where": {
+   "kind": "source",
+   "file": "apps/client/src/components/HomeScreen.tsx",
+   "line": 181
+  }
+ },
+ {
+  "id": "s609",
+  "section": "components/HomeScreen.tsx",
+  "text": "אמנדה",
+  "where": {
+   "kind": "source",
+   "file": "apps/client/src/components/HomeScreen.tsx",
+   "line": 241
+  }
+ },
+ {
+  "id": "s610",
+  "section": "components/HomeScreen.tsx",
+  "text": "משחק קלפים מפלצתי",
+  "where": {
+   "kind": "source",
+   "file": "apps/client/src/components/HomeScreen.tsx",
+   "line": 243
+  }
+ },
+ {
+  "id": "s611",
+  "section": "components/HomeScreen.tsx",
+  "text": "לשחק",
+  "where": {
+   "kind": "source",
+   "file": "apps/client/src/components/HomeScreen.tsx",
+   "line": 247
+  }
+ },
+ {
+  "id": "s612",
+  "section": "components/HomeScreen.tsx",
+  "text": "לשחק עם בוט",
+  "where": {
+   "kind": "source",
+   "file": "apps/client/src/components/HomeScreen.tsx",
+   "line": 257
+  }
+ },
+ {
+  "id": "s613",
+  "section": "components/HomeScreen.tsx",
+  "text": "כמה הבוט מתאמץ",
+  "where": {
+   "kind": "source",
+   "file": "apps/client/src/components/HomeScreen.tsx",
+   "line": 268
+  }
+ },
+ {
+  "id": "s614",
+  "section": "components/HomeScreen.tsx",
+  "text": "לא בגרסה הזאת",
+  "where": {
+   "kind": "source",
+   "file": "apps/client/src/components/HomeScreen.tsx",
+   "line": 290
+  }
+ },
+ {
+  "id": "s615",
+  "section": "components/HomeScreen.tsx",
+  "text": "לשחק עם חברים",
+  "where": {
+   "kind": "source",
+   "file": "apps/client/src/components/HomeScreen.tsx",
+   "line": 293
+  }
+ },
+ {
+  "id": "s616",
+  "section": "components/HomeScreen.tsx",
+  "text": "קוד החדר",
+  "where": {
+   "kind": "source",
+   "file": "apps/client/src/components/HomeScreen.tsx",
+   "line": 330
+  }
+ },
+ {
+  "id": "s617",
+  "section": "components/HomeScreen.tsx",
+  "text": "בלי שעון, שני הצדדים שלך",
+  "where": {
+   "kind": "source",
+   "file": "apps/client/src/components/HomeScreen.tsx",
+   "line": 352
+  }
+ },
+ {
+  "id": "s618",
+  "section": "components/HomeScreen.tsx",
+  "text": "אין חדר כזה. אולי המצאת אותו.",
+  "where": {
+   "kind": "source",
+   "file": "apps/client/src/components/HomeScreen.tsx",
+   "line": 382
+  }
+ },
+ {
+  "id": "s619",
+  "section": "components/HomeScreen.tsx",
+  "text": "זה הקוד שלך. אתה לא יכול לאכול את עצמך.",
+  "where": {
+   "kind": "source",
+   "file": "apps/client/src/components/HomeScreen.tsx",
+   "line": 384
+  }
+ },
+ {
+  "id": "s620",
+  "section": "components/HomeScreen.tsx",
+  "text": "החדר מלא. שניים מספיקים לי.",
+  "where": {
+   "kind": "source",
+   "file": "apps/client/src/components/HomeScreen.tsx",
+   "line": 385
+  }
+ },
+ {
+  "id": "s621",
+  "section": "components/HomeScreen.tsx",
+  "text": "לא בגרסה הזאת",
+  "where": {
+   "kind": "source",
+   "file": "apps/client/src/components/HomeScreen.tsx",
+   "line": 389
+  }
+ },
+ {
+  "id": "s622",
+  "section": "components/HomeScreen.tsx",
+  "text": "ההתקדמות שלי",
+  "where": {
+   "kind": "source",
+   "file": "apps/client/src/components/HomeScreen.tsx",
+   "line": 399
+  }
+ },
+ {
+  "id": "s623",
+  "section": "components/HomeScreen.tsx",
+  "text": "מה יש לך",
+  "where": {
+   "kind": "source",
+   "file": "apps/client/src/components/HomeScreen.tsx",
+   "line": 475
+  }
+ },
+ {
+  "id": "s624",
+  "section": "components/HomeScreen.tsx",
+  "text": "האוסף שלי",
+  "where": {
+   "kind": "source",
+   "file": "apps/client/src/components/HomeScreen.tsx",
+   "line": 507
+  }
+ },
+ {
+  "id": "s625",
+  "section": "components/HomeScreen.tsx",
+  "text": "האלבום",
+  "where": {
+   "kind": "source",
+   "file": "apps/client/src/components/HomeScreen.tsx",
+   "line": 522
+  }
+ },
+ {
+  "id": "s626",
+  "section": "components/HomeScreen.tsx",
+  "text": "חנות נוחות",
+  "where": {
+   "kind": "source",
+   "file": "apps/client/src/components/HomeScreen.tsx",
+   "line": 527
+  }
+ },
+ {
+  "id": "s627",
+  "section": "components/HomeScreen.tsx",
+  "text": "חדש בחנות",
+  "where": {
+   "kind": "source",
+   "file": "apps/client/src/components/HomeScreen.tsx",
+   "line": 541
+  }
+ },
+ {
+  "id": "s628",
+  "section": "components/HomeScreen.tsx",
+  "text": "חברים",
+  "where": {
+   "kind": "source",
+   "file": "apps/client/src/components/HomeScreen.tsx",
+   "line": 562
+  }
+ },
+ {
+  "id": "s629",
+  "section": "components/HomeScreen.tsx",
+  "text": "חברים",
+  "where": {
+   "kind": "source",
+   "file": "apps/client/src/components/HomeScreen.tsx",
+   "line": 565
+  }
+ },
+ {
+  "id": "s630",
+  "section": "components/HomeScreen.tsx",
+  "text": "מישהו מחכה לתשובה",
+  "where": {
+   "kind": "source",
+   "file": "apps/client/src/components/HomeScreen.tsx",
+   "line": 573
+  }
+ },
+ {
+  "id": "s631",
+  "section": "components/HomeScreen.tsx",
+  "text": "יש עדכון שלא קראתם",
+  "where": {
+   "kind": "source",
+   "file": "apps/client/src/components/HomeScreen.tsx",
+   "line": 607
+  }
+ },
+ {
+  "id": "s632",
+  "section": "components/HomeScreen.tsx",
+  "text": "מוריד אותי מחדש ומנקה גרסאות ישנות",
+  "where": {
+   "kind": "source",
+   "file": "apps/client/src/components/HomeScreen.tsx",
+   "line": 627
+  }
+ },
+ {
+  "id": "s633",
+  "section": "components/Inbox.tsx",
+  "text": "עכשיו",
+  "where": {
+   "kind": "source",
+   "file": "apps/client/src/components/Inbox.tsx",
+   "line": 36
+  }
+ },
+ {
+  "id": "s634",
+  "section": "components/Inbox.tsx",
+  "text": "לפני ${mins} דק׳",
+  "where": {
+   "kind": "source",
+   "file": "apps/client/src/components/Inbox.tsx",
+   "line": 37
+  }
+ },
+ {
+  "id": "s635",
+  "section": "components/Inbox.tsx",
+  "text": "לפני ${hours} שע׳",
+  "where": {
+   "kind": "source",
+   "file": "apps/client/src/components/Inbox.tsx",
+   "line": 39
+  }
+ },
+ {
+  "id": "s636",
+  "section": "components/Inbox.tsx",
+  "text": "סגירה",
+  "where": {
+   "kind": "source",
+   "file": "apps/client/src/components/Inbox.tsx",
+   "line": 59
+  }
+ },
+ {
+  "id": "s637",
+  "section": "components/Inbox.tsx",
+  "text": "הודעות",
+  "where": {
+   "kind": "source",
+   "file": "apps/client/src/components/Inbox.tsx",
+   "line": 62
+  }
+ },
+ {
+  "id": "s638",
+  "section": "components/Inbox.tsx",
+  "text": "רגע…",
+  "where": {
+   "kind": "source",
+   "file": "apps/client/src/components/Inbox.tsx",
+   "line": 65
+  }
+ },
+ {
+  "id": "s639",
+  "section": "components/Inbox.tsx",
+  "text": "שקט כאן. זה בסדר.",
+  "where": {
+   "kind": "source",
+   "file": "apps/client/src/components/Inbox.tsx",
+   "line": 71
+  }
+ },
+ {
+  "id": "s640",
+  "section": "components/Intro.tsx",
+  "text": "דלג",
+  "where": {
+   "kind": "source",
+   "file": "apps/client/src/components/Intro.tsx",
+   "line": 87
+  }
+ },
+ {
+  "id": "s641",
+  "section": "components/MatePeek.tsx",
+  "text": "להגדיל את החצי של מי שאיתך",
+  "where": {
+   "kind": "source",
+   "file": "apps/client/src/components/MatePeek.tsx",
+   "line": 53
+  }
+ },
+ {
+  "id": "s642",
+  "section": "components/MatePeek.tsx",
+  "text": "סגירה",
+  "where": {
+   "kind": "source",
+   "file": "apps/client/src/components/MatePeek.tsx",
+   "line": 74
+  }
+ },
+ {
+  "id": "s643",
+  "section": "components/MoreModes.tsx",
+  "text": "אמנדה — הצצה",
+  "where": {
+   "kind": "source",
+   "file": "apps/client/src/components/MoreModes.tsx",
+   "line": 39
+  }
+ },
+ {
+  "id": "s644",
+  "section": "components/MoreModes.tsx",
+  "text": "מולה לבד. אי אפשר לנצח.",
+  "where": {
+   "kind": "source",
+   "file": "apps/client/src/components/MoreModes.tsx",
+   "line": 40
+  }
+ },
+ {
+  "id": "s645",
+  "section": "components/MoreModes.tsx",
+  "text": "חפיסה זהה",
+  "where": {
+   "kind": "source",
+   "file": "apps/client/src/components/MoreModes.tsx",
+   "line": 46
+  }
+ },
+ {
+  "id": "s646",
+  "section": "components/MoreModes.tsx",
+  "text": "אותם קלפים לשני הצדדים.",
+  "where": {
+   "kind": "source",
+   "file": "apps/client/src/components/MoreModes.tsx",
+   "line": 47
+  }
+ },
+ {
+  "id": "s647",
+  "section": "components/MoreModes.tsx",
+  "text": "2 נגד 2",
+  "where": {
+   "kind": "source",
+   "file": "apps/client/src/components/MoreModes.tsx",
+   "line": 53
+  }
+ },
+ {
+  "id": "s648",
+  "section": "components/MoreModes.tsx",
+  "text": "שניים בונים לוח אחד.",
+  "where": {
+   "kind": "source",
+   "file": "apps/client/src/components/MoreModes.tsx",
+   "line": 54
+  }
+ },
+ {
+  "id": "s649",
+  "section": "components/MoreModes.tsx",
+  "text": "דראפט",
+  "where": {
+   "kind": "source",
+   "file": "apps/client/src/components/MoreModes.tsx",
+   "line": 60
+  }
+ },
+ {
+  "id": "s650",
+  "section": "components/MoreModes.tsx",
+  "text": "מה שלא לקחת הולך ליריב.",
+  "where": {
+   "kind": "source",
+   "file": "apps/client/src/components/MoreModes.tsx",
+   "line": 61
+  }
+ },
+ {
+  "id": "s651",
+  "section": "components/MoreModes.tsx",
+  "text": "סגירה",
+  "where": {
+   "kind": "source",
+   "file": "apps/client/src/components/MoreModes.tsx",
+   "line": 69
+  }
+ },
+ {
+  "id": "s652",
+  "section": "components/MoreModes.tsx",
+  "text": "עוד מודים",
+  "where": {
+   "kind": "source",
+   "file": "apps/client/src/components/MoreModes.tsx",
+   "line": 72
+  }
+ },
+ {
+  "id": "s653",
+  "section": "components/MoreModes.tsx",
+  "text": "שחק",
+  "where": {
+   "kind": "source",
+   "file": "apps/client/src/components/MoreModes.tsx",
+   "line": 73
+  }
+ },
+ {
+  "id": "s654",
+  "section": "components/MoreModes.tsx",
+  "text": "בקרוב",
+  "where": {
+   "kind": "source",
+   "file": "apps/client/src/components/MoreModes.tsx",
+   "line": 74
+  }
+ },
+ {
+  "id": "s655",
+  "section": "components/MoreModes.tsx",
+  "text": "בקרוב",
+  "where": {
+   "kind": "source",
+   "file": "apps/client/src/components/MoreModes.tsx",
+   "line": 87
+  }
+ },
+ {
+  "id": "s656",
+  "section": "components/NachoBar.tsx",
+  "text": "${bar.have} נאצ'וס מתוך ${bar.need} לתיבה הבאה",
+  "where": {
+   "kind": "source",
+   "file": "apps/client/src/components/NachoBar.tsx",
+   "line": 39
+  }
+ },
+ {
+  "id": "s657",
+  "section": "components/NachoBar.tsx",
+  "text": "כל משחק נותן נאצ'וס, לפי כמה טוב שיחקת",
+  "where": {
+   "kind": "source",
+   "file": "apps/client/src/components/NachoBar.tsx",
+   "line": 40
+  }
+ },
+ {
+  "id": "s658",
   "section": "components/Onboarding.tsx",
   "text": "שחקן",
   "where": {
    "kind": "source",
    "file": "apps/client/src/components/Onboarding.tsx",
-   "line": 38
+   "line": 40
   }
  },
  {
-  "id": "s514",
+  "id": "s659",
+  "section": "components/Onboarding.tsx",
+  "text": "בן",
+  "where": {
+   "kind": "source",
+   "file": "apps/client/src/components/Onboarding.tsx",
+   "line": 87
+  }
+ },
+ {
+  "id": "s660",
+  "section": "components/Onboarding.tsx",
+  "text": "בת",
+  "where": {
+   "kind": "source",
+   "file": "apps/client/src/components/Onboarding.tsx",
+   "line": 87
+  }
+ },
+ {
+  "id": "s661",
+  "section": "components/Onboarding.tsx",
+  "text": "לא אומר",
+  "where": {
+   "kind": "source",
+   "file": "apps/client/src/components/Onboarding.tsx",
+   "line": 87
+  }
+ },
+ {
+  "id": "s662",
   "section": "components/Onboarding.tsx",
   "text": "הכינוי שלך",
   "where": {
    "kind": "source",
    "file": "apps/client/src/components/Onboarding.tsx",
-   "line": 97
+   "line": 137
   }
  },
  {
-  "id": "s515",
+  "id": "s663",
+  "section": "components/Payout.tsx",
+  "text": "אתגר הושלם",
+  "where": {
+   "kind": "source",
+   "file": "apps/client/src/components/Payout.tsx",
+   "line": 75
+  }
+ },
+ {
+  "id": "s664",
+  "section": "components/Payout.tsx",
+  "text": "${done} אתגרים הושלמו",
+  "where": {
+   "kind": "source",
+   "file": "apps/client/src/components/Payout.tsx",
+   "line": 75
+  }
+ },
+ {
+  "id": "s665",
+  "section": "components/Payout.tsx",
+  "text": "מספיק גביעים מהבוט להיום — נאצ'וס ואתגרים ממשיכים",
+  "where": {
+   "kind": "source",
+   "file": "apps/client/src/components/Payout.tsx",
+   "line": 91
+  }
+ },
+ {
+  "id": "s666",
   "section": "components/Profile.tsx",
   "text": "נשמר",
   "where": {
    "kind": "source",
    "file": "apps/client/src/components/Profile.tsx",
-   "line": 81
+   "line": 182
   }
  },
  {
-  "id": "s516",
+  "id": "s667",
   "section": "components/Profile.tsx",
   "text": "החלף פרצוף",
   "where": {
    "kind": "source",
    "file": "apps/client/src/components/Profile.tsx",
-   "line": 99
+   "line": 200
   }
  },
  {
-  "id": "s517",
+  "id": "s668",
   "section": "components/Profile.tsx",
   "text": "הכינוי שלך",
   "where": {
    "kind": "source",
    "file": "apps/client/src/components/Profile.tsx",
-   "line": 109
+   "line": 213
   }
  },
  {
-  "id": "s518",
+  "id": "s669",
+  "section": "components/Profile.tsx",
+  "text": "ניהול",
+  "where": {
+   "kind": "source",
+   "file": "apps/client/src/components/Profile.tsx",
+   "line": 237
+  }
+ },
+ {
+  "id": "s670",
+  "section": "components/Profile.tsx",
+  "text": "למחוק את החשבון?",
+  "where": {
+   "kind": "source",
+   "file": "apps/client/src/components/Profile.tsx",
+   "line": 247
+  }
+ },
+ {
+  "id": "s671",
+  "section": "components/Profile.tsx",
+  "text": "אי אפשר לבטל.",
+  "where": {
+   "kind": "source",
+   "file": "apps/client/src/components/Profile.tsx",
+   "line": 250
+  }
+ },
+ {
+  "id": "s672",
+  "section": "components/Profile.tsx",
+  "text": "יציאה / החלפת משתמש",
+  "where": {
+   "kind": "source",
+   "file": "apps/client/src/components/Profile.tsx",
+   "line": 253
+  }
+ },
+ {
+  "id": "s673",
+  "section": "components/Profile.tsx",
+  "text": "מוחק…",
+  "where": {
+   "kind": "source",
+   "file": "apps/client/src/components/Profile.tsx",
+   "line": 273
+  }
+ },
+ {
+  "id": "s674",
+  "section": "components/Profile.tsx",
+  "text": "כן, למחוק הכול",
+  "where": {
+   "kind": "source",
+   "file": "apps/client/src/components/Profile.tsx",
+   "line": 273
+  }
+ },
+ {
+  "id": "s675",
+  "section": "components/Profile.tsx",
+  "text": "למחוק את הפרטים שלך?",
+  "where": {
+   "kind": "source",
+   "file": "apps/client/src/components/Profile.tsx",
+   "line": 295
+  }
+ },
+ {
+  "id": "s676",
+  "section": "components/Profile.tsx",
+  "text": "מוחק…",
+  "where": {
+   "kind": "source",
+   "file": "apps/client/src/components/Profile.tsx",
+   "line": 316
+  }
+ },
+ {
+  "id": "s677",
+  "section": "components/Profile.tsx",
+  "text": "כן, למחוק את הפרטים",
+  "where": {
+   "kind": "source",
+   "file": "apps/client/src/components/Profile.tsx",
+   "line": 316
+  }
+ },
+ {
+  "id": "s678",
+  "section": "components/Profile.tsx",
+  "text": "לצאת מהחשבון?",
+  "where": {
+   "kind": "source",
+   "file": "apps/client/src/components/Profile.tsx",
+   "line": 329
+  }
+ },
+ {
+  "id": "s679",
+  "section": "components/Profile.tsx",
+  "text": "הכול נשמר, ואפשר לחזור.",
+  "where": {
+   "kind": "source",
+   "file": "apps/client/src/components/Profile.tsx",
+   "line": 334
+  }
+ },
+ {
+  "id": "s680",
+  "section": "components/Profile.tsx",
+  "text": "משפט המחץ שלי",
+  "where": {
+   "kind": "source",
+   "file": "apps/client/src/components/Profile.tsx",
+   "line": 400
+  }
+ },
+ {
+  "id": "s681",
+  "section": "components/Profile.tsx",
+  "text": "בלי משפט",
+  "where": {
+   "kind": "source",
+   "file": "apps/client/src/components/Profile.tsx",
+   "line": 410
+  }
+ },
+ {
+  "id": "s682",
+  "section": "components/Profile.tsx",
+  "text": "איך לפנות אליך",
+  "where": {
+   "kind": "source",
+   "file": "apps/client/src/components/Profile.tsx",
+   "line": 427
+  }
+ },
+ {
+  "id": "s683",
+  "section": "components/Profile.tsx",
+  "text": "לא אומר",
+  "where": {
+   "kind": "source",
+   "file": "apps/client/src/components/Profile.tsx",
+   "line": 429
+  }
+ },
+ {
+  "id": "s684",
+  "section": "components/Profile.tsx",
+  "text": "לא אומר",
+  "where": {
+   "kind": "source",
+   "file": "apps/client/src/components/Profile.tsx",
+   "line": 438
+  }
+ },
+ {
+  "id": "s685",
+  "section": "components/Profile.tsx",
+  "text": "בן",
+  "where": {
+   "kind": "source",
+   "file": "apps/client/src/components/Profile.tsx",
+   "line": 444
+  }
+ },
+ {
+  "id": "s686",
+  "section": "components/Profile.tsx",
+  "text": "בת",
+  "where": {
+   "kind": "source",
+   "file": "apps/client/src/components/Profile.tsx",
+   "line": 445
+  }
+ },
+ {
+  "id": "s687",
+  "section": "components/Profile.tsx",
+  "text": "למה להגדיר?",
+  "where": {
+   "kind": "source",
+   "file": "apps/client/src/components/Profile.tsx",
+   "line": 446
+  }
+ },
+ {
+  "id": "s688",
   "section": "components/Profile.tsx",
   "text": "יום ההולדת שלך",
   "where": {
    "kind": "source",
    "file": "apps/client/src/components/Profile.tsx",
-   "line": 143
+   "line": 460
   }
  },
  {
-  "id": "s519",
-  "section": "components/Profile.tsx",
-  "text": "בשביל לשחק נגד אנשים אחרים צריך להיות בן ${MIN_AGE} לפחות. נגד הבוט — תמיד אפשר.",
-  "where": {
-   "kind": "source",
-   "file": "apps/client/src/components/Profile.tsx",
-   "line": 152
-  }
- },
- {
-  "id": "s520",
-  "section": "components/Profile.tsx",
-  "text": "זה רק בשביל הגיל.",
-  "where": {
-   "kind": "source",
-   "file": "apps/client/src/components/Profile.tsx",
-   "line": 153
-  }
- },
- {
-  "id": "s521",
+  "id": "s689",
   "section": "components/Profile.tsx",
   "text": "החשבון שלך",
   "where": {
    "kind": "source",
    "file": "apps/client/src/components/Profile.tsx",
-   "line": 165
+   "line": 491
   }
  },
  {
-  "id": "s522",
-  "section": "components/Profile.tsx",
-  "text": "מחובר. האלבום שלך שמור גם אם תחליף מכשיר.",
-  "where": {
-   "kind": "source",
-   "file": "apps/client/src/components/Profile.tsx",
-   "line": 167
-  }
- },
- {
-  "id": "s523",
-  "section": "components/Profile.tsx",
-  "text": "או",
-  "where": {
-   "kind": "source",
-   "file": "apps/client/src/components/Profile.tsx",
-   "line": 176
-  }
- },
- {
-  "id": "s524",
-  "section": "components/Profile.tsx",
-  "text": "אימייל",
-  "where": {
-   "kind": "source",
-   "file": "apps/client/src/components/Profile.tsx",
-   "line": 180
-  }
- },
- {
-  "id": "s525",
-  "section": "components/Profile.tsx",
-  "text": "סיסמה (6 תווים ומעלה)",
-  "where": {
-   "kind": "source",
-   "file": "apps/client/src/components/Profile.tsx",
-   "line": 187
-  }
- },
- {
-  "id": "s526",
+  "id": "s690",
   "section": "components/Profile.tsx",
   "text": "מחובר",
   "where": {
    "kind": "source",
    "file": "apps/client/src/components/Profile.tsx",
-   "line": 194
+   "line": 494
   }
  },
  {
-  "id": "s527",
+  "id": "s691",
+  "section": "components/Profile.tsx",
+  "text": "מחובר",
+  "where": {
+   "kind": "source",
+   "file": "apps/client/src/components/Profile.tsx",
+   "line": 498
+  }
+ },
+ {
+  "id": "s692",
+  "section": "components/Profile.tsx",
+  "text": "או",
+  "where": {
+   "kind": "source",
+   "file": "apps/client/src/components/Profile.tsx",
+   "line": 535
+  }
+ },
+ {
+  "id": "s693",
+  "section": "components/Profile.tsx",
+  "text": "אימייל",
+  "where": {
+   "kind": "source",
+   "file": "apps/client/src/components/Profile.tsx",
+   "line": 539
+  }
+ },
+ {
+  "id": "s694",
+  "section": "components/Profile.tsx",
+  "text": "סיסמה (6 תווים ומעלה)",
+  "where": {
+   "kind": "source",
+   "file": "apps/client/src/components/Profile.tsx",
+   "line": 546
+  }
+ },
+ {
+  "id": "s695",
+  "section": "components/Profile.tsx",
+  "text": "מחובר",
+  "where": {
+   "kind": "source",
+   "file": "apps/client/src/components/Profile.tsx",
+   "line": 553
+  }
+ },
+ {
+  "id": "s696",
+  "section": "components/Report.tsx",
+  "text": "סגירה",
+  "where": {
+   "kind": "source",
+   "file": "apps/client/src/components/Report.tsx",
+   "line": 59
+  }
+ },
+ {
+  "id": "s697",
+  "section": "components/Report.tsx",
+  "text": "קיבלנו.",
+  "where": {
+   "kind": "source",
+   "file": "apps/client/src/components/Report.tsx",
+   "line": 66
+  }
+ },
+ {
+  "id": "s698",
+  "section": "components/Report.tsx",
+  "text": "נסתכל על זה. תודה שסיפרת לנו.",
+  "where": {
+   "kind": "source",
+   "file": "apps/client/src/components/Report.tsx",
+   "line": 67
+  }
+ },
+ {
+  "id": "s699",
+  "section": "components/Report.tsx",
+  "text": "לספר לנו משהו",
+  "where": {
+   "kind": "source",
+   "file": "apps/client/src/components/Report.tsx",
+   "line": 74
+  }
+ },
+ {
+  "id": "s700",
+  "section": "components/Report.tsx",
+  "text": "רגע…",
+  "where": {
+   "kind": "source",
+   "file": "apps/client/src/components/Report.tsx",
+   "line": 93
+  }
+ },
+ {
+  "id": "s701",
+  "section": "components/Report.tsx",
+  "text": "בלי שם",
+  "where": {
+   "kind": "source",
+   "file": "apps/client/src/components/Report.tsx",
+   "line": 107
+  }
+ },
+ {
+  "id": "s702",
+  "section": "components/Report.tsx",
+  "text": "מה קרה? מה ציפית שיקרה?",
+  "where": {
+   "kind": "source",
+   "file": "apps/client/src/components/Report.tsx",
+   "line": 122
+  }
+ },
+ {
+  "id": "s703",
+  "section": "components/Report.tsx",
+  "text": "מה הוא עשה?",
+  "where": {
+   "kind": "source",
+   "file": "apps/client/src/components/Report.tsx",
+   "line": 122
+  }
+ },
+ {
+  "id": "s704",
+  "section": "components/Report.tsx",
+  "text": "שולח…",
+  "where": {
+   "kind": "source",
+   "file": "apps/client/src/components/Report.tsx",
+   "line": 135
+  }
+ },
+ {
+  "id": "s705",
+  "section": "components/Report.tsx",
+  "text": "שליחה",
+  "where": {
+   "kind": "source",
+   "file": "apps/client/src/components/Report.tsx",
+   "line": 135
+  }
+ },
+ {
+  "id": "s706",
+  "section": "components/ResultScreen.tsx",
+  "text": "הצד שלך החזיק",
+  "where": {
+   "kind": "source",
+   "file": "apps/client/src/components/ResultScreen.tsx",
+   "line": 74
+  }
+ },
+ {
+  "id": "s707",
+  "section": "components/ResultScreen.tsx",
+  "text": "הצד שמולך החזיק",
+  "where": {
+   "kind": "source",
+   "file": "apps/client/src/components/ResultScreen.tsx",
+   "line": 74
+  }
+ },
+ {
+  "id": "s708",
+  "section": "components/ResultScreen.tsx",
+  "text": "מתחילים…",
+  "where": {
+   "kind": "source",
+   "file": "apps/client/src/components/ResultScreen.tsx",
+   "line": 123
+  }
+ },
+ {
+  "id": "s709",
+  "section": "components/ResultScreen.tsx",
+  "text": "מחכה ליריב…",
+  "where": {
+   "kind": "source",
+   "file": "apps/client/src/components/ResultScreen.tsx",
+   "line": 124
+  }
+ },
+ {
+  "id": "s710",
+  "section": "components/ResultScreen.tsx",
+  "text": "רוצים עוד אחד! קדימה",
+  "where": {
+   "kind": "source",
+   "file": "apps/client/src/components/ResultScreen.tsx",
+   "line": 126
+  }
+ },
+ {
+  "id": "s711",
+  "section": "components/ResultScreen.tsx",
+  "text": "קרב חוזר",
+  "where": {
+   "kind": "source",
+   "file": "apps/client/src/components/ResultScreen.tsx",
+   "line": 127
+  }
+ },
+ {
+  "id": "s712",
+  "section": "components/ResultScreen.tsx",
+  "text": "משחק חדש",
+  "where": {
+   "kind": "source",
+   "file": "apps/client/src/components/ResultScreen.tsx",
+   "line": 156
+  }
+ },
+ {
+  "id": "s713",
+  "section": "components/ResultScreen.tsx",
+  "text": "מספיק, הבנתי",
+  "where": {
+   "kind": "source",
+   "file": "apps/client/src/components/ResultScreen.tsx",
+   "line": 164
+  }
+ },
+ {
+  "id": "s714",
+  "section": "components/Say.tsx",
+  "text": "סגירה",
+  "where": {
+   "kind": "source",
+   "file": "apps/client/src/components/Say.tsx",
+   "line": 84
+  }
+ },
+ {
+  "id": "s715",
+  "section": "components/Say.tsx",
+  "text": "להגיד משהו",
+  "where": {
+   "kind": "source",
+   "file": "apps/client/src/components/Say.tsx",
+   "line": 84
+  }
+ },
+ {
+  "id": "s716",
+  "section": "components/Say.tsx",
+  "text": "סגירה",
+  "where": {
+   "kind": "source",
+   "file": "apps/client/src/components/Say.tsx",
+   "line": 85
+  }
+ },
+ {
+  "id": "s717",
+  "section": "components/Say.tsx",
+  "text": "להגיד משהו",
+  "where": {
+   "kind": "source",
+   "file": "apps/client/src/components/Say.tsx",
+   "line": 85
+  }
+ },
+ {
+  "id": "s718",
+  "section": "components/Say.tsx",
+  "text": "עוד אימוג'ים בחנות",
+  "where": {
+   "kind": "source",
+   "file": "apps/client/src/components/Say.tsx",
+   "line": 122
+  }
+ },
+ {
+  "id": "s719",
+  "section": "components/Say.tsx",
+  "text": "עוד",
+  "where": {
+   "kind": "source",
+   "file": "apps/client/src/components/Say.tsx",
+   "line": 129
+  }
+ },
+ {
+  "id": "s720",
+  "section": "components/Say.tsx",
+  "text": "לא לראות הודעות",
+  "where": {
+   "kind": "source",
+   "file": "apps/client/src/components/Say.tsx",
+   "line": 152
+  }
+ },
+ {
+  "id": "s721",
+  "section": "components/Say.tsx",
+  "text": "להראות הודעות שוב",
+  "where": {
+   "kind": "source",
+   "file": "apps/client/src/components/Say.tsx",
+   "line": 152
+  }
+ },
+ {
+  "id": "s722",
+  "section": "components/Say.tsx",
+  "text": "אין אימוג'ים",
+  "where": {
+   "kind": "source",
+   "file": "apps/client/src/components/Say.tsx",
+   "line": 191
+  }
+ },
+ {
+  "id": "s723",
+  "section": "components/Shop.tsx",
+  "text": "פרצופים",
+  "where": {
+   "kind": "source",
+   "file": "apps/client/src/components/Shop.tsx",
+   "line": 48
+  }
+ },
+ {
+  "id": "s724",
+  "section": "components/Shop.tsx",
+  "text": "מראה לקלפים",
+  "where": {
+   "kind": "source",
+   "file": "apps/client/src/components/Shop.tsx",
+   "line": 49
+  }
+ },
+ {
+  "id": "s725",
+  "section": "components/Shop.tsx",
+  "text": "אימוג׳ים",
+  "where": {
+   "kind": "source",
+   "file": "apps/client/src/components/Shop.tsx",
+   "line": 50
+  }
+ },
+ {
+  "id": "s726",
+  "section": "components/Shop.tsx",
+  "text": "משפטי מחץ",
+  "where": {
+   "kind": "source",
+   "file": "apps/client/src/components/Shop.tsx",
+   "line": 51
+  }
+ },
+ {
+  "id": "s727",
+  "section": "components/Shop.tsx",
+  "text": "תיבות",
+  "where": {
+   "kind": "source",
+   "file": "apps/client/src/components/Shop.tsx",
+   "line": 52
+  }
+ },
+ {
+  "id": "s728",
+  "section": "components/Shop.tsx",
+  "text": "קלפים",
+  "where": {
+   "kind": "source",
+   "file": "apps/client/src/components/Shop.tsx",
+   "line": 53
+  }
+ },
+ {
+  "id": "s729",
+  "section": "components/Shop.tsx",
+  "text": "סגירה",
+  "where": {
+   "kind": "source",
+   "file": "apps/client/src/components/Shop.tsx",
+   "line": 119
+  }
+ },
+ {
+  "id": "s730",
+  "section": "components/Shop.tsx",
+  "text": "חנות נוחות",
+  "where": {
+   "kind": "source",
+   "file": "apps/client/src/components/Shop.tsx",
+   "line": 125
+  }
+ },
+ {
+  "id": "s731",
+  "section": "components/Shop.tsx",
+  "text": "רגע…",
+  "where": {
+   "kind": "source",
+   "file": "apps/client/src/components/Shop.tsx",
+   "line": 132
+  }
+ },
+ {
+  "id": "s732",
+  "section": "components/Shop.tsx",
+  "text": "המדפים עוד ריקים. בקרוב.",
+  "where": {
+   "kind": "source",
+   "file": "apps/client/src/components/Shop.tsx",
+   "line": 134
+  }
+ },
+ {
+  "id": "s733",
+  "section": "components/Shop.tsx",
+  "text": "אין מספיק יהלומים",
+  "where": {
+   "kind": "source",
+   "file": "apps/client/src/components/Shop.tsx",
+   "line": 189
+  }
+ },
+ {
+  "id": "s734",
+  "section": "components/Shop.tsx",
+  "text": "חינם",
+  "where": {
+   "kind": "source",
+   "file": "apps/client/src/components/Shop.tsx",
+   "line": 197
+  }
+ },
+ {
+  "id": "s735",
+  "section": "components/SignedInOnly.tsx",
+  "text": "צריך חשבון. זה חינם, ושומר את האלבום שלך.",
+  "where": {
+   "kind": "source",
+   "file": "apps/client/src/components/SignedInOnly.tsx",
+   "line": 32
+  }
+ },
+ {
+  "id": "s736",
+  "section": "components/SignedInOnly.tsx",
+  "text": "האלבום נשמר — גם אם תנקה את הדפדפן או תחליף מכשיר",
+  "where": {
+   "kind": "source",
+   "file": "apps/client/src/components/SignedInOnly.tsx",
+   "line": 38
+  }
+ },
+ {
+  "id": "s737",
+  "section": "components/SignedInOnly.tsx",
+  "text": "לשחק מול אנשים אמיתיים",
+  "where": {
+   "kind": "source",
+   "file": "apps/client/src/components/SignedInOnly.tsx",
+   "line": 39
+  }
+ },
+ {
+  "id": "s738",
+  "section": "components/SignedInOnly.tsx",
+  "text": "חברים — לראות מי מחובר ולהזמין למשחק",
+  "where": {
+   "kind": "source",
+   "file": "apps/client/src/components/SignedInOnly.tsx",
+   "line": 40
+  }
+ },
+ {
+  "id": "s739",
+  "section": "components/SignedInOnly.tsx",
+  "text": "חנות נוחות",
+  "where": {
+   "kind": "source",
+   "file": "apps/client/src/components/SignedInOnly.tsx",
+   "line": 41
+  }
+ },
+ {
+  "id": "s740",
+  "section": "components/SignedInOnly.tsx",
+  "text": "סגירה",
+  "where": {
+   "kind": "source",
+   "file": "apps/client/src/components/SignedInOnly.tsx",
+   "line": 67
+  }
+ },
+ {
+  "id": "s741",
+  "section": "components/SignedInOnly.tsx",
+  "text": "עם חשבון זה שלך",
+  "where": {
+   "kind": "source",
+   "file": "apps/client/src/components/SignedInOnly.tsx",
+   "line": 70
+  }
+ },
+ {
+  "id": "s742",
   "section": "components/Tutorial.tsx",
-  "text": "הבנתי",
+  "text": "המשך ←",
   "where": {
    "kind": "source",
    "file": "apps/client/src/components/Tutorial.tsx",
-   "line": 128
+   "line": 291
   }
  },
  {
-  "id": "s528",
+  "id": "s743",
+  "section": "components/Updates.tsx",
+  "text": "סגירה",
+  "where": {
+   "kind": "source",
+   "file": "apps/client/src/components/Updates.tsx",
+   "line": 30
+  }
+ },
+ {
+  "id": "s744",
+  "section": "components/Updates.tsx",
+  "text": "עוד לא קרה כלום. תחזרו.",
+  "where": {
+   "kind": "source",
+   "file": "apps/client/src/components/Updates.tsx",
+   "line": 38
+  }
+ },
+ {
+  "id": "s745",
+  "section": "components/Updates.tsx",
+  "text": "חדש",
+  "where": {
+   "kind": "source",
+   "file": "apps/client/src/components/Updates.tsx",
+   "line": 48
+  }
+ },
+ {
+  "id": "s746",
+  "section": "components/Versus.tsx",
+  "text": "ביחד",
+  "where": {
+   "kind": "source",
+   "file": "apps/client/src/components/Versus.tsx",
+   "line": 54
+  }
+ },
+ {
+  "id": "s747",
+  "section": "components/Versus.tsx",
+  "text": "נגד",
+  "where": {
+   "kind": "source",
+   "file": "apps/client/src/components/Versus.tsx",
+   "line": 54
+  }
+ },
+ {
+  "id": "s748",
+  "section": "components/Versus.tsx",
+  "text": "אני",
+  "where": {
+   "kind": "source",
+   "file": "apps/client/src/components/Versus.tsx",
+   "line": 95
+  }
+ },
+ {
+  "id": "s749",
+  "section": "components/Versus.tsx",
+  "text": "היריב",
+  "where": {
+   "kind": "source",
+   "file": "apps/client/src/components/Versus.tsx",
+   "line": 95
+  }
+ },
+ {
+  "id": "s750",
+  "section": "data/tutorialLines.ts",
+  "text": "היי, אני אמנדה. באת להילחם מולי, ילד? בוא נלמד איך עושים את זה.",
+  "where": {
+   "kind": "source",
+   "file": "apps/client/src/data/tutorialLines.ts",
+   "line": 35
+  }
+ },
+ {
+  "id": "s751",
+  "section": "data/tutorialLines.ts",
+  "text": "ההקדמה, לפני שהיא מצביעה על משהו",
+  "where": {
+   "kind": "source",
+   "file": "apps/client/src/data/tutorialLines.ts",
+   "line": 37
+  }
+ },
+ {
+  "id": "s752",
+  "section": "data/tutorialLines.ts",
+  "text": "אנחנו בחדר המשחקים. אם תנצח אותי פה תוכל להתקדם למקומות אחרים. זה האלבום שלי, זה האלבום שלך. אנחנו מדביקים מדבקות, ובסוף הן ילחמו.",
+  "where": {
+   "kind": "source",
+   "file": "apps/client/src/data/tutorialLines.ts",
+   "line": 41
+  }
+ },
+ {
+  "id": "s753",
+  "section": "data/tutorialLines.ts",
+  "text": "ההקדמה, שורה שנייה",
+  "where": {
+   "kind": "source",
+   "file": "apps/client/src/data/tutorialLines.ts",
+   "line": 43
+  }
+ },
+ {
+  "id": "s754",
+  "section": "data/tutorialLines.ts",
+  "text": "נתחיל בהדבקות. הנה הקלף הראשון — {card}. {trait}. {where}.",
+  "where": {
+   "kind": "source",
+   "file": "apps/client/src/data/tutorialLines.ts",
+   "line": 47
+  }
+ },
+ {
+  "id": "s755",
+  "section": "data/tutorialLines.ts",
+  "text": "הקלף הראשון, על לוח ריק",
+  "where": {
+   "kind": "source",
+   "file": "apps/client/src/data/tutorialLines.ts",
+   "line": 49
+  }
+ },
+ {
+  "id": "s756",
+  "section": "data/tutorialLines.ts",
+  "text": "עוד אחד: {card}. {trait}. {where}.",
+  "where": {
+   "kind": "source",
+   "file": "apps/client/src/data/tutorialLines.ts",
+   "line": 53
+  }
+ },
+ {
+  "id": "s757",
+  "section": "data/tutorialLines.ts",
+  "text": "הקלף השני",
+  "where": {
+   "kind": "source",
+   "file": "apps/client/src/data/tutorialLines.ts",
+   "line": 55
+  }
+ },
+ {
+  "id": "s758",
+  "section": "data/tutorialLines.ts",
+  "text": "ועכשיו המלך. הוא לא זז, הוא חזק פי שלושה, ואם הוא נופל — נגמר.",
+  "where": {
+   "kind": "source",
+   "file": "apps/client/src/data/tutorialLines.ts",
+   "line": 59
+  }
+ },
+ {
+  "id": "s759",
+  "section": "data/tutorialLines.ts",
+  "text": "אחרי שני קלפים, כשאין עדיין מלך",
+  "where": {
+   "kind": "source",
+   "file": "apps/client/src/data/tutorialLines.ts",
+   "line": 61
+  }
+ },
+ {
+  "id": "s760",
+  "section": "data/tutorialLines.ts",
+  "text": "{card}? סטטי, הרבה חיים. הוא לא ילך לשום מקום — שים אותו מול המלך, שם עוצרים את מי שבא אליו.",
+  "where": {
+   "kind": "source",
+   "file": "apps/client/src/data/tutorialLines.ts",
+   "line": 65
+  }
+ },
+ {
+  "id": "s761",
+  "section": "data/tutorialLines.ts",
+  "text": "קלף כבד וסטטי ביד, אחרי שיש מלך",
+  "where": {
+   "kind": "source",
+   "file": "apps/client/src/data/tutorialLines.ts",
+   "line": 67
+  }
+ },
+ {
+  "id": "s762",
+  "section": "data/tutorialLines.ts",
+  "text": "{card} {moves} — הוא לא צריך שהדרך תהיה פנויה. שים אותו מאחורה ושיירה משם.",
+  "where": {
+   "kind": "source",
+   "file": "apps/client/src/data/tutorialLines.ts",
+   "line": 71
+  }
+ },
+ {
+  "id": "s763",
+  "section": "data/tutorialLines.ts",
+  "text": "מעופף או צלף ביד",
+  "where": {
+   "kind": "source",
+   "file": "apps/client/src/data/tutorialLines.ts",
+   "line": 73
+  }
+ },
+ {
+  "id": "s764",
+  "section": "data/tutorialLines.ts",
+  "text": "קלף פעולה. לא מניחים אותו על הלוח — לוקחים אותו לבר ומפעילים כשצריך.",
+  "where": {
+   "kind": "source",
+   "file": "apps/client/src/data/tutorialLines.ts",
+   "line": 77
+  }
+ },
+ {
+  "id": "s765",
+  "section": "data/tutorialLines.ts",
+  "text": "קלף פעולה ביד, אחרי שיש מלך",
+  "where": {
+   "kind": "source",
+   "file": "apps/client/src/data/tutorialLines.ts",
+   "line": 79
+  }
+ },
+ {
+  "id": "s766",
+  "section": "data/tutorialLines.ts",
+  "text": "כל קלף אחר ביד — שלא נאמר עליו משהו ספציפי יותר",
+  "where": {
+   "kind": "source",
+   "file": "apps/client/src/data/tutorialLines.ts",
+   "line": 85
+  }
+ },
+ {
+  "id": "s767",
+  "section": "data/tutorialLines.ts",
+  "text": "זה קלף פעולה — הוא לא יושב על הלוח. קח אותו לבר שמתחת.",
+  "where": {
+   "kind": "source",
+   "file": "apps/client/src/data/tutorialLines.ts",
+   "line": 89
+  }
+ },
+ {
+  "id": "s768",
+  "section": "data/tutorialLines.ts",
+  "text": "קלף פעולה ביד לפני שיש מלך",
+  "where": {
+   "kind": "source",
+   "file": "apps/client/src/data/tutorialLines.ts",
+   "line": 91
+  }
+ },
+ {
+  "id": "s769",
+  "section": "data/tutorialLines.ts",
+  "text": "{card} חלש. יגיעו טובים יותר — לפח איתו.",
+  "where": {
+   "kind": "source",
+   "file": "apps/client/src/data/tutorialLines.ts",
+   "line": 95
+  }
+ },
+ {
+  "id": "s770",
+  "section": "data/tutorialLines.ts",
+  "text": "קלף חלש משמעותית מהממוצע",
+  "where": {
+   "kind": "source",
+   "file": "apps/client/src/data/tutorialLines.ts",
+   "line": 97
+  }
+ },
+ {
+  "id": "s771",
+  "section": "data/tutorialLines.ts",
+  "text": "התחרטת? הקלף העליון בפח חוזר. רק הוא, ומה שתיתן במקומו נקבר.",
+  "where": {
+   "kind": "source",
+   "file": "apps/client/src/data/tutorialLines.ts",
+   "line": 101
+  }
+ },
+ {
+  "id": "s772",
+  "section": "data/tutorialLines.ts",
+  "text": "אחרי שנזרק קלף ראשון לפח",
+  "where": {
+   "kind": "source",
+   "file": "apps/client/src/data/tutorialLines.ts",
+   "line": 103
+  }
+ },
+ {
+  "id": "s773",
+  "section": "data/tutorialLines.ts",
+  "text": "שלושה מאותה סדרה צמודים זה לזה — {bonus} נדלק. {what}",
+  "where": {
+   "kind": "source",
+   "file": "apps/client/src/data/tutorialLines.ts",
+   "line": 107
+  }
+ },
+ {
+  "id": "s774",
+  "section": "data/tutorialLines.ts",
+  "text": "כששלושה מאותה סדרה נוגעים זה בזה",
+  "where": {
+   "kind": "source",
+   "file": "apps/client/src/data/tutorialLines.ts",
+   "line": 109
+  }
+ },
+ {
+  "id": "s775",
+  "section": "data/tutorialLines.ts",
+  "text": "נגמר הערפל — עכשיו רואים מה היריב שם. שינויים של הרגע האחרון?",
+  "where": {
+   "kind": "source",
+   "file": "apps/client/src/data/tutorialLines.ts",
+   "line": 113
+  }
+ },
+ {
+  "id": "s776",
+  "section": "data/tutorialLines.ts",
+  "text": "בתחילת שלב הפאניקה",
+  "where": {
+   "kind": "source",
+   "file": "apps/client/src/data/tutorialLines.ts",
+   "line": 115
+  }
+ },
+ {
+  "id": "s777",
+  "section": "data/tutorialLines.ts",
+  "text": "יאללה, בוא נראה מה קורה.",
+  "where": {
+   "kind": "source",
+   "file": "apps/client/src/data/tutorialLines.ts",
+   "line": 119
+  }
+ },
+ {
+  "id": "s778",
+  "section": "data/tutorialLines.ts",
+  "text": "הדבר האחרון לפני הקרב",
+  "where": {
+   "kind": "source",
+   "file": "apps/client/src/data/tutorialLines.ts",
+   "line": 121
+  }
+ },
+ {
+  "id": "s779",
+  "section": "data/tutorialLines.ts",
+  "text": "ל{enemy} יש ערימת חיים. {card} לא מנסה לנצח אותו במכות — הארס שלו מצטבר בכל פגיעה וממשיך לשרוף גם אחרי שהוא מת. שים אותו מולו.",
+  "where": {
+   "kind": "source",
+   "file": "apps/client/src/data/tutorialLines.ts",
+   "line": 125
+  }
+ },
+ {
+  "id": "s780",
+  "section": "data/tutorialLines.ts",
+  "text": "ארס ביד מול קיר חיים של היריב",
+  "where": {
+   "kind": "source",
+   "file": "apps/client/src/data/tutorialLines.ts",
+   "line": 127
+  }
+ },
+ {
+  "id": "s781",
+  "section": "data/tutorialLines.ts",
+  "text": "הוא שם משהו שמתפצל כשהוא מת — תהרוג אחד ויהיו שניים. {card} מכה כמה נתיבים בבת אחת, וזה בדיוק מה שמבטל את זה. רק אל תשים אותו בקצה, שם חצי מהמכה הולכת לאוויר.",
+  "where": {
+   "kind": "source",
+   "file": "apps/client/src/data/tutorialLines.ts",
+   "line": 131
+  }
+ },
+ {
+  "id": "s782",
+  "section": "data/tutorialLines.ts",
+  "text": "מכת רוחב ביד מול משהו שמתרבה",
+  "where": {
+   "kind": "source",
+   "file": "apps/client/src/data/tutorialLines.ts",
+   "line": 133
+  }
+ },
+ {
+  "id": "s783",
+  "section": "data/tutorialLines.ts",
+  "text": "הוא ערם קלפים בטור אחד. {card} מבעיר את הנתיב שלפניו — כולם שם משלמים כל שנייה, ושריון לא עוזר. שים אותו מול הטור הזה.",
+  "where": {
+   "kind": "source",
+   "file": "apps/client/src/data/tutorialLines.ts",
+   "line": 137
+  }
+ },
+ {
+  "id": "s784",
+  "section": "data/tutorialLines.ts",
+  "text": "הצתת נתיב ביד מול טור עמוס",
+  "where": {
+   "kind": "source",
+   "file": "apps/client/src/data/tutorialLines.ts",
+   "line": 139
+  }
+ },
+ {
+  "id": "s785",
+  "section": "data/tutorialLines.ts",
+  "text": "הוא בנה משהו שיורה מרחוק ולא מתקרב. {card} גורר את כל הקו שלו אליך — ישר לתוך הטווח של השומרים שלך.",
+  "where": {
+   "kind": "source",
+   "file": "apps/client/src/data/tutorialLines.ts",
+   "line": 143
+  }
+ },
+ {
+  "id": "s786",
+  "section": "data/tutorialLines.ts",
+  "text": "שואב ביד מול יריב ששומר מרחק",
+  "where": {
+   "kind": "source",
+   "file": "apps/client/src/data/tutorialLines.ts",
+   "line": 145
+  }
+ },
+ {
+  "id": "s787",
+  "section": "data/tutorialLines.ts",
+  "text": "{ally} מכה חזק ושובר בקלות. {card} סופג חצי מכל מכה שמכוונת לשכן שלו — שים אותו ממש לידו ותן לו לחיות קצת.",
+  "where": {
+   "kind": "source",
+   "file": "apps/client/src/data/tutorialLines.ts",
+   "line": 149
+  }
+ },
+ {
+  "id": "s788",
+  "section": "data/tutorialLines.ts",
+  "text": "סופג ביד כשיש לך קלף שביר שמכה חזק",
+  "where": {
+   "kind": "source",
+   "file": "apps/client/src/data/tutorialLines.ts",
+   "line": 151
+  }
+ },
+ {
+  "id": "s789",
+  "section": "data/updates.ts",
+  "text": "אוקטובר 2026",
+  "where": {
+   "kind": "source",
+   "file": "apps/client/src/data/updates.ts",
+   "line": 43
+  }
+ },
+ {
+  "id": "s790",
+  "section": "data/updates.ts",
+  "text": "חנות נוחות, חברים, ודיווח",
+  "where": {
+   "kind": "source",
+   "file": "apps/client/src/data/updates.ts",
+   "line": 44
+  }
+ },
+ {
+  "id": "s791",
+  "section": "data/updates.ts",
+  "text": "נפתחה חנות נוחות — אווטארים, אימוג'ים וקלפים, הכל ביהלומים.",
+  "where": {
+   "kind": "source",
+   "file": "apps/client/src/data/updates.ts",
+   "line": 46
+  }
+ },
+ {
+  "id": "s792",
+  "section": "data/updates.ts",
+  "text": "אפשר להוסיף לחברים מישהו ששיחקתם מולו, לראות מי מחובר, ולהזמין אותו למשחק.",
+  "where": {
+   "kind": "source",
+   "file": "apps/client/src/data/updates.ts",
+   "line": 47
+  }
+ },
+ {
+  "id": "s793",
+  "section": "data/updates.ts",
+  "text": "אפשר להגיד ליריב ארבעה-עשר משפטים מוכנים, וגם לבחור לא לראות הודעות בכלל.",
+  "where": {
+   "kind": "source",
+   "file": "apps/client/src/data/updates.ts",
+   "line": 48
+  }
+ },
+ {
+  "id": "s794",
+  "section": "data/updates.ts",
+  "text": "יש כפתור לדווח על באג או על שחקן.",
+  "where": {
+   "kind": "source",
+   "file": "apps/client/src/data/updates.ts",
+   "line": 49
+  }
+ },
+ {
+  "id": "s795",
+  "section": "data/updates.ts",
+  "text": "אוקטובר 2026",
+  "where": {
+   "kind": "source",
+   "file": "apps/client/src/data/updates.ts",
+   "line": 54
+  }
+ },
+ {
+  "id": "s796",
+  "section": "data/updates.ts",
+  "text": "נאצ'וס, אתגרים, וחוגת קושי",
+  "where": {
+   "kind": "source",
+   "file": "apps/client/src/data/updates.ts",
+   "line": 55
+  }
+ },
+ {
+  "id": "s797",
+  "section": "data/updates.ts",
+  "text": "כל משחק נותן נאצ'וס לפי כמה טוב שיחקתם — גם כשמפסידים. כל 5 נאצ'וס זו תיבה.",
+  "where": {
+   "kind": "source",
+   "file": "apps/client/src/data/updates.ts",
+   "line": 57
+  }
+ },
+ {
+  "id": "s798",
+  "section": "data/updates.ts",
+  "text": "אתגרים יומיים, שבועיים וחודשיים, עם יהלומים ונאצ'וס בסוף.",
+  "where": {
+   "kind": "source",
+   "file": "apps/client/src/data/updates.ts",
+   "line": 58
+  }
+ },
+ {
+  "id": "s799",
+  "section": "data/updates.ts",
+  "text": "לבוט יש עכשיו שלוש דרגות: קליל, רגיל וקשה. הקליל באמת קליל.",
+  "where": {
+   "kind": "source",
+   "file": "apps/client/src/data/updates.ts",
+   "line": 59
+  }
+ },
+ {
+  "id": "s800",
+  "section": "data/updates.ts",
+  "text": "ניצחון מול הבוט שווה גביעים — רגיל 8, קשה 12.",
+  "where": {
+   "kind": "source",
+   "file": "apps/client/src/data/updates.ts",
+   "line": 60
+  }
+ },
+ {
+  "id": "s801",
+  "section": "data/updates.ts",
+  "text": "בתיבות יש יותר קלפים שכבר יש לכם, כדי שיהיה אפשר לשדרג אותם.",
+  "where": {
+   "kind": "source",
+   "file": "apps/client/src/data/updates.ts",
+   "line": 61
+  }
+ },
+ {
+  "id": "s802",
+  "section": "game/account.ts",
+  "text": "חשבון הגוגל הזה כבר שייך לחשבון אחר, ולא הצלחתי להיכנס אליו.",
+  "where": {
+   "kind": "source",
+   "file": "apps/client/src/game/account.ts",
+   "line": 262
+  }
+ },
+ {
+  "id": "s803",
+  "section": "game/account.ts",
+  "text": "ההתחברות לגוגל לא הושלמה. נסה שוב מהדפדפן הרגיל ולא מתוך אפליקציה אחרת.",
+  "where": {
+   "kind": "source",
+   "file": "apps/client/src/game/account.ts",
+   "line": 283
+  }
+ },
+ {
+  "id": "s804",
   "section": "game/account.ts",
   "text": "אין חיבור לשרת",
   "where": {
    "kind": "source",
    "file": "apps/client/src/game/account.ts",
-   "line": 173
+   "line": 384
   }
  },
  {
-  "id": "s529",
+  "id": "s805",
   "section": "game/account.ts",
   "text": "אין חשבון",
   "where": {
    "kind": "source",
    "file": "apps/client/src/game/account.ts",
-   "line": 177
+   "line": 388
   }
  },
  {
-  "id": "s530",
+  "id": "s806",
   "section": "game/account.ts",
   "text": "לא הצליח",
   "where": {
    "kind": "source",
    "file": "apps/client/src/game/account.ts",
-   "line": 184
+   "line": 395
   }
  },
  {
-  "id": "s531",
+  "id": "s807",
   "section": "game/account.ts",
   "text": "אין חיבור לשרת",
   "where": {
    "kind": "source",
    "file": "apps/client/src/game/account.ts",
-   "line": 344
+   "line": 662
   }
  },
  {
-  "id": "s532",
+  "id": "s808",
   "section": "game/account.ts",
   "text": "צריך להיות בן ${MIN_AGE} לפחות",
   "where": {
    "kind": "source",
    "file": "apps/client/src/game/account.ts",
-   "line": 346
+   "line": 664
   }
  },
  {
-  "id": "s533",
+  "id": "s809",
   "section": "game/account.ts",
   "text": "אין חשבון",
   "where": {
    "kind": "source",
    "file": "apps/client/src/game/account.ts",
-   "line": 350
+   "line": 668
   }
  },
  {
-  "id": "s534",
+  "id": "s810",
   "section": "game/account.ts",
   "text": "אין חיבור לשרת",
   "where": {
    "kind": "source",
    "file": "apps/client/src/game/account.ts",
-   "line": 367
+   "line": 687
   }
  },
  {
-  "id": "s535",
+  "id": "s811",
   "section": "game/account.ts",
   "text": "צריך להתחיל לשחק קודם",
   "where": {
    "kind": "source",
    "file": "apps/client/src/game/account.ts",
-   "line": 370
+   "line": 690
   }
  },
  {
-  "id": "s536",
+  "id": "s812",
   "section": "game/account.ts",
   "text": "אין חיבור לשרת",
   "where": {
    "kind": "source",
    "file": "apps/client/src/game/account.ts",
-   "line": 393
+   "line": 753
   }
  },
  {
-  "id": "s537",
+  "id": "s813",
+  "section": "game/account.ts",
+  "text": "צריך חשבון כדי לדווח",
+  "where": {
+   "kind": "source",
+   "file": "apps/client/src/game/account.ts",
+   "line": 757
+  }
+ },
+ {
+  "id": "s814",
+  "section": "game/account.ts",
+  "text": "לא הצליח",
+  "where": {
+   "kind": "source",
+   "file": "apps/client/src/game/account.ts",
+   "line": 764
+  }
+ },
+ {
+  "id": "s815",
+  "section": "game/account.ts",
+  "text": "אין חיבור לשרת",
+  "where": {
+   "kind": "source",
+   "file": "apps/client/src/game/account.ts",
+   "line": 825
+  }
+ },
+ {
+  "id": "s816",
+  "section": "game/account.ts",
+  "text": "לא הצליח",
+  "where": {
+   "kind": "source",
+   "file": "apps/client/src/game/account.ts",
+   "line": 827
+  }
+ },
+ {
+  "id": "s817",
+  "section": "game/account.ts",
+  "text": "אין חיבור לשרת",
+  "where": {
+   "kind": "source",
+   "file": "apps/client/src/game/account.ts",
+   "line": 888
+  }
+ },
+ {
+  "id": "s818",
+  "section": "game/account.ts",
+  "text": "לא הצליח",
+  "where": {
+   "kind": "source",
+   "file": "apps/client/src/game/account.ts",
+   "line": 890
+  }
+ },
+ {
+  "id": "s819",
+  "section": "game/account.ts",
+  "text": "אין חיבור לשרת",
+  "where": {
+   "kind": "source",
+   "file": "apps/client/src/game/account.ts",
+   "line": 955
+  }
+ },
+ {
+  "id": "s820",
+  "section": "game/account.ts",
+  "text": "אין חשבון",
+  "where": {
+   "kind": "source",
+   "file": "apps/client/src/game/account.ts",
+   "line": 959
+  }
+ },
+ {
+  "id": "s821",
+  "section": "game/account.ts",
+  "text": "לא הצליח",
+  "where": {
+   "kind": "source",
+   "file": "apps/client/src/game/account.ts",
+   "line": 966
+  }
+ },
+ {
+  "id": "s822",
+  "section": "game/account.ts",
+  "text": "לא הצליח",
+  "where": {
+   "kind": "source",
+   "file": "apps/client/src/game/account.ts",
+   "line": 968
+  }
+ },
+ {
+  "id": "s823",
+  "section": "game/account.ts",
+  "text": "אין חיבור לשרת",
+  "where": {
+   "kind": "source",
+   "file": "apps/client/src/game/account.ts",
+   "line": 974
+  }
+ },
+ {
+  "id": "s824",
+  "section": "game/account.ts",
+  "text": "אין חשבון",
+  "where": {
+   "kind": "source",
+   "file": "apps/client/src/game/account.ts",
+   "line": 978
+  }
+ },
+ {
+  "id": "s825",
+  "section": "game/account.ts",
+  "text": "לא הצליח",
+  "where": {
+   "kind": "source",
+   "file": "apps/client/src/game/account.ts",
+   "line": 985
+  }
+ },
+ {
+  "id": "s826",
+  "section": "game/account.ts",
+  "text": "אין חיבור לשרת",
+  "where": {
+   "kind": "source",
+   "file": "apps/client/src/game/account.ts",
+   "line": 1032
+  }
+ },
+ {
+  "id": "s827",
   "section": "game/account.ts",
   "text": "צריך להתחיל לשחק קודם",
   "where": {
    "kind": "source",
    "file": "apps/client/src/game/account.ts",
-   "line": 397
+   "line": 1036
   }
  },
  {
-  "id": "s538",
+  "id": "s828",
   "section": "game/account.ts",
   "text": "כבר מחובר",
   "where": {
    "kind": "source",
    "file": "apps/client/src/game/account.ts",
-   "line": 398
+   "line": 1037
   }
  },
  {
-  "id": "s539",
+  "id": "s829",
   "section": "game/coach.ts",
-  "text": "שלושה מאותה סדרה על הלוח — ${s.synergy.name.he} נדלק. ${s.synergy.description.he}",
+  "text": "הוא מעופף",
   "where": {
    "kind": "source",
    "file": "apps/client/src/game/coach.ts",
-   "line": 59
+   "line": 186
   }
  },
  {
-  "id": "s540",
+  "id": "s830",
   "section": "game/coach.ts",
-  "text": "קודם כול מלך. הוא לא זז, הוא חזק פי שלושה, ואם הוא נופל — נגמר.",
+  "text": "הוא צלף",
   "where": {
    "kind": "source",
    "file": "apps/client/src/game/coach.ts",
-   "line": 105
+   "line": 187
   }
  },
  {
-  "id": "s541",
+  "id": "s831",
   "section": "game/coach.ts",
-  "text": "${inHand.name.he}? סטטי, הרבה חיים. הוא לא ילך לשום מקום — שים אותו מול המלך, שם עוצרים את מי שבא אליו.",
+  "text": "הוא עבה",
   "where": {
    "kind": "source",
    "file": "apps/client/src/game/coach.ts",
-   "line": 115
+   "line": 188
   }
  },
  {
-  "id": "s542",
+  "id": "s832",
   "section": "game/coach.ts",
-  "text": "${inHand.name.he} ${inHand.flying ? \"עף\" : \"צלף\"} — הוא לא צריך שהדרך תהיה פנויה. שים אותו מאחורה ושיירה משם.",
+  "text": "הוא חזק",
   "where": {
    "kind": "source",
    "file": "apps/client/src/game/coach.ts",
-   "line": 125
+   "line": 189
   }
  },
  {
-  "id": "s543",
+  "id": "s833",
   "section": "game/coach.ts",
-  "text": "קלף פעולה. לא מניחים אותו על הלוח — לוקחים אותו לבר ומפעילים כשצריך.",
+  "text": "הוא לא זז",
   "where": {
    "kind": "source",
    "file": "apps/client/src/game/coach.ts",
-   "line": 135
+   "line": 190
   }
  },
  {
-  "id": "s544",
+  "id": "s834",
   "section": "game/coach.ts",
-  "text": "${inHand.name.he} חלש. יגיעו טובים יותר — לפח איתו.",
+  "text": "הוא בסדר גמור",
   "where": {
    "kind": "source",
    "file": "apps/client/src/game/coach.ts",
-   "line": 145
+   "line": 191
   }
  },
  {
-  "id": "s545",
+  "id": "s835",
   "section": "game/coach.ts",
-  "text": "התחרטת? הקלף העליון בפח חוזר. רק הוא, ומה שתיתן במקומו נקבר.",
+  "text": "נמקם אותו מאחורה",
   "where": {
    "kind": "source",
    "file": "apps/client/src/game/coach.ts",
-   "line": 155
+   "line": 196
   }
  },
  {
-  "id": "s546",
+  "id": "s836",
   "section": "game/coach.ts",
-  "text": "נגמר הערפל — עכשיו רואים מה היריב שם. שינויים של הרגע האחרון?",
+  "text": "נמקם אותו מקדימה",
   "where": {
    "kind": "source",
    "file": "apps/client/src/game/coach.ts",
-   "line": 172
+   "line": 197
   }
  },
  {
-  "id": "s547",
+  "id": "s837",
   "section": "game/coach.ts",
-  "text": "יאללה, בוא נראה מה קורה.",
+  "text": "נמקם אותו באמצע",
   "where": {
    "kind": "source",
    "file": "apps/client/src/game/coach.ts",
-   "line": 180
+   "line": 198
+  }
+ },
+ {
+  "id": "s838",
+  "section": "game/coach.ts",
+  "text": "עף",
+  "where": {
+   "kind": "source",
+   "file": "apps/client/src/game/coach.ts",
+   "line": 365
+  }
+ },
+ {
+  "id": "s839",
+  "section": "game/coach.ts",
+  "text": "צלף",
+  "where": {
+   "kind": "source",
+   "file": "apps/client/src/game/coach.ts",
+   "line": 365
+  }
+ },
+ {
+  "id": "s840",
+  "section": "game/lessons.ts",
+  "text": "משחק ראשון — איך בונים לוח",
+  "where": {
+   "kind": "source",
+   "file": "apps/client/src/game/lessons.ts",
+   "line": 70
+  }
+ },
+ {
+  "id": "s841",
+  "section": "game/lessons.ts",
+  "text": "משחק שני — מה מנצח את מה",
+  "where": {
+   "kind": "source",
+   "file": "apps/client/src/game/lessons.ts",
+   "line": 112
+  }
+ },
+ {
+  "id": "s842",
+  "section": "game/meta.ts",
+  "text": "אין חיבור לשרת",
+  "where": {
+   "kind": "source",
+   "file": "apps/client/src/game/meta.ts",
+   "line": 134
+  }
+ },
+ {
+  "id": "s843",
+  "section": "game/meta.ts",
+  "text": "צריך חשבון",
+  "where": {
+   "kind": "source",
+   "file": "apps/client/src/game/meta.ts",
+   "line": 137
+  }
+ },
+ {
+  "id": "s844",
+  "section": "game/meta.ts",
+  "text": "האתגר הזה כבר לא פעיל.",
+  "where": {
+   "kind": "source",
+   "file": "apps/client/src/game/meta.ts",
+   "line": 147
+  }
+ },
+ {
+  "id": "s845",
+  "section": "game/meta.ts",
+  "text": "עוד לא סיימת את האתגר.",
+  "where": {
+   "kind": "source",
+   "file": "apps/client/src/game/meta.ts",
+   "line": 148
+  }
+ },
+ {
+  "id": "s846",
+  "section": "game/meta.ts",
+  "text": "כבר לקחת את הפרס.",
+  "where": {
+   "kind": "source",
+   "file": "apps/client/src/game/meta.ts",
+   "line": 149
+  }
+ },
+ {
+  "id": "s847",
+  "section": "game/meta.ts",
+  "text": "לא הצלחתי. נסה שוב.",
+  "where": {
+   "kind": "source",
+   "file": "apps/client/src/game/meta.ts",
+   "line": 150
+  }
+ },
+ {
+  "id": "s848",
+  "section": "game/useMatch.ts",
+  "text": "בוט קליל",
+  "where": {
+   "kind": "source",
+   "file": "apps/client/src/game/useMatch.ts",
+   "line": 246
+  }
+ },
+ {
+  "id": "s849",
+  "section": "game/useMatch.ts",
+  "text": "הבוט",
+  "where": {
+   "kind": "source",
+   "file": "apps/client/src/game/useMatch.ts",
+   "line": 253
+  }
+ },
+ {
+  "id": "s850",
+  "section": "game/useMatch.ts",
+  "text": "בוט קשה",
+  "where": {
+   "kind": "source",
+   "file": "apps/client/src/game/useMatch.ts",
+   "line": 260
+  }
+ },
+ {
+  "id": "s851",
+  "section": "game/verdict.ts",
+  "text": "של היריב",
+  "where": {
+   "kind": "source",
+   "file": "apps/client/src/game/verdict.ts",
+   "line": 12
+  }
+ },
+ {
+  "id": "s852",
+  "section": "game/verdict.ts",
+  "text": "שלך",
+  "where": {
+   "kind": "source",
+   "file": "apps/client/src/game/verdict.ts",
+   "line": 12
+  }
+ },
+ {
+  "id": "s853",
+  "section": "game/verdict.ts",
+  "text": "המלך ${whose} נפל — זה מסיים את הקרב מיד.",
+  "where": {
+   "kind": "source",
+   "file": "apps/client/src/game/verdict.ts",
+   "line": 16
+  }
+ },
+ {
+  "id": "s854",
+  "section": "game/verdict.ts",
+  "text": "נגמר הזמן והמלכים שרדו עם אותו אחוז חיים — הוכרע לפי סך החיים על הלוח.",
+  "where": {
+   "kind": "source",
+   "file": "apps/client/src/game/verdict.ts",
+   "line": 26
+  }
+ },
+ {
+  "id": "s855",
+  "section": "game/verdict.ts",
+  "text": "נגמר הזמן והחיים היו שווים — הוכרע לפי מספר הקלפים ששרדו.",
+  "where": {
+   "kind": "source",
+   "file": "apps/client/src/game/verdict.ts",
+   "line": 28
+  }
+ },
+ {
+  "id": "s856",
+  "section": "game/verdict.ts",
+  "text": "נגמר הזמן והכול יצא שווה לחלוטין — הוכרע בהטלת מטבע.",
+  "where": {
+   "kind": "source",
+   "file": "apps/client/src/game/verdict.ts",
+   "line": 30
   }
  }
 ]

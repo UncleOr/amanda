@@ -22,17 +22,17 @@ export const ELEMENT_META: Record<Element, ElementMeta> = {
   variable: { he: "משתנה", en: "Variable", icon: "variable", color: "#b06fd6" },
 };
 
-export const RANGE_META: Record<Range, { he: string; icon: IconName }> = {
-  melee: { he: "קרוב", icon: "melee" },
-  ranged: { he: "רחוק", icon: "ranged" },
-  sniper: { he: "צלף", icon: "sniper" },
+export const RANGE_META: Record<Range, { he: string; en: string; icon: IconName }> = {
+  melee: { he: "קרוב", en: "Melee", icon: "melee" },
+  ranged: { he: "רחוק", en: "Ranged", icon: "ranged" },
+  sniper: { he: "צלף", en: "Sniper", icon: "sniper" },
 };
 
-export const RARITY_META: Record<Rarity, { he: string; color: string }> = {
-  common: { he: "נפוץ", color: "#9aa4ad" },
-  rare: { he: "נדיר", color: "#4aa3ff" },
-  epic: { he: "אפי", color: "#b06fd6" },
-  legendary: { he: "אגדי", color: "#ffb020" },
+export const RARITY_META: Record<Rarity, { he: string; en: string; color: string }> = {
+  common: { he: "נפוץ", en: "Common", color: "#9aa4ad" },
+  rare: { he: "נדיר", en: "Rare", color: "#4aa3ff" },
+  epic: { he: "אפי", en: "Epic", color: "#b06fd6" },
+  legendary: { he: "אגדי", en: "Legendary", color: "#ffb020" },
 };
 
 /**
@@ -40,12 +40,12 @@ export const RARITY_META: Record<Rarity, { he: string; color: string }> = {
  * the board, so the family has to be readable at a glance — this colour drives
  * the card frame and name plate, making same-series cards group visually.
  */
-export const SERIES_META: Record<string, { he: string; color: string }> = {
-  dragons: { he: "דרקונים", color: "#ff6a3d" },
-  giants: { he: "ענקים", color: "#b98a4e" },
-  insects: { he: "חרקים", color: "#c04ddb" },
-  plants: { he: "צמחים", color: "#4fc85f" },
-  slimes: { he: "ריריים", color: "#2fc5c0" },
+export const SERIES_META: Record<string, { he: string; en: string; color: string }> = {
+  dragons: { he: "דרקונים", en: "Dragons", color: "#ff6a3d" },
+  giants: { he: "ענקים", en: "Giants", color: "#b98a4e" },
+  insects: { he: "חרקים", en: "Insects", color: "#c04ddb" },
+  plants: { he: "צמחים", en: "Plants", color: "#4fc85f" },
+  slimes: { he: "ריריים", en: "Slimes", color: "#2fc5c0" },
 };
 export const SERIES_FALLBACK_COLOR = "#8a93a6";
 
@@ -53,32 +53,38 @@ export function seriesColor(seriesId: string): string {
   return SERIES_META[seriesId]?.color ?? SERIES_FALLBACK_COLOR;
 }
 
-/** Short Hebrew labels for ability types (used when a card has no custom text). */
-export const ABILITY_LABEL: Partial<Record<AbilityType, string>> = {
-  knockback: "הדף אחורה",
-  sideKnockback: "הדף הצידה",
-  trample: "דריסה והמשך",
-  pullVacuum: "שאיבה למרכז",
-  rootOnReveal: "מלכודת הצמדה",
-  knockbackImmune: "חסין הדיפה",
-  damageReflect: "החזרת נזק",
-  armorGain: "צבירת שריון",
-  armorBreak: "שבירת שריון",
-  armorAura: "הילת שריון",
-  damageShareAdjacent: "ספיגה לשכנים",
-  damageReductionAura: "הילת הגנה",
-  regen: "התחדשות",
-  healAura: "הילת ריפוי",
-  aoeRowAttack: "מכה אזורית",
-  lineDenialDot: "חסימת נתיב",
-  freezeOnHit: "הקפאה במכה",
-  stackingDot: "רעל מצטבר",
-  absorbOnCollision: "בליעת יריב",
-  slowAura: "הילת האטה",
-  attackSpeedAura: "הילת מהירות",
-  delayedTransform: "התמרה מושהית",
-  swarmOnDeath: "נחיל במוות",
-  splitOnDeath: "פיצול במוות",
-  sacrificeAdjacent: "הקרבת בעל-ברית",
-  elementSteal: "גניבת אלמנט",
+/**
+ * Short labels for ability types, used when a card has no custom text.
+ *
+ * These are vocabulary, not voice — "Break armour" is the name of a mechanic
+ * and translating it is terminology rather than writing. Amanda's own lines
+ * are not in here, and they are not mine to translate.
+ */
+export const ABILITY_LABEL: Partial<Record<AbilityType, { he: string; en: string }>> = {
+  knockback: { he: "הדף אחורה", en: "Knock back" },
+  sideKnockback: { he: "הדף הצידה", en: "Knock sideways" },
+  trample: { he: "דריסה והמשך", en: "Trample onward" },
+  pullVacuum: { he: "שאיבה למרכז", en: "Pull to centre" },
+  rootOnReveal: { he: "מלכודת הצמדה", en: "Rooting trap" },
+  knockbackImmune: { he: "חסין הדיפה", en: "Immovable" },
+  damageReflect: { he: "החזרת נזק", en: "Reflect damage" },
+  armorGain: { he: "צבירת שריון", en: "Gain armour" },
+  armorBreak: { he: "שבירת שריון", en: "Break armour" },
+  armorAura: { he: "הילת שריון", en: "Armour aura" },
+  damageShareAdjacent: { he: "ספיגה לשכנים", en: "Share with neighbours" },
+  damageReductionAura: { he: "הילת הגנה", en: "Shield aura" },
+  regen: { he: "התחדשות", en: "Regenerate" },
+  healAura: { he: "הילת ריפוי", en: "Healing aura" },
+  aoeRowAttack: { he: "מכה אזורית", en: "Area strike" },
+  lineDenialDot: { he: "חסימת נתיב", en: "Block the lane" },
+  freezeOnHit: { he: "הקפאה במכה", en: "Freeze on hit" },
+  stackingDot: { he: "רעל מצטבר", en: "Stacking poison" },
+  absorbOnCollision: { he: "בליעת יריב", en: "Swallow rival" },
+  slowAura: { he: "הילת האטה", en: "Slowing aura" },
+  attackSpeedAura: { he: "הילת מהירות", en: "Speed aura" },
+  delayedTransform: { he: "התמרה מושהית", en: "Delayed change" },
+  swarmOnDeath: { he: "נחיל במוות", en: "Swarm on death" },
+  splitOnDeath: { he: "פיצול במוות", en: "Split on death" },
+  sacrificeAdjacent: { he: "הקרבת בעל-ברית", en: "Sacrifice an ally" },
+  elementSteal: { he: "גניבת אלמנט", en: "Steal element" },
 };

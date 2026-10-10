@@ -15,6 +15,7 @@ import {
 import { CATALOG } from "../data/catalog";
 import { ELEMENT_META, RANGE_META, seriesColor } from "../data/cardMeta";
 import { Overlay } from "./Overlay";
+import { say } from "../game/lang";
 
 
 const TPS = SIMULATION.ticksPerSecond;
@@ -499,7 +500,7 @@ function UnitReportModal({
                   {ELEMENT_META[card.elements[0]!].he}
                 </span>
               )}
-              {card && <span className="badge">{RANGE_META[card.stats.range].he}</span>}
+              {card && <span className="badge">{say(RANGE_META[card.stats.range])}</span>}
               <span className={`badge${unit.survived ? " badge--king" : ""}`}>
                 {unit.survived ? (
               <>

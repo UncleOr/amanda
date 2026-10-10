@@ -23,6 +23,8 @@
  * options, one for everything else".
  */
 import { SERIES, ACTIONS, CATALOG } from "../data/catalog";
+import { lang } from "./lang";
+import englishCatalogue from "../../../../data/copy.en.json";
 
 /** id → the lines Or wrote for it. Empty until the fetch comes back. */
 let overrides: Record<string, string[]> = {};
@@ -39,6 +41,18 @@ export function onCopyChange(fn: () => void): () => void {
 }
 
 /**
+ * The English of a screen string, by the same id the copy document uses.
+ *
+ * Card text is not in here: every card, series and ability already carries
+ * `he` and `en` side by side in data/*.json, and `say()` in lang.ts reads
+ * them. This file is only for the strings that live as literals inside
+ * components, which have nowhere else to keep a second language.
+ *
+ * Written by `pnpm copy:apply` from the אנגלית column of docs/COPY.md.
+ */
+const ENGLISH = englishCatalogue as Record<string, string>;
+
+/**
  * One of the lines for this id, or the one the game shipped with.
  *
  * Re-rolled on every call, which is the point for the handful of ids that
@@ -46,9 +60,32 @@ export function onCopyChange(fn: () => void): () => void {
  * `useLine` in App.tsx, which settles one per screen).
  */
 export function line(id: string, shipped: string): string {
+  /*
+   * English wins over a Hebrew override, and loses to nothing.
+   *
+   * The two columns answer different questions. An override is Or changing
+   * his mind about the Hebrew; the English column is the same line in
+   * another language. A player reading English should not be shown a Hebrew
+   * rewrite just because one exists — so if there is an English string for
+   * this id and English is what was asked for, that is the answer.
+   */
+  if (lang() === "en") {
+    const english = ENGLISH[id];
+    if (english) return english;
+  }
   const mine = overrides[id];
   if (!mine?.length) return shipped;
   return mine[Math.floor(Math.random() * mine.length)]!;
+}
+
+/**
+ * Untranslated screen strings, for the admin panel to show a number.
+ *
+ * It counts what the game ships with against what the catalogue holds, so it
+ * answers "how much English is missing" without anyone opening the document.
+ */
+export function englishCount(): number {
+  return Object.keys(ENGLISH).length;
 }
 
 /** Every line for an id, for the admin screen. */

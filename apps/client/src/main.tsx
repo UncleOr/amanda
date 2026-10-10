@@ -12,6 +12,7 @@ import { loadCopy } from "./game/copy";
 import { loadCardOverrides } from "./game/cardOverrides";
 import { loadLiveContent } from "./game/liveContent";
 import { track } from "./game/track";
+import { applyLang } from "./game/lang";
 
 /*
  * Anything Or has rewritten, fetched in the background.
@@ -20,6 +21,16 @@ import { track } from "./game/track";
  * a slow or missing server costs nothing — the words are already there, and
  * the card text simply updates in place if an override arrives.
  */
+/*
+ * Direction first, before a single pixel.
+ *
+ * index.html ships lang="he" dir="rtl" because that is what most players
+ * get, and a static default beats a flash of the wrong direction. This
+ * corrects it for anyone who chose English — synchronously, above React,
+ * so the first paint is already the right way round.
+ */
+applyLang();
+
 void loadCopy();
 /*
  * And anything he has changed about the cards. Same promise: the game ships

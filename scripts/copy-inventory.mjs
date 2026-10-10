@@ -22,6 +22,14 @@ export const ROOT = fileURLToPath(new URL("..", import.meta.url));
 const SRC = join(ROOT, "apps", "client", "src");
 const OUT = join(ROOT, "docs", "COPY.md");
 export const MAP = join(ROOT, "docs", "copy.map.json");
+/**
+ * The English of every screen string, by id.
+ *
+ * It is read back in here so that regenerating the document NEVER loses a
+ * translation — the English column comes out pre-filled with whatever has
+ * already been written, and only the empty cells are work left to do.
+ */
+export const EN = join(ROOT, "data", "copy.en.json");
 
 const HEBREW = /[֐-׿]/;
 /** A string in quotes or a JSX text node — the things a player actually reads. */
@@ -60,24 +68,52 @@ function collectData(entries) {
     jsonStrings(json, [], found);
     const isActions = rel.endsWith("action-cards.json");
     const section = isActions ? "קלפי פעולה" : `סדרה — ${json.name?.he ?? rel}`;
-    for (const f of found)
-      entries.push(
-        entry(`d${entries.length + 1}`, section, f.text, {
-          kind: "json",
-          file: rel,
-          path: f.path,
-        }),
-      );
+    for (const f of found) {
+      const e = entry(`d${entries.length + 1}`, section, f.text, {
+        kind: "json",
+        file: rel,
+        path: f.path,
+      });
+      /*
+       * Card text is already bilingual — every name, ability and role in
+       * these files is a LocalizedString, so the English is sitting one key
+       * away from the Hebrew we just read. Carrying it across means a third
+       * of this document arrives translated instead of asking Or to write
+       * 182 English card names that already exist.
+       */
+      const path = f.path;
+      if (path[path.length - 1] === "he") {
+        let node = json;
+        for (const key of path.slice(0, -1)) node = node?.[key];
+        if (typeof node?.en === "string") e.en = node.en;
+      }
+      entries.push(e);
+    }
   }
 }
 
 // ── the client screens ─────────────────────────────────────────────
+/**
+ * The admin panel is not in here, and this document is the reason.
+ *
+ * It opens with "every text a player sees", and an admin screen is not one:
+ * it is a tool for one adult, and the style guide makes it the single place
+ * in the game allowed to explain itself. It had crept in anyway — 300 of the
+ * 1,194 rows were Admin*.tsx — because the panel was built after this script
+ * and nothing here ever said not to.
+ *
+ * It matters more now than it did. The document has an English column, and
+ * three hundred rows of a Hebrew tool in it is three hundred rows of work
+ * that must never be done.
+ */
+const SKIP = /^Admin|^components[\/]Admin|CardEditor|^lab[\/]/;
+
 function walk(dir) {
   const out = [];
   for (const name of readdirSync(dir)) {
     const p = join(dir, name);
     if (statSync(p).isDirectory()) out.push(...walk(p));
-    else if (/\.tsx?$/.test(name) && !/\.test\.tsx?$/.test(name)) out.push(p);
+    else if (/\.tsx?$/.test(name) && !/\.test\.tsx?$/.test(name) && !SKIP.test(name)) out.push(p);
   }
   return out;
 }
@@ -166,29 +202,52 @@ for (const e of entries) {
 }
 
 const esc = (t) => t.replace(/\|/g, "\\|");
+const english = existsSync(EN) ? JSON.parse(readFileSync(EN, "utf8")) : {};
+const translated = entries.filter((e) => english[e.id] ?? e.en).length;
 const parts = [
   "# הטקסטים של אמנדה",
   "",
-  `כל טקסט שהשחקן רואה — ${entries.length} במספר.`,
+  `כל טקסט שהשחקן רואה — ${entries.length} במספר, ${translated} מהם כבר באנגלית.`,
   "",
   "## איך עורכים",
   "",
-  "ממלאים **רק את העמודה האחרונה** (`טקסט חדש`). מה שנשאר ריק פשוט לא ישתנה.",
-  "אחר כך אומרים לי, ואני מריץ `pnpm copy:apply` שכותב את השינויים בחזרה לקוד —",
-  "לכל טקסט יש מזהה שיודע בדיוק מאיפה הוא נלקח.",
+  "**שתי עמודות למלא, ושתיהן אופציונליות.**",
+  "",
+  "| עמודה | למה היא |",
+  "| --- | --- |",
+  "| `טקסט חדש` | לשנות את העברית. מה שנשאר ריק לא ישתנה |",
+  "| `אנגלית` | התרגום. מה שנשאר ריק פשוט יישאר בעברית במשחק |",
+  "",
+  "אחר כך אומרים לי, ואני מריץ `pnpm copy:apply`: העברית נכתבת בחזרה לקוד",
+  "— לכל טקסט יש מזהה שיודע בדיוק מאיפה הוא נלקח — והאנגלית נכתבת ל-",
+  "`data/copy.en.json`, שהמשחק טוען כשבוחרים אנגלית.",
   "",
   "אל תשנו את עמודת המזהה ואל תמחקו שורות. אם טקסט מופיע פעמיים ברשימה, הוא",
   "באמת מופיע פעמיים במשחק — אפשר לשנות כל אחד בנפרד.",
   "",
+  "> **מה לא לתרגם מילולית:** הקול של אמנדה. היא דמות, ו-`\"ילד ילד ילד, בוא",
+  "> להילחם\"` שעובר מילה במילה מפסיק להיות היא. עדיף לכתוב לה שורה חדשה",
+  "> באנגלית מאשר לתרגם את זו.",
+  "",
 ];
 
 for (const [section, items] of bySection) {
-  parts.push(`## ${section}`, "", "| מזהה | טקסט נוכחי | טקסט חדש |", "| --- | --- | --- |");
-  for (const e of items) parts.push(`| ${e.id} | ${esc(e.text)} | |`);
+  parts.push(
+    `## ${section}`,
+    "",
+    "| מזהה | טקסט נוכחי | טקסט חדש | אנגלית |",
+    "| --- | --- | --- | --- |",
+  );
+  for (const e of items)
+    parts.push(`| ${e.id} | ${esc(e.text)} | | ${esc(english[e.id] ?? e.en ?? "")} |`);
   parts.push("");
 }
 
 mkdirSync(join(ROOT, "docs"), { recursive: true });
 writeFileSync(OUT, parts.join("\n"), "utf8");
 writeFileSync(MAP, JSON.stringify(entries, null, 1), "utf8");
-console.log(`${entries.length} strings -> docs/COPY.md (+ docs/copy.map.json)`);
+console.log(
+  `${entries.length} strings -> docs/COPY.md (+ docs/copy.map.json)
+` +
+    `${translated} of them already carry English; ${entries.length - translated} to go.`,
+);

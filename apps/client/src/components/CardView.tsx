@@ -4,6 +4,7 @@ import { Icon } from "./Icon";
 import { KING } from "@amanda/shared";
 import { CATALOG } from "../data/catalog";
 import { ELEMENT_META, RANGE_META, RARITY_META, seriesColor } from "../data/cardMeta";
+import { say } from "../game/lang";
 
 interface StatBuff {
   powerAdd?: number;
@@ -87,10 +88,10 @@ export function CardView({
       {/* top-left: element + traits · top-right: king flag + info */}
       <div className="card__top">
         <span className="card__traits">
-          <span className="card__element" title={el.he}>
+          <span className="card__element" title={say(el)}>
             <Icon name={el.icon} size={13} />
           </span>
-          <span title={RANGE_META[card.stats.range].he}>
+          <span title={say(RANGE_META[card.stats.range])}>
             <Icon name={RANGE_META[card.stats.range].icon} size={12} />
           </span>
           {card.stats.moveSpeed > 0 && (
@@ -111,7 +112,7 @@ export function CardView({
           {!king && card.midBoss && <span className="card__boss" title="ענק אמצע (מתאים למלך)">
               <Icon name="king" size={13} />
             </span>}
-          <span className="card__rarity" title={rarity.he} />
+          <span className="card__rarity" title={say(rarity)} />
           {onInfo && (
             <button
               type="button"
@@ -130,7 +131,7 @@ export function CardView({
 
       {/* bottom plate: name + stats — identical coordinates on every card */}
       <div className="card__plate">
-        <span className="card__name">{card.name.he}</span>
+        <span className="card__name">{say(card.name)}</span>
         {size !== "small" && (
           <span className={`card__stats${buffed ? " card__stats--buffed" : ""}`}>
             <span className="stat stat--hp" title="חיים">

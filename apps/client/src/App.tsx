@@ -70,6 +70,7 @@ const ArenaPreview = lazy(() =>
 );
 import { MoreModes } from "./components/MoreModes";
 import { Overlay } from "./components/Overlay";
+import { lang, setLang } from "./game/lang";
 
 
 /**
@@ -799,6 +800,19 @@ function Game() {
               <Icon name="exit" size={14} /> יציאה
             </button>
           )}
+          {/*
+            The language switch lives here, beside sound, and not inside a
+            Hebrew-labelled settings screen — somebody who cannot read the
+            game has to be able to find it. The label is the language it
+            switches TO, in that language, which needs no translating.
+          */}
+          <button
+            className="mute mute--lang"
+            title={lang() === "he" ? "Switch to English" : "למעבר לעברית"}
+            onClick={() => setLang(lang() === "he" ? "en" : "he")}
+          >
+            {lang() === "he" ? "EN" : "עב"}
+          </button>
           <button
             className={`mute${musicOn ? "" : " mute--off"}`}
             title={musicOn ? "כיבוי מוזיקה" : "הפעלת מוזיקה"}
