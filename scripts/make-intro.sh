@@ -67,8 +67,7 @@ ffmpeg -y -v error -stats \
   -filter_complex "$(IFS=';'; echo "${filters[*]}");\
 ${concat}concat=n=${i}:v=1:a=0,fade=t=in:st=0:d=0.5,\
 fade=t=out:st=${OUT_AT}:d=0.8:color=${BG}[v];\
-[${i}:a]atrim=0:${LEN},afade=t=in:st=0:d=0.8,afade=t=out:st=${OUT_AT}:d=0.8,\
-loudnorm=I=-17:TP=-1.5:LRA=11[a]" \
+[${i}:a]atrim=0:${LEN},afade=t=in:st=0:d=0.8,afade=t=out:st=${OUT_AT}:d=0.8[a]" \
   -map "[v]" -map "[a]" \
   -c:v libx264 -preset slow -crf 30 -pix_fmt yuv420p -r "$FPS" \
   -c:a aac -b:a 96k -movflags +faststart \

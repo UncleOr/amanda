@@ -290,7 +290,7 @@
 | s621af20 | זהו. תודה על הארוחה. | | That's that. Thanks for dinner. |
 | sbc1c615 | הפסדת, וידעת שזה יקרה. | | You lost, and you knew you would. |
 | sbdbc574 | אוי. כמעט. | | Oh. So close. |
-| s2fd8580 | היריב ברח. ניצחת בטכני. | | Your opponent ran. You win on a technicality. |
+| s4e10573 | היריב ברח. ניצחון טכני! | | Your opponent ran. You win on a technicality. |
 | s3a0ee19 | הוא ברח. אני לא מאשימה אותו. | | They ran. I don't blame them. |
 | sdb10f2b | נשארת לבד. זה נחשב ניצחון. | | You're on your own. That counts as a win. |
 | s0176373 | היריב נעלם. אכלתי אותו בדרך. | | Your opponent vanished. I ate them on the way. |

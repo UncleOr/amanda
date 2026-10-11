@@ -58,6 +58,20 @@ MUSIC="apps/client/public/music/track1.mp3"
 #
 # 1.8 dB across half a minute is a passage, not a change. The check further
 # down keeps the cut inside it.
+# ═══ NO loudnorm ON THE MUSIC. IT SKIPPED THREE SECONDS. ═══
+#
+# Or: *"something is wrong with the soundtrack. At second 16 there is some
+# strange join. Where does it come from?"*
+#
+# Measured rather than guessed: correlating the finished trailer against the
+# song, second by second, the first ten seconds matched exactly — and from
+# about twelve seconds on, every window matched a point 2.98 SECONDS LATER
+# in the song than it should have. The music jumps forward, once, and
+# carries on. Three seconds is loudnorm's lookahead window.
+#
+# The file does not need it. make-music.sh already normalises both songs to
+# -17 LUFS, which is the level the game is tuned against; normalising a
+# second time was work that could only do harm, and did.
 MUSIC_START=91
 MUSIC_WINDOW=32
 GAMEPLAY=store/gameplay.mp4
@@ -254,8 +268,7 @@ ffmpeg -y -v warning -stats \
   -f concat -safe 0 -i "$SEG/list.txt" \
   -ss "$MUSIC_START" -i "$MUSIC" \
   -filter_complex "[0:v]fade=t=out:st=${FADEOUT}:d=1.4[v];\
-[1:a]atrim=0:${TOTAL},afade=t=in:st=0:d=1.2,afade=t=out:st=${FADEOUT}:d=1.4,\
-loudnorm=I=-16:TP=-1.5:LRA=11[a]" \
+[1:a]atrim=0:${TOTAL},afade=t=in:st=0:d=1.2,afade=t=out:st=${FADEOUT}:d=1.4[a]" \
   -map "[v]" -map "[a]" \
   -c:v libx264 -preset slow -crf 19 -pix_fmt yuv420p -r "$FPS" \
   -c:a aac -b:a 192k -movflags +faststart \

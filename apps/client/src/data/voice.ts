@@ -118,7 +118,7 @@ export const LOSE_TITLE = [
 
 /** The opponent walked out mid-match. */
 export const OPPONENT_LEFT = [
-  t("s2fd8580", "היריב ברח. ניצחת בטכני."),
+  t("s4e10573", "היריב ברח. ניצחון טכני!"),
   t("s3a0ee19", "הוא ברח. אני לא מאשימה אותו."),
   t("sdb10f2b", "נשארת לבד. זה נחשב ניצחון."),
   t("s0176373", "היריב נעלם. אכלתי אותו בדרך."),
