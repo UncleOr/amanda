@@ -10,10 +10,13 @@
 #
 # Each clip in assets/raw/trailer/clips is five seconds, and each of these
 # takes between 1.1 and 1.8 of them FROM THE HEAD. Kling drifts towards the
-# end of a clip — by second four of 06-charge the stone colossus has grown
-# horns and become something else, and at 4.6 seconds something falls on the
-# fried bread out of nowhere. The head of a clip still looks like the frame
-# that was approved.
+# end of a clip — at 4.6 seconds something falls on the fried bread out of
+# nowhere, and the colossus used to sprout horns by second four. The head of
+# a clip still looks like the frame that was approved.
+#
+# 06-charge holds for all five now, because the creatures run AT the camera
+# and the only thing the model can do with that is make them bigger. It is
+# still cut at 1.6 to stay in rhythm with the shots around it.
 #
 # 08-fold is not here. Or: "they walk to Amanda and it ends there with a fade
 # to the game." The opening peaks when she rises and a dissolve after it is a

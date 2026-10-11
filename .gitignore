@@ -61,7 +61,13 @@ assets/raw/
 # to live in a public repository; store/raw/ is wherever you dropped the phone
 # captures before scripts/screenshots.sh converted them.
 store/trailer.mp4
+store/trailer-he.mp4
+store/trailer-en.mp4
 store/raw/
+
+# Single clips exported so Or can watch one shot on its own before the whole
+# cut is rebuilt. Throwaway: the clip they came from lives in assets/raw.
+store/preview/
 
 # Screen recordings. Source footage is tens of megabytes and this repo is
 # public; scripts/cut-gameplay.sh turns one into the few seconds that ship.

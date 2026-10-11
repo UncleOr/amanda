@@ -280,48 +280,76 @@ export const SHOTS: Shot[] = [
   },
   {
     id: "06-charge",
-    he: "ארבעתם מסתערים יחד. רחב, נמוך, קולנועי.",
+    he: "ארבעתם מסתערים יחד — ישר אל העדשה.",
     hold: 1.6,
     refShots: ["02-titan", "03-dragon", "04-chuppy", "05-bread"],
     refs: [],
+    /*
+     * ═══ THEY RUN AT THE CAMERA NOW, AND THAT IS THE FIX ═══
+     *
+     * Twice this shot came back with the group turning: Or, the first time,
+     * *"the giant walks in a different direction from all the other
+     * creatures"*, and after the re-roll, *"in clip 06 they walk in a
+     * circle"*. He was right both times — by second one the colossus has
+     * swung round to face the lens and the dragon has banked back the other
+     * way, and four creatures rotating on the spot is a circle.
+     *
+     * Re-rolling the motion would not have fixed it, because the cause is
+     * the composition and not the prompt. They were charging at something
+     * OFF-FRAME, so every frame the model drew was a frame of creatures
+     * looking somewhere the picture does not show — and a model that cannot
+     * see what they are charging at turns them towards the one thing it
+     * knows is there, the camera. It did that slowly, which is a rotation.
+     *
+     * So the thing they are charging at is the camera. Four creatures coming
+     * straight down the lens cannot be animated into a circle: the only
+     * direction available to them is BIGGER. And it buys the cut as well —
+     * 07 becomes the reverse angle, the thing they are running at, which is
+     * Amanda. The teal glow is behind the camera here and throws their
+     * shadows back at the station, so the frame already says she is there
+     * one shot before she rises.
+     */
     prompt: [
       LOOK,
       PLACE,
-      "Wide low cinematic shot across the forecourt, at the same petrol station as",
-      "the four reference images and lit the same way.",
-      "The four creatures from those reference images are charging together toward",
-      "something off-frame to the right: the mossy lava-cracked STONE COLOSSUS from",
-      "the first image striding at the back, the FIRE DRAGON from the second flying",
-      "low above him trailing flame, the small YELLOW FURRY creature from the third",
-      "sprinting ahead throwing lightning into the puddles, and the tiny FURIOUS",
-      "FRIED BREAD from the fourth running last with his fists up.",
-      "ALL FOUR FACE THE SAME WAY AND TRAVEL THE SAME WAY: seen from BEHIND, their",
-      "backs to the camera, moving AWAY from it toward the right of frame. Not one",
-      "of them is turned toward the camera and not one of them is walking across",
-      "the frame while the others walk along it. Four backs, one direction.",
+      "Wide low cinematic shot, the camera down near the wet asphalt of the",
+      "forecourt at the same petrol station as the four reference images and lit",
+      "the same way, with the canopy and the pumps BEHIND them in the distance.",
+      "The four creatures from those reference images are charging STRAIGHT AT THE",
+      "CAMERA, side by side, coming down the middle of the frame: the mossy",
+      "lava-cracked STONE COLOSSUS from the first image pounding forward at the",
+      "back, the FIRE DRAGON from the second flying low straight at the lens",
+      "trailing flame, the small YELLOW FURRY creature from the third sprinting out",
+      "in front throwing lightning into the puddles, and the tiny FURIOUS FRIED",
+      "BREAD from the fourth running at the side with his fists up.",
+      "ALL FOUR COME TOWARD THE CAMERA. Every one of them faces the lens and every",
+      "one of them is closing the distance. Not one of them is seen from behind,",
+      "not one of them is walking across the frame, and not one of them is turned",
+      "away. Four faces, one direction, straight down the barrel.",
       "EVERY ONE OF THEM IS RENDERED EXACTLY AS IT APPEARS IN ITS REFERENCE IMAGE:",
       "the same photoreal 3D, the same volume, the same materials — real stone, real",
       "scales, real fur, real fried crust. NOT ONE OF THEM IS A FLAT CARTOON, a",
       "sticker, a drawing or a toy. All four belong to the same film as the",
       "reference frames.",
-      "They are lit from the right by a cold teal light that is not yet in frame,",
-      "which throws four long shadows back toward the camera.",
-      "FOUR CREATURES ONLY. Do not add a fifth. Keep them small in the frame — the",
-      "station and the empty asphalt are most of the picture.",
+      "A cold teal light from BEHIND THE CAMERA catches their faces and chests and",
+      "throws four long shadows away from us, back toward the station.",
+      "FOUR CREATURES ONLY. Do not add a fifth. Keep them small against the station",
+      "— the canopy, the pumps and the empty asphalt are most of the picture.",
     ].join(" "),
     motion: [
       /*
-       * Direction is taken from the frame, not dictated to it. The still
-       * decides which way they are already facing, and the only thing asked
-       * for here is that nobody turns around — which was Or's note: "the
-       * giant walks in a different direction from all the other creatures".
+       * The only verb this shot needs is "closer". Nothing here tells them
+       * which way to face, because the frame already has them facing the
+       * one direction that cannot drift into a turn.
        */
-      "All four keep moving together in the direction they are already facing,",
-      "in step with each other. NOT ONE OF THEM TURNS AROUND, changes direction,",
-      "or moves against the others — the giant striding,",
-      "the dragon beating its wings, the furry one sprinting, the bread stomping",
-      "behind. The teal light from the right brightens across them. The camera tracks",
-      "slowly right with them.",
+      "The four creatures run straight toward the camera and GET CLOSER AND",
+      "LARGER in frame, in step with each other: the colossus pounding, the dragon",
+      "beating its wings as it closes, the furry one sprinting ahead with lightning",
+      "cracking off the puddles, the bread stomping at the side. The petrol station",
+      "behind them stays where it is and gets smaller behind them.",
+      "THE CAMERA DOES NOT MOVE. NOT ONE OF THEM TURNS AROUND, turns to the side,",
+      "or runs away from the camera. The teal light from behind the camera",
+      "brightens on them as they close.",
       "NOTHING IS ADDED AND NOTHING LEAVES. They do not turn into anything. NO TEXT",
       "APPEARS. One continuous shot.",
     ].join(" "),
