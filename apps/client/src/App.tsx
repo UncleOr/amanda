@@ -71,7 +71,7 @@ const ArenaPreview = lazy(() =>
 import { MoreModes } from "./components/MoreModes";
 import { Overlay } from "./components/Overlay";
 import { lang, setLang } from "./game/lang";
-import { line as t } from "./game/copy";
+import { line as t, lineF as tf } from "./game/copy";
 
 
 /**
@@ -102,7 +102,7 @@ function LabSideLabel({
         {on ? "✎ " : ""}
         {name}
       </button>
-      <button className="lab-side__clear" onClick={onClear} title={`לרוקן את ${name}`}>
+      <button className="lab-side__clear" onClick={onClear} title={tf("safa431d", t("safa431d", "לרוקן את {0}"), name)}>
         נקה
       </button>
     </span>

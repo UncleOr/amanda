@@ -1,6 +1,6 @@
 import { NACHOS_PER_CHEST, nachoBar, nachoChestKind, chestsFilled } from "@amanda/shared";
 import { Icon } from "./Icon";
-import { line as t } from "../game/copy";
+import { line as t, lineF as tf } from "../game/copy";
 
 /**
  * How close the next chest is, in nachos.
@@ -37,7 +37,7 @@ export function NachoBar({ nachos }: { nachos: number }) {
       className={`nachos nachos--${next}`}
       // The whole thing says what it means; the pips below are decoration.
       role="img"
-      aria-label={`${bar.have} נאצ'וס מתוך ${bar.need} לתיבה הבאה`}
+      aria-label={tf("s90346fe", t("s90346fe", "{0} נאצ'וס מתוך {1} לתיבה הבאה"), bar.have, bar.need)}
       title={t("s65876b9", "כל משחק נותן נאצ'וס, לפי כמה טוב שיחקת")}
     >
       <span className="nachos__row" aria-hidden="true">

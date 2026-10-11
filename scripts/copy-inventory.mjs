@@ -13,7 +13,7 @@
  * installed-app manifest.
  */
 import { readdirSync, readFileSync, writeFileSync, mkdirSync, statSync, existsSync } from "node:fs";
-import { createHash } from "node:crypto";
+import { idFor, slotify } from "./copy-slots.mjs";
 import { join, relative } from "node:path";
 import { fileURLToPath } from "node:url";
 
@@ -63,12 +63,7 @@ function entry(id, section, text, where) {
  * nothing but its own id.
  */
 const seen = new Map();
-function idFor(prefix, relFile, text) {
-  const key = `${relFile}\u0000${text}`;
-  const n = (seen.get(key) ?? 0) + 1;
-  seen.set(key, n);
-  return prefix + createHash("sha1").update(`${key}\u0000${n}`).digest("hex").slice(0, 7);
-}
+const id = (prefix, relFile, text) => idFor(seen, prefix, relFile, text);
 
 // ── the card data ──────────────────────────────────────────────────
 /** Every Hebrew leaf in a JSON file, as a path the apply step can follow. */
@@ -95,7 +90,7 @@ function collectData(entries) {
     const isActions = rel.endsWith("action-cards.json");
     const section = isActions ? "קלפי פעולה" : `סדרה — ${json.name?.he ?? rel}`;
     for (const f of found) {
-      const e = entry(idFor("d", rel, f.text), section, f.text, {
+      const e = entry(id("d", rel, f.text), section, f.text, {
         kind: "json",
         file: rel,
         path: f.path,
@@ -182,11 +177,27 @@ function fromLines(entries, relFile, lines, section, prefix) {
        * Or to translate a fragment of JSX.
        */
       if (/[<>]|=\{/.test(text)) continue;
+
+      /*
+       * A template literal shows its slots, not its expressions.
+       *
+       * `${e.actor} הפיל את ${e.target}` is listed as `{0} הפיל את {1}`,
+       * because the expressions are not text and nobody can translate them.
+       * The raw form is kept beside it: until copy-codemod.mjs converts the
+       * line, that is still what is written in the file, and both the apply
+       * step and the codemod need to be able to find it there.
+       */
+      const isTemplate = m[3] !== undefined && text.includes("${");
+      const slots = isTemplate ? slotify(text) : null;
+      if (isTemplate && !slots) continue; // unbalanced braces — do not guess
+      const shown = slots ? slots.text : text;
+
       entries.push(
-        entry(idFor(prefix, relFile, text), section, text, {
+        entry(id(prefix, relFile, shown), section, shown, {
           kind: "source",
           file: relFile,
           line: i + 1,
+          ...(slots ? { raw: text } : {}),
         }),
       );
     }

@@ -6,7 +6,7 @@ import { LEVELS, levelCost, levelMultiplier } from "@amanda/shared";
 import { Overlay } from "./Overlay";
 import { spriteFor } from "../game/skins";
 import { say } from "../game/lang";
-import { line as t } from "../game/copy";
+import { line as t, lineF as tf } from "../game/copy";
 
 export function CardDetailModal({
   cardId,
@@ -97,8 +97,8 @@ export function CardDetailModal({
             <span className="modal__level-note">
               {owned.copies} עותקים
               {level < LEVELS.max
-                ? ` · הרמה הבאה עולה ${levelCost(card.rarity, level)}`
-                : " · הגעת למקסימום"}
+                ? " " + tf("sad22ee6", t("sad22ee6", "· הרמה הבאה עולה {0}"), levelCost(card.rarity, level))
+                : " " + t("s512576d", "· הגעת למקסימום")}
             </span>
           </div>
         )}
@@ -106,11 +106,11 @@ export function CardDetailModal({
         <div className="modal__stats">
           <Stat icon="hp" label={t("sa1b7d2c", "חיים")} value={hp} />
           <Stat icon="power" label={t("s4173ded", "עוצמה")} value={power} />
-          <Stat icon="timer" label={t("s4763941", "קצב תקיפה")} value={`${card.stats.attackSpeed}ש׳`} />
+          <Stat icon="timer" label={t("s4763941", "קצב תקיפה")} value={tf("s26ebf92", t("s26ebf92", "{0}ש׳"), card.stats.attackSpeed)} />
           <Stat
             icon="move"
             label={t("sefc23b0", "תנועה")}
-            value={card.stats.moveSpeed > 0 ? `${card.stats.moveSpeed}/ש׳` : t("s60fd570", "סטטי")}
+            value={card.stats.moveSpeed > 0 ? tf("s9546375", t("s9546375", "{0}/ש׳"), card.stats.moveSpeed) : t("s60fd570", "סטטי")}
           />
           <Stat
             icon={RANGE_META[card.stats.range].icon}

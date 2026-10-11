@@ -79,6 +79,34 @@ export function line(id: string, shipped: string): string {
 }
 
 /**
+ * A line with values in it.
+ *
+ * ═══ WHY THE BATTLE REPORT NEEDED THIS ═══
+ *
+ * A template literal's text is not the text — half of it is computed when the
+ * line runs, and `${e.actor} הפיל את ${e.target}` has nothing in it a
+ * translator can be handed. The battle report is almost entirely these, so
+ * without a way to carry them, the screen a player reads after every single
+ * match would have stayed Hebrew forever.
+ *
+ * So the slots are numbered in the copy document — "המלך {0} נפל כבר בשנייה
+ * {1}" — and filled in here. Numbers and not names, because a name has to be
+ * derived from the expression and `${secs(f.value ?? 0)}` has no name in it,
+ * only `secs`, which would be a lie. The Hebrew around the slot says what
+ * belongs there.
+ *
+ * A slot with no argument is left standing rather than printed as
+ * "undefined": a translation with one slot too many should look like a
+ * mistake in the translation, not like a crash.
+ */
+export function lineF(id: string, shipped: string, ...values: unknown[]): string {
+  return line(id, shipped).replace(/\{(\d+)\}/g, (whole, n) => {
+    const v = values[Number(n)];
+    return v === undefined || v === null ? whole : String(v);
+  });
+}
+
+/**
  * Untranslated screen strings, for the admin panel to show a number.
  *
  * It counts what the game ships with against what the catalogue holds, so it

@@ -3,7 +3,7 @@ import { periodEndsOn, type Period } from "@amanda/shared";
 import { challengesSoFar, claimChallenge, loadChallenges, type Standing } from "../game/meta";
 import { Icon } from "./Icon";
 import { Lock } from "./SignedInOnly";
-import { line as t } from "../game/copy";
+import { line as t, lineF as tf } from "../game/copy";
 
 /**
  * Today's challenges, on the home screen.
@@ -35,9 +35,9 @@ function timeLeft(period: Period): string {
   const ends = new Date(`${periodEndsOn(period)}T00:00:00+03:00`).getTime();
   const hours = Math.max(0, Math.round((ends - Date.now()) / 3_600_000));
   if (hours < 1) return t("sa421571", "עוד פחות משעה");
-  if (hours < 24) return `עוד ${hours} שעות`;
+  if (hours < 24) return tf("sde4b772", t("sde4b772", "עוד {0} שעות"), hours);
   const days = Math.round(hours / 24);
-  return days === 1 ? t("s58b31e8", "עוד יום") : `עוד ${days} ימים`;
+  return days === 1 ? t("s58b31e8", "עוד יום") : tf("sa1356f2", t("sa1356f2", "עוד {0} ימים"), days);
 }
 
 export function Challenges({

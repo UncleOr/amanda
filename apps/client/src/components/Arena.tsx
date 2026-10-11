@@ -7,7 +7,7 @@ import { cardColor, CATALOG } from "../data/catalog";
 import { seriesColor } from "../data/cardMeta";
 import { sfx } from "../game/sfx";
 import { combatLook, drawAura, drawProjectile, type CombatLook } from "./arenaFx";
-import { line as t } from "../game/copy";
+import { line as t, lineF as tf } from "../game/copy";
 
 const CELL = 72;
 /** Header band above the lanes, so the identity banners never cover a unit. */
@@ -980,7 +980,7 @@ export function Arena({
       window.setTimeout(() => {
         if (disposed) return;
         if (!hostRef.current?.querySelector("canvas")) {
-          setWhy(`נתקע אחרי ${STARTUP_GRACE_MS / 1000} שניות בלי ציור`);
+          setWhy(tf("sb672b2e", t("sb672b2e", "נתקע אחרי {0} שניות בלי ציור"), STARTUP_GRACE_MS / 1000));
           setFailed(true);
         }
       }, STARTUP_GRACE_MS),

@@ -20,7 +20,7 @@ import { Icon } from "./Icon";
 import { useEffect, useState } from "react";
 import { LEVELS, levelCost } from "@amanda/shared";
 import { levelUpCard, loadStats, type Account, type Stats } from "../game/account";
-import { line as t } from "../game/copy";
+import { line as t, lineF as tf } from "../game/copy";
 
 interface Props {
   account: Account | null;
@@ -143,7 +143,7 @@ export function Album({ account, onClose, onCardInfo, onChanged }: Props) {
                     icon: "ready",
                     n: `${stats.played ? Math.round((stats.wins / stats.played) * 100) : 0}%`,
                     k: t("sf9d8dd4", "ניצחונות"),
-                    sub: stats.played ? `${stats.wins} מתוך ${stats.played}` : null,
+                    sub: stats.played ? tf("s0ab9316", t("s0ab9316", "{0} מתוך {1}"), stats.wins, stats.played) : null,
                     tone: "good",
                   },
                   { icon: "lose", n: stats.losses, k: t("s80eabb4", "הפסדים"), tone: "bad" },
@@ -212,7 +212,7 @@ export function Album({ account, onClose, onCardInfo, onChanged }: Props) {
                               disabled={
                                 busy === card.id || mine.copies < levelCost(card.rarity, mine.level)
                               }
-                              title={`שדרוג לרמה ${mine.level + 1} — עולה ${levelCost(card.rarity, mine.level)} עותקים`}
+                              title={tf("sdcf87da", t("sdcf87da", "שדרוג לרמה {0} — עולה {1} עותקים"), mine.level + 1, levelCost(card.rarity, mine.level))}
                               onClick={(e) => {
                                 e.stopPropagation();
                                 void buyLevel(card.id);

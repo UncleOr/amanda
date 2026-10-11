@@ -1,7 +1,7 @@
 import { nachoBar } from "@amanda/shared";
 import { Icon } from "./Icon";
 import type { Award } from "../game/meta";
-import { line as t } from "../game/copy";
+import { line as t, lineF as tf } from "../game/copy";
 
 /**
  * What the match just paid, on the result screen.
@@ -73,7 +73,7 @@ export function Payout({
       {done > 0 && (
         <span className="payout__bit payout__bit--quest">
           <Icon name="challenge" size={17} />{" "}
-          {done === 1 ? t("s1b4740d", "אתגר הושלם") : `${done} אתגרים הושלמו`}
+          {done === 1 ? t("s1b4740d", "אתגר הושלם") : tf("s440773f", t("s440773f", "{0} אתגרים הושלמו"), done)}
         </span>
       )}
       {/* How close the next one is, so the screen that says "play again"

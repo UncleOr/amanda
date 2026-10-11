@@ -43,6 +43,7 @@
  */
 import { readFileSync, writeFileSync, existsSync } from "node:fs";
 import { join, relative } from "node:path";
+import { slotify } from "./copy-slots.mjs";
 import { fileURLToPath } from "node:url";
 
 const ROOT = fileURLToPath(new URL("..", import.meta.url));
@@ -105,7 +106,38 @@ const skipped = [];
  * this codebase actually does, and anything they do not recognise is skipped
  * rather than rewritten on a guess.
  */
-function rewrite(line, text, id) {
+function rewrite(line, text, id, raw) {
+  /*
+   * A template literal, carrying values.
+   *
+   * `where.raw` is what is still written in the file; `text` is the slotted
+   * form the document shows. The backtick literal goes whole, replaced by a
+   * call that takes the expressions as arguments:
+   *
+   *   `המלך ${f.name} נפל כבר בשנייה ${secs(f.value ?? 0)}`
+   *   tf("s6cccecb", "המלך {0} נפל כבר בשנייה {1}", f.name, secs(f.value ?? 0))
+   *
+   * This runs before the plain-string branch on purpose — some of these
+   * templates have a Hebrew string INSIDE an expression, `${e.actor ??
+   * "משהו"}`, which is its own row in the document. Converting the template
+   * first moves that literal into an argument, where the plain branch can
+   * still find it on a later pass.
+   */
+  if (raw) {
+    // As with quoted strings, the document trimmed the ends; the padding
+    // stays outside the call so the text and its id keep matching.
+    const padded = new RegExp("`(\\s*)" + escapeRe(raw) + "(\\s*)`");
+    const m = line.match(padded);
+    if (!m) return null;
+    const slots = slotify(raw);
+    if (!slots || slots.text !== text) return null;
+    const args = slots.exprs.length ? ", " + slots.exprs.join(", ") : "";
+    const call = `tf(${JSON.stringify(id)}, ${JSON.stringify(text)}${args})`;
+    const pre = m[1] ? `${JSON.stringify(m[1])} + ` : "";
+    const post = m[2] ? ` + ${JSON.stringify(m[2])}` : "";
+    return { line: line.replace(padded, `${pre}${call}${post}`), kind: "values" };
+  }
+
   const call = `t(${JSON.stringify(id)}, ${JSON.stringify(text)})`;
 
   // A JSX attribute: title="..." -> title={t(...)}
@@ -119,6 +151,24 @@ function rewrite(line, text, id) {
     if (at === -1) continue;
     if (isObjectKey(line, at, quoted.length)) return null;
     return { line: line.replace(quoted, call), kind: "string" };
+  }
+
+  /*
+   * The same string, but with a space inside the quotes.
+   *
+   * The document trims what it shows, so `" · הגעת למקסימום"` is listed as
+   * `· הגעת למקסימום` and the exact literal above is never found. The space
+   * cannot simply be folded into the call, because the id is derived from
+   * the text and the two would stop matching on the next regeneration — so
+   * it stays outside it, as its own string.
+   */
+  for (const q of ['"', "'"]) {
+    const padded = new RegExp(`${q}(\\s*)${escapeRe(text)}(\\s*)${q}`);
+    const m = line.match(padded);
+    if (!m || (!m[1] && !m[2])) continue;
+    const pre = m[1] ? `${JSON.stringify(m[1])} + ` : "";
+    const post = m[2] ? ` + ${JSON.stringify(m[2])}` : "";
+    return { line: line.replace(padded, `${pre}${call}${post}`), kind: "padded" };
   }
 
   // A backtick with no interpolation behaves like a quoted string.
@@ -164,17 +214,32 @@ for (const [file, items] of byFile) {
   }
   const lines = readFileSync(abs, "utf8").split(/\r?\n/);
   let touched = 0;
+  /** Whether anything in this file ended up needing the slot-filling helper. */
+  let needsF = false;
 
   // Bottom-up: a rewrite only ever changes its own line, but working
   // backwards keeps that true even if one day it does not.
-  for (const e of [...items].sort((a, b) => b.where.line - a.where.line)) {
+  /*
+   * Templates before plain strings, then bottom-up. A template can contain a
+   * Hebrew literal inside one of its expressions, and converting the
+   * template first leaves that literal intact as an argument; doing it the
+   * other way round would put a `t(...)` call inside the template and the
+   * raw form would no longer be findable.
+   */
+  const ordered = [...items].sort(
+    (a, b) => (b.where.raw ? 1 : 0) - (a.where.raw ? 1 : 0) || b.where.line - a.where.line,
+  );
+  for (const e of ordered) {
     const i = e.where.line - 1;
     const line = lines[i];
-    if (line === undefined || !line.includes(e.text)) {
+    // For a template the file still holds the raw form; `text` is the
+    // slotted version that only exists in the document until this runs.
+    const needle = e.where.raw ?? e.text;
+    if (line === undefined || !line.includes(needle)) {
       skipped.push(`${e.id}: "${short(e.text)}" is no longer on line ${e.where.line} of ${file}`);
       continue;
     }
-    if (line.split(e.text).length > 2) {
+    if (line.split(needle).length > 2) {
       skipped.push(`${e.id}: "${short(e.text)}" appears twice on line ${e.where.line} of ${file}`);
       continue;
     }
@@ -197,18 +262,19 @@ for (const [file, items] of byFile) {
       continue;
     }
 
-    const out = rewrite(line, e.text, e.id);
+    const out = rewrite(line, e.text, e.id, e.where.raw);
     if (!out) {
       skipped.push(`${e.id}: cannot tell how "${short(e.text)}" is written in ${file}:${e.where.line}`);
       continue;
     }
     lines[i] = out.line;
     done.push({ id: e.id, file, kind: out.kind });
+    if (out.kind === "values") needsF = true;
     touched++;
   }
 
   if (touched && APPLY) {
-    writeFileSync(abs, ensureImport(lines, file).join("\n"), "utf8");
+    writeFileSync(abs, ensureImport(lines, file, needsF).join("\n"), "utf8");
   }
 }
 
@@ -220,12 +286,20 @@ for (const [file, items] of byFile) {
  * components/Shop.tsx, which is one level too far up and would not have
  * compiled.
  */
-function ensureImport(lines, file) {
-  if (lines.some((l) => /\bline as t\b/.test(l))) return lines;
+function ensureImport(lines, file, needsF) {
+  const names = needsF ? "line as t, lineF as tf" : "line as t";
+  const at = lines.findIndex((l) => /\bline as t\b/.test(l));
   const dir = file.split("/").slice(0, -1).join("/");
   let rel = relative(dir, "apps/client/src/game/copy").split("\\").join("/");
   if (!rel.startsWith(".")) rel = `./${rel}`;
-  const stmt = `import { line as t } from "${rel}";`;
+  const stmt = `import { ${names} } from "${rel}";`;
+
+  // Only ever widen it: a file converted on an earlier run may already
+  // import `t`, and now needs `tf` beside it.
+  if (at > -1) {
+    if (needsF && !/\blineF as tf\b/.test(lines[at])) lines[at] = stmt;
+    return lines;
+  }
   let last = -1;
   for (let i = 0; i < lines.length; i++) if (/^import /.test(lines[i])) last = i;
   lines.splice(last + 1, 0, stmt);

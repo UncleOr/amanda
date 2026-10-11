@@ -39,7 +39,7 @@ import { CATCHPHRASES, EMOJI, EMOJI_PACKS } from "@amanda/shared";
 import { sfx } from "../game/sfx";
 import type { Chest } from "../game/account";
 import * as V from "../data/voice";
-import { line as t } from "../game/copy";
+import { line as t, lineF as tf } from "../game/copy";
 
 /** How each kind of chest introduces itself, and which painting it is. */
 const CHEST_LOOK: Record<string, { he: string; tone: string; art: string }> = {
@@ -176,7 +176,7 @@ export function ChestReveal({ chest, onClose }: Props) {
             <button
               className={`chest__lid chest__lid--hit-${taps % 2 === 0 ? "a" : "b"}`}
               onClick={hit}
-              aria-label={`פתח ${look.he}`}
+              aria-label={tf("s3a10489", t("s3a10489", "פתח {0}"), look.he)}
               style={{
                 backgroundImage: `url("${BASE}scenes/${look.art}")`,
                 ["--built" as string]: `${taps / TAPS_TO_OPEN}`,

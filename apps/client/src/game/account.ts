@@ -13,7 +13,7 @@
  * never be the reason a child cannot play.
  */
 import { createClient, type SupabaseClient } from "@supabase/supabase-js";
-import { line as t } from "./copy";
+import { line as t, lineF as tf } from "./copy";
 
 /**
  * Publishable, and meant to be: row level security is what protects the data,
@@ -662,7 +662,7 @@ export async function saveProfile(patch: {
   const sb = db();
   if (!sb) return t("see8db43", "אין חיבור לשרת");
   if (patch.birthDate && ageFrom(patch.birthDate) < MIN_AGE)
-    return `צריך להיות בן ${MIN_AGE} לפחות`;
+    return tf("sde6b2f0", t("sde6b2f0", "צריך להיות בן {0} לפחות"), MIN_AGE);
   try {
     const { data } = await sb.auth.getSession();
     const id = data.session?.user.id;

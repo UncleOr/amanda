@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import { Icon } from "./Icon";
 import { loadInbox, markInboxRead, type Notice } from "../game/account";
 import { Overlay } from "./Overlay";
-import { line as t } from "../game/copy";
+import { line as t, lineF as tf } from "../game/copy";
 
 /**
  * What the game has to tell you.
@@ -35,9 +35,9 @@ const KIND_ICON: Record<Notice["kind"], string> = {
 function when(iso: string): string {
   const mins = Math.floor((Date.now() - Date.parse(iso)) / 60000);
   if (mins < 1) return t("s9b9aa0b", "עכשיו");
-  if (mins < 60) return `לפני ${mins} דק׳`;
+  if (mins < 60) return tf("s16309f9", t("s16309f9", "לפני {0} דק׳"), mins);
   const hours = Math.floor(mins / 60);
-  if (hours < 24) return `לפני ${hours} שע׳`;
+  if (hours < 24) return tf("sf183b5f", t("sf183b5f", "לפני {0} שע׳"), hours);
   return new Date(iso).toLocaleDateString("he-IL");
 }
 

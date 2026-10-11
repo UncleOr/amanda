@@ -3632,9 +3632,9 @@
   }
  },
  {
-  "id": "s535a706",
+  "id": "safa431d",
   "section": "מסכי המשחק — פתיחה, בנייה, קרב, תוצאה",
-  "text": "לרוקן את ${name}",
+  "text": "לרוקן את {0}",
   "where": {
    "kind": "source",
    "file": "apps/client/src/App.tsx",
@@ -4312,9 +4312,9 @@
   }
  },
  {
-  "id": "s00a5c06",
+  "id": "sf4b8060",
   "section": "דוח הקרב",
-  "text": "${f.name} עשה ${f.value}% מהנזק של הצד הזה",
+  "text": "{0} עשה {1}% מהנזק של הצד הזה",
   "where": {
    "kind": "source",
    "file": "apps/client/src/components/BattleLog.tsx",
@@ -4322,9 +4322,9 @@
   }
  },
  {
-  "id": "sa4e2435",
+  "id": "sb03fb80",
   "section": "דוח הקרב",
-  "text": "המלך ${f.name} נשא את הקרב — ${f.value}% מהנזק",
+  "text": "המלך {0} נשא את הקרב — {1}% מהנזק",
   "where": {
    "kind": "source",
    "file": "apps/client/src/components/BattleLog.tsx",
@@ -4332,9 +4332,9 @@
   }
  },
  {
-  "id": "s084eab8",
+  "id": "sf2f72a8",
   "section": "דוח הקרב",
-  "text": "${f.value} קלפים לא נגעו בקרב בכלל — לא תקפו ולא ספגו",
+  "text": "{0} קלפים לא נגעו בקרב בכלל — לא תקפו ולא ספגו",
   "where": {
    "kind": "source",
    "file": "apps/client/src/components/BattleLog.tsx",
@@ -4342,9 +4342,9 @@
   }
  },
  {
-  "id": "sd0dddd2",
+  "id": "s92c427c",
   "section": "דוח הקרב",
-  "text": "${f.value} קלפים בעורף שרדו בלי לתקוף אף פעם — הלוח עמוק מדי",
+  "text": "{0} קלפים בעורף שרדו בלי לתקוף אף פעם — הלוח עמוק מדי",
   "where": {
    "kind": "source",
    "file": "apps/client/src/components/BattleLog.tsx",
@@ -4352,9 +4352,9 @@
   }
  },
  {
-  "id": "s0812a8b",
+  "id": "sb6efc72",
   "section": "דוח הקרב",
-  "text": "המלך ${f.name} נפל כבר בשנייה ${secs(f.value ?? 0)}",
+  "text": "המלך {0} נפל כבר בשנייה {1}",
   "where": {
    "kind": "source",
    "file": "apps/client/src/components/BattleLog.tsx",
@@ -4362,9 +4362,9 @@
   }
  },
  {
-  "id": "s221d29c",
+  "id": "s296dff0",
   "section": "דוח הקרב",
-  "text": "כל הקלפים במסלול ${(f.lane ?? 0) + 1} נפלו — שם נפרצה החזית",
+  "text": "כל הקלפים במסלול {0} נפלו — שם נפרצה החזית",
   "where": {
    "kind": "source",
    "file": "apps/client/src/components/BattleLog.tsx",
@@ -4372,9 +4372,9 @@
   }
  },
  {
-  "id": "s825381e",
+  "id": "s5ac99ca",
   "section": "דוח הקרב",
-  "text": "בוזבז נזק על ${f.name}: ספג ${f.value}% מהחיים שלו",
+  "text": "בוזבז נזק על {0}: ספג {1}% מהחיים שלו",
   "where": {
    "kind": "source",
    "file": "apps/client/src/components/BattleLog.tsx",
@@ -4382,9 +4382,9 @@
   }
  },
  {
-  "id": "s525cdcd",
+  "id": "s7268432",
   "section": "דוח הקרב",
-  "text": "הצד הזה נמחק לגמרי — ${f.value} קלפים",
+  "text": "הצד הזה נמחק לגמרי — {0} קלפים",
   "where": {
    "kind": "source",
    "file": "apps/client/src/components/BattleLog.tsx",
@@ -4402,9 +4402,9 @@
   }
  },
  {
-  "id": "s259c605",
+  "id": "se153a53",
   "section": "דוח הקרב",
-  "text": "${f.name} הרג את עצמו — הנזק החוזר מהיעד היה ${f.value}% מהחיים שלו",
+  "text": "{0} הרג את עצמו — הנזק החוזר מהיעד היה {1}% מהחיים שלו",
   "where": {
    "kind": "source",
    "file": "apps/client/src/components/BattleLog.tsx",
@@ -4412,9 +4412,9 @@
   }
  },
  {
-  "id": "sd3ea759",
+  "id": "sf4060a1",
   "section": "דוח הקרב",
-  "text": "ניצחון סוחף — ${f.value} קלפים הפרש",
+  "text": "ניצחון סוחף — {0} קלפים הפרש",
   "where": {
    "kind": "source",
    "file": "apps/client/src/components/BattleLog.tsx",
@@ -4422,9 +4422,9 @@
   }
  },
  {
-  "id": "s1d42fbc",
+  "id": "s03917ba",
   "section": "דוח הקרב",
-  "text": "דם ראשון — ${e.actor ?? \"משהו\"} הפיל את ${e.target}",
+  "text": "דם ראשון — {0} הפיל את {1}",
   "where": {
    "kind": "source",
    "file": "apps/client/src/components/BattleLog.tsx",
@@ -4432,9 +4432,19 @@
   }
  },
  {
-  "id": "sb50ac5f",
+  "id": "s3c01a8e",
   "section": "דוח הקרב",
-  "text": "${e.actor ?? \"משהו\"} הפיל את ${e.target}",
+  "text": "משהו",
+  "where": {
+   "kind": "source",
+   "file": "apps/client/src/components/BattleLog.tsx",
+   "line": 45
+  }
+ },
+ {
+  "id": "s4813b7e",
+  "section": "דוח הקרב",
+  "text": "{0} הפיל את {1}",
   "where": {
    "kind": "source",
    "file": "apps/client/src/components/BattleLog.tsx",
@@ -4442,9 +4452,19 @@
   }
  },
  {
-  "id": "s935b452",
+  "id": "se33f63d",
   "section": "דוח הקרב",
-  "text": "המלך ${e.target} נפל",
+  "text": "משהו",
+  "where": {
+   "kind": "source",
+   "file": "apps/client/src/components/BattleLog.tsx",
+   "line": 46
+  }
+ },
+ {
+  "id": "s09d8eb1",
+  "section": "דוח הקרב",
+  "text": "המלך {0} נפל",
   "where": {
    "kind": "source",
    "file": "apps/client/src/components/BattleLog.tsx",
@@ -4452,9 +4472,9 @@
   }
  },
  {
-  "id": "se2f9eac",
+  "id": "sf5f7bec",
   "section": "דוח הקרב",
-  "text": "${e.target} ספג ${e.damage?.toLocaleString(\"he-IL\")} נזק חוזר מ${e.actor} — הוא פגע בקוצים",
+  "text": "{0} ספג {1} נזק חוזר מ{2} — הוא פגע בקוצים",
   "where": {
    "kind": "source",
    "file": "apps/client/src/components/BattleLog.tsx",
@@ -4462,9 +4482,9 @@
   }
  },
  {
-  "id": "sae1821a",
+  "id": "s32b1dc6",
   "section": "דוח הקרב",
-  "text": "${e.actor} התפצל",
+  "text": "{0} התפצל",
   "where": {
    "kind": "source",
    "file": "apps/client/src/components/BattleLog.tsx",
@@ -4472,9 +4492,9 @@
   }
  },
  {
-  "id": "sebcd8ed",
+  "id": "s29eee42",
   "section": "דוח הקרב",
-  "text": "נחשף קלף קומת קרקע: ${e.target}",
+  "text": "נחשף קלף קומת קרקע: {0}",
   "where": {
    "kind": "source",
    "file": "apps/client/src/components/BattleLog.tsx",
@@ -4482,9 +4502,19 @@
   }
  },
  {
-  "id": "sde861ff",
+  "id": "s59a7b2d",
   "section": "דוח הקרב",
-  "text": "${e.actor ?? \"משהו\"} הקפיא את ${e.target}",
+  "text": "{0} הקפיא את {1}",
+  "where": {
+   "kind": "source",
+   "file": "apps/client/src/components/BattleLog.tsx",
+   "line": 52
+  }
+ },
+ {
+  "id": "s1abba82",
+  "section": "דוח הקרב",
+  "text": "משהו",
   "where": {
    "kind": "source",
    "file": "apps/client/src/components/BattleLog.tsx",
@@ -4782,9 +4812,9 @@
   }
  },
  {
-  "id": "s74bdc67",
+  "id": "sd1502a2",
   "section": "דוח הקרב",
-  "text": "${u.name} — מילוי אוטומטי של משבצת ריקה",
+  "text": "{0} — מילוי אוטומטי של משבצת ריקה",
   "where": {
    "kind": "source",
    "file": "apps/client/src/components/BattleLog.tsx",
@@ -4792,9 +4822,9 @@
   }
  },
  {
-  "id": "sa8546f4",
+  "id": "sf6c8aac",
   "section": "דוח הקרב",
-  "text": "${u.name} — לחצו לפרטים",
+  "text": "{0} — לחצו לפרטים",
   "where": {
    "kind": "source",
    "file": "apps/client/src/components/BattleLog.tsx",
@@ -4802,9 +4832,9 @@
   }
  },
  {
-  "id": "se237a20",
+  "id": "sf72ed62",
   "section": "דוח הקרב",
-  "text": "${king.name} — לחצו לפרטים",
+  "text": "{0} — לחצו לפרטים",
   "where": {
    "kind": "source",
    "file": "apps/client/src/components/BattleLog.tsx",
@@ -4872,9 +4902,9 @@
   }
  },
  {
-  "id": "sa2d62f1",
+  "id": "sac3c899",
   "section": "דוח הקרב",
-  "text": "חתך את הדרך — הפיל ${unit.kills} קלפים.",
+  "text": "חתך את הדרך — הפיל {0} קלפים.",
   "where": {
    "kind": "source",
    "file": "apps/client/src/components/BattleLog.tsx",
@@ -4882,9 +4912,9 @@
   }
  },
  {
-  "id": "s9965104",
+  "id": "s22f4051",
   "section": "דוח הקרב",
-  "text": "נשא את הצד שלו: ${share}% מכל הנזק.",
+  "text": "נשא את הצד שלו: {0}% מכל הנזק.",
   "where": {
    "kind": "source",
    "file": "apps/client/src/components/BattleLog.tsx",
@@ -4892,9 +4922,9 @@
   }
  },
  {
-  "id": "sf220ec8",
+  "id": "s45645fa",
   "section": "דוח הקרב",
-  "text": "תרם ${share}% מהנזק של הצד שלו.",
+  "text": "תרם {0}% מהנזק של הצד שלו.",
   "where": {
    "kind": "source",
    "file": "apps/client/src/components/BattleLog.tsx",
@@ -5022,9 +5052,9 @@
   }
  },
  {
-  "id": "s01174d9",
+  "id": "s1eeba78",
   "section": "דוח הקרב",
-  "text": "התקדם ${unit.colsMoved.toFixed(1)} משבצות",
+  "text": "התקדם {0} משבצות",
   "where": {
    "kind": "source",
    "file": "apps/client/src/components/BattleLog.tsx",
@@ -5042,9 +5072,9 @@
   }
  },
  {
-  "id": "s28c59bb",
+  "id": "sad22ee6",
   "section": "חלון פרטי מפלצת",
-  "text": "· הרמה הבאה עולה ${levelCost(card.rarity, level)}",
+  "text": "· הרמה הבאה עולה {0}",
   "where": {
    "kind": "source",
    "file": "apps/client/src/components/CardDetailModal.tsx",
@@ -5092,9 +5122,9 @@
   }
  },
  {
-  "id": "s07331c1",
+  "id": "s26ebf92",
   "section": "חלון פרטי מפלצת",
-  "text": "${card.stats.attackSpeed}ש׳",
+  "text": "{0}ש׳",
   "where": {
    "kind": "source",
    "file": "apps/client/src/components/CardDetailModal.tsx",
@@ -5112,9 +5142,9 @@
   }
  },
  {
-  "id": "s81cbd2d",
+  "id": "s9546375",
   "section": "חלון פרטי מפלצת",
-  "text": "${card.stats.moveSpeed}/ש׳",
+  "text": "{0}/ש׳",
   "where": {
    "kind": "source",
    "file": "apps/client/src/components/CardDetailModal.tsx",
@@ -5422,9 +5452,9 @@
   }
  },
  {
-  "id": "saaa7b6a",
+  "id": "sb672b2e",
   "section": "זירת הקרב",
-  "text": "נתקע אחרי ${STARTUP_GRACE_MS / 1000} שניות בלי ציור",
+  "text": "נתקע אחרי {0} שניות בלי ציור",
   "where": {
    "kind": "source",
    "file": "apps/client/src/components/Arena.tsx",
@@ -6412,9 +6442,9 @@
   }
  },
  {
-  "id": "sf298218",
+  "id": "s0ab9316",
   "section": "components/Album.tsx",
-  "text": "${stats.wins} מתוך ${stats.played}",
+  "text": "{0} מתוך {1}",
   "where": {
    "kind": "source",
    "file": "apps/client/src/components/Album.tsx",
@@ -6482,9 +6512,9 @@
   }
  },
  {
-  "id": "s8be782b",
+  "id": "sdcf87da",
   "section": "components/Album.tsx",
-  "text": "שדרוג לרמה ${mine.level + 1} — עולה ${levelCost(card.rarity, mine.level)} עותקים",
+  "text": "שדרוג לרמה {0} — עולה {1} עותקים",
   "where": {
    "kind": "source",
    "file": "apps/client/src/components/Album.tsx",
@@ -6642,9 +6672,9 @@
   }
  },
  {
-  "id": "s35e9efd",
+  "id": "sde4b772",
   "section": "components/Challenges.tsx",
-  "text": "עוד ${hours} שעות",
+  "text": "עוד {0} שעות",
   "where": {
    "kind": "source",
    "file": "apps/client/src/components/Challenges.tsx",
@@ -6662,9 +6692,9 @@
   }
  },
  {
-  "id": "s867194d",
+  "id": "sa1356f2",
   "section": "components/Challenges.tsx",
-  "text": "עוד ${days} ימים",
+  "text": "עוד {0} ימים",
   "where": {
    "kind": "source",
    "file": "apps/client/src/components/Challenges.tsx",
@@ -6752,9 +6782,9 @@
   }
  },
  {
-  "id": "sfd61255",
+  "id": "s3a10489",
   "section": "components/ChestReveal.tsx",
-  "text": "פתח ${look.he}",
+  "text": "פתח {0}",
   "where": {
    "kind": "source",
    "file": "apps/client/src/components/ChestReveal.tsx",
@@ -7312,9 +7342,9 @@
   }
  },
  {
-  "id": "sf77b827",
+  "id": "s16309f9",
   "section": "components/Inbox.tsx",
-  "text": "לפני ${mins} דק׳",
+  "text": "לפני {0} דק׳",
   "where": {
    "kind": "source",
    "file": "apps/client/src/components/Inbox.tsx",
@@ -7322,9 +7352,9 @@
   }
  },
  {
-  "id": "sa9392dc",
+  "id": "sf183b5f",
   "section": "components/Inbox.tsx",
-  "text": "לפני ${hours} שע׳",
+  "text": "לפני {0} שע׳",
   "where": {
    "kind": "source",
    "file": "apps/client/src/components/Inbox.tsx",
@@ -7532,9 +7562,9 @@
   }
  },
  {
-  "id": "s2f01523",
+  "id": "s90346fe",
   "section": "components/NachoBar.tsx",
-  "text": "${bar.have} נאצ'וס מתוך ${bar.need} לתיבה הבאה",
+  "text": "{0} נאצ'וס מתוך {1} לתיבה הבאה",
   "where": {
    "kind": "source",
    "file": "apps/client/src/components/NachoBar.tsx",
@@ -7612,9 +7642,9 @@
   }
  },
  {
-  "id": "s809a814",
+  "id": "s440773f",
   "section": "components/Payout.tsx",
-  "text": "${done} אתגרים הושלמו",
+  "text": "{0} אתגרים הושלמו",
   "where": {
    "kind": "source",
    "file": "apps/client/src/components/Payout.tsx",
@@ -9052,9 +9082,9 @@
   }
  },
  {
-  "id": "s9ef3dda",
+  "id": "sde6b2f0",
   "section": "game/account.ts",
-  "text": "צריך להיות בן ${MIN_AGE} לפחות",
+  "text": "צריך להיות בן {0} לפחות",
   "where": {
    "kind": "source",
    "file": "apps/client/src/game/account.ts",
@@ -9502,9 +9532,9 @@
   }
  },
  {
-  "id": "sc3571df",
+  "id": "s313e3b4",
   "section": "game/verdict.ts",
-  "text": "המלך ${whose} נפל — זה מסיים את הקרב מיד.",
+  "text": "המלך {0} נפל — זה מסיים את הקרב מיד.",
   "where": {
    "kind": "source",
    "file": "apps/client/src/game/verdict.ts",
