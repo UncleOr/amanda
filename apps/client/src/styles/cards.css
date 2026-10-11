@@ -411,6 +411,51 @@ button:disabled {
 }
 
 /*
+ * ═══ A CARD ON THE BOARD HAS NO NAME PLATE ═══
+ *
+ * Or: *"after you place them you see loads of text instead of simply the
+ * picture of the monster."* The bars answered the numbers. The name was
+ * still there, and measuring it is what settled this:
+ *
+ *   the name box on a board card    27px
+ *   what the median name needs      40px
+ *   what the longest needs          68px
+ *   names that fit                  19 of 75
+ *
+ * **Three names in four were cut to "פליים…".** That is not a label, it is
+ * the shape of a label — and it was costing 17 of the card's 59 pixels, the
+ * same pixels the monster needed in order to be told apart from the monster
+ * beside it. Four dragons on a row all looked like one dragon with four
+ * captions, none of which could be read.
+ *
+ * Clipped rather than `display: none`, so the name is still in the
+ * accessibility tree and still announced. The ℹ on the card opens the full
+ * details, which is where Or put them: *"and maybe if they tap it they'd see
+ * its details."*
+ *
+ * `.slot` and not a size: the board uses `medium`, or `small` when it is
+ * compact, and the picker rail uses `small` too — where a cut name is still
+ * the only thing telling two unchosen cards apart, and there is a search box
+ * beside it. Being ON THE BOARD is the condition, so the board is what the
+ * selector names.
+ */
+.slot .card__plate {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
+}
+/* The seventeen pixels go to the bar, which is the thing that now carries
+   the numbers and had 19px of a 59px card to say them in. */
+.slot .card__bar {
+  top: 21px;
+  bottom: 4px;
+}
+
+/*
  * The plate no longer carries numbers on a board card, so it no longer needs
  * the height it took for them: the name alone, and the monster gets the
  * fifteen percent back.
