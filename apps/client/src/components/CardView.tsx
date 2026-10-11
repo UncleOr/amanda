@@ -49,6 +49,35 @@ interface Props {
  * on every single card. Stats are rendered live, so King ×3 and action-card
  * buffs always show the true battle numbers.
  */
+/**
+ * The strongest card there is, for scaling the edge bars.
+ *
+ * Measured rather than written down: adding a card with more health than
+ * anything before it should move the scale, not run off the end of it.
+ */
+const MAX_HP = Math.max(...[...CATALOG.values()].map((c) => c.stats.hp));
+const MAX_POWER = Math.max(...[...CATALOG.values()].map((c) => c.stats.power));
+
+/**
+ * How full a bar is, 0 to 1.
+ *
+ * ═══ THE SCALE IS A SQUARE ROOT, AND THAT IS A CHOICE ═══
+ *
+ * Health runs from 200 to 5,555 and the median is 600. On a straight scale
+ * nine cards in ten would be a stub two pixels tall and the Titan King would
+ * be the only one you could see — which tells a player nothing about the
+ * choice in front of them.
+ *
+ * A square root keeps the ORDER exact and compresses the distance: four
+ * times the health shows twice the bar. It is a deliberate distortion of
+ * magnitude in exchange for a difference you can see at 63 pixels, and the
+ * real numbers are one tap away on the card itself.
+ */
+function fill(value: number, max: number): number {
+  if (!(value > 0) || !(max > 0)) return 0;
+  return Math.min(1, Math.sqrt(value / max));
+}
+
 export function CardView({
   cardId,
   onClick,
@@ -130,10 +159,40 @@ export function CardView({
         </span>
       </div>
 
+      {/*
+        ═══ THE EDGES CARRY THE NUMBERS ═══
+
+        Or: *"on mobile the cards don't look good. After you place them you
+        see loads of text instead of simply the picture of the monster...
+        maybe on the two sides of the card a blue bar and a red bar showing
+        attack power and defence, the length of the coloured line being the
+        length of the power."*
+
+        Measured first: a card on a phone board is 63x82, and 45 of those 82
+        pixels were the icon row and the name plate. More than half the card
+        was furniture, and the monster — the only thing a player is actually
+        choosing between — was behind it.
+
+        So the two numbers move to the edges, where they cost four pixels of
+        width and no height at all. Blue on the left is health, red on the
+        right is power, and they do not swap in English: the meaning is the
+        side, so the side is physical and not logical.
+      */}
+      <span
+        className="card__bar card__bar--hp"
+        style={{ "--fill": fill(hp, MAX_HP) } as CSSProperties}
+        aria-hidden="true"
+      />
+      <span
+        className="card__bar card__bar--pw"
+        style={{ "--fill": fill(power, MAX_POWER) } as CSSProperties}
+        aria-hidden="true"
+      />
+
       {/* bottom plate: name + stats — identical coordinates on every card */}
       <div className="card__plate">
         <span className="card__name">{say(card.name)}</span>
-        {size !== "small" && (
+        {size === "large" && (
           <span className={`card__stats${buffed ? " card__stats--buffed" : ""}`}>
             <span className="stat stat--hp" title={t("sd3b512b", "חיים")}>
               <Icon name="hp" size={13} className="stat__icon" />

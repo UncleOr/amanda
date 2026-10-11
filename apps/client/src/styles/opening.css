@@ -1,11 +1,19 @@
 /*
  * The opening film.
  *
+ * ═══ IT IS NOT CALLED .intro ═══
+ *
+ * It was, for an hour, and the home screen has been called `.intro` since
+ * the game was built. `position: fixed; inset: 0; z-index: 200; display:
+ * grid` landed on the start screen, which stopped responding to clicks
+ * entirely and reflowed every time a tab inside it changed. Or found it
+ * before any test did.
+ *
  * z-index 200 — above everything. The highest the game itself goes is 100
  * (the board's and the report's own layers), and this sits over all of it
  * including the top bar at 60.
  */
-.intro {
+.opening {
   position: fixed;
   inset: 0;
   z-index: 200;
@@ -24,7 +32,7 @@
  * the top: the canopy, the flickering strip lights, and Amanda's three heads
  * rising above them. The bars are the game's own background and invisible.
  */
-.intro__film {
+.opening__film {
   width: 100%;
   height: 100%;
   object-fit: contain;
@@ -36,7 +44,7 @@
  * deliberately quiet: it is the way out for someone who has already decided,
  * not an offer. The whole screen does the same job.
  */
-.intro__skip {
+.opening__skip {
   position: absolute;
   inset-block-end: max(14px, env(safe-area-inset-bottom));
   inset-inline-end: max(14px, env(safe-area-inset-right));

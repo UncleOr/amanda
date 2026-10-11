@@ -64,10 +64,10 @@ export function Intro() {
   if (!mode) return null;
 
   return (
-    <div className="intro" onClick={() => setMode(null)}>
+    <div className="opening" onClick={() => setMode(null)}>
       <video
         ref={video}
-        className="intro__film"
+        className="opening__film"
         src={SRC}
         muted={mode === "auto"}
         playsInline
@@ -85,7 +85,7 @@ export function Intro() {
           if (!video.current?.currentTime) setMode(null);
         }}
       />
-      <button className="intro__skip">{t("s7bf4370", "דלג")}</button>
+      <button className="opening__skip">{t("s7bf4370", "דלג")}</button>
     </div>
   );
 }

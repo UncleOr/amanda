@@ -294,8 +294,11 @@ export const SHOTS: Shot[] = [
       "the first image striding at the back, the FIRE DRAGON from the second flying",
       "low above him trailing flame, the small YELLOW FURRY creature from the third",
       "sprinting ahead throwing lightning into the puddles, and the tiny FURIOUS",
-      "FRIED BREAD from the fourth running last with his fists up. They are seen",
-      "from behind and three-quarters, moving away to the right.",
+      "FRIED BREAD from the fourth running last with his fists up.",
+      "ALL FOUR FACE THE SAME WAY AND TRAVEL THE SAME WAY: seen from BEHIND, their",
+      "backs to the camera, moving AWAY from it toward the right of frame. Not one",
+      "of them is turned toward the camera and not one of them is walking across",
+      "the frame while the others walk along it. Four backs, one direction.",
       "EVERY ONE OF THEM IS RENDERED EXACTLY AS IT APPEARS IN ITS REFERENCE IMAGE:",
       "the same photoreal 3D, the same volume, the same materials — real stone, real",
       "scales, real fur, real fried crust. NOT ONE OF THEM IS A FLAT CARTOON, a",
@@ -307,7 +310,15 @@ export const SHOTS: Shot[] = [
       "station and the empty asphalt are most of the picture.",
     ].join(" "),
     motion: [
-      "All four move forward together toward the right of frame — the giant striding,",
+      /*
+       * Direction is taken from the frame, not dictated to it. The still
+       * decides which way they are already facing, and the only thing asked
+       * for here is that nobody turns around — which was Or's note: "the
+       * giant walks in a different direction from all the other creatures".
+       */
+      "All four keep moving together in the direction they are already facing,",
+      "in step with each other. NOT ONE OF THEM TURNS AROUND, changes direction,",
+      "or moves against the others — the giant striding,",
       "the dragon beating its wings, the furry one sprinting, the bread stomping",
       "behind. The teal light from the right brightens across them. The camera tracks",
       "slowly right with them.",
@@ -319,13 +330,34 @@ export const SHOTS: Shot[] = [
     id: "07-amanda",
     he: "אמנדה עולה מאחורי הגגון. ענקית. הם קופאים.",
     hold: 1.8,
+    /*
+     * ═══ SHE CAME OUT DRAWN ═══
+     *
+     * Or: *"Amanda in the last frame looks illustrated and does not fit the
+     * theme of the video."* She did. Both of her references are paintings —
+     * the banner and Hod's card — and a model handed two drawings and asked
+     * for a creature returns a drawing, whatever the prompt says about
+     * volume.
+     *
+     * So an approved photoreal frame goes in FIRST, the same way shot 6 was
+     * fixed: a frame from this film, in this station, under this light, to
+     * say what MEDIUM is wanted. The paintings stay, because they are the
+     * only thing that says what she looks like.
+     */
+    refShots: ["02-titan"],
     refs: [WHO.amanda, WHO.amandaCanon, STATION],
     prompt: [
       LOOK,
       PLACE,
       "AMANDA rises behind the petrol station, colossal — her shoulders above the",
-      "canopy, the whole station tiny beneath her. She is the creature in the first",
-      "two reference images.",
+      "canopy, the whole station tiny beneath her.",
+      "SHE IS BUILT IN THE SAME PHOTOREAL 3D AS THE FIRST REFERENCE IMAGE: real",
+      "volume, real surfaces, real fire, lit by the station itself, with the same",
+      "haze and the same film grain. She belongs to that photograph. She is NOT a",
+      "flat illustration, NOT a painting, NOT cel-shaded, NOT a cartoon pasted over",
+      "a photograph, NOT outlined in ink.",
+      "The LATER reference images give her DESIGN and not her medium — take the",
+      "shapes, the colours and the three heads from them, and then BUILD them.",
       "SHE HAS THREE HEADS, ALL THREE GROWING ON NECKS FROM HER OWN SHOULDERS, as in",
       "the second reference image. CENTRE: a face of glowing teal spirit-fire with",
       "big glowing eyes and a wide knowing grin, a crown of ghost flame rising off",
@@ -335,7 +367,7 @@ export const SHOTS: Shot[] = [
       "and they are not pets. Three necks, one body.",
       "Her body is tall and flowing, deep navy, draped like smoke and trailing off",
       "into mist and embers instead of legs, with long clawed arms. Golden runes float",
-      "around her. Rendered in 3D with real volume and real flame.",
+      "around her.",
       "Her teal light floods the forecourt from behind and throws enormous shadows",
       "forward across the wet asphalt toward the camera. Far below her, tiny and",
       "backlit, four silhouettes are frozen mid-charge looking up: a winged dragon, a",

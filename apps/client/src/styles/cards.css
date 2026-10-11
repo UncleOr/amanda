@@ -191,10 +191,6 @@
    (position already says which is which: HP left, Power right). */
 .card--small .stat__icon,
 .card--medium .stat__icon { display: none; }
-.card--small .stat--hp b,
-.card--medium .stat--hp b { color: #ff8d98; }
-.card--small .stat--pw b,
-.card--medium .stat--pw b { color: #ffd98a; }
 .card--small .card__stats .stat b { font-size: 9px; }
 .card--large .card__stats { gap: 4px; }
 .card--large .card__stats .stat b { font-size: 12px; }
@@ -353,4 +349,73 @@ button:disabled {
   color: #fff;
   font-size: 17px;
   padding: 12px 20px;
+}
+
+/*
+ * ═══ THE TWO EDGES ═══
+ *
+ * Or: "maybe on the two sides of the card a blue bar and a red bar showing
+ * attack power and defence, the length of the coloured line being the length
+ * of the power."
+ *
+ * LEFT and RIGHT, not inline-start and inline-end. Everything else in this
+ * game flips with the language and should; these must not. A bar that means
+ * health in Hebrew and power in English is a bar that means nothing.
+ *
+ * ═══ A TRACK, NOT JUST A LINE ═══
+ *
+ * The first version was a bare coloured line growing from the bottom edge.
+ * Two things were wrong with it, and both showed up the moment it was on a
+ * real card: it ran over the card's own series-coloured frame, so on an
+ * orange dragon the red bar WAS the frame; and a line with nothing behind it
+ * gives a length and no scale — full and nearly-full look the same.
+ *
+ * So the bar sits inside the artwork, clear of the icon row above and the
+ * name plate below, with a dark groove showing how much there was to fill.
+ */
+.card__bar {
+  position: absolute;
+  top: 17px;
+  bottom: 18px;
+  width: 4px;
+  z-index: 2;
+  pointer-events: none;
+  border-radius: 2px;
+  background: rgba(0, 0, 0, 0.55);
+  box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.14);
+}
+.card__bar::after {
+  content: "";
+  position: absolute;
+  inset-inline: 0;
+  bottom: 0;
+  height: calc(var(--fill, 0) * 100%);
+  border-radius: 2px;
+  background: var(--bar-color);
+}
+.card__bar--hp {
+  left: 3px;
+  --bar-color: linear-gradient(to top, #2f7fe2, #8fccff);
+}
+.card__bar--pw {
+  right: 3px;
+  --bar-color: linear-gradient(to top, #c22f2f, #ff9170);
+}
+
+/* The big card has room for both the bars and the numbers, and a 4px line
+   at that size looks like a rendering accident. */
+.card--large .card__bar {
+  width: 7px;
+  top: 26px;
+  bottom: 42px;
+}
+
+/*
+ * The plate no longer carries numbers on a board card, so it no longer needs
+ * the height it took for them: the name alone, and the monster gets the
+ * fifteen percent back.
+ */
+.card--small .card__plate,
+.card--medium .card__plate {
+  padding: 1px 6px 2px;
 }
