@@ -263,14 +263,14 @@
 | s2631ad1 | מה, זהו? | | What, that's it? |
 | sb4c1729 | ברצינות? | | Seriously? |
 | s3bfb17f | עכשיו דווקא? | | Now of all times? |
-| s4515ae6 | אבל רק התחלנו | | But we'd only just started |
+| s4515ae6 | אבל רק התחלנו | | But we only just started |
 | sb749f7c | הלוח שבנית נמחק. אשמור לך מקום בתפריט שלי, ילד. | | The board you built is gone. I'll keep you a place on my menu, kid. |
 | sf823ea4 | הלוח שבנית נמחק. אשמור לך מקום בתפריט שלי, ילדה. | | The board you built is gone. I'll keep you a place on my menu, kid. |
 | s41bc2a0 | כל מה שבנית הולך לפח. אני אשרוד איכשהו. | | Everything you built goes in the trash. I'll survive somehow. |
 | s841d0a1 | הלוח נמחק והקרב לא יקרה. אף אחד לא ידע שהיית כאן. | | The board is gone and the battle won't happen. Nobody will know you were here. |
 | s4f08f6b | אני מוחקת את הלוח. אל תדאג, אני זוכרת אותך. | | I'm wiping the board. Don't worry, I remember you. |
 | s10d5f41 | זה נמחק והולך. כולם חוזרים. | | Wiped and gone. They all come back. |
-| s627f20a | כן, אני בורח | | Yes, I'm running |
+| s627f20a | כן, אני בורח | | Yes, I'm out of here |
 | sd44f6f7 | כן, מספיק לי | | Yes, I've had enough |
 | s0211124 | כן, שחרר אותי | | Yes, let me go |
 | s3630815 | כן, ביי | | Yes, bye |
@@ -287,17 +287,17 @@
 | sd1f0cd1 | טוב. באמת טוב. | | Good. Genuinely good. |
 | s6b08edc | הפסדת. טעים. | | You lost. Delicious. |
 | s609bca4 | הפסדת. היה נחמד. | | You lost. That was nice. |
-| s621af20 | זהו. תודה על הארוחה. | | That's that. Thank you for the meal. |
+| s621af20 | זהו. תודה על הארוחה. | | That's that. Thanks for dinner. |
 | sbc1c615 | הפסדת, וידעת שזה יקרה. | | You lost, and you knew you would. |
 | sbdbc574 | אוי. כמעט. | | Oh. So close. |
 | s2fd8580 | היריב ברח. ניצחת בטכני. | | Your opponent ran. You win on a technicality. |
-| s3a0ee19 | הוא ברח. אני לא מאשימה אותו. | | He ran. I don't blame him. |
+| s3a0ee19 | הוא ברח. אני לא מאשימה אותו. | | They ran. I don't blame them. |
 | sdb10f2b | נשארת לבד. זה נחשב ניצחון. | | You're on your own. That counts as a win. |
-| s0176373 | היריב נעלם. אכלתי אותו בדרך. | | Your opponent vanished. I ate him on the way. |
+| s0176373 | היריב נעלם. אכלתי אותו בדרך. | | Your opponent vanished. I ate them on the way. |
 | s1661c13 | התכונן לקרב, ילד | | Get ready to fight, kid |
 | s0f9d55a | התכונני לקרב, ילדה | | Get ready to fight, kid |
-| s34b7fb9 | תתארגן, ילד | | Sort yourself out, kid |
-| s5361c59 | תתארגני, ילדה | | Sort yourself out, kid |
+| s34b7fb9 | תתארגן, ילד | | Get it together, kid |
+| s5361c59 | תתארגני, ילדה | | Get it together, kid |
 | s353737f | מתחילים. תנשום. | | Here we go. Breathe. |
 | s5656766 | קדימה, ילד | | Come on, kid |
 | s9175f67 | קדימה, ילדה | | Come on, kid |
@@ -313,12 +313,12 @@
 | s69104e2 | מחפשת לך מישהו מתוק | | Finding you someone sweet |
 | s43db7a1 | מחפשת לך יריב. סבלנות. | | Finding you an opponent. Patience. |
 | s95c7718 | מישהו יבוא. תמיד בא מישהו. | | Someone will come. Someone always comes. |
-| s4fa0459 | רגע, אני מסדרת לך משחק | | One moment, I'm arranging you a game |
+| s4fa0459 | רגע, אני מסדרת לך משחק | | Hold on, I'm setting you up a game |
 | s50cc39e | קודם כול מלך. הוא לא זז, הוא חזק פי שלושה, ואם הוא נופל — נגמר. גרור מפלצת לאמצע. קלף פעולה ביד? לפח איתו. | | The King first. He doesn't move, he's three times as strong, and if he falls it's over. Drag a monster to the middle. Holding an action card? Throw it away. |
 | s54b2c21 | שתי המשבצות האלה שומרות עליו. כל עוד מישהו עומד שם, אי אפשר לגעת בו. | | These two squares guard him. While somebody is standing there, nobody can touch him. |
 | s2e30355 | זה מה שיש לך ביד. לא מוצא חן בעיניך? לפח. אבל רק הקלף העליון חוזר, אז תחשוב. | | That's what's in your hand. Don't like it? Throw it away. But only the top card comes back, so think. |
 | sdc4abc1 | כל מה שאפשר למלא — למלא. מה שיישאר ריק אני אמלא, וזה לא יהיה נעים. | | Fill everything you can. Whatever you leave empty, I'll fill — and you won't enjoy it. |
-| sb496ba8 | וכשזה נראה מוכן — ללחוץ. אני כבר מוכנה. | | And when it looks ready — press. I'm ready already. |
+| sb496ba8 | וכשזה נראה מוכן — ללחוץ. אני כבר מוכנה. | | And when it looks ready — press it. I'm ready already. |
 | s0a11063 | רגע. לפני הכול — אני מדברת אל ילד או אל ילדה? | | Wait. Before anything — am I talking to a boy or a girl? |
 | scae72fe | אז הגעת. יופי. לפני שנתחיל אני רוצה לדעת את מי אני אוכלת. | | So you came. Good. Before we start I want to know who I'm eating. |
 | s0d5203b | בחר לך פרצוף. זה מה שאני אזכור. | | Pick a face. That's what I'll remember. |
