@@ -13,7 +13,7 @@ import { listFriends, type Chest, type ShopItem } from "../game/account";
 import type { Overlays } from "../game/useOverlay";
 import type { MatchApi } from "../game/useMatch";
 import { line as t, lineF as tf } from "../game/copy";
-import { say } from "../game/lang";
+import { lang, say } from "../game/lang";
 
 const BASE = import.meta.env.BASE_URL;
 
@@ -237,10 +237,19 @@ export function HomeScreen({
           letterforms are baked into an image so the name always looks like
           the name. Rendered FROM the real font rather than generated, so the
           Hebrew is correct by construction instead of by luck.
+
+          There are two of them, because a logotype is letters and letters
+          have a language. An English player was being shown אמנדה — a mark
+          they cannot read, over an alt attribute saying Amanda, which is the
+          screen reader getting a better experience than the player.
         */}
         <header className="home__brand">
           <h1 className="intro__name">
-            <img src={`${BASE}brand/wordmark.png`} alt={t("sfd7535c", "אמנדה")} width={720} height={197} />
+            {lang() === "en" ? (
+              <img src={`${BASE}brand/wordmark-en.png`} alt="Amanda" width={720} height={174} />
+            ) : (
+              <img src={`${BASE}brand/wordmark.png`} alt={t("sfd7535c", "אמנדה")} width={720} height={197} />
+            )}
           </h1>
           <p className="intro__sub">{t("s86247d1", "משחק קלפים מפלצתי")}</p>
         </header>

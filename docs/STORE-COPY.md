@@ -99,7 +99,7 @@ The game is played in Hebrew.
 | App icon | `store/play-icon-512.png` | 512×512, בלי שקיפות |
 | Feature graphic | `store/feature-graphic-1024x500.png` | 1024×500 |
 | Phone screenshots | `store/screenshots/01-04` | 1600×900 |
-| Promo video | יוטיוב — ראה `store/trailer.mp4` | |
+| Promo video | יוטיוב — `store/trailer-he.mp4` / `store/trailer-en.mp4` | אחד לכל שפה |
 
 ### צילומי המסך — החלף אותם
 

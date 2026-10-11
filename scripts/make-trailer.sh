@@ -2,15 +2,33 @@
 #
 # The trailer, assembled.
 #
-#   bash scripts/make-trailer.sh
-#   → store/trailer.mp4
+#   bash scripts/make-trailer.sh he     → store/trailer-he.mp4
+#   bash scripts/make-trailer.sh en     → store/trailer-en.mp4
+#   bash scripts/make-trailer.sh        → both
 #
 # Four segments, built separately and then joined:
 #
 #   OPENING   8 generated shots in a dark petrol station      11.2s
 #   CARDS     four cards drop onto black                       1.4s
 #   GAMEPLAY  Or's screen recording, cut down                 14.5s
-#   CLOSING   album, a win, the wordmark, the address          5.2s
+#   CLOSING   a win, then the end card                         5.2s
+#
+# ═══ TWO CUTS, AND ONLY THE END OF THEM DIFFERS ═══
+#
+# Or: *"I want us to make a Hebrew clip and an English clip."* Play takes one
+# promo video per listing language, so these are two uploads.
+#
+# Eleven of the sixteen seconds are identical between them — the opening is
+# four monsters in a petrol station and has no words in it at all. What
+# changes is the footage that shows the interface and the card that ends it:
+#
+#   he   store/gameplay.mp4      store/screenshots/      אמנדה, in the wordmark
+#   en   store/gameplay-en.mp4   store/screenshots-en/   AMANDA
+#
+# The English captures do not exist yet — Or is re-recording them now that
+# the game speaks English. Until they do, this builds the English cut with
+# the Hebrew footage and says so loudly, because a cut that silently ships
+# Hebrew screenshots to an English listing is worse than one that refuses.
 #
 # ═══ WHY SEGMENTS AND NOT ONE FILTER GRAPH ═══
 #
@@ -33,7 +51,12 @@
 set -euo pipefail
 cd "$(dirname "$0")/.."
 
-OUT=store/trailer.mp4
+LANGS=("$@")
+[ ${#LANGS[@]} -gt 0 ] || LANGS=(he en)
+for l in "${LANGS[@]}"; do
+  [ "$l" = "he" ] || [ "$l" = "en" ] || { echo "usage: $0 [he|en ...]" >&2; exit 1; }
+done
+
 SEG=assets/raw/trailer/segments
 CLIPS=assets/raw/trailer/clips
 MUSIC="apps/client/public/music/track1.mp3"
@@ -74,7 +97,6 @@ MUSIC="apps/client/public/music/track1.mp3"
 # second time was work that could only do harm, and did.
 MUSIC_START=91
 MUSIC_WINDOW=32
-GAMEPLAY=store/gameplay.mp4
 W=1920
 H=1080
 FPS=25
@@ -98,17 +120,28 @@ CARDS=(
   apps/client/public/cards/legends_01_amanda.webp
 )
 
-FONT='C\:/Windows/Fonts/arial.ttf'
+# ═══ THE HEBREW ON THE END CARD IS LAID OUT BY ffmpeg, NOT BY ME ═══
+#
+# drawtext does not reorder text by itself, so the obvious move is to reverse
+# the Hebrew string before handing it over. It is also wrong here: this
+# ffmpeg is built --enable-libfribidi --enable-libharfbuzz, so it applies
+# bidi already, and a pre-reversed string would come out backwards. Checked
+# by rendering one frame and reading it rather than by reasoning about it.
+#
+# Segoe UI Bold rather than Arial: it is the game's own interface font
+# (tokens.css), it covers Hebrew, and the end card is the one place in the
+# trailer where the game's own typography should be showing.
+FONT='C\:/Windows/Fonts/segoeuib.ttf'
 HAS_FONT=1
-[ -f "/c/Windows/Fonts/arial.ttf" ] || [ -f "C:/Windows/Fonts/arial.ttf" ] || HAS_FONT=0
+[ -f "/c/Windows/Fonts/segoeuib.ttf" ] || HAS_FONT=0
 
-mkdir -p "$SEG" store
-
-# The gameplay cut is built by its own script; make it if it is not there.
-if [ ! -f "$GAMEPLAY" ]; then
-  echo "  gameplay cut missing — building it"
-  bash scripts/cut-gameplay.sh
-fi
+# The tagline is not written here. It is the subtitle under the wordmark on
+# the home screen, and its English is the English that shipped — see COPY.md
+# s86247d1. Two places saying this in two different ways is how a game ends
+# up calling itself one thing in the store and another when you open it.
+mkdir -p "$SEG" store assets/raw/trailer/text
+printf 'משחק קלפים מפלצתי' > assets/raw/trailer/text/tagline-he.txt
+printf 'Monster card game'  > assets/raw/trailer/text/tagline-en.txt
 
 for s in "${SHOTS[@]}"; do
   set -- $s
@@ -191,89 +224,176 @@ ffmpeg -y -v error "${cinputs[@]}" \
   -filter_complex "$(IFS=';'; echo "${cfilters[*]}");${prev}fade=t=in:st=0:d=0.26:color=${FLASH},format=yuv420p[v]" \
   -map "[v]" "${ENC[@]}" "$SEG/2-cards.mp4"
 
-# ── 3 · gameplay ──────────────────────────────────────────────────────
-echo "  gameplay"
-ffmpeg -y -v error -i "$GAMEPLAY" -vf "$NORM" "${ENC[@]}" "$SEG/3-gameplay.mp4"
+# ── 3 and 4, once per language ────────────────────────────────────────
+#
+# Everything above this line is the same film in both cuts: four monsters in
+# a petrol station and four cards falling out of Amanda's light, with not one
+# word in any of it. Only the footage of the interface and the card at the
+# end have a language.
+for L in "${LANGS[@]}"; do
+  echo
+  echo "── ${L} ──"
 
-# ── 4 · closing ───────────────────────────────────────────────────────
-#
-# What winning looks like, and where to get it. The address is the only text
-# in the whole trailer: Play autoplays the first thirty seconds MUTED, so the
-# last thing on screen has to work in silence.
-#
-# ═══ THE ALBUM SHOT IS MISSING, DELIBERATELY ═══
-#
-# This closed on the album before the win, which is the right order — what
-# you collect, then what it gets you. The album screenshot we have is from a
-# brand new account: "0% הושלמו", four zeroes across the counters and a page
-# of empty slots. As the last thing a viewer sees before the address, that is
-# an argument against installing.
-#
-# It comes back the moment there is a played-in capture. Put one at
-# store/screenshots/04-album.png and set ALBUM=1.
-ALBUM=0
-echo "  closing"
-if [ "$HAS_FONT" = "1" ]; then
-  LOGOTEXT=",drawtext=fontfile='${FONT}':text='playamanda.com':x=(w-text_w)/2:y=h/2+130:fontsize=52:fontcolor=white@0.92"
-else
-  echo "    (no arial.ttf — the address will be left off the end card)"
-  LOGOTEXT=""
-fi
-if [ "$ALBUM" = "1" ]; then
-  ffmpeg -y -v error \
-    -i store/screenshots/04-album.png \
-    -i store/screenshots/03-win.png \
-    -f lavfi -t 2.6 -i "color=${BG}:s=${W}x${H}:r=${FPS}" \
-    -i apps/client/public/brand/wordmark.png \
-    -filter_complex "\
+  if [ "$L" = "he" ]; then
+    GAMEPLAY=store/gameplay.mp4
+    SHOTS_DIR=store/screenshots
+    WORDMARK=apps/client/public/brand/wordmark.png
+  else
+    GAMEPLAY=store/gameplay-en.mp4
+    SHOTS_DIR=store/screenshots-en
+    WORDMARK=apps/client/public/brand/wordmark-en.png
+  fi
+
+  # Or is re-recording the English captures now that the game speaks English.
+  # Until they land, fall back — but say it every time, because the whole
+  # point of an English cut is that an English speaker can read the screen.
+  FELLBACK=0
+  if [ ! -f "$GAMEPLAY" ]; then
+    if [ "$L" = "he" ]; then
+      echo "  gameplay cut missing — building it"
+      bash scripts/cut-gameplay.sh
+    else
+      GAMEPLAY=store/gameplay.mp4
+      FELLBACK=1
+    fi
+  fi
+  [ -d "$SHOTS_DIR" ] && [ -f "$SHOTS_DIR/03-win.png" ] || { SHOTS_DIR=store/screenshots; FELLBACK=1; }
+  [ -f "$WORDMARK" ] || { echo "missing: $WORDMARK — run pnpm --filter @amanda/art exec tsx src/wordmarkEn.ts" >&2; exit 1; }
+  [ "$FELLBACK" = "0" ] || cat >&2 <<WARN
+
+  ⚠  The English cut is being built with HEBREW footage.
+     Needs store/gameplay-en.mp4 and store/screenshots-en/03-win.png.
+     Everything else — the opening and the end card — is English.
+WARN
+
+  echo "  gameplay"
+  ffmpeg -y -v error -i "$GAMEPLAY" -vf "$NORM" "${ENC[@]}" "$SEG/3-gameplay.mp4"
+
+  # ── closing ─────────────────────────────────────────────────────────
+  #
+  # What winning looks like, and then the end card Or asked for:
+  #
+  #     אמנדה                    the wordmark, which IS the name
+  #     משחק קלפים מפלצתי        what it is
+  #     playamanda.com           where to get it
+  #
+  # This is the only text in the whole trailer, and Play autoplays the first
+  # thirty seconds MUTED, so it has to carry the pitch on its own in silence.
+  #
+  # ═══ WHICH IS WHY THE WIN SHOT IS SHORT ═══
+  #
+  # First build of this card put it up at 28.4s. The whole cut is 31.4s and
+  # starts fading at 30.0 — so inside the window Play actually autoplays, the
+  # address was legible for 1.6 seconds. The win screenshot before it had
+  # 2.4. That is the wrong way round: the win is a picture and reads at a
+  # glance, the address is nine characters that have to be read and
+  # remembered.
+  #
+  # So the cut to the card comes 0.7s earlier and the card holds 0.7s longer.
+  # Same 31.4s total — the music window does not allow more — and the address
+  # now gets 2.3 seconds before the fade starts.
+  #
+  # Three tiers and they are not close: the mark is 760px wide, the tagline
+  # is 54px and grey, the address is 56px and gold. Squint at it and the
+  # name is what you see; look at it and the address is the only coloured
+  # thing on the screen. The tagline sits between them because it explains,
+  # and explaining is never the hero.
+  #
+  # ═══ THE ALBUM SHOT IS MISSING, DELIBERATELY ═══
+  #
+  # This closed on the album before the win, which is the right order — what
+  # you collect, then what it gets you. The album screenshot we have is from
+  # a brand new account: "0% הושלמו", four zeroes across the counters and a
+  # page of empty slots. As the last thing a viewer sees before the address,
+  # that is an argument against installing.
+  #
+  # It comes back the moment there is a played-in capture. Put one at
+  # store/screenshots/04-album.png and set ALBUM=1.
+  ALBUM=0
+  echo "  closing"
+
+  # Laid out from the top of the group so the three lines stay locked to each
+  # other, and the group is centred as a block. The two wordmarks are
+  # different heights, so the block is measured rather than assumed.
+  WM_W=760
+  WM_H=$(ffprobe -v error -show_entries stream=width,height -of csv=p=0 "$WORDMARK" |
+         awk -F, -v w="$WM_W" '{printf "%d", w * $2 / $1}')
+  TAG_SIZE=54
+  ADR_SIZE=56
+  BLOCK=$((WM_H + 46 + TAG_SIZE + 42 + ADR_SIZE))
+  WM_Y=$(( (H - BLOCK) / 2 ))
+  TAG_Y=$((WM_Y + WM_H + 46))
+  ADR_Y=$((TAG_Y + TAG_SIZE + 42))
+
+  if [ "$HAS_FONT" = "1" ]; then
+    CARDTEXT=",drawtext=fontfile='${FONT}':textfile=assets/raw/trailer/text/tagline-${L}.txt\
+:x=(w-text_w)/2:y=${TAG_Y}:fontsize=${TAG_SIZE}:fontcolor=0xd5dce8@0.85\
+,drawtext=fontfile='${FONT}':text='playamanda.com'\
+:x=(w-text_w)/2:y=${ADR_Y}:fontsize=${ADR_SIZE}:fontcolor=0xffb020"
+    # 0xffb020 is --accent from tokens.css. The address is the only thing on
+    # the end card wearing it, which is the whole idea of an accent.
+  else
+    echo "    (no segoeuib.ttf — the end card will be the wordmark alone)"
+    CARDTEXT=""
+  fi
+
+  if [ "$ALBUM" = "1" ]; then
+    ffmpeg -y -v error \
+      -i "$SHOTS_DIR/04-album.png" \
+      -i "$SHOTS_DIR/03-win.png" \
+      -f lavfi -t 3.9 -i "color=${BG}:s=${W}x${H}:r=${FPS}" \
+      -i "$WORDMARK" \
+      -filter_complex "\
 [0:v]${NORM},zoompan=z='min(zoom+0.0009,1.1)':d=45:s=${W}x${H}:fps=${FPS}[a];\
 [1:v]${NORM},zoompan=z='if(eq(on,0),1.1,max(zoom-0.0009,1.0))':d=55:s=${W}x${H}:fps=${FPS}[b];\
-[3:v]scale=840:-1[wm];\
-[2:v][wm]overlay=x=(W-w)/2:y=(H-h)/2-60${LOGOTEXT},fade=t=in:st=0:d=0.4[c];\
+[3:v]scale=${WM_W}:-1[wm];\
+[2:v][wm]overlay=x=(W-w)/2:y=${WM_Y}${CARDTEXT},fade=t=in:st=0:d=0.4[c];\
 [a][b]xfade=transition=fade:duration=0.3:offset=1.5[ab];\
-[ab][c]xfade=transition=fade:duration=0.4:offset=3.3,format=yuv420p[v]" \
-    -map "[v]" "${ENC[@]}" "$SEG/4-closing.mp4"
-else
-  ffmpeg -y -v error \
-    -i store/screenshots/03-win.png \
-    -f lavfi -t 2.8 -i "color=${BG}:s=${W}x${H}:r=${FPS}" \
-    -i apps/client/public/brand/wordmark.png \
-    -filter_complex "\
+[ab][c]xfade=transition=fade:duration=0.4:offset=2.6,format=yuv420p[v]" \
+      -map "[v]" "${ENC[@]}" "$SEG/4-closing.mp4"
+  else
+    ffmpeg -y -v error \
+      -i "$SHOTS_DIR/03-win.png" \
+      -f lavfi -t 4.1 -i "color=${BG}:s=${W}x${H}:r=${FPS}" \
+      -i "$WORDMARK" \
+      -filter_complex "\
 [0:v]${NORM},zoompan=z='if(eq(on,0),1.1,max(zoom-0.0008,1.0))':d=60:s=${W}x${H}:fps=${FPS}[b];\
-[2:v]scale=840:-1[wm];\
-[1:v][wm]overlay=x=(W-w)/2:y=(H-h)/2-60${LOGOTEXT},fade=t=in:st=0:d=0.4[c];\
-[b][c]xfade=transition=fade:duration=0.4:offset=2.0,format=yuv420p[v]" \
-    -map "[v]" "${ENC[@]}" "$SEG/4-closing.mp4"
-fi
+[2:v]scale=${WM_W}:-1[wm];\
+[1:v][wm]overlay=x=(W-w)/2:y=${WM_Y}${CARDTEXT},fade=t=in:st=0:d=0.4[c];\
+[b][c]xfade=transition=fade:duration=0.4:offset=1.3,format=yuv420p[v]" \
+      -map "[v]" "${ENC[@]}" "$SEG/4-closing.mp4"
+  fi
 
-# ── join, and lay the score over the whole thing ──────────────────────
-echo "  joining"
-: > "$SEG/list.txt"
-for f in 1-opening 2-cards 3-gameplay 4-closing; do
-  echo "file '$(basename "$f").mp4'" >> "$SEG/list.txt"
-done
+  # ── join, and lay the score over the whole thing ────────────────────
+  echo "  joining"
+  OUT="store/trailer-${L}.mp4"
+  : > "$SEG/list.txt"
+  for f in 1-opening 2-cards 3-gameplay 4-closing; do
+    echo "file '${f}.mp4'" >> "$SEG/list.txt"
+  done
 
-TOTAL=$(for f in "$SEG"/[1-4]-*.mp4; do
-  ffprobe -v error -show_entries format=duration -of csv=p=0 "$f"
-done | awk '{t+=$1} END{printf "%.3f", t}')
-FADEOUT=$(awk -v t="$TOTAL" 'BEGIN{printf "%.3f", t-1.4}')
+  TOTAL=$(for f in "$SEG"/[1-4]-*.mp4; do
+    ffprobe -v error -show_entries format=duration -of csv=p=0 "$f"
+  done | awk '{t+=$1} END{printf "%.3f", t}')
+  FADEOUT=$(awk -v t="$TOTAL" 'BEGIN{printf "%.3f", t-1.4}')
 
-awk -v t="$TOTAL" -v w="$MUSIC_WINDOW" 'BEGIN{if (t > w) exit 1}' || {
-  echo "The cut is ${TOTAL}s but the steady stretch of music is only ${MUSIC_WINDOW}s." >&2
-  echo "Shorten a segment, or measure a longer window — see MUSIC_START." >&2
-  exit 1
-}
+  awk -v t="$TOTAL" -v w="$MUSIC_WINDOW" 'BEGIN{if (t > w) exit 1}' || {
+    echo "The cut is ${TOTAL}s but the steady stretch of music is only ${MUSIC_WINDOW}s." >&2
+    echo "Shorten a segment, or measure a longer window — see MUSIC_START." >&2
+    exit 1
+  }
 
-ffmpeg -y -v warning -stats \
-  -f concat -safe 0 -i "$SEG/list.txt" \
-  -ss "$MUSIC_START" -i "$MUSIC" \
-  -filter_complex "[0:v]fade=t=out:st=${FADEOUT}:d=1.4[v];\
+  ffmpeg -y -v warning -stats \
+    -f concat -safe 0 -i "$SEG/list.txt" \
+    -ss "$MUSIC_START" -i "$MUSIC" \
+    -filter_complex "[0:v]fade=t=out:st=${FADEOUT}:d=1.4[v];\
 [1:a]atrim=0:${TOTAL},afade=t=in:st=0:d=1.2,afade=t=out:st=${FADEOUT}:d=1.4[a]" \
-  -map "[v]" -map "[a]" \
-  -c:v libx264 -preset slow -crf 19 -pix_fmt yuv420p -r "$FPS" \
-  -c:a aac -b:a 192k -movflags +faststart \
-  "$OUT"
+    -map "[v]" -map "[a]" \
+    -c:v libx264 -preset slow -crf 19 -pix_fmt yuv420p -r "$FPS" \
+    -c:a aac -b:a 192k -movflags +faststart \
+    "$OUT"
 
-echo
-echo "  $OUT"
-ffprobe -v error -show_entries format=duration:stream=width,height,codec_name -of default=nw=1 "$OUT"
+  echo
+  printf '  %-26s ' "$OUT"
+  ffprobe -v error -show_entries format=duration,size -of csv=p=0 "$OUT"
+done
