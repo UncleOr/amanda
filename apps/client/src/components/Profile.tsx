@@ -44,6 +44,7 @@ import { NO_PHRASE, ownedCatchphrases } from "@amanda/shared";
 import { Plaque } from "./Plaque";
 import * as V from "../data/voice";
 import { Overlay } from "./Overlay";
+import { line as t } from "../game/copy";
 
 /**
  * The avatars drawn for this, matching packages/art/src/brandLooks.ts.
@@ -179,7 +180,7 @@ export function Profile({ account, onClose, onChanged }: Props) {
     setBusy(false);
     // The copy has to change under the player straight away, not on reload.
     V.setGender(gender);
-    setNote(err ?? "נשמר");
+    setNote(err ?? t("see9fd0e", "נשמר"));
     if (!err) onChanged();
   }
 
@@ -197,7 +198,7 @@ export function Profile({ account, onClose, onChanged }: Props) {
           <button
             className="profile__face"
             onClick={() => setFacesOpen((v) => !v)}
-            title="החלף פרצוף"
+            title={t("sa83f16f", "החלף פרצוף")}
           >
             <img src={`${BASE}brand/${avatar}.webp`} alt="" />
             {/* A corner badge, not a stamp across the face. */}
@@ -210,7 +211,7 @@ export function Profile({ account, onClose, onChanged }: Props) {
               className="profile__name"
               value={nickname}
               maxLength={16}
-              placeholder="הכינוי שלך"
+              placeholder={t("s5516565", "הכינוי שלך")}
               onChange={(e) => setNickname(e.target.value)}
             />
             <div className="profile__stats">
@@ -234,7 +235,7 @@ export function Profile({ account, onClose, onChanged }: Props) {
         */}
         {admin && (
           <section className="profile__box">
-            <h3>ניהול</h3>
+            <h3>{t("safd776c", "ניהול")}</h3>
             <a className="btn-fight btn-online profile__wide profile__admin" href="?admin">
               <Icon name="menu" size={15} /> פתח את לוח הניהול
             </a>
@@ -244,13 +245,13 @@ export function Profile({ account, onClose, onChanged }: Props) {
         {deleting && (
           <Overlay onClick={() => setDeleting(false)}>
             <div className="modal modal--confirm" onClick={(e) => e.stopPropagation()}>
-              <h2>למחוק את החשבון?</h2>
+              <h2>{t("s5846b62", "למחוק את החשבון?")}</h2>
               <p>
                 הכול נמחק: האלבום, הקלפים, הגביעים, היהלומים וההיסטוריה. מיד,
-                בלי תקופת המתנה. <b>אי אפשר לבטל.</b>
+                בלי תקופת המתנה. <b>{t("s7e78db8", "אי אפשר לבטל.")}</b>
               </p>
               <p className="profile__note">
-                אם רק רצית לשחק מחשבון אחר — <b>יציאה / החלפת משתמש</b> עושה
+                אם רק רצית לשחק מחשבון אחר — <b>{t("sa4507ca", "יציאה / החלפת משתמש")}</b> עושה
                 את זה בלי למחוק כלום.
               </p>
               <div className="result__buttons">
@@ -270,7 +271,7 @@ export function Profile({ account, onClose, onChanged }: Props) {
                     });
                   }}
                 >
-                  {reallyDeleting ? "מוחק…" : "כן, למחוק הכול"}
+                  {reallyDeleting ? t("s3c685c0", "מוחק…") : t("s5f2eea0", "כן, למחוק הכול")}
                 </button>
                 <button className="btn-fight btn-ghost" onClick={() => setDeleting(false)}>
                   ביטול
@@ -292,7 +293,7 @@ export function Profile({ account, onClose, onChanged }: Props) {
         {scrubbing && (
           <Overlay onClick={() => setScrubbing(false)}>
             <div className="modal modal--confirm" onClick={(e) => e.stopPropagation()}>
-              <h2>למחוק את הפרטים שלך?</h2>
+              <h2>{t("safed31c", "למחוק את הפרטים שלך?")}</h2>
               <p>
                 הכינוי, הפרצוף, יום ההולדת, משפט המחץ, רשימת החברים וכל
                 המשחקים שלך — נמחקים. <b>האלבום, הקלפים, הגביעים והיהלומים
@@ -313,7 +314,7 @@ export function Profile({ account, onClose, onChanged }: Props) {
                     });
                   }}
                 >
-                  {reallyScrubbing ? "מוחק…" : "כן, למחוק את הפרטים"}
+                  {reallyScrubbing ? t("s4431549", "מוחק…") : t("s19e44e1", "כן, למחוק את הפרטים")}
                 </button>
                 <button className="btn-fight btn-ghost" onClick={() => setScrubbing(false)}>
                   ביטול
@@ -326,12 +327,12 @@ export function Profile({ account, onClose, onChanged }: Props) {
         {leaving && (
           <Overlay onClick={() => setLeaving(false)}>
             <div className="modal modal--confirm" onClick={(e) => e.stopPropagation()}>
-              <h2>לצאת מהחשבון?</h2>
+              <h2>{t("s23e4e7c", "לצאת מהחשבון?")}</h2>
               {/* One sentence. The other two said the same thing in
                   implementation detail — which login, which device — and §6's
                   own example of the offence is two sentences doing one
                   sentence's job. */}
-              <p>הכול נשמר, ואפשר לחזור.</p>
+              <p>{t("s6059eba", "הכול נשמר, ואפשר לחזור.")}</p>
               <div className="result__buttons">
                 <button
                   className="btn-fight"
@@ -397,7 +398,7 @@ export function Profile({ account, onClose, onChanged }: Props) {
           we said about explanatory lines? Cut, cut, cut."*
         */}
         <section className="panel">
-          <h3>משפט המחץ שלי</h3>
+          <h3>{t("s56f3a93", "משפט המחץ שלי")}</h3>
           <div className="phrases">
             {ownedCatchphrases(owned).map((p) => (
               <button
@@ -407,7 +408,7 @@ export function Profile({ account, onClose, onChanged }: Props) {
                 onClick={() => setPhrase(p.id)}
               >
                 {p.id === NO_PHRASE ? (
-                  <span className="phrases__silent">בלי משפט</span>
+                  <span className="phrases__silent">{t("sf806fc3", "בלי משפט")}</span>
                 ) : (
                   <Plaque phrase={p} />
                 )}
@@ -424,9 +425,9 @@ export function Profile({ account, onClose, onChanged }: Props) {
           nickname never got asked and had no way to answer.
         */}
         <section className="panel">
-          <h3>איך לפנות אליך</h3>
+          <h3>{t("s878f7ab", "איך לפנות אליך")}</h3>
           {/*
-            ═══ NO EXPLANATION, AND NOT "לא אומר" ═══
+            ═══ NO EXPLANATION, AND NOT t("s7c32ea2", "לא אומר") ═══
 
             There was a line under this explaining that Hebrew forces the
             choice and that saying nothing gets you the masculine. Or: *"do
@@ -435,15 +436,15 @@ export function Profile({ account, onClose, onChanged }: Props) {
             it was me explaining a problem with the language to a
             seven-year-old who only wants to tap a word.
 
-            And the third option could not stay "לא אומר", because that is
+            And the third option could not stay t("s3cb377b", "לא אומר"), because that is
             itself masculine: the button for "I would rather not say" was
             quietly saying it for you. Or's suggestion, and his wording.
           */}
           <div className="profile__gender">
             {([
-              { v: "boy", he: "בן" },
-              { v: "girl", he: "בת" },
-              { v: null, he: "למה להגדיר?" },
+              { v: "boy", he: t("s9003bc9", "בן") },
+              { v: "girl", he: t("sb434f05", "בת") },
+              { v: null, he: t("s95fa408", "למה להגדיר?") },
             ] as const).map((o) => (
               <button
                 key={o.he}
@@ -457,7 +458,7 @@ export function Profile({ account, onClose, onChanged }: Props) {
         </section>
 
         <section className="panel">
-          <h3>יום ההולדת שלך</h3>
+          <h3>{t("sf69f486", "יום ההולדת שלך")}</h3>
           <input
             className="profile__input"
             type="date"
@@ -488,14 +489,14 @@ export function Profile({ account, onClose, onChanged }: Props) {
         </p>
 
         <section className="panel">
-          <h3>החשבון שלך</h3>
+          <h3>{t("sc0f520f", "החשבון שלך")}</h3>
           {account?.linked ? (
             <>
-              {/* "מחובר" is the whole message. What being connected buys
+              {/* t("sa8324d2", "מחובר") is the whole message. What being connected buys
                   was the reason to sign in and that argument was already
                   made and won on the way in — repeating it here is a
                   salesman still talking after the sale. */}
-              <p className="profile__note">מחובר</p>
+              <p className="profile__note">{t("s1d9574c", "מחובר")}</p>
               {/*
                 Leaving, which was not possible before. A signed-in player on a
                 shared machine had no way to hand it to anyone else.
@@ -532,25 +533,25 @@ export function Profile({ account, onClose, onChanged }: Props) {
               >
                 המשך עם גוגל
               </button>
-              <div className="profile__or">או</div>
+              <div className="profile__or">{t("s074bcb0", "או")}</div>
               <input
                 className="profile__input"
                 type="email"
-                placeholder="אימייל"
+                placeholder={t("sc8aa4b2", "אימייל")}
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
               />
               <input
                 className="profile__input"
                 type="password"
-                placeholder="סיסמה (6 תווים ומעלה)"
+                placeholder={t("scebe1c7", "סיסמה (6 תווים ומעלה)")}
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
               />
               <button
                 className="btn-fight btn-online profile__wide"
                 disabled={!email || password.length < 6}
-                onClick={() => void linkEmail(email, password).then((e) => setNote(e ?? "מחובר"))}
+                onClick={() => void linkEmail(email, password).then((e) => setNote(e ?? t("s4104b4f", "מחובר")))}
               >
                 שמור עם אימייל
               </button>

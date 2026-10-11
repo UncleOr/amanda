@@ -7,6 +7,7 @@ import {
   type Friend,
 } from "../game/account";
 import { Overlay } from "./Overlay";
+import { line as t } from "../game/copy";
 
 /**
  * The friends list.
@@ -78,7 +79,7 @@ export function Friends({
     setAddable(await addableOpponents());
   }
 
-  const name = (f: { nickname: string | null }) => f.nickname ?? "בלי שם";
+  const name = (f: { nickname: string | null }) => f.nickname ?? t("s99cd003", "בלי שם");
 
   return (
     <Overlay onClick={onClose}>
@@ -86,19 +87,19 @@ export function Friends({
         className="modal modal--friends"
         onClick={(e) => e.stopPropagation()}
       >
-        <button className="modal__close" onClick={onClose} title="סגירה">
+        <button className="modal__close" onClick={onClose} title={t("s92f2116", "סגירה")}>
           <Icon name="exit" size={15} />
         </button>
-        <h2 className="friends__title">חברים</h2>
+        <h2 className="friends__title">{t("s2e78dd8", "חברים")}</h2>
 
         {friends === null ? (
-          <p className="friends__hint">רגע…</p>
+          <p className="friends__hint">{t("sf41dbdb", "רגע…")}</p>
         ) : friends.length === 0 && !adding ? (
           // Was three clauses: "nobody here yet. you can only add someone you
           // have played — play, and then you can add them." The rule it spent
           // two of them on is the same rule the add panel states when you get
           // there, which is the only place it is any use.
-          <p className="friends__hint">עוד אין כאן אף אחד.</p>
+          <p className="friends__hint">{t("s451672b", "עוד אין כאן אף אחד.")}</p>
         ) : (
           <ul className="friends__list">
             {friends.map((f) => (
@@ -114,12 +115,12 @@ export function Friends({
                   <b>{name(f)}</b>
                   <small>
                     {f.state === "asking"
-                      ? "רוצה להיות חבר שלך"
+                      ? t("se22affe", "רוצה להיות חבר שלך")
                       : f.state === "asked"
-                        ? "מחכה שיאשר"
+                        ? t("s3d6a918", "מחכה שיאשר")
                         : f.online
-                          ? "מחובר"
-                          : "לא מחובר"}
+                          ? t("s7171c91", "מחובר")
+                          : t("s940973e", "לא מחובר")}
                   </small>
                 </span>
                 <span className="friends__do">
@@ -139,7 +140,7 @@ export function Friends({
                         className="btn-fight btn-small"
                         disabled={!canInvite}
                         title={
-                          canInvite ? "להזמין למשחק" : "אפשר להזמין ממסך הבית"
+                          canInvite ? t("s018b28b", "להזמין למשחק") : t("s7d7e4b6", "אפשר להזמין ממסך הבית")
                         }
                         onClick={() => onInvite(f.id)}
                       >
@@ -149,7 +150,7 @@ export function Friends({
                   )}
                   <button
                     className="friends__drop"
-                    title={f.state === "friend" ? "להסיר" : "לבטל"}
+                    title={f.state === "friend" ? t("s4997be8", "להסיר") : t("s71eb681", "לבטל")}
                     disabled={busy === f.id}
                     onClick={() => void act("remove", f.id)}
                   >
@@ -180,12 +181,12 @@ export function Friends({
               each of them is four words long.
             */}
             {addable === null ? (
-              <p className="friends__hint">רגע…</p>
+              <p className="friends__hint">{t("s1620146", "רגע…")}</p>
             ) : addable.length === 0 ? (
-              <p className="friends__hint">עוד לא שיחקת מול אף אחד.</p>
+              <p className="friends__hint">{t("s18ecd7a", "עוד לא שיחקת מול אף אחד.")}</p>
             ) : (
               <>
-                <p className="friends__hint">רק מי ששיחקת מולו.</p>
+                <p className="friends__hint">{t("sbec9016", "רק מי ששיחקת מולו.")}</p>
                 <div className="friends__candidates">
                   {addable.map((o) => (
                     <button

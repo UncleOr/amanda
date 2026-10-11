@@ -16,6 +16,7 @@ import { CATALOG } from "../data/catalog";
 import { ELEMENT_META, RANGE_META, seriesColor } from "../data/cardMeta";
 import { Overlay } from "./Overlay";
 import { say } from "../game/lang";
+import { line as t } from "../game/copy";
 
 
 const TPS = SIMULATION.ticksPerSecond;
@@ -34,7 +35,7 @@ const FINDING_TEXT: Record<Finding["code"], (f: Finding) => string> = {
   laneCollapse: (f) => `כל הקלפים במסלול ${(f.lane ?? 0) + 1} נפלו — שם נפרצה החזית`,
   overkill: (f) => `בוזבז נזק על ${f.name}: ספג ${f.value}% מהחיים שלו`,
   wipe: (f) => `הצד הזה נמחק לגמרי — ${f.value} קלפים`,
-  closeCall: () => `קרב צמוד — הוכרע בהפרש של קלף אחד`,
+  closeCall: () => t("sa039c8a", "קרב צמוד — הוכרע בהפרש של קלף אחד"),
   diedToThorns: (f) =>
     `${f.name} הרג את עצמו — הנזק החוזר מהיעד היה ${f.value}% מהחיים שלו`,
   outnumbered: (f) => `ניצחון סוחף — ${f.value} קלפים הפרש`,
@@ -49,7 +50,7 @@ const TIMELINE_TEXT: Record<TimelineEntry["kind"], (e: TimelineEntry) => string>
   split: (e) => `${e.actor} התפצל`,
   reveal: (e) => `נחשף קלף קומת קרקע: ${e.target}`,
   freeze: (e) => `${e.actor ?? "משהו"} הקפיא את ${e.target}`,
-  end: (e) => (e.owner ? `הקרב נגמר` : `תיקו. לשנינו טעם רע בפה.`),
+  end: (e) => (e.owner ? t("s3f09475", "הקרב נגמר") : t("s9ab5edb", "תיקו. לשנינו טעם רע בפה.")),
 };
 
 // The game's own icons, not the phone's. Each key is an id in iconLooks.ts.
@@ -78,7 +79,7 @@ export function BattleLog({ result, mySide }: { result: BattleResult; mySide: Ow
   const report = useMemo(() => buildReport(result, CATALOG), [result]);
 
   const theirSide: Owner = mySide === "A" ? "B" : "A";
-  const sideName = (o: Owner) => (o === mySide ? "אתה" : "היריב");
+  const sideName = (o: Owner) => (o === mySide ? t("s1ab2182", "אתה") : t("s36e0c61", "היריב"));
 
   /**
    * Put the whole report on the clipboard, or show it if that is not possible.
@@ -143,8 +144,8 @@ export function BattleLog({ result, mySide }: { result: BattleResult; mySide: Ow
         >
           ציר זמן
         </button>
-        <button className="log__copy" onClick={copyJson} title="העתקת הדוח המלא כ-JSON">
-          {copied ? "✔ הועתק" : "⧉ העתק JSON"}
+        <button className="log__copy" onClick={copyJson} title={t("s484ea7e", "העתקת הדוח המלא כ-JSON")}>
+          {copied ? t("sb22f4be", "✔ הועתק") : t("s5970baf", "⧉ העתק JSON")}
         </button>
       </div>
 
@@ -159,7 +160,7 @@ export function BattleLog({ result, mySide }: { result: BattleResult; mySide: Ow
             // the fiddly part.
             ref={(el) => el?.select()}
           />
-          <p className="log__json-note">הדפדפן לא נתן להעתיק. סמנו הכול והעתיקו ידנית.</p>
+          <p className="log__json-note">{t("se1d32f8", "הדפדפן לא נתן להעתיק. סמנו הכול והעתיקו ידנית.")}</p>
         </>
       )}
 
@@ -173,11 +174,11 @@ export function BattleLog({ result, mySide }: { result: BattleResult; mySide: Ow
             <div className="log__grade-bars">
               {(
                 [
-                  ["תוצאה", "outcome"],
-                  ["מהירות", "speed"],
-                  ["יחס נזק", "trade"],
-                  ["השתתפות הלוח", "participation"],
-                  ["שרידות", "survival"],
+                  [t("sb9555de", "תוצאה"), "outcome"],
+                  [t("s41257f4", "מהירות"), "speed"],
+                  [t("sb7c0a3f", "יחס נזק"), "trade"],
+                  [t("s63fa2b3", "השתתפות הלוח"), "participation"],
+                  [t("s41fe997", "שרידות"), "survival"],
                 ] as const
               ).map(([label, key]) => (
                 <div key={key} className="log__grade-bar">
@@ -198,19 +199,19 @@ export function BattleLog({ result, mySide }: { result: BattleResult; mySide: Ow
                   <h4>{sideName(o)}</h4>
                   <dl>
                     <div>
-                      <dt>נזק</dt>
+                      <dt>{t("sb7b9d16", "נזק")}</dt>
                       <dd>{s.damageDealt.toLocaleString("he-IL")}</dd>
                     </div>
                     <div>
-                      <dt>הפלות</dt>
+                      <dt>{t("scca46b4", "הפלות")}</dt>
                       <dd>{s.kills}</dd>
                     </div>
                     <div>
-                      <dt>שרדו</dt>
+                      <dt>{t("s995ae23", "שרדו")}</dt>
                       <dd>{s.survivors}</dd>
                     </div>
                     <div>
-                      <dt>נפלו</dt>
+                      <dt>{t("sf79b753", "נפלו")}</dt>
                       <dd>{s.losses}</dd>
                     </div>
                   </dl>
@@ -220,7 +221,7 @@ export function BattleLog({ result, mySide }: { result: BattleResult; mySide: Ow
           </div>
 
           <ul className="log__findings">
-            {report.findings.length === 0 && <li className="log__quiet">קרב משעמם. לא קרה כלום.</li>}
+            {report.findings.length === 0 && <li className="log__quiet">{t("sc18fd03", "קרב משעמם. לא קרה כלום.")}</li>}
             {report.findings.map((f, i) => (
               <li key={i} className={`log__finding log__finding--${f.owner === mySide ? "me" : "them"}`}>
                 <span className="log__who">{sideName(f.owner)}</span>
@@ -233,7 +234,7 @@ export function BattleLog({ result, mySide }: { result: BattleResult; mySide: Ow
 
       {tab === "map" && (
         <div className="log__body">
-          <p className="log__quiet">ככה נראו הלוחות בהתחלה. תראה מה כל קלף עשה.</p>
+          <p className="log__quiet">{t("s30b45ab", "ככה נראו הלוחות בהתחלה. תראה מה כל קלף עשה.")}</p>
           <div className="log__maps">
             {([mySide, theirSide] as Owner[]).map((o) => (
               <BoardMap
@@ -247,14 +248,14 @@ export function BattleLog({ result, mySide }: { result: BattleResult; mySide: Ow
             ))}
           </div>
           <div className="log__legend">
-            <span><i className="log__swatch log__swatch--top" /> הכי הרבה נזק</span>
-            <span><i className="log__swatch log__swatch--some" /> תרם נזק</span>
-            <span><i className="log__swatch log__swatch--idle" /> ישן</span>
+            <span><i className="log__swatch log__swatch--top" /> {t("s1d0a003", "הכי הרבה נזק")}</span>
+            <span><i className="log__swatch log__swatch--some" /> {t("s9c41951", "תרם נזק")}</span>
+            <span><i className="log__swatch log__swatch--idle" /> {t("s3b86504", "ישן")}</span>
             <span>
             <Icon name="skull" size={13} /> נפל · <Icon name="ready" size={13} /> שרד ·{" "}
             <Icon name="frozen" size={13} /> לא זז
           </span>
-            <span>לחץ על קלף ואספר לך</span>
+            <span>{t("s65ef918", "לחץ על קלף ואספר לך")}</span>
           </div>
         </div>
       )}
@@ -264,12 +265,12 @@ export function BattleLog({ result, mySide }: { result: BattleResult; mySide: Ow
           <table className="log__table">
             <thead>
               <tr>
-                <th>קלף</th>
-                <th>צד</th>
-                <th>נזק</th>
-                <th>ספג</th>
-                <th>הפלות</th>
-                <th>סוף</th>
+                <th>{t("s3b1fddd", "קלף")}</th>
+                <th>{t("se4b01fc", "צד")}</th>
+                <th>{t("sa777d2c", "נזק")}</th>
+                <th>{t("s4e62559", "ספג")}</th>
+                <th>{t("s1fad98a", "הפלות")}</th>
+                <th>{t("scbe08c2", "סוף")}</th>
               </tr>
             </thead>
             <tbody>
@@ -453,14 +454,14 @@ function UnitReportModal({
     : null;
   const sideTotal = Math.max(1, report.sides[unit.owner].damageDealt);
   const share = Math.round((unit.damageDealt / sideTotal) * 100);
-  const col = ["עורף", "שלישית", "שנייה", "חזית"][unit.startX] ?? "";
+  const col = [t("secfc437", "עורף"), t("s5b44eac", "שלישית"), t("s2f05432", "שנייה"), t("s0160f0c", "חזית")][unit.startX] ?? "";
 
   // What this card actually did, in one line, rather than making the player
   // read the numbers and work it out.
   const story = (() => {
     if (unit.damageDealt === 0 && unit.damageTaken === 0)
-      return "לא נגע בקרב. לא הגיע לאף אחד, ואף אחד לא הגיע אליו.";
-    if (unit.damageDealt === 0) return "חטף ולא הספיק להחזיר אפילו מכה אחת.";
+      return t("s565b00b", "לא נגע בקרב. לא הגיע לאף אחד, ואף אחד לא הגיע אליו.");
+    if (unit.damageDealt === 0) return t("s33300d2", "חטף ולא הספיק להחזיר אפילו מכה אחת.");
     if (unit.kills >= 2) return `חתך את הדרך — הפיל ${unit.kills} קלפים.`;
     if (share >= 30) return `נשא את הצד שלו: ${share}% מכל הנזק.`;
     return `תרם ${share}% מהנזק של הצד שלו.`;
@@ -473,7 +474,7 @@ function UnitReportModal({
         onClick={(e) => e.stopPropagation()}
         style={{ ["--card-color"]: seriesColor(unit.seriesId) } as React.CSSProperties}
       >
-        <button className="modal__close" onClick={onClose} title="סגירה">
+        <button className="modal__close" onClick={onClose} title={t("sbf12851", "סגירה")}>
           <Icon name="exit" size={15} />
         </button>
         <div className="modal__banner">
@@ -491,7 +492,7 @@ function UnitReportModal({
               {unit.name}
             </h2>
             <p className="modal__subtitle">
-              {mine ? "שלך" : "של היריב"} · {col}, מסלול {unit.lane + 1}
+              {mine ? t("sa7d29bc", "שלך") : t("s8900b3c", "של היריב")} · {col}, מסלול {unit.lane + 1}
             </p>
             <div className="modal__badges">
               {card && (
@@ -522,19 +523,19 @@ function UnitReportModal({
           <div className="log__score">
             <dl>
               <div>
-                <dt>נזק שעשה</dt>
+                <dt>{t("s64a471a", "נזק שעשה")}</dt>
                 <dd>{unit.damageDealt.toLocaleString("he-IL")}</dd>
               </div>
               <div>
-                <dt>נזק שספג</dt>
+                <dt>{t("s6353210", "נזק שספג")}</dt>
                 <dd>{unit.damageTaken.toLocaleString("he-IL")}</dd>
               </div>
               <div>
-                <dt>הפלות</dt>
+                <dt>{t("s48e7c57", "הפלות")}</dt>
                 <dd>{unit.kills}</dd>
               </div>
               <div>
-                <dt>מכות</dt>
+                <dt>{t("s95f2cfd", "מכות")}</dt>
                 <dd>{unit.hits}</dd>
               </div>
             </dl>
@@ -543,16 +544,16 @@ function UnitReportModal({
 
         <ul className="log__facts">
           <li>
-            <b>מהנזק של הצד:</b> {share}%
+            <b>{t("sf9252a0", "מהנזק של הצד:")}</b> {share}%
           </li>
           <li>
-            <b>חיים:</b> {unit.maxHp.toLocaleString("he-IL")}
+            <b>{t("s80415c3", "חיים:")}</b> {unit.maxHp.toLocaleString("he-IL")}
             {unit.isKing && " (כולל בונוס מלך ×3)"}
           </li>
           <li>
-            <b>תזוזה:</b>{" "}
+            <b>{t("s5765650", "תזוזה:")}</b>{" "}
             {unit.colsMoved === 0
-              ? "לא זז מילימטר"
+              ? t("s0cadd6e", "לא זז מילימטר")
               : `התקדם ${unit.colsMoved.toFixed(1)} משבצות`}
           </li>
         </ul>

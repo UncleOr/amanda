@@ -12,6 +12,7 @@ import { hasUnreadUpdate } from "../data/updates";
 import { listFriends, type Chest, type ShopItem } from "../game/account";
 import type { Overlays } from "../game/useOverlay";
 import type { MatchApi } from "../game/useMatch";
+import { line as t } from "../game/copy";
 
 const BASE = import.meta.env.BASE_URL;
 
@@ -60,9 +61,9 @@ const MOTES = [
 
 /** The three settings of the bot dial, and what each one means in a sentence. */
 const BOT_LEVELS: ReadonlyArray<{ id: "easy" | "normal" | "hard"; he: string; note: string }> = [
-  { id: "easy", he: "קליל", note: "לוח דליל, קלפים חלשים. מנצח ב-17% מהקרבות." },
-  { id: "normal", he: "רגיל", note: "בונה כמו שהוא יודע. חצי-חצי." },
-  { id: "hard", he: "קשה", note: "בוחר מתוך אוסף גדול בהרבה. מנצח בערך ב-58%." },
+  { id: "easy", he: t("s5eb66c7", "קליל"), note: t("s9251769", "לוח דליל, קלפים חלשים. מנצח ב-17% מהקרבות.") },
+  { id: "normal", he: t("s0c9f683", "רגיל"), note: t("s901d39c", "בונה כמו שהוא יודע. חצי-חצי.") },
+  { id: "hard", he: t("sc93cdac", "קשה"), note: t("s62d48e5", "בוחר מתוך אוסף גדול בהרבה. מנצח בערך ב-58%.") },
 ];
 
 /**
@@ -178,7 +179,7 @@ export function HomeScreen({
           <Icon name="king" size={20} />
         )}
         <span className="me__name">
-          {m.account?.nickname ?? (m.account?.linked ? "הפרופיל שלי" : "התחברות")}
+          {m.account?.nickname ?? (m.account?.linked ? t("sb1726a6", "הפרופיל שלי") : t("sae98436", "התחברות"))}
         </span>
       </button>
       {/*
@@ -238,13 +239,13 @@ export function HomeScreen({
         */}
         <header className="home__brand">
           <h1 className="intro__name">
-            <img src={`${BASE}brand/wordmark.png`} alt="אמנדה" width={720} height={197} />
+            <img src={`${BASE}brand/wordmark.png`} alt={t("sfd7535c", "אמנדה")} width={720} height={197} />
           </h1>
-          <p className="intro__sub">משחק קלפים מפלצתי</p>
+          <p className="intro__sub">{t("s86247d1", "משחק קלפים מפלצתי")}</p>
         </header>
 
         {/* ─────────────── playing ─────────────── */}
-        <section className="home__play intro__card" aria-label="לשחק">
+        <section className="home__play intro__card" aria-label={t("s0cadb17", "לשחק")}>
           {/*
             The "you VS the opponent" portrait was describing a match that has
             not been chosen yet. The same two pictures do more work as the
@@ -254,7 +255,7 @@ export function HomeScreen({
             <div className="pick">
               <button className="pick__card" onClick={m.startMatch}>
                 <img src={`${BASE}brand/versus_robot.webp`} alt="" />
-                <span>לשחק עם בוט</span>
+                <span>{t("sb99e77d", "לשחק עם בוט")}</span>
                 {/*
                   How hard it tries. Three settings, each one MEASURED over
                   700 battles rather than guessed: the easy bot wins 17% of
@@ -265,7 +266,7 @@ export function HomeScreen({
                 <span
                   className="pick__levels"
                   role="group"
-                  aria-label="כמה הבוט מתאמץ"
+                  aria-label={t("s066beed", "כמה הבוט מתאמץ")}
                   onClick={(e) => e.stopPropagation()}
                 >
                   {BOT_LEVELS.map((lvl) => (
@@ -287,10 +288,10 @@ export function HomeScreen({
                 className="pick__card"
                 onClick={gated(() => setFriendOpen(true))}
                 disabled={!m.onlineAvailable}
-                title={m.onlineAvailable ? "" : "לא בגרסה הזאת"}
+                title={m.onlineAvailable ? "" : t("s0443085", "לא בגרסה הזאת")}
               >
                 <img src={`${BASE}brand/versus_player.webp`} alt="" />
-                <span>לשחק עם חברים</span>
+                <span>{t("sa6f7e6a", "לשחק עם חברים")}</span>
                 {!signedIn && <Lock />}
               </button>
             </div>
@@ -327,7 +328,7 @@ export function HomeScreen({
                 className="join__input"
                 value={codeInput}
                 onChange={(e) => setCodeInput(e.target.value.toUpperCase())}
-                placeholder="קוד החדר"
+                placeholder={t("scf8cabd", "קוד החדר")}
                 maxLength={6}
                 autoFocus
                 inputMode="text"
@@ -349,7 +350,7 @@ export function HomeScreen({
             <button
               className="btn-lab"
               onClick={m.startPlayground}
-              title="בלי שעון, שני הצדדים שלך"
+              title={t("s1dda509", "בלי שעון, שני הצדדים שלך")}
             >
               <Icon name="stacked" size={15} /> מגרש המשחקים
             </button>
@@ -379,14 +380,14 @@ export function HomeScreen({
           {m.roomError && (
             <p className="warn">
               {m.roomError === "notFound"
-                ? "אין חדר כזה. אולי המצאת אותו."
+                ? t("sd01b2d8", "אין חדר כזה. אולי המצאת אותו.")
                 : m.roomError === "self"
-                  ? "זה הקוד שלך. אתה לא יכול לאכול את עצמך."
-                  : "החדר מלא. שניים מספיקים לי."}
+                  ? t("sf8d116e", "זה הקוד שלך. אתה לא יכול לאכול את עצמך.")
+                  : t("s1f6e5ea", "החדר מלא. שניים מספיקים לי.")}
             </p>
           )}
           {/* No sentence here. The friends card is already disabled with
-              "לא בגרסה הזאת" on it, which says the same thing in the place
+              t("se81adad", "לא בגרסה הזאת") on it, which says the same thing in the place
               somebody is actually looking when they wonder. */}
         </section>
 
@@ -396,7 +397,7 @@ export function HomeScreen({
           place and in the order the distances get shorter: the arena is weeks
           off, the chest is three matches, a daily challenge is tonight.
         */}
-        <section className="home__progress" aria-label="ההתקדמות שלי">
+        <section className="home__progress" aria-label={t("sefa91e2", "ההתקדמות שלי")}>
           {/*
             Open to a guest: Or, after seeing how many padlocks a first visit
             had on it — "open the album to guests and leave only the shop,
@@ -472,7 +473,7 @@ export function HomeScreen({
           the column he is already looking at.
         */}
         {m.account && (
-          <div className="home__purse purse" aria-label="מה יש לך">
+          <div className="home__purse purse" aria-label={t("s3cd2566", "מה יש לך")}>
             <span className="purse__item">
               <Icon name="win" size={16} /> {m.account.trophies}
             </span>
@@ -504,7 +505,7 @@ export function HomeScreen({
           above the two buttons that start one. It is now a plain row under
           the shop, and the column itself starts below the title.
         */}
-        <section className="home__collect" aria-label="האוסף שלי">
+        <section className="home__collect" aria-label={t("s5d488a4", "האוסף שלי")}>
           {/*
             The album, as a door — but only where it is not already beside
             the arena.
@@ -519,12 +520,12 @@ export function HomeScreen({
           {compact && (
             <button className="rail__item" onClick={() => panel.show("album")}>
               <Icon name="deck" size={19} />
-              <span>האלבום</span>
+              <span>{t("sb1c5413", "האלבום")}</span>
             </button>
           )}
           <button className="rail__item" onClick={gated(() => panel.show("shop"))}>
             <Icon name="gem" size={19} />
-            <span>חנות נוחות</span>
+            <span>{t("s2706aa0", "חנות נוחות")}</span>
             {!signedIn && <Lock />}
           </button>
           {/*
@@ -538,7 +539,7 @@ export function HomeScreen({
           */}
           {promo && (
             <button className="rail__promo" onClick={gated(() => panel.show("shop"))}>
-              <span className="rail__promo-tag">חדש בחנות</span>
+              <span className="rail__promo-tag">{t("s26c5785", "חדש בחנות")}</span>
               <span className="rail__promo-row">
                 {/* The thing itself. An advertisement with no picture of what
                     it is selling is a sentence, not an advertisement. */}
@@ -559,10 +560,10 @@ export function HomeScreen({
 
         {/* ─────────────── other people ─────────────── */}
         {/* Or: "and friends in an area slightly apart from them." */}
-        <section className="home__social" aria-label="חברים">
+        <section className="home__social" aria-label={t("s0cab6b9", "חברים")}>
           <button className="rail__item" onClick={gated(() => panel.show("friends"))}>
             <Icon name="friend" size={19} />
-            <span>חברים</span>
+            <span>{t("s44d803c", "חברים")}</span>
             {friends && friends.have > 0 && (
               <small className="rail__count">{friends.have}</small>
             )}
@@ -570,7 +571,7 @@ export function HomeScreen({
                 for the same reason the challenge tabs use one: "there is
                 something here" is the whole message. */}
             {friends && friends.waiting > 0 && (
-              <i className="rail__dot" aria-label="מישהו מחכה לתשובה" />
+              <i className="rail__dot" aria-label={t("sd0647c4", "מישהו מחכה לתשובה")} />
             )}
             {!signedIn && <Lock />}
           </button>
@@ -604,7 +605,7 @@ export function HomeScreen({
             }}
           >
             מה חדש
-            {newsUnread && <i className="btn-news__dot" aria-label="יש עדכון שלא קראתם" />}
+            {newsUnread && <i className="btn-news__dot" aria-label={t("sb468431", "יש עדכון שלא קראתם")} />}
           </button>
           {/* Open to everybody: the player most likely to hit a bug is the one
               who just arrived. Reporting a PERSON still needs an account, and
@@ -624,7 +625,7 @@ export function HomeScreen({
             {!INSTALLED && (
               <button
                 className="btn-link"
-                title="מוריד אותי מחדש ומנקה גרסאות ישנות"
+                title={t("s301358f", "מוריד אותי מחדש ומנקה גרסאות ישנות")}
                 onClick={() => void hardRefresh()}
               >
                 ⟳ רענן

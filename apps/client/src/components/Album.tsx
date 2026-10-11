@@ -20,6 +20,7 @@ import { Icon } from "./Icon";
 import { useEffect, useState } from "react";
 import { LEVELS, levelCost } from "@amanda/shared";
 import { levelUpCard, loadStats, type Account, type Stats } from "../game/account";
+import { line as t } from "../game/copy";
 
 interface Props {
   account: Account | null;
@@ -97,7 +98,7 @@ export function Album({ account, onClose, onCardInfo, onChanged }: Props) {
       {/* Five words, not two sentences. Or has asked for this more times than
           any other thing in this game, and the audit now reads multi-line JSX
           so it can no longer be slipped past by pressing Enter. */}
-      {!account && <p className="album__none">אתה משחק מהחפיסה המלאה</p>}
+      {!account && <p className="album__none">{t("s9ed23d9", "אתה משחק מהחפיסה המלאה")}</p>}
 
       {note && <p className="album__none album__none--warn">{note}</p>}
 
@@ -112,7 +113,7 @@ export function Album({ account, onClose, onCardInfo, onChanged }: Props) {
               them — a settings screen, not a trophy shelf. Each number is now
               a plaque with the game's own icon on it, big enough to look at.
             */}
-            <h3 className="record__title">הקרבות שלך</h3>
+            <h3 className="record__title">{t("s5c7bb8f", "הקרבות שלך")}</h3>
             <div className="record__grid">
               {(
                 [
@@ -141,14 +142,14 @@ export function Album({ account, onClose, onCardInfo, onChanged }: Props) {
                   {
                     icon: "ready",
                     n: `${stats.played ? Math.round((stats.wins / stats.played) * 100) : 0}%`,
-                    k: "ניצחונות",
+                    k: t("sf9d8dd4", "ניצחונות"),
                     sub: stats.played ? `${stats.wins} מתוך ${stats.played}` : null,
                     tone: "good",
                   },
-                  { icon: "lose", n: stats.losses, k: "הפסדים", tone: "bad" },
-                  { icon: "win", n: stats.bestTrophies, k: "שיא גביעים", tone: "gold" },
-                  { icon: "chest", n: stats.chestsOpened, k: "תיבות", tone: "" },
-                  { icon: "deck", n: stats.copiesOwned, k: "עותקים", tone: "" },
+                  { icon: "lose", n: stats.losses, k: t("s80eabb4", "הפסדים"), tone: "bad" },
+                  { icon: "win", n: stats.bestTrophies, k: t("s2fd7491", "שיא גביעים"), tone: "gold" },
+                  { icon: "chest", n: stats.chestsOpened, k: t("s59e6cc5", "תיבות"), tone: "" },
+                  { icon: "deck", n: stats.copiesOwned, k: t("sd969559", "עותקים"), tone: "" },
                 ] as const
               ).map((cell) => (
                 <div key={cell.k} className={`record__cell record__cell--${cell.tone || "plain"}`}>
@@ -162,7 +163,7 @@ export function Album({ account, onClose, onCardInfo, onChanged }: Props) {
               ))}
             </div>
             {stats.recent.length > 0 && (
-              <div className="record__streak" title="הקרבות האחרונים, החדש ביותר ראשון">
+              <div className="record__streak" title={t("s3cfae6d", "הקרבות האחרונים, החדש ביותר ראשון")}>
                 {stats.recent.map((won, i) => (
                   <span key={i} className={`record__mark ${won ? "is-win" : "is-loss"}`}>
                     <Icon name={won ? "win" : "lose"} size={17} />
@@ -197,7 +198,7 @@ export function Album({ account, onClose, onCardInfo, onChanged }: Props) {
                       {mine ? (
                         <>
                           <CardView cardId={card.id} size="small" />
-                          <span className="album__copies" title="עותקים — כמה פעמים אפשר להניח אותו">
+                          <span className="album__copies" title={t("s176d067", "עותקים — כמה פעמים אפשר להניח אותו")}>
                             ×{mine.copies}
                           </span>
                           {mine.level > 1 && (

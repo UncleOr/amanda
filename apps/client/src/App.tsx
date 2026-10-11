@@ -71,6 +71,7 @@ const ArenaPreview = lazy(() =>
 import { MoreModes } from "./components/MoreModes";
 import { Overlay } from "./components/Overlay";
 import { lang, setLang } from "./game/lang";
+import { line as t } from "./game/copy";
 
 
 /**
@@ -120,13 +121,13 @@ function useLine(lines: readonly V.Line[]): string {
 }
 
 const PHASE_LABEL: Record<string, string> = {
-  countdown: "מתארגנת…",
-  waiting: "מחפשת לך יריב…",
+  countdown: t("sdfad51e", "מתארגנת…"),
+  waiting: t("s8da6ce3", "מחפשת לך יריב…"),
   build: PHASES.build.label.he,
   panic: PHASES.panic.label.he + "!",
-  prebattle: "נועלת לוחות…",
+  prebattle: t("s7265e57", "נועלת לוחות…"),
   battle: PHASES.battle.label.he,
-  result: "זהו",
+  result: t("s7b1e036", "זהו"),
 };
 
 /** Phases where leaving means abandoning a match in progress. */
@@ -199,7 +200,7 @@ const REVIEW = new URLSearchParams(location.search).has("gallery")
 export default function App() {
   if (REVIEW === "gallery" || REVIEW === "arena")
     return (
-      <Suspense fallback={<div className="admin admin--msg">רגע…</div>}>
+      <Suspense fallback={<div className="admin admin--msg">{t("sb472148", "רגע…")}</div>}>
         {REVIEW === "gallery" ? <CardGallery /> : <ArenaPreview />}
       </Suspense>
     );
@@ -207,7 +208,7 @@ export default function App() {
   // Supabase client, and nobody playing the game needs either.
   if (REVIEW === "admin")
     return (
-      <Suspense fallback={<div className="admin admin--msg">רגע…</div>}>
+      <Suspense fallback={<div className="admin admin--msg">{t("s49e6902", "רגע…")}</div>}>
         <Admin />
       </Suspense>
     );
@@ -736,8 +737,8 @@ function Game() {
           so on a phone held upright we ask for a turn instead of squashing. */}
       <div className="rotate-hint">
         <div className="rotate-hint__icon"><Icon name="phone" size={56} /></div>
-        <h2>סובב את המכשיר</h2>
-        <p>אני משוחקת לרוחב, ילד. ככה אני רואה את שניכם.</p>
+        <h2>{t("s1396b7a", "סובב את המכשיר")}</h2>
+        <p>{t("sf038582", "אני משוחקת לרוחב, ילד. ככה אני רואה את שניכם.")}</p>
       </div>
       {phaseCard && (
         <div className="phase-card" role="status" key={phaseCard}>
@@ -752,7 +753,7 @@ function Game() {
             itself across the screen and leaves (see .phase-card below). */}
         {m.phase === "waiting" && (
           <div className={`topbar__phase phase--${m.phase}`}>
-            {m.roomCode ? "מחכה לחבר שלך…" : PHASE_LABEL[m.phase]}
+            {m.roomCode ? t("sbd466e9", "מחכה לחבר שלך…") : PHASE_LABEL[m.phase]}
           </div>
         )}
         {(m.phase === "build" || m.phase === "panic") && !m.playground && (
@@ -779,7 +780,7 @@ function Game() {
           {m.account && m.phase === "intro" && (
             <button
               className={`mute bell${unread ? " bell--new" : ""}`}
-              title="הודעות"
+              title={t("s1703f49", "הודעות")}
               onClick={() => panel.show("inbox")}
             >
               <Icon name="report" size={18} />
@@ -789,7 +790,7 @@ function Game() {
           {m.phase !== "intro" && (
             <button
               className="topbar__exit"
-              title="חזרה לתפריט"
+              title={t("s460b8e8", "חזרה לתפריט")}
               onClick={() => {
                 sfx.play("click");
                 // Leaving mid-match throws the board away, so ask first.
@@ -808,21 +809,21 @@ function Game() {
           */}
           <button
             className="mute mute--lang"
-            title={lang() === "he" ? "Switch to English" : "למעבר לעברית"}
+            title={lang() === "he" ? "Switch to English" : t("s2bd3e6a", "למעבר לעברית")}
             onClick={() => setLang(lang() === "he" ? "en" : "he")}
           >
-            {lang() === "he" ? "EN" : "עב"}
+            {lang() === "he" ? "EN" : t("s853021b", "עב")}
           </button>
           <button
             className={`mute${musicOn ? "" : " mute--off"}`}
-            title={musicOn ? "כיבוי מוזיקה" : "הפעלת מוזיקה"}
+            title={musicOn ? t("s16f12ca", "כיבוי מוזיקה") : t("s745079b", "הפעלת מוזיקה")}
             onClick={() => setMusicOn(music.toggleEnabled())}
           >
             <Icon name={musicOn ? "musicOn" : "musicOff"} size={19} />
           </button>
           <button
             className="mute"
-            title={muted ? "הפעלת צליל" : "השתקה"}
+            title={muted ? t("s0a41262", "הפעלת צליל") : t("s119a8c7", "השתקה")}
             onClick={() => {
               const nowMuted = sfx.toggleMute();
               music.setMuted(nowMuted);
@@ -868,11 +869,11 @@ function Game() {
               <Icon name={m.netError ? "unplugged" : m.roomCode ? "friend" : "online"} size={60} />
             </div>
             <h2>
-              {m.netError ? "השרת לא עונה" : m.roomCode ? "מחכה לחבר שלך…" : "מחפשת לך יריב…"}
+              {m.netError ? t("se65fa4a", "השרת לא עונה") : m.roomCode ? t("sa759290", "מחכה לחבר שלך…") : t("s70fb9fd", "מחפשת לך יריב…")}
             </h2>
             {m.roomCode ? (
               <>
-                <p className="intro__tag">שלח את הקוד למי שבא לך לאכול:</p>
+                <p className="intro__tag">{t("sbb39d20", "שלח את הקוד למי שבא לך לאכול:")}</p>
                 <div className="room-code">{m.roomCode}</div>
                 <button
                   className="btn-link"
@@ -884,13 +885,13 @@ function Game() {
                     });
                   }}
                 >
-                  {copied ? "✔ העתקתי" : "⧉ העתק הזמנה"}
+                  {copied ? t("s8850299", "✔ העתקתי") : t("sb48d812", "⧉ העתק הזמנה")}
                 </button>
               </>
             ) : (
               <p className="intro__tag">
                 {m.netError
-                  ? "השרת לא עונה. אני פנויה."
+                  ? t("s20677b2", "השרת לא עונה. אני פנויה.")
                   : searching}
               </p>
             )}
@@ -901,7 +902,7 @@ function Game() {
                 </button>
               )}
               <button className="btn-fight btn-online" onClick={m.reset}>
-                {m.netError ? "חזרה" : "ביטול"}
+                {m.netError ? t("s3ffaa2b", "חזרה") : t("s7807abd", "ביטול")}
               </button>
             </div>
           </div>
@@ -928,23 +929,23 @@ function Game() {
               <div className="side__label">
                 {m.playground ? (
                   <LabSideLabel
-                    name="הצד שלך"
+                    name={t("sc2b0252", "הצד שלך")}
                     on={m.editSide === "me"}
                     onPick={() => m.setEditSide("me")}
                     onClear={() => m.clearSide("me")}
                   />
                 ) : (
                   <>
-                    {m.coop ? "החצי שלך" : "אתה"} <span className="side__way">⟵</span>
+                    {m.coop ? t("sc84b632", "החצי שלך") : t("s502312f", "אתה")} <span className="side__way">⟵</span>
                   </>
                 )}
               </div>
               {m.frozenFor > 0 && (
                 <div className="frozen" role="status">
                   <span className="frozen__icon"><Icon name="frozen" size={26} /></span>
-                  <strong>הידיים שלך קפואות</strong>
+                  <strong>{t("sa531737", "הידיים שלך קפואות")}</strong>
                   <span className="frozen__count">{m.frozenFor.toFixed(1)}</span>
-                  <span className="frozen__note">לשלוף ולזרוק אפשר. להדביק — לא.</span>
+                  <span className="frozen__note">{t("s5d4a4e0", "לשלוף ולזרוק אפשר. להדביק — לא.")}</span>
                 </div>
               )}
               {/* What you just said, over your own board, so you can see it
@@ -996,7 +997,7 @@ function Game() {
                  * what is going on because it is so small." See MatePeek.
                  */
                 <MatePeek
-                  label="החצי של מי שאיתך"
+                  label={t("sc8775fd", "החצי של מי שאיתך")}
                   placements={m.mate?.placements ?? {}}
                   king={m.mate?.king ?? null}
                   side="left"
@@ -1017,7 +1018,7 @@ function Game() {
               <div className="side__label">
                 {m.playground ? (
                   <LabSideLabel
-                    name="הצד שמולך"
+                    name={t("sfc83143", "הצד שמולך")}
                     on={m.editSide === "enemy"}
                     onPick={() => m.setEditSide("enemy")}
                     onClear={() => m.clearSide("enemy")}
@@ -1029,14 +1030,14 @@ function Game() {
 
                       Or: *"and during the battle you need to see your
                       opponent's profile picture and name."* It was the word
-                      "היריב" over an anonymous grid — which is who you are
+                      t("s52b9172", "היריב") over an anonymous grid — which is who you are
                       playing against in the abstract, and nobody in
                       particular. The face is small on purpose: it belongs
                       beside the label, not over the board.
                     */}
                     <span className="side__way">⟶</span>{" "}
                     {m.coop ? (
-                      "אמנדה"
+                      t("s9d29f31", "אמנדה")
                     ) : (
                       <span className="side__who">
                         {m.rival?.avatar && (
@@ -1046,7 +1047,7 @@ function Game() {
                             alt=""
                           />
                         )}
-                        {m.rival?.nickname ?? "היריב"}
+                        {m.rival?.nickname ?? t("sdb2b008", "היריב")}
                         {m.rival && (
                           <span className="side__cups">
                             <Icon name="win" size={11} /> {m.rival.trophies}
@@ -1054,7 +1055,7 @@ function Game() {
                         )}
                       </span>
                     )}{" "}
-                    {m.phase !== "build" && <span className="side__revealed">נחשף!</span>}
+                    {m.phase !== "build" && <span className="side__revealed">{t("sf0485e7", "נחשף!")}</span>}
                   </>
                 )}
               </div>
@@ -1105,10 +1106,10 @@ function Game() {
               <span className="targeting-bar__text">
                 <Icon name="target" size={16} />{" "}
                 {isEnemyTargeted(m.targeting)
-                  ? "בחר קלף אצל היריב"
+                  ? t("sbcd9db8", "בחר קלף אצל היריב")
                   : m.firstPick
-                    ? "ועכשיו את השני"
-                    : "בחר קלף על הלוח שלך"}{" "}
+                    ? t("s1445cf1", "ועכשיו את השני")
+                    : t("s4106038", "בחר קלף על הלוח שלך")}{" "}
                 עבור "{ACTIONS.get(m.targeting)?.name.he}"
               </span>
               <button className="targeting-bar__cancel" onClick={m.cancelTargeting}>
@@ -1141,20 +1142,20 @@ function Game() {
                     <button
                       className="action-chip__main"
                       disabled={a.passive || a.used || !m.canPlayAction(a.id)}
-                      title={!m.canPlayAction(a.id) ? "מאוחר. תכננת גרוע." : undefined}
+                      title={!m.canPlayAction(a.id) ? t("s3cec9ca", "מאוחר. תכננת גרוע.") : undefined}
                       onClick={() => m.activateAction(a.id)}
                     >
                       {a.passive
-                        ? "פעיל ∞"
+                        ? t("sb9a31bf", "פעיל ∞")
                         : a.used
-                          ? "נוצל"
+                          ? t("s34ec88c", "נוצל")
                           : !m.canPlayAction(a.id)
-                            ? "מאוחר מדי"
-                            : "הפעל"}
+                            ? t("sa549a85", "מאוחר מדי")
+                            : t("sf916188", "הפעל")}
                     </button>
                     <button
                       className="action-chip__info"
-                      title="הסבר"
+                      title={t("sdc8c744", "הסבר")}
                       onClick={() => setActionDetail(a.id)}
                     >
                       ℹ
@@ -1186,7 +1187,7 @@ function Game() {
                     />
                   )
                 ) : (
-                  <div className="lab__eraser" title="גע בקלף על הלוח כדי להוריד אותו">
+                  <div className="lab__eraser" title={t("s932d88e", "גע בקלף על הלוח כדי להוריד אותו")}>
                     <Icon name="erase" size={34} />
                   </div>
                 )}
@@ -1195,7 +1196,7 @@ function Game() {
                 {m.handIsAction && (
                   <button className="take-action" onClick={m.takeAction} disabled={m.barFull}>
                     {m.barFull ? (
-                      "הבר מלא"
+                      t("s3adfc6c", "הבר מלא")
                     ) : (
                       <>
                         <Icon name="plus" size={14} /> קח לפעולה
@@ -1220,7 +1221,7 @@ function Game() {
             <aside className="hand">
               <div className="hand__current">
                 {!m.hand ? (
-                  <div className="hand__empty">אין קלף</div>
+                  <div className="hand__empty">{t("sb0d338c", "אין קלף")}</div>
                 ) : m.handIsAction ? (
                   <div className="action-hand">
                     <ActionCardView
@@ -1248,11 +1249,11 @@ function Game() {
               <div className="hand__counts">
                 <span
                   className={`count count--deck${m.deckLeft <= 3 ? " count--low" : ""}`}
-                  title="קלפים שנשארו בחפיסה"
+                  title={t("s2f616ac", "קלפים שנשארו בחפיסה")}
                 >
                   <Icon name="deck" size={15} /> {m.deckLeft}
                 </span>
-                <span className="count count--discard" title="קלפים בפח">
+                <span className="count count--discard" title={t("s6c4fc10", "קלפים בפח")}>
                   <Icon name="discard" size={15} /> {m.discardCount}
                 </span>
               </div>
@@ -1260,7 +1261,7 @@ function Game() {
                 {m.handIsAction && (
                   <button className="take-action" onClick={m.takeAction} disabled={m.barFull}>
                     {m.barFull ? (
-                      "הבר מלא"
+                      t("s7aacede", "הבר מלא")
                     ) : (
                       <>
                         <Icon name="plus" size={14} /> קח לפעולה
@@ -1295,18 +1296,18 @@ function Game() {
                 onClick={m.online ? m.toggleReady : m.toBattle}
               >
                 {!m.online
-                  ? "התחל קרב!"
+                  ? t("s4a9f52a", "התחל קרב!")
                   : m.ready
-                    ? "מוכן — לחץ לביטול"
-                    : "אני מוכן"}
+                    ? t("s72c3f50", "מוכן — לחץ לביטול")
+                    : t("sd693107", "אני מוכן")}
               </button>
               {m.online && (m.ready || m.oppReady) && (
                 <p className="hand__hint hand__hint--ready">
                   {m.ready && m.oppReady
-                    ? "שניכם מוכנים — מתחילים"
+                    ? t("sa4fb281", "שניכם מוכנים — מתחילים")
                     : m.ready
-                      ? "אתה מוכן. אפשר להמשיך לבנות עד שגם הוא יהיה."
-                      : "היריב מוכן. אתה עדיין יכול לבנות."}
+                      ? t("s0ecac63", "אתה מוכן. אפשר להמשיך לבנות עד שגם הוא יהיה.")
+                      : t("sabbc0bf", "היריב מוכן. אתה עדיין יכול לבנות.")}
                 </p>
               )}
             </aside>
@@ -1322,15 +1323,15 @@ function Game() {
               */}
               {m.online ? (
                 <>
-                  <div className="overlay__mini">הלוח שלך נעול</div>
+                  <div className="overlay__mini">{t("seef7e51", "הלוח שלך נעול")}</div>
                   <div className="overlay__wait" aria-hidden="true">
                     <Icon name="timer" size={54} />
                   </div>
-                  <div className="overlay__label">מחכה שהיריב יסיים…</div>
+                  <div className="overlay__label">{t("sc0930d9", "מחכה שהיריב יסיים…")}</div>
                 </>
               ) : (
                 <>
-                  <div className="overlay__mini">ממלאת לך את החורים…</div>
+                  <div className="overlay__mini">{t("s40977ec", "ממלאת לך את החורים…")}</div>
                   <div className="overlay__count">{Math.ceil(m.timeLeft)}</div>
                   <div className="overlay__label">{battleStart}</div>
                 </>
@@ -1463,8 +1464,8 @@ function Game() {
             <Icon name="win" size={72} />
             {m.lesson < LESSONS.length ? (
               <>
-                <h2>יפה. עכשיו משהו קצת יותר מתוחכם.</h2>
-                <p>במשחק הבא יש ליריב לוח אמיתי — ולך יש בדיוק מה שמנצח אותו.</p>
+                <h2>{t("s19395af", "יפה. עכשיו משהו קצת יותר מתוחכם.")}</h2>
+                <p>{t("s9b86633", "במשחק הבא יש ליריב לוח אמיתי — ולך יש בדיוק מה שמנצח אותו.")}</p>
                 <div className="result__buttons">
                   <button
                     className="btn-fight"
@@ -1480,8 +1481,8 @@ function Game() {
               </>
             ) : (
               <>
-                <h2>זהו, אתה יודע לשחק.</h2>
-                <p>עכשיו לך תאסוף קלפים. אני רעבה.</p>
+                <h2>{t("sb604bef", "זהו, אתה יודע לשחק.")}</h2>
+                <p>{t("s80f3ec6", "עכשיו לך תאסוף קלפים. אני רעבה.")}</p>
                 <div className="result__buttons">
                   <button
                     className="btn-fight"
@@ -1588,7 +1589,7 @@ function Game() {
       {panel.is("challenges") && (
         <Overlay onClick={() => panel.close()}>
           <div className="modal modal--quests" onClick={(e) => e.stopPropagation()}>
-            <button className="modal__close" onClick={() => panel.close()} title="סגירה">
+            <button className="modal__close" onClick={() => panel.close()} title={t("s0e0ecca", "סגירה")}>
               <Icon name="exit" size={15} />
             </button>
             <Challenges
@@ -1660,7 +1661,7 @@ function Game() {
         <Overlay onClick={m.declineInvitation}>
           <div className="modal modal--invite" onClick={(e) => e.stopPropagation()}>
             <Icon name="friend" size={44} />
-            <h2>{m.invitation.nickname ?? "חבר"} מזמין אותך למשחק</h2>
+            <h2>{m.invitation.nickname ?? t("seaa865f", "חבר")} מזמין אותך למשחק</h2>
             <div className="result__buttons">
               <button className="btn-fight" onClick={m.acceptInvitation}>
                 <Icon name="play" size={16} /> קדימה

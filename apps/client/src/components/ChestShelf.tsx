@@ -1,6 +1,7 @@
 import { useCallback, useEffect, useState } from "react";
 import { openChest, unopenedChests, type Chest } from "../game/account";
 import { Icon } from "./Icon";
+import { line as t } from "../game/copy";
 
 /**
  * The chests waiting for you, on the home screen.
@@ -49,13 +50,13 @@ export function ChestShelf({
   if (!chests.length) return null;
 
   return (
-    <div className="shelf" aria-label="תיבות שמחכות לך">
+    <div className="shelf" aria-label={t("sb1a59ea", "תיבות שמחכות לך")}>
       {chests.slice(0, 4).map((chest) => (
         <button
           key={chest.id}
           className={`shelf__chest shelf__chest--${chest.kind}`}
           disabled={busy === chest.id}
-          title="פתח"
+          title={t("s97a626f", "פתח")}
           onClick={() => {
             setBusy(chest.id);
             void openChest(chest.id).then((opened) => {

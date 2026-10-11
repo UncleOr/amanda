@@ -4,6 +4,7 @@ import { Icon } from "./Icon";
 import { useCompact } from "../game/useCompact";
 import type { ComponentProps } from "react";
 import { Overlay } from "./Overlay";
+import { line as t } from "../game/copy";
 
 type GridProps = ComponentProps<typeof BoardGrid>;
 
@@ -50,7 +51,7 @@ export function MatePeek({ label, ...grid }: GridProps & { label: string }) {
       <button
         className="mate mate--peek"
         onClick={() => setOpen(true)}
-        title="להגדיל את החצי של מי שאיתך"
+        title={t("s8a4e2d5", "להגדיל את החצי של מי שאיתך")}
       >
         <span className="mate__label">
           <Icon name="friend" size={11} /> {label}
@@ -71,7 +72,7 @@ export function MatePeek({ label, ...grid }: GridProps & { label: string }) {
       {open && (
         <Overlay onClick={() => setOpen(false)}>
           <div className="modal modal--mate" onClick={(e) => e.stopPropagation()}>
-            <button className="modal__close" onClick={() => setOpen(false)} title="סגירה">
+            <button className="modal__close" onClick={() => setOpen(false)} title={t("sf3cf709", "סגירה")}>
               <Icon name="exit" size={15} />
             </button>
             <h2 className="mate__title">

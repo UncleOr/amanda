@@ -10,6 +10,7 @@ import {
 } from "@amanda/shared";
 import { Icon } from "./Icon";
 import { EmojiFace } from "./EmojiFace";
+import { line as t } from "../game/copy";
 
 /**
  * Saying something to the other player.
@@ -81,8 +82,8 @@ export function SayButton({
       <button
         className="say__handle"
         onClick={() => setOpen((o) => !o)}
-        title={open ? "סגירה" : "להגיד משהו"}
-        aria-label={open ? "סגירה" : "להגיד משהו"}
+        title={open ? t("sba7f872", "סגירה") : t("sf1e57a9", "להגיד משהו")}
+        aria-label={open ? t("sedb69c9", "סגירה") : t("sc6886d9", "להגיד משהו")}
         aria-expanded={open}
       >
         {open ? (
@@ -119,14 +120,14 @@ export function SayButton({
               <button
                 className="say__face say__face--more"
                 role="menuitem"
-                title="עוד אימוג'ים בחנות"
+                title={t("s1e8d9ca", "עוד אימוג'ים בחנות")}
                 onClick={() => {
                   setOpen(false);
                   onWantMore();
                 }}
               >
                 <Icon name="plus" size={16} />
-                <small>עוד</small>
+                <small>{t("s7e6e15e", "עוד")}</small>
               </button>
             )}
           </div>
@@ -149,7 +150,7 @@ export function SayButton({
                 <Icon name={hearing ? "soundOn" : "soundOff"} size={17} />
               </span>
               <span className="say__words">
-                {hearing ? "לא לראות הודעות" : "להראות הודעות שוב"}
+                {hearing ? t("s299e1cd", "לא לראות הודעות") : t("sf929198", "להראות הודעות שוב")}
               </span>
             </button>
           )}
@@ -188,7 +189,7 @@ export function SayButton({
           </div>
           {/* A sentence's face is always one of the free ones, so nothing in
               the list above can be a picture this player does not have. */}
-          {mineIds.size === 0 && <p className="say__none">אין אימוג'ים</p>}
+          {mineIds.size === 0 && <p className="say__none">{t("sed1b7c0", "אין אימוג'ים")}</p>}
         </div>
       )}
     </div>

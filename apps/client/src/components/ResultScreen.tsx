@@ -7,6 +7,7 @@ import * as V from "../data/voice";
 import { verdictText } from "../game/verdict";
 import type { MatchApi } from "../game/useMatch";
 import type { Overlays } from "../game/useOverlay";
+import { line as t } from "../game/copy";
 
 /**
  * How it went, and what to do next.
@@ -71,7 +72,7 @@ export function ResultScreen({
           {/* In the lab there is no winner, only a reading. Crowning the
               player for a board they also built for the other side would be
               nonsense, and the taunts are aimed at an opponent who is them. */}
-          <h1>{m.playground ? (m.iWon ? "הצד שלך החזיק" : "הצד שמולך החזיק") : winnerText}</h1>
+          <h1>{m.playground ? (m.iWon ? t("sb73e6cd", "הצד שלך החזיק") : t("sb66c1e6", "הצד שמולך החזיק")) : winnerText}</h1>
           {m.result && (
             <>
               <p className="result__verdict">{verdictText(m.result, m.iWon)}</p>
@@ -120,11 +121,11 @@ export function ResultScreen({
                 <Icon name="again" size={17} />{" "}
                 {m.rematchAsked
                   ? m.rematchOffered
-                    ? "מתחילים…"
-                    : "מחכה ליריב…"
+                    ? t("s6052ae4", "מתחילים…")
+                    : t("s30a40da", "מחכה ליריב…")
                   : m.rematchOffered
-                    ? "רוצים עוד אחד! קדימה"
-                    : "קרב חוזר"}
+                    ? t("s21914e7", "רוצים עוד אחד! קדימה")
+                    : t("sab50205", "קרב חוזר")}
               </button>
             )}
             {m.playground ? (
@@ -153,7 +154,7 @@ export function ResultScreen({
             )}
             {/*
               A quiet button, not a blue gradient across the whole card.
-              Measured: it was 442x46 against "משחק חדש" at 216x48 — twice
+              Measured: it was 442x46 against t("se3da978", "משחק חדש") at 216x48 — twice
               the area, and both of them gradients — so the loudest thing on
               the screen after a match was "shall I explain what happened?"
               rather than "play again". Curiosity is secondary to carrying on.
@@ -161,7 +162,7 @@ export function ResultScreen({
             {m.result && (
               <button className="btn-fight btn-ghost" onClick={() => setShowLog((v) => !v)}>
                 {showLog ? (
-                  "מספיק, הבנתי"
+                  t("s18fbbed", "מספיק, הבנתי")
                 ) : (
                   <>
                     <Icon name="report" size={16} /> שאסביר לך מה קרה?

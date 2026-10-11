@@ -55,7 +55,7 @@ function readEdits() {
       .map((c) => c.trim());
     if (cells.length < 3) continue;
     const [id, current, next, english] = cells;
-    if (!/^[a-z]\d+$/.test(id)) continue; // header and divider rows
+    if (!/^[a-z][0-9a-f]{7}$/.test(id)) continue; // header and divider rows
     if (!next && !english) continue; // both left blank = leave it alone
     const unescape = (t) => (t ?? "").replace(/\\\|/g, "|");
     edits.push({

@@ -3,6 +3,7 @@ import { periodEndsOn, type Period } from "@amanda/shared";
 import { challengesSoFar, claimChallenge, loadChallenges, type Standing } from "../game/meta";
 import { Icon } from "./Icon";
 import { Lock } from "./SignedInOnly";
+import { line as t } from "../game/copy";
 
 /**
  * Today's challenges, on the home screen.
@@ -24,19 +25,19 @@ import { Lock } from "./SignedInOnly";
  */
 
 const WHEN: Record<Period, string> = {
-  daily: "היום",
-  weekly: "השבוע",
-  monthly: "החודש",
+  daily: t("sfbba2d0", "היום"),
+  weekly: t("sb2dcc21", "השבוע"),
+  monthly: t("scbbd32e", "החודש"),
 };
 
 /** How long is left, in the roundest words that are still true. */
 function timeLeft(period: Period): string {
   const ends = new Date(`${periodEndsOn(period)}T00:00:00+03:00`).getTime();
   const hours = Math.max(0, Math.round((ends - Date.now()) / 3_600_000));
-  if (hours < 1) return "עוד פחות משעה";
+  if (hours < 1) return t("sa421571", "עוד פחות משעה");
   if (hours < 24) return `עוד ${hours} שעות`;
   const days = Math.round(hours / 24);
-  return days === 1 ? "עוד יום" : `עוד ${days} ימים`;
+  return days === 1 ? t("s58b31e8", "עוד יום") : `עוד ${days} ימים`;
 }
 
 export function Challenges({
@@ -90,7 +91,7 @@ export function Challenges({
   const ready = (c: Standing) => c.done && !c.claimed;
 
   return (
-    <section className="quests" aria-label="אתגרים">
+    <section className="quests" aria-label={t("se995a4a", "אתגרים")}>
       <header className="quests__head">
         <h2>
           <Icon name="challenge" size={18} /> אתגרים
@@ -108,7 +109,7 @@ export function Challenges({
                 {WHEN[p]}
                 {/* A dot, not a number: "there is something here" is the whole
                     message, and a badge that counts invites counting. */}
-                {waiting > 0 && <i className="quests__dot" aria-label="יש פרס לקחת" />}
+                {waiting > 0 && <i className="quests__dot" aria-label={t("s8037b61", "יש פרס לקחת")} />}
               </button>
             );
           })}
@@ -139,7 +140,7 @@ export function Challenges({
               )}
             </span>
             {c.claimed ? (
-              <span className="quests__taken">נלקח</span>
+              <span className="quests__taken">{t("sb752d13", "נלקח")}</span>
             ) : (
               /*
                * A LOCK, not a dead button.
@@ -156,7 +157,7 @@ export function Challenges({
                 disabled={!c.done || busy === c.id}
                 onClick={signedIn ? () => void take(c.id) : gated(() => {})}
               >
-                {busy === c.id ? "…" : "לקחת"}
+                {busy === c.id ? "…" : t("s1d3665c", "לקחת")}
                 {!signedIn && <Lock />}
               </button>
             )}
@@ -201,7 +202,7 @@ export function ChallengeButton({
   return (
     <button className="quests__open" onClick={onOpen}>
       <Icon name="challenge" size={20} />
-      <span>אתגרים</span>
+      <span>{t("s4b399e6", "אתגרים")}</span>
       {ready > 0 && <i className="quests__dot quests__dot--big">{ready}</i>}
     </button>
   );

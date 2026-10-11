@@ -1,5 +1,6 @@
 import { Icon } from "./Icon";
 import { Overlay } from "./Overlay";
+import { line as t } from "../game/copy";
 
 /**
  * What a guest may do, and what an account is for.
@@ -29,16 +30,16 @@ import { Overlay } from "./Overlay";
  * that owns an album. `linked` is true once a Google account or an email is
  * attached, and that is the line.
  */
-export const LOCKED_REASON = "צריך חשבון. זה חינם, ושומר את האלבום שלך.";
+export const LOCKED_REASON = t("s9c73ff4", "צריך חשבון. זה חינם, ושומר את האלבום שלך.");
 
 /** Everything a guest is missing, in the order it is worth wanting. */
 export const WHAT_AN_ACCOUNT_GIVES = [
   // The first line is the true one, and it is first on purpose: a guest can
   // already SEE their album — what they cannot do is keep it.
-  { icon: "deck", he: "האלבום נשמר — גם אם תנקה את הדפדפן או תחליף מכשיר" },
-  { icon: "online", he: "לשחק מול אנשים אמיתיים" },
-  { icon: "friend", he: "חברים — לראות מי מחובר ולהזמין למשחק" },
-  { icon: "gem", he: "חנות נוחות" },
+  { icon: "deck", he: t("s3e98614", "האלבום נשמר — גם אם תנקה את הדפדפן או תחליף מכשיר") },
+  { icon: "online", he: t("se65df62", "לשחק מול אנשים אמיתיים") },
+  { icon: "friend", he: t("s627ac6b", "חברים — לראות מי מחובר ולהזמין למשחק") },
+  { icon: "gem", he: t("sa9713fa", "חנות נוחות") },
 ] as const;
 
 /**
@@ -64,10 +65,10 @@ export function WhySignIn({ onClose, onSignIn }: { onClose: () => void; onSignIn
   return (
     <Overlay onClick={onClose}>
       <div className="modal modal--why" onClick={(e) => e.stopPropagation()}>
-        <button className="modal__close" onClick={onClose} title="סגירה">
+        <button className="modal__close" onClick={onClose} title={t("s59e83a1", "סגירה")}>
           <Icon name="exit" size={15} />
         </button>
-        <h2>עם חשבון זה שלך</h2>
+        <h2>{t("sde7d6f8", "עם חשבון זה שלך")}</h2>
         <p className="why__lead">
           בלי חשבון אפשר לשחק ולאסוף — אבל הכול יושב רק בדפדפן הזה, וברגע
           שתנקה אותו או תעבור למכשיר אחר, הוא ייעלם.

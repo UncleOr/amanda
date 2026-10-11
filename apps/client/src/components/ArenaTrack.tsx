@@ -2,6 +2,7 @@ import { useState } from "react";
 import { ARENAS, arenaFor, arenaProgress, toArena } from "@amanda/shared";
 import { Icon } from "./Icon";
 import { Overlay } from "./Overlay";
+import { line as t } from "../game/copy";
 
 /**
  * The ladder of arenas, on the home screen.
@@ -27,7 +28,7 @@ export function ArenaTrack({ trophies }: { trophies: number }) {
 
   return (
     <>
-      <button className="track" onClick={() => setOpen(true)} title="כל הארנות">
+      <button className="track" onClick={() => setOpen(true)} title={t("s84b983e", "כל הארנות")}>
         <span
           className="track__art"
           style={{ backgroundImage: `url("${BASE}arena/${here.id}.webp")` }}
@@ -58,10 +59,10 @@ export function ArenaTrack({ trophies }: { trophies: number }) {
       {open && (
         <Overlay onClick={() => setOpen(false)}>
           <div className="modal modal--arenas" onClick={(e) => e.stopPropagation()}>
-            <button className="modal__close" onClick={() => setOpen(false)} title="סגירה">
+            <button className="modal__close" onClick={() => setOpen(false)} title={t("s92d6d79", "סגירה")}>
               <Icon name="exit" size={15} />
             </button>
-            <h2 className="arenas__title">הדרך</h2>
+            <h2 className="arenas__title">{t("s474cafb", "הדרך")}</h2>
             <ol className="arenas__list">
               {ARENAS.map((a) => {
                 const reached = trophies >= a.from;
@@ -84,7 +85,7 @@ export function ArenaTrack({ trophies }: { trophies: number }) {
                     </span>
                     <span className="arenas__at">
                       {current ? (
-                        <span className="arenas__badge">אתה כאן</span>
+                        <span className="arenas__badge">{t("s2411278", "אתה כאן")}</span>
                       ) : reached ? (
                         <Icon name="ready" size={18} />
                       ) : (

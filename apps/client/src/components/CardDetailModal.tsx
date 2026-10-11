@@ -6,6 +6,7 @@ import { LEVELS, levelCost, levelMultiplier } from "@amanda/shared";
 import { Overlay } from "./Overlay";
 import { spriteFor } from "../game/skins";
 import { say } from "../game/lang";
+import { line as t } from "../game/copy";
 
 export function CardDetailModal({
   cardId,
@@ -39,7 +40,7 @@ export function CardDetailModal({
         onClick={(e) => e.stopPropagation()}
         style={{ "--card-color": card.art.placeholderColor } as CSSProperties}
       >
-        <button className="modal__close" onClick={onClose} title="סגירה">
+        <button className="modal__close" onClick={onClose} title={t("s2027844", "סגירה")}>
           <Icon name="exit" size={15} />
         </button>
 
@@ -103,24 +104,24 @@ export function CardDetailModal({
         )}
 
         <div className="modal__stats">
-          <Stat icon="hp" label="חיים" value={hp} />
-          <Stat icon="power" label="עוצמה" value={power} />
-          <Stat icon="timer" label="קצב תקיפה" value={`${card.stats.attackSpeed}ש׳`} />
+          <Stat icon="hp" label={t("sa1b7d2c", "חיים")} value={hp} />
+          <Stat icon="power" label={t("s4173ded", "עוצמה")} value={power} />
+          <Stat icon="timer" label={t("s4763941", "קצב תקיפה")} value={`${card.stats.attackSpeed}ש׳`} />
           <Stat
             icon="move"
-            label="תנועה"
-            value={card.stats.moveSpeed > 0 ? `${card.stats.moveSpeed}/ש׳` : "סטטי"}
+            label={t("sefc23b0", "תנועה")}
+            value={card.stats.moveSpeed > 0 ? `${card.stats.moveSpeed}/ש׳` : t("s60fd570", "סטטי")}
           />
           <Stat
             icon={RANGE_META[card.stats.range].icon}
-            label="טווח"
+            label={t("sa3be69c", "טווח")}
             value={say(RANGE_META[card.stats.range])}
           />
         </div>
 
         {card.abilities.length > 0 && (
           <div className="modal__section">
-            <h3>יכולות</h3>
+            <h3>{t("s8fa9cc4", "יכולות")}</h3>
             <ul className="ability-list">
               {card.abilities.map((ab, i) => (
                 <li key={i}>
@@ -134,7 +135,7 @@ export function CardDetailModal({
 
         {card.role && (
           <div className="modal__section">
-            <h3>תפקיד</h3>
+            <h3>{t("s8efe7ee", "תפקיד")}</h3>
             <p className="modal__role">{say(card.role)}</p>
           </div>
         )}

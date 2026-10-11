@@ -3,6 +3,7 @@ import { Icon } from "./Icon";
 import { ageFrom } from "../game/account";
 import { Overlay } from "./Overlay";
 import { replayIntro } from "../game/intro";
+import { line as t } from "../game/copy";
 
 /**
  * About, and the legal pages the stores will not publish us without.
@@ -30,7 +31,7 @@ import { replayIntro } from "../game/intro";
 
 const FILM = "https://www.youtube.com/watch?v=Z0h80PW_YJA";
 /** What to search for, when a link is not allowed. */
-const FILM_SEARCH = "אמנדה המפלצת מסונול כצנלסון";
+const FILM_SEARCH = t("s4c6892c", "אמנדה המפלצת מסונול כצנלסון");
 /**
  * Old enough to be handed a link out of a children's app.
  *
@@ -66,15 +67,15 @@ export function mayFollowLinks(birthDate: string | null | undefined): boolean {
  * nowhere is worse than no link.
  */
 const SONG_YOUTUBE: string = "https://www.youtube.com/watch?v=yDtnLcs_A0M";
-const SONG_SEARCH = "אמנדה המפלצת מסונול כצנלסון";
+const SONG_SEARCH = t("s8c8128f", "אמנדה המפלצת מסונול כצנלסון");
 
 type Page = "about" | "privacy" | "a11y" | "terms";
 
 const TABS: Array<{ id: Page; he: string }> = [
-  { id: "about", he: "עלינו" },
-  { id: "privacy", he: "פרטיות" },
-  { id: "a11y", he: "נגישות" },
-  { id: "terms", he: "תנאים" },
+  { id: "about", he: t("sa1ba3d6", "עלינו") },
+  { id: "privacy", he: t("s4bda300", "פרטיות") },
+  { id: "a11y", he: t("s4947c25", "נגישות") },
+  { id: "terms", he: t("s16ab030", "תנאים") },
 ];
 
 export function About({
@@ -102,7 +103,7 @@ export function About({
   return (
     <Overlay onClick={onClose}>
       <div className="modal modal--about" onClick={(e) => e.stopPropagation()}>
-        <button className="modal__close" onClick={onClose} title="סגירה">
+        <button className="modal__close" onClick={onClose} title={t("sd1e2d62", "סגירה")}>
           <Icon name="exit" size={15} />
         </button>
 
@@ -181,7 +182,7 @@ function AboutUs({ grown }: { grown: boolean }) {
    */
   return (
     <>
-      <h2>אם אתם מפחדים ממפלצות — המשחק הזה לא בשבילכם</h2>
+      <h2>{t("s315003f", "אם אתם מפחדים ממפלצות — המשחק הזה לא בשבילכם")}</h2>
       <p>
         הכירו את אמנדה: המפלצת הכי חזקה באלבום המפלצות. דרקונים יורקי אש, ענקי
         אבן, אפילו צ'ופי המחשמל — כולם ניסו להילחם בה ונכשלו. אמנדה אכלה את
@@ -195,10 +196,10 @@ function AboutUs({ grown }: { grown: boolean }) {
       </p>
       <p>
         המשחק נוצר על ידי הוד אסולין ואור אסולין, בהשראת הסרט שיצרנו יחד:
-        "אמנדה — המפלצת מסונול כצנלסון". מוזמנים לצפות בו ולהעלות לנו קצת את
+        t("s1cb17af", "אמנדה — המפלצת מסונול כצנלסון"). מוזמנים לצפות בו ולהעלות לנו קצת את
         הצפיות. תיהנו!
       </p>
-      <WayOut href={FILM} search={FILM_SEARCH} label="הסרט המלא" grown={grown} />
+      <WayOut href={FILM} search={FILM_SEARCH} label={t("sf8961a7", "הסרט המלא")} grown={grown} />
 
       {/*
         The opening film plays once, on a first visit, and then never again on
@@ -211,9 +212,9 @@ function AboutUs({ grown }: { grown: boolean }) {
 
       {SONG_YOUTUBE && (
         <>
-          <h3>שיר הנושא</h3>
-          <p>המוזיקה שמתנגנת כאן היא שלנו. לשמוע אותה במלואה:</p>
-          <WayOut href={SONG_YOUTUBE} search={SONG_SEARCH} label="השיר" grown={grown} />
+          <h3>{t("sce69090", "שיר הנושא")}</h3>
+          <p>{t("sf085dc3", "המוזיקה שמתנגנת כאן היא שלנו. לשמוע אותה במלואה:")}</p>
+          <WayOut href={SONG_YOUTUBE} search={SONG_SEARCH} label={t("s9b547f8", "השיר")} grown={grown} />
         </>
       )}
     </>
@@ -223,20 +224,20 @@ function AboutUs({ grown }: { grown: boolean }) {
 function Privacy() {
   return (
     <>
-      <h2>מדיניות פרטיות</h2>
-      <p className="about__date">עודכן: אוקטובר 2026</p>
+      <h2>{t("s02cec25", "מדיניות פרטיות")}</h2>
+      <p className="about__date">{t("sbfac0cb", "עודכן: אוקטובר 2026")}</p>
 
-      <h3>מה נשמר עליך</h3>
+      <h3>{t("sda5279b", "מה נשמר עליך")}</h3>
       <ul>
         <li>
-          <b>כינוי, אווטאר ומגדר</b> — אם בחרת. אפשר לשחק בלי אף אחד מהם.
+          <b>{t("s9a31259", "כינוי, אווטאר ומגדר")}</b> — אם בחרת. אפשר לשחק בלי אף אחד מהם.
         </li>
         <li>
-          <b>תאריך לידה</b> — רק כדי לוודא גיל מינימלי של 7. נשמר כתאריך, לא
+          <b>{t("s2dcc96e", "תאריך לידה")}</b> — רק כדי לוודא גיל מינימלי של 7. נשמר כתאריך, לא
           כתעודת זהות, ולא משותף עם אף אחד.
         </li>
         <li>
-          <b>ההתקדמות שלך</b> — גביעים, יהלומים, הקלפים באלבום, ותוצאות
+          <b>{t("sb82d9bb", "ההתקדמות שלך")}</b> — גביעים, יהלומים, הקלפים באלבום, ותוצאות
           המשחקים ששיחקת.
         </li>
         <li>
@@ -245,26 +246,26 @@ function Privacy() {
         </li>
       </ul>
 
-      <h3>מה לא נשמר</h3>
+      <h3>{t("s0e064c8", "מה לא נשמר")}</h3>
       <p>
         אין פרסומות, אין מזהי פרסום, אין מעקב בין אתרים, ואין צ'אט חופשי. אנחנו
         לא אוספים מיקום, אנשי קשר, תמונות או מיקרופון.
       </p>
 
-      <h3>איפה זה יושב</h3>
+      <h3>{t("s17cae8a", "איפה זה יושב")}</h3>
       <p>
         על שרתי Supabase בפרנקפורט שבגרמניה (האיחוד האירופי). רק אתה יכול לקרוא
         את השורות שלך — בסיס הנתונים חוסם גישה לשורות של מישהו אחר ברמת
         המסד עצמו, לא רק באפליקציה.
       </p>
 
-      <h3>איך מוחקים הכול</h3>
+      <h3>{t("sa910811", "איך מוחקים הכול")}</h3>
       <p>
-        באזור האישי יש <b>מחיקת חשבון</b>. היא מוחקת את החשבון, האלבום, הגביעים
+        באזור האישי יש <b>{t("see1a564", "מחיקת חשבון")}</b>. היא מוחקת את החשבון, האלבום, הגביעים
         וההיסטוריה — מיד, בלי תקופת המתנה ובלי לשלוח אימייל. אי אפשר לבטל.
       </p>
 
-      <h3>יצירת קשר</h3>
+      <h3>{t("scf1e0b8", "יצירת קשר")}</h3>
       <p>
         לשאלות על פרטיות או למחיקת מידע: amanda@orasul.in
       </p>
@@ -275,34 +276,34 @@ function Privacy() {
 function Accessibility() {
   return (
     <>
-      <h2>הצהרת נגישות</h2>
-      <p className="about__date">עודכן: אוקטובר 2026</p>
+      <h2>{t("s3bbb564", "הצהרת נגישות")}</h2>
+      <p className="about__date">{t("s98d6639", "עודכן: אוקטובר 2026")}</p>
       <p>
         אנחנו משתדלים שהמשחק יהיה נגיש לכמה שיותר אנשים, ומכוונים לתקן הישראלי
         ת"י 5568 ולהנחיות WCAG 2.1 ברמה AA.
       </p>
 
-      <h3>מה כבר נעשה</h3>
+      <h3>{t("s9e45ede", "מה כבר נעשה")}</h3>
       <ul>
-        <li>כל הכפתורים נגישים במקלדת וסימון המיקוד נשאר גלוי.</li>
+        <li>{t("s0b8e183", "כל הכפתורים נגישים במקלדת וסימון המיקוד נשאר גלוי.")}</li>
         <li>
           מי שביקש פחות תנועה במערכת ההפעלה — האנימציות נעצרות. זה כולל את
           ההבהובים, הניצוצות והתיבות הקופצות.
         </li>
-        <li>אפשר לכבות את הצלילים ואת המוזיקה בנפרד, והבחירה נשמרת.</li>
-        <li>אייקונים נושאים תיאור טקסטואלי כשהם עומדים בפני עצמם.</li>
-        <li>המשחק עובד לאורך ולרוחב, ובלי לנעול את גודל הטקסט.</li>
+        <li>{t("s12cb0a6", "אפשר לכבות את הצלילים ואת המוזיקה בנפרד, והבחירה נשמרת.")}</li>
+        <li>{t("s0ec6329", "אייקונים נושאים תיאור טקסטואלי כשהם עומדים בפני עצמם.")}</li>
+        <li>{t("s99b2530", "המשחק עובד לאורך ולרוחב, ובלי לנעול את גודל הטקסט.")}</li>
       </ul>
 
-      <h3>מה עוד לא</h3>
+      <h3>{t("s1bd53f9", "מה עוד לא")}</h3>
       <p>
         הקרב עצמו הוא אנימציה גרפית, ואנחנו עדיין עובדים על תיאור טקסטואלי מלא
         של מה שקורה בו. דוח הקרב בסוף כל משחק מתאר את ההתרחשות במילים, וזו
         כרגע הדרך הנגישה לדעת מה קרה.
       </p>
 
-      <h3>נתקלתם בבעיה?</h3>
-      <p>ספרו לנו דרך פרטי הקשר בדף החנות, ונתקן.</p>
+      <h3>{t("s9e79aac", "נתקלתם בבעיה?")}</h3>
+      <p>{t("se71be7a", "ספרו לנו דרך פרטי הקשר בדף החנות, ונתקן.")}</p>
     </>
   );
 }
@@ -310,11 +311,11 @@ function Accessibility() {
 function Terms() {
   return (
     <>
-      <h2>תנאי שימוש</h2>
-      <p className="about__date">עודכן: אוקטובר 2026</p>
+      <h2>{t("s1c1af17", "תנאי שימוש")}</h2>
+      <p className="about__date">{t("sadf3694", "עודכן: אוקטובר 2026")}</p>
       <ul>
-        <li>המשחק חינמי. אין רכישות בתוך האפליקציה.</li>
-        <li>הגיל המינימלי הוא 7.</li>
+        <li>{t("s2b98856", "המשחק חינמי. אין רכישות בתוך האפליקציה.")}</li>
+        <li>{t("sab731f2", "הגיל המינימלי הוא 7.")}</li>
         <li>
           הקלפים, הדמויות, האיורים והסיפור הם שלנו. אפשר לשחק, אי אפשר למכור או
           להפיץ אותם.

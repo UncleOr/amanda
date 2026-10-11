@@ -5,6 +5,7 @@ import { KING } from "@amanda/shared";
 import { CATALOG } from "../data/catalog";
 import { ELEMENT_META, RANGE_META, RARITY_META, seriesColor } from "../data/cardMeta";
 import { say } from "../game/lang";
+import { line as t } from "../game/copy";
 
 interface StatBuff {
   powerAdd?: number;
@@ -95,21 +96,21 @@ export function CardView({
             <Icon name={RANGE_META[card.stats.range].icon} size={12} />
           </span>
           {card.stats.moveSpeed > 0 && (
-            <span title="מסתער">
+            <span title={t("s5379cdd", "מסתער")}>
               <Icon name="move" size={12} />
             </span>
           )}
           {card.flying && (
-            <span title="מעופף">
+            <span title={t("sd75b53b", "מעופף")}>
               <Icon name="fly" size={12} />
             </span>
           )}
         </span>
         <span className="card__flags">
-          {king && <span className="card__boss" title="בונוס מלך ×3">
+          {king && <span className="card__boss" title={t("sd3446ed", "בונוס מלך ×3")}>
               <Icon name="king" size={13} />×3
             </span>}
-          {!king && card.midBoss && <span className="card__boss" title="ענק אמצע (מתאים למלך)">
+          {!king && card.midBoss && <span className="card__boss" title={t("s4aa3080", "ענק אמצע (מתאים למלך)")}>
               <Icon name="king" size={13} />
             </span>}
           <span className="card__rarity" title={say(rarity)} />
@@ -117,7 +118,7 @@ export function CardView({
             <button
               type="button"
               className="card__info"
-              title="פרטי הקלף"
+              title={t("sdf7d9b8", "פרטי הקלף")}
               onClick={(e) => {
                 e.stopPropagation();
                 onInfo();
@@ -134,7 +135,7 @@ export function CardView({
         <span className="card__name">{say(card.name)}</span>
         {size !== "small" && (
           <span className={`card__stats${buffed ? " card__stats--buffed" : ""}`}>
-            <span className="stat stat--hp" title="חיים">
+            <span className="stat stat--hp" title={t("sd3b512b", "חיים")}>
               <Icon name="hp" size={13} className="stat__icon" />
               <b>{short(hp)}</b>
             </span>
@@ -147,7 +148,7 @@ export function CardView({
               itself, where there is room to read it.
             */}
             {size === "large" && (
-              <span className="stat stat--pw" title="עוצמה">
+              <span className="stat stat--pw" title={t("s415a2b6", "עוצמה")}>
                 <Icon name="power" size={13} className="stat__icon" />
                 <b>{short(power)}</b>
               </span>
@@ -166,7 +167,7 @@ export function CardView({
  */
 export function CardBack({ size = "small" }: { size?: "small" | "medium" }) {
   return (
-    <div className={`card card--back card--${size}`} aria-label="מוסתר בערפל">
+    <div className={`card card--back card--${size}`} aria-label={t("se274434", "מוסתר בערפל")}>
       <span className="card-back__mark">
         <Icon name="hidden" size={20} />
       </span>

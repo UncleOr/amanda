@@ -13,6 +13,7 @@
  * never be the reason a child cannot play.
  */
 import { createClient, type SupabaseClient } from "@supabase/supabase-js";
+import { line as t } from "./copy";
 
 /**
  * Publishable, and meant to be: row level security is what protects the data,
@@ -259,7 +260,7 @@ export async function loadAccount(): Promise<Account | null> {
         });
         // The browser is leaving for Google; nothing after this runs.
         if (!error) return null;
-        lastAuthError = "חשבון הגוגל הזה כבר שייך לחשבון אחר, ולא הצלחתי להיכנס אליו.";
+        lastAuthError = t("s3add400", "חשבון הגוגל הזה כבר שייך לחשבון אחר, ולא הצלחתי להיכנס אליו.");
       } else {
         lastAuthError = returning.error;
       }
@@ -280,7 +281,7 @@ export async function loadAccount(): Promise<Account | null> {
       // did not — most often because the verifier it stored is not in this
       // browsing context, which is what an in-app browser on a phone does.
       lastAuthError =
-        "ההתחברות לגוגל לא הושלמה. נסה שוב מהדפדפן הרגיל ולא מתוך אפליקציה אחרת.";
+        t("s9365276", "ההתחברות לגוגל לא הושלמה. נסה שוב מהדפדפן הרגיל ולא מתוך אפליקציה אחרת.");
       cleanOAuthFromUrl();
       return null;
     }
@@ -381,18 +382,18 @@ export async function markTutorialDone(): Promise<void> {
  */
 export async function levelUpCard(cardId: string): Promise<{ error?: string; level?: number }> {
   const sb = db();
-  if (!sb || !SERVER_HTTP) return { error: "אין חיבור לשרת" };
+  if (!sb || !SERVER_HTTP) return { error: t("s674d50d", "אין חיבור לשרת") };
   try {
     const { data } = await sb.auth.getSession();
     const token = data.session?.access_token;
-    if (!token) return { error: "אין חשבון" };
+    if (!token) return { error: t("s648890c", "אין חשבון") };
     const res = await fetch(`${SERVER_HTTP}/api/level-up`, {
       method: "POST",
       headers: { "content-type": "application/json", authorization: `Bearer ${token}` },
       body: JSON.stringify({ cardId }),
     });
     const out = (await res.json()) as { error?: string; level?: number };
-    return res.ok ? { level: out.level } : { error: out.error ?? "לא הצליח" };
+    return res.ok ? { level: out.level } : { error: out.error ?? t("s2efa30b", "לא הצליח") };
   } catch (err) {
     return { error: (err as Error).message };
   }
@@ -659,13 +660,13 @@ export async function saveProfile(patch: {
   catchphrase?: string;
 }): Promise<string | null> {
   const sb = db();
-  if (!sb) return "אין חיבור לשרת";
+  if (!sb) return t("see8db43", "אין חיבור לשרת");
   if (patch.birthDate && ageFrom(patch.birthDate) < MIN_AGE)
     return `צריך להיות בן ${MIN_AGE} לפחות`;
   try {
     const { data } = await sb.auth.getSession();
     const id = data.session?.user.id;
-    if (!id) return "אין חשבון";
+    if (!id) return t("s56e58ef", "אין חשבון");
     const row: Record<string, string> = {};
     if (patch.nickname !== undefined) row.nickname = patch.nickname;
     if (patch.avatar !== undefined) row.avatar = patch.avatar;
@@ -684,10 +685,10 @@ export async function saveProfile(patch: {
 /** Sign in with an email and password, keeping the album you already have. */
 export async function linkEmail(email: string, password: string): Promise<string | null> {
   const sb = db();
-  if (!sb) return "אין חיבור לשרת";
+  if (!sb) return t("s665d389", "אין חיבור לשרת");
   try {
     const { data } = await sb.auth.getSession();
-    if (!data.session?.user) return "צריך להתחיל לשחק קודם";
+    if (!data.session?.user) return t("se81f968", "צריך להתחיל לשחק קודם");
     // updateUser on an anonymous account attaches the credentials to it rather
     // than creating a second, empty one.
     const { error } = await sb.auth.updateUser({ email, password });
@@ -750,18 +751,18 @@ export async function fileReport(input: {
   message: string;
 }): Promise<string | null> {
   const sb = db();
-  if (!sb || !SERVER_HTTP) return "אין חיבור לשרת";
+  if (!sb || !SERVER_HTTP) return t("s5383875", "אין חיבור לשרת");
   try {
     const { data } = await sb.auth.getSession();
     const token = data.session?.access_token;
-    if (!token) return "צריך חשבון כדי לדווח";
+    if (!token) return t("s5370a70", "צריך חשבון כדי לדווח");
     const res = await fetch(`${SERVER_HTTP}/api/report`, {
       method: "POST",
       headers: { authorization: `Bearer ${token}`, "content-type": "application/json" },
       body: JSON.stringify(input),
     });
     const body = (await res.json()) as { ok?: boolean; error?: string };
-    return body.ok ? null : (body.error ?? "לא הצליח");
+    return body.ok ? null : (body.error ?? t("s97e263e", "לא הצליח"));
   } catch (err) {
     return (err as Error).message;
   }
@@ -822,9 +823,9 @@ export async function friendAction(
   const r = await friendsCall<{ ok?: boolean; error?: string }>(
     `/api/friends/${action}`,
     { playerId },
-    { error: "אין חיבור לשרת" },
+    { error: t("s651f017", "אין חיבור לשרת") },
   );
-  return r.ok ? null : (r.error ?? "לא הצליח");
+  return r.ok ? null : (r.error ?? t("sd13c7f9", "לא הצליח"));
 }
 
 export interface ShopItem {
@@ -885,9 +886,9 @@ export async function buyItem(itemId: string): Promise<string | null> {
   const r = await friendsCall<{ ok?: boolean; error?: string }>(
     "/api/shop/buy",
     { itemId },
-    { error: "אין חיבור לשרת" },
+    { error: t("sedc6c2a", "אין חיבור לשרת") },
   );
-  return r.ok ? null : (r.error ?? "לא הצליח");
+  return r.ok ? null : (r.error ?? t("s54a1abe", "לא הצליח"));
 }
 
 export interface Notice {
@@ -952,37 +953,37 @@ export async function markInboxRead(): Promise<void> {
  */
 export async function scrubMyData(): Promise<string | null> {
   const sb = db();
-  if (!sb || !SERVER_HTTP) return "אין חיבור לשרת";
+  if (!sb || !SERVER_HTTP) return t("sac33701", "אין חיבור לשרת");
   try {
     const { data } = await sb.auth.getSession();
     const token = data.session?.access_token;
-    if (!token) return "אין חשבון";
+    if (!token) return t("s2cb3864", "אין חשבון");
     const res = await fetch(`${SERVER_HTTP}/api/account/scrub`, {
       method: "POST",
       headers: { authorization: `Bearer ${token}`, "content-type": "application/json" },
       body: "{}",
     });
     const body = (await res.json()) as { ok?: boolean; error?: string };
-    return body.ok ? null : (body.error ?? "לא הצליח");
+    return body.ok ? null : (body.error ?? t("s2afe5ef", "לא הצליח"));
   } catch {
-    return "לא הצליח";
+    return t("s58e9ecf", "לא הצליח");
   }
 }
 
 export async function deleteAccount(): Promise<string | null> {
   const sb = db();
-  if (!sb || !SERVER_HTTP) return "אין חיבור לשרת";
+  if (!sb || !SERVER_HTTP) return t("s835acce", "אין חיבור לשרת");
   try {
     const { data } = await sb.auth.getSession();
     const token = data.session?.access_token;
-    if (!token) return "אין חשבון";
+    if (!token) return t("s2d85691", "אין חשבון");
     const res = await fetch(`${SERVER_HTTP}/api/account/delete`, {
       method: "POST",
       headers: { authorization: `Bearer ${token}`, "content-type": "application/json" },
       body: "{}",
     });
     const body = (await res.json()) as { ok?: boolean; error?: string };
-    if (!body.ok) return body.error ?? "לא הצליח";
+    if (!body.ok) return body.error ?? t("s5da8d9e", "לא הצליח");
     await sb.auth.signOut();
     return null;
   } catch (err) {
@@ -1029,12 +1030,12 @@ export async function isAdmin(): Promise<boolean> {
 
 export async function linkGoogle(): Promise<string | null> {
   const sb = db();
-  if (!sb) return "אין חיבור לשרת";
+  if (!sb) return t("s115ddae", "אין חיבור לשרת");
   try {
     const { data: session } = await sb.auth.getSession();
     const user = session.session?.user;
-    if (!user) return "צריך להתחיל לשחק קודם";
-    if (!user.is_anonymous) return "כבר מחובר";
+    if (!user) return t("sf5f2796", "צריך להתחיל לשחק קודם");
+    if (!user.is_anonymous) return t("s79d47ae", "כבר מחובר");
 
     const { error } = await sb.auth.linkIdentity({
       provider: "google",

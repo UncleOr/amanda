@@ -1,5 +1,6 @@
 import { NACHOS_PER_CHEST, nachoBar, nachoChestKind, chestsFilled } from "@amanda/shared";
 import { Icon } from "./Icon";
+import { line as t } from "../game/copy";
 
 /**
  * How close the next chest is, in nachos.
@@ -37,7 +38,7 @@ export function NachoBar({ nachos }: { nachos: number }) {
       // The whole thing says what it means; the pips below are decoration.
       role="img"
       aria-label={`${bar.have} נאצ'וס מתוך ${bar.need} לתיבה הבאה`}
-      title="כל משחק נותן נאצ'וס, לפי כמה טוב שיחקת"
+      title={t("s65876b9", "כל משחק נותן נאצ'וס, לפי כמה טוב שיחקת")}
     >
       <span className="nachos__row" aria-hidden="true">
         {pips.map((on, i) => (

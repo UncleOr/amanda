@@ -1,5 +1,6 @@
 import { Icon } from "./Icon";
 import { Overlay } from "./Overlay";
+import { line as t } from "../game/copy";
 
 /**
  * The shelf of modes that do not exist yet.
@@ -36,29 +37,29 @@ export function MoreModes({
     {
       id: "amanda",
       icon: "king",
-      title: "אמנדה — הצצה",
-      blurb: "מולה לבד. אי אפשר לנצח.",
+      title: t("s4fc5b19", "אמנדה — הצצה"),
+      blurb: t("s7767343", "מולה לבד. אי אפשר לנצח."),
       start: onAmandaSolo,
     },
     {
       id: "mirror",
       icon: "deck",
-      title: "חפיסה זהה",
-      blurb: "אותם קלפים לשני הצדדים.",
+      title: t("s5c8a703", "חפיסה זהה"),
+      blurb: t("secbb695", "אותם קלפים לשני הצדדים."),
       start: onMirror,
     },
     {
       id: "duo",
       icon: "monster",
-      title: "2 נגד 2",
-      blurb: "שניים בונים לוח אחד.",
+      title: t("se14e946", "2 נגד 2"),
+      blurb: t("sac17390", "שניים בונים לוח אחד."),
       soon: true,
     },
     {
       id: "draft",
       icon: "discard",
-      title: "דראפט",
-      blurb: "מה שלא לקחת הולך ליריב.",
+      title: t("se4e1ef0", "דראפט"),
+      blurb: t("s4b7da7f", "מה שלא לקחת הולך ליריב."),
       soon: true,
     },
   ];
@@ -66,12 +67,12 @@ export function MoreModes({
   return (
     <Overlay onClick={onClose}>
       <div className="modal modal--modes" onClick={(e) => e.stopPropagation()}>
-        <button className="modal__close" onClick={onClose} title="סגירה">
+        <button className="modal__close" onClick={onClose} title={t("sc4d6c42", "סגירה")}>
           <Icon name="exit" size={15} />
         </button>
-        <h2 className="modes__title">עוד מודים</h2>
-        {/* The list says it itself: a mode you can play has a "שחק" button
-            and one that is not ready says "בקרוב". A line above it
+        <h2 className="modes__title">{t("sa53602d", "עוד מודים")}</h2>
+        {/* The list says it itself: a mode you can play has a t("sb8d28c1", "שחק") button
+            and one that is not ready says t("sbdb5aac", "בקרוב"). A line above it
             describing that is a line describing the obvious. */}
         <ul className="modes__list">
           {modes.map((mode) => (
@@ -84,7 +85,7 @@ export function MoreModes({
                 <small>{mode.blurb}</small>
               </span>
               {mode.soon ? (
-                <span className="modes__soon">בקרוב</span>
+                <span className="modes__soon">{t("sbc98f3e", "בקרוב")}</span>
               ) : (
                 <button
                   className="btn-fight modes__go"

@@ -39,14 +39,15 @@ import { CATCHPHRASES, EMOJI, EMOJI_PACKS } from "@amanda/shared";
 import { sfx } from "../game/sfx";
 import type { Chest } from "../game/account";
 import * as V from "../data/voice";
+import { line as t } from "../game/copy";
 
 /** How each kind of chest introduces itself, and which painting it is. */
 const CHEST_LOOK: Record<string, { he: string; tone: string; art: string }> = {
   // png, not webp: a chest is an object and keeps its transparency, so it sits
   // on the panel instead of on a coloured tile (see process.ts).
-  wood: { he: "תיבת עץ", tone: "#b07a3c", art: "chest_wood.png" },
-  silver: { he: "תיבת כסף", tone: "#c3cdd8", art: "chest_silver.png" },
-  gold: { he: "תיבת זהב", tone: "#f0b429", art: "chest_gold.png" },
+  wood: { he: t("s82374a3", "תיבת עץ"), tone: "#b07a3c", art: "chest_wood.png" },
+  silver: { he: t("s662d31c", "תיבת כסף"), tone: "#c3cdd8", art: "chest_silver.png" },
+  gold: { he: t("s5bba8e8", "תיבת זהב"), tone: "#f0b429", art: "chest_gold.png" },
 };
 
 const BASE = import.meta.env.BASE_URL;
@@ -212,7 +213,7 @@ export function ChestReveal({ chest, onClose }: Props) {
             */}
             {allShown && chest.items?.map((id) => <Prize key={id} id={id} />)}
             <button className="btn-fight" disabled={!allShown} onClick={onClose}>
-              {allShown ? "יפה" : "…"}
+              {allShown ? t("sbcd9e71", "יפה") : "…"}
             </button>
           </>
         )}
@@ -295,7 +296,7 @@ function Prize({ id }: { id: string }) {
 
   return (
     <div className="chest__prize">
-      <span className="chest__prize-tag">חדש אצלך</span>
+      <span className="chest__prize-tag">{t("sb0e2d63", "חדש אצלך")}</span>
       {pack ? (
         <>
           <span className="chest__prize-faces">

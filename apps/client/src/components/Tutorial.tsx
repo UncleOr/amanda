@@ -30,6 +30,7 @@
  */
 import { useCallback, useEffect, useLayoutEffect, useRef, useState } from "react";
 import type { Awaits } from "../game/coach";
+import { line as t } from "../game/copy";
 
 export interface Step {
   /**
@@ -288,7 +289,7 @@ export function Tutorial({ steps, onDone, onQuit }: Props) {
 
             The way OUT stays, because that one is a real choice.
           */}
-          {!pointing && <span className="tut__go">המשך ←</span>}
+          {!pointing && <span className="tut__go">{t("sbecf213", "המשך ←")}</span>}
           <button className="btn-link tut__skip" onClick={onQuit ?? onDone}>
             אני יודע לשחק
           </button>

@@ -4,6 +4,7 @@ import { ErrorBoundary } from "./ErrorBoundary";
 import { SayButton, SaidBubble } from "./Say";
 import { verdictText } from "../game/verdict";
 import type { MatchApi } from "../game/useMatch";
+import { line as t } from "../game/copy";
 
 /**
  * The battle, and PixiJS with it, fetched only when there is one.
@@ -36,7 +37,7 @@ export function BattleScreen({
           fallback={(why) => (
             <div className="result__card">
               <h1><Icon name="explode" size={64} /></h1>
-              <p>שגיאה בהצגת הקרב</p>
+              <p>{t("s1a437d7", "שגיאה בהצגת הקרב")}</p>
               {/*
                 The actual error, in English, in small grey type.
                 
@@ -59,7 +60,7 @@ export function BattleScreen({
             — the result was computed before this screen mounted — so the
             only thing waiting costs is the animation.
           */}
-          <Suspense fallback={<div className="arena arena--loading">רגע…</div>}>
+          <Suspense fallback={<div className="arena arena--loading">{t("s0e0b682", "רגע…")}</div>}>
             <Arena
               result={result}
               onFinish={m.finishBattle}
@@ -71,7 +72,7 @@ export function BattleScreen({
             />
           </Suspense>
         </ErrorBoundary>
-        {/* "ולעצור את הקרב בכל רגע נתון" — straight back to the boards you
+        {/* t("s1cc4c49", "ולעצור את הקרב בכל רגע נתון") — straight back to the boards you
             built, mid-blow if you like. A lab you cannot interrupt is just a
             slow match. */}
         {m.playground && (

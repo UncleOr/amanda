@@ -1,5 +1,6 @@
 import { Component, type ReactNode } from "react";
 import { track } from "../game/track";
+import { line as t } from "../game/copy";
 
 interface Props {
   children: ReactNode;
@@ -108,9 +109,9 @@ export function AppCrash({ children }: { children: ReactNode }) {
     <ErrorBoundary
       fallback={(why) => (
         <main className="crash">
-          <h1 className="crash__title">משהו נשבר</h1>
+          <h1 className="crash__title">{t("s231aee0", "משהו נשבר")}</h1>
           {/* Amanda's voice, not an apology and not an explanation. */}
-          <p className="crash__says">זה קורה. האוסף שלך שמור.</p>
+          <p className="crash__says">{t("s9959640", "זה קורה. האוסף שלך שמור.")}</p>
           <button className="btn-fight" onClick={() => window.location.reload()}>
             לטעון מחדש
           </button>

@@ -1,6 +1,7 @@
 import { catchphraseById, phraseText, type PlayerCard } from "@amanda/shared";
 import { Plaque } from "./Plaque";
 import { Icon } from "./Icon";
+import { line as t } from "../game/copy";
 
 const BASE = import.meta.env.BASE_URL;
 
@@ -51,7 +52,7 @@ export function Versus({
     <div className="versus" role="status">
       <Fighter who={me} saidTo={them?.gender ?? null} mine />
       <div className="versus__vs" aria-hidden="true">
-        <span className="versus__word">{joined ? "ביחד" : "נגד"}</span>
+        <span className="versus__word">{joined ? t("s67c1f88", "ביחד") : t("s943b402", "נגד")}</span>
         {/* The countdown, small, under the word — the number was the whole
             screen before and it is the least interesting thing on it now. */}
         <span className="versus__clock">{Math.max(1, Math.ceil(secondsLeft))}</span>
@@ -92,7 +93,7 @@ function Fighter({
           <Icon name="king" size={38} />
         )}
       </div>
-      <b className="versus__name">{who?.nickname ?? (mine ? "אני" : "היריב")}</b>
+      <b className="versus__name">{who?.nickname ?? (mine ? t("s91836d5", "אני") : t("sb1bf590", "היריב"))}</b>
       <span className="versus__cups">
         <Icon name="win" size={14} /> {who?.trophies ?? 0}
       </span>

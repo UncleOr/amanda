@@ -13,6 +13,7 @@
  * installed-app manifest.
  */
 import { readdirSync, readFileSync, writeFileSync, mkdirSync, statSync, existsSync } from "node:fs";
+import { createHash } from "node:crypto";
 import { join, relative } from "node:path";
 import { fileURLToPath } from "node:url";
 
@@ -44,6 +45,31 @@ function entry(id, section, text, where) {
   return { id, section, text, where };
 }
 
+/**
+ * An id that does not move when the file around it does.
+ *
+ * ═══ THESE USED TO BE COUNTERS ═══
+ *
+ * `s1, s2, s3…` in the order the files were walked. That was fine while the
+ * ids only lived in this document and the sidecar map, both regenerated
+ * together. It stops being fine now, for two reasons that arrived on the
+ * same day: the ids are written INTO the source by copy-codemod.mjs, and
+ * data/copy.en.json is keyed by them. Add one Hebrew string near the top of
+ * App.tsx and every id after it shifts by one — silently reattaching several
+ * hundred English translations to the wrong lines.
+ *
+ * So the id is derived from what it identifies: the file, the text, and
+ * which occurrence of that text in that file it is. Adding a string changes
+ * nothing but its own id.
+ */
+const seen = new Map();
+function idFor(prefix, relFile, text) {
+  const key = `${relFile}\u0000${text}`;
+  const n = (seen.get(key) ?? 0) + 1;
+  seen.set(key, n);
+  return prefix + createHash("sha1").update(`${key}\u0000${n}`).digest("hex").slice(0, 7);
+}
+
 // ── the card data ──────────────────────────────────────────────────
 /** Every Hebrew leaf in a JSON file, as a path the apply step can follow. */
 function jsonStrings(value, path, out) {
@@ -69,7 +95,7 @@ function collectData(entries) {
     const isActions = rel.endsWith("action-cards.json");
     const section = isActions ? "קלפי פעולה" : `סדרה — ${json.name?.he ?? rel}`;
     for (const f of found) {
-      const e = entry(`d${entries.length + 1}`, section, f.text, {
+      const e = entry(idFor("d", rel, f.text), section, f.text, {
         kind: "json",
         file: rel,
         path: f.path,
@@ -146,8 +172,18 @@ function fromLines(entries, relFile, lines, section, prefix) {
     for (const m of line.matchAll(STRING_LITERAL)) {
       const text = (m[1] ?? m[2] ?? m[3] ?? m[4] ?? "").trim();
       if (!text || !HEBREW.test(text)) continue;
+      /*
+       * A capture that swallowed markup is not a string.
+       *
+       * The JSX branch of the pattern matches between a > and a <, and on a
+       * line holding two elements it runs straight through the tag between
+       * them — producing rows like `size={14} /> אפשר להניח קלף`. Harmless
+       * while this document was Hebrew only; with an English column it asks
+       * Or to translate a fragment of JSX.
+       */
+      if (/[<>]|=\{/.test(text)) continue;
       entries.push(
-        entry(`${prefix}${entries.length + 1}`, section, text, {
+        entry(idFor(prefix, relFile, text), section, text, {
           kind: "source",
           file: relFile,
           line: i + 1,

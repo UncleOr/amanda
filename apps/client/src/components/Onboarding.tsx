@@ -11,6 +11,7 @@ import { useState } from "react";
 import { MIN_AGE, ageFrom, saveProfile } from "../game/account";
 import { AVATAR_IDS } from "./Profile";
 import * as V from "../data/voice";
+import { line as t } from "../game/copy";
 
 const BASE = import.meta.env.BASE_URL;
 
@@ -37,7 +38,7 @@ export function Onboarding({ initialNickname, onDone }: Props) {
     await saveProfile({
       avatar,
       ...(gender ? { gender } : {}),
-      nickname: nickname.trim() || "שחקן",
+      nickname: nickname.trim() || t("s7628ae6", "שחקן"),
       ...(birthDate && !tooYoung ? { birthDate } : {}),
     });
     setSaving(false);
@@ -84,7 +85,7 @@ export function Onboarding({ initialNickname, onDone }: Props) {
                 setStage("face");
               }}
             >
-              {/* "בן"/"בת", and the third is not "לא אומר" — that phrasing is
+              {/* t("sd66df01", "בן")/t("s51bc16c", "בת"), and the third is not t("s284cdb8", "לא אומר") — that phrasing is
                   itself masculine, so the button for declining to say was
                   saying it. Or's wording; the same three are in Profile. */}
               בן
@@ -134,7 +135,7 @@ export function Onboarding({ initialNickname, onDone }: Props) {
               value={nickname}
               maxLength={16}
               autoFocus
-              placeholder="הכינוי שלך"
+              placeholder={t("s8e369df", "הכינוי שלך")}
               onChange={(e) => setNickname(e.target.value)}
               onKeyDown={(e) => e.key === "Enter" && setStage("age")}
             />

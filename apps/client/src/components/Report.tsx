@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import { Icon } from "./Icon";
 import { fileReport, recentOpponents, type Opponent } from "../game/account";
 import { Overlay } from "./Overlay";
+import { line as t } from "../game/copy";
 
 /**
  * Reporting a bug, or a player who was unpleasant.
@@ -56,22 +57,22 @@ export function Report({
   return (
     <Overlay onClick={onClose}>
       <div className="modal modal--report" onClick={(e) => e.stopPropagation()}>
-        <button className="modal__close" onClick={onClose} title="סגירה">
+        <button className="modal__close" onClick={onClose} title={t("sb82583e", "סגירה")}>
           <Icon name="exit" size={15} />
         </button>
 
         {sent ? (
           <div className="report__done">
             <Icon name="ready" size={56} />
-            <h2>קיבלנו.</h2>
-            <p>נסתכל על זה. תודה שסיפרת לנו.</p>
+            <h2>{t("sf3ddba9", "קיבלנו.")}</h2>
+            <p>{t("s2c4bff4", "נסתכל על זה. תודה שסיפרת לנו.")}</p>
             <button className="btn-fight" onClick={onClose}>
               סגור
             </button>
           </div>
         ) : (
           <>
-            <h2 className="report__title">לספר לנו משהו</h2>
+            <h2 className="report__title">{t("s8566da7", "לספר לנו משהו")}</h2>
             <div className="report__kinds">
               <button className={kind === "bug" ? "is-on" : ""} onClick={() => setKind("bug")}>
                 <Icon name="warning" size={16} /> משהו לא עובד
@@ -90,7 +91,7 @@ export function Report({
                   אפשר לדווח רק על מישהו ששיחקת מולו, ורק אם יש לו חשבון.
                 </p>
                 {opponents === null ? (
-                  <p className="report__hint">רגע…</p>
+                  <p className="report__hint">{t("s32c1f5b", "רגע…")}</p>
                 ) : opponents.length === 0 ? (
                   <p className="report__hint">
                     עוד לא שיחקת מול שחקן רשום. דיווח על שחקן אפשרי רק אחרי משחק
@@ -104,7 +105,7 @@ export function Report({
                         className={picked?.id === o.id ? "is-on" : ""}
                         onClick={() => setPicked(o)}
                       >
-                        {o.nickname ?? "בלי שם"}
+                        {o.nickname ?? t("sdd0c69b", "בלי שם")}
                         <small>{new Date(o.at).toLocaleDateString("he-IL")}</small>
                       </button>
                     ))}
@@ -119,7 +120,7 @@ export function Report({
               maxLength={1000}
               value={message}
               placeholder={
-                kind === "bug" ? "מה קרה? מה ציפית שיקרה?" : "מה הוא עשה?"
+                kind === "bug" ? t("s39b2618", "מה קרה? מה ציפית שיקרה?") : t("saa2714a", "מה הוא עשה?")
               }
               onChange={(e) => setMessage(e.target.value)}
             />
@@ -132,7 +133,7 @@ export function Report({
                 disabled={busy || (kind === "player" && !picked)}
                 onClick={() => void send()}
               >
-                {busy ? "שולח…" : "שליחה"}
+                {busy ? t("se6b6c12", "שולח…") : t("sb224f0c", "שליחה")}
               </button>
               <button className="btn-fight btn-ghost" onClick={onClose}>
                 ביטול

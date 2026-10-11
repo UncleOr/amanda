@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import { Icon } from "./Icon";
 import { loadInbox, markInboxRead, type Notice } from "../game/account";
 import { Overlay } from "./Overlay";
+import { line as t } from "../game/copy";
 
 /**
  * What the game has to tell you.
@@ -33,7 +34,7 @@ const KIND_ICON: Record<Notice["kind"], string> = {
 
 function when(iso: string): string {
   const mins = Math.floor((Date.now() - Date.parse(iso)) / 60000);
-  if (mins < 1) return "עכשיו";
+  if (mins < 1) return t("s9b9aa0b", "עכשיו");
   if (mins < 60) return `לפני ${mins} דק׳`;
   const hours = Math.floor(mins / 60);
   if (hours < 24) return `לפני ${hours} שע׳`;
@@ -56,19 +57,19 @@ export function Inbox({ onClose, onAction }: { onClose: () => void; onAction: (a
   return (
     <Overlay onClick={onClose}>
       <div className="modal modal--inbox" onClick={(e) => e.stopPropagation()}>
-        <button className="modal__close" onClick={onClose} title="סגירה">
+        <button className="modal__close" onClick={onClose} title={t("sa00dd23", "סגירה")}>
           <Icon name="exit" size={15} />
         </button>
-        <h2 className="friends__title">הודעות</h2>
+        <h2 className="friends__title">{t("sca9e956", "הודעות")}</h2>
 
         {notices === null ? (
-          <p className="friends__hint">רגע…</p>
+          <p className="friends__hint">{t("sbaae76e", "רגע…")}</p>
         ) : notices.length === 0 ? (
           // SKILL.md §6 quotes the line this replaces as its example of an
           // empty state doing two sentences' work. It then sat here for a
           // week, because the audit only read the screens a child plays and
           // this was not on that list. It is now.
-          <p className="friends__hint">שקט כאן. זה בסדר.</p>
+          <p className="friends__hint">{t("s3fa36bf", "שקט כאן. זה בסדר.")}</p>
         ) : (
           <ul className="inbox__list">
             {notices.map((n) => (

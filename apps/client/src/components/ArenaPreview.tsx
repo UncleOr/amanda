@@ -2,6 +2,7 @@ import { useMemo, useState } from "react";
 import { runBattle, type BoardInput, type Placement } from "@amanda/engine";
 import { CATALOG, SYNERGIES, cardPool } from "../data/catalog";
 import { Arena } from "./Arena";
+import { line as t } from "../game/copy";
 
 /**
  * Battle-FX workbench (open the game with ?arena).
@@ -54,13 +55,13 @@ export function ArenaPreview() {
   return (
     <div className="gallery">
       <header className="gallery__bar">
-        <h2>מעבדת קרב</h2>
+        <h2>{t("sd2e39c8", "מעבדת קרב")}</h2>
         <label>
           שמאל:{" "}
           <select value={left} onChange={(e) => setLeft(e.target.value)}>
             {SERIES_IDS.map((s) => (
               <option key={s} value={s}>
-                {s || "מעורב"}
+                {s || t("se019310", "מעורב")}
               </option>
             ))}
           </select>
@@ -70,12 +71,12 @@ export function ArenaPreview() {
           <select value={right} onChange={(e) => setRight(e.target.value)}>
             {SERIES_IDS.map((s) => (
               <option key={s} value={s}>
-                {s || "מעורב"}
+                {s || t("s3962d65", "מעורב")}
               </option>
             ))}
           </select>
         </label>
-        <button onClick={() => setRun((r) => r + 1)}>▶ הרץ שוב</button>
+        <button onClick={() => setRun((r) => r + 1)}>{t("s1e70355", "▶ הרץ שוב")}</button>
       </header>
       <Arena key={run} result={result} onFinish={() => {}} />
     </div>

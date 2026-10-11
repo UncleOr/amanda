@@ -3,6 +3,7 @@ import { ACTIONS, CATALOG, SERIES } from "../data/catalog";
 import { CardView } from "./CardView";
 import { ActionCardView } from "./ActionCardView";
 import { Icon } from "./Icon";
+import { line as t } from "../game/copy";
 
 /**
  * The playground's card rack.
@@ -56,7 +57,7 @@ export function CardPicker({
         <button
           className={`rack__erase${picked === null ? " rack__erase--on" : ""}`}
           onClick={() => onPick(null)}
-          title="בלי קלף ביד — נגיעה בקלף על הלוח מורידה אותו"
+          title={t("sa38c228", "בלי קלף ביד — נגיעה בקלף על הלוח מורידה אותו")}
         >
           <Icon name="erase" size={14} /> מחק
         </button>
@@ -64,7 +65,7 @@ export function CardPicker({
           className="rack__search"
           value={query}
           onChange={(e) => setQuery(e.target.value)}
-          placeholder="חיפוש קלף…"
+          placeholder={t("s7af4893", "חיפוש קלף…")}
           inputMode="search"
         />
       </div>
@@ -115,7 +116,7 @@ export function CardPicker({
 
         {actions.length > 0 && (
           <section className="rack__group">
-            <h4>קלפי פעולה</h4>
+            <h4>{t("s0d0c2fd", "קלפי פעולה")}</h4>
             <div className="rack__row">
               {actions.map((id) => (
                 <button
@@ -133,7 +134,7 @@ export function CardPicker({
         )}
 
         {groups.length === 0 && actions.length === 0 && (
-          <p className="rack__none">אין קלף כזה. המצאת אותו?</p>
+          <p className="rack__none">{t("s5b61d19", "אין קלף כזה. המצאת אותו?")}</p>
         )}
       </div>
     </aside>

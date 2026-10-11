@@ -1,4 +1,5 @@
 import type { Placement } from "@amanda/engine";
+import { line as t } from "./copy";
 
 /**
  * The two tutorial matches, written out in advance.
@@ -67,7 +68,7 @@ export const LESSONS: Lesson[] = [
    * match learns "this game is hard", not "the King goes in the middle".
    */
   {
-    title: { he: "משחק ראשון — איך בונים לוח" },
+    title: { he: t("s24e4af8", "משחק ראשון — איך בונים לוח") },
     deck: [
       "giants_10_titan_king", // a King worth crowning, and she says so
       "giants_01_stone_colossus", // static, tough: the guard-post lesson
@@ -109,7 +110,7 @@ export const LESSONS: Lesson[] = [
    * opponent's board has no answer to them.
    */
   {
-    title: { he: "משחק שני — מה מנצח את מה" },
+    title: { he: t("s078dd87", "משחק שני — מה מנצח את מה") },
     deck: [
       "giants_10_titan_king",
       "insects_10_insect_empress", // poison, for the wall opposite

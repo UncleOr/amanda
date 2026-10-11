@@ -2,6 +2,7 @@ import type { CSSProperties } from "react";
 import { ACTIONS, isPassiveAction } from "../data/catalog";
 import { RARITY_META } from "../data/cardMeta";
 import { Icon } from "./Icon";
+import { line as t } from "../game/copy";
 
 /** Where the generated artwork for an action card lives. */
 export function actionArtUrl(id: string): string {
@@ -44,7 +45,7 @@ export function ActionCardView({ actionId, size = "medium", onClick, onInfo, use
     >
       <div className="card__top">
         <span className="card__traits">
-          <span className="action-card__kind" title={passive ? "פסיבי — פועל כל הזמן" : "קלף פעולה"}>
+          <span className="action-card__kind" title={passive ? t("sba8cb81", "פסיבי — פועל כל הזמן") : t("sff358eb", "קלף פעולה")}>
             {used ? <Icon name="ready" size={13} /> : passive ? "∞" : <Icon name="play" size={12} />}
           </span>
         </span>
@@ -54,7 +55,7 @@ export function ActionCardView({ actionId, size = "medium", onClick, onInfo, use
             <button
               type="button"
               className="card__info"
-              title="פרטי הקלף"
+              title={t("sbeacb74", "פרטי הקלף")}
               onClick={(e) => {
                 e.stopPropagation();
                 onInfo();
@@ -69,7 +70,7 @@ export function ActionCardView({ actionId, size = "medium", onClick, onInfo, use
       <div className="card__plate">
         <span className="card__name">{card.name.he}</span>
         {size !== "small" && (
-          <span className="action-card__tag">{passive ? "פסיבי" : "קלף פעולה"}</span>
+          <span className="action-card__tag">{passive ? t("s2ee640d", "פסיבי") : t("sf01886f", "קלף פעולה")}</span>
         )}
       </div>
     </div>

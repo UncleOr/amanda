@@ -1,4 +1,5 @@
 import type { BattleResult } from "@amanda/engine";
+import { line as t } from "./copy";
 
 /**
  * Why the battle ended, in a sentence.
@@ -9,7 +10,7 @@ import type { BattleResult } from "@amanda/engine";
  * wording is the point.
  */
 export function verdictText(result: BattleResult, iWon: boolean): string {
-  const whose = iWon ? "של היריב" : "שלך";
+  const whose = iWon ? t("s656f60c", "של היריב") : t("s42347b7", "שלך");
   const pct = (n: number) => `${Math.round(n * 100)}%`;
   switch (result.winReason) {
     case "kingDown":
@@ -23,10 +24,10 @@ export function verdictText(result: BattleResult, iWon: boolean): string {
       )} שלך מול ${pct(iWon ? mine : theirs)} של היריב.`;
     }
     case "totalHp":
-      return "נגמר הזמן והמלכים שרדו עם אותו אחוז חיים — הוכרע לפי סך החיים על הלוח.";
+      return t("sd1c6f72", "נגמר הזמן והמלכים שרדו עם אותו אחוז חיים — הוכרע לפי סך החיים על הלוח.");
     case "aliveCount":
-      return "נגמר הזמן והחיים היו שווים — הוכרע לפי מספר הקלפים ששרדו.";
+      return t("s3d96736", "נגמר הזמן והחיים היו שווים — הוכרע לפי מספר הקלפים ששרדו.");
     case "coinFlip":
-      return "נגמר הזמן והכול יצא שווה לחלוטין — הוכרע בהטלת מטבע.";
+      return t("s9726494", "נגמר הזמן והכול יצא שווה לחלוטין — הוכרע בהטלת מטבע.");
   }
 }

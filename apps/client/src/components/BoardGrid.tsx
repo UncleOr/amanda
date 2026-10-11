@@ -3,6 +3,7 @@ import { Icon } from "./Icon";
 import type { CSSProperties } from "react";
 import { BOARD_SIZE, cellKey, type BattleMods } from "../game/useMatch";
 import { isCornerKey } from "../data/catalog";
+import { line as t } from "../game/copy";
 
 interface Props {
   placements: Record<string, string>;
@@ -185,7 +186,7 @@ export function BoardGrid({
         ) : (
           <span className="slot__hint slot__hint--king">
             <Icon name="king" size={22} />
-            <b>המלך</b>
+            <b>{t("s3ed5f40", "המלך")}</b>
           </span>
         )}
       </div>
@@ -227,12 +228,12 @@ export function BoardGrid({
             }}
           >
             {stacked[key] && (
-              <span className="slot__stack-mark" title="יש קלף מתחת. הוא יצוץ כשהעליון ייפול.">
+              <span className="slot__stack-mark" title={t("s8845f5f", "יש קלף מתחת. הוא יצוץ כשהעליון ייפול.")}>
                 <Icon name="stacked" size={15} />
               </span>
             )}
             {isGuardPost(x, y, kingLane) && !occ && interactive && (
-              <span className="slot__guard-mark" title="משמר המלך. כאן עוצרים את מי שבא לאכול אותו.">
+              <span className="slot__guard-mark" title={t("s0e2bdac", "משמר המלך. כאן עוצרים את מי שבא לאכול אותו.")}>
                 <Icon name="guard" size={15} />
               </span>
             )}

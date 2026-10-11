@@ -1,6 +1,7 @@
 import { nachoBar } from "@amanda/shared";
 import { Icon } from "./Icon";
 import type { Award } from "../game/meta";
+import { line as t } from "../game/copy";
 
 /**
  * What the match just paid, on the result screen.
@@ -72,7 +73,7 @@ export function Payout({
       {done > 0 && (
         <span className="payout__bit payout__bit--quest">
           <Icon name="challenge" size={17} />{" "}
-          {done === 1 ? "אתגר הושלם" : `${done} אתגרים הושלמו`}
+          {done === 1 ? t("s1b4740d", "אתגר הושלם") : `${done} אתגרים הושלמו`}
         </span>
       )}
       {/* How close the next one is, so the screen that says "play again"
@@ -88,7 +89,7 @@ export function Payout({
         and the challenges carry on regardless, which is the sentence.
       */}
       {award.cappedOut && (
-        <span className="payout__near">מספיק גביעים מהבוט להיום — נאצ'וס ואתגרים ממשיכים</span>
+        <span className="payout__near">{t("s854fe19", "מספיק גביעים מהבוט להיום — נאצ'וס ואתגרים ממשיכים")}</span>
       )}
     </p>
   );

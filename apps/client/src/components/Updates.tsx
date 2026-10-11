@@ -2,6 +2,7 @@ import { useEffect } from "react";
 import { Icon } from "./Icon";
 import { UPDATES, markUpdatesSeen } from "../data/updates";
 import { Overlay } from "./Overlay";
+import { line as t } from "../game/copy";
 
 /**
  * "What's new" — the reason to open the game again.
@@ -27,7 +28,7 @@ export function Updates({ onClose }: { onClose: () => void }) {
   return (
     <Overlay onClick={onClose}>
       <div className="modal modal--news" onClick={(e) => e.stopPropagation()}>
-        <button className="modal__close" onClick={onClose} title="סגירה">
+        <button className="modal__close" onClick={onClose} title={t("s25bc69f", "סגירה")}>
           <Icon name="exit" size={15} />
         </button>
         <h2 className="news__title">
@@ -35,7 +36,7 @@ export function Updates({ onClose }: { onClose: () => void }) {
         </h2>
 
         {newestFirst.length === 0 ? (
-          <p className="news__lead">עוד לא קרה כלום. תחזרו.</p>
+          <p className="news__lead">{t("s0c0129b", "עוד לא קרה כלום. תחזרו.")}</p>
         ) : (
           <ol className="news__list">
             {newestFirst.map((entry, i) => (
@@ -45,7 +46,7 @@ export function Updates({ onClose }: { onClose: () => void }) {
                   <small>{entry.when}</small>
                   {/* Only on the newest, and only as a word — a number here
                       would invite counting things that are not countable. */}
-                  {i === 0 && <span className="news__flag">חדש</span>}
+                  {i === 0 && <span className="news__flag">{t("s912daec", "חדש")}</span>}
                 </header>
                 <ul>
                   {entry.lines.map((line, n) => (

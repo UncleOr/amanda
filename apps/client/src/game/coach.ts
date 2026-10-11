@@ -13,6 +13,7 @@
 import { CATALOG, SERIES_BY_ID, synergyGroups } from "../data/catalog";
 import { line } from "../data/tutorialLines";
 import type { Card } from "@amanda/shared";
+import { line as t } from "./copy";
 
 export interface Cue {
   /** Which line this is, so it is only ever said once. */
@@ -183,19 +184,19 @@ function glassCannon(view: CoachView): Card | null {
  * rather than hoped for.
  */
 function trait(c: Card): string {
-  if (c.flying) return "הוא מעופף";
-  if (c.stats.range === "sniper") return "הוא צלף";
-  if (c.stats.hp >= 800) return "הוא עבה";
-  if (c.stats.power >= c.stats.hp) return "הוא חזק";
-  if (c.stats.moveSpeed === 0) return "הוא לא זז";
-  return "הוא בסדר גמור";
+  if (c.flying) return t("sc10480b", "הוא מעופף");
+  if (c.stats.range === "sniper") return t("s4a2ba08", "הוא צלף");
+  if (c.stats.hp >= 800) return t("sdf5d45f", "הוא עבה");
+  if (c.stats.power >= c.stats.hp) return t("s46589c2", "הוא חזק");
+  if (c.stats.moveSpeed === 0) return t("s6124c70", "הוא לא זז");
+  return t("se7147b6", "הוא בסדר גמור");
 }
 
 /** Where that card wants to stand, and why in one clause. */
 function wants(c: Card): string {
-  if (c.flying || c.stats.range === "sniper") return "נמקם אותו מאחורה";
-  if (c.stats.moveSpeed === 0 && c.stats.hp >= 800) return "נמקם אותו מקדימה";
-  return "נמקם אותו באמצע";
+  if (c.flying || c.stats.range === "sniper") return t("s9e7ee3f", "נמקם אותו מאחורה");
+  if (c.stats.moveSpeed === 0 && c.stats.hp >= 800) return t("seb09973", "נמקם אותו מקדימה");
+  return t("sfe838f6", "נמקם אותו באמצע");
 }
 
 function counterCues(view: CoachView, inHand: Card | null): Array<() => Cue | null> {
@@ -362,7 +363,7 @@ export function nextCue(view: CoachView, said: Set<string>): Cue | null {
             id: "flyer",
             text: line("flyer", {
               card: inHand.name.he,
-              moves: inHand.flying ? "עף" : "צלף",
+              moves: inHand.flying ? t("s8f1fa7e", "עף") : t("sc2c8332", "צלף"),
             }),
             target: ".side--me .board",
             awaits: { kind: "placements", atLeast: down + 1 },

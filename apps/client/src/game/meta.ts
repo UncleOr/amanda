@@ -10,6 +10,7 @@
 import { authToken, serverHttp } from "./account";
 import type { Placement } from "@amanda/engine";
 import type { BotLevel, Challenge } from "@amanda/shared";
+import { line as t } from "./copy";
 
 /** One live challenge, and how far along you are. */
 export interface Standing extends Challenge {
@@ -131,10 +132,10 @@ export async function reportSolo(opts: {
 /** Take the reward for a finished challenge. Null when it worked. */
 export async function claimChallenge(challengeId: string): Promise<string | null> {
   const base = serverHttp();
-  if (!base) return "אין חיבור לשרת";
+  if (!base) return t("sbd36b97", "אין חיבור לשרת");
   try {
     const token = await authToken();
-    if (!token) return "צריך חשבון";
+    if (!token) return t("s7a0587d", "צריך חשבון");
     const res = await fetch(`${base}/api/meta/claim`, {
       method: "POST",
       headers: { authorization: `Bearer ${token}`, "content-type": "application/json" },
@@ -144,10 +145,10 @@ export async function claimChallenge(challengeId: string): Promise<string | null
     if (res.ok) return null;
     return (
       {
-        expired: "האתגר הזה כבר לא פעיל.",
-        notDone: "עוד לא סיימת את האתגר.",
-        claimed: "כבר לקחת את הפרס.",
-      }[body.error ?? ""] ?? "לא הצלחתי. נסה שוב."
+        expired: t("sc65088a", "האתגר הזה כבר לא פעיל."),
+        notDone: t("sc6b6e23", "עוד לא סיימת את האתגר."),
+        claimed: t("s1322daa", "כבר לקחת את הפרס."),
+      }[body.error ?? ""] ?? t("sbf13716", "לא הצלחתי. נסה שוב.")
     );
   } catch (err) {
     return (err as Error).message;

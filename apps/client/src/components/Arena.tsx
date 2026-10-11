@@ -7,6 +7,7 @@ import { cardColor, CATALOG } from "../data/catalog";
 import { seriesColor } from "../data/cardMeta";
 import { sfx } from "../game/sfx";
 import { combatLook, drawAura, drawProjectile, type CombatLook } from "./arenaFx";
+import { line as t } from "../game/copy";
 
 const CELL = 72;
 /** Header band above the lanes, so the identity banners never cover a unit. */
@@ -605,8 +606,8 @@ export function Arena({
           t.y = HEAD / 2;
           uiLayer.addChild(t);
         };
-        banner("🧑 אתה", W * 0.25, localTint);
-        banner("🤖 היריב", W * 0.75, oppTint);
+        banner(t("s379a6ae", "🧑 אתה"), W * 0.25, localTint);
+        banner(t("s2742a4b", "🤖 היריב"), W * 0.75, oppTint);
 
         // Battle clock, centred in the header band. A 30 second fight needs to
         // show how much of it is left, and shout when it is nearly gone.
@@ -634,7 +635,7 @@ export function Arena({
         announce.alpha = 0;
         const annBg = new Graphics();
         const annTitle = new Text({
-          text: "⏱ נגמר הזמן!",
+          text: t("s25910a5", "⏱ נגמר הזמן!"),
           style: {
             fontFamily: "Segoe UI, sans-serif",
             fontSize: 26,
@@ -1010,8 +1011,8 @@ export function Arena({
     return (
       <div className="arena arena--failed" role="alert">
         <div className="arena__oops">🙈</div>
-        <p>לא הצלחתי להראות לך את הקרב.</p>
-        <p className="arena__sub">הוא כבר הוכרע — אני לוקחת אותך לתוצאה.</p>
+        <p>{t("sbaf8bec", "לא הצלחתי להראות לך את הקרב.")}</p>
+        <p className="arena__sub">{t("se051373", "הוא כבר הוכרע — אני לוקחת אותך לתוצאה.")}</p>
         {/* Small, and in the corner: a child does not need it, and the one
             person who does need it cannot ask for it if it is not written. */}
         {why && <p className="arena__why">({why})</p>}

@@ -5,6 +5,7 @@ import { CATCHPHRASES, EMOJI } from "@amanda/shared";
 import { priceNow } from "../game/account";
 import { buyItem, loadShop, type ShopItem } from "../game/account";
 import { Overlay } from "./Overlay";
+import { line as t } from "../game/copy";
 
 /**
  * ═══ WHAT THIS SCREEN IS FOR ═══
@@ -45,12 +46,12 @@ const BASE = import.meta.env.BASE_URL;
 
 /** The shelves, in the order a small shop stacks them. */
 const SECTIONS: Array<{ kind: ShopItem["kind"]; he: string }> = [
-  { kind: "avatar", he: "פרצופים" },
-  { kind: "skin", he: "מראה לקלפים" },
-  { kind: "emoji", he: "אימוג׳ים" },
-  { kind: "phrase", he: "משפטי מחץ" },
-  { kind: "chest", he: "תיבות" },
-  { kind: "card", he: "קלפים" },
+  { kind: "avatar", he: t("s509b97d", "פרצופים") },
+  { kind: "skin", he: t("sa52276e", "מראה לקלפים") },
+  { kind: "emoji", he: t("s63ae982", "אימוג׳ים") },
+  { kind: "phrase", he: t("se3cd8fd", "משפטי מחץ") },
+  { kind: "chest", he: t("sd9e67b5", "תיבות") },
+  { kind: "card", he: t("s26df959", "קלפים") },
 ];
 
 /**
@@ -116,22 +117,22 @@ export function Shop({
   return (
     <Overlay onClick={onClose}>
       <div className="modal modal--shop" onClick={(e) => e.stopPropagation()}>
-        <button className="modal__close" onClick={onClose} title="סגירה">
+        <button className="modal__close" onClick={onClose} title={t("s56fa87f", "סגירה")}>
           <Icon name="exit" size={15} />
         </button>
 
         <div className="shop__sign">
           <span className="shop__strip" aria-hidden="true" />
-          <h2>חנות נוחות</h2>
+          <h2>{t("s4eef1f1", "חנות נוחות")}</h2>
           <span className="shop__purse">
             <Icon name="gem" size={15} /> {diamonds}
           </span>
         </div>
 
         {items === null ? (
-          <p className="friends__hint">רגע…</p>
+          <p className="friends__hint">{t("s0f95b79", "רגע…")}</p>
         ) : items.length === 0 ? (
-          <p className="friends__hint">המדפים עוד ריקים. בקרוב.</p>
+          <p className="friends__hint">{t("s947b31f", "המדפים עוד ריקים. בקרוב.")}</p>
         ) : (
           <div className="shop__shelves">
             {SECTIONS.map(({ kind, he }) => {
@@ -186,7 +187,7 @@ export function Shop({
                               className="good__buy"
                               disabled={busy === item.id || tooDear}
                               onClick={() => void take(item)}
-                              title={tooDear ? "אין מספיק יהלומים" : undefined}
+                              title={tooDear ? t("s585947b", "אין מספיק יהלומים") : undefined}
                             >
                               {/* The old price, struck through, is the whole
                                   mechanism of a sale: a lower number nobody
@@ -194,7 +195,7 @@ export function Shop({
                                   price. */}
                               {was !== null && <s className="good__was">{was}</s>}
                               {pay === 0 ? (
-                                "חינם"
+                                t("s9eddab1", "חינם")
                               ) : (
                                 <>
                                   <Icon name="gem" size={12} /> {pay}

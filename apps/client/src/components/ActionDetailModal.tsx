@@ -4,6 +4,7 @@ import { RARITY_META } from "../data/cardMeta";
 import { actionArtUrl } from "./ActionCardView";
 import { Icon } from "./Icon";
 import { Overlay } from "./Overlay";
+import { line as t } from "../game/copy";
 
 
 export function ActionDetailModal({
@@ -31,7 +32,7 @@ export function ActionDetailModal({
         onClick={(e) => e.stopPropagation()}
         style={{ ["--card-color"]: "#ffb020" } as CSSProperties}
       >
-        <button className="modal__close" onClick={onClose} title="סגירה">
+        <button className="modal__close" onClick={onClose} title={t("s3383520", "סגירה")}>
           <Icon name="exit" size={15} />
         </button>
         <div className="modal__banner">
@@ -51,14 +52,14 @@ export function ActionDetailModal({
                 {rarity.he}
               </span>
               <span className={`badge${passive ? " badge--king" : ""}`}>
-                {passive ? "∞ פסיבי" : "בלחיצה"}
+                {passive ? t("s900e8c0", "∞ פסיבי") : t("se9c2d53", "בלחיצה")}
               </span>
             </div>
           </div>
         </div>
 
         <div className="modal__section">
-          <h3>{passive ? "מה הוא עושה (אוטומטית)" : "מה הוא עושה בלחיצה"}</h3>
+          <h3>{passive ? t("s9c8a7eb", "מה הוא עושה (אוטומטית)") : t("s333574c", "מה הוא עושה בלחיצה")}</h3>
           <p className="modal__role">{card.description.he}</p>
         </div>
 
@@ -72,7 +73,7 @@ export function ActionDetailModal({
               </button>
             ) : (
               <button className="btn-fight btn-ghost" disabled>
-                {state === "used" ? "כבר נוצל" : "∞ פועל מעצמו"}
+                {state === "used" ? t("sc3582bb", "כבר נוצל") : t("s2ed708e", "∞ פועל מעצמו")}
               </button>
             )}
           </div>

@@ -52,6 +52,7 @@ import {
 import { reportSolo, type Award } from "./meta";
 import { LESSONS } from "./lessons";
 import { Net, ONLINE_AVAILABLE, type Intent } from "./net";
+import { line as t } from "./copy";
 
 export type Phase =
   | "intro"
@@ -243,21 +244,21 @@ interface Skill {
  */
 export const BOT_CARDS: Record<BotLevel, PlayerCard> = {
   easy: {
-    nickname: "בוט קליל",
+    nickname: t("sadfc854", "בוט קליל"),
     avatar: "versus_robot",
     trophies: 40,
     catchphrase: null,
     gender: null,
   },
   normal: {
-    nickname: "הבוט",
+    nickname: t("s69fcaa6", "הבוט"),
     avatar: "versus_robot",
     trophies: 300,
     catchphrase: "phrase.fight",
     gender: null,
   },
   hard: {
-    nickname: "בוט קשה",
+    nickname: t("s38e97db", "בוט קשה"),
     avatar: "versus_robot",
     trophies: 700,
     catchphrase: "phrase.onlyamanda",

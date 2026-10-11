@@ -23,6 +23,7 @@
  */
 import { useEffect, useRef, useState } from "react";
 import { markIntroSeen, onIntroRequest, shouldPlayIntro } from "../game/intro";
+import { line as t } from "../game/copy";
 
 const SRC = `${import.meta.env.BASE_URL}brand/intro.mp4`;
 
@@ -84,7 +85,7 @@ export function Intro() {
           if (!video.current?.currentTime) setMode(null);
         }}
       />
-      <button className="intro__skip">דלג</button>
+      <button className="intro__skip">{t("s7bf4370", "דלג")}</button>
     </div>
   );
 }

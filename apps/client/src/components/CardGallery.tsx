@@ -4,6 +4,7 @@ import { CardView } from "./CardView";
 import { CardDetailModal } from "./CardDetailModal";
 import { ActionCardView } from "./ActionCardView";
 import { ActionDetailModal } from "./ActionDetailModal";
+import { line as t } from "../game/copy";
 
 /**
  * Art-review gallery (open the game with ?gallery). Shows every launch card at
@@ -18,7 +19,7 @@ export function CardGallery() {
   return (
     <div className="gallery">
       <header className="gallery__bar">
-        <h2>גלריית קלפים</h2>
+        <h2>{t("s30e62ac", "גלריית קלפים")}</h2>
         <label>
           <input type="checkbox" checked={onlyArt} onChange={(e) => setOnlyArt(e.target.checked)} />{" "}
           רק קלפים עם ציור

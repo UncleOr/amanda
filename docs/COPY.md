@@ -1,6 +1,6 @@
 # הטקסטים של אמנדה
 
-כל טקסט שהשחקן רואה — 856 במספר, 183 מהם כבר באנגלית.
+כל טקסט שהשחקן רואה — 850 במספר, 219 מהם כבר באנגלית.
 
 ## איך עורכים
 
@@ -26,1139 +26,1133 @@
 
 | מזהה | טקסט נוכחי | טקסט חדש | אנגלית |
 | --- | --- | --- | --- |
-| h1 | אמנדה \| משחק קלפים מפלצתי | | Amanda \| Monster Card Game |
-| h2 | בונים לוח 4×4 של מפלצות, והן נלחמות לבד. אמנדה שופטת, אמנדה אוכלת. | |  |
-| h3 | אמנדה | |  |
-| h4 | אמנדה \| משחק קלפים מפלצתי | |  |
-| h5 | אמנדה | |  |
-| h6 | בונים לוח 4×4 של מפלצות, ואז הן נלחמות לבד. אמנדה שופטת, אמנדה אוכלת. | |  |
+| hfc09a93 | אמנדה \| משחק קלפים מפלצתי | |  |
+| hbab6fe4 | בונים לוח 4×4 של מפלצות, והן נלחמות לבד. אמנדה שופטת, אמנדה אוכלת. | |  |
+| hafb233b | אמנדה | |  |
+| h1b28f47 | אמנדה \| משחק קלפים מפלצתי | |  |
+| h9c383ea | אמנדה | |  |
+| h8264212 | בונים לוח 4×4 של מפלצות, ואז הן נלחמות לבד. אמנדה שופטת, אמנדה אוכלת. | |  |
 
 ## סדרה — הדרקונים
 
 | מזהה | טקסט נוכחי | טקסט חדש | אנגלית |
 | --- | --- | --- | --- |
-| d7 | הדרקונים | | The Dragons |
-| d8 | פינוי קו ראייה, נזק אזורי ופצצות מתקתקות | | Clearing line of sight, area damage, and ticking bombs |
-| d9 | קשקשי דרקון | | Dragon Scales |
-| d10 | כל הדרקונים בלוח שלכם מקבלים הגנה פסיבית שמפחיתה את כל הנזק הנכנס אליהם ב-20%. | | All your dragons gain a passive 20% reduction to all incoming damage. |
-| d11 | פליים דראגון | | Flame Dragon |
-| d12 | יוזמה מהירה: מכה שהודפת את היריב, ממשיך לצעוד לתוך שטח היריב ומפנה קו ראייה לצלפים שמאחור. | | Fast initiative: knocks the enemy back, advances into enemy territory and clears line of sight for your snipers. |
-| d13 | ביצת אובסידיאן | | Obsidian Egg |
-| d14 | אחרי 10 שניות בוקע דרקון הרסני עם +1500 עוצמה. | | After 10 seconds a destructive dragon hatches with +1500 power. |
-| d15 | פצצה מתקתקת לקומת קרקע: מניחים אותה למטה ומעליה טנק; עד שהטנק נפרץ הטיימר נגמר. | | Ground-floor ticking bomb: place it under a tank; by the time the tank breaks, its timer is up. |
-| d16 | רעם-כנף | | Thunderwing |
-| d17 | צלף מותנה: יורה לקלף האחרון בנתיב המקביל, דורש קו ראייה פנוי. | | Conditional sniper: fires at the last card in its lane, requires a clear line of sight. |
-| d18 | לאבה | | Lava |
-| d19 | משאיר זרם געש בנתיב; כל מסתער נכנס לשלולית הלבה ונשרף. | | Leaves a lava stream in the lane; any advancer walks into the pool and burns. |
-| d20 | שליטת נתיבים / חסימת הסתערות עם נזק מתמשך. | | Lane control / advance-denial with damage over time. |
-| d21 | ספייק | | Spike |
-| d22 | מגן מחזיר-נזק לקומת קרקע: מחזיר 30% מהנזק שספג, מצוין תחת קלף מתפוצץ. | | Damage-reflect wall for the ground floor: returns 30% of damage taken, great under a bomb card. |
-| d23 | נשיפת כפור | | Frost Breath |
-| d24 | בקרת קצב: מקפיא יריב מסתער ל-2 שניות ומאפס לו את זמן הטעינה. | | Crowd control: freezes an advancing enemy for 2s and resets its attack cooldown. |
-| d25 | גולד-הורן | | Gold-Horn |
-| d26 | מוחץ קלף חלש שלכם שלידו בתמורה לשריון, ואז צועד כטנק מוגן. | | Crushes a weak adjacent ally for armor, then advances as a protected tank. |
-| d27 | טנק כבד שניזון מהקרבה. | | Heavy tank fueled by sacrifice. |
-| d28 | דרקון רפאים | | Ghost Dragon |
-| d29 | נחיל מתפרץ: נועד למות מהר, ואז בוקעות 3 רוחות שממשיכות להסתער. | | Bursting swarm: meant to die fast, then 3 spirits hatch and keep charging. |
-| d30 | דרקון הטייפון | | Typhoon Dragon |
-| d31 | דוחף את היריב הצידה מעמודה לעמודה, מזיז צלפים מחוץ לנתיב. | | Pushes the enemy sideways between columns, moving snipers out of the lane. |
-| d32 | שליטה מרחבית / הדף צדדי. | | Spatial control / lateral knockback. |
-| d33 | מלך השחקים | | Sky King |
-| d34 | מכת כנפיים לרוחב 3 נתיבים כל 5 שניות עם הדף. | | A wing sweep across 3 lanes every 5 seconds with knockback. |
-| d35 | ענק אמצע למשבצת ה-2×2: שליטת חזית מוחלטת עם נזק אזורי. | | Mid-boss for the 2×2 King slot: total front control with area damage. |
+| d708c394 | הדרקונים | | The Dragons |
+| d140e3f9 | פינוי קו ראייה, נזק אזורי ופצצות מתקתקות | | Clearing line of sight, area damage, and ticking bombs |
+| dc64864a | קשקשי דרקון | | Dragon Scales |
+| d80d51ce | כל הדרקונים בלוח שלכם מקבלים הגנה פסיבית שמפחיתה את כל הנזק הנכנס אליהם ב-20%. | | All your dragons gain a passive 20% reduction to all incoming damage. |
+| dd069f94 | פליים דראגון | | Flame Dragon |
+| d8cf349b | יוזמה מהירה: מכה שהודפת את היריב, ממשיך לצעוד לתוך שטח היריב ומפנה קו ראייה לצלפים שמאחור. | | Fast initiative: knocks the enemy back, advances into enemy territory and clears line of sight for your snipers. |
+| ddfe4de4 | ביצת אובסידיאן | | Obsidian Egg |
+| d05af5bf | אחרי 10 שניות בוקע דרקון הרסני עם +1500 עוצמה. | | After 10 seconds a destructive dragon hatches with +1500 power. |
+| dd171205 | פצצה מתקתקת לקומת קרקע: מניחים אותה למטה ומעליה טנק; עד שהטנק נפרץ הטיימר נגמר. | | Ground-floor ticking bomb: place it under a tank; by the time the tank breaks, its timer is up. |
+| d87bdbe8 | רעם-כנף | | Thunderwing |
+| d39052c3 | צלף מותנה: יורה לקלף האחרון בנתיב המקביל, דורש קו ראייה פנוי. | | Conditional sniper: fires at the last card in its lane, requires a clear line of sight. |
+| d751bd5b | לאבה | | Lava |
+| dc728737 | משאיר זרם געש בנתיב; כל מסתער נכנס לשלולית הלבה ונשרף. | | Leaves a lava stream in the lane; any advancer walks into the pool and burns. |
+| d4c2a5cc | שליטת נתיבים / חסימת הסתערות עם נזק מתמשך. | | Lane control / advance-denial with damage over time. |
+| d20cc0d1 | ספייק | | Spike |
+| df748656 | מגן מחזיר-נזק לקומת קרקע: מחזיר 30% מהנזק שספג, מצוין תחת קלף מתפוצץ. | | Damage-reflect wall for the ground floor: returns 30% of damage taken, great under a bomb card. |
+| d501199d | נשיפת כפור | | Frost Breath |
+| d549c6db | בקרת קצב: מקפיא יריב מסתער ל-2 שניות ומאפס לו את זמן הטעינה. | | Crowd control: freezes an advancing enemy for 2s and resets its attack cooldown. |
+| d8932979 | גולד-הורן | | Gold-Horn |
+| d2db5085 | מוחץ קלף חלש שלכם שלידו בתמורה לשריון, ואז צועד כטנק מוגן. | | Crushes a weak adjacent ally for armor, then advances as a protected tank. |
+| d4198710 | טנק כבד שניזון מהקרבה. | | Heavy tank fueled by sacrifice. |
+| d634b55d | דרקון רפאים | | Ghost Dragon |
+| dc6cb2ed | נחיל מתפרץ: נועד למות מהר, ואז בוקעות 3 רוחות שממשיכות להסתער. | | Bursting swarm: meant to die fast, then 3 spirits hatch and keep charging. |
+| d330d7d5 | דרקון הטייפון | | Typhoon Dragon |
+| de90eb52 | דוחף את היריב הצידה מעמודה לעמודה, מזיז צלפים מחוץ לנתיב. | | Pushes the enemy sideways between columns, moving snipers out of the lane. |
+| d0dd38e1 | שליטה מרחבית / הדף צדדי. | | Spatial control / lateral knockback. |
+| dbcd6ba4 | מלך השחקים | | Sky King |
+| d1cbbaba | מכת כנפיים לרוחב 3 נתיבים כל 5 שניות עם הדף. | | A wing sweep across 3 lanes every 5 seconds with knockback. |
+| dd7fb407 | ענק אמצע למשבצת ה-2×2: שליטת חזית מוחלטת עם נזק אזורי. | | Mid-boss for the 2×2 King slot: total front control with area damage. |
 
 ## סדרה — הענקים
 
 | מזהה | טקסט נוכחי | טקסט חדש | אנגלית |
 | --- | --- | --- | --- |
-| d36 | הענקים | | The Giants |
-| d37 | טנקים, התגרות והחזרת נזק | | Tanks, taunts and damage reflection |
-| d38 | עור עבה | | Thick Hide |
-| d39 | כל הענקים שלכם מקבלים שריון פסיבי שחוסם חלק מכל מכה נכנסת. | | All your giants gain passive armor that blocks part of every incoming hit. |
-| d40 | גולם אבן | | Stone Colossus |
-| d41 | טנק הליכה שמחזיר נזק. | | A walking tank that reflects damage. |
-| d42 | שומר הפלדה | | Steel Warden |
-| d43 | מעניק שריון לכל בעלי הברית סביבו. | | Grants armor to nearby allies. |
-| d44 | ענק הגבעות | | Hill Giant |
-| d45 | מכה כבדה שהודפת יריבים אחורה. | | Heavy blows that knock enemies back. |
-| d46 | טרול סלע | | Rock Troll |
-| d47 | מתחדש: מרפא את עצמו לאורך הקרב. | | Regenerates its own health during battle. |
-| d48 | שובר החומות | | Wall Breaker |
-| d49 | מכה איטית שמנפצת שריון. | | A slow blow that shatters armor. |
-| d50 | ענק הקרח | | Frost Giant |
-| d51 | כל מכה מקפיאה את היריב לרגע. | | Each hit briefly freezes the enemy. |
-| d52 | מגן הברזל | | Iron Bulwark |
-| d53 | חומה כמעט בלתי חדירה שמחזירה 40% נזק. | | A near-impenetrable wall reflecting 40% damage. |
-| d54 | רוק הנוקם | | Vengeful Rok |
-| d55 | מעניש כל מי שמעז לתקוף אותו. | | Punishes anyone who dares strike it. |
-| d56 | ענק הרעם | | Thunder Giant |
-| d57 | מכת רעם שפוגעת בשני נתיבים. | | A thunderclap that strikes two lanes. |
-| d58 | אבי-הענקים | | Titan King |
-| d59 | ענק אמצע למשבצת ה-2×2: טנק עצום שמגן על כל הלוח. | | Mid-boss for the 2×2 King slot: a colossal tank that shields the whole board. |
+| d8c365e1 | הענקים | | The Giants |
+| d1b5fe74 | טנקים, התגרות והחזרת נזק | | Tanks, taunts and damage reflection |
+| d27e8948 | עור עבה | | Thick Hide |
+| d503e2ab | כל הענקים שלכם מקבלים שריון פסיבי שחוסם חלק מכל מכה נכנסת. | | All your giants gain passive armor that blocks part of every incoming hit. |
+| dbbaccd6 | גולם אבן | | Stone Colossus |
+| d3694c8e | טנק הליכה שמחזיר נזק. | | A walking tank that reflects damage. |
+| dd07b195 | שומר הפלדה | | Steel Warden |
+| df53d12f | מעניק שריון לכל בעלי הברית סביבו. | | Grants armor to nearby allies. |
+| d68c3bcf | ענק הגבעות | | Hill Giant |
+| d71c0943 | מכה כבדה שהודפת יריבים אחורה. | | Heavy blows that knock enemies back. |
+| d8d307c3 | טרול סלע | | Rock Troll |
+| dce82a23 | מתחדש: מרפא את עצמו לאורך הקרב. | | Regenerates its own health during battle. |
+| da06b9a9 | שובר החומות | | Wall Breaker |
+| d5065925 | מכה איטית שמנפצת שריון. | | A slow blow that shatters armor. |
+| dfb64c5b | ענק הקרח | | Frost Giant |
+| d9ca1ff9 | כל מכה מקפיאה את היריב לרגע. | | Each hit briefly freezes the enemy. |
+| d2f2bf3c | מגן הברזל | | Iron Bulwark |
+| dedbf1d1 | חומה כמעט בלתי חדירה שמחזירה 40% נזק. | | A near-impenetrable wall reflecting 40% damage. |
+| dfcad363 | רוק הנוקם | | Vengeful Rok |
+| dc28819c | מעניש כל מי שמעז לתקוף אותו. | | Punishes anyone who dares strike it. |
+| dc8d0506 | ענק הרעם | | Thunder Giant |
+| d0768b12 | מכת רעם שפוגעת בשני נתיבים. | | A thunderclap that strikes two lanes. |
+| d28e30a0 | אבי-הענקים | | Titan King |
+| dfdbffd8 | ענק אמצע למשבצת ה-2×2: טנק עצום שמגן על כל הלוח. | | Mid-boss for the 2×2 King slot: a colossal tank that shields the whole board. |
 
 ## סדרה — הפרוותיים
 
 | מזהה | טקסט נוכחי | טקסט חדש | אנגלית |
 | --- | --- | --- | --- |
-| d60 | הפרוותיים | | The Furries |
-| d61 | מכות חשמל מהירות — מעט חיים, הרבה כוח | | Fast electric strikes — little health, a lot of power |
-| d62 | פרווה טעונה | | Charged Fur |
-| d63 | כל הפרוותיים שלכם תוקפים מהר יותר ב-20%. | | All your Furries attack 20% faster. |
-| d64 | צ'ופי | | Chuppy |
-| d65 | החבר שלך מההתחלה. מכה חזק מרחוק ושובר שריון — אבל סופג כמעט כלום, אז הוא לא עומד בחזית. | | Your friend from the start. Hits hard at range and breaks armour, but takes almost nothing, so he does not belong in the front row. |
+| d2cdcd05 | הפרוותיים | | The Furries |
+| d85387a0 | מכות חשמל מהירות — מעט חיים, הרבה כוח | | Fast electric strikes — little health, a lot of power |
+| de4a1b06 | פרווה טעונה | | Charged Fur |
+| d5852e1b | כל הפרוותיים שלכם תוקפים מהר יותר ב-20%. | | All your Furries attack 20% faster. |
+| d267c630 | צ'ופי | | Chuppy |
+| d8d0f124 | החבר שלך מההתחלה. מכה חזק מרחוק ושובר שריון — אבל סופג כמעט כלום, אז הוא לא עומד בחזית. | | Your friend from the start. Hits hard at range and breaks armour, but takes almost nothing, so he does not belong in the front row. |
 
 ## סדרה — החרקים
 
 | מזהה | טקסט נוכחי | טקסט חדש | אנגלית |
 | --- | --- | --- | --- |
-| d66 | החרקים | | The Insects |
-| d67 | מלכודות, רעל ופגיעה ישירה במרכז | | Traps, poison and striking straight at the center |
-| d68 | נחיל | | The Swarm |
-| d69 | כל החרקים שלכם מקבלים +20% מהירות תקיפה כשהם נלחמים יחד. | | All your insects gain +20% attack speed when fighting together. |
-| d70 | חייל נמלה | | Ant Soldier |
-| d71 | מסתער מהיר וזול להצפת נתיבים. | | A cheap, fast rusher to flood lanes. |
-| d72 | מלכת הנמלים | | Ant Queen |
-| d73 | במוות בוקעות ממנה 3 נמלים חדשות. | | On death hatches 3 fresh ants. |
-| d74 | עקרב ארסי | | Venom Scorpion |
-| d75 | עוקץ ומרעיל; הרעל מצטבר. | | Stings and poisons; the venom stacks. |
-| d76 | עש רעל | | Toxic Moth |
-| d77 | מרחף מעל הקרקע ומפזר אבקת רעל. | | Flies over the ground spreading toxic dust. |
-| d78 | חיפושית שריון | | Armored Beetle |
-| d79 | שריון קשה שמחזיר מעט נזק. | | A hard shell that reflects some damage. |
-| d80 | עכביש מארב | | Ambush Spider |
-| d81 | מלכודת קומת-קרקע: כשנחשף מדביק את היריב. | | Ground-floor trap: roots the enemy when revealed. |
-| d82 | צרעה תוקפנית | | Aggressive Wasp |
-| d83 | עפה מהר, עוקצת והודפת. | | Flies fast, stings and knocks back. |
-| d84 | גחלילית | | Firefly |
-| d85 | מאיצה את קצב התקיפה של הנחיל סביבה. | | Speeds up the attack rate of the nearby swarm. |
-| d86 | חרק פצצה | | Bombardier |
-| d87 | מתפוצץ במוות לשני חרקים קטנים. | | Explodes on death into two small bugs. |
-| d88 | קיסרית החרקים | | Insect Empress |
-| d89 | ענק אמצע למשבצת ה-2×2: מרעילה מרחוק ובוקעת נחיל במוות. | | Mid-boss for the 2×2 King slot: poisons from afar and bursts a swarm on death. |
+| df172f20 | החרקים | | The Insects |
+| d0a8be11 | מלכודות, רעל ופגיעה ישירה במרכז | | Traps, poison and striking straight at the center |
+| db45ae8e | נחיל | | The Swarm |
+| df12e1eb | כל החרקים שלכם מקבלים +20% מהירות תקיפה כשהם נלחמים יחד. | | All your insects gain +20% attack speed when fighting together. |
+| d1e8dfab | חייל נמלה | | Ant Soldier |
+| daff27cb | מסתער מהיר וזול להצפת נתיבים. | | A cheap, fast rusher to flood lanes. |
+| d56e0c0e | מלכת הנמלים | | Ant Queen |
+| dc0d7f80 | במוות בוקעות ממנה 3 נמלים חדשות. | | On death hatches 3 fresh ants. |
+| d528ee34 | עקרב ארסי | | Venom Scorpion |
+| d25b3f53 | עוקץ ומרעיל; הרעל מצטבר. | | Stings and poisons; the venom stacks. |
+| d428d394 | עש רעל | | Toxic Moth |
+| d2d1f2d6 | מרחף מעל הקרקע ומפזר אבקת רעל. | | Flies over the ground spreading toxic dust. |
+| d8a9bd04 | חיפושית שריון | | Armored Beetle |
+| d48bf173 | שריון קשה שמחזיר מעט נזק. | | A hard shell that reflects some damage. |
+| d40a44e2 | עכביש מארב | | Ambush Spider |
+| d9a4769d | מלכודת קומת-קרקע: כשנחשף מדביק את היריב. | | Ground-floor trap: roots the enemy when revealed. |
+| dc3c1f11 | צרעה תוקפנית | | Aggressive Wasp |
+| d1bb9b6f | עפה מהר, עוקצת והודפת. | | Flies fast, stings and knocks back. |
+| dd3a1765 | גחלילית | | Firefly |
+| d5219007 | מאיצה את קצב התקיפה של הנחיל סביבה. | | Speeds up the attack rate of the nearby swarm. |
+| de11f78a | חרק פצצה | | Bombardier |
+| de11c8f1 | מתפוצץ במוות לשני חרקים קטנים. | | Explodes on death into two small bugs. |
+| d737d9d3 | קיסרית החרקים | | Insect Empress |
+| d6a9f6a3 | ענק אמצע למשבצת ה-2×2: מרעילה מרחוק ובוקעת נחיל במוות. | | Mid-boss for the 2×2 King slot: poisons from afar and bursts a swarm on death. |
 
 ## סדרה — הצמחים
 
 | מזהה | טקסט נוכחי | טקסט חדש | אנגלית |
 | --- | --- | --- | --- |
-| d90 | הצמחים | | The Plants |
-| d91 | התפשטות על הלוח, צמיחה ותוספת חיים | | Spreading across the board, growth and added health |
-| d92 | פוטוסינתזה | | Photosynthesis |
-| d93 | כל הצמחים שלכם מתרפאים לאט לאורך כל הקרב. | | All your plants slowly heal throughout the battle. |
-| d94 | נבט קוצני | | Thorn Sprout |
-| d95 | קוצים שדוקרים את מי שנוגע. | | Thorns that prick whoever touches it. |
-| d96 | עץ עתיק | | Ancient Tree |
-| d97 | חומה חיה שמתחדשת ללא הרף. | | A living wall that constantly regenerates. |
-| d98 | פרח מרפא | | Healing Bloom |
-| d99 | מרפא את כל בעלי הברית סביבו. | | Heals all nearby allies. |
-| d100 | צמח טורף | | Venus Trap |
-| d101 | נושך ומזריק רעל מצטבר. | | Bites and injects stacking poison. |
-| d102 | גפן מתפשטת | | Creeping Vine |
-| d103 | מתפשטת: במוות צומחות ממנה שתי גפנים. | | Spreads: on death two new vines grow. |
-| d104 | פטריית רעל | | Toxic Mushroom |
-| d105 | יורה נבגי רעל מרחוק. | | Fires poison spores from afar. |
-| d106 | שן הארי | | Dandelion |
-| d107 | במוות מפזרת זרעים שממשיכים להילחם. | | On death scatters seeds that fight on. |
-| d108 | קקטוס | | Cactus |
-| d109 | קוצני ועמיד — דוקר ומתחדש. | | Spiky and hardy — pricks and regenerates. |
-| d110 | חמנייה | | Sunflower |
-| d111 | אוגרת אור ומרפאת את הסובבים. | | Stores sunlight and heals those around it. |
-| d112 | עץ-האם הענק | | Great Mother Tree |
-| d113 | ענק אמצע למשבצת ה-2×2: מתחדש בעצמו ומרפא את כל הצמחים. | | Mid-boss for the 2×2 King slot: self-regenerates and heals all plants. |
+| d5696dab | הצמחים | | The Plants |
+| d180cb32 | התפשטות על הלוח, צמיחה ותוספת חיים | | Spreading across the board, growth and added health |
+| d1c33c0c | פוטוסינתזה | | Photosynthesis |
+| dc5c9b79 | כל הצמחים שלכם מתרפאים לאט לאורך כל הקרב. | | All your plants slowly heal throughout the battle. |
+| d7f9ed67 | נבט קוצני | | Thorn Sprout |
+| d16ff73d | קוצים שדוקרים את מי שנוגע. | | Thorns that prick whoever touches it. |
+| d301ef3d | עץ עתיק | | Ancient Tree |
+| da1c7536 | חומה חיה שמתחדשת ללא הרף. | | A living wall that constantly regenerates. |
+| d8acc97c | פרח מרפא | | Healing Bloom |
+| d6b0cd91 | מרפא את כל בעלי הברית סביבו. | | Heals all nearby allies. |
+| d6ee9e8e | צמח טורף | | Venus Trap |
+| d05289dd | נושך ומזריק רעל מצטבר. | | Bites and injects stacking poison. |
+| d4d415b0 | גפן מתפשטת | | Creeping Vine |
+| df0991a1 | מתפשטת: במוות צומחות ממנה שתי גפנים. | | Spreads: on death two new vines grow. |
+| df2db041 | פטריית רעל | | Toxic Mushroom |
+| db0816c9 | יורה נבגי רעל מרחוק. | | Fires poison spores from afar. |
+| d1845f96 | שן הארי | | Dandelion |
+| d8deff30 | במוות מפזרת זרעים שממשיכים להילחם. | | On death scatters seeds that fight on. |
+| d137f274 | קקטוס | | Cactus |
+| d1fa91ef | קוצני ועמיד — דוקר ומתחדש. | | Spiky and hardy — pricks and regenerates. |
+| d57a0224 | חמנייה | | Sunflower |
+| dac9c5a2 | אוגרת אור ומרפאת את הסובבים. | | Stores sunlight and heals those around it. |
+| d9da1c5d | עץ-האם הענק | | Great Mother Tree |
+| de3ae8ea | ענק אמצע למשבצת ה-2×2: מתחדש בעצמו ומרפא את כל הצמחים. | | Mid-boss for the 2×2 King slot: self-regenerates and heals all plants. |
 
 ## סדרה — הריריים
 
 | מזהה | טקסט נוכחי | טקסט חדש | אנגלית |
 | --- | --- | --- | --- |
-| d114 | הריריים | | The Slimes |
-| d115 | משאירים שובל ריר שמאט את היריב | | Leaving a slime trail that slows the enemy |
-| d116 | דביקות | | Stickiness |
-| d117 | כל קלף יריב שמנסה להסתער בנתיב שיש בו קלף רירי סובל מהאטה של 50% במהירות התנועה. | | Any enemy advancing in a lane containing a slime suffers a 50% movement slow. |
-| d118 | סליים בסיסי | | Basic Slime |
-| d119 | בולם זעזועים: המבנה הג'לטיני סופג הדף, לא ניתן לדחוף אותו אחורה. | | Shock absorber: its gelatinous body soaks knockback — it cannot be pushed back. |
-| d120 | קוביית ג'לי | | Gelatinous Cube |
-| d121 | בולעת את הקלף המסתער של היריב ומשהה אותו 3 שניות. | | Swallows the enemy's advancing card, stunning it for 3 seconds. |
-| d122 | עיכול / בקרת קצב: שוברת ליריב את טיימר ההתקפות. | | Digestion / crowd control: breaks the enemy's attack timer. |
-| d123 | רפש חומצי | | Acid Ooze |
-| d124 | כל מכה ממיסה שריון של היריב, גם אם היה אמור לספוג יותר. | | Every hit melts the enemy's armor, even if it would have blocked more. |
-| d125 | ממיס שריון. | | Armor melter. |
-| d126 | בלוב מתפצל | | Splitting Blob |
-| d127 | במוות נחתך לשני בלובים קטנים שקופצים לנתיבים הסמוכים וממשיכים להילחם. | | On death splits into two small blobs that leap to adjacent lanes and keep fighting. |
-| d128 | נחיל במוות. | | Swarm on death. |
-| d129 | שטיח-דבק | | Sticky Rug |
-| d130 | כשנחשף מתחת לקלף שמת, מדביק את היריב שמולו ומונע ממנו לזוז עד סוף הקרב. | | When revealed under a dead card, glues the enemy in front so it cannot move for the rest of the battle. |
-| d131 | מלכודת קומת-קרקע. | | Ground-floor trap. |
-| d132 | סליים רדיואקטיבי | | Toxic Sludge |
-| d133 | יורה בועות רעל; הרעל מצטבר וכל פגיעה מגדילה את הנזק לשנייה. | | Fires poison bubbles; poison stacks and each hit raises the damage per second. |
-| d134 | נזק מתמשך מרחוק. | | Ranged damage over time. |
-| d135 | מוח-צף | | Floating Brain |
-| d136 | משדר פולסים חשמליים שמעניקים +25% מהירות תקיפה למפלצות ברדיוס. | | Emits electric pulses granting +25% attack speed to monsters in range. |
-| d137 | באף אזורי. | | Area buffer. |
-| d138 | מטמיע הצורות | | Assimilator |
-| d139 | בפגיעה הראשונה מעתיק את האלמנט של היריב ומשתלב בסינרגיות. | | On its first hit copies the enemy's element, letting it slot into synergies. |
-| d140 | גנב אלמנטים. | | Element thief. |
-| d141 | פודינג-מגן | | Pudding Shield |
-| d142 | סופג חצי מהנזק שמופנה לקלפים הצמודים אליו מימין ומשמאל. | | Absorbs half the damage aimed at the cards directly to its left and right. |
-| d143 | הגנה היקפית / שומר ראש. | | Perimeter guard / bodyguard. |
-| d144 | זליג הענק | | Zelig the Giant Ooze |
-| d145 | כל 6 שניות מושך את כל קלפי היריב המסתערים משבצת אחת פנימה למרכז ומשבש נתיבים. | | Every 6 seconds pulls all advancing enemy cards one slot inward, disrupting lanes. |
-| d146 | ענק אמצע למשבצת ה-2×2: שואב עולמי איטי אך קטלני. | | Mid-boss for the 2×2 King slot: a slow but lethal world-sucker. |
+| d9349aef | הריריים | | The Slimes |
+| d477a268 | משאירים שובל ריר שמאט את היריב | | Leaving a slime trail that slows the enemy |
+| df041649 | דביקות | | Stickiness |
+| d86a9ebb | כל קלף יריב שמנסה להסתער בנתיב שיש בו קלף רירי סובל מהאטה של 50% במהירות התנועה. | | Any enemy advancing in a lane containing a slime suffers a 50% movement slow. |
+| d24312e8 | סליים בסיסי | | Basic Slime |
+| d5a5e71a | בולם זעזועים: המבנה הג'לטיני סופג הדף, לא ניתן לדחוף אותו אחורה. | | Shock absorber: its gelatinous body soaks knockback — it cannot be pushed back. |
+| d9dab6c4 | קוביית ג'לי | | Gelatinous Cube |
+| dc3a07f6 | בולעת את הקלף המסתער של היריב ומשהה אותו 3 שניות. | | Swallows the enemy's advancing card, stunning it for 3 seconds. |
+| d804a3f3 | עיכול / בקרת קצב: שוברת ליריב את טיימר ההתקפות. | | Digestion / crowd control: breaks the enemy's attack timer. |
+| dc0ee275 | רפש חומצי | | Acid Ooze |
+| d6768ae4 | כל מכה ממיסה שריון של היריב, גם אם היה אמור לספוג יותר. | | Every hit melts the enemy's armor, even if it would have blocked more. |
+| d0855e04 | ממיס שריון. | | Armor melter. |
+| d596f0a9 | בלוב מתפצל | | Splitting Blob |
+| d26b185e | במוות נחתך לשני בלובים קטנים שקופצים לנתיבים הסמוכים וממשיכים להילחם. | | On death splits into two small blobs that leap to adjacent lanes and keep fighting. |
+| d3669850 | נחיל במוות. | | Swarm on death. |
+| d414ebd5 | שטיח-דבק | | Sticky Rug |
+| d2ae4498 | כשנחשף מתחת לקלף שמת, מדביק את היריב שמולו ומונע ממנו לזוז עד סוף הקרב. | | When revealed under a dead card, glues the enemy in front so it cannot move for the rest of the battle. |
+| d0b30ec8 | מלכודת קומת-קרקע. | | Ground-floor trap. |
+| daaa981c | סליים רדיואקטיבי | | Toxic Sludge |
+| db9094e8 | יורה בועות רעל; הרעל מצטבר וכל פגיעה מגדילה את הנזק לשנייה. | | Fires poison bubbles; poison stacks and each hit raises the damage per second. |
+| d1818001 | נזק מתמשך מרחוק. | | Ranged damage over time. |
+| d9892ad9 | מוח-צף | | Floating Brain |
+| de776251 | משדר פולסים חשמליים שמעניקים +25% מהירות תקיפה למפלצות ברדיוס. | | Emits electric pulses granting +25% attack speed to monsters in range. |
+| d81d470f | באף אזורי. | | Area buffer. |
+| df2a4637 | מטמיע הצורות | | Assimilator |
+| d4b8587c | בפגיעה הראשונה מעתיק את האלמנט של היריב ומשתלב בסינרגיות. | | On its first hit copies the enemy's element, letting it slot into synergies. |
+| da2bed0b | גנב אלמנטים. | | Element thief. |
+| d5ff14e8 | פודינג-מגן | | Pudding Shield |
+| d9ffeb46 | סופג חצי מהנזק שמופנה לקלפים הצמודים אליו מימין ומשמאל. | | Absorbs half the damage aimed at the cards directly to its left and right. |
+| d59cfdc3 | הגנה היקפית / שומר ראש. | | Perimeter guard / bodyguard. |
+| de5bfdae | זליג הענק | | Zelig the Giant Ooze |
+| db20969f | כל 6 שניות מושך את כל קלפי היריב המסתערים משבצת אחת פנימה למרכז ומשבש נתיבים. | | Every 6 seconds pulls all advancing enemy cards one slot inward, disrupting lanes. |
+| dd02f859 | ענק אמצע למשבצת ה-2×2: שואב עולמי איטי אך קטלני. | | Mid-boss for the 2×2 King slot: a slow but lethal world-sucker. |
 
 ## סדרה — האגדיים
 
 | מזהה | טקסט נוכחי | טקסט חדש | אנגלית |
 | --- | --- | --- | --- |
-| d147 | האגדיים | | The Legends |
-| d148 | לא נאספים ולא נבנים. מופיעים. | | Not collected, not built. They arrive. |
-| d149 | תוהו | | Chaos |
-| d150 | אין. הם לא באים בשלושה. | | None. They do not come in threes. |
-| d151 | אמנדה | | Amanda |
-| d152 | מלכת הצד שלה. לא זזה, יורה רחוק, מחזירה נזק ומרפאה את מי שסביבה. היא לא אמורה להיות הוגנת — בשביל זה אתם שניים. | | Queen of her side. Never moves, shoots far, reflects damage and heals what stands near her. She is not meant to be fair — that is why there are two of you. |
+| d2d5efb3 | האגדיים | | The Legends |
+| d0a4d057 | לא נאספים ולא נבנים. מופיעים. | | Not collected, not built. They arrive. |
+| df6551b7 | תוהו | | Chaos |
+| d3dcebe0 | אין. הם לא באים בשלושה. | | None. They do not come in threes. |
+| da3285cd | אמנדה | | Amanda |
+| da6a1290 | מלכת הצד שלה. לא זזה, יורה רחוק, מחזירה נזק ומרפאה את מי שסביבה. היא לא אמורה להיות הוגנת — בשביל זה אתם שניים. | | Queen of her side. Never moves, shoots far, reflects damage and heals what stands near her. She is not meant to be fair — that is why there are two of you. |
 
 ## קלפי פעולה
 
 | מזהה | טקסט נוכחי | טקסט חדש | אנגלית |
 | --- | --- | --- | --- |
-| d153 | שליפה משולשת | | Triple Draw |
-| d154 | שולף 3 קלפים במכה אחת ליד. מעולה לחיסכון בזמן הבנייה. | | Draws 3 cards to hand at once. Great for saving build time. |
-| d155 | בוסט אנרגיה | | Energy Boost |
-| d156 | מעניק +50 עוצמה לכל הקלפים שמונחים כרגע על הלוח שלך. | | Grants +50 power to all cards currently on your board. |
-| d157 | מחק רדיואקטיבי | | Radioactive Eraser |
-| d158 | מוחק קלף אחד שהיריב הניח (אם הופעל על המלך - מוריד לו נזק כבד במקום למחוק). | | Erases one enemy card (if used on the King, deals heavy damage instead of erasing). |
-| d159 | הקפאת זמן | | Time Freeze |
-| d160 | מקפיא את המסך של היריב לחלוטין ל-3 שניות. | | Completely freezes the opponent's screen for 3 seconds. |
-| d161 | החלפת מקומות | | Swap Places |
-| d162 | מחליף מיקומים בין שני קלפים שכבר הנחת על הלוח שלך. | | Swaps the positions of two cards you have already placed on your board. |
-| d163 | רנטגן | | X-Ray |
-| d164 | חושף את כל הלוח של היריב (כולל שורת ההפתעה האחורית) למשך 5 שניות. | | Reveals the entire enemy board (including the back Surprise Row) for 5 seconds. |
-| d165 | קומת קרקע | | Ground Floor (Stacking) |
-| d166 | מאפשר לבחור 4 משבצות בלוח ולהניח בהן קלף על גבי קלף. כשהעליון מת בקרב, התחתון נחשף. | | Lets you pick 4 slots and stack a card on top of another. When the top dies in battle, the bottom is revealed. |
-| d167 | פינות אפלות | | Dark Corners |
-| d168 | מאפשר אוטומטית הנחת קלף כפול (Stack) בכל 4 הפינות החיצוניות של הלוח שלך. | | Automatically enables stacking a double card on all 4 outer corners of your board. |
-| d169 | סופת חול | | Sandstorm |
-| d170 | מחליפה בין שני שומרי המלך של היריב, ובין שני הקלפים שבקצוות — השורה הקדמית נשארת, הסדר שלה לא. | | Swaps the enemy's two King guards with each other, and its two outer front cards with each other. |
-| d171 | חומת פלדה | | Steel Wall |
-| d172 | מניח מגן פסיבי שחוסם לחלוטין את קלף המערכת הבא שהיריב ינסה להפעיל עליך. | | Places a passive shield that fully blocks the next Action Card the enemy tries to use on you. |
-| d173 | תדלוק מלא | | Full Refuel |
-| d174 | משדרג מיידית קלף שהנחת על הלוח לגרסה החזקה יותר שלו (רמה 2) למשך המשחקון. | | Instantly upgrades a placed card to its stronger version (level 2) for the match. |
-| d175 | זימון אמנדה | | Amanda's Awakening |
-| d176 | עוצר את המשחק התחרותי, מאחד את הלוחות ומכניס את שני השחקנים לקרב Co-Op משותף מול אמנדה. | | Halts the competitive match, merges the boards and drops both players into a co-op battle against Amanda. |
-| d177 | פינוי קלף | | Recall Card |
-| d178 | בלחיצה: בחר קלף שהנחת על הלוח והורד אותו (המשבצת מתפנה). מנטרל את ההדבקה. | | On use: pick a card you placed and remove it (its slot frees up). Undoes the glue. |
-| d179 | מילוי לאבה | | Lava Fill |
-| d180 | פסיבי: בסוף הבנייה ממלא עד 3 משבצות ריקות ב'לאבה' (במקום מפלצת פירורים) במיקומים אקראיים. | | Passive: at the end of building, fills up to 3 empty slots with Lava (instead of Crumb Demons) at random positions. |
-| d181 | מילוי גולם אבן | | Colossus Fill |
-| d182 | פסיבי: בסוף הבנייה ממלא עד 3 משבצות ריקות ב'גולם אבן' במיקומים אקראיים. | | Passive: at the end of building, fills up to 3 empty slots with Stone Colossus at random positions. |
-| d183 | מילוי דרקון אש | | Flame Fill |
-| d184 | פסיבי: בסוף הבנייה ממלא עד 3 משבצות ריקות ב'פליים דראגון' במיקומים אקראיים. | | Passive: at the end of building, fills up to 3 empty slots with Flame Dragon at random positions. |
-| d185 | מילוי קוביית ג'לי | | Cube Fill |
-| d186 | פסיבי: בסוף הבנייה ממלא עד 3 משבצות ריקות ב'קוביית ג'לי' במיקומים אקראיים. | | Passive: at the end of building, fills up to 3 empty slots with Gelatinous Cube at random positions. |
-| d187 | ידיים קפואות | | Frozen Hands |
-| d188 | היריב קופא לחמש שניות. לשלוף ולזרוק הוא עוד יכול — להדביק קלפים באלבום כבר לא. אי אפשר לשחק את זה כשנותרו פחות מעשר שניות בנייה. | | Freezes the opponent for five seconds: they can still draw, discard and play action cards, but they cannot place a card on the board. Unplayable with under ten seconds of building left. |
+| d049f291 | שליפה משולשת | | Triple Draw |
+| d0d3125a | שולף 3 קלפים במכה אחת ליד. מעולה לחיסכון בזמן הבנייה. | | Draws 3 cards to hand at once. Great for saving build time. |
+| d8af9ed0 | בוסט אנרגיה | | Energy Boost |
+| d924260a | מעניק +50 עוצמה לכל הקלפים שמונחים כרגע על הלוח שלך. | | Grants +50 power to all cards currently on your board. |
+| d8db5211 | מחק רדיואקטיבי | | Radioactive Eraser |
+| d08dfbce | מוחק קלף אחד שהיריב הניח (אם הופעל על המלך - מוריד לו נזק כבד במקום למחוק). | | Erases one enemy card (if used on the King, deals heavy damage instead of erasing). |
+| d3929761 | הקפאת זמן | | Time Freeze |
+| db59b2b4 | מקפיא את המסך של היריב לחלוטין ל-3 שניות. | | Completely freezes the opponent's screen for 3 seconds. |
+| d36bffd3 | החלפת מקומות | | Swap Places |
+| d52f8ecc | מחליף מיקומים בין שני קלפים שכבר הנחת על הלוח שלך. | | Swaps the positions of two cards you have already placed on your board. |
+| d6c5480b | רנטגן | | X-Ray |
+| d0c06a9b | חושף את כל הלוח של היריב (כולל שורת ההפתעה האחורית) למשך 5 שניות. | | Reveals the entire enemy board (including the back Surprise Row) for 5 seconds. |
+| d8dd9d7a | קומת קרקע | | Ground Floor (Stacking) |
+| da8138d9 | מאפשר לבחור 4 משבצות בלוח ולהניח בהן קלף על גבי קלף. כשהעליון מת בקרב, התחתון נחשף. | | Lets you pick 4 slots and stack a card on top of another. When the top dies in battle, the bottom is revealed. |
+| d45d0447 | פינות אפלות | | Dark Corners |
+| dd8f73aa | מאפשר אוטומטית הנחת קלף כפול (Stack) בכל 4 הפינות החיצוניות של הלוח שלך. | | Automatically enables stacking a double card on all 4 outer corners of your board. |
+| d2af4555 | סופת חול | | Sandstorm |
+| dc311f15 | מחליפה בין שני שומרי המלך של היריב, ובין שני הקלפים שבקצוות — השורה הקדמית נשארת, הסדר שלה לא. | | Swaps the enemy's two King guards with each other, and its two outer front cards with each other. |
+| d28ffb0e | חומת פלדה | | Steel Wall |
+| deebcf6a | מניח מגן פסיבי שחוסם לחלוטין את קלף המערכת הבא שהיריב ינסה להפעיל עליך. | | Places a passive shield that fully blocks the next Action Card the enemy tries to use on you. |
+| d2221bdb | תדלוק מלא | | Full Refuel |
+| daee0956 | משדרג מיידית קלף שהנחת על הלוח לגרסה החזקה יותר שלו (רמה 2) למשך המשחקון. | | Instantly upgrades a placed card to its stronger version (level 2) for the match. |
+| dad4d9ca | זימון אמנדה | | Amanda's Awakening |
+| d96dd866 | עוצר את המשחק התחרותי, מאחד את הלוחות ומכניס את שני השחקנים לקרב Co-Op משותף מול אמנדה. | | Halts the competitive match, merges the boards and drops both players into a co-op battle against Amanda. |
+| d0ecb3e1 | פינוי קלף | | Recall Card |
+| d3b1792e | בלחיצה: בחר קלף שהנחת על הלוח והורד אותו (המשבצת מתפנה). מנטרל את ההדבקה. | | On use: pick a card you placed and remove it (its slot frees up). Undoes the glue. |
+| d5bb37c6 | מילוי לאבה | | Lava Fill |
+| dc7c436b | פסיבי: בסוף הבנייה ממלא עד 3 משבצות ריקות ב'לאבה' (במקום מפלצת פירורים) במיקומים אקראיים. | | Passive: at the end of building, fills up to 3 empty slots with Lava (instead of Crumb Demons) at random positions. |
+| dc3fedf6 | מילוי גולם אבן | | Colossus Fill |
+| d20f47e3 | פסיבי: בסוף הבנייה ממלא עד 3 משבצות ריקות ב'גולם אבן' במיקומים אקראיים. | | Passive: at the end of building, fills up to 3 empty slots with Stone Colossus at random positions. |
+| db4905a9 | מילוי דרקון אש | | Flame Fill |
+| d598d611 | פסיבי: בסוף הבנייה ממלא עד 3 משבצות ריקות ב'פליים דראגון' במיקומים אקראיים. | | Passive: at the end of building, fills up to 3 empty slots with Flame Dragon at random positions. |
+| db55bdb5 | מילוי קוביית ג'לי | | Cube Fill |
+| d3c3107c | פסיבי: בסוף הבנייה ממלא עד 3 משבצות ריקות ב'קוביית ג'לי' במיקומים אקראיים. | | Passive: at the end of building, fills up to 3 empty slots with Gelatinous Cube at random positions. |
+| dcc09db5 | ידיים קפואות | | Frozen Hands |
+| d865b720 | היריב קופא לחמש שניות. לשלוף ולזרוק הוא עוד יכול — להדביק קלפים באלבום כבר לא. אי אפשר לשחק את זה כשנותרו פחות מעשר שניות בנייה. | | Freezes the opponent for five seconds: they can still draw, discard and play action cards, but they cannot place a card on the board. Unplayable with under ten seconds of building left. |
 
 ## הקול של אמנדה — שורות מתחלפות (כמה גרסאות לכל רגע)
 
 | מזהה | טקסט נוכחי | טקסט חדש | אנגלית |
 | --- | --- | --- | --- |
-| s189 | כבר הולך? | |  |
-| s190 | מה, זהו? | |  |
-| s191 | ברצינות? | |  |
-| s192 | עכשיו דווקא? | |  |
-| s193 | אבל רק התחלנו | |  |
-| s194 | הלוח שבנית נמחק. אשמור לך מקום בתפריט שלי, ילד. | |  |
-| s195 | הלוח שבנית נמחק. אשמור לך מקום בתפריט שלי, ילדה. | |  |
-| s196 | כל מה שבנית הולך לפח. אני אשרוד איכשהו. | |  |
-| s197 | הלוח נמחק והקרב לא יקרה. אף אחד לא ידע שהיית כאן. | |  |
-| s198 | אני מוחקת את הלוח. אל תדאג, אני זוכרת אותך. | |  |
-| s199 | זה נמחק והולך. כולם חוזרים. | |  |
-| s200 | כן, אני בורח | |  |
-| s201 | כן, מספיק לי | |  |
-| s202 | כן, שחרר אותי | |  |
-| s203 | כן, ביי | |  |
-| s204 | לא, אני נשאר | |  |
-| s205 | לא, בוא נשחק | |  |
-| s206 | לא, בואי נשחק | |  |
-| s207 | התבלבלתי | |  |
-| s208 | עוד לא סיימתי | |  |
-| s209 | ניצחת! הפעם. | |  |
-| s210 | ניצחת. נתתי לך. | |  |
-| s211 | יפה, ילד. | |  |
-| s212 | יפה, ילדה. | |  |
-| s213 | ניצחת. אל תתרגל. | |  |
-| s214 | טוב. באמת טוב. | |  |
-| s215 | הפסדת. טעים. | |  |
-| s216 | הפסדת. היה נחמד. | |  |
-| s217 | זהו. תודה על הארוחה. | |  |
-| s218 | הפסדת, וידעת שזה יקרה. | |  |
-| s219 | אוי. כמעט. | |  |
-| s220 | היריב ברח. ניצחת בטכני. | |  |
-| s221 | הוא ברח. אני לא מאשימה אותו. | |  |
-| s222 | נשארת לבד. זה נחשב ניצחון. | |  |
-| s223 | היריב נעלם. אכלתי אותו בדרך. | |  |
-| s224 | התכונן לקרב, ילד | |  |
-| s225 | התכונני לקרב, ילדה | |  |
-| s226 | תתארגן, ילד | |  |
-| s227 | תתארגני, ילדה | |  |
-| s228 | מתחילים. תנשום. | |  |
-| s229 | קדימה, ילד | |  |
-| s230 | קדימה, ילדה | |  |
-| s231 | קדימה לקרב! | |  |
-| s232 | ועכשיו: לקרב! | |  |
-| s233 | בואו נלחם! | |  |
-| s234 | הקרב מתחיל, ילד | |  |
-| s235 | הקרב מתחיל, ילדה | |  |
-| s236 | ועכשיו נראה מה בנית | |  |
-| s237 | מאוחר מדי לשנות | |  |
-| s238 | בוא נראה אותך | |  |
-| s239 | בואי נראה אותך | |  |
-| s240 | מחפשת לך מישהו מתוק | |  |
-| s241 | מחפשת לך יריב. סבלנות. | |  |
-| s242 | מישהו יבוא. תמיד בא מישהו. | |  |
-| s243 | רגע, אני מסדרת לך משחק | |  |
-| s244 | קודם כול מלך. הוא לא זז, הוא חזק פי שלושה, ואם הוא נופל — נגמר. גרור מפלצת לאמצע. קלף פעולה ביד? לפח איתו. | |  |
-| s245 | שתי המשבצות האלה שומרות עליו. כל עוד מישהו עומד שם, אי אפשר לגעת בו. | |  |
-| s246 | זה מה שיש לך ביד. לא מוצא חן בעיניך? לפח. אבל רק הקלף העליון חוזר, אז תחשוב. | |  |
-| s247 | כל מה שאפשר למלא — למלא. מה שיישאר ריק אני אמלא, וזה לא יהיה נעים. | |  |
-| s248 | וכשזה נראה מוכן — ללחוץ. אני כבר מוכנה. | |  |
-| s249 | רגע. לפני הכול — אני מדברת אל ילד או אל ילדה? | |  |
-| s250 | אז הגעת. יופי. לפני שנתחיל אני רוצה לדעת את מי אני אוכלת. | |  |
-| s251 | בחר לך פרצוף. זה מה שאני אזכור. | |  |
-| s252 | ואיך קוראים לך? תן שם שאפשר לצעוק. | |  |
-| s253 | ומתי נולדת? זה רק בשבילי. אני אוהבת לדעת כמה זמן חיכיתי. | |  |
-| s254 | משהו בפנים. תפתח כבר. | |  |
-| s255 | זכית. אל תתרגש מדי. | |  |
-| s256 | קח, הרווחת. | |  |
-| s257 | בוא נראה מה יצא לך. | |  |
-| s258 | בואי נראה מה יצא לך. | |  |
-| s259 | זה לא יפתח את עצמו. | |  |
+| sf076071 | כבר הולך? | |  |
+| s2631ad1 | מה, זהו? | |  |
+| sb4c1729 | ברצינות? | |  |
+| s3bfb17f | עכשיו דווקא? | |  |
+| s4515ae6 | אבל רק התחלנו | |  |
+| sb749f7c | הלוח שבנית נמחק. אשמור לך מקום בתפריט שלי, ילד. | |  |
+| sf823ea4 | הלוח שבנית נמחק. אשמור לך מקום בתפריט שלי, ילדה. | |  |
+| s41bc2a0 | כל מה שבנית הולך לפח. אני אשרוד איכשהו. | |  |
+| s841d0a1 | הלוח נמחק והקרב לא יקרה. אף אחד לא ידע שהיית כאן. | |  |
+| s4f08f6b | אני מוחקת את הלוח. אל תדאג, אני זוכרת אותך. | |  |
+| s10d5f41 | זה נמחק והולך. כולם חוזרים. | |  |
+| s627f20a | כן, אני בורח | |  |
+| sd44f6f7 | כן, מספיק לי | |  |
+| s0211124 | כן, שחרר אותי | |  |
+| s3630815 | כן, ביי | |  |
+| sb86d2ab | לא, אני נשאר | |  |
+| sdc2715c | לא, בוא נשחק | |  |
+| s54722a8 | לא, בואי נשחק | |  |
+| s420c05d | התבלבלתי | |  |
+| s07e484c | עוד לא סיימתי | |  |
+| s5bd3e69 | ניצחת! הפעם. | |  |
+| s322e6c0 | ניצחת. נתתי לך. | |  |
+| s072fa2f | יפה, ילד. | |  |
+| s47dce22 | יפה, ילדה. | |  |
+| sad1cc07 | ניצחת. אל תתרגל. | |  |
+| sd1f0cd1 | טוב. באמת טוב. | |  |
+| s6b08edc | הפסדת. טעים. | |  |
+| s609bca4 | הפסדת. היה נחמד. | |  |
+| s621af20 | זהו. תודה על הארוחה. | |  |
+| sbc1c615 | הפסדת, וידעת שזה יקרה. | |  |
+| sbdbc574 | אוי. כמעט. | |  |
+| s2fd8580 | היריב ברח. ניצחת בטכני. | |  |
+| s3a0ee19 | הוא ברח. אני לא מאשימה אותו. | |  |
+| sdb10f2b | נשארת לבד. זה נחשב ניצחון. | |  |
+| s0176373 | היריב נעלם. אכלתי אותו בדרך. | |  |
+| s1661c13 | התכונן לקרב, ילד | |  |
+| s0f9d55a | התכונני לקרב, ילדה | |  |
+| s34b7fb9 | תתארגן, ילד | |  |
+| s5361c59 | תתארגני, ילדה | |  |
+| s353737f | מתחילים. תנשום. | |  |
+| s5656766 | קדימה, ילד | |  |
+| s9175f67 | קדימה, ילדה | |  |
+| s36e79b6 | קדימה לקרב! | |  |
+| sf842646 | ועכשיו: לקרב! | |  |
+| sf43f6cb | בואו נלחם! | |  |
+| sa21c01f | הקרב מתחיל, ילד | |  |
+| sd988a9d | הקרב מתחיל, ילדה | |  |
+| s647d2f6 | ועכשיו נראה מה בנית | |  |
+| s361ec57 | מאוחר מדי לשנות | |  |
+| s32acee8 | בוא נראה אותך | |  |
+| s6f30a3c | בואי נראה אותך | |  |
+| s69104e2 | מחפשת לך מישהו מתוק | |  |
+| s43db7a1 | מחפשת לך יריב. סבלנות. | |  |
+| s95c7718 | מישהו יבוא. תמיד בא מישהו. | |  |
+| s4fa0459 | רגע, אני מסדרת לך משחק | |  |
+| s50cc39e | קודם כול מלך. הוא לא זז, הוא חזק פי שלושה, ואם הוא נופל — נגמר. גרור מפלצת לאמצע. קלף פעולה ביד? לפח איתו. | |  |
+| s54b2c21 | שתי המשבצות האלה שומרות עליו. כל עוד מישהו עומד שם, אי אפשר לגעת בו. | |  |
+| s2e30355 | זה מה שיש לך ביד. לא מוצא חן בעיניך? לפח. אבל רק הקלף העליון חוזר, אז תחשוב. | |  |
+| sdc4abc1 | כל מה שאפשר למלא — למלא. מה שיישאר ריק אני אמלא, וזה לא יהיה נעים. | |  |
+| sb496ba8 | וכשזה נראה מוכן — ללחוץ. אני כבר מוכנה. | |  |
+| s0a11063 | רגע. לפני הכול — אני מדברת אל ילד או אל ילדה? | |  |
+| scae72fe | אז הגעת. יופי. לפני שנתחיל אני רוצה לדעת את מי אני אוכלת. | |  |
+| s0d5203b | בחר לך פרצוף. זה מה שאני אזכור. | |  |
+| s9836b0a | ואיך קוראים לך? תן שם שאפשר לצעוק. | |  |
+| s82a43b6 | ומתי נולדת? זה רק בשבילי. אני אוהבת לדעת כמה זמן חיכיתי. | |  |
+| s42071fe | משהו בפנים. תפתח כבר. | |  |
+| sb72299f | זכית. אל תתרגש מדי. | |  |
+| se3b46b6 | קח, הרווחת. | |  |
+| se56f9ce | בוא נראה מה יצא לך. | |  |
+| sd4cc59c | בואי נראה מה יצא לך. | |  |
+| s6e563e0 | זה לא יפתח את עצמו. | |  |
 
 ## מסכי המשחק — פתיחה, בנייה, קרב, תוצאה
 
 | מזהה | טקסט נוכחי | טקסט חדש | אנגלית |
 | --- | --- | --- | --- |
-| s260 | לרוקן את ${name} | |  |
-| s261 | מתארגנת… | |  |
-| s262 | מחפשת לך יריב… | |  |
-| s263 | נועלת לוחות… | |  |
-| s264 | זהו | |  |
-| s265 | רגע… | |  |
-| s266 | רגע… | |  |
-| s267 | סובב את המכשיר | |  |
-| s268 | אני משוחקת לרוחב, ילד. ככה אני רואה את שניכם. | |  |
-| s269 | מחכה לחבר שלך… | |  |
-| s270 | הודעות | |  |
-| s271 | חזרה לתפריט | |  |
-| s272 | למעבר לעברית | |  |
-| s273 | עב | |  |
-| s274 | כיבוי מוזיקה | |  |
-| s275 | הפעלת מוזיקה | |  |
-| s276 | הפעלת צליל | |  |
-| s277 | השתקה | |  |
-| s278 | השרת לא עונה | |  |
-| s279 | מחכה לחבר שלך… | |  |
-| s280 | מחפשת לך יריב… | |  |
-| s281 | שלח את הקוד למי שבא לך לאכול: | |  |
-| s282 | ✔ העתקתי | |  |
-| s283 | ⧉ העתק הזמנה | |  |
-| s284 | השרת לא עונה. אני פנויה. | |  |
-| s285 | חזרה | |  |
-| s286 | ביטול | |  |
-| s287 | הצד שלך | |  |
-| s288 | החצי שלך | |  |
-| s289 | אתה | |  |
-| s290 | הידיים שלך קפואות | |  |
-| s291 | לשלוף ולזרוק אפשר. להדביק — לא. | |  |
-| s292 | החצי של מי שאיתך | |  |
-| s293 | הצד שמולך | |  |
-| s294 | היריב | |  |
-| s295 | אמנדה | |  |
-| s296 | היריב | |  |
-| s297 | נחשף! | |  |
-| s298 | בחר קלף אצל היריב | |  |
-| s299 | ועכשיו את השני | |  |
-| s300 | בחר קלף על הלוח שלך | |  |
-| s301 | מאוחר. תכננת גרוע. | |  |
-| s302 | פעיל ∞ | |  |
-| s303 | נוצל | |  |
-| s304 | מאוחר מדי | |  |
-| s305 | הפעל | |  |
-| s306 | הסבר | |  |
-| s307 | גע בקלף על הלוח כדי להוריד אותו | |  |
-| s308 | הבר מלא | |  |
-| s309 | אין קלף | |  |
-| s310 | קלפים שנשארו בחפיסה | |  |
-| s311 | קלפים בפח | |  |
-| s312 | הבר מלא | |  |
-| s313 | size={14} /> אפשר להניח קלף על קלף שכבר הנחתם — נשארו{ | |  |
-| s314 | התחל קרב! | |  |
-| s315 | מוכן — לחץ לביטול | |  |
-| s316 | אני מוכן | |  |
-| s317 | שניכם מוכנים — מתחילים | |  |
-| s318 | אתה מוכן. אפשר להמשיך לבנות עד שגם הוא יהיה. | |  |
-| s319 | היריב מוכן. אתה עדיין יכול לבנות. | |  |
-| s320 | הלוח שלך נעול | |  |
-| s321 | מחכה שהיריב יסיים… | |  |
-| s322 | ממלאת לך את החורים… | |  |
-| s323 | יפה. עכשיו משהו קצת יותר מתוחכם. | |  |
-| s324 | במשחק הבא יש ליריב לוח אמיתי — ולך יש בדיוק מה שמנצח אותו. | |  |
-| s325 | זהו, אתה יודע לשחק. | |  |
-| s326 | עכשיו לך תאסוף קלפים. אני רעבה. | |  |
-| s327 | סגירה | |  |
-| s328 | חבר | |  |
+| s535a706 | לרוקן את ${name} | |  |
+| sdfad51e | מתארגנת… | |  |
+| s8da6ce3 | מחפשת לך יריב… | |  |
+| s7265e57 | נועלת לוחות… | |  |
+| s7b1e036 | זהו | |  |
+| sb472148 | רגע… | | One moment… |
+| s49e6902 | רגע… | | One moment… |
+| s1396b7a | סובב את המכשיר | |  |
+| sf038582 | אני משוחקת לרוחב, ילד. ככה אני רואה את שניכם. | |  |
+| sbd466e9 | מחכה לחבר שלך… | |  |
+| s1703f49 | הודעות | |  |
+| s460b8e8 | חזרה לתפריט | |  |
+| s2bd3e6a | למעבר לעברית | |  |
+| s853021b | עב | |  |
+| s16f12ca | כיבוי מוזיקה | |  |
+| s745079b | הפעלת מוזיקה | |  |
+| s0a41262 | הפעלת צליל | |  |
+| s119a8c7 | השתקה | |  |
+| se65fa4a | השרת לא עונה | |  |
+| sa759290 | מחכה לחבר שלך… | |  |
+| s70fb9fd | מחפשת לך יריב… | |  |
+| sbb39d20 | שלח את הקוד למי שבא לך לאכול: | |  |
+| s8850299 | ✔ העתקתי | |  |
+| sb48d812 | ⧉ העתק הזמנה | |  |
+| s20677b2 | השרת לא עונה. אני פנויה. | |  |
+| s3ffaa2b | חזרה | |  |
+| s7807abd | ביטול | |  |
+| sc2b0252 | הצד שלך | |  |
+| sc84b632 | החצי שלך | |  |
+| s502312f | אתה | |  |
+| sa531737 | הידיים שלך קפואות | |  |
+| s5d4a4e0 | לשלוף ולזרוק אפשר. להדביק — לא. | |  |
+| sc8775fd | החצי של מי שאיתך | |  |
+| sfc83143 | הצד שמולך | |  |
+| s52b9172 | היריב | |  |
+| s9d29f31 | אמנדה | |  |
+| sdb2b008 | היריב | |  |
+| sf0485e7 | נחשף! | |  |
+| sbcd9db8 | בחר קלף אצל היריב | |  |
+| s1445cf1 | ועכשיו את השני | |  |
+| s4106038 | בחר קלף על הלוח שלך | |  |
+| s3cec9ca | מאוחר. תכננת גרוע. | |  |
+| sb9a31bf | פעיל ∞ | |  |
+| s34ec88c | נוצל | |  |
+| sa549a85 | מאוחר מדי | |  |
+| sf916188 | הפעל | |  |
+| sdc8c744 | הסבר | |  |
+| s932d88e | גע בקלף על הלוח כדי להוריד אותו | |  |
+| s3adfc6c | הבר מלא | |  |
+| sb0d338c | אין קלף | |  |
+| s2f616ac | קלפים שנשארו בחפיסה | |  |
+| s6c4fc10 | קלפים בפח | |  |
+| s7aacede | הבר מלא | |  |
+| s4a9f52a | התחל קרב! | | Start the battle! |
+| s72c3f50 | מוכן — לחץ לביטול | |  |
+| sd693107 | אני מוכן | |  |
+| sa4fb281 | שניכם מוכנים — מתחילים | |  |
+| s0ecac63 | אתה מוכן. אפשר להמשיך לבנות עד שגם הוא יהיה. | |  |
+| sabbc0bf | היריב מוכן. אתה עדיין יכול לבנות. | |  |
+| seef7e51 | הלוח שלך נעול | |  |
+| sc0930d9 | מחכה שהיריב יסיים… | |  |
+| s40977ec | ממלאת לך את החורים… | |  |
+| s19395af | יפה. עכשיו משהו קצת יותר מתוחכם. | |  |
+| s9b86633 | במשחק הבא יש ליריב לוח אמיתי — ולך יש בדיוק מה שמנצח אותו. | |  |
+| sb604bef | זהו, אתה יודע לשחק. | |  |
+| s80f3ec6 | עכשיו לך תאסוף קלפים. אני רעבה. | |  |
+| s0e0ecca | סגירה | | Close |
+| seaa865f | חבר | |  |
 
 ## דוח הקרב
 
 | מזהה | טקסט נוכחי | טקסט חדש | אנגלית |
 | --- | --- | --- | --- |
-| s329 | ${f.name} עשה ${f.value}% מהנזק של הצד הזה | |  |
-| s330 | המלך ${f.name} נשא את הקרב — ${f.value}% מהנזק | |  |
-| s331 | ${f.value} קלפים לא נגעו בקרב בכלל — לא תקפו ולא ספגו | |  |
-| s332 | ${f.value} קלפים בעורף שרדו בלי לתקוף אף פעם — הלוח עמוק מדי | |  |
-| s333 | המלך ${f.name} נפל כבר בשנייה ${secs(f.value ?? 0)} | |  |
-| s334 | כל הקלפים במסלול ${(f.lane ?? 0) + 1} נפלו — שם נפרצה החזית | |  |
-| s335 | בוזבז נזק על ${f.name}: ספג ${f.value}% מהחיים שלו | |  |
-| s336 | הצד הזה נמחק לגמרי — ${f.value} קלפים | |  |
-| s337 | קרב צמוד — הוכרע בהפרש של קלף אחד | |  |
-| s338 | ${f.name} הרג את עצמו — הנזק החוזר מהיעד היה ${f.value}% מהחיים שלו | |  |
-| s339 | ניצחון סוחף — ${f.value} קלפים הפרש | |  |
-| s340 | דם ראשון — ${e.actor ?? "משהו"} הפיל את ${e.target} | |  |
-| s341 | ${e.actor ?? "משהו"} הפיל את ${e.target} | |  |
-| s342 | המלך ${e.target} נפל | |  |
-| s343 | ${e.target} ספג ${e.damage?.toLocaleString("he-IL")} נזק חוזר מ${e.actor} — הוא פגע בקוצים | |  |
-| s344 | ${e.actor} התפצל | |  |
-| s345 | נחשף קלף קומת קרקע: ${e.target} | |  |
-| s346 | ${e.actor ?? "משהו"} הקפיא את ${e.target} | |  |
-| s347 | הקרב נגמר | |  |
-| s348 | תיקו. לשנינו טעם רע בפה. | |  |
-| s349 | אתה | |  |
-| s350 | היריב | |  |
-| s351 | העתקת הדוח המלא כ-JSON | |  |
-| s352 | ✔ הועתק | |  |
-| s353 | ⧉ העתק JSON | |  |
-| s354 | הדפדפן לא נתן להעתיק. סמנו הכול והעתיקו ידנית. | |  |
-| s355 | תוצאה | |  |
-| s356 | מהירות | |  |
-| s357 | יחס נזק | |  |
-| s358 | השתתפות הלוח | |  |
-| s359 | שרידות | |  |
-| s360 | נזק | |  |
-| s361 | הפלות | |  |
-| s362 | שרדו | |  |
-| s363 | נפלו | |  |
-| s364 | קרב משעמם. לא קרה כלום. | |  |
-| s365 | ככה נראו הלוחות בהתחלה. תראה מה כל קלף עשה. | |  |
-| s366 | הכי הרבה נזק | |  |
-| s367 | תרם נזק | |  |
-| s368 | ישן | |  |
-| s369 | size={13} /> נפל · <Icon name= | |  |
-| s370 | size={13} /> שרד ·{ | |  |
-| s371 | לחץ על קלף ואספר לך | |  |
-| s372 | קלף | |  |
-| s373 | צד | |  |
-| s374 | נזק | |  |
-| s375 | ספג | |  |
-| s376 | הפלות | |  |
-| s377 | סוף | |  |
-| s378 | ${u.name} — מילוי אוטומטי של משבצת ריקה | |  |
-| s379 | ${u.name} — לחצו לפרטים | |  |
-| s380 | ${king.name} — לחצו לפרטים | |  |
-| s381 | עורף | |  |
-| s382 | שלישית | |  |
-| s383 | שנייה | |  |
-| s384 | חזית | |  |
-| s385 | לא נגע בקרב. לא הגיע לאף אחד, ואף אחד לא הגיע אליו. | |  |
-| s386 | חטף ולא הספיק להחזיר אפילו מכה אחת. | |  |
-| s387 | חתך את הדרך — הפיל ${unit.kills} קלפים. | |  |
-| s388 | נשא את הצד שלו: ${share}% מכל הנזק. | |  |
-| s389 | תרם ${share}% מהנזק של הצד שלו. | |  |
-| s390 | סגירה | |  |
-| s391 | שלך | |  |
-| s392 | של היריב | |  |
-| s393 | נזק שעשה | |  |
-| s394 | נזק שספג | |  |
-| s395 | הפלות | |  |
-| s396 | מכות | |  |
-| s397 | מהנזק של הצד: | |  |
-| s398 | חיים: | |  |
-| s399 | (כולל בונוס מלך ×3) | |  |
-| s400 | תזוזה: | |  |
-| s401 | לא זז מילימטר | |  |
-| s402 | התקדם ${unit.colsMoved.toFixed(1)} משבצות | |  |
+| s00a5c06 | ${f.name} עשה ${f.value}% מהנזק של הצד הזה | |  |
+| sa4e2435 | המלך ${f.name} נשא את הקרב — ${f.value}% מהנזק | |  |
+| s084eab8 | ${f.value} קלפים לא נגעו בקרב בכלל — לא תקפו ולא ספגו | |  |
+| sd0dddd2 | ${f.value} קלפים בעורף שרדו בלי לתקוף אף פעם — הלוח עמוק מדי | |  |
+| s0812a8b | המלך ${f.name} נפל כבר בשנייה ${secs(f.value ?? 0)} | |  |
+| s221d29c | כל הקלפים במסלול ${(f.lane ?? 0) + 1} נפלו — שם נפרצה החזית | |  |
+| s825381e | בוזבז נזק על ${f.name}: ספג ${f.value}% מהחיים שלו | |  |
+| s525cdcd | הצד הזה נמחק לגמרי — ${f.value} קלפים | |  |
+| sa039c8a | קרב צמוד — הוכרע בהפרש של קלף אחד | |  |
+| s259c605 | ${f.name} הרג את עצמו — הנזק החוזר מהיעד היה ${f.value}% מהחיים שלו | |  |
+| sd3ea759 | ניצחון סוחף — ${f.value} קלפים הפרש | |  |
+| s1d42fbc | דם ראשון — ${e.actor ?? "משהו"} הפיל את ${e.target} | |  |
+| sb50ac5f | ${e.actor ?? "משהו"} הפיל את ${e.target} | |  |
+| s935b452 | המלך ${e.target} נפל | |  |
+| se2f9eac | ${e.target} ספג ${e.damage?.toLocaleString("he-IL")} נזק חוזר מ${e.actor} — הוא פגע בקוצים | |  |
+| sae1821a | ${e.actor} התפצל | |  |
+| sebcd8ed | נחשף קלף קומת קרקע: ${e.target} | |  |
+| sde861ff | ${e.actor ?? "משהו"} הקפיא את ${e.target} | |  |
+| s3f09475 | הקרב נגמר | |  |
+| s9ab5edb | תיקו. לשנינו טעם רע בפה. | |  |
+| s1ab2182 | אתה | |  |
+| s36e0c61 | היריב | |  |
+| s484ea7e | העתקת הדוח המלא כ-JSON | |  |
+| sb22f4be | ✔ הועתק | |  |
+| s5970baf | ⧉ העתק JSON | |  |
+| se1d32f8 | הדפדפן לא נתן להעתיק. סמנו הכול והעתיקו ידנית. | |  |
+| sb9555de | תוצאה | |  |
+| s41257f4 | מהירות | |  |
+| sb7c0a3f | יחס נזק | |  |
+| s63fa2b3 | השתתפות הלוח | |  |
+| s41fe997 | שרידות | |  |
+| sb7b9d16 | נזק | |  |
+| scca46b4 | הפלות | |  |
+| s995ae23 | שרדו | |  |
+| sf79b753 | נפלו | |  |
+| sc18fd03 | קרב משעמם. לא קרה כלום. | |  |
+| s30b45ab | ככה נראו הלוחות בהתחלה. תראה מה כל קלף עשה. | |  |
+| s1d0a003 | הכי הרבה נזק | |  |
+| s9c41951 | תרם נזק | |  |
+| s3b86504 | ישן | |  |
+| s65ef918 | לחץ על קלף ואספר לך | |  |
+| s3b1fddd | קלף | |  |
+| se4b01fc | צד | |  |
+| sa777d2c | נזק | |  |
+| s4e62559 | ספג | |  |
+| s1fad98a | הפלות | |  |
+| scbe08c2 | סוף | |  |
+| s74bdc67 | ${u.name} — מילוי אוטומטי של משבצת ריקה | |  |
+| sa8546f4 | ${u.name} — לחצו לפרטים | |  |
+| se237a20 | ${king.name} — לחצו לפרטים | |  |
+| secfc437 | עורף | |  |
+| s5b44eac | שלישית | |  |
+| s2f05432 | שנייה | |  |
+| s0160f0c | חזית | |  |
+| s565b00b | לא נגע בקרב. לא הגיע לאף אחד, ואף אחד לא הגיע אליו. | |  |
+| s33300d2 | חטף ולא הספיק להחזיר אפילו מכה אחת. | |  |
+| sa2d62f1 | חתך את הדרך — הפיל ${unit.kills} קלפים. | |  |
+| s9965104 | נשא את הצד שלו: ${share}% מכל הנזק. | |  |
+| sf220ec8 | תרם ${share}% מהנזק של הצד שלו. | |  |
+| sbf12851 | סגירה | | Close |
+| sa7d29bc | שלך | |  |
+| s8900b3c | של היריב | |  |
+| s64a471a | נזק שעשה | |  |
+| s6353210 | נזק שספג | |  |
+| s48e7c57 | הפלות | |  |
+| s95f2cfd | מכות | |  |
+| sf9252a0 | מהנזק של הצד: | |  |
+| s80415c3 | חיים: | |  |
+| s3ef4c7b | (כולל בונוס מלך ×3) | |  |
+| s5765650 | תזוזה: | |  |
+| s0cadd6e | לא זז מילימטר | |  |
+| s01174d9 | התקדם ${unit.colsMoved.toFixed(1)} משבצות | |  |
 
 ## חלון פרטי מפלצת
 
 | מזהה | טקסט נוכחי | טקסט חדש | אנגלית |
 | --- | --- | --- | --- |
-| s403 | סגירה | |  |
-| s404 | · הרמה הבאה עולה ${levelCost(card.rarity, level)} | |  |
-| s405 | · הגעת למקסימום | |  |
-| s406 | חיים | |  |
-| s407 | עוצמה | |  |
-| s408 | קצב תקיפה | |  |
-| s409 | ${card.stats.attackSpeed}ש׳ | |  |
-| s410 | תנועה | |  |
-| s411 | ${card.stats.moveSpeed}/ש׳ | |  |
-| s412 | סטטי | |  |
-| s413 | טווח | |  |
-| s414 | יכולות | |  |
-| s415 | תפקיד | |  |
+| s2027844 | סגירה | | Close |
+| s28c59bb | · הרמה הבאה עולה ${levelCost(card.rarity, level)} | |  |
+| s512576d | · הגעת למקסימום | |  |
+| sa1b7d2c | חיים | |  |
+| s4173ded | עוצמה | |  |
+| s4763941 | קצב תקיפה | |  |
+| s07331c1 | ${card.stats.attackSpeed}ש׳ | |  |
+| sefc23b0 | תנועה | |  |
+| s81cbd2d | ${card.stats.moveSpeed}/ש׳ | |  |
+| s60fd570 | סטטי | |  |
+| sa3be69c | טווח | |  |
+| s8fa9cc4 | יכולות | |  |
+| s8efe7ee | תפקיד | |  |
 
 ## חלון פרטי קלף פעולה
 
 | מזהה | טקסט נוכחי | טקסט חדש | אנגלית |
 | --- | --- | --- | --- |
-| s416 | סגירה | |  |
-| s417 | ∞ פסיבי | |  |
-| s418 | בלחיצה | |  |
-| s419 | מה הוא עושה (אוטומטית) | |  |
-| s420 | מה הוא עושה בלחיצה | |  |
-| s421 | כבר נוצל | |  |
-| s422 | ∞ פועל מעצמו | |  |
+| s3383520 | סגירה | | Close |
+| s900e8c0 | ∞ פסיבי | |  |
+| se9c2d53 | בלחיצה | |  |
+| s9c8a7eb | מה הוא עושה (אוטומטית) | |  |
+| s333574c | מה הוא עושה בלחיצה | |  |
+| sc3582bb | כבר נוצל | |  |
+| s2ed708e | ∞ פועל מעצמו | |  |
 
 ## תווית קלף פעולה
 
 | מזהה | טקסט נוכחי | טקסט חדש | אנגלית |
 | --- | --- | --- | --- |
-| s423 | פסיבי — פועל כל הזמן | |  |
-| s424 | קלף פעולה | |  |
-| s425 | פרטי הקלף | |  |
-| s426 | פסיבי | |  |
-| s427 | קלף פעולה | |  |
+| sba8cb81 | פסיבי — פועל כל הזמן | |  |
+| sff358eb | קלף פעולה | |  |
+| sbeacb74 | פרטי הקלף | |  |
+| s2ee640d | פסיבי | |  |
+| sf01886f | קלף פעולה | |  |
 
 ## קלף מפלצת
 
 | מזהה | טקסט נוכחי | טקסט חדש | אנגלית |
 | --- | --- | --- | --- |
-| s428 | מסתער | |  |
-| s429 | מעופף | |  |
-| s430 | בונוס מלך ×3 | |  |
-| s431 | ענק אמצע (מתאים למלך) | |  |
-| s432 | פרטי הקלף | |  |
-| s433 | חיים | |  |
-| s434 | עוצמה | |  |
-| s435 | מוסתר בערפל | |  |
+| s5379cdd | מסתער | |  |
+| sd75b53b | מעופף | |  |
+| sd3446ed | בונוס מלך ×3 | |  |
+| s4aa3080 | ענק אמצע (מתאים למלך) | |  |
+| sdf7d9b8 | פרטי הקלף | |  |
+| sd3b512b | חיים | |  |
+| s415a2b6 | עוצמה | |  |
+| se274434 | מוסתר בערפל | |  |
 
 ## הלוח
 
 | מזהה | טקסט נוכחי | טקסט חדש | אנגלית |
 | --- | --- | --- | --- |
-| s436 | המלך | |  |
-| s437 | יש קלף מתחת. הוא יצוץ כשהעליון ייפול. | |  |
-| s438 | משמר המלך. כאן עוצרים את מי שבא לאכול אותו. | |  |
+| s3ed5f40 | המלך | |  |
+| s8845f5f | יש קלף מתחת. הוא יצוץ כשהעליון ייפול. | |  |
+| s0e2bdac | משמר המלך. כאן עוצרים את מי שבא לאכול אותו. | |  |
 
 ## זירת הקרב
 
 | מזהה | טקסט נוכחי | טקסט חדש | אנגלית |
 | --- | --- | --- | --- |
-| s439 | 🧑 אתה | |  |
-| s440 | 🤖 היריב | |  |
-| s441 | ⏱ נגמר הזמן! | |  |
-| s442 | נתקע אחרי ${STARTUP_GRACE_MS / 1000} שניות בלי ציור | |  |
-| s443 | לא הצלחתי להראות לך את הקרב. | |  |
-| s444 | הוא כבר הוכרע — אני לוקחת אותך לתוצאה. | |  |
+| s379a6ae | 🧑 אתה | |  |
+| s2742a4b | 🤖 היריב | |  |
+| s25910a5 | ⏱ נגמר הזמן! | |  |
+| saaa7b6a | נתקע אחרי ${STARTUP_GRACE_MS / 1000} שניות בלי ציור | |  |
+| sbaf8bec | לא הצלחתי להראות לך את הקרב. | |  |
+| se051373 | הוא כבר הוכרע — אני לוקחת אותך לתוצאה. | |  |
 
 ## גלריית קלפים (כלי פיתוח)
 
 | מזהה | טקסט נוכחי | טקסט חדש | אנגלית |
 | --- | --- | --- | --- |
-| s445 | גלריית קלפים | |  |
+| s30e62ac | גלריית קלפים | |  |
 
 ## מעבדת קרב (כלי פיתוח)
 
 | מזהה | טקסט נוכחי | טקסט חדש | אנגלית |
 | --- | --- | --- | --- |
-| s446 | מעבדת קרב | |  |
-| s447 | מעורב | |  |
-| s448 | מעורב | |  |
-| s449 | ▶ הרץ שוב | |  |
+| sd2e39c8 | מעבדת קרב | |  |
+| se019310 | מעורב | |  |
+| s3962d65 | מעורב | |  |
+| s1e70355 | ▶ הרץ שוב | |  |
 
 ## טבלאות — אלמנטים, נדירות, סדרות, יכולות
 
 | מזהה | טקסט נוכחי | טקסט חדש | אנגלית |
 | --- | --- | --- | --- |
-| s450 | אש | |  |
-| s451 | מים | |  |
-| s452 | אדמה | |  |
-| s453 | אוויר | |  |
-| s454 | חשמל | |  |
-| s455 | מתכת | |  |
-| s456 | אור | |  |
-| s457 | אופל | |  |
-| s458 | רעל | |  |
-| s459 | משתנה | |  |
-| s460 | קרוב | |  |
-| s461 | רחוק | |  |
-| s462 | צלף | |  |
-| s463 | נפוץ | |  |
-| s464 | נדיר | |  |
-| s465 | אפי | |  |
-| s466 | אגדי | |  |
-| s467 | דרקונים | |  |
-| s468 | ענקים | |  |
-| s469 | חרקים | |  |
-| s470 | צמחים | |  |
-| s471 | ריריים | |  |
-| s472 | הדף אחורה | |  |
-| s473 | הדף הצידה | |  |
-| s474 | דריסה והמשך | |  |
-| s475 | שאיבה למרכז | |  |
-| s476 | מלכודת הצמדה | |  |
-| s477 | חסין הדיפה | |  |
-| s478 | החזרת נזק | |  |
-| s479 | צבירת שריון | |  |
-| s480 | שבירת שריון | |  |
-| s481 | הילת שריון | |  |
-| s482 | ספיגה לשכנים | |  |
-| s483 | הילת הגנה | |  |
-| s484 | התחדשות | |  |
-| s485 | הילת ריפוי | |  |
-| s486 | מכה אזורית | |  |
-| s487 | חסימת נתיב | |  |
-| s488 | הקפאה במכה | |  |
-| s489 | רעל מצטבר | |  |
-| s490 | בליעת יריב | |  |
-| s491 | הילת האטה | |  |
-| s492 | הילת מהירות | |  |
-| s493 | התמרה מושהית | |  |
-| s494 | נחיל במוות | |  |
-| s495 | פיצול במוות | |  |
-| s496 | הקרבת בעל-ברית | |  |
-| s497 | גניבת אלמנט | |  |
+| s3b5fada | אש | |  |
+| se54cfe6 | מים | |  |
+| s97762a4 | אדמה | |  |
+| s4ebd96a | אוויר | |  |
+| s047a96e | חשמל | |  |
+| s6452608 | מתכת | |  |
+| s1839931 | אור | |  |
+| sd03badd | אופל | |  |
+| s65e3646 | רעל | |  |
+| scb4ea40 | משתנה | |  |
+| sa6527a7 | קרוב | |  |
+| sdd2006d | רחוק | |  |
+| s317ed65 | צלף | |  |
+| s255b0a7 | נפוץ | |  |
+| s251c112 | נדיר | |  |
+| sc88b92c | אפי | |  |
+| sa91c15e | אגדי | |  |
+| sb12fa21 | דרקונים | |  |
+| s0e72d20 | ענקים | |  |
+| s33bdcfd | חרקים | |  |
+| s8548d4d | צמחים | |  |
+| sd14e01c | ריריים | |  |
+| s3de4a7f | הדף אחורה | |  |
+| s592cd53 | הדף הצידה | |  |
+| s5687c43 | דריסה והמשך | |  |
+| s7e92335 | שאיבה למרכז | |  |
+| s7ca9c66 | מלכודת הצמדה | |  |
+| se4a0bda | חסין הדיפה | |  |
+| s2beb051 | החזרת נזק | |  |
+| s64c0a63 | צבירת שריון | |  |
+| sc6f2e8a | שבירת שריון | |  |
+| s06c965d | הילת שריון | |  |
+| s82d0727 | ספיגה לשכנים | |  |
+| sc53cc27 | הילת הגנה | |  |
+| sc8f8c73 | התחדשות | |  |
+| s4d5bc89 | הילת ריפוי | |  |
+| s9f338b9 | מכה אזורית | |  |
+| saf36f95 | חסימת נתיב | |  |
+| s2b9b46b | הקפאה במכה | |  |
+| s9454569 | רעל מצטבר | |  |
+| s46a5630 | בליעת יריב | |  |
+| sfe07448 | הילת האטה | |  |
+| s703d3b1 | הילת מהירות | |  |
+| sab709b3 | התמרה מושהית | |  |
+| s58ed0ca | נחיל במוות | |  |
+| s42bf123 | פיצול במוות | |  |
+| s5cbfbc5 | הקרבת בעל-ברית | |  |
+| s271ce55 | גניבת אלמנט | |  |
 
 ## נתוני קלפים
 
 | מזהה | טקסט נוכחי | טקסט חדש | אנגלית |
 | --- | --- | --- | --- |
-| s498 | מפלץ פירורים | |  |
+| s09e69cb | מפלץ פירורים | |  |
 
 ## components/About.tsx
 
 | מזהה | טקסט נוכחי | טקסט חדש | אנגלית |
 | --- | --- | --- | --- |
-| s499 | אמנדה המפלצת מסונול כצנלסון | |  |
-| s500 | אמנדה המפלצת מסונול כצנלסון | |  |
-| s501 | עלינו | |  |
-| s502 | פרטיות | |  |
-| s503 | נגישות | |  |
-| s504 | תנאים | |  |
-| s505 | סגירה | |  |
-| s506 | size={15} /> {label}: חפשו ביוטיוב{ | |  |
-| s507 | אם אתם מפחדים ממפלצות — המשחק הזה לא בשבילכם | |  |
-| s508 | אמנדה — המפלצת מסונול כצנלסון | |  |
-| s509 | הסרט המלא | |  |
-| s510 | שיר הנושא | |  |
-| s511 | המוזיקה שמתנגנת כאן היא שלנו. לשמוע אותה במלואה: | |  |
-| s512 | השיר | |  |
-| s513 | מדיניות פרטיות | |  |
-| s514 | עודכן: אוקטובר 2026 | |  |
-| s515 | מה נשמר עליך | |  |
-| s516 | כינוי, אווטאר ומגדר | |  |
-| s517 | תאריך לידה | |  |
-| s518 | ההתקדמות שלך | |  |
-| s519 | חשבון | |  |
-| s520 | מה לא נשמר | |  |
-| s521 | איפה זה יושב | |  |
-| s522 | איך מוחקים הכול | |  |
-| s523 | מחיקת חשבון | |  |
-| s524 | יצירת קשר | |  |
-| s525 | הצהרת נגישות | |  |
-| s526 | עודכן: אוקטובר 2026 | |  |
-| s527 | מה כבר נעשה | |  |
-| s528 | כל הכפתורים נגישים במקלדת וסימון המיקוד נשאר גלוי. | |  |
-| s529 | אפשר לכבות את הצלילים ואת המוזיקה בנפרד, והבחירה נשמרת. | |  |
-| s530 | אייקונים נושאים תיאור טקסטואלי כשהם עומדים בפני עצמם. | |  |
-| s531 | המשחק עובד לאורך ולרוחב, ובלי לנעול את גודל הטקסט. | |  |
-| s532 | מה עוד לא | |  |
-| s533 | נתקלתם בבעיה? | |  |
-| s534 | ספרו לנו דרך פרטי הקשר בדף החנות, ונתקן. | |  |
-| s535 | תנאי שימוש | |  |
-| s536 | עודכן: אוקטובר 2026 | |  |
-| s537 | המשחק חינמי. אין רכישות בתוך האפליקציה. | |  |
-| s538 | הגיל המינימלי הוא 7. | |  |
+| s4c6892c | אמנדה המפלצת מסונול כצנלסון | |  |
+| s8c8128f | אמנדה המפלצת מסונול כצנלסון | |  |
+| sa1ba3d6 | עלינו | |  |
+| s4bda300 | פרטיות | |  |
+| s4947c25 | נגישות | |  |
+| s16ab030 | תנאים | |  |
+| sd1e2d62 | סגירה | | Close |
+| s315003f | אם אתם מפחדים ממפלצות — המשחק הזה לא בשבילכם | |  |
+| s1cb17af | אמנדה — המפלצת מסונול כצנלסון | |  |
+| sf8961a7 | הסרט המלא | |  |
+| sce69090 | שיר הנושא | |  |
+| sf085dc3 | המוזיקה שמתנגנת כאן היא שלנו. לשמוע אותה במלואה: | |  |
+| s9b547f8 | השיר | |  |
+| s02cec25 | מדיניות פרטיות | |  |
+| sbfac0cb | עודכן: אוקטובר 2026 | |  |
+| sda5279b | מה נשמר עליך | |  |
+| s9a31259 | כינוי, אווטאר ומגדר | |  |
+| s2dcc96e | תאריך לידה | |  |
+| sb82d9bb | ההתקדמות שלך | |  |
+| sc1ff6e0 | חשבון | |  |
+| s0e064c8 | מה לא נשמר | |  |
+| s17cae8a | איפה זה יושב | |  |
+| sa910811 | איך מוחקים הכול | |  |
+| see1a564 | מחיקת חשבון | |  |
+| scf1e0b8 | יצירת קשר | |  |
+| s3bbb564 | הצהרת נגישות | |  |
+| s98d6639 | עודכן: אוקטובר 2026 | |  |
+| s9e45ede | מה כבר נעשה | |  |
+| s0b8e183 | כל הכפתורים נגישים במקלדת וסימון המיקוד נשאר גלוי. | |  |
+| s12cb0a6 | אפשר לכבות את הצלילים ואת המוזיקה בנפרד, והבחירה נשמרת. | |  |
+| s0ec6329 | אייקונים נושאים תיאור טקסטואלי כשהם עומדים בפני עצמם. | |  |
+| s99b2530 | המשחק עובד לאורך ולרוחב, ובלי לנעול את גודל הטקסט. | |  |
+| s1bd53f9 | מה עוד לא | |  |
+| s9e79aac | נתקלתם בבעיה? | |  |
+| se71be7a | ספרו לנו דרך פרטי הקשר בדף החנות, ונתקן. | |  |
+| s1c1af17 | תנאי שימוש | |  |
+| sadf3694 | עודכן: אוקטובר 2026 | |  |
+| s2b98856 | המשחק חינמי. אין רכישות בתוך האפליקציה. | |  |
+| sab731f2 | הגיל המינימלי הוא 7. | |  |
 
 ## components/Album.tsx
 
 | מזהה | טקסט נוכחי | טקסט חדש | אנגלית |
 | --- | --- | --- | --- |
-| s539 | אתה משחק מהחפיסה המלאה | |  |
-| s540 | הקרבות שלך | |  |
-| s541 | ניצחונות | |  |
-| s542 | ${stats.wins} מתוך ${stats.played} | |  |
-| s543 | הפסדים | |  |
-| s544 | שיא גביעים | |  |
-| s545 | תיבות | |  |
-| s546 | עותקים | |  |
-| s547 | הקרבות האחרונים, החדש ביותר ראשון | |  |
-| s548 | עותקים — כמה פעמים אפשר להניח אותו | |  |
-| s549 | שדרוג לרמה ${mine.level + 1} — עולה ${levelCost(card.rarity, mine.level)} עותקים | |  |
+| s9ed23d9 | אתה משחק מהחפיסה המלאה | |  |
+| s5c7bb8f | הקרבות שלך | |  |
+| sf9d8dd4 | ניצחונות | |  |
+| sf298218 | ${stats.wins} מתוך ${stats.played} | |  |
+| s80eabb4 | הפסדים | |  |
+| s2fd7491 | שיא גביעים | |  |
+| s59e6cc5 | תיבות | | Chests |
+| sd969559 | עותקים | |  |
+| s3cfae6d | הקרבות האחרונים, החדש ביותר ראשון | |  |
+| s176d067 | עותקים — כמה פעמים אפשר להניח אותו | |  |
+| s8be782b | שדרוג לרמה ${mine.level + 1} — עולה ${levelCost(card.rarity, mine.level)} עותקים | |  |
 
 ## components/ArenaTrack.tsx
 
 | מזהה | טקסט נוכחי | טקסט חדש | אנגלית |
 | --- | --- | --- | --- |
-| s550 | כל הארנות | |  |
-| s551 | size={12} /> {trophies} · עוד {next.from - trophies}{ | |  |
-| s552 | סגירה | |  |
-| s553 | הדרך | |  |
-| s554 | אתה כאן | |  |
+| s84b983e | כל הארנות | |  |
+| s92d6d79 | סגירה | | Close |
+| s474cafb | הדרך | |  |
+| s2411278 | אתה כאן | |  |
 
 ## components/BattleScreen.tsx
 
 | מזהה | טקסט נוכחי | טקסט חדש | אנגלית |
 | --- | --- | --- | --- |
-| s555 | שגיאה בהצגת הקרב | |  |
-| s556 | רגע… | |  |
-| s557 | ולעצור את הקרב בכל רגע נתון | |  |
+| s1a437d7 | שגיאה בהצגת הקרב | |  |
+| s0e0b682 | רגע… | | One moment… |
+| s1cc4c49 | ולעצור את הקרב בכל רגע נתון | |  |
 
 ## components/CardPicker.tsx
 
 | מזהה | טקסט נוכחי | טקסט חדש | אנגלית |
 | --- | --- | --- | --- |
-| s558 | בלי קלף ביד — נגיעה בקלף על הלוח מורידה אותו | |  |
-| s559 | חיפוש קלף… | |  |
-| s560 | קלפי פעולה | |  |
-| s561 | אין קלף כזה. המצאת אותו? | |  |
+| sa38c228 | בלי קלף ביד — נגיעה בקלף על הלוח מורידה אותו | |  |
+| s7af4893 | חיפוש קלף… | |  |
+| s0d0c2fd | קלפי פעולה | |  |
+| s5b61d19 | אין קלף כזה. המצאת אותו? | |  |
 
 ## components/Challenges.tsx
 
 | מזהה | טקסט נוכחי | טקסט חדש | אנגלית |
 | --- | --- | --- | --- |
-| s562 | היום | |  |
-| s563 | השבוע | |  |
-| s564 | החודש | |  |
-| s565 | עוד פחות משעה | |  |
-| s566 | עוד ${hours} שעות | |  |
-| s567 | עוד יום | |  |
-| s568 | עוד ${days} ימים | |  |
-| s569 | אתגרים | |  |
-| s570 | יש פרס לקחת | |  |
-| s571 | נלקח | |  |
-| s572 | לקחת | |  |
-| s573 | אתגרים | |  |
+| sfbba2d0 | היום | |  |
+| sb2dcc21 | השבוע | |  |
+| scbbd32e | החודש | |  |
+| sa421571 | עוד פחות משעה | |  |
+| s35e9efd | עוד ${hours} שעות | |  |
+| s58b31e8 | עוד יום | |  |
+| s867194d | עוד ${days} ימים | |  |
+| se995a4a | אתגרים | |  |
+| s8037b61 | יש פרס לקחת | |  |
+| sb752d13 | נלקח | |  |
+| s1d3665c | לקחת | |  |
+| s4b399e6 | אתגרים | |  |
 
 ## components/ChestReveal.tsx
 
 | מזהה | טקסט נוכחי | טקסט חדש | אנגלית |
 | --- | --- | --- | --- |
-| s574 | תיבת עץ | |  |
-| s575 | תיבת כסף | |  |
-| s576 | תיבת זהב | |  |
-| s577 | פתח ${look.he} | |  |
-| s578 | יפה | |  |
-| s579 | >{many ? `${ids.length} קלפים חדשים!` : | |  |
-| s580 | חדש אצלך | |  |
+| s82374a3 | תיבת עץ | |  |
+| s662d31c | תיבת כסף | |  |
+| s5bba8e8 | תיבת זהב | |  |
+| sfd61255 | פתח ${look.he} | |  |
+| sbcd9e71 | יפה | |  |
+| sb0e2d63 | חדש אצלך | |  |
 
 ## components/ChestShelf.tsx
 
 | מזהה | טקסט נוכחי | טקסט חדש | אנגלית |
 | --- | --- | --- | --- |
-| s581 | תיבות שמחכות לך | |  |
-| s582 | פתח | |  |
+| sb1a59ea | תיבות שמחכות לך | |  |
+| s97a626f | פתח | |  |
 
 ## components/ErrorBoundary.tsx
 
 | מזהה | טקסט נוכחי | טקסט חדש | אנגלית |
 | --- | --- | --- | --- |
-| s583 | משהו נשבר | |  |
-| s584 | זה קורה. האוסף שלך שמור. | |  |
+| s231aee0 | משהו נשבר | |  |
+| s9959640 | זה קורה. האוסף שלך שמור. | |  |
 
 ## components/Friends.tsx
 
 | מזהה | טקסט נוכחי | טקסט חדש | אנגלית |
 | --- | --- | --- | --- |
-| s585 | בלי שם | |  |
-| s586 | סגירה | |  |
-| s587 | חברים | |  |
-| s588 | רגע… | |  |
-| s589 | עוד אין כאן אף אחד. | |  |
-| s590 | רוצה להיות חבר שלך | |  |
-| s591 | מחכה שיאשר | |  |
-| s592 | מחובר | |  |
-| s593 | לא מחובר | |  |
-| s594 | להזמין למשחק | |  |
-| s595 | אפשר להזמין ממסך הבית | |  |
-| s596 | להסיר | |  |
-| s597 | לבטל | |  |
-| s598 | רגע… | |  |
-| s599 | עוד לא שיחקת מול אף אחד. | |  |
-| s600 | רק מי ששיחקת מולו. | |  |
+| s99cd003 | בלי שם | |  |
+| s92f2116 | סגירה | | Close |
+| s2e78dd8 | חברים | |  |
+| sf41dbdb | רגע… | | One moment… |
+| s451672b | עוד אין כאן אף אחד. | |  |
+| se22affe | רוצה להיות חבר שלך | |  |
+| s3d6a918 | מחכה שיאשר | |  |
+| s7171c91 | מחובר | |  |
+| s940973e | לא מחובר | |  |
+| s018b28b | להזמין למשחק | |  |
+| s7d7e4b6 | אפשר להזמין ממסך הבית | |  |
+| s4997be8 | להסיר | |  |
+| s71eb681 | לבטל | |  |
+| s1620146 | רגע… | | One moment… |
+| s18ecd7a | עוד לא שיחקת מול אף אחד. | |  |
+| sbec9016 | רק מי ששיחקת מולו. | |  |
 
 ## components/HomeScreen.tsx
 
 | מזהה | טקסט נוכחי | טקסט חדש | אנגלית |
 | --- | --- | --- | --- |
-| s601 | קליל | |  |
-| s602 | לוח דליל, קלפים חלשים. מנצח ב-17% מהקרבות. | |  |
-| s603 | רגיל | |  |
-| s604 | בונה כמו שהוא יודע. חצי-חצי. | |  |
-| s605 | קשה | |  |
-| s606 | בוחר מתוך אוסף גדול בהרבה. מנצח בערך ב-58%. | |  |
-| s607 | הפרופיל שלי | |  |
-| s608 | התחברות | |  |
-| s609 | אמנדה | |  |
-| s610 | משחק קלפים מפלצתי | |  |
-| s611 | לשחק | |  |
-| s612 | לשחק עם בוט | |  |
-| s613 | כמה הבוט מתאמץ | |  |
-| s614 | לא בגרסה הזאת | |  |
-| s615 | לשחק עם חברים | |  |
-| s616 | קוד החדר | |  |
-| s617 | בלי שעון, שני הצדדים שלך | |  |
-| s618 | אין חדר כזה. אולי המצאת אותו. | |  |
-| s619 | זה הקוד שלך. אתה לא יכול לאכול את עצמך. | |  |
-| s620 | החדר מלא. שניים מספיקים לי. | |  |
-| s621 | לא בגרסה הזאת | |  |
-| s622 | ההתקדמות שלי | |  |
-| s623 | מה יש לך | |  |
-| s624 | האוסף שלי | |  |
-| s625 | האלבום | |  |
-| s626 | חנות נוחות | |  |
-| s627 | חדש בחנות | |  |
-| s628 | חברים | |  |
-| s629 | חברים | |  |
-| s630 | מישהו מחכה לתשובה | |  |
-| s631 | יש עדכון שלא קראתם | |  |
-| s632 | מוריד אותי מחדש ומנקה גרסאות ישנות | |  |
+| s5eb66c7 | קליל | |  |
+| s9251769 | לוח דליל, קלפים חלשים. מנצח ב-17% מהקרבות. | |  |
+| s0c9f683 | רגיל | |  |
+| s901d39c | בונה כמו שהוא יודע. חצי-חצי. | |  |
+| sc93cdac | קשה | |  |
+| s62d48e5 | בוחר מתוך אוסף גדול בהרבה. מנצח בערך ב-58%. | |  |
+| sb1726a6 | הפרופיל שלי | |  |
+| sae98436 | התחברות | |  |
+| sfd7535c | אמנדה | |  |
+| s86247d1 | משחק קלפים מפלצתי | |  |
+| s0cadb17 | לשחק | |  |
+| sb99e77d | לשחק עם בוט | |  |
+| s066beed | כמה הבוט מתאמץ | |  |
+| s0443085 | לא בגרסה הזאת | |  |
+| sa6f7e6a | לשחק עם חברים | |  |
+| scf8cabd | קוד החדר | |  |
+| s1dda509 | בלי שעון, שני הצדדים שלך | |  |
+| sd01b2d8 | אין חדר כזה. אולי המצאת אותו. | |  |
+| sf8d116e | זה הקוד שלך. אתה לא יכול לאכול את עצמך. | |  |
+| s1f6e5ea | החדר מלא. שניים מספיקים לי. | |  |
+| se81adad | לא בגרסה הזאת | |  |
+| sefa91e2 | ההתקדמות שלי | |  |
+| s3cd2566 | מה יש לך | |  |
+| s5d488a4 | האוסף שלי | |  |
+| sb1c5413 | האלבום | |  |
+| s2706aa0 | חנות נוחות | | Corner Shop |
+| s26c5785 | חדש בחנות | |  |
+| s0cab6b9 | חברים | |  |
+| s44d803c | חברים | |  |
+| sd0647c4 | מישהו מחכה לתשובה | |  |
+| sb468431 | יש עדכון שלא קראתם | |  |
+| s301358f | מוריד אותי מחדש ומנקה גרסאות ישנות | |  |
 
 ## components/Inbox.tsx
 
 | מזהה | טקסט נוכחי | טקסט חדש | אנגלית |
 | --- | --- | --- | --- |
-| s633 | עכשיו | |  |
-| s634 | לפני ${mins} דק׳ | |  |
-| s635 | לפני ${hours} שע׳ | |  |
-| s636 | סגירה | |  |
-| s637 | הודעות | |  |
-| s638 | רגע… | |  |
-| s639 | שקט כאן. זה בסדר. | |  |
+| s9b9aa0b | עכשיו | |  |
+| sf77b827 | לפני ${mins} דק׳ | |  |
+| sa9392dc | לפני ${hours} שע׳ | |  |
+| sa00dd23 | סגירה | | Close |
+| sca9e956 | הודעות | |  |
+| sbaae76e | רגע… | | One moment… |
+| s3fa36bf | שקט כאן. זה בסדר. | |  |
 
 ## components/Intro.tsx
 
 | מזהה | טקסט נוכחי | טקסט חדש | אנגלית |
 | --- | --- | --- | --- |
-| s640 | דלג | |  |
+| s7bf4370 | דלג | | Skip |
 
 ## components/MatePeek.tsx
 
 | מזהה | טקסט נוכחי | טקסט חדש | אנגלית |
 | --- | --- | --- | --- |
-| s641 | להגדיל את החצי של מי שאיתך | |  |
-| s642 | סגירה | |  |
+| s8a4e2d5 | להגדיל את החצי של מי שאיתך | |  |
+| sf3cf709 | סגירה | | Close |
 
 ## components/MoreModes.tsx
 
 | מזהה | טקסט נוכחי | טקסט חדש | אנגלית |
 | --- | --- | --- | --- |
-| s643 | אמנדה — הצצה | |  |
-| s644 | מולה לבד. אי אפשר לנצח. | |  |
-| s645 | חפיסה זהה | |  |
-| s646 | אותם קלפים לשני הצדדים. | |  |
-| s647 | 2 נגד 2 | |  |
-| s648 | שניים בונים לוח אחד. | |  |
-| s649 | דראפט | |  |
-| s650 | מה שלא לקחת הולך ליריב. | |  |
-| s651 | סגירה | |  |
-| s652 | עוד מודים | |  |
-| s653 | שחק | |  |
-| s654 | בקרוב | |  |
-| s655 | בקרוב | |  |
+| s4fc5b19 | אמנדה — הצצה | |  |
+| s7767343 | מולה לבד. אי אפשר לנצח. | |  |
+| s5c8a703 | חפיסה זהה | |  |
+| secbb695 | אותם קלפים לשני הצדדים. | |  |
+| se14e946 | 2 נגד 2 | |  |
+| sac17390 | שניים בונים לוח אחד. | |  |
+| se4e1ef0 | דראפט | |  |
+| s4b7da7f | מה שלא לקחת הולך ליריב. | |  |
+| sc4d6c42 | סגירה | | Close |
+| sa53602d | עוד מודים | |  |
+| sb8d28c1 | שחק | |  |
+| sbdb5aac | בקרוב | |  |
+| sbc98f3e | בקרוב | |  |
 
 ## components/NachoBar.tsx
 
 | מזהה | טקסט נוכחי | טקסט חדש | אנגלית |
 | --- | --- | --- | --- |
-| s656 | ${bar.have} נאצ'וס מתוך ${bar.need} לתיבה הבאה | |  |
-| s657 | כל משחק נותן נאצ'וס, לפי כמה טוב שיחקת | |  |
+| s2f01523 | ${bar.have} נאצ'וס מתוך ${bar.need} לתיבה הבאה | |  |
+| s65876b9 | כל משחק נותן נאצ'וס, לפי כמה טוב שיחקת | |  |
 
 ## components/Onboarding.tsx
 
 | מזהה | טקסט נוכחי | טקסט חדש | אנגלית |
 | --- | --- | --- | --- |
-| s658 | שחקן | |  |
-| s659 | בן | |  |
-| s660 | בת | |  |
-| s661 | לא אומר | |  |
-| s662 | הכינוי שלך | |  |
+| s7628ae6 | שחקן | |  |
+| sd66df01 | בן | |  |
+| s51bc16c | בת | |  |
+| s284cdb8 | לא אומר | |  |
+| s8e369df | הכינוי שלך | |  |
 
 ## components/Payout.tsx
 
 | מזהה | טקסט נוכחי | טקסט חדש | אנגלית |
 | --- | --- | --- | --- |
-| s663 | אתגר הושלם | |  |
-| s664 | ${done} אתגרים הושלמו | |  |
-| s665 | מספיק גביעים מהבוט להיום — נאצ'וס ואתגרים ממשיכים | |  |
+| s1b4740d | אתגר הושלם | |  |
+| s809a814 | ${done} אתגרים הושלמו | |  |
+| s854fe19 | מספיק גביעים מהבוט להיום — נאצ'וס ואתגרים ממשיכים | |  |
 
 ## components/Profile.tsx
 
 | מזהה | טקסט נוכחי | טקסט חדש | אנגלית |
 | --- | --- | --- | --- |
-| s666 | נשמר | |  |
-| s667 | החלף פרצוף | |  |
-| s668 | הכינוי שלך | |  |
-| s669 | ניהול | |  |
-| s670 | למחוק את החשבון? | |  |
-| s671 | אי אפשר לבטל. | |  |
-| s672 | יציאה / החלפת משתמש | |  |
-| s673 | מוחק… | |  |
-| s674 | כן, למחוק הכול | |  |
-| s675 | למחוק את הפרטים שלך? | |  |
-| s676 | מוחק… | |  |
-| s677 | כן, למחוק את הפרטים | |  |
-| s678 | לצאת מהחשבון? | |  |
-| s679 | הכול נשמר, ואפשר לחזור. | |  |
-| s680 | משפט המחץ שלי | |  |
-| s681 | בלי משפט | |  |
-| s682 | איך לפנות אליך | |  |
-| s683 | לא אומר | |  |
-| s684 | לא אומר | |  |
-| s685 | בן | |  |
-| s686 | בת | |  |
-| s687 | למה להגדיר? | |  |
-| s688 | יום ההולדת שלך | |  |
-| s689 | החשבון שלך | |  |
-| s690 | מחובר | |  |
-| s691 | מחובר | |  |
-| s692 | או | |  |
-| s693 | אימייל | |  |
-| s694 | סיסמה (6 תווים ומעלה) | |  |
-| s695 | מחובר | |  |
+| see9fd0e | נשמר | |  |
+| sa83f16f | החלף פרצוף | |  |
+| s5516565 | הכינוי שלך | |  |
+| safd776c | ניהול | |  |
+| s5846b62 | למחוק את החשבון? | |  |
+| s7e78db8 | אי אפשר לבטל. | |  |
+| sa4507ca | יציאה / החלפת משתמש | |  |
+| s3c685c0 | מוחק… | |  |
+| s5f2eea0 | כן, למחוק הכול | |  |
+| safed31c | למחוק את הפרטים שלך? | |  |
+| s4431549 | מוחק… | |  |
+| s19e44e1 | כן, למחוק את הפרטים | |  |
+| s23e4e7c | לצאת מהחשבון? | |  |
+| s6059eba | הכול נשמר, ואפשר לחזור. | |  |
+| s56f3a93 | משפט המחץ שלי | |  |
+| sf806fc3 | בלי משפט | |  |
+| s878f7ab | איך לפנות אליך | |  |
+| s7c32ea2 | לא אומר | |  |
+| s3cb377b | לא אומר | |  |
+| s9003bc9 | בן | |  |
+| sb434f05 | בת | |  |
+| s95fa408 | למה להגדיר? | |  |
+| sf69f486 | יום ההולדת שלך | |  |
+| sc0f520f | החשבון שלך | |  |
+| sa8324d2 | מחובר | |  |
+| s1d9574c | מחובר | |  |
+| s074bcb0 | או | |  |
+| sc8aa4b2 | אימייל | |  |
+| scebe1c7 | סיסמה (6 תווים ומעלה) | |  |
+| s4104b4f | מחובר | |  |
 
 ## components/Report.tsx
 
 | מזהה | טקסט נוכחי | טקסט חדש | אנגלית |
 | --- | --- | --- | --- |
-| s696 | סגירה | |  |
-| s697 | קיבלנו. | |  |
-| s698 | נסתכל על זה. תודה שסיפרת לנו. | |  |
-| s699 | לספר לנו משהו | |  |
-| s700 | רגע… | |  |
-| s701 | בלי שם | |  |
-| s702 | מה קרה? מה ציפית שיקרה? | |  |
-| s703 | מה הוא עשה? | |  |
-| s704 | שולח… | |  |
-| s705 | שליחה | |  |
+| sb82583e | סגירה | | Close |
+| sf3ddba9 | קיבלנו. | |  |
+| s2c4bff4 | נסתכל על זה. תודה שסיפרת לנו. | |  |
+| s8566da7 | לספר לנו משהו | |  |
+| s32c1f5b | רגע… | | One moment… |
+| sdd0c69b | בלי שם | |  |
+| s39b2618 | מה קרה? מה ציפית שיקרה? | |  |
+| saa2714a | מה הוא עשה? | |  |
+| se6b6c12 | שולח… | |  |
+| sb224f0c | שליחה | |  |
 
 ## components/ResultScreen.tsx
 
 | מזהה | טקסט נוכחי | טקסט חדש | אנגלית |
 | --- | --- | --- | --- |
-| s706 | הצד שלך החזיק | |  |
-| s707 | הצד שמולך החזיק | |  |
-| s708 | מתחילים… | |  |
-| s709 | מחכה ליריב… | |  |
-| s710 | רוצים עוד אחד! קדימה | |  |
-| s711 | קרב חוזר | |  |
-| s712 | משחק חדש | |  |
-| s713 | מספיק, הבנתי | |  |
+| sb73e6cd | הצד שלך החזיק | |  |
+| sb66c1e6 | הצד שמולך החזיק | |  |
+| s6052ae4 | מתחילים… | |  |
+| s30a40da | מחכה ליריב… | |  |
+| s21914e7 | רוצים עוד אחד! קדימה | |  |
+| sab50205 | קרב חוזר | |  |
+| se3da978 | משחק חדש | |  |
+| s18fbbed | מספיק, הבנתי | |  |
 
 ## components/Say.tsx
 
 | מזהה | טקסט נוכחי | טקסט חדש | אנגלית |
 | --- | --- | --- | --- |
-| s714 | סגירה | |  |
-| s715 | להגיד משהו | |  |
-| s716 | סגירה | |  |
-| s717 | להגיד משהו | |  |
-| s718 | עוד אימוג'ים בחנות | |  |
-| s719 | עוד | |  |
-| s720 | לא לראות הודעות | |  |
-| s721 | להראות הודעות שוב | |  |
-| s722 | אין אימוג'ים | |  |
+| sba7f872 | סגירה | | Close |
+| sf1e57a9 | להגיד משהו | |  |
+| sedb69c9 | סגירה | | Close |
+| sc6886d9 | להגיד משהו | |  |
+| s1e8d9ca | עוד אימוג'ים בחנות | |  |
+| s7e6e15e | עוד | |  |
+| s299e1cd | לא לראות הודעות | |  |
+| sf929198 | להראות הודעות שוב | |  |
+| sed1b7c0 | אין אימוג'ים | |  |
 
 ## components/Shop.tsx
 
 | מזהה | טקסט נוכחי | טקסט חדש | אנגלית |
 | --- | --- | --- | --- |
-| s723 | פרצופים | |  |
-| s724 | מראה לקלפים | |  |
-| s725 | אימוג׳ים | |  |
-| s726 | משפטי מחץ | |  |
-| s727 | תיבות | |  |
-| s728 | קלפים | |  |
-| s729 | סגירה | |  |
-| s730 | חנות נוחות | |  |
-| s731 | רגע… | |  |
-| s732 | המדפים עוד ריקים. בקרוב. | |  |
-| s733 | אין מספיק יהלומים | |  |
-| s734 | חינם | |  |
+| s509b97d | פרצופים | | Faces |
+| sa52276e | מראה לקלפים | | Card looks |
+| s63ae982 | אימוג׳ים | | Emoji |
+| se3cd8fd | משפטי מחץ | | Catchphrases |
+| sd9e67b5 | תיבות | | Chests |
+| s26df959 | קלפים | | Cards |
+| s56fa87f | סגירה | | Close |
+| s4eef1f1 | חנות נוחות | | Corner Shop |
+| s0f95b79 | רגע… | | One moment… |
+| s947b31f | המדפים עוד ריקים. בקרוב. | | The shelves are still empty. Soon. |
+| s585947b | אין מספיק יהלומים | |  |
+| s9eddab1 | חינם | |  |
 
 ## components/SignedInOnly.tsx
 
 | מזהה | טקסט נוכחי | טקסט חדש | אנגלית |
 | --- | --- | --- | --- |
-| s735 | צריך חשבון. זה חינם, ושומר את האלבום שלך. | |  |
-| s736 | האלבום נשמר — גם אם תנקה את הדפדפן או תחליף מכשיר | |  |
-| s737 | לשחק מול אנשים אמיתיים | |  |
-| s738 | חברים — לראות מי מחובר ולהזמין למשחק | |  |
-| s739 | חנות נוחות | |  |
-| s740 | סגירה | |  |
-| s741 | עם חשבון זה שלך | |  |
+| s9c73ff4 | צריך חשבון. זה חינם, ושומר את האלבום שלך. | |  |
+| s3e98614 | האלבום נשמר — גם אם תנקה את הדפדפן או תחליף מכשיר | |  |
+| se65df62 | לשחק מול אנשים אמיתיים | |  |
+| s627ac6b | חברים — לראות מי מחובר ולהזמין למשחק | |  |
+| sa9713fa | חנות נוחות | | Corner Shop |
+| s59e83a1 | סגירה | | Close |
+| sde7d6f8 | עם חשבון זה שלך | |  |
 
 ## components/Tutorial.tsx
 
 | מזהה | טקסט נוכחי | טקסט חדש | אנגלית |
 | --- | --- | --- | --- |
-| s742 | המשך ← | |  |
+| sbecf213 | המשך ← | |  |
 
 ## components/Updates.tsx
 
 | מזהה | טקסט נוכחי | טקסט חדש | אנגלית |
 | --- | --- | --- | --- |
-| s743 | סגירה | |  |
-| s744 | עוד לא קרה כלום. תחזרו. | |  |
-| s745 | חדש | |  |
+| s25bc69f | סגירה | | Close |
+| s0c0129b | עוד לא קרה כלום. תחזרו. | |  |
+| s912daec | חדש | |  |
 
 ## components/Versus.tsx
 
 | מזהה | טקסט נוכחי | טקסט חדש | אנגלית |
 | --- | --- | --- | --- |
-| s746 | ביחד | |  |
-| s747 | נגד | |  |
-| s748 | אני | |  |
-| s749 | היריב | |  |
+| s67c1f88 | ביחד | |  |
+| s943b402 | נגד | |  |
+| s91836d5 | אני | |  |
+| sb1bf590 | היריב | |  |
 
 ## data/tutorialLines.ts
 
 | מזהה | טקסט נוכחי | טקסט חדש | אנגלית |
 | --- | --- | --- | --- |
-| s750 | היי, אני אמנדה. באת להילחם מולי, ילד? בוא נלמד איך עושים את זה. | |  |
-| s751 | ההקדמה, לפני שהיא מצביעה על משהו | |  |
-| s752 | אנחנו בחדר המשחקים. אם תנצח אותי פה תוכל להתקדם למקומות אחרים. זה האלבום שלי, זה האלבום שלך. אנחנו מדביקים מדבקות, ובסוף הן ילחמו. | |  |
-| s753 | ההקדמה, שורה שנייה | |  |
-| s754 | נתחיל בהדבקות. הנה הקלף הראשון — {card}. {trait}. {where}. | |  |
-| s755 | הקלף הראשון, על לוח ריק | |  |
-| s756 | עוד אחד: {card}. {trait}. {where}. | |  |
-| s757 | הקלף השני | |  |
-| s758 | ועכשיו המלך. הוא לא זז, הוא חזק פי שלושה, ואם הוא נופל — נגמר. | |  |
-| s759 | אחרי שני קלפים, כשאין עדיין מלך | |  |
-| s760 | {card}? סטטי, הרבה חיים. הוא לא ילך לשום מקום — שים אותו מול המלך, שם עוצרים את מי שבא אליו. | |  |
-| s761 | קלף כבד וסטטי ביד, אחרי שיש מלך | |  |
-| s762 | {card} {moves} — הוא לא צריך שהדרך תהיה פנויה. שים אותו מאחורה ושיירה משם. | |  |
-| s763 | מעופף או צלף ביד | |  |
-| s764 | קלף פעולה. לא מניחים אותו על הלוח — לוקחים אותו לבר ומפעילים כשצריך. | |  |
-| s765 | קלף פעולה ביד, אחרי שיש מלך | |  |
-| s766 | כל קלף אחר ביד — שלא נאמר עליו משהו ספציפי יותר | |  |
-| s767 | זה קלף פעולה — הוא לא יושב על הלוח. קח אותו לבר שמתחת. | |  |
-| s768 | קלף פעולה ביד לפני שיש מלך | |  |
-| s769 | {card} חלש. יגיעו טובים יותר — לפח איתו. | |  |
-| s770 | קלף חלש משמעותית מהממוצע | |  |
-| s771 | התחרטת? הקלף העליון בפח חוזר. רק הוא, ומה שתיתן במקומו נקבר. | |  |
-| s772 | אחרי שנזרק קלף ראשון לפח | |  |
-| s773 | שלושה מאותה סדרה צמודים זה לזה — {bonus} נדלק. {what} | |  |
-| s774 | כששלושה מאותה סדרה נוגעים זה בזה | |  |
-| s775 | נגמר הערפל — עכשיו רואים מה היריב שם. שינויים של הרגע האחרון? | |  |
-| s776 | בתחילת שלב הפאניקה | |  |
-| s777 | יאללה, בוא נראה מה קורה. | |  |
-| s778 | הדבר האחרון לפני הקרב | |  |
-| s779 | ל{enemy} יש ערימת חיים. {card} לא מנסה לנצח אותו במכות — הארס שלו מצטבר בכל פגיעה וממשיך לשרוף גם אחרי שהוא מת. שים אותו מולו. | |  |
-| s780 | ארס ביד מול קיר חיים של היריב | |  |
-| s781 | הוא שם משהו שמתפצל כשהוא מת — תהרוג אחד ויהיו שניים. {card} מכה כמה נתיבים בבת אחת, וזה בדיוק מה שמבטל את זה. רק אל תשים אותו בקצה, שם חצי מהמכה הולכת לאוויר. | |  |
-| s782 | מכת רוחב ביד מול משהו שמתרבה | |  |
-| s783 | הוא ערם קלפים בטור אחד. {card} מבעיר את הנתיב שלפניו — כולם שם משלמים כל שנייה, ושריון לא עוזר. שים אותו מול הטור הזה. | |  |
-| s784 | הצתת נתיב ביד מול טור עמוס | |  |
-| s785 | הוא בנה משהו שיורה מרחוק ולא מתקרב. {card} גורר את כל הקו שלו אליך — ישר לתוך הטווח של השומרים שלך. | |  |
-| s786 | שואב ביד מול יריב ששומר מרחק | |  |
-| s787 | {ally} מכה חזק ושובר בקלות. {card} סופג חצי מכל מכה שמכוונת לשכן שלו — שים אותו ממש לידו ותן לו לחיות קצת. | |  |
-| s788 | סופג ביד כשיש לך קלף שביר שמכה חזק | |  |
+| sec89d42 | היי, אני אמנדה. באת להילחם מולי, ילד? בוא נלמד איך עושים את זה. | |  |
+| s9484b03 | ההקדמה, לפני שהיא מצביעה על משהו | |  |
+| sad8f4bf | אנחנו בחדר המשחקים. אם תנצח אותי פה תוכל להתקדם למקומות אחרים. זה האלבום שלי, זה האלבום שלך. אנחנו מדביקים מדבקות, ובסוף הן ילחמו. | |  |
+| s6da50a2 | ההקדמה, שורה שנייה | |  |
+| sf6e019c | נתחיל בהדבקות. הנה הקלף הראשון — {card}. {trait}. {where}. | |  |
+| s3b5a80d | הקלף הראשון, על לוח ריק | |  |
+| sdd3544e | עוד אחד: {card}. {trait}. {where}. | |  |
+| s8231a88 | הקלף השני | |  |
+| s267eda8 | ועכשיו המלך. הוא לא זז, הוא חזק פי שלושה, ואם הוא נופל — נגמר. | |  |
+| s5384124 | אחרי שני קלפים, כשאין עדיין מלך | |  |
+| s2e3ddc3 | {card}? סטטי, הרבה חיים. הוא לא ילך לשום מקום — שים אותו מול המלך, שם עוצרים את מי שבא אליו. | |  |
+| scbdee8f | קלף כבד וסטטי ביד, אחרי שיש מלך | |  |
+| s5877095 | {card} {moves} — הוא לא צריך שהדרך תהיה פנויה. שים אותו מאחורה ושיירה משם. | |  |
+| s9bfb295 | מעופף או צלף ביד | |  |
+| sc22b303 | קלף פעולה. לא מניחים אותו על הלוח — לוקחים אותו לבר ומפעילים כשצריך. | |  |
+| s17dc9b0 | קלף פעולה ביד, אחרי שיש מלך | |  |
+| s21cb509 | כל קלף אחר ביד — שלא נאמר עליו משהו ספציפי יותר | |  |
+| sb3dff27 | זה קלף פעולה — הוא לא יושב על הלוח. קח אותו לבר שמתחת. | |  |
+| s1643dc2 | קלף פעולה ביד לפני שיש מלך | |  |
+| se947507 | {card} חלש. יגיעו טובים יותר — לפח איתו. | |  |
+| s52db857 | קלף חלש משמעותית מהממוצע | |  |
+| sb491c42 | התחרטת? הקלף העליון בפח חוזר. רק הוא, ומה שתיתן במקומו נקבר. | |  |
+| s2ca2d8b | אחרי שנזרק קלף ראשון לפח | |  |
+| s0f0bc4e | שלושה מאותה סדרה צמודים זה לזה — {bonus} נדלק. {what} | |  |
+| sfc7ee43 | כששלושה מאותה סדרה נוגעים זה בזה | |  |
+| s658fd0b | נגמר הערפל — עכשיו רואים מה היריב שם. שינויים של הרגע האחרון? | |  |
+| s2fae425 | בתחילת שלב הפאניקה | |  |
+| sfce8645 | יאללה, בוא נראה מה קורה. | |  |
+| s2fe9cd5 | הדבר האחרון לפני הקרב | |  |
+| sec0b1a9 | ל{enemy} יש ערימת חיים. {card} לא מנסה לנצח אותו במכות — הארס שלו מצטבר בכל פגיעה וממשיך לשרוף גם אחרי שהוא מת. שים אותו מולו. | |  |
+| s0a06b79 | ארס ביד מול קיר חיים של היריב | |  |
+| sefad056 | הוא שם משהו שמתפצל כשהוא מת — תהרוג אחד ויהיו שניים. {card} מכה כמה נתיבים בבת אחת, וזה בדיוק מה שמבטל את זה. רק אל תשים אותו בקצה, שם חצי מהמכה הולכת לאוויר. | |  |
+| sa0e51a2 | מכת רוחב ביד מול משהו שמתרבה | |  |
+| se750bda | הוא ערם קלפים בטור אחד. {card} מבעיר את הנתיב שלפניו — כולם שם משלמים כל שנייה, ושריון לא עוזר. שים אותו מול הטור הזה. | |  |
+| sf7d19d0 | הצתת נתיב ביד מול טור עמוס | |  |
+| se17e5e8 | הוא בנה משהו שיורה מרחוק ולא מתקרב. {card} גורר את כל הקו שלו אליך — ישר לתוך הטווח של השומרים שלך. | |  |
+| s4c27fff | שואב ביד מול יריב ששומר מרחק | |  |
+| se565ab8 | {ally} מכה חזק ושובר בקלות. {card} סופג חצי מכל מכה שמכוונת לשכן שלו — שים אותו ממש לידו ותן לו לחיות קצת. | |  |
+| s5a0fcb1 | סופג ביד כשיש לך קלף שביר שמכה חזק | |  |
 
 ## data/updates.ts
 
 | מזהה | טקסט נוכחי | טקסט חדש | אנגלית |
 | --- | --- | --- | --- |
-| s789 | אוקטובר 2026 | |  |
-| s790 | חנות נוחות, חברים, ודיווח | |  |
-| s791 | נפתחה חנות נוחות — אווטארים, אימוג'ים וקלפים, הכל ביהלומים. | |  |
-| s792 | אפשר להוסיף לחברים מישהו ששיחקתם מולו, לראות מי מחובר, ולהזמין אותו למשחק. | |  |
-| s793 | אפשר להגיד ליריב ארבעה-עשר משפטים מוכנים, וגם לבחור לא לראות הודעות בכלל. | |  |
-| s794 | יש כפתור לדווח על באג או על שחקן. | |  |
-| s795 | אוקטובר 2026 | |  |
-| s796 | נאצ'וס, אתגרים, וחוגת קושי | |  |
-| s797 | כל משחק נותן נאצ'וס לפי כמה טוב שיחקתם — גם כשמפסידים. כל 5 נאצ'וס זו תיבה. | |  |
-| s798 | אתגרים יומיים, שבועיים וחודשיים, עם יהלומים ונאצ'וס בסוף. | |  |
-| s799 | לבוט יש עכשיו שלוש דרגות: קליל, רגיל וקשה. הקליל באמת קליל. | |  |
-| s800 | ניצחון מול הבוט שווה גביעים — רגיל 8, קשה 12. | |  |
-| s801 | בתיבות יש יותר קלפים שכבר יש לכם, כדי שיהיה אפשר לשדרג אותם. | |  |
+| s00ba05b | אוקטובר 2026 | |  |
+| s8e775e4 | חנות נוחות, חברים, ודיווח | |  |
+| sffee556 | נפתחה חנות נוחות — אווטארים, אימוג'ים וקלפים, הכל ביהלומים. | |  |
+| s945e9ab | אפשר להוסיף לחברים מישהו ששיחקתם מולו, לראות מי מחובר, ולהזמין אותו למשחק. | |  |
+| s1f2e3f1 | אפשר להגיד ליריב ארבעה-עשר משפטים מוכנים, וגם לבחור לא לראות הודעות בכלל. | |  |
+| sc99cf96 | יש כפתור לדווח על באג או על שחקן. | |  |
+| sb7b7b9a | אוקטובר 2026 | |  |
+| s9ff5891 | נאצ'וס, אתגרים, וחוגת קושי | |  |
+| s86e4a59 | כל משחק נותן נאצ'וס לפי כמה טוב שיחקתם — גם כשמפסידים. כל 5 נאצ'וס זו תיבה. | |  |
+| s0dce83b | אתגרים יומיים, שבועיים וחודשיים, עם יהלומים ונאצ'וס בסוף. | |  |
+| sa6c8b7d | לבוט יש עכשיו שלוש דרגות: קליל, רגיל וקשה. הקליל באמת קליל. | |  |
+| s37ceacb | ניצחון מול הבוט שווה גביעים — רגיל 8, קשה 12. | |  |
+| sc9e804b | בתיבות יש יותר קלפים שכבר יש לכם, כדי שיהיה אפשר לשדרג אותם. | |  |
 
 ## game/account.ts
 
 | מזהה | טקסט נוכחי | טקסט חדש | אנגלית |
 | --- | --- | --- | --- |
-| s802 | חשבון הגוגל הזה כבר שייך לחשבון אחר, ולא הצלחתי להיכנס אליו. | |  |
-| s803 | ההתחברות לגוגל לא הושלמה. נסה שוב מהדפדפן הרגיל ולא מתוך אפליקציה אחרת. | |  |
-| s804 | אין חיבור לשרת | |  |
-| s805 | אין חשבון | |  |
-| s806 | לא הצליח | |  |
-| s807 | אין חיבור לשרת | |  |
-| s808 | צריך להיות בן ${MIN_AGE} לפחות | |  |
-| s809 | אין חשבון | |  |
-| s810 | אין חיבור לשרת | |  |
-| s811 | צריך להתחיל לשחק קודם | |  |
-| s812 | אין חיבור לשרת | |  |
-| s813 | צריך חשבון כדי לדווח | |  |
-| s814 | לא הצליח | |  |
-| s815 | אין חיבור לשרת | |  |
-| s816 | לא הצליח | |  |
-| s817 | אין חיבור לשרת | |  |
-| s818 | לא הצליח | |  |
-| s819 | אין חיבור לשרת | |  |
-| s820 | אין חשבון | |  |
-| s821 | לא הצליח | |  |
-| s822 | לא הצליח | |  |
-| s823 | אין חיבור לשרת | |  |
-| s824 | אין חשבון | |  |
-| s825 | לא הצליח | |  |
-| s826 | אין חיבור לשרת | |  |
-| s827 | צריך להתחיל לשחק קודם | |  |
-| s828 | כבר מחובר | |  |
+| s3add400 | חשבון הגוגל הזה כבר שייך לחשבון אחר, ולא הצלחתי להיכנס אליו. | |  |
+| s9365276 | ההתחברות לגוגל לא הושלמה. נסה שוב מהדפדפן הרגיל ולא מתוך אפליקציה אחרת. | |  |
+| s674d50d | אין חיבור לשרת | |  |
+| s648890c | אין חשבון | |  |
+| s2efa30b | לא הצליח | |  |
+| see8db43 | אין חיבור לשרת | |  |
+| s9ef3dda | צריך להיות בן ${MIN_AGE} לפחות | |  |
+| s56e58ef | אין חשבון | |  |
+| s665d389 | אין חיבור לשרת | |  |
+| se81f968 | צריך להתחיל לשחק קודם | |  |
+| s5383875 | אין חיבור לשרת | |  |
+| s5370a70 | צריך חשבון כדי לדווח | |  |
+| s97e263e | לא הצליח | |  |
+| s651f017 | אין חיבור לשרת | |  |
+| sd13c7f9 | לא הצליח | |  |
+| sedc6c2a | אין חיבור לשרת | |  |
+| s54a1abe | לא הצליח | |  |
+| sac33701 | אין חיבור לשרת | |  |
+| s2cb3864 | אין חשבון | |  |
+| s2afe5ef | לא הצליח | |  |
+| s58e9ecf | לא הצליח | |  |
+| s835acce | אין חיבור לשרת | |  |
+| s2d85691 | אין חשבון | |  |
+| s5da8d9e | לא הצליח | |  |
+| s115ddae | אין חיבור לשרת | |  |
+| sf5f2796 | צריך להתחיל לשחק קודם | |  |
+| s79d47ae | כבר מחובר | |  |
 
 ## game/coach.ts
 
 | מזהה | טקסט נוכחי | טקסט חדש | אנגלית |
 | --- | --- | --- | --- |
-| s829 | הוא מעופף | |  |
-| s830 | הוא צלף | |  |
-| s831 | הוא עבה | |  |
-| s832 | הוא חזק | |  |
-| s833 | הוא לא זז | |  |
-| s834 | הוא בסדר גמור | |  |
-| s835 | נמקם אותו מאחורה | |  |
-| s836 | נמקם אותו מקדימה | |  |
-| s837 | נמקם אותו באמצע | |  |
-| s838 | עף | |  |
-| s839 | צלף | |  |
+| sc10480b | הוא מעופף | |  |
+| s4a2ba08 | הוא צלף | |  |
+| sdf5d45f | הוא עבה | |  |
+| s46589c2 | הוא חזק | |  |
+| s6124c70 | הוא לא זז | |  |
+| se7147b6 | הוא בסדר גמור | |  |
+| s9e7ee3f | נמקם אותו מאחורה | |  |
+| seb09973 | נמקם אותו מקדימה | |  |
+| sfe838f6 | נמקם אותו באמצע | |  |
+| s8f1fa7e | עף | |  |
+| sc2c8332 | צלף | |  |
 
 ## game/lessons.ts
 
 | מזהה | טקסט נוכחי | טקסט חדש | אנגלית |
 | --- | --- | --- | --- |
-| s840 | משחק ראשון — איך בונים לוח | |  |
-| s841 | משחק שני — מה מנצח את מה | |  |
+| s24e4af8 | משחק ראשון — איך בונים לוח | |  |
+| s078dd87 | משחק שני — מה מנצח את מה | |  |
 
 ## game/meta.ts
 
 | מזהה | טקסט נוכחי | טקסט חדש | אנגלית |
 | --- | --- | --- | --- |
-| s842 | אין חיבור לשרת | |  |
-| s843 | צריך חשבון | |  |
-| s844 | האתגר הזה כבר לא פעיל. | |  |
-| s845 | עוד לא סיימת את האתגר. | |  |
-| s846 | כבר לקחת את הפרס. | |  |
-| s847 | לא הצלחתי. נסה שוב. | |  |
+| sbd36b97 | אין חיבור לשרת | |  |
+| s7a0587d | צריך חשבון | |  |
+| sc65088a | האתגר הזה כבר לא פעיל. | |  |
+| sc6b6e23 | עוד לא סיימת את האתגר. | |  |
+| s1322daa | כבר לקחת את הפרס. | |  |
+| sbf13716 | לא הצלחתי. נסה שוב. | |  |
 
 ## game/useMatch.ts
 
 | מזהה | טקסט נוכחי | טקסט חדש | אנגלית |
 | --- | --- | --- | --- |
-| s848 | בוט קליל | |  |
-| s849 | הבוט | |  |
-| s850 | בוט קשה | |  |
+| sadfc854 | בוט קליל | |  |
+| s69fcaa6 | הבוט | |  |
+| s38e97db | בוט קשה | |  |
 
 ## game/verdict.ts
 
 | מזהה | טקסט נוכחי | טקסט חדש | אנגלית |
 | --- | --- | --- | --- |
-| s851 | של היריב | |  |
-| s852 | שלך | |  |
-| s853 | המלך ${whose} נפל — זה מסיים את הקרב מיד. | |  |
-| s854 | נגמר הזמן והמלכים שרדו עם אותו אחוז חיים — הוכרע לפי סך החיים על הלוח. | |  |
-| s855 | נגמר הזמן והחיים היו שווים — הוכרע לפי מספר הקלפים ששרדו. | |  |
-| s856 | נגמר הזמן והכול יצא שווה לחלוטין — הוכרע בהטלת מטבע. | |  |
+| s656f60c | של היריב | |  |
+| s42347b7 | שלך | |  |
+| sc3571df | המלך ${whose} נפל — זה מסיים את הקרב מיד. | |  |
+| sd1c6f72 | נגמר הזמן והמלכים שרדו עם אותו אחוז חיים — הוכרע לפי סך החיים על הלוח. | |  |
+| s3d96736 | נגמר הזמן והחיים היו שווים — הוכרע לפי מספר הקלפים ששרדו. | |  |
+| s9726494 | נגמר הזמן והכול יצא שווה לחלוטין — הוכרע בהטלת מטבע. | |  |
