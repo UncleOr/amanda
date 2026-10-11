@@ -8,6 +8,7 @@ import { seriesColor } from "../data/cardMeta";
 import { sfx } from "../game/sfx";
 import { combatLook, drawAura, drawProjectile, type CombatLook } from "./arenaFx";
 import { line as t, lineF as tf } from "../game/copy";
+import { say } from "../game/lang";
 
 const CELL = 72;
 /** Header band above the lanes, so the identity banners never cover a unit. */
@@ -251,7 +252,7 @@ export function Arena({
 
       const hp = new Graphics();
       const card = CATALOG.get(fu.cardId);
-      const rawName = card?.name.he ?? "";
+      const rawName = card ? say(card.name) : "";
 
       // The name sits INSIDE the unit on a dark strip. Drawing it below the box
       // made neighbouring units' labels collide across lanes.
@@ -980,7 +981,7 @@ export function Arena({
       window.setTimeout(() => {
         if (disposed) return;
         if (!hostRef.current?.querySelector("canvas")) {
-          setWhy(tf("sb672b2e", t("sb672b2e", "נתקע אחרי {0} שניות בלי ציור"), STARTUP_GRACE_MS / 1000));
+          setWhy(tf("sb672b2e", "נתקע אחרי {0} שניות בלי ציור", STARTUP_GRACE_MS / 1000));
           setFailed(true);
         }
       }, STARTUP_GRACE_MS),
@@ -1024,7 +1025,7 @@ export function Arena({
             onFinish();
           }}
         >
-          קדימה לתוצאה
+          {t("s54733fd", "קדימה לתוצאה")}
         </button>
       </div>
     );

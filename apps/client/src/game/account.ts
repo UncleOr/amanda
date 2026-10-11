@@ -662,7 +662,7 @@ export async function saveProfile(patch: {
   const sb = db();
   if (!sb) return t("see8db43", "אין חיבור לשרת");
   if (patch.birthDate && ageFrom(patch.birthDate) < MIN_AGE)
-    return tf("sde6b2f0", t("sde6b2f0", "צריך להיות בן {0} לפחות"), MIN_AGE);
+    return tf("sde6b2f0", "צריך להיות בן {0} לפחות", MIN_AGE);
   try {
     const { data } = await sb.auth.getSession();
     const id = data.session?.user.id;

@@ -6,6 +6,7 @@ import { priceNow } from "../game/account";
 import { buyItem, loadShop, type ShopItem } from "../game/account";
 import { Overlay } from "./Overlay";
 import { line as t } from "../game/copy";
+import { say } from "../game/lang";
 
 /**
  * ═══ WHAT THIS SCREEN IS FOR ═══
@@ -176,11 +177,11 @@ export function Shop({
                           </div>
                           {/* The name of a phrase is the phrase, already
                               shown above it. Saying it twice is clutter. */}
-                          {!phrase && <b className="good__name">{item.name.he}</b>}
+                          {!phrase && <b className="good__name">{say(item.name)}</b>}
                           {item.blurb?.he && <small className="good__blurb">{item.blurb.he}</small>}
                           {mine ? (
                             <span className="good__mine">
-                              <Icon name="ready" size={13} /> שלך
+                              <Icon name="ready" size={13} /> {t("s1a96dcd", "שלך")}
                             </span>
                           ) : (
                             <button

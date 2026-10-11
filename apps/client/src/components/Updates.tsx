@@ -32,7 +32,7 @@ export function Updates({ onClose }: { onClose: () => void }) {
           <Icon name="exit" size={15} />
         </button>
         <h2 className="news__title">
-          <Icon name="info" size={20} /> מה חדש
+          <Icon name="info" size={20} /> {t("s2ddcf0b", "מה חדש")}
         </h2>
 
         {newestFirst.length === 0 ? (

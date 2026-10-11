@@ -22,7 +22,7 @@ export function CardGallery() {
         <h2>{t("s30e62ac", "גלריית קלפים")}</h2>
         <label>
           <input type="checkbox" checked={onlyArt} onChange={(e) => setOnlyArt(e.target.checked)} />{" "}
-          רק קלפים עם ציור
+          {t("s537a98d", "רק קלפים עם ציור")}
         </label>
       </header>
 

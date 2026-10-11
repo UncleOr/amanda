@@ -48,7 +48,7 @@ export function BattleScreen({
               */}
               <p className="battle__why">{why}</p>
               <button className="btn-fight" onClick={m.finishBattle}>
-                המשך לתוצאה
+                {t("s3e7a5b3", "המשך לתוצאה")}
               </button>
             </div>
           )}
@@ -77,7 +77,7 @@ export function BattleScreen({
             slow match. */}
         {m.playground && (
           <button className="lab__stop" onClick={m.backToPlayground}>
-            <Icon name="stop" size={14} /> עצור וחזור ללוח
+            <Icon name="stop" size={14} /> {t("s84d910b", "עצור וחזור ללוח")}
           </button>
         )}
         {/* The battle is forty-five seconds of the two of you watching the

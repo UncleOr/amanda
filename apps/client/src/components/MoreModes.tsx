@@ -71,7 +71,7 @@ export function MoreModes({
           <Icon name="exit" size={15} />
         </button>
         <h2 className="modes__title">{t("sa53602d", "עוד מודים")}</h2>
-        {/* The list says it itself: a mode you can play has a t("sb8d28c1", "שחק") button
+        {/* The list says it itself: a mode you can play has a "שחק" button
             and one that is not ready says t("sbdb5aac", "בקרוב"). A line above it
             describing that is a line describing the obvious. */}
         <ul className="modes__list">
@@ -94,7 +94,7 @@ export function MoreModes({
                     mode.start?.();
                   }}
                 >
-                  שחק
+                  {t("sb8d28c1", "שחק")}
                 </button>
               )}
             </li>

@@ -14,7 +14,7 @@ export function verdictText(result: BattleResult, iWon: boolean): string {
   const pct = (n: number) => `${Math.round(n * 100)}%`;
   switch (result.winReason) {
     case "kingDown":
-      return tf("s313e3b4", t("s313e3b4", "המלך {0} נפל — זה מסיים את הקרב מיד."), whose);
+      return tf("s313e3b4", "המלך {0} נפל — זה מסיים את הקרב מיד.", whose);
     case "kingHp": {
       const t = result.tiebreak!;
       const mine = result.winner === "A" ? t.b : t.a;

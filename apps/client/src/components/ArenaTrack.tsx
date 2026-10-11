@@ -2,7 +2,8 @@ import { useState } from "react";
 import { ARENAS, arenaFor, arenaProgress, toArena } from "@amanda/shared";
 import { Icon } from "./Icon";
 import { Overlay } from "./Overlay";
-import { line as t } from "../game/copy";
+import { line as t, lineF as tf } from "../game/copy";
+import { lang, say } from "../game/lang";
 
 /**
  * The ladder of arenas, on the home screen.
@@ -35,17 +36,23 @@ export function ArenaTrack({ trophies }: { trophies: number }) {
           aria-hidden="true"
         />
         <span className="track__text">
-          <b>{here.name.he}</b>
+          <b>{say(here.name)}</b>
           <span className="track__bar" aria-hidden="true">
             <i style={{ width: `${progress * 100}%` }} />
           </span>
           <small>
             {next ? (
               <>
-                <Icon name="win" size={12} /> {trophies} · עוד {next.from - trophies}{" "}
+                <Icon name="win" size={12} /> {tf("sbdb539a", "{0} · עוד {1}", trophies, next.from - trophies)}{" "}
                 {/* The trophy again, right after the number: "150 more" of WHAT
                     was the missing half of the sentence. */}
-                <Icon name="win" size={12} /> {toArena(next.name.he)}
+                {/*
+                  toArena() is Hebrew grammar: ל and ה collapse, so המגרש
+                  becomes למגרש and not להמגרש. English needs none of that
+                  and would read "tothe Playroom" if it were applied.
+                */}
+                <Icon name="win" size={12} />{" "}
+                {lang() === "he" ? toArena(say(next.name)) : `to ${say(next.name)}`}
               </>
             ) : (
               <>
@@ -80,8 +87,8 @@ export function ArenaTrack({ trophies }: { trophies: number }) {
                       aria-hidden="true"
                     />
                     <span className="arenas__who">
-                      <b>{a.name.he}</b>
-                      <small>{a.tease.he}</small>
+                      <b>{say(a.name)}</b>
+                      <small>{say(a.tease)}</small>
                     </span>
                     <span className="arenas__at">
                       {current ? (

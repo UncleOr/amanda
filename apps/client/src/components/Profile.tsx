@@ -188,7 +188,7 @@ export function Profile({ account, onClose, onChanged }: Props) {
     <div className="profile">
       <header className="profile__top">
         <button className="btn-link" onClick={onClose}>
-          ← חזרה
+          {t("sc37bae6", "← חזרה")}
         </button>
       </header>
 
@@ -237,7 +237,7 @@ export function Profile({ account, onClose, onChanged }: Props) {
           <section className="profile__box">
             <h3>{t("safd776c", "ניהול")}</h3>
             <a className="btn-fight btn-online profile__wide profile__admin" href="?admin">
-              <Icon name="menu" size={15} /> פתח את לוח הניהול
+              <Icon name="menu" size={15} /> {t("s2cf62eb", "פתח את לוח הניהול")}
             </a>
           </section>
         )}
@@ -251,8 +251,8 @@ export function Profile({ account, onClose, onChanged }: Props) {
                 בלי תקופת המתנה. <b>{t("s7e78db8", "אי אפשר לבטל.")}</b>
               </p>
               <p className="profile__note">
-                אם רק רצית לשחק מחשבון אחר — <b>{t("sa4507ca", "יציאה / החלפת משתמש")}</b> עושה
-                את זה בלי למחוק כלום.
+                אם רק רצית לשחק מחשבון אחר — <b>{t("sa4507ca", "יציאה / החלפת משתמש")}</b> {t("s6253602", "עושה")}
+                {t("s7b07d58", "את זה בלי למחוק כלום.")}
               </p>
               <div className="result__buttons">
                 <button
@@ -274,7 +274,7 @@ export function Profile({ account, onClose, onChanged }: Props) {
                   {reallyDeleting ? t("s3c685c0", "מוחק…") : t("s5f2eea0", "כן, למחוק הכול")}
                 </button>
                 <button className="btn-fight btn-ghost" onClick={() => setDeleting(false)}>
-                  ביטול
+                  {t("sae4c613", "ביטול")}
                 </button>
               </div>
             </div>
@@ -296,7 +296,7 @@ export function Profile({ account, onClose, onChanged }: Props) {
               <h2>{t("safed31c", "למחוק את הפרטים שלך?")}</h2>
               <p>
                 הכינוי, הפרצוף, יום ההולדת, משפט המחץ, רשימת החברים וכל
-                המשחקים שלך — נמחקים. <b>האלבום, הקלפים, הגביעים והיהלומים
+                המשחקים שלך — נמחקים. <b>{t("s9dc9a57", "האלבום, הקלפים, הגביעים והיהלומים")}
                 נשארים.</b>
               </p>
               <div className="result__buttons">
@@ -317,7 +317,7 @@ export function Profile({ account, onClose, onChanged }: Props) {
                   {reallyScrubbing ? t("s4431549", "מוחק…") : t("s19e44e1", "כן, למחוק את הפרטים")}
                 </button>
                 <button className="btn-fight btn-ghost" onClick={() => setScrubbing(false)}>
-                  ביטול
+                  {t("s20d92b5", "ביטול")}
                 </button>
               </div>
             </div>
@@ -341,10 +341,10 @@ export function Profile({ account, onClose, onChanged }: Props) {
                     void switchAccount().then(() => window.location.reload());
                   }}
                 >
-                  כן, לצאת
+                  {t("s9dc75cf", "כן, לצאת")}
                 </button>
                 <button className="btn-fight btn-ghost" onClick={() => setLeaving(false)}>
-                  ביטול
+                  {t("sa1d9361", "ביטול")}
                 </button>
               </div>
             </div>
@@ -474,7 +474,7 @@ export function Profile({ account, onClose, onChanged }: Props) {
 
         {dirty && (
           <button className="btn-fight profile__save" disabled={busy} onClick={() => void save()}>
-            שמור שינויים
+            {t("sf5092ae", "שמור שינויים")}
           </button>
         )}
         {note && <p className="profile__note profile__note--loud">{note}</p>}
@@ -505,7 +505,7 @@ export function Profile({ account, onClose, onChanged }: Props) {
                 className="btn-fight btn-ghost profile__wide"
                 onClick={() => setLeaving(true)}
               >
-                <Icon name="back" size={15} /> יציאה / החלפת משתמש
+                <Icon name="back" size={15} /> {t("s40f4472", "יציאה / החלפת משתמש")}
               </button>
               {/*
                 Deleting your own account, from inside the game. Both stores
@@ -516,13 +516,13 @@ export function Profile({ account, onClose, onChanged }: Props) {
                 className="btn-fight btn-ghost profile__wide"
                 onClick={() => setScrubbing(true)}
               >
-                מחיקת הפרטים שלי
+                {t("s18888a2", "מחיקת הפרטים שלי")}
               </button>
               <button
                 className="btn-fight profile__wide profile__delete"
                 onClick={() => setDeleting(true)}
               >
-                מחיקת החשבון שלי
+                {t("s971761e", "מחיקת החשבון שלי")}
               </button>
             </>
           ) : (
@@ -531,7 +531,7 @@ export function Profile({ account, onClose, onChanged }: Props) {
                 className="btn-fight btn-online profile__wide"
                 onClick={() => void linkGoogle().then(setNote)}
               >
-                המשך עם גוגל
+                {t("s2248739", "המשך עם גוגל")}
               </button>
               <div className="profile__or">{t("s074bcb0", "או")}</div>
               <input
@@ -553,7 +553,7 @@ export function Profile({ account, onClose, onChanged }: Props) {
                 disabled={!email || password.length < 6}
                 onClick={() => void linkEmail(email, password).then((e) => setNote(e ?? t("s4104b4f", "מחובר")))}
               >
-                שמור עם אימייל
+                {t("s0d032c8", "שמור עם אימייל")}
               </button>
             </>
           )}

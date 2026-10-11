@@ -70,8 +70,7 @@ export function WhySignIn({ onClose, onSignIn }: { onClose: () => void; onSignIn
         </button>
         <h2>{t("sde7d6f8", "עם חשבון זה שלך")}</h2>
         <p className="why__lead">
-          בלי חשבון אפשר לשחק ולאסוף — אבל הכול יושב רק בדפדפן הזה, וברגע
-          שתנקה אותו או תעבור למכשיר אחר, הוא ייעלם.
+          {t("se86ff27", "בלי חשבון אפשר לשחק ולאסוף — אבל הכול יושב רק בדפדפן הזה, וברגע שתנקה אותו או תעבור למכשיר אחר, הוא ייעלם.")}
         </p>
         <ul className="why__list">
           {WHAT_AN_ACCOUNT_GIVES.map((row) => (
@@ -82,10 +81,10 @@ export function WhySignIn({ onClose, onSignIn }: { onClose: () => void; onSignIn
         </ul>
         <div className="result__buttons">
           <button className="btn-fight" onClick={onSignIn}>
-            <Icon name="king" size={16} /> להתחבר
+            <Icon name="king" size={16} /> {t("s29640f4", "להתחבר")}
           </button>
           <button className="btn-fight btn-ghost" onClick={onClose}>
-            אחר כך
+            {t("s88dd08b", "אחר כך")}
           </button>
         </div>
       </div>

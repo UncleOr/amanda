@@ -130,7 +130,7 @@ export function Friends({
                       disabled={busy === f.id}
                       onClick={() => void act("accept", f.id)}
                     >
-                      <Icon name="ready" size={14} /> כן
+                      <Icon name="ready" size={14} /> {t("s820fa28", "כן")}
                     </button>
                   ) : (
                     f.state === "friend" &&
@@ -144,7 +144,7 @@ export function Friends({
                         }
                         onClick={() => onInvite(f.id)}
                       >
-                        <Icon name="play" size={14} /> שחק
+                        <Icon name="play" size={14} /> {t("s9e7bf93", "שחק")}
                       </button>
                     )
                   )}
@@ -169,7 +169,7 @@ export function Friends({
             className="btn-fight btn-ghost"
             onClick={() => void openAdd()}
           >
-            <Icon name="plus" size={15} /> להוסיף חבר
+            <Icon name="plus" size={15} /> {t("s6fa5878", "להוסיף חבר")}
           </button>
         ) : (
           <div className="friends__add">

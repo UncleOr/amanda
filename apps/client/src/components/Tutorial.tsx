@@ -291,7 +291,7 @@ export function Tutorial({ steps, onDone, onQuit }: Props) {
           */}
           {!pointing && <span className="tut__go">{t("sbecf213", "המשך ←")}</span>}
           <button className="btn-link tut__skip" onClick={onQuit ?? onDone}>
-            אני יודע לשחק
+            {t("s7955b5e", "אני יודע לשחק")}
           </button>
         </div>
       </div>

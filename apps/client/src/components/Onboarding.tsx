@@ -60,10 +60,10 @@ export function Onboarding({ initialNickname, onDone }: Props) {
         {stage === "hello" && (
           <div className="ob__row">
             <button className="btn-fight" onClick={() => setStage("who")}>
-              יאללה
+              {t("sbe708cc", "יאללה")}
             </button>
             <button className="btn-link" onClick={onDone}>
-              אחר כך
+              {t("s8d5377a", "אחר כך")}
             </button>
           </div>
         )}
@@ -85,10 +85,10 @@ export function Onboarding({ initialNickname, onDone }: Props) {
                 setStage("face");
               }}
             >
-              {/* t("sd66df01", "בן")/t("s51bc16c", "בת"), and the third is not t("s284cdb8", "לא אומר") — that phrasing is
+              {/* "בן"/"בת", and the third is not "לא אומר" — that phrasing is
                   itself masculine, so the button for declining to say was
                   saying it. Or's wording; the same three are in Profile. */}
-              בן
+              {t("sd66df01", "בן")}
             </button>
             <button
               className="btn-fight"
@@ -98,10 +98,10 @@ export function Onboarding({ initialNickname, onDone }: Props) {
                 setStage("face");
               }}
             >
-              בת
+              {t("s51bc16c", "בת")}
             </button>
             <button className="btn-link" onClick={() => setStage("face")}>
-              למה להגדיר?
+              {t("s4e5fa5b", "למה להגדיר?")}
             </button>
           </div>
         )}
@@ -122,7 +122,7 @@ export function Onboarding({ initialNickname, onDone }: Props) {
             </div>
             <div className="ob__row">
               <button className="btn-fight" onClick={() => setStage("name")}>
-                זה אני
+                {t("s42fb787", "זה אני")}
               </button>
             </div>
           </>
@@ -141,7 +141,7 @@ export function Onboarding({ initialNickname, onDone }: Props) {
             />
             <div className="ob__row">
               <button className="btn-fight" onClick={() => setStage("age")}>
-                קדימה
+                {t("sb359ace", "קדימה")}
               </button>
             </div>
           </>
@@ -163,10 +163,10 @@ export function Onboarding({ initialNickname, onDone }: Props) {
             )}
             <div className="ob__row">
               <button className="btn-fight" disabled={saving} onClick={() => void finish()}>
-                סיימנו
+                {t("sd694b8e", "סיימנו")}
               </button>
               <button className="btn-link" onClick={() => void finish()}>
-                בלי להגיד
+                {t("scea7960", "בלי להגיד")}
               </button>
             </div>
           </>

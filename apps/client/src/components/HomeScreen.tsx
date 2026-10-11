@@ -12,7 +12,8 @@ import { hasUnreadUpdate } from "../data/updates";
 import { listFriends, type Chest, type ShopItem } from "../game/account";
 import type { Overlays } from "../game/useOverlay";
 import type { MatchApi } from "../game/useMatch";
-import { line as t } from "../game/copy";
+import { line as t, lineF as tf } from "../game/copy";
+import { say } from "../game/lang";
 
 const BASE = import.meta.env.BASE_URL;
 
@@ -279,7 +280,7 @@ export function HomeScreen({
                       onClick={() => m.setBotLevel(lvl.id)}
                       onKeyDown={(e) => e.key === "Enter" && m.setBotLevel(lvl.id)}
                     >
-                      {lvl.he}
+                      {say(lvl)}
                     </span>
                   ))}
                 </span>
@@ -298,21 +299,21 @@ export function HomeScreen({
           ) : (
             <div className="pick pick--ways">
               <button className="btn-fight btn-online" onClick={() => m.hostRoom()}>
-                לפתוח חדר
+                {t("s665bc9f", "לפתוח חדר")}
               </button>
               <button className="btn-fight btn-online" onClick={() => setJoining(true)}>
-                יש לי קוד
+                {t("s3ebc7cd", "יש לי קוד")}
               </button>
               <button className="btn-fight btn-online" onClick={() => m.startOnline()}>
-                מישהו אקראי
+                {t("saedd95d", "מישהו אקראי")}
               </button>
               {/* The event, not the everyday opponent. It takes two people on
                   purpose: one board cannot beat her. */}
               <button className="btn-fight btn-amanda" onClick={() => m.startAmanda()}>
-                נגד אמנדה — שניים נגדה
+                {t("s96c910e", "נגד אמנדה — שניים נגדה")}
               </button>
               <button className="btn-link" onClick={() => setFriendOpen(false)}>
-                ← חזרה
+                {t("s9cadb42", "← חזרה")}
               </button>
             </div>
           )}
@@ -334,7 +335,7 @@ export function HomeScreen({
                 inputMode="text"
               />
               <button className="btn-fight" type="submit">
-                הצטרף
+                {t("sd1f36fa", "הצטרף")}
               </button>
             </form>
           )}
@@ -345,14 +346,14 @@ export function HomeScreen({
               is nothing to lose. */}
           <div className="extras">
             <button className="btn-modes" onClick={() => panel.show("modes")}>
-              <Icon name="monster" size={18} /> עוד מודים
+              <Icon name="monster" size={18} /> {t("s2c8e767", "עוד מודים")}
             </button>
             <button
               className="btn-lab"
               onClick={m.startPlayground}
               title={t("s1dda509", "בלי שעון, שני הצדדים שלך")}
             >
-              <Icon name="stacked" size={15} /> מגרש המשחקים
+              <Icon name="stacked" size={15} /> {t("s77f529a", "מגרש המשחקים")}
             </button>
             {/*
               Or: *"a small button that lets me get back into the tutorial…
@@ -362,7 +363,7 @@ export function HomeScreen({
               ways in, not with the privacy policy.
             */}
             <button className="btn-lab" onClick={onTutorial}>
-              <Icon name="info" size={15} /> איך משחקים
+              <Icon name="info" size={15} /> {t("s1a9483e", "איך משחקים")}
             </button>
           </div>
           {/* Told, and told until when. */}
@@ -374,7 +375,7 @@ export function HomeScreen({
                 month: "long",
                 year: "numeric",
               })}
-              . אפשר לשחק נגד המחשב בינתיים.
+              {t("s23c3f2c", ". אפשר לשחק נגד המחשב בינתיים.")}
             </p>
           )}
           {m.roomError && (
@@ -416,7 +417,7 @@ export function HomeScreen({
           <div className="home__ladder">
             <ArenaTrack trophies={m.account?.trophies ?? 0} />
             <button className="btn-album" onClick={() => panel.show("album")}>
-              <Icon name="deck" size={18} /> האלבום שלי
+              <Icon name="deck" size={18} /> {t("sac17bac", "האלבום שלי")}
             </button>
           </div>
           <NachoBar nachos={m.account?.nachos ?? 0} />
@@ -547,8 +548,8 @@ export function HomeScreen({
                   <img className="rail__promo-art" src={shopItemArt(promo)!} alt="" />
                 )}
                 <span className="rail__promo-words">
-                  <b>{promo.name.he}</b>
-                  {promo.blurb?.he && <small>{promo.blurb.he}</small>}
+                  <b>{say(promo.name)}</b>
+                  {promo.blurb && <small>{say(promo.blurb)}</small>}
                 </span>
               </span>
               <span className="rail__promo-price">
@@ -589,7 +590,7 @@ export function HomeScreen({
         */}
         <aside className="home__meta smallprint">
           <button className="btn-link" onClick={() => panel.show("about")}>
-            אודות · פרטיות · נגישות
+            {t("sdd48f4d", "אודות · פרטיות · נגישות")}
           </button>
           {/*
             Or: "updates — what's new in this version, so there is a reason to
@@ -604,14 +605,14 @@ export function HomeScreen({
               panel.show("updates");
             }}
           >
-            מה חדש
+            {t("s77b6cd1", "מה חדש")}
             {newsUnread && <i className="btn-news__dot" aria-label={t("sb468431", "יש עדכון שלא קראתם")} />}
           </button>
           {/* Open to everybody: the player most likely to hit a bug is the one
               who just arrived. Reporting a PERSON still needs an account, and
               the server is where that is decided. */}
           <button className="btn-link" onClick={() => panel.show({ kind: "report", about: "bug" })}>
-            משהו לא עובד?
+            {t("s9940578", "משהו לא עובד?")}
           </button>
           {/*
             The version, and the way to force a fresh copy. The refresh button
@@ -621,14 +622,14 @@ export function HomeScreen({
             browser app".
           */}
           <p className="intro__version">
-            גרסה {__BUILD_ID__} · מסך {viewport}
+            {tf("s6f3e4d6", "גרסה {0} · מסך {1}", __BUILD_ID__, viewport)}
             {!INSTALLED && (
               <button
                 className="btn-link"
                 title={t("s301358f", "מוריד אותי מחדש ומנקה גרסאות ישנות")}
                 onClick={() => void hardRefresh()}
               >
-                ⟳ רענן
+                {t("se6e2f22", "⟳ רענן")}
               </button>
             )}
           </p>

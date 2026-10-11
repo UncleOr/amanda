@@ -14,6 +14,7 @@ import { CATALOG, SERIES_BY_ID, synergyGroups } from "../data/catalog";
 import { line } from "../data/tutorialLines";
 import type { Card } from "@amanda/shared";
 import { line as t } from "./copy";
+import { say } from "./lang";
 
 export interface Cue {
   /** Which line this is, so it is only ever said once. */
@@ -99,7 +100,7 @@ const MEDIAN_WORTH = (() => {
 function synergyLine(seriesId: string): string | null {
   const s = SERIES_BY_ID.get(seriesId);
   if (!s?.synergy) return null;
-  return line("synergy", { bonus: s.synergy.name.he, what: s.synergy.description.he });
+  return line("synergy", { bonus: say(s.synergy.name), what: say(s.synergy.description) });
 }
 
 /** Which series has a touching group big enough, using the engine's own rule. */
@@ -210,7 +211,7 @@ function counterCues(view: CoachView, inHand: Card | null): Array<() => Cue | nu
       return has(inHand, "stackingDot") && wall
         ? {
             id: "x-poison",
-            text: line("x-poison", { enemy: wall.name.he, card: inHand!.name.he }),
+            text: line("x-poison", { enemy: say(wall.name), card: say(inHand!.name) }),
             target: board,
           }
         : null;
@@ -224,7 +225,7 @@ function counterCues(view: CoachView, inHand: Card | null): Array<() => Cue | nu
       return has(inHand, "aoeRowAttack") && multiplies
         ? {
             id: "x-wide",
-            text: line("x-wide", { card: inHand!.name.he }),
+            text: line("x-wide", { card: say(inHand!.name) }),
             target: board,
           }
         : null;
@@ -235,7 +236,7 @@ function counterCues(view: CoachView, inHand: Card | null): Array<() => Cue | nu
       return has(inHand, "lineDenialDot") && deepestLane(view) >= 2
         ? {
             id: "x-lane",
-            text: line("x-lane", { card: inHand!.name.he }),
+            text: line("x-lane", { card: say(inHand!.name) }),
             target: board,
           }
         : null;
@@ -249,7 +250,7 @@ function counterCues(view: CoachView, inHand: Card | null): Array<() => Cue | nu
       return has(inHand, "pullVacuum") && keepsDistance
         ? {
             id: "x-pull",
-            text: line("x-pull", { card: inHand!.name.he }),
+            text: line("x-pull", { card: say(inHand!.name) }),
             target: board,
           }
         : null;
@@ -261,7 +262,7 @@ function counterCues(view: CoachView, inHand: Card | null): Array<() => Cue | nu
       return has(inHand, "damageShareAdjacent") && fragile
         ? {
             id: "x-shield",
-            text: line("x-shield", { ally: fragile.name.he, card: inHand!.name.he }),
+            text: line("x-shield", { ally: say(fragile.name), card: say(inHand!.name) }),
             target: ".side--me .board",
           }
         : null;
@@ -309,7 +310,7 @@ export function nextCue(view: CoachView, said: Set<string>): Cue | null {
         ? {
             id: "first",
             text: line("first", {
-              card: inHand.name.he,
+              card: say(inHand.name),
               trait: trait(inHand),
               where: wants(inHand),
             }),
@@ -323,7 +324,7 @@ export function nextCue(view: CoachView, said: Set<string>): Cue | null {
         ? {
             id: "second",
             text: line("second", {
-              card: inHand.name.he,
+              card: say(inHand.name),
               trait: trait(inHand),
               where: wants(inHand),
             }),
@@ -349,7 +350,7 @@ export function nextCue(view: CoachView, said: Set<string>): Cue | null {
       view.king && inHand && inHand.stats.moveSpeed === 0 && inHand.stats.hp >= 800
         ? {
             id: "tank",
-            text: line("tank", { card: inHand.name.he }),
+            text: line("tank", { card: say(inHand.name) }),
             target: ".side--me .slot--guard",
             // One more than is on the board right now: "something is placed"
             // was already true, so the step answered itself instantly.
@@ -362,7 +363,7 @@ export function nextCue(view: CoachView, said: Set<string>): Cue | null {
         ? {
             id: "flyer",
             text: line("flyer", {
-              card: inHand.name.he,
+              card: say(inHand.name),
               moves: inHand.flying ? t("s8f1fa7e", "עף") : t("sc2c8332", "צלף"),
             }),
             target: ".side--me .board",
@@ -388,7 +389,7 @@ export function nextCue(view: CoachView, said: Set<string>): Cue | null {
       view.king && inHand && worth(inHand) < MEDIAN_WORTH * 0.6
         ? {
             id: "weak",
-            text: line("weak", { card: inHand.name.he }),
+            text: line("weak", { card: say(inHand.name) }),
             target: ".hand",
             awaits: { kind: "discard", atLeast: view.discardCount + 1 },
           }
@@ -454,7 +455,7 @@ export function nextCue(view: CoachView, said: Set<string>): Cue | null {
       return inHand
         ? {
             id: `any-${down}`,
-            text: line("any", { card: inHand.name.he, where: wants(inHand) }),
+            text: line("any", { card: say(inHand.name), where: wants(inHand) }),
             target: ".side--me .board",
             awaits: { kind: "placements", atLeast: down + 1 },
           }

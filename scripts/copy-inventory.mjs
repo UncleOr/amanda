@@ -33,9 +33,38 @@ export const MAP = join(ROOT, "docs", "copy.map.json");
 export const EN = join(ROOT, "data", "copy.en.json");
 
 const HEBREW = /[֐-׿]/;
+/** Make a literal safe to drop into a RegExp. */
+const escapeRe = (t) => t.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
 /** A string in quotes or a JSX text node — the things a player actually reads. */
+/*
+ * ═══ THE JSX BRANCH TAKES A LINE END AS A BOUNDARY, NOT JUST A `<` ═══
+ *
+ * It used to require `>text<` on one line, and this codebase does not often
+ * write that. It writes
+ *
+ *     <button>
+ *       <Icon name="deck" size={18} /> האלבום שלי
+ *     </button>
+ *
+ * where the text begins after a `/>` and ends at the newline. Twelve strings
+ * on the home screen alone were never collected — not untranslated, absent:
+ * "my album", "the playground", "how to play", "what's new". They surfaced
+ * only when the game was switched to English and they were still Hebrew.
+ *
+ * So the RIGHT boundary may now be the end of the line. The left one must
+ * still be a `>`: letting it be the start of the line as well matched whole
+ * lines of ordinary code — `t("sf076071", "כבר הולך?"),` came back as a
+ * string — and produced 354 nonsense rows while losing 217 real ones.
+ */
+/*
+ * The `(?<![=\-!<>])>(?!=)` is a comparison guard. `(f) => t("sa039c8a", "…")` ends in
+ * a `>` too, so without it the fat arrow became the left boundary and the
+ * whole line of code came back as a string — taking the real strings inside
+ * it out of the document at the same time. `>=` needed the lookahead for the
+ * same reason: `if (c.stats.hp >= 800) return t("sdf5d45f", "הוא עבה");`.
+ */
 const STRING_LITERAL =
-  /"([^"\n]*[֐-׿][^"\n]*)"|'([^'\n]*[֐-׿][^'\n]*)'|`([^`\n]*[֐-׿][^`\n]*)`|>\s*([^<>{}\n]*[֐-׿][^<>{}\n]*?)\s*</g;
+  /"([^"\n]*[֐-׿][^"\n]*)"|'([^'\n]*[֐-׿][^'\n]*)'|`([^`\n]*[֐-׿][^`\n]*)`|(?<![=\-!<>])>(?!=)\s*([^<>{}\n]*[֐-׿][^<>{}\n]*?)\s*(?=<|$)/gm;
 
 /**
  * One editable string. `where` is enough to find it again, and to verify it has
@@ -158,11 +187,105 @@ const SECTIONS = [
   ["data/catalog.ts", "נתוני קלפים"],
 ];
 
+/**
+ * A paragraph of JSX text spread over several lines.
+ *
+ * ═══ THE ABOUT SCREEN WAS INVISIBLE ═══
+ *
+ * This file works a line at a time, and a <p> whose sentence wraps has no
+ * single line that is the string:
+ *
+ *     <p>
+ *       הכירו את אמנדה: המפלצת הכי חזקה באלבום המפלצות. דרקונים יורקי אש, ענקי
+ *       אבן, אפילו צ'ופי המחשמל — כולם ניסו להילחם בה ונכשלו. אמנדה אכלה את
+ *       כולם לארוחת ערב, והיא תשמח לאכול גם אתכם לקינוח.
+ *     </p>
+ *
+ * So 127 lines of Hebrew produced no row at all, and nearly all of them were
+ * About, privacy and terms — the most text there is in the game. Switching to
+ * English left the whole screen in Hebrew with nothing in the document to
+ * blame.
+ *
+ * A block is a run of two or more lines that carry nothing but text: no tag,
+ * no brace, no quote. Anything mixed — a paragraph with a <b> or an already
+ * converted t() inside it — is left to the line-by-line pass, because
+ * joining it would move code into a string.
+ */
+/*
+ * Apostrophes are allowed: צ'ופי has one, and excluding them threw out
+ * whole paragraphs. A single-quoted JS string cannot be mistaken for text
+ * here anyway — a block only counts when the line before it ends with a
+ * `>` and the line after starts with a `<`.
+ */
+const PLAIN = /^[^<>{}"`]+$/;
+
+function textBlocks(lines) {
+  const blocks = [];
+  for (let i = 0; i < lines.length; i++) {
+    if (!PLAIN.test(lines[i].trim()) || !lines[i].trim()) continue;
+    let j = i;
+    while (j + 1 < lines.length && lines[j + 1].trim() && PLAIN.test(lines[j + 1].trim())) j++;
+    const before = lines[i - 1]?.trim() ?? "";
+    const after = lines[j + 1]?.trim() ?? "";
+    const run = lines.slice(i, j + 1);
+    /*
+     * One line counts too. A <button> whose label sits on its own line is
+     * the same text node as a paragraph, just shorter, and requiring two
+     * lines left "קדימה", "← חזרה" and "לראות שוב את הפתיח" uncollected.
+     */
+    /*
+     * A brace bounds a text node just as a tag does. "מה חדש" sits between
+     * a `>` above and a `{newsUnread && …}` below, and insisting on a `<`
+     * underneath left it — and the rest of its kind — uncollected.
+     */
+    const opens = before.endsWith(">") || before.endsWith("}");
+    const closes = after.startsWith("<") || after.startsWith("{");
+    if (opens && closes && run.some((l) => HEBREW.test(l))) {
+      blocks.push({ from: i, to: j, text: run.map((l) => l.trim()).join(" ") });
+    }
+    i = j;
+  }
+  return blocks;
+}
+
 function fromLines(entries, relFile, lines, section, prefix) {
+  const consumed = new Set();
+  /** Inside a multi-line {/* … *\/} JSX comment. */
+  let inJsxComment = false;
+  for (const b of textBlocks(lines)) {
+    for (let k = b.from; k <= b.to; k++) consumed.add(k);
+    entries.push(
+      entry(id(prefix, relFile, b.text), section, b.text, {
+        kind: "source",
+        file: relFile,
+        line: b.from + 1,
+        endLine: b.to + 1,
+      }),
+    );
+  }
+
   lines.forEach((line, i) => {
+    if (consumed.has(i)) return;
     const trimmed = line.trim();
-    // comments are notes to developers, not copy
-    if (trimmed.startsWith("//") || trimmed.startsWith("*") || trimmed.startsWith("/*")) return;
+    /*
+     * Comments are notes to developers, not copy — INCLUDING JSX ones.
+     *
+     * `{/* "בן"/"בת", and the third is not "לא אומר" — … *\/}` is a comment
+     * explaining why three buttons are worded the way they are. It was read
+     * as three strings, and the codemod then rewrote the comment to quote
+     * ids instead of words, destroying the explanation it existed to give.
+     */
+    if (
+      trimmed.startsWith("//") ||
+      trimmed.startsWith("*") ||
+      trimmed.startsWith("/*") ||
+      trimmed.startsWith("{/*") ||
+      inJsxComment
+    ) {
+      if (trimmed.includes("*/")) inJsxComment = false;
+      else if (trimmed.startsWith("{/*")) inJsxComment = true;
+      return;
+    }
     if (!HEBREW.test(line)) return;
     for (const m of line.matchAll(STRING_LITERAL)) {
       const text = (m[1] ?? m[2] ?? m[3] ?? m[4] ?? "").trim();
@@ -187,6 +310,19 @@ function fromLines(entries, relFile, lines, section, prefix) {
        * line, that is still what is written in the file, and both the apply
        * step and the codemod need to be able to find it there.
        */
+      /*
+       * A Hebrew string with its English twin on the same line.
+       *
+       * cardMeta.ts holds the game's vocabulary as `{ he: "נדיר", en:
+       * "Rare" }` — bilingual in place, read by say(), and deliberately left
+       * alone by the codemod. Without this the document would list all 48 of
+       * them as untranslated and ask for English that is already two columns
+       * to the right in the source.
+       */
+      const twin = line.match(
+        new RegExp(escapeRe(text) + "[\"'`]\\s*,\\s*en:\\s*[\"'`]([^\"'`]+)"),
+      );
+
       const isTemplate = m[3] !== undefined && text.includes("${");
       const slots = isTemplate ? slotify(text) : null;
       if (isTemplate && !slots) continue; // unbalanced braces — do not guess
@@ -200,6 +336,7 @@ function fromLines(entries, relFile, lines, section, prefix) {
           ...(slots ? { raw: text } : {}),
         }),
       );
+      if (twin) entries[entries.length - 1].en = twin[1];
     }
   });
 }

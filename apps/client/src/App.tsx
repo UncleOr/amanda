@@ -70,7 +70,7 @@ const ArenaPreview = lazy(() =>
 );
 import { MoreModes } from "./components/MoreModes";
 import { Overlay } from "./components/Overlay";
-import { lang, setLang } from "./game/lang";
+import { lang, say, setLang } from "./game/lang";
 import { line as t, lineF as tf } from "./game/copy";
 
 
@@ -102,8 +102,8 @@ function LabSideLabel({
         {on ? "✎ " : ""}
         {name}
       </button>
-      <button className="lab-side__clear" onClick={onClear} title={tf("safa431d", t("safa431d", "לרוקן את {0}"), name)}>
-        נקה
+      <button className="lab-side__clear" onClick={onClear} title={tf("safa431d", "לרוקן את {0}", name)}>
+        {t("sdfa1c45", "נקה")}
       </button>
     </span>
   );
@@ -123,10 +123,10 @@ function useLine(lines: readonly V.Line[]): string {
 const PHASE_LABEL: Record<string, string> = {
   countdown: t("sdfad51e", "מתארגנת…"),
   waiting: t("s8da6ce3", "מחפשת לך יריב…"),
-  build: PHASES.build.label.he,
-  panic: PHASES.panic.label.he + "!",
+  build: say(PHASES.build.label),
+  panic: say(PHASES.panic.label) + "!",
   prebattle: t("s7265e57", "נועלת לוחות…"),
-  battle: PHASES.battle.label.he,
+  battle: say(PHASES.battle.label),
   result: t("s7b1e036", "זהו"),
 };
 
@@ -766,7 +766,7 @@ function Game() {
             thing that makes it interesting is invisible. */}
         {m.mirrorSeed !== null && showBoards && (
           <div className="topbar__mode">
-            <Icon name="deck" size={14} /> חפיסה זהה
+            <Icon name="deck" size={14} /> {t("sc752be6", "חפיסה זהה")}
           </div>
         )}
         <div className="topbar__right">
@@ -798,7 +798,7 @@ function Game() {
                 else m.reset();
               }}
             >
-              <Icon name="exit" size={14} /> יציאה
+              <Icon name="exit" size={14} /> {t("s7ee96f5", "יציאה")}
             </button>
           )}
           {/*
@@ -898,7 +898,7 @@ function Game() {
             <div className="intro__buttons">
               {m.netError && (
                 <button className="btn-fight" onClick={m.startMatch}>
-                  <Icon name="robot" size={18} /> נגד המחשב
+                  <Icon name="robot" size={18} /> {t("s7156cf4", "נגד המחשב")}
                 </button>
               )}
               <button className="btn-fight btn-online" onClick={m.reset}>
@@ -953,7 +953,7 @@ function Game() {
               <SaidBubble said={m.spoke} mine />
               {m.coop && (
                 <div className="mate__label mate__label--mine">
-                  <Icon name="king" size={13} /> החצי שלך
+                  <Icon name="king" size={13} /> {t("s138a2c6", "החצי שלך")}
                 </div>
               )}
               <BoardGrid
@@ -1113,7 +1113,7 @@ function Game() {
                 עבור "{ACTIONS.get(m.targeting)?.name.he}"
               </span>
               <button className="targeting-bar__cancel" onClick={m.cancelTargeting}>
-                <Icon name="exit" size={13} /> ביטול
+                <Icon name="exit" size={13} /> {t("s7ab31ff", "ביטול")}
               </button>
             </div>
           )}
@@ -1199,13 +1199,13 @@ function Game() {
                       t("s3adfc6c", "הבר מלא")
                     ) : (
                       <>
-                        <Icon name="plus" size={14} /> קח לפעולה
+                        <Icon name="plus" size={14} /> {t("s25edd89", "קח לפעולה")}
                       </>
                     )}
                   </button>
                 )}
                 <button className="btn-fight" onClick={m.toBattle}>
-                  <Icon name="play" size={15} /> הרץ קרב
+                  <Icon name="play" size={15} /> {t("s8006c77", "הרץ קרב")}
                 </button>
               </div>
               </div>
@@ -1264,7 +1264,7 @@ function Game() {
                       t("s7aacede", "הבר מלא")
                     ) : (
                       <>
-                        <Icon name="plus" size={14} /> קח לפעולה
+                        <Icon name="plus" size={14} /> {t("s9f032e5", "קח לפעולה")}
                       </>
                     )}
                   </button>
@@ -1286,7 +1286,7 @@ function Game() {
               )}
               {m.stackCorners && (
                 <p className="hand__hint hand__hint--stack">
-                  <Icon name="build" size={14} /> ארבע הפינות פתוחות להנחה כפולה
+                  <Icon name="build" size={14} /> {t("sb28db8b", "ארבע הפינות פתוחות להנחה כפולה")}
                 </p>
               )}
               {/* No sentence here any more — the empty crown on the board
@@ -1475,7 +1475,7 @@ function Game() {
                       m.startLesson(m.lesson + 1);
                     }}
                   >
-                    קדימה
+                    {t("se31bdcc", "קדימה")}
                   </button>
                 </div>
               </>
@@ -1494,7 +1494,7 @@ function Game() {
                       m.reset();
                     }}
                   >
-                    יאללה
+                    {t("s8e26ffe", "יאללה")}
                   </button>
                 </div>
               </>
@@ -1664,10 +1664,10 @@ function Game() {
             <h2>{m.invitation.nickname ?? t("seaa865f", "חבר")} מזמין אותך למשחק</h2>
             <div className="result__buttons">
               <button className="btn-fight" onClick={m.acceptInvitation}>
-                <Icon name="play" size={16} /> קדימה
+                <Icon name="play" size={16} /> {t("sa2adcdb", "קדימה")}
               </button>
               <button className="btn-fight btn-ghost" onClick={m.declineInvitation}>
-                אולי אחר כך
+                {t("sfe483c6", "אולי אחר כך")}
               </button>
             </div>
           </div>

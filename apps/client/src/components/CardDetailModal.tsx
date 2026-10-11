@@ -77,7 +77,7 @@ export function CardDetailModal({
               {series && <span className="badge">{say(series.name)}</span>}
               {card.midBoss && (
                 <span className="badge badge--king">
-                  <Icon name="king" size={13} /> ענק אמצע
+                  <Icon name="king" size={13} /> {t("s461e043", "ענק אמצע")}
                 </span>
               )}
               {owned && <span className="badge badge--level">רמה {level}</span>}
@@ -97,7 +97,7 @@ export function CardDetailModal({
             <span className="modal__level-note">
               {owned.copies} עותקים
               {level < LEVELS.max
-                ? " " + tf("sad22ee6", t("sad22ee6", "· הרמה הבאה עולה {0}"), levelCost(card.rarity, level))
+                ? " " + tf("sad22ee6", "· הרמה הבאה עולה {0}", levelCost(card.rarity, level))
                 : " " + t("s512576d", "· הגעת למקסימום")}
             </span>
           </div>
@@ -106,11 +106,11 @@ export function CardDetailModal({
         <div className="modal__stats">
           <Stat icon="hp" label={t("sa1b7d2c", "חיים")} value={hp} />
           <Stat icon="power" label={t("s4173ded", "עוצמה")} value={power} />
-          <Stat icon="timer" label={t("s4763941", "קצב תקיפה")} value={tf("s26ebf92", t("s26ebf92", "{0}ש׳"), card.stats.attackSpeed)} />
+          <Stat icon="timer" label={t("s4763941", "קצב תקיפה")} value={tf("s26ebf92", "{0}ש׳", card.stats.attackSpeed)} />
           <Stat
             icon="move"
             label={t("sefc23b0", "תנועה")}
-            value={card.stats.moveSpeed > 0 ? tf("s9546375", t("s9546375", "{0}/ש׳"), card.stats.moveSpeed) : t("s60fd570", "סטטי")}
+            value={card.stats.moveSpeed > 0 ? tf("s9546375", "{0}/ש׳", card.stats.moveSpeed) : t("s60fd570", "סטטי")}
           />
           <Stat
             icon={RANGE_META[card.stats.range].icon}

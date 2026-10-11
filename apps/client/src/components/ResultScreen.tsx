@@ -130,7 +130,7 @@ export function ResultScreen({
             )}
             {m.playground ? (
               <button className="btn-fight" onClick={m.backToPlayground}>
-                ← חזרה ללוח
+                {t("s2d822f4", "← חזרה ללוח")}
               </button>
             ) : (
               <button
@@ -139,22 +139,22 @@ export function ResultScreen({
                 className={`btn-fight${m.online && !m.oppLeft ? " btn-ghost" : ""}`}
                 onClick={m.playAgain}
               >
-                <Icon name="again" size={17} /> משחק חדש
+                <Icon name="again" size={17} /> {t("se3da978", "משחק חדש")}
               </button>
             )}
             <button className="btn-fight btn-ghost" onClick={m.reset}>
-              <Icon name="menu" size={16} /> תפריט
+              <Icon name="menu" size={16} /> {t("s11133bf", "תפריט")}
             </button>
             {/* Where a complaint about a person actually occurs to somebody:
                 right after playing them, not buried in a settings page. */}
             {m.online && !m.playground && signedIn && (
               <button className="btn-fight btn-ghost" onClick={() => panel.show({ kind: "report", about: "player" })}>
-                <Icon name="warning" size={15} /> דיווח על היריב
+                <Icon name="warning" size={15} /> {t("seb359d8", "דיווח על היריב")}
               </button>
             )}
             {/*
               A quiet button, not a blue gradient across the whole card.
-              Measured: it was 442x46 against t("se3da978", "משחק חדש") at 216x48 — twice
+              Measured: it was 442x46 against "משחק חדש" at 216x48 — twice
               the area, and both of them gradients — so the loudest thing on
               the screen after a match was "shall I explain what happened?"
               rather than "play again". Curiosity is secondary to carrying on.
@@ -165,7 +165,7 @@ export function ResultScreen({
                   t("s18fbbed", "מספיק, הבנתי")
                 ) : (
                   <>
-                    <Icon name="report" size={16} /> שאסביר לך מה קרה?
+                    <Icon name="report" size={16} /> {t("se664893", "שאסביר לך מה קרה?")}
                   </>
                 )}
               </button>

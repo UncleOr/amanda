@@ -113,7 +113,7 @@ export function AppCrash({ children }: { children: ReactNode }) {
           {/* Amanda's voice, not an apology and not an explanation. */}
           <p className="crash__says">{t("s9959640", "זה קורה. האוסף שלך שמור.")}</p>
           <button className="btn-fight" onClick={() => window.location.reload()}>
-            לטעון מחדש
+            {t("sb1a0138", "לטעון מחדש")}
           </button>
           {/* The real error, small, for a screenshot. Same reasoning as the
               battle screen: a message in a console on a phone is no report. */}

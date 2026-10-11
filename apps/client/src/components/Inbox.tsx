@@ -3,6 +3,7 @@ import { Icon } from "./Icon";
 import { loadInbox, markInboxRead, type Notice } from "../game/account";
 import { Overlay } from "./Overlay";
 import { line as t, lineF as tf } from "../game/copy";
+import { say } from "../game/lang";
 
 /**
  * What the game has to tell you.
@@ -35,9 +36,9 @@ const KIND_ICON: Record<Notice["kind"], string> = {
 function when(iso: string): string {
   const mins = Math.floor((Date.now() - Date.parse(iso)) / 60000);
   if (mins < 1) return t("s9b9aa0b", "עכשיו");
-  if (mins < 60) return tf("s16309f9", t("s16309f9", "לפני {0} דק׳"), mins);
+  if (mins < 60) return tf("s16309f9", "לפני {0} דק׳", mins);
   const hours = Math.floor(mins / 60);
-  if (hours < 24) return tf("sf183b5f", t("sf183b5f", "לפני {0} שע׳"), hours);
+  if (hours < 24) return tf("sf183b5f", "לפני {0} שע׳", hours);
   return new Date(iso).toLocaleDateString("he-IL");
 }
 
@@ -78,8 +79,8 @@ export function Inbox({ onClose, onAction }: { onClose: () => void; onAction: (a
                   <Icon name={(KIND_ICON[n.kind] ?? "report") as never} size={18} />
                 </span>
                 <span className="inbox__text">
-                  <b>{n.title.he}</b>
-                  {n.body?.he && <small>{n.body.he}</small>}
+                  <b>{say(n.title)}</b>
+                  {n.body && <small>{say(n.body)}</small>}
                   <i>{when(n.created_at)}</i>
                 </span>
                 {n.action && (
@@ -90,7 +91,7 @@ export function Inbox({ onClose, onAction }: { onClose: () => void; onAction: (a
                       onClose();
                     }}
                   >
-                    לראות
+                    {t("s1c852d5", "לראות")}
                   </button>
                 )}
               </li>

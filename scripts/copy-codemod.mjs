@@ -177,9 +177,21 @@ function rewrite(line, text, id, raw) {
     return { line: line.replace(tick, call), kind: "template" };
   }
 
-  // A JSX text node: >טקסט< -> >{t(...)}<
-  const jsx = new RegExp(`>(\\s*)${escapeRe(text)}(\\s*)<`);
-  if (jsx.test(line)) return { line: line.replace(jsx, `>$1{${call}}$2<`), kind: "jsx" };
+  /*
+   * A JSX text node: >טקסט< -> >{t(...)}<
+   *
+   * The right boundary may be the end of the line rather than a `<`, which
+   * is how this codebase usually writes it:
+   *
+   *     <Icon name="deck" size={18} /> האלבום שלי
+   *
+   * Requiring the `<` left forty-odd strings converted nowhere, and so
+   * translatable nowhere — "my album", "the playground", "how to play".
+   * They were found by switching the game to English and seeing them still
+   * in Hebrew.
+   */
+  const jsx = new RegExp(`>(\\s*)${escapeRe(text)}(\\s*)(?=<|$)`);
+  if (jsx.test(line)) return { line: line.replace(jsx, `>$1{${call}}$2`), kind: "jsx" };
 
   return null;
 }
@@ -231,6 +243,33 @@ for (const [file, items] of byFile) {
   );
   for (const e of ordered) {
     const i = e.where.line - 1;
+
+    /*
+     * A JSX text node that owns its lines outright.
+     *
+     * The inventory records these with an endLine: nothing on those lines
+     * but the text itself, bounded by a tag above and a tag below. They are
+     * replaced as a unit, collapsing to one line, because the string is the
+     * whole run — About, privacy and terms are almost entirely this shape
+     * and none of it could be converted a line at a time.
+     */
+    if (e.where.endLine) {
+      const to = e.where.endLine - 1;
+      const joined = lines
+        .slice(i, to + 1)
+        .map((l) => l.trim())
+        .join(" ");
+      if (joined !== e.text) {
+        skipped.push(`${e.id}: the block at ${file}:${e.where.line} has changed`);
+        continue;
+      }
+      const indent = lines[i].match(/^\s*/)[0];
+      lines.splice(i, to - i + 1, `${indent}{t(${JSON.stringify(e.id)}, ${JSON.stringify(e.text)})}`);
+      done.push({ id: e.id, file, kind: "block" });
+      touched++;
+      continue;
+    }
+
     const line = lines[i];
     // For a template the file still holds the raw form; `text` is the
     // slotted version that only exists in the document until this runs.
@@ -244,6 +283,26 @@ for (const [file, items] of byFile) {
       continue;
     }
     if (line.includes(`t("${e.id}"`)) continue; // already done on an earlier run
+
+    /*
+     * ═══ NEVER WRAP A STRING THAT IS ALREADY A SHIPPED TEXT ═══
+     *
+     * Checking only for this entry's own id was not enough. Regenerating the
+     * document gives the text inside an existing call a NEW id — it is a
+     * Hebrew string literal in a source file like any other — and the next
+     * run wrapped it again:
+     *
+     *     t("sdb2b008", t("s52b9172", "היריב"))
+     *
+     * Fifty of those, and they still rendered, so nothing complained. The
+     * guard is the shape of the call rather than any particular id.
+     */
+    const wrapped = new RegExp(`\\btf?\\("[a-z][0-9a-f]{7}",\\s*(?:t\\("[a-z][0-9a-f]{7}",\\s*)?${escapeRe(JSON.stringify(e.text))}`);
+    if (wrapped.test(line)) continue;
+
+    // A JSX comment is a note to a developer. The codemod rewrote two of
+    // them into quoted ids and destroyed what they were explaining.
+    if (line.trim().startsWith("{/*") || line.trim().startsWith("*")) continue;
 
     /*
      * A string that already has an English twin on the same line is a

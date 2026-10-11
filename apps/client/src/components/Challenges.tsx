@@ -4,6 +4,7 @@ import { challengesSoFar, claimChallenge, loadChallenges, type Standing } from "
 import { Icon } from "./Icon";
 import { Lock } from "./SignedInOnly";
 import { line as t, lineF as tf } from "../game/copy";
+import { say } from "../game/lang";
 
 /**
  * Today's challenges, on the home screen.
@@ -35,9 +36,9 @@ function timeLeft(period: Period): string {
   const ends = new Date(`${periodEndsOn(period)}T00:00:00+03:00`).getTime();
   const hours = Math.max(0, Math.round((ends - Date.now()) / 3_600_000));
   if (hours < 1) return t("sa421571", "עוד פחות משעה");
-  if (hours < 24) return tf("sde4b772", t("sde4b772", "עוד {0} שעות"), hours);
+  if (hours < 24) return tf("sde4b772", "עוד {0} שעות", hours);
   const days = Math.round(hours / 24);
-  return days === 1 ? t("s58b31e8", "עוד יום") : tf("sa1356f2", t("sa1356f2", "עוד {0} ימים"), days);
+  return days === 1 ? t("s58b31e8", "עוד יום") : tf("sa1356f2", "עוד {0} ימים", days);
 }
 
 export function Challenges({
@@ -94,7 +95,7 @@ export function Challenges({
     <section className="quests" aria-label={t("se995a4a", "אתגרים")}>
       <header className="quests__head">
         <h2>
-          <Icon name="challenge" size={18} /> אתגרים
+          <Icon name="challenge" size={18} /> {t("s4b399e6", "אתגרים")}
         </h2>
         <nav className="quests__tabs">
           {(["daily", "weekly", "monthly"] as Period[]).map((p) => {
@@ -121,7 +122,7 @@ export function Challenges({
       <ul className="quests__list">
         {showing.map((c) => (
           <li key={c.id} className={ready(c) ? "is-ready" : c.claimed ? "is-done" : ""}>
-            <span className="quests__what">{c.he}</span>
+            <span className="quests__what">{say(c)}</span>
             <span className="quests__bar" aria-hidden="true">
               <i style={{ width: `${Math.min(1, c.progress / c.need) * 100}%` }} />
             </span>
@@ -202,7 +203,7 @@ export function ChallengeButton({
   return (
     <button className="quests__open" onClick={onOpen}>
       <Icon name="challenge" size={20} />
-      <span>{t("s4b399e6", "אתגרים")}</span>
+      <span>{t("sac7fc13", "אתגרים")}</span>
       {ready > 0 && <i className="quests__dot quests__dot--big">{ready}</i>}
     </button>
   );

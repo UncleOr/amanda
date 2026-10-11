@@ -59,7 +59,7 @@ export function CardPicker({
           onClick={() => onPick(null)}
           title={t("sa38c228", "בלי קלף ביד — נגיעה בקלף על הלוח מורידה אותו")}
         >
-          <Icon name="erase" size={14} /> מחק
+          <Icon name="erase" size={14} /> {t("s06b4234", "מחק")}
         </button>
         <input
           className="rack__search"
@@ -75,7 +75,7 @@ export function CardPicker({
           className={`rack__tab${openSeries === "all" ? " rack__tab--on" : ""}`}
           onClick={() => setOpenSeries("all")}
         >
-          הכול
+          {t("sddd5ff9", "הכול")}
         </button>
         {SERIES.map((s) => (
           <button
@@ -90,7 +90,7 @@ export function CardPicker({
           className={`rack__tab${openSeries === "actions" ? " rack__tab--on" : ""}`}
           onClick={() => setOpenSeries("actions")}
         >
-          פעולה
+          {t("s251d187", "פעולה")}
         </button>
       </div>
 

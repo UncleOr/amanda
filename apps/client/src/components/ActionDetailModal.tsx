@@ -5,6 +5,7 @@ import { actionArtUrl } from "./ActionCardView";
 import { Icon } from "./Icon";
 import { Overlay } from "./Overlay";
 import { line as t } from "../game/copy";
+import { say } from "../game/lang";
 
 
 export function ActionDetailModal({
@@ -45,11 +46,11 @@ export function ActionDetailModal({
             }}
           />
           <div className="modal__title">
-            <h2>{card.name.he}</h2>
+            <h2>{say(card.name)}</h2>
             <p className="modal__subtitle">{card.name.en}</p>
             <div className="modal__badges">
               <span className="badge" style={{ borderColor: rarity.color, color: rarity.color }}>
-                {rarity.he}
+                {say(rarity)}
               </span>
               <span className={`badge${passive ? " badge--king" : ""}`}>
                 {passive ? t("s900e8c0", "∞ פסיבי") : t("se9c2d53", "בלחיצה")}
@@ -60,7 +61,7 @@ export function ActionDetailModal({
 
         <div className="modal__section">
           <h3>{passive ? t("s9c8a7eb", "מה הוא עושה (אוטומטית)") : t("s333574c", "מה הוא עושה בלחיצה")}</h3>
-          <p className="modal__role">{card.description.he}</p>
+          <p className="modal__role">{say(card.description)}</p>
         </div>
 
         {/* Playing the card lives here, where there is room for a real button,
@@ -69,7 +70,7 @@ export function ActionDetailModal({
           <div className="modal__actions">
             {onActivate ? (
               <button className="btn-fight" onClick={onActivate}>
-                ▶ הפעל עכשיו
+                {t("s3460857", "▶ הפעל עכשיו")}
               </button>
             ) : (
               <button className="btn-fight btn-ghost" disabled>

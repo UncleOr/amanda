@@ -27,29 +27,29 @@ const secs = (tick: number): string => (tick / TPS).toFixed(1);
  * wording lives here so it can be edited without touching the analysis.
  */
 const FINDING_TEXT: Record<Finding["code"], (f: Finding) => string> = {
-  mvp: (f) => tf("sf4b8060", t("sf4b8060", "{0} עשה {1}% מהנזק של הצד הזה"), f.name, f.value),
-  kingCarried: (f) => tf("sb03fb80", t("sb03fb80", "המלך {0} נשא את הקרב — {1}% מהנזק"), f.name, f.value),
-  deadWeight: (f) => tf("sf2f72a8", t("sf2f72a8", "{0} קלפים לא נגעו בקרב בכלל — לא תקפו ולא ספגו"), f.value),
-  backRowIdle: (f) => tf("s92c427c", t("s92c427c", "{0} קלפים בעורף שרדו בלי לתקוף אף פעם — הלוח עמוק מדי"), f.value),
-  kingFellEarly: (f) => tf("sb6efc72", t("sb6efc72", "המלך {0} נפל כבר בשנייה {1}"), f.name, secs(f.value ?? 0)),
-  laneCollapse: (f) => tf("s296dff0", t("s296dff0", "כל הקלפים במסלול {0} נפלו — שם נפרצה החזית"), (f.lane ?? 0) + 1),
-  overkill: (f) => tf("s5ac99ca", t("s5ac99ca", "בוזבז נזק על {0}: ספג {1}% מהחיים שלו"), f.name, f.value),
-  wipe: (f) => tf("s7268432", t("s7268432", "הצד הזה נמחק לגמרי — {0} קלפים"), f.value),
+  mvp: (f) => tf("sf4b8060", "{0} עשה {1}% מהנזק של הצד הזה", f.name, f.value),
+  kingCarried: (f) => tf("sb03fb80", "המלך {0} נשא את הקרב — {1}% מהנזק", f.name, f.value),
+  deadWeight: (f) => tf("sf2f72a8", "{0} קלפים לא נגעו בקרב בכלל — לא תקפו ולא ספגו", f.value),
+  backRowIdle: (f) => tf("s92c427c", "{0} קלפים בעורף שרדו בלי לתקוף אף פעם — הלוח עמוק מדי", f.value),
+  kingFellEarly: (f) => tf("sb6efc72", "המלך {0} נפל כבר בשנייה {1}", f.name, secs(f.value ?? 0)),
+  laneCollapse: (f) => tf("s296dff0", "כל הקלפים במסלול {0} נפלו — שם נפרצה החזית", (f.lane ?? 0) + 1),
+  overkill: (f) => tf("s5ac99ca", "בוזבז נזק על {0}: ספג {1}% מהחיים שלו", f.name, f.value),
+  wipe: (f) => tf("s7268432", "הצד הזה נמחק לגמרי — {0} קלפים", f.value),
   closeCall: () => t("sa039c8a", "קרב צמוד — הוכרע בהפרש של קלף אחד"),
   diedToThorns: (f) =>
-    tf("se153a53", t("se153a53", "{0} הרג את עצמו — הנזק החוזר מהיעד היה {1}% מהחיים שלו"), f.name, f.value),
-  outnumbered: (f) => tf("sf4060a1", t("sf4060a1", "ניצחון סוחף — {0} קלפים הפרש"), f.value),
+    tf("se153a53", "{0} הרג את עצמו — הנזק החוזר מהיעד היה {1}% מהחיים שלו", f.name, f.value),
+  outnumbered: (f) => tf("sf4060a1", "ניצחון סוחף — {0} קלפים הפרש", f.value),
 };
 
 const TIMELINE_TEXT: Record<TimelineEntry["kind"], (e: TimelineEntry) => string> = {
-  firstBlood: (e) => tf("s03917ba", t("s03917ba", "דם ראשון — {0} הפיל את {1}"), e.actor ?? t("s3c01a8e", "משהו"), e.target),
-  kill: (e) => tf("s4813b7e", t("s4813b7e", "{0} הפיל את {1}"), e.actor ?? t("se33f63d", "משהו"), e.target),
-  kingDown: (e) => tf("s09d8eb1", t("s09d8eb1", "המלך {0} נפל"), e.target),
+  firstBlood: (e) => tf("s03917ba", "דם ראשון — {0} הפיל את {1}", e.actor ?? t("s3c01a8e", "משהו"), e.target),
+  kill: (e) => tf("s4813b7e", "{0} הפיל את {1}", e.actor ?? t("se33f63d", "משהו"), e.target),
+  kingDown: (e) => tf("s09d8eb1", "המלך {0} נפל", e.target),
   reflected: (e) =>
-    tf("sf5f7bec", t("sf5f7bec", "{0} ספג {1} נזק חוזר מ{2} — הוא פגע בקוצים"), e.target, e.damage?.toLocaleString("he-IL"), e.actor),
-  split: (e) => tf("s32b1dc6", t("s32b1dc6", "{0} התפצל"), e.actor),
-  reveal: (e) => tf("s29eee42", t("s29eee42", "נחשף קלף קומת קרקע: {0}"), e.target),
-  freeze: (e) => tf("s59a7b2d", t("s59a7b2d", "{0} הקפיא את {1}"), e.actor ?? t("s1abba82", "משהו"), e.target),
+    tf("sf5f7bec", "{0} ספג {1} נזק חוזר מ{2} — הוא פגע בקוצים", e.target, e.damage?.toLocaleString("he-IL"), e.actor),
+  split: (e) => tf("s32b1dc6", "{0} התפצל", e.actor),
+  reveal: (e) => tf("s29eee42", "נחשף קלף קומת קרקע: {0}", e.target),
+  freeze: (e) => tf("s59a7b2d", "{0} הקפיא את {1}", e.actor ?? t("s1abba82", "משהו"), e.target),
   end: (e) => (e.owner ? t("s3f09475", "הקרב נגמר") : t("s9ab5edb", "תיקו. לשנינו טעם רע בפה.")),
 };
 
@@ -124,25 +124,25 @@ export function BattleLog({ result, mySide }: { result: BattleResult; mySide: Ow
           className={`log__tab${tab === "analysis" ? " log__tab--on" : ""}`}
           onClick={() => setTab("analysis")}
         >
-          ניתוח
+          {t("sd9066d0", "ניתוח")}
         </button>
         <button
           className={`log__tab${tab === "map" ? " log__tab--on" : ""}`}
           onClick={() => setTab("map")}
         >
-          מפה
+          {t("s8c23ea2", "מפה")}
         </button>
         <button
           className={`log__tab${tab === "units" ? " log__tab--on" : ""}`}
           onClick={() => setTab("units")}
         >
-          קלפים
+          {t("s634d610", "קלפים")}
         </button>
         <button
           className={`log__tab${tab === "timeline" ? " log__tab--on" : ""}`}
           onClick={() => setTab("timeline")}
         >
-          ציר זמן
+          {t("s0d36f2d", "ציר זמן")}
         </button>
         <button className="log__copy" onClick={copyJson} title={t("s484ea7e", "העתקת הדוח המלא כ-JSON")}>
           {copied ? t("sb22f4be", "✔ הועתק") : t("s5970baf", "⧉ העתק JSON")}
@@ -253,7 +253,7 @@ export function BattleLog({ result, mySide }: { result: BattleResult; mySide: Ow
             <span><i className="log__swatch log__swatch--idle" /> {t("s3b86504", "ישן")}</span>
             <span>
             <Icon name="skull" size={13} /> נפל · <Icon name="ready" size={13} /> שרד ·{" "}
-            <Icon name="frozen" size={13} /> לא זז
+            <Icon name="frozen" size={13} /> {t("s57f747b", "לא זז")}
           </span>
             <span>{t("s65ef918", "לחץ על קלף ואספר לך")}</span>
           </div>
@@ -384,8 +384,8 @@ function BoardMap({
       style={{ gridColumn: colFor(u.startX), gridRow: u.lane + 1 }}
       title={
         u.cardId === FILLER_CARD_ID
-          ? tf("sd1502a2", t("sd1502a2", "{0} — מילוי אוטומטי של משבצת ריקה"), u.name)
-          : tf("sf6c8aac", t("sf6c8aac", "{0} — לחצו לפרטים"), u.name)
+          ? tf("sd1502a2", "{0} — מילוי אוטומטי של משבצת ריקה", u.name)
+          : tf("sf6c8aac", "{0} — לחצו לפרטים", u.name)
       }
       onClick={() => onPick(u)}
     >
@@ -413,7 +413,7 @@ function BoardMap({
             type="button"
             className={`log__cell log__cell--king log__cell--${band(king, top)}${king.survived ? "" : " log__cell--dead"}`}
             style={{ gridColumn: "2 / 4", gridRow: "2 / 4" }}
-            title={tf("sf72ed62", t("sf72ed62", "{0} — לחצו לפרטים"), king.name)}
+            title={tf("sf72ed62", "{0} — לחצו לפרטים", king.name)}
             onClick={() => onPick(king)}
           >
             <span className="log__cell-name">
@@ -462,9 +462,9 @@ function UnitReportModal({
     if (unit.damageDealt === 0 && unit.damageTaken === 0)
       return t("s565b00b", "לא נגע בקרב. לא הגיע לאף אחד, ואף אחד לא הגיע אליו.");
     if (unit.damageDealt === 0) return t("s33300d2", "חטף ולא הספיק להחזיר אפילו מכה אחת.");
-    if (unit.kills >= 2) return tf("sac3c899", t("sac3c899", "חתך את הדרך — הפיל {0} קלפים."), unit.kills);
-    if (share >= 30) return tf("s22f4051", t("s22f4051", "נשא את הצד שלו: {0}% מכל הנזק."), share);
-    return tf("s45645fa", t("s45645fa", "תרם {0}% מהנזק של הצד שלו."), share);
+    if (unit.kills >= 2) return tf("sac3c899", "חתך את הדרך — הפיל {0} קלפים.", unit.kills);
+    if (share >= 30) return tf("s22f4051", "נשא את הצד שלו: {0}% מכל הנזק.", share);
+    return tf("s45645fa", "תרם {0}% מהנזק של הצד שלו.", share);
   })();
 
   return (
@@ -498,14 +498,14 @@ function UnitReportModal({
               {card && (
                 <span className="badge">
                   <Icon name={ELEMENT_META[card.elements[0]!].icon} size={13} />{" "}
-                  {ELEMENT_META[card.elements[0]!].he}
+                  {say(ELEMENT_META[card.elements[0]!])}
                 </span>
               )}
               {card && <span className="badge">{say(RANGE_META[card.stats.range])}</span>}
               <span className={`badge${unit.survived ? " badge--king" : ""}`}>
                 {unit.survived ? (
               <>
-                <Icon name="ready" size={14} /> שרד
+                <Icon name="ready" size={14} /> {t("s4acff09", "שרד")}
               </>
             ) : (
               <>
@@ -554,7 +554,7 @@ function UnitReportModal({
             <b>{t("s5765650", "תזוזה:")}</b>{" "}
             {unit.colsMoved === 0
               ? t("s0cadd6e", "לא זז מילימטר")
-              : tf("s1eeba78", t("s1eeba78", "התקדם {0} משבצות"), unit.colsMoved.toFixed(1))}
+              : tf("s1eeba78", "התקדם {0} משבצות", unit.colsMoved.toFixed(1))}
           </li>
         </ul>
       </div>

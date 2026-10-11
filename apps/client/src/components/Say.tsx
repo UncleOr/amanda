@@ -11,6 +11,7 @@ import {
 import { Icon } from "./Icon";
 import { EmojiFace } from "./EmojiFace";
 import { line as t } from "../game/copy";
+import { say } from "../game/lang";
 
 /**
  * Saying something to the other player.
@@ -102,13 +103,13 @@ export function SayButton({
                 key={e.id}
                 className="say__face"
                 role="menuitem"
-                title={e.he}
+                title={say(e)}
                 onClick={() => {
                   onSay(sayIdFor(e.id));
                   setOpen(false);
                 }}
               >
-                <EmojiFace id={e.id} size={30} label={e.he} />
+                <EmojiFace id={e.id} size={30} label={say(e)} />
               </button>
             ))}
             {/*
@@ -183,7 +184,7 @@ export function SayButton({
                 <span className="say__emoji">
                   <EmojiFace id={t.face} size={18} />
                 </span>
-                <span className="say__words">{t.he}</span>
+                <span className="say__words">{say(t)}</span>
               </button>
             ))}
           </div>
@@ -229,7 +230,7 @@ export function SaidBubble({
   if (loneEmoji)
     return (
       <div className={`bubble bubble--face${mine ? " bubble--mine" : ""}`} role="status">
-        <EmojiFace id={loneEmoji.id} size={56} label={loneEmoji.he} alive />
+        <EmojiFace id={loneEmoji.id} size={56} label={say(loneEmoji)} alive />
       </div>
     );
 
@@ -240,9 +241,9 @@ export function SaidBubble({
   return (
     <div className={`bubble${mine ? " bubble--mine" : ""}`} role="status">
       <span className="bubble__emoji">
-        <EmojiFace id={taunt.face} size={30} label={face?.he} alive />
+        <EmojiFace id={taunt.face} size={30} label={face ? say(face) : undefined} alive />
       </span>
-      <span className="bubble__words">{taunt.he}</span>
+      <span className="bubble__words">{say(taunt)}</span>
     </div>
   );
 }

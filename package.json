@@ -25,7 +25,9 @@
     "art:sounds-process": "pnpm --filter @amanda/art sounds-process",
     "art:surfaces": "pnpm --filter @amanda/art surfaces",
     "art:scenes": "pnpm --filter @amanda/art scenes",
-    "art:trailer": "pnpm --filter @amanda/art trailer"
+    "art:trailer": "pnpm --filter @amanda/art trailer",
+    "copy:codemod": "node scripts/copy-codemod.mjs",
+    "copy:verify": "node scripts/copy-verify.mjs"
   },
   "engines": {
     "node": ">=20"

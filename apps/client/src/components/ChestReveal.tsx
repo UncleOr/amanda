@@ -40,6 +40,7 @@ import { sfx } from "../game/sfx";
 import type { Chest } from "../game/account";
 import * as V from "../data/voice";
 import { line as t, lineF as tf } from "../game/copy";
+import { say } from "../game/lang";
 
 /** How each kind of chest introduces itself, and which painting it is. */
 const CHEST_LOOK: Record<string, { he: string; tone: string; art: string }> = {
@@ -150,7 +151,7 @@ export function ChestReveal({ chest, onClose }: Props) {
     <div className="chest" role="dialog">
       <div className={`chest__panel chest__panel--${chest.kind}`}>
         <p className="chest__title" style={{ color: look.tone }}>
-          {look.he}
+          {say(look)}
         </p>
 
         {burst && <div className="chest__burst" aria-hidden="true" />}
@@ -176,7 +177,7 @@ export function ChestReveal({ chest, onClose }: Props) {
             <button
               className={`chest__lid chest__lid--hit-${taps % 2 === 0 ? "a" : "b"}`}
               onClick={hit}
-              aria-label={tf("s3a10489", t("s3a10489", "פתח {0}"), look.he)}
+              aria-label={tf("s3a10489", "פתח {0}", look.he)}
               style={{
                 backgroundImage: `url("${BASE}scenes/${look.art}")`,
                 ["--built" as string]: `${taps / TAPS_TO_OPEN}`,
@@ -274,7 +275,7 @@ function NewCards({ ids, onClose }: { ids: string[]; onClose: () => void }) {
             being a row of cards and starts being a list. */}
         {ids.length > 3 && <p className="newcard__more">ועוד {ids.length - 3}</p>}
         <button className="btn-fight" onClick={onClose}>
-          איזה יופי
+          {t("s70a58ef", "איזה יופי")}
         </button>
       </div>
     </div>
@@ -304,7 +305,7 @@ function Prize({ id }: { id: string }) {
               <EmojiFace key={e.id} id={e.id} size={34} />
             ))}
           </span>
-          <b>{pack.he}</b>
+          <b>{say(pack)}</b>
         </>
       ) : (
         <Plaque phrase={phrase!} size="big" />

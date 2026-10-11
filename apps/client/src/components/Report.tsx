@@ -67,7 +67,7 @@ export function Report({
             <h2>{t("sf3ddba9", "קיבלנו.")}</h2>
             <p>{t("s2c4bff4", "נסתכל על זה. תודה שסיפרת לנו.")}</p>
             <button className="btn-fight" onClick={onClose}>
-              סגור
+              {t("s62681f7", "סגור")}
             </button>
           </div>
         ) : (
@@ -75,27 +75,26 @@ export function Report({
             <h2 className="report__title">{t("s8566da7", "לספר לנו משהו")}</h2>
             <div className="report__kinds">
               <button className={kind === "bug" ? "is-on" : ""} onClick={() => setKind("bug")}>
-                <Icon name="warning" size={16} /> משהו לא עובד
+                <Icon name="warning" size={16} /> {t("s70bbb9d", "משהו לא עובד")}
               </button>
               <button
                 className={kind === "player" ? "is-on" : ""}
                 onClick={() => setKind("player")}
               >
-                <Icon name="friend" size={16} /> שחקן שהתנהג לא יפה
+                <Icon name="friend" size={16} /> {t("s7945004", "שחקן שהתנהג לא יפה")}
               </button>
             </div>
 
             {kind === "player" && (
               <>
                 <p className="report__hint">
-                  אפשר לדווח רק על מישהו ששיחקת מולו, ורק אם יש לו חשבון.
+                  {t("s632b011", "אפשר לדווח רק על מישהו ששיחקת מולו, ורק אם יש לו חשבון.")}
                 </p>
                 {opponents === null ? (
                   <p className="report__hint">{t("s32c1f5b", "רגע…")}</p>
                 ) : opponents.length === 0 ? (
                   <p className="report__hint">
-                    עוד לא שיחקת מול שחקן רשום. דיווח על שחקן אפשרי רק אחרי משחק
-                    כזה.
+                    {t("s9a36847", "עוד לא שיחקת מול שחקן רשום. דיווח על שחקן אפשרי רק אחרי משחק כזה.")}
                   </p>
                 ) : (
                   <div className="report__who">
@@ -136,7 +135,7 @@ export function Report({
                 {busy ? t("se6b6c12", "שולח…") : t("sb224f0c", "שליחה")}
               </button>
               <button className="btn-fight btn-ghost" onClick={onClose}>
-                ביטול
+                {t("s8978c83", "ביטול")}
               </button>
             </div>
           </>

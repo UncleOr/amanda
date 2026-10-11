@@ -1,5 +1,6 @@
 import { useLayoutEffect, useRef, useState } from "react";
 import type { Catchphrase } from "@amanda/shared";
+import { say } from "../game/lang";
 
 /**
  * A catchphrase, on the plaque it always sits on.
@@ -92,7 +93,7 @@ export function Plaque({
     fit();
     window.addEventListener("resize", fit);
     return () => window.removeEventListener("resize", fit);
-  }, [phrase.he, size]);
+  }, [say(phrase), size]);
 
   return (
     <span
@@ -105,7 +106,7 @@ export function Plaque({
           treatment twice in CSS. */}
       <i className="plaque__end" aria-hidden="true" />
       <span className="plaque__words" ref={words}>
-        {phrase.he}
+        {say(phrase)}
       </span>
       <i className="plaque__end" aria-hidden="true" />
     </span>

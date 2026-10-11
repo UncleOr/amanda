@@ -3,6 +3,7 @@ import { ACTIONS, isPassiveAction } from "../data/catalog";
 import { RARITY_META } from "../data/cardMeta";
 import { Icon } from "./Icon";
 import { line as t } from "../game/copy";
+import { say } from "../game/lang";
 
 /** Where the generated artwork for an action card lives. */
 export function actionArtUrl(id: string): string {
@@ -41,7 +42,7 @@ export function ActionCardView({ actionId, size = "medium", onClick, onInfo, use
       className={`card card--${size} card--art action-card${used ? " action-card--used" : ""}`}
       style={style}
       onClick={onClick}
-      title={card.description.he}
+      title={say(card.description)}
     >
       <div className="card__top">
         <span className="card__traits">
@@ -50,7 +51,7 @@ export function ActionCardView({ actionId, size = "medium", onClick, onInfo, use
           </span>
         </span>
         <span className="card__flags">
-          <span className="card__rarity" title={rarity.he} />
+          <span className="card__rarity" title={say(rarity)} />
           {onInfo && (
             <button
               type="button"
@@ -68,7 +69,7 @@ export function ActionCardView({ actionId, size = "medium", onClick, onInfo, use
       </div>
 
       <div className="card__plate">
-        <span className="card__name">{card.name.he}</span>
+        <span className="card__name">{say(card.name)}</span>
         {size !== "small" && (
           <span className="action-card__tag">{passive ? t("s2ee640d", "פסיבי") : t("sf01886f", "קלף פעולה")}</span>
         )}

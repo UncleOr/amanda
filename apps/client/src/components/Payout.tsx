@@ -67,13 +67,13 @@ export function Payout({
           onClick={onOpenChest}
           disabled={!onOpenChest}
         >
-          <Icon name="chest" size={19} /> תיבה מחכה לך!
+          <Icon name="chest" size={19} /> {t("sedb65d6", "תיבה מחכה לך!")}
         </button>
       ))}
       {done > 0 && (
         <span className="payout__bit payout__bit--quest">
           <Icon name="challenge" size={17} />{" "}
-          {done === 1 ? t("s1b4740d", "אתגר הושלם") : tf("s440773f", t("s440773f", "{0} אתגרים הושלמו"), done)}
+          {done === 1 ? t("s1b4740d", "אתגר הושלם") : tf("s440773f", "{0} אתגרים הושלמו", done)}
         </span>
       )}
       {/* How close the next one is, so the screen that says "play again"
