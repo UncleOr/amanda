@@ -83,10 +83,122 @@ if (!core) {
 }
 const { TwaGenerator, TwaManifest, ConsoleLog } = require(core);
 
+/**
+ * Ask the Gradle daemon to go away before deleting the tree it sits in.
+ *
+ * The build after the first successful one failed here, not in Gradle:
+ *
+ *   PREPARE FAILED: EPERM, Permission denied: C:\Users\Public\amanda-android
+ *     at Object.rmSync
+ *
+ * A successful build leaves a daemon running — that is what a daemon is for,
+ * it stays warm for the next build — and on Windows a process holding open
+ * handles inside a directory makes that directory undeletable. It is not a
+ * permissions problem despite what the error says, which is the reason to
+ * translate it here instead of leaving somebody to read EPERM and start
+ * changing ACLs.
+ *
+ * `--stop` is the polite version and is usually enough. It is allowed to
+ * fail: with no wrapper yet, or no daemon, there is nothing to stop and the
+ * retry below covers what is left.
+ */
+function stopGradleDaemon() {
+  const wrapper = path.join(OUT, "gradlew.bat");
+  if (!fs.existsSync(wrapper)) return;
+  try {
+    // `shell: true` because gradlew.bat is a BATCH file: without a shell,
+    // execFileSync cannot run it at all and throws straight into the catch
+    // below, so the stop never happened and the error said nothing.
+    //
+    // cwd is the PARENT, never OUT — a process whose working directory is
+    // the folder is one of the things that makes it undeletable, and this
+    // one exists to remove that problem rather than add to it.
+    require("node:child_process").execFileSync(wrapper, ["--stop"], {
+      cwd: path.dirname(OUT),
+      shell: true,
+      stdio: "ignore",
+      env: {
+        ...process.env,
+        JAVA_HOME: process.argv[3] || process.env.JAVA_HOME,
+        // Daemons are registered per GRADLE_USER_HOME. Asking the wrong one
+        // finds nothing to stop and reports success.
+        GRADLE_USER_HOME: process.env.GRADLE_USER_HOME || "C:\\Users\\Public\\.gradle",
+      },
+    });
+    // Stopping is asynchronous on the daemon's side.
+    pause(1200);
+  } catch {
+    /*
+     * No daemon, no java to ask with — or no loopback.
+     *
+     * `--stop` talks to the daemon over a local socket, which is the same
+     * connection a build needs, so in an environment where Gradle cannot run
+     * neither can this: it fails with "Unable to establish loopback
+     * connection". That is why this was written but never proven here; it
+     * works in a terminal where the build itself works.
+     *
+     * The wipe below reports what to do when it cannot clear the way.
+     */
+  }
+}
+
+/** Sleep without pulling in a promise, since everything here is synchronous. */
+function pause(ms) {
+  Atomics.wait(new Int32Array(new SharedArrayBuffer(4)), 0, 0, ms);
+}
+
+/**
+ * Delete the work tree, allowing for Windows letting go slowly.
+ *
+ * A daemon that has been asked to stop does not drop its handles the instant
+ * it is asked, and a virus scanner can hold a file it has just watched being
+ * written. Both clear in well under a second, so this retries instead of
+ * failing on the first attempt — and when it genuinely cannot, it says what
+ * is actually wrong rather than repeating "permission denied".
+ */
+function wipe(dir) {
+  if (!fs.existsSync(dir)) return;
+  for (let attempt = 1; attempt <= 6; attempt++) {
+    try {
+      /*
+       * The CONTENTS, not the directory.
+       *
+       * The EPERM was on `C:\Users\Public\amanda-android` itself rather
+       * than on anything inside it, which is what Windows reports when a
+       * process is sitting in the folder — a daemon started there keeps it
+       * as its working directory even after its files are closed. The folder
+       * cannot be removed; everything in it can, and an empty folder is all
+       * the next step wants.
+       */
+      for (const entry of fs.readdirSync(dir))
+        fs.rmSync(path.join(dir, entry), {
+          recursive: true,
+          force: true,
+          maxRetries: 3,
+          retryDelay: 200,
+        });
+      return;
+    } catch (err) {
+      if (attempt === 6) {
+        console.error(
+          "\nCould not empty " + dir + ".\n\n" +
+            "Something still has files open in there — almost always a Gradle\n" +
+            "daemon from the last build. Close any terminal running one, or:\n\n" +
+            "    taskkill /IM java.exe /F\n\n" +
+            "and run this again.\n",
+        );
+        throw err;
+      }
+      pause(400);
+    }
+  }
+}
+
 (async () => {
   writeBubblewrapConfig();
 
-  fs.rmSync(OUT, { recursive: true, force: true });
+  stopGradleDaemon();
+  wipe(OUT);
   fs.mkdirSync(OUT, { recursive: true });
 
   // The signing key and its password travel with it, and the manifest is
