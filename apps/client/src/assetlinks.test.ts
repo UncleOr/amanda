@@ -17,8 +17,11 @@ import { fileURLToPath } from "node:url";
  * common way a TWA fails verification, and the symptom is a toolbar rather
  * than an error.
  *
- * The fingerprint cannot be checked, because it does not exist until Play App
- * Signing has seen the first upload. See docs/PLAY.md.
+ * The fingerprint is Google's, not ours. Play App Signing re-signs every
+ * upload with its own key, so the certificate a phone sees is theirs and the
+ * one in android/android.keystore is only a credential for uploading. Both
+ * are shown in the Console, side by side, which is the trap: the app verifies
+ * against the wrong one in silence.
  */
 const PACKAGE_ID = "com.asulins.amanda";
 
@@ -51,8 +54,27 @@ describe("digital asset links", () => {
   });
 
   it("carries exactly one fingerprint slot", () => {
-    // One upload, one signing certificate. More than one here is usually a
-    // half-finished key rotation, which is worth stopping to look at.
+    /*
+     * One upload, one signing certificate. More than one here is usually a
+     * half-finished key rotation, which is worth stopping to look at.
+     *
+     * Play Console now hands over THREE certificates — deployment, and two
+     * hybrid ones for post-quantum signing it has not started delivering
+     * with. The deployment certificate is the one that signs what reaches a
+     * phone today, so it is the one here; if a future delivery is signed
+     * with a hybrid key the app grows a toolbar again and the answer is to
+     * add that fingerprint beside this one, deliberately.
+     */
     expect(links[0]!.target.sha256_cert_fingerprints).toHaveLength(1);
+  });
+
+  it("holds a real fingerprint rather than the placeholder", () => {
+    /*
+     * The placeholder shipped for days and nothing said a word: the file was
+     * valid JSON naming the right package, and the only symptom was a
+     * browser bar across the top of the app.
+     */
+    const [fingerprint] = links[0]!.target.sha256_cert_fingerprints;
+    expect(fingerprint).toMatch(/^([0-9A-F]{2}:){31}[0-9A-F]{2}$/);
   });
 });
