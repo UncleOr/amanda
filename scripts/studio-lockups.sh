@@ -165,10 +165,15 @@ done
 # Two columns. A logo judged at thumbnail size is a logo approved by mistake,
 # and the thing being judged here is whether a word and a picture look like
 # one object or two things that happen to be near each other.
+#
+# Each tile carries its NUMBER. Twelve unlabelled options on one sheet is a
+# sheet you cannot answer — "the orange one with the controllers, third row"
+# is not a choice, it is a description. A digit in the corner makes the reply
+# one character long.
 inputs=(); tiles=()
 for i in "${!made[@]}"; do
   inputs+=(-i "${made[$i]}")
-  tiles+=("[$i:v]scale=640:299,pad=660:319:10:10:color=${BG}[t$i]")
+  tiles+=("[$i:v]scale=640:299,pad=660:319:10:10:color=${BG},drawtext=fontfile='$(f ariblk.ttf)':text='$((i + 1))':x=22:y=18:fontsize=34:fontcolor=0x55627a[t$i]")
 done
 rows=(); r=0
 for ((i = 0; i < ${#made[@]}; i += 2)); do
