@@ -1,6 +1,6 @@
 # הטקסטים של אמנדה
 
-כל טקסט שהשחקן רואה — 995 במספר, 995 מהם כבר באנגלית.
+כל טקסט שהשחקן רואה — 1018 במספר, 1018 מהם כבר באנגלית.
 
 ## איך עורכים
 
@@ -1286,6 +1286,34 @@
 | sc6b6e23 | עוד לא סיימת את האתגר. | | You have not finished the challenge yet. |
 | s1322daa | כבר לקחת את הפרס. | | You have already collected the prize. |
 | sbf13716 | לא הצלחתי. נסה שוב. | | I could not do it. Try again. |
+
+## game/serverError.ts
+
+| מזהה | טקסט נוכחי | טקסט חדש | אנגלית |
+| --- | --- | --- | --- |
+| sc839803 | זה אתה. | | That's you. |
+| s1e4d1ce | צריך חשבון כדי להוסיף חברים. אפשר להתחבר באזור האישי. | | Adding friends needs an account. You can sign in from your profile. |
+| s8c2f055 | לשחקן הזה אין חשבון. | | That player doesn't have an account. |
+| sfb1cb0c | אפשר להוסיף רק מישהו ששיחקת מולו. | | You can only add someone you've played against. |
+| s9768947 | אתם כבר חברים. | | You're already friends. |
+| s73fed82 | כבר ביקשת. מחכים שיאשרו. | | You already asked. Waiting for them to say yes. |
+| sa1cbf5f | יש לך יותר מדי בקשות שמחכות לתשובה. | | You have too many requests still waiting for an answer. |
+| s28541c5 | אין בקשה כזאת. | | There's no such request. |
+| s0c9162c | צריך חשבון כדי לדווח על שחקן. אפשר להתחבר באזור האישי. | | Reporting a player needs an account. You can sign in from your profile. |
+| scc4eb78 | ספר לנו מה קרה. | | Tell us what happened. |
+| s3a38c0a | על מי מדווחים? | | Who is this about? |
+| s8583e14 | זה אתה. | | That's you. |
+| se4e8aeb | אפשר לדווח רק על שחקנים רשומים. | | You can only report registered players. |
+| s39dfb3e | אפשר לדווח רק על מישהו ששיחקת מולו. | | You can only report someone you've played against. |
+| s606c355 | דיווחת הרבה. נבדוק, ונחזור אליך. | | That's a lot of reports. We'll look, and we'll get back to you. |
+| s9c601a6 | הפריט הזה לא בחנות. | | That item isn't in the shop. |
+| se01b086 | עוד לא. | | Not yet. |
+| s750dee1 | זה כבר נגמר. | | That one's over. |
+| s50f7dfe | זה כבר שלך. | | You already have it. |
+| sc59543d | אין מספיק יהלומים. | | Not enough gems. |
+| s31caecc | חסרים {0} יהלומים. | | You're {0} gems short. |
+| s67fd1f6 | לא הצלחתי. נסה שוב. | | That didn't work. Try again. |
+| s25ffa6e | לא הצלחתי. נסה שוב. | | That didn't work. Try again. |
 
 ## game/useMatch.ts
 

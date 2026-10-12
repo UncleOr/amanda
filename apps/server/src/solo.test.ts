@@ -80,7 +80,7 @@ describe("replaying a reported match", () => {
   it("refuses a request with no seed to replay from", () => {
     expect(soloResult({ mine: strong, theirs: weak })).toEqual({ error: "no seed" });
     expect(soloResult({ seed: "soon", mine: strong, theirs: weak })).toEqual({ error: "no seed" });
-    expect(soloResult(null)).toEqual({ error: "מה?" });
+    expect(soloResult(null)).toEqual({ error: "no body" });
   });
 });
 

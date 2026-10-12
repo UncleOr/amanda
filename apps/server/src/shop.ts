@@ -168,9 +168,9 @@ export async function buy(
     .eq("id", itemId)
     .maybeSingle();
 
-  if (!item || !item.active) return "הפריט הזה לא בחנות.";
-  if (item.available_from && item.available_from > now) return "עוד לא.";
-  if (item.available_until && item.available_until < now) return "זה כבר נגמר.";
+  if (!item || !item.active) return "shop.gone";
+  if (item.available_from && item.available_from > now) return "shop.notYet";
+  if (item.available_until && item.available_until < now) return "shop.ended";
 
   const { data: already } = await sb
     .from("player_items")
@@ -178,14 +178,15 @@ export async function buy(
     .eq("player_id", playerId)
     .eq("item_id", itemId)
     .maybeSingle();
-  if (already) return "זה כבר שלך.";
+  if (already) return "shop.owned";
 
   // The same function the shelf used to draw the price, so the number on the
   // tile and the number taken out of the purse cannot drift apart.
   const price = priceNow(item, now).pay;
   const { data: me } = await sb.from("players").select("diamonds").eq("id", playerId).maybeSingle();
   const have = me?.diamonds ?? 0;
-  if (have < price) return `חסרים ${price - have} יהלומים.`;
+  // The one refusal a code alone cannot carry: it has to say how many.
+  if (have < price) return `shop.poor:${price - have}`;
 
   /*
    * Take the payment FIRST, and only against the balance we just read.
@@ -202,7 +203,7 @@ export async function buy(
       .eq("id", playerId)
       .eq("diamonds", have)
       .select("id");
-    if (!paid?.length) return "משהו השתנה באותו רגע. נסה שוב.";
+    if (!paid?.length) return "retry";
   }
 
   await sb.from("player_items").insert({ player_id: playerId, item_id: itemId, source: "bought" });
@@ -294,6 +295,15 @@ export async function runGrant(
     .select("id, name, gives, filters, active")
     .eq("id", grantId)
     .maybeSingle();
+  /*
+   * These three stay in Hebrew, and that is not an oversight.
+   *
+   * Every other refusal in this file became a code because a player reads it
+   * and a player may be reading in English. `runGrant` is called from
+   * admin.ts and nowhere else — it is Or pressing "send this gift", one
+   * adult, in Hebrew, where a sentence that explains itself is worth more
+   * than a code the panel would have to translate back.
+   */
   if (!g) return { sent: 0, skipped: 0, error: "אין מתנה כזאת." };
   if (!g.active) return { sent: 0, skipped: 0, error: "המתנה הזאת כבויה." };
 

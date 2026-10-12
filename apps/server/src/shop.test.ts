@@ -184,7 +184,8 @@ describe("buying", () => {
       players: { [ME]: { diamonds: 40 } },
       items: { "avatar.yeti": hat },
     });
-    expect(await buy(sb, ME, "avatar.yeti")).toBe("חסרים 60 יהלומים.");
+    // The one code that carries a value: how many are missing.
+    expect(await buy(sb, ME, "avatar.yeti")).toBe("shop.poor:60");
     expect(state.players[ME]!.diamonds).toBe(40);
     expect(state.owned).toHaveLength(0);
   });
@@ -195,7 +196,7 @@ describe("buying", () => {
       items: { "avatar.yeti": hat },
       owned: [{ player_id: ME, item_id: "avatar.yeti" }],
     });
-    expect(await buy(sb, ME, "avatar.yeti")).toBe("זה כבר שלך.");
+    expect(await buy(sb, ME, "avatar.yeti")).toBe("shop.owned");
     expect(state.players[ME]!.diamonds).toBe(500);
   });
 
@@ -213,7 +214,7 @@ describe("buying", () => {
 
   it("refuses an item that is not in the shop", async () => {
     const { sb } = fakeDb({ players: { [ME]: { diamonds: 500 } }, items: {} });
-    expect(await buy(sb, ME, "avatar.nope")).toBe("הפריט הזה לא בחנות.");
+    expect(await buy(sb, ME, "avatar.nope")).toBe("shop.gone");
   });
 
   it("refuses one whose window has closed, however it is asked for", async () => {
@@ -223,7 +224,7 @@ describe("buying", () => {
         "avatar.yeti": { ...hat, available_until: "2000-01-01T00:00:00.000Z" },
       },
     });
-    expect(await buy(sb, ME, "avatar.yeti")).toBe("זה כבר נגמר.");
+    expect(await buy(sb, ME, "avatar.yeti")).toBe("shop.ended");
     expect(state.players[ME]!.diamonds).toBe(500);
   });
 });

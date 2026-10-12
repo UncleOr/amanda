@@ -53,3 +53,6 @@ export * from "./taunts.js";
 
 // Multiplayer wire protocol
 export * from "./net.js";
+
+/** What the server can refuse, as codes the client turns into words. */
+export * from "./serverErrors.js";

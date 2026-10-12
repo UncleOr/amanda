@@ -96,7 +96,7 @@ export interface SoloOutcome {
  * nobody would build.
  */
 export function soloResult(raw: unknown): SoloOutcome | { error: string } {
-  if (!raw || typeof raw !== "object") return { error: "מה?" };
+  if (!raw || typeof raw !== "object") return { error: "no body" };
   const body = raw as Record<string, unknown>;
   const seed = Number(body.seed);
   if (!Number.isFinite(seed)) return { error: "no seed" };

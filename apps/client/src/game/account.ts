@@ -14,6 +14,7 @@
  */
 import { createClient, type SupabaseClient } from "@supabase/supabase-js";
 import { line as t, lineF as tf } from "./copy";
+import { serverError } from "./serverError";
 
 /**
  * Publishable, and meant to be: row level security is what protects the data,
@@ -393,7 +394,9 @@ export async function levelUpCard(cardId: string): Promise<{ error?: string; lev
       body: JSON.stringify({ cardId }),
     });
     const out = (await res.json()) as { error?: string; level?: number };
-    return res.ok ? { level: out.level } : { error: out.error ?? t("s2efa30b", "לא הצליח") };
+    return res.ok
+      ? { level: out.level }
+      : { error: serverError(out.error) ?? t("s2efa30b", "לא הצליח") };
   } catch (err) {
     return { error: (err as Error).message };
   }
@@ -762,7 +765,7 @@ export async function fileReport(input: {
       body: JSON.stringify(input),
     });
     const body = (await res.json()) as { ok?: boolean; error?: string };
-    return body.ok ? null : (body.error ?? t("s97e263e", "לא הצליח"));
+    return body.ok ? null : (serverError(body.error) ?? t("s97e263e", "לא הצליח"));
   } catch (err) {
     return (err as Error).message;
   }
@@ -825,7 +828,7 @@ export async function friendAction(
     { playerId },
     { error: t("s651f017", "אין חיבור לשרת") },
   );
-  return r.ok ? null : (r.error ?? t("sd13c7f9", "לא הצליח"));
+  return r.ok ? null : (serverError(r.error) ?? t("sd13c7f9", "לא הצליח"));
 }
 
 export interface ShopItem {
@@ -888,7 +891,7 @@ export async function buyItem(itemId: string): Promise<string | null> {
     { itemId },
     { error: t("sedc6c2a", "אין חיבור לשרת") },
   );
-  return r.ok ? null : (r.error ?? t("s54a1abe", "לא הצליח"));
+  return r.ok ? null : (serverError(r.error) ?? t("s54a1abe", "לא הצליח"));
 }
 
 export interface Notice {
@@ -964,7 +967,7 @@ export async function scrubMyData(): Promise<string | null> {
       body: "{}",
     });
     const body = (await res.json()) as { ok?: boolean; error?: string };
-    return body.ok ? null : (body.error ?? t("s2afe5ef", "לא הצליח"));
+    return body.ok ? null : (serverError(body.error) ?? t("s2afe5ef", "לא הצליח"));
   } catch {
     return t("s58e9ecf", "לא הצליח");
   }
@@ -983,7 +986,7 @@ export async function deleteAccount(): Promise<string | null> {
       body: "{}",
     });
     const body = (await res.json()) as { ok?: boolean; error?: string };
-    if (!body.ok) return body.error ?? t("s5da8d9e", "לא הצליח");
+    if (!body.ok) return serverError(body.error) ?? t("s5da8d9e", "לא הצליח");
     await sb.auth.signOut();
     return null;
   } catch (err) {

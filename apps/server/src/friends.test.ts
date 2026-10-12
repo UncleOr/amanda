@@ -60,7 +60,7 @@ describe("you may only ask somebody you have played", () => {
   it("refuses a stranger, and writes nothing", async () => {
     const { sb, inserted } = fakeDb({ friends: [] });
     const err = await askFriend(sb, ME, STRANGER);
-    expect(err).toBe("אפשר להוסיף רק מישהו ששיחקת מולו.");
+    expect(err).toBe("friend.notPlayed");
     expect(inserted).toHaveLength(0);
   });
 
@@ -74,7 +74,7 @@ describe("you may only ask somebody you have played", () => {
 
   it("refuses yourself before anything else", async () => {
     const { sb, inserted } = fakeDb({ friends: [] });
-    expect(await askFriend(sb, ME, ME)).toBe("זה אתה.");
+    expect(await askFriend(sb, ME, ME)).toBe("friend.self");
     expect(inserted).toHaveLength(0);
   });
 
@@ -94,7 +94,7 @@ describe("an account at both ends", () => {
   it("refuses when you have no real account", async () => {
     vi.spyOn(reports, "isRegistered").mockResolvedValue(false);
     const { sb, inserted } = fakeDb({ friends: [] });
-    expect(await askFriend(sb, ME, PLAYED)).toContain("צריך חשבון");
+    expect(await askFriend(sb, ME, PLAYED)).toBe("friend.needAccount");
     expect(inserted).toHaveLength(0);
   });
 });
@@ -104,7 +104,7 @@ describe("asking twice, and asking back", () => {
     const { sb, inserted } = fakeDb({
       friends: [{ player_id: ME, friend_id: PLAYED, status: "pending" }],
     });
-    expect(await askFriend(sb, ME, PLAYED)).toBe("כבר ביקשת. מחכים שיאשרו.");
+    expect(await askFriend(sb, ME, PLAYED)).toBe("friend.pending");
     expect(inserted).toHaveLength(0);
   });
 
@@ -125,7 +125,7 @@ describe("asking twice, and asking back", () => {
     const { sb, inserted } = fakeDb({
       friends: [{ player_id: ME, friend_id: PLAYED, status: "accepted" }],
     });
-    expect(await askFriend(sb, ME, PLAYED)).toBe("אתם כבר חברים.");
+    expect(await askFriend(sb, ME, PLAYED)).toBe("friend.already");
     expect(inserted).toHaveLength(0);
   });
 });
@@ -133,7 +133,7 @@ describe("asking twice, and asking back", () => {
 describe("accepting", () => {
   it("refuses when nobody asked — you cannot accept your way in", async () => {
     const { sb, inserted } = fakeDb({ friends: [] });
-    expect(await acceptFriend(sb, ME, STRANGER)).toBe("אין בקשה כזאת.");
+    expect(await acceptFriend(sb, ME, STRANGER)).toBe("friend.noRequest");
     expect(inserted).toHaveLength(0);
   });
 });

@@ -110,16 +110,16 @@ export async function fileReport(
    * most likely to hit a bug is the one who just arrived.
    */
   if (input.kind === "player" && !(await isRegistered(sb, reporterId)))
-    return "צריך חשבון כדי לדווח על שחקן. אפשר להתחבר באזור האישי.";
+    return "report.needAccount";
 
   const message = input.message.trim().slice(0, 1000);
-  if (input.kind === "bug" && message.length < 3) return "ספר לנו מה קרה.";
+  if (input.kind === "bug" && message.length < 3) return "report.empty";
 
   if (input.kind === "player") {
-    if (!input.reportedId) return "על מי מדווחים?";
-    if (input.reportedId === reporterId) return "זה אתה.";
+    if (!input.reportedId) return "report.whoAbout";
+    if (input.reportedId === reporterId) return "report.self";
     if (!(await isRegistered(sb, input.reportedId)))
-      return "אפשר לדווח רק על שחקנים רשומים.";
+      return "report.notRegistered";
     /*
      * And they have to have actually played them. Without this the button is
      * a way to name anybody at all, which is the first thing it would be
@@ -127,7 +127,7 @@ export async function fileReport(
      */
     const met = await recentOpponents(sb, reporterId, 50);
     if (!met.some((o) => o.id === input.reportedId))
-      return "אפשר לדווח רק על מישהו ששיחקת מולו.";
+      return "report.notPlayed";
   }
 
   const hourAgo = new Date(Date.now() - 3600_000).toISOString();
@@ -137,7 +137,7 @@ export async function fileReport(
     .eq("reporter_id", reporterId)
     .eq("status", "open")
     .gte("created_at", hourAgo);
-  if ((count ?? 0) >= MAX_OPEN_PER_HOUR) return "דיווחת הרבה. נבדוק, ונחזור אליך.";
+  if ((count ?? 0) >= MAX_OPEN_PER_HOUR) return "report.tooMany";
 
   const { error } = await sb.from("reports").insert({
     kind: input.kind,

@@ -349,7 +349,7 @@ async function handleFriends(req: IncomingMessage, res: ServerResponse, path: st
 
   const body = (await readBody(req)) as Record<string, unknown>;
   const other = typeof body.playerId === "string" ? body.playerId : "";
-  if (!other) return send(res, 400, { error: "מי?" });
+  if (!other) return send(res, 400, { error: "which player" });
 
   const error =
     path === "/api/friends/ask"
@@ -358,7 +358,7 @@ async function handleFriends(req: IncomingMessage, res: ServerResponse, path: st
         ? await acceptFriend(sb, playerId, other)
         : path === "/api/friends/remove"
           ? await removeFriend(sb, playerId, other)
-          : "לא ידוע";
+          : "unknown route";
   send(res, error ? 400 : 200, error ? { error } : { ok: true });
 }
 
@@ -384,7 +384,7 @@ async function handleShop(req: IncomingMessage, res: ServerResponse, path: strin
   if (!playerId) return send(res, 401, { error: "who are you" });
   const body = (await readBody(req)) as Record<string, unknown>;
   const itemId = typeof body.itemId === "string" ? body.itemId : "";
-  if (!itemId) return send(res, 400, { error: "מה?" });
+  if (!itemId) return send(res, 400, { error: "which item" });
   const error = await buy(sb, playerId, itemId);
   send(res, error ? 400 : 200, error ? { error } : { ok: true });
 }
@@ -428,7 +428,7 @@ async function handleMeta(req: IncomingMessage, res: ServerResponse, path: strin
   if (path === "/api/meta/claim") {
     const body = (await readBody(req)) as Record<string, unknown>;
     const id = typeof body.challengeId === "string" ? body.challengeId : "";
-    if (!id) return send(res, 400, { error: "מה?" });
+    if (!id) return send(res, 400, { error: "which challenge" });
     const done = await claim(sb, playerId, id);
     return send(res, done.ok ? 200 : 400, done.ok ? { ok: true, gave: done.gave } : { error: done.why });
   }

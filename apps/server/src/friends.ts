@@ -114,14 +114,14 @@ export async function askFriend(
   playerId: string,
   otherId: string,
 ): Promise<string | null> {
-  if (playerId === otherId) return "זה אתה.";
+  if (playerId === otherId) return "friend.self";
   if (!(await isRegistered(sb, playerId)))
-    return "צריך חשבון כדי להוסיף חברים. אפשר להתחבר באזור האישי.";
-  if (!(await isRegistered(sb, otherId))) return "לשחקן הזה אין חשבון.";
+    return "friend.needAccount";
+  if (!(await isRegistered(sb, otherId))) return "friend.theyNeedAccount";
 
   // The rule that matters: you have actually played them.
   const played = await recentOpponents(sb, playerId, 15);
-  if (!played.some((o) => o.id === otherId)) return "אפשר להוסיף רק מישהו ששיחקת מולו.";
+  if (!played.some((o) => o.id === otherId)) return "friend.notPlayed";
 
   const { data: existing } = await sb
     .from("friends")
@@ -129,10 +129,10 @@ export async function askFriend(
     .or(`and(player_id.eq.${playerId},friend_id.eq.${otherId}),and(player_id.eq.${otherId},friend_id.eq.${playerId})`);
 
   for (const r of existing ?? []) {
-    if (r.status === "accepted") return "אתם כבר חברים.";
+    if (r.status === "accepted") return "friend.already";
     // They asked you first — asking back is accepting.
     if (r.player_id === otherId) return await acceptFriend(sb, playerId, otherId);
-    return "כבר ביקשת. מחכים שיאשרו.";
+    return "friend.pending";
   }
 
   const { count } = await sb
@@ -140,12 +140,12 @@ export async function askFriend(
     .select("*", { count: "exact", head: true })
     .eq("player_id", playerId)
     .eq("status", "pending");
-  if ((count ?? 0) >= MAX_PENDING_OUT) return "יש לך יותר מדי בקשות שמחכות לתשובה.";
+  if ((count ?? 0) >= MAX_PENDING_OUT) return "friend.tooMany";
 
   const { error } = await sb
     .from("friends")
     .insert({ player_id: playerId, friend_id: otherId, status: "pending" });
-  return error ? "לא הצלחתי. נסה שוב." : null;
+  return error ? "retry" : null;
 }
 
 /**
@@ -163,7 +163,7 @@ export async function acceptFriend(
     .eq("player_id", otherId)
     .eq("friend_id", playerId)
     .maybeSingle();
-  if (!ask) return "אין בקשה כזאת.";
+  if (!ask) return "friend.noRequest";
 
   const { error } = await sb
     .from("friends")
@@ -174,7 +174,7 @@ export async function acceptFriend(
       ],
       { onConflict: "player_id,friend_id" },
     );
-  return error ? "לא הצלחתי. נסה שוב." : null;
+  return error ? "retry" : null;
 }
 
 /** Remove, decline, or take back a request — all of them are these two rows. */
@@ -187,7 +187,7 @@ export async function removeFriend(
     .from("friends")
     .delete()
     .or(`and(player_id.eq.${playerId},friend_id.eq.${otherId}),and(player_id.eq.${otherId},friend_id.eq.${playerId})`);
-  return error ? "לא הצלחתי. נסה שוב." : null;
+  return error ? "retry" : null;
 }
 
 /** Is this person actually my accepted friend? Used before an invite. */

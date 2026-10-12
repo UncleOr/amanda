@@ -8297,7 +8297,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/components/Intro.tsx",
-   "line": 88
+   "line": 98
   }
  },
  {
@@ -10488,7 +10488,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/game/account.ts",
-   "line": 263
+   "line": 264
   }
  },
  {
@@ -10498,7 +10498,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/game/account.ts",
-   "line": 284
+   "line": 285
   }
  },
  {
@@ -10508,7 +10508,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/game/account.ts",
-   "line": 385
+   "line": 386
   }
  },
  {
@@ -10518,7 +10518,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/game/account.ts",
-   "line": 389
+   "line": 390
   }
  },
  {
@@ -10528,7 +10528,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/game/account.ts",
-   "line": 396
+   "line": 399
   }
  },
  {
@@ -10538,7 +10538,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/game/account.ts",
-   "line": 663
+   "line": 666
   }
  },
  {
@@ -10548,7 +10548,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/game/account.ts",
-   "line": 665
+   "line": 668
   }
  },
  {
@@ -10558,7 +10558,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/game/account.ts",
-   "line": 669
+   "line": 672
   }
  },
  {
@@ -10568,7 +10568,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/game/account.ts",
-   "line": 688
+   "line": 691
   }
  },
  {
@@ -10578,7 +10578,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/game/account.ts",
-   "line": 691
+   "line": 694
   }
  },
  {
@@ -10588,7 +10588,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/game/account.ts",
-   "line": 754
+   "line": 757
   }
  },
  {
@@ -10598,7 +10598,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/game/account.ts",
-   "line": 758
+   "line": 761
   }
  },
  {
@@ -10608,7 +10608,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/game/account.ts",
-   "line": 765
+   "line": 768
   }
  },
  {
@@ -10618,7 +10618,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/game/account.ts",
-   "line": 826
+   "line": 829
   }
  },
  {
@@ -10628,7 +10628,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/game/account.ts",
-   "line": 828
+   "line": 831
   }
  },
  {
@@ -10638,7 +10638,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/game/account.ts",
-   "line": 889
+   "line": 892
   }
  },
  {
@@ -10648,7 +10648,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/game/account.ts",
-   "line": 891
+   "line": 894
   }
  },
  {
@@ -10658,7 +10658,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/game/account.ts",
-   "line": 956
+   "line": 959
   }
  },
  {
@@ -10668,7 +10668,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/game/account.ts",
-   "line": 960
+   "line": 963
   }
  },
  {
@@ -10678,7 +10678,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/game/account.ts",
-   "line": 967
+   "line": 970
   }
  },
  {
@@ -10688,7 +10688,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/game/account.ts",
-   "line": 969
+   "line": 972
   }
  },
  {
@@ -10698,7 +10698,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/game/account.ts",
-   "line": 975
+   "line": 978
   }
  },
  {
@@ -10708,7 +10708,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/game/account.ts",
-   "line": 979
+   "line": 982
   }
  },
  {
@@ -10718,7 +10718,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/game/account.ts",
-   "line": 986
+   "line": 989
   }
  },
  {
@@ -10728,7 +10728,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/game/account.ts",
-   "line": 1033
+   "line": 1036
   }
  },
  {
@@ -10738,7 +10738,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/game/account.ts",
-   "line": 1037
+   "line": 1040
   }
  },
  {
@@ -10748,7 +10748,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/game/account.ts",
-   "line": 1038
+   "line": 1041
   }
  },
  {
@@ -10939,6 +10939,236 @@
    "kind": "source",
    "file": "apps/client/src/game/meta.ts",
    "line": 151
+  }
+ },
+ {
+  "id": "sc839803",
+  "section": "game/serverError.ts",
+  "text": "זה אתה.",
+  "where": {
+   "kind": "source",
+   "file": "apps/client/src/game/serverError.ts",
+   "line": 40
+  }
+ },
+ {
+  "id": "s1e4d1ce",
+  "section": "game/serverError.ts",
+  "text": "צריך חשבון כדי להוסיף חברים. אפשר להתחבר באזור האישי.",
+  "where": {
+   "kind": "source",
+   "file": "apps/client/src/game/serverError.ts",
+   "line": 42
+  }
+ },
+ {
+  "id": "s8c2f055",
+  "section": "game/serverError.ts",
+  "text": "לשחקן הזה אין חשבון.",
+  "where": {
+   "kind": "source",
+   "file": "apps/client/src/game/serverError.ts",
+   "line": 44
+  }
+ },
+ {
+  "id": "sfb1cb0c",
+  "section": "game/serverError.ts",
+  "text": "אפשר להוסיף רק מישהו ששיחקת מולו.",
+  "where": {
+   "kind": "source",
+   "file": "apps/client/src/game/serverError.ts",
+   "line": 46
+  }
+ },
+ {
+  "id": "s9768947",
+  "section": "game/serverError.ts",
+  "text": "אתם כבר חברים.",
+  "where": {
+   "kind": "source",
+   "file": "apps/client/src/game/serverError.ts",
+   "line": 48
+  }
+ },
+ {
+  "id": "s73fed82",
+  "section": "game/serverError.ts",
+  "text": "כבר ביקשת. מחכים שיאשרו.",
+  "where": {
+   "kind": "source",
+   "file": "apps/client/src/game/serverError.ts",
+   "line": 50
+  }
+ },
+ {
+  "id": "sa1cbf5f",
+  "section": "game/serverError.ts",
+  "text": "יש לך יותר מדי בקשות שמחכות לתשובה.",
+  "where": {
+   "kind": "source",
+   "file": "apps/client/src/game/serverError.ts",
+   "line": 52
+  }
+ },
+ {
+  "id": "s28541c5",
+  "section": "game/serverError.ts",
+  "text": "אין בקשה כזאת.",
+  "where": {
+   "kind": "source",
+   "file": "apps/client/src/game/serverError.ts",
+   "line": 54
+  }
+ },
+ {
+  "id": "s0c9162c",
+  "section": "game/serverError.ts",
+  "text": "צריך חשבון כדי לדווח על שחקן. אפשר להתחבר באזור האישי.",
+  "where": {
+   "kind": "source",
+   "file": "apps/client/src/game/serverError.ts",
+   "line": 58
+  }
+ },
+ {
+  "id": "scc4eb78",
+  "section": "game/serverError.ts",
+  "text": "ספר לנו מה קרה.",
+  "where": {
+   "kind": "source",
+   "file": "apps/client/src/game/serverError.ts",
+   "line": 60
+  }
+ },
+ {
+  "id": "s3a38c0a",
+  "section": "game/serverError.ts",
+  "text": "על מי מדווחים?",
+  "where": {
+   "kind": "source",
+   "file": "apps/client/src/game/serverError.ts",
+   "line": 62
+  }
+ },
+ {
+  "id": "s8583e14",
+  "section": "game/serverError.ts",
+  "text": "זה אתה.",
+  "where": {
+   "kind": "source",
+   "file": "apps/client/src/game/serverError.ts",
+   "line": 64
+  }
+ },
+ {
+  "id": "se4e8aeb",
+  "section": "game/serverError.ts",
+  "text": "אפשר לדווח רק על שחקנים רשומים.",
+  "where": {
+   "kind": "source",
+   "file": "apps/client/src/game/serverError.ts",
+   "line": 66
+  }
+ },
+ {
+  "id": "s39dfb3e",
+  "section": "game/serverError.ts",
+  "text": "אפשר לדווח רק על מישהו ששיחקת מולו.",
+  "where": {
+   "kind": "source",
+   "file": "apps/client/src/game/serverError.ts",
+   "line": 68
+  }
+ },
+ {
+  "id": "s606c355",
+  "section": "game/serverError.ts",
+  "text": "דיווחת הרבה. נבדוק, ונחזור אליך.",
+  "where": {
+   "kind": "source",
+   "file": "apps/client/src/game/serverError.ts",
+   "line": 70
+  }
+ },
+ {
+  "id": "s9c601a6",
+  "section": "game/serverError.ts",
+  "text": "הפריט הזה לא בחנות.",
+  "where": {
+   "kind": "source",
+   "file": "apps/client/src/game/serverError.ts",
+   "line": 74
+  }
+ },
+ {
+  "id": "se01b086",
+  "section": "game/serverError.ts",
+  "text": "עוד לא.",
+  "where": {
+   "kind": "source",
+   "file": "apps/client/src/game/serverError.ts",
+   "line": 76
+  }
+ },
+ {
+  "id": "s750dee1",
+  "section": "game/serverError.ts",
+  "text": "זה כבר נגמר.",
+  "where": {
+   "kind": "source",
+   "file": "apps/client/src/game/serverError.ts",
+   "line": 78
+  }
+ },
+ {
+  "id": "s50f7dfe",
+  "section": "game/serverError.ts",
+  "text": "זה כבר שלך.",
+  "where": {
+   "kind": "source",
+   "file": "apps/client/src/game/serverError.ts",
+   "line": 80
+  }
+ },
+ {
+  "id": "sc59543d",
+  "section": "game/serverError.ts",
+  "text": "אין מספיק יהלומים.",
+  "where": {
+   "kind": "source",
+   "file": "apps/client/src/game/serverError.ts",
+   "line": 83
+  }
+ },
+ {
+  "id": "s31caecc",
+  "section": "game/serverError.ts",
+  "text": "חסרים {0} יהלומים.",
+  "where": {
+   "kind": "source",
+   "file": "apps/client/src/game/serverError.ts",
+   "line": 84
+  }
+ },
+ {
+  "id": "s67fd1f6",
+  "section": "game/serverError.ts",
+  "text": "לא הצלחתי. נסה שוב.",
+  "where": {
+   "kind": "source",
+   "file": "apps/client/src/game/serverError.ts",
+   "line": 87
+  }
+ },
+ {
+  "id": "s25ffa6e",
+  "section": "game/serverError.ts",
+  "text": "לא הצלחתי. נסה שוב.",
+  "where": {
+   "kind": "source",
+   "file": "apps/client/src/game/serverError.ts",
+   "line": 112
   }
  },
  {
