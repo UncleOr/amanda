@@ -60,6 +60,23 @@
 }
 
 /* The way back to the film, in the About screen. */
+/*
+ * ═══ IT WAS A DIFFERENT WIDTH FROM EVERYTHING AROUND IT ═══
+ *
+ * Or: *"the 'watch the opening again' button isn't aligned and isn't
+ * proportional."* Measured in the panel: every block in that column is 377px
+ * wide and this one was 213, `display: inline-block`, so it sat against one
+ * edge with 164px of nothing beside it — and at 17px while the prose around
+ * it is 14.
+ *
+ * It is a PATH control inside a document, not the thing the screen is for,
+ * so it takes the column's width like every other block and the body type
+ * size like every other control.
+ */
 .about__replay {
+  display: block;
+  inline-size: 100%;
   margin-block-start: var(--sp-3);
+  padding: 10px 16px;
+  font-size: var(--t-3);
 }

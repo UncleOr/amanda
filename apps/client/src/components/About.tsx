@@ -69,7 +69,7 @@ export function mayFollowLinks(birthDate: string | null | undefined): boolean {
 const SONG_YOUTUBE: string = "https://www.youtube.com/watch?v=yDtnLcs_A0M";
 const SONG_SEARCH = t("s8c8128f", "אמנדה המפלצת מסונול כצנלסון");
 
-type Page = "about" | "privacy" | "a11y" | "terms";
+export type Page = "about" | "privacy" | "a11y" | "terms";
 
 const TABS: Array<{ id: Page; he: string }> = [
   { id: "about", he: t("sa1ba3d6", "עלינו") },

@@ -58,6 +58,7 @@ import { sfx } from "../game/sfx";
 import { music } from "../game/music";
 import { lang, setLang } from "../game/lang";
 import type { Overlays } from "../game/useOverlay";
+import type { Page as AboutPage } from "./About";
 import { line as t, lineF as tf } from "../game/copy";
 
 /**
@@ -70,6 +71,20 @@ const INSTALLED =
   (window.matchMedia?.("(display-mode: standalone)").matches ||
     // iOS does not report standalone through matchMedia.
     (navigator as { standalone?: boolean }).standalone === true);
+
+/**
+ * The four documents, each under its own name.
+ *
+ * A function per label rather than a plain string: `line()` reads the chosen
+ * language when it is CALLED, and a module-level constant would be evaluated
+ * once at import — in whichever language the game happened to boot in.
+ */
+const DOCS: Array<{ page: AboutPage; label: () => string }> = [
+  { page: "about", label: () => t("sc8369bd", "עלינו") },
+  { page: "privacy", label: () => t("saf78986", "פרטיות") },
+  { page: "a11y", label: () => t("sf13b7f5", "נגישות") },
+  { page: "terms", label: () => t("sf28862a", "תנאים") },
+];
 
 export function Settings({
   account,
@@ -165,15 +180,28 @@ export function Settings({
 
         {/* ── the small print, which is still reachable without an account ── */}
         <section className="set__group set__group--links">
-          <button
-            className="set__link"
-            onClick={() => {
-              onClose();
-              panel.show("about");
-            }}
-          >
-            {t("s05245ec", "אודות · פרטיות · נגישות")}
-          </button>
+          {/*
+            Four rows, not one.
+
+            Or: *"now that there are settings there is no reason to put
+            about, privacy, accessibility and terms together. Put each one
+            separately."* They were a single row reading
+            "אודות · פרטיות · נגישות" opening a panel of tabs — so finding
+            the privacy policy meant knowing it hid behind a word that was
+            not "privacy", and the terms were not named at all.
+          */}
+          {DOCS.map((d) => (
+            <button
+              key={d.page}
+              className="set__link"
+              onClick={() => {
+                onClose();
+                panel.show({ kind: "about", page: d.page });
+              }}
+            >
+              {d.label()}
+            </button>
+          ))}
           <button
             className="set__link"
             onClick={() => {

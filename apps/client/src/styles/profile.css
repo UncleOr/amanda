@@ -140,12 +140,9 @@
 }
 .btn-album:hover { background: rgba(255, 176, 32, 0.2); }
 
-/* Who you are, in the corner. */
+/* Who you are, in the top bar beside the bell. See chests.css for why it is
+   no longer absolutely positioned in the corner. */
 .me {
-  position: absolute;
-  top: 10px;
-  inset-inline-start: 12px;
-  z-index: 4;
   display: inline-flex;
   align-items: center;
   gap: 8px;
@@ -222,9 +219,29 @@
 
 /* the title has a slow pulse of its own so the eye lands there */
 .intro__name img { animation: wordglow 5.5s ease-in-out infinite alternate; }
+/*
+ * ═══ THE DARK CLOUD WAS IN HERE, NOT IN THE PNG ═══
+ *
+ * Or, in Hebrew as well as English: *"behind the Amanda logo there's a
+ * background. Remove it."* There is no background — the png is clean, I
+ * checked it over a bright colour. It was `drop-shadow(0 6px 26px
+ * rgba(0,0,0,0.85))`, carried by BOTH keyframes below.
+ *
+ * The mark is 72% solid inside its box, so at 26px of blur every letter's
+ * shadow overlaps its neighbours', and 85% black of all of them together
+ * pools into one dark rectangle that reads as a panel.
+ *
+ * A shadow lifting letters off a painting wants to be TIGHT: 6px hugs each
+ * letter instead of filling the gaps between them.
+ *
+ * It also has to be fixed HERE. An animation's keyframes beat the static
+ * `filter` on `.intro__name img` (album.css) for the whole time it runs,
+ * which is for ever — so changing that rule alone looked like doing nothing
+ * at all, and did.
+ */
 @keyframes wordglow {
-  from { filter: drop-shadow(0 0 16px rgba(90,230,220,0.38)) drop-shadow(0 6px 26px rgba(0,0,0,0.85)); }
-  to   { filter: drop-shadow(0 0 30px rgba(90,230,220,0.72)) drop-shadow(0 6px 26px rgba(0,0,0,0.85)); }
+  from { filter: drop-shadow(0 0 16px rgba(90,230,220,0.38)) drop-shadow(0 2px 6px rgba(0,0,0,0.7)); }
+  to   { filter: drop-shadow(0 0 30px rgba(90,230,220,0.72)) drop-shadow(0 2px 6px rgba(0,0,0,0.7)); }
 }
 
 /* Nothing here is information, so when motion is unwelcome it simply stops. */

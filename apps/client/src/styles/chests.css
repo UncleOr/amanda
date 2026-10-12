@@ -348,8 +348,29 @@
 }
 .purse__item { display: inline-flex; align-items: center; gap: 5px; font-size: 14px; }
 .purse__item--gem { color: #9fe6ff; }
-/* the corner profile moves out from under it */
-.me { inset-inline-start: 12px; inset-inline-end: auto; }
+/* The album count, in the colour the album's own furniture uses. */
+.purse__item--cards { color: #c9b6ff; }
+/*
+ * ═══ THE PROFILE BUTTON SITS WITH THE BELL ═══
+ *
+ * Or: *"and pin the profile button to the notifications button."*
+ *
+ * It was at a fixed 12px from the edge while the top-bar row — gear, bell —
+ * ran out from the same corner, so the two were near each other by accident
+ * and the gap between them changed with every button added or removed. It
+ * was that accident that put the bell on top of it before the gear replaced
+ * three buttons with one.
+ *
+ * No offset can fix that, because there is nothing to offset FROM: the bell
+ * only exists with an account, so any number is wrong in one of the two
+ * states. It is a flex item in that row now (App.tsx), which is what it
+ * always should have been — the gap is the row's gap, in both states, for
+ * free.
+ */
+.me {
+  position: static;
+  flex: none;
+}
 
 /* ════════ your record, in the album ════════ */
 /*

@@ -1543,6 +1543,29 @@ export function useMatch(): MatchApi {
       netRef.current?.lock(buildPlayerBoard(filled, modsRef.current, stackedRef.current, accountRef.current?.album));
   }, []);
 
+  /**
+   * The fight button, during a lesson.
+   *
+   * With the clock stopped in build and panic, nothing advances on its own,
+   * so the button walks the phases rather than jumping to the end: build
+   * takes you to panic — where Amanda says the fog has lifted and points at
+   * the opponent's board — and panic takes you to the battle.
+   *
+   * Without this, stopping the clock would have skipped panic entirely and
+   * silently dropped the last two things she says.
+   *
+   * Outside a lesson it is not reachable and nothing changes: the clock runs
+   * the phases, and the button means "I am ready, skip the rest".
+   */
+  const lessonStep = useCallback(() => {
+    if (phaseRef.current === "build") {
+      setPhase("panic");
+      setTimeLeft(PHASES.panic.seconds);
+      return;
+    }
+    enterPrebattle();
+  }, [enterPrebattle]);
+
   const startBattle = useCallback(() => {
     const aiFull: BoardInput = soloAmandaRef.current
       ? { owner: "B", placements: buildAmandaBoard(CATALOG.values()) as Placement[] }
@@ -2077,10 +2100,34 @@ export function useMatch(): MatchApi {
     // "בלי הגבלת זמן" means the clock does not run at all, not that it runs
     // and is hidden — a timer ticking to zero would end the sandbox.
     if (playground) return;
+    /*
+     * ═══ NOR DURING A LESSON ═══
+     *
+     * Or: *"and in the tutorial the clock shouldn't run."*
+     *
+     * He is right, and it is worse than untidy. Amanda stops between lines
+     * and waits for the child to do the thing she just described — and
+     * reading a sentence, finding the card and placing it takes a seven-
+     * year-old longer than it takes me. Meanwhile 45 seconds run out
+     * underneath, the build ends mid-explanation, and the empty slots fill
+     * with Crumb Demons while she is still talking about where to put the
+     * giant.
+     *
+     * A lesson is not a match with a tutor over it; it is a lesson. It ends
+     * when she runs out of things to say, not when a clock does.
+     *
+     * Only the two phases she TEACHES in, though. `prebattle` is three
+     * seconds of crumbs dropping into the empty slots and `countdown` is
+     * three of "get ready", and both advance by this very timer — stopping
+     * it there does not remove the pressure, it removes the next phase. The
+     * way out of build and panic is the fight button, which `toBattle` now
+     * walks one step at a time during a lesson.
+     */
+    if (lesson > 0 && (phase === "build" || phase === "panic")) return;
     if (!["countdown", "build", "panic", "prebattle"].includes(phase)) return;
     const id = setInterval(() => setTimeLeft((t) => Math.max(0, t - 0.1)), 100);
     return () => clearInterval(id);
-  }, [phase, playground]);
+  }, [phase, playground, lesson]);
 
   /** Tick the freeze down on its own clock, so it lasts five real seconds. */
   useEffect(() => {
@@ -2262,7 +2309,7 @@ export function useMatch(): MatchApi {
     placeKing,
     // The playground skips the lock-and-count-down ceremony: you press fight,
     // it fights, and you can stop it again a second later.
-    toBattle: playground ? startBenchBattle : enterPrebattle,
+    toBattle: playground ? startBenchBattle : lesson > 0 ? lessonStep : enterPrebattle,
     ready,
     oppReady,
     toggleReady,

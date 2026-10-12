@@ -154,16 +154,16 @@ export function HomeScreen({
 
   return (
     <main className="intro intro--hero">
-      <button className="me" onClick={() => panel.show("profile")}>
-        {m.account?.avatar ? (
-          <img src={`${BASE}brand/${m.account.avatar}.webp`} alt="" />
-        ) : (
-          <Icon name="king" size={20} />
-        )}
-        <span className="me__name">
-          {m.account?.nickname ?? (m.account?.linked ? t("sb1726a6", "הפרופיל שלי") : t("sae98436", "התחברות"))}
-        </span>
-      </button>
+      {/*
+        The profile button lives in the top bar now, beside the bell — see
+        App.tsx. Or: *"pin the profile button to the notifications button."*
+
+        It was here, absolutely positioned at a fixed distance from the
+        corner, while the top-bar row ran out from that same corner. The two
+        were near each other by coincidence, and the gap changed with every
+        button added or removed to the row — which is how the bell came to be
+        sitting on top of it. In the row, flexbox keeps the gap.
+      */}
       {/*
         She is the background, not a picture inside a box. The banner was
         generated with its left half deliberately empty, which is where
@@ -476,11 +476,24 @@ export function HomeScreen({
             <span className="purse__item purse__item--gem">
               <Icon name="gem" size={16} /> {m.account.diamonds}
             </span>
-            {/* The third number is nachos rather than the album size: the
-                album has its own button, and this row is for the things a
-                match MOVES. */}
-            <span className="purse__item purse__item--nacho">
-              <Icon name="nacho" size={16} /> {m.account.nachos}
+            {/*
+              The third number WAS nachos, and Or is right that it should not
+              be: *"in the winnings bar there's no reason to show me how many
+              nachos I have, because they actually get swapped for a chest
+              every time, right? That's only relevant to the chests right
+              now."*
+
+              He has it exactly: nachos are not a balance, they are a bar
+              filling towards the next chest, and they reset when it opens.
+              A number that returns to zero on its own is not a thing you
+              have — and the chest shelf already draws that bar, where it
+              means something.
+
+              So: how many monsters are in the album. That one only ever goes
+              up, and it is the thing the whole game is for.
+            */}
+            <span className="purse__item purse__item--cards">
+              <Icon name="monster" size={16} /> {m.account.album.size}
             </span>
           </div>
         )}

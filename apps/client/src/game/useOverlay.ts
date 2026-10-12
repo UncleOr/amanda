@@ -1,4 +1,5 @@
 import { useCallback, useState } from "react";
+import type { Page as AboutPage } from "../components/About";
 
 /**
  * Which full-screen panel is open, as ONE piece of state.
@@ -28,7 +29,17 @@ export type Overlay =
   | { kind: "friends" }
   | { kind: "shop" }
   | { kind: "inbox" }
-  | { kind: "about" }
+  /**
+   * The four documents, and WHICH of them.
+   *
+   * Or: *"now that there are settings there is no reason to put about,
+   * privacy, accessibility and terms together. Put each one separately."*
+   * They were one row opening a panel of tabs; they are four rows now, and
+   * the page rides along with the request rather than being a second piece
+   * of state to keep in step — the same reason a report carries what it is
+   * about.
+   */
+  | { kind: "about"; page?: AboutPage }
   /** Sound, music, language, the small print, the version, and deleting. */
   | { kind: "settings" }
   /** "What's new" — see data/updates.ts. */

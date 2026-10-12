@@ -106,23 +106,67 @@ for L in "${LANGS[@]}"; do
   fi
   [ -f "$WORDMARK" ] || { echo "missing: $WORDMARK" >&2; exit 1; }
 
-  # Measured rather than assumed: the two wordmarks are different heights, so
-  # the block is centred from what they actually are.
+  # ═══ THE LOGO IS CENTRED, AND THE TAGLINE HANGS OFF IT ═══
+  #
+  # Or: *"the Amanda logo at the end isn't centred."* Measured: the card was
+  # centred — within one pixel across and six down. What was NOT centred is
+  # the LOGO, because the block being centred was logo-plus-tagline, which
+  # puts the logo itself 25px above the middle of the frame.
+  #
+  # He is reading the screen the way anyone does: the logo is the thing you
+  # look at, so the logo is the thing that has to sit in the middle. The
+  # tagline hangs below it and is allowed to be off-centre, because nobody
+  # measures a subtitle.
   WM_W=440
   WM_H=$(ffprobe -v error -show_entries stream=width,height -of csv=p=0 "$WORDMARK" |
          awk -F, -v w="$WM_W" '{printf "%d", w * $2 / $1}')
   TAG=30
-  BLOCK=$((WM_H + 28 + TAG))
-  WM_Y=$(( (H - BLOCK) / 2 ))
-  TAG_Y=$((WM_Y + WM_H + 28))
+  WM_Y=$(( (H - WM_H) / 2 ))
+  TAG_Y=$((WM_Y + WM_H + 26))
 
   if [ "$HAS_FONT" = "1" ]; then
     TAGTEXT=",drawtext=fontfile='${FONT}':textfile=assets/raw/trailer/text/tagline-${L}.txt\
-:x=(w-text_w)/2:y=${TAG_Y}:fontsize=${TAG}:fontcolor=0xd5dce8@0.85"
+:x=(w-text_w)/2:y=${TAG_Y}:fontsize=${TAG}:fontcolor=0xd5dce8@0.85\
+:alpha='if(lt(t,0.45),0,min(1,(t-0.45)/0.35))'"
   else
     echo "    (no segoeuib.ttf — the end card will be the wordmark alone)"
     TAGTEXT=""
   fi
+
+  # ═══ THE ENTRANCE ═══
+  #
+  # Or: *"and give it a cooler entrance."* It had none — it arrived inside
+  # the crossfade from the last shot, which is not an entrance, it is a
+  # dissolve that happens to end on a logo.
+  #
+  # So: the name lands. It starts 22% oversized and settles to its true size
+  # over 0.45s, on a square-root curve — fast at first and slowing into
+  # place, which is what something heavy arriving looks like. The tagline
+  # waits until the logo has stopped moving and then fades up on its own.
+  #
+  # Done in two passes on purpose. `zoompan` works on a STILL, producing
+  # `d` frames from one picture, so the card is composed to a png first and
+  # animated second.
+  #
+  # And the png goes in WITHOUT `-loop 1`. I wrote that warning and then
+  # looped it anyway: looping makes it a stream of identical frames, zoompan
+  # emits `d` frames for EACH of them, and a ten-second film came out at two
+  # minutes and ten. It encoded cleanly and reported nothing wrong — only the
+  # duration said anything had happened, which is why this script prints it.
+  CARD_PNG="assets/raw/trailer/text/card-${L}.png"
+  ffmpeg -y -v error \
+    -f lavfi -i "color=${BG}:s=${W}x${H}" \
+    -i "$WORDMARK" \
+    -filter_complex "[1:v]scale=${WM_W}:-1[wm];[0:v][wm]overlay=x=(W-w)/2:y=${WM_Y}" \
+    -frames:v 1 "$CARD_PNG"
+
+  CARD_FRAMES=$(awk -v c="$CARD" -v f="$FPS" 'BEGIN{printf "%d", c*f}')
+  # It HOLDS big until the crossfade from the last shot has finished, and
+  # only then lands. The first version eased from frame zero, so the whole
+  # entrance happened underneath a half-transparent dissolve and the only
+  # part anyone saw was the logo already sitting still.
+  HOLD=$(awk -v f="$FPS" 'BEGIN{printf "%d", 0.42*f}')
+  EASE=$(awk -v f="$FPS" 'BEGIN{printf "%d", 0.45*f}')
 
   # crf 30 rather than the trailer's 19: this is downloaded by a child on a
   # phone before the game starts, and it is dark, grainy footage that hides
@@ -130,16 +174,16 @@ for L in "${LANGS[@]}"; do
   # because of the thing that was supposed to make it feel good.
   ffmpeg -y -v error -stats \
     "${inputs[@]}" \
-    -f lavfi -t "$CARD" -i "color=${BG}:s=${W}x${H}:r=${FPS}" \
-    -i "$WORDMARK" \
+    -i "$CARD_PNG" \
     -ss "$MUSIC_START" -i "$MUSIC" \
     -filter_complex "$(IFS=';'; echo "${filters[*]}");\
-[$((i + 1)):v]scale=${WM_W}:-1[wm];\
-[${i}:v][wm]overlay=x=(W-w)/2:y=${WM_Y}${TAGTEXT},fps=${FPS},setsar=1,settb=AVTB,format=yuv420p[card];\
+[${i}:v]zoompan=z='if(lt(on,${HOLD}),1.22,if(lte(on,${HOLD}+${EASE}),1.22-0.22*sqrt((on-${HOLD})/${EASE}),1))'\
+:x='iw/2-(iw/zoom/2)':y='ih/2-(ih/zoom/2)':d=${CARD_FRAMES}:s=${W}x${H}:fps=${FPS}\
+${TAGTEXT},setsar=1,settb=AVTB,format=yuv420p[card];\
 ${concat}concat=n=${i}:v=1:a=0,fps=${FPS},settb=AVTB[film];\
 [film][card]xfade=transition=fade:duration=0.5:offset=$(awk -v t="$FILM" 'BEGIN{printf "%.2f", t-0.5}'),\
 fade=t=in:st=0:d=0.5,fade=t=out:st=${OUT_AT}:d=0.8:color=${BG}[v];\
-[$((i + 2)):a]atrim=0:${LEN},afade=t=in:st=0:d=0.8,afade=t=out:st=${OUT_AT}:d=0.8[a]" \
+[$((i + 1)):a]atrim=0:${LEN},afade=t=in:st=0:d=0.8,afade=t=out:st=${OUT_AT}:d=0.8[a]" \
     -map "[v]" -map "[a]" \
     -c:v libx264 -preset slow -crf 30 -pix_fmt yuv420p -r "$FPS" \
     -c:a aac -b:a 96k -movflags +faststart \

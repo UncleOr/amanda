@@ -1,6 +1,6 @@
 # הטקסטים של אמנדה
 
-כל טקסט שהשחקן רואה — 1018 במספר, 1018 מהם כבר באנגלית.
+כל טקסט שהשחקן רואה — 1021 במספר, 1021 מהם כבר באנגלית.
 
 ## איך עורכים
 
@@ -347,6 +347,8 @@
 | sf038582 | אני משוחקת לרוחב, ילד. ככה אני רואה את שניכם. | | I am played sideways, kid. That is how I see you both. |
 | sbd466e9 | מחכה לחבר שלך… | | Waiting for your friend… |
 | sc752be6 | חפיסה זהה | | Same deck |
+| se2c2032 | הפרופיל שלי | | My profile |
+| sda25897 | התחברות | | Sign in |
 | s1703f49 | הודעות | | Messages |
 | s460b8e8 | חזרה לתפריט | | Back to the menu |
 | s7ee96f5 | יציאה | | Leave |
@@ -864,8 +866,6 @@
 | s901d39c | בונה כמו שהוא יודע. חצי-חצי. | | Builds as well as it knows how. Fifty-fifty. |
 | sc93cdac | קשה | | Hard |
 | s62d48e5 | בוחר מתוך אוסף גדול בהרבה. מנצח בערך ב-58%. | | Picks from a much bigger collection. Wins about 58%. |
-| sb1726a6 | הפרופיל שלי | | My profile |
-| sae98436 | התחברות | | Sign in |
 | sfd7535c | אמנדה | | Amanda |
 | s86247d1 | משחק קלפים מפלצתי | | Monster card game |
 | s0cadb17 | לשחק | | Play |
@@ -1068,6 +1068,10 @@
 | מזהה | טקסט נוכחי | טקסט חדש | אנגלית |
 | --- | --- | --- | --- |
 | sbf142a2 | עברית | | Hebrew |
+| sc8369bd | עלינו | | About |
+| saf78986 | פרטיות | | Privacy |
+| sf13b7f5 | נגישות | | Accessibility |
+| sf28862a | תנאים | | Terms |
 | se811a27 | סגירה | | Close |
 | seb080a0 | הגדרות | | Settings |
 | s497670b | צלילים | | Sounds |
@@ -1077,7 +1081,6 @@
 | s6f43267 | דולקת | | On |
 | s3c95ca3 | כבויה | | Off |
 | s46dcd47 | שפה | | Language |
-| s05245ec | אודות · פרטיות · נגישות | | About · Privacy · Accessibility |
 | s8e11615 | מה חדש | | What's new |
 | s6eed161 | יש עדכון שלא קראתם | | There is an update you have not read |
 | s50fb087 | משהו לא עובד? | | Something not working? |

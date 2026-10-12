@@ -394,6 +394,24 @@
   text-align: start;
 }
 .quests__head { display: flex; align-items: center; justify-content: space-between; gap: 8px; }
+/*
+ * ═══ THE LAST TAB WAS UNDER THE CLOSE BUTTON ═══
+ *
+ * Or: *"in challenges, 'this month' is hidden under the X."* Measured: the
+ * close button sits at 811-841 and the third tab at 824-892, so seventeen
+ * pixels of it are covered — and `.modal__close` carries `z-index: 2`, so
+ * the X is the thing on top.
+ *
+ * The header is `space-between`, which puts the tabs at the row's END, and
+ * `.modal__close` is pinned to `inset-inline-end`. Both honour direction, so
+ * both land on the same side in either language — this is not an RTL bug,
+ * it is two things asking for the same corner.
+ *
+ * The close button is 30px at 10px in, so 44px of clearance leaves it a
+ * margin. Only inside the panel: the home screen draws this same header
+ * inline with no close button to avoid.
+ */
+.modal--quests .quests__head { padding-inline-end: 44px; }
 .quests__head h2 {
   display: flex;
   align-items: center;

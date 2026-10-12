@@ -786,7 +786,16 @@ function Game() {
             {m.roomCode ? t("sbd466e9", "מחכה לחבר שלך…") : PHASE_LABEL[m.phase]}
           </div>
         )}
-        {(m.phase === "build" || m.phase === "panic") && !m.playground && (
+        {/*
+          No clock in the playground, and none during a lesson.
+
+          Or: *"and in the tutorial the clock shouldn't run."* It does not
+          any more (useMatch), but a number sitting at 45 and never moving is
+          its own question — a child waiting for it to tick is being given
+          something to worry about instead of something to do. The same
+          reason the playground has never shown one.
+        */}
+        {(m.phase === "build" || m.phase === "panic") && !m.playground && m.lesson === 0 && (
           <div className="topbar__timer">
             <Icon name="timer" size={15} /> {Math.ceil(m.timeLeft)}s
           </div>
@@ -807,6 +816,24 @@ function Game() {
            * a clock is running, and there is nothing here that cannot wait
            * ninety seconds.
            */}
+          {/*
+            Who you are, beside the things that change what you see. Only on
+            the home screen: mid-match it is one more thing to look at while
+            a clock runs, and the profile is not going anywhere.
+          */}
+          {m.phase === "intro" && (
+            <button className="me" onClick={() => panel.show("profile")}>
+              {m.account?.avatar ? (
+                <img src={`${BASE}brand/${m.account.avatar}.webp`} alt="" />
+              ) : (
+                <Icon name="king" size={20} />
+              )}
+              <span className="me__name">
+                {m.account?.nickname ??
+                  (m.account?.linked ? t("se2c2032", "הפרופיל שלי") : t("sda25897", "התחברות"))}
+              </span>
+            </button>
+          )}
           {m.account && m.phase === "intro" && (
             <button
               className={`mute bell${unread ? " bell--new" : ""}`}
@@ -1418,7 +1445,25 @@ function Game() {
       )}
 
       {/* ---- result ---- */}
-      {m.phase === "result" && (
+      {/*
+        ═══ NOT DURING A LESSON ═══
+
+        Or: *"I couldn't even get to the end. It broke on me before the
+        end."* It did, and this was it: a lesson ends like any other match,
+        with `phase === "result"` — so the ordinary result screen rendered,
+        and the lesson's own ending rendered on top of it. Two full-screen
+        cards stacked, two headings, two rows of buttons through each other,
+        and no way to read either.
+
+        A lesson has its own ending — "now something a bit trickier", and
+        then "that's it, you know how to play". That IS its result screen.
+        Trophies, chests and a rematch button belong to a real match.
+
+        Gated on `teaching` rather than on `lessonDone`, which the effect
+        above sets one render LATER: gating on that would let the wrong
+        screen paint for a frame before the right one covered it.
+      */}
+      {m.phase === "result" && !(teaching && m.lesson > 0) && (
         <ResultScreen
           m={m}
           panel={panel}
@@ -1586,9 +1631,26 @@ function Game() {
                   ? m.hasKing
                   : cue.awaits.kind === "placements"
                     ? Object.keys(m.placements).length >= cue.awaits.atLeast
-                    : cue.awaits.kind === "bar"
-                      ? m.actionBar.length >= cue.awaits.atLeast
-                      : m.discardCount >= cue.awaits.atLeast,
+                    : /*
+                       * ═══ OR THE CARD IT IS ABOUT IS GONE ═══
+                       *
+                       * "Take it to the bar" and "bin this one" are both
+                       * about the card IN YOUR HAND. If the hand is empty
+                       * the card has already gone somewhere — onto the
+                       * board, into the bin, into the bar — and the step is
+                       * over however it ended.
+                       *
+                       * Without this it waits for a count that can no longer
+                       * rise. The clock used to hide it: the build phase ran
+                       * out and dragged everyone forward. Stopping the clock
+                       * for lessons turned a step nobody noticed into a dead
+                       * end, with Amanda asking a child to bin a card they
+                       * are not holding and the bin button greyed out.
+                       */
+                      m.hand === null ||
+                      (cue.awaits.kind === "bar"
+                        ? m.actionBar.length >= cue.awaits.atLeast
+                        : m.discardCount >= cue.awaits.atLeast),
             },
           ]}
           onDone={() => setCue(null)}
@@ -1608,11 +1670,11 @@ function Game() {
         />
       )}
 
-      {panel.is("about") && (
+      {panel.open?.kind === "about" && (
         <About
           onClose={() => panel.close()}
           birthDate={m.account?.birthDate}
-          start={LEGAL ?? undefined}
+          start={panel.open.page}
         />
       )}
 
