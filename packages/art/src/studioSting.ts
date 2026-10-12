@@ -352,100 +352,80 @@ interface Sting {
 const CHORD = ["D3", "F#3", "A3", "D4"];
 
 const STINGS: Sting[] = [
+  /*
+   * ═══ THREE AND FOUR, CROSSED ═══
+   *
+   * Hod picked 4, the choir. Or picked 3, and said which part: *"especially
+   * the beginning of 3"* — the crescendo, before anything lands.
+   *
+   * Those are not a disagreement, they are the two halves of one sting. 3's
+   * opening is a RUN-UP and 4's body is an ARRIVAL, and neither had the other
+   * before: 3 landed on brass, which is the part Or did not single out, and 4
+   * began on a voice already singing, with nothing to arrive from.
+   *
+   * So all three below are 3's crescendo into 4's voices. They differ in how
+   * long the run-up gets and how much metal is left in the landing, which is
+   * the only real question left.
+   */
   {
-    id: "1-taller",
-    idea: "The one you liked, grown up: the same climb, but it lands on something.",
+    id: "1-rise-into-voices",
+    idea: "Straight down the middle: his run-up, Hod's choir, nothing else.",
     build: () => {
-      const out = make(2.4);
-      ["D4", "F#4", "A4", "D5"].forEach((n, i) =>
-        at(out, bell(note(n), 0.9, { ratio: 2.0, index: 2.2, decay: 4.6, gain: 0.34 }), i * 0.08),
-      );
-      const L = 0.32;
-      CHORD.forEach((n, i) =>
-        at(out, brass(note(n), 1.9, { gain: 0.3 - i * 0.03, swell: 0.03, decay: 1.9 }), L),
-      );
-      at(out, thud(note("D1"), 1.3, { decay: 3.2, gain: 0.85 }), L);
-      at(out, bell(note("D5"), 1.7, { ratio: 2.0, index: 2.6, decay: 2.4, gain: 0.5 }), L);
-      at(out, bell(note("A5"), 1.5, { ratio: 3.0, index: 1.2, decay: 2.8, gain: 0.18 }), L + 0.01);
-      return finish(room(out, { mix: 0.26 }));
-    },
-  },
-  {
-    id: "2-two-voices",
-    idea: "The logo as sound, climbing: the big voice, the small one, then both.",
-    build: () => {
-      const out = make(2.4);
-      // Up a fifth, not down a third. The same two characters, the opposite
-      // feeling — and the fifth is the interval nothing on earth uses to
-      // tell you that you got something wrong.
-      at(out, brass(note("D2"), 0.9, { gain: 0.42, swell: 0.04, decay: 3.0, open: 2.6 }), 0);
-      at(out, brass(note("A3"), 0.9, { gain: 0.34, swell: 0.03, decay: 3.0, open: 3.0 }), 0.2);
-      const L = 0.42;
-      CHORD.forEach((n, i) =>
-        at(out, brass(note(n), 1.9, { gain: 0.28 - i * 0.03, swell: 0.03, decay: 1.8 }), L),
-      );
-      at(out, choir(note("D4"), 1.8, { gain: 0.2, swell: 0.1, decay: 2.0 }), L);
-      at(out, thud(note("D1"), 1.4, { decay: 3.0, gain: 0.9 }), L);
-      at(out, bell(note("D5"), 1.6, { ratio: 2.0, index: 2.4, decay: 2.6, gain: 0.42 }), L);
-      return finish(room(out, { mix: 0.28 }));
-    },
-  },
-  {
-    id: "3-swell",
-    idea: "A short run-up into one wide open chord. The most cinematic of the five.",
-    build: () => {
-      const out = make(2.6);
+      const out = make(2.7);
       const L = 0.5;
-      // The crescendo: air, and a fifth growing underneath it.
+      // The part Or singled out: air, and a fifth growing under it.
       at(out, air(L + 0.05, { cutoff: 5200, gain: 0.26, rise: true }), 0);
       at(out, brass(note("D2"), L + 0.1, { gain: 0.22, swell: L * 0.9, decay: 0.2, open: 2.2 }), 0);
       at(out, brass(note("A2"), L + 0.1, { gain: 0.16, swell: L * 0.9, decay: 0.2, open: 2.2 }), 0);
-      // The arrival, across three octaves.
-      ["D2", "A2", "D3", "F#3", "A3", "D4", "F#4"].forEach((n, i) =>
-        at(out, brass(note(n), 2.0, { gain: 0.26 - i * 0.022, swell: 0.02, decay: 1.7 }), L),
+      // And then voices rather than brass.
+      ["D3", "A3", "D4", "F#4", "A4"].forEach((n, i) =>
+        at(out, choir(note(n), 2.1, { gain: 0.36 - i * 0.04, swell: 0.05, decay: 1.5 }), L),
       );
-      at(out, thud(note("D1"), 1.6, { decay: 2.8, gain: 1.0 }), L);
-      at(out, bell(note("D5"), 1.8, { ratio: 2.0, index: 2.8, decay: 2.2, gain: 0.4 }), L);
-      at(out, air(0.4, { cutoff: 8000, decay: 9, gain: 0.12 }), L);
-      return finish(room(out, { mix: 0.3 }));
+      at(out, thud(note("D1"), 1.5, { decay: 2.9, gain: 0.78 }), L);
+      at(out, bell(note("D6"), 1.5, { ratio: 2.0, index: 1.6, decay: 3.0, gain: 0.13 }), L + 0.04);
+      return finish(room(out, { mix: 0.32 }));
     },
   },
   {
-    id: "4-choir",
-    idea: "Voices rather than metal: warm, wide, opening out. The least shouty.",
+    id: "2-longer-run",
+    idea: "The same, with twice the run-up. The most cinematic of the three.",
     build: () => {
-      const out = make(2.6);
-      at(out, choir(note("A3"), 0.8, { gain: 0.42, swell: 0.14, decay: 2.4 }), 0);
-      at(out, choir(note("D4"), 0.8, { gain: 0.36, swell: 0.1, decay: 2.4 }), 0.22);
-      const L = 0.46;
+      const out = make(3.0);
+      const L = 0.8;
+      at(out, air(L + 0.05, { cutoff: 5600, gain: 0.3, rise: true }), 0);
+      at(out, brass(note("D2"), L + 0.1, { gain: 0.24, swell: L * 0.92, decay: 0.2, open: 2.4 }), 0);
+      at(out, brass(note("A2"), L + 0.1, { gain: 0.17, swell: L * 0.92, decay: 0.2, open: 2.4 }), 0);
+      // A voice joins the climb before the chord does, so the arrival is
+      // something the run-up was already becoming.
+      at(out, choir(note("D4"), L, { gain: 0.14, swell: L * 0.8, decay: 0.3 }), 0.2);
       ["D3", "A3", "D4", "F#4", "A4"].forEach((n, i) =>
-        at(out, choir(note(n), 2.0, { gain: 0.34 - i * 0.04, swell: 0.08, decay: 1.6 }), L),
+        at(out, choir(note(n), 2.1, { gain: 0.36 - i * 0.04, swell: 0.05, decay: 1.4 }), L),
       );
-      at(out, brass(note("D2"), 1.9, { gain: 0.2, swell: 0.06, decay: 1.8, open: 2.4 }), L);
-      at(out, thud(note("D1"), 1.3, { decay: 3.4, gain: 0.62 }), L);
-      at(out, bell(note("D6"), 1.4, { ratio: 2.0, index: 1.6, decay: 3.0, gain: 0.14 }), L + 0.04);
+      at(out, thud(note("D1"), 1.6, { decay: 2.7, gain: 0.85 }), L);
+      at(out, bell(note("D6"), 1.4, { ratio: 2.0, index: 1.5, decay: 3.2, gain: 0.12 }), L + 0.05);
       return finish(room(out, { mix: 0.34 }));
     },
   },
   {
-    id: "5-stomp",
-    idea: "Three steps and a landing with the most weight under it. The biggest.",
+    id: "3-voices-with-weight",
+    idea: "Voices in front, but brass underneath them. Warm and still big.",
     build: () => {
-      const out = make(2.5);
-      ["A3", "D4", "F#4"].forEach((n, i) =>
-        at(out, brass(note(n), 0.5, { gain: 0.3, swell: 0.015, decay: 5.0, open: 3.0 }), i * 0.1),
+      const out = make(2.8);
+      const L = 0.5;
+      at(out, air(L + 0.05, { cutoff: 5200, gain: 0.24, rise: true }), 0);
+      at(out, brass(note("D2"), L + 0.1, { gain: 0.22, swell: L * 0.9, decay: 0.2, open: 2.2 }), 0);
+      at(out, brass(note("A2"), L + 0.1, { gain: 0.16, swell: L * 0.9, decay: 0.2, open: 2.2 }), 0);
+      // Voices carry the chord; brass sits beneath holding it up rather than
+      // singing it, which is where 4 felt thin and 3 felt cold.
+      ["D3", "A3", "D4", "F#4", "A4"].forEach((n, i) =>
+        at(out, choir(note(n), 2.1, { gain: 0.32 - i * 0.035, swell: 0.05, decay: 1.5 }), L),
       );
-      const L = 0.34;
-      // Two octaves of root under everything: this is the "bit big".
-      at(out, thud(note("D1"), 1.8, { decay: 2.4, gain: 1.0 }), L);
-      at(out, brass(note("D2"), 2.0, { gain: 0.34, swell: 0.02, decay: 1.5, open: 2.8, sub: 0.5 }), L);
-      ["F#3", "A3", "D4"].forEach((n, i) =>
-        at(out, brass(note(n), 1.9, { gain: 0.26 - i * 0.03, swell: 0.025, decay: 1.7 }), L),
+      ["D2", "A2", "D3"].forEach((n, i) =>
+        at(out, brass(note(n), 2.0, { gain: 0.17 - i * 0.03, swell: 0.03, decay: 1.7, open: 2.6 }), L),
       );
-      at(out, bell(note("D5"), 1.6, { ratio: 2.0, index: 2.6, decay: 2.4, gain: 0.44 }), L);
-      at(out, bell(note("A5"), 1.4, { ratio: 3.0, index: 1.3, decay: 2.8, gain: 0.16 }), L + 0.01);
-      at(out, air(0.26, { cutoff: 7000, decay: 11, gain: 0.14 }), L);
-      return finish(room(out, { mix: 0.28 }));
+      at(out, thud(note("D1"), 1.7, { decay: 2.6, gain: 0.95 }), L);
+      at(out, bell(note("D5"), 1.6, { ratio: 2.0, index: 2.2, decay: 2.6, gain: 0.22 }), L + 0.02);
+      return finish(room(out, { mix: 0.3 }));
     },
   },
 ];

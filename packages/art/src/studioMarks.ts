@@ -104,20 +104,70 @@ const MARKS: Mark[] = [
       "Not furry, not detailed, not painted.",
     ].join(" "),
   },
+  /*
+   * ═══ THE THREE BELOW ARE THE ONE HOD PICKED, SIMPLIFIED ═══
+   *
+   * Hod chose the two monsters holding a controller. Or: *"I'm going with
+   * him on it, but to me it's a bit fussy — the visual needs simplifying and
+   * fewer colours, or if the controller is white then the text should be
+   * white too."*
+   *
+   * He is right, and it is not a matter of taste: the original has FOUR
+   * colours in it — orange monster, teal monster, cream controller, dark
+   * ground — plus horns, teeth and grins. A studio mark ends up at the size
+   * of a favicon, and four colours and three kinds of detail at 32 pixels is
+   * a smudge. Every one of these drops something.
+   */
   {
-    id: "monsters-pad",
-    idea: "Both at once: a big monster and a small one sharing a controller.",
+    id: "pair-twotone",
+    idea: "Two colours only: both monsters cream, the controller in gold.",
     prompt: [
       "Two friendly cartoon monsters standing side by side and facing forward,",
-      "drawn as simple bold flat shapes with thick outlines: a LARGE round monster",
-      "on the left with two horns and a wide grin, and a SMALL monster on the",
-      "right about half its height with one horn and the same grin.",
-      "Between them, held by both, is ONE simple video game controller seen flat",
-      "from the front — a rounded body with two grips, a round d-pad and two round",
-      "buttons.",
-      "The large monster is warm orange, the small one is bright teal, and the",
-      "controller between them is cream.",
-      "Chunky, symmetrical, and simple enough to read small.",
+      "drawn as simple bold flat silhouettes: a LARGE round monster on the left",
+      "and a SMALL one on the right about half its height. Between them, held by",
+      "both, is ONE simple video game controller seen flat from the front.",
+      "ONLY TWO COLOURS in the whole picture: both monsters are the SAME warm",
+      "cream, and the controller is warm gold. Nothing else is coloured.",
+      "The monsters are simple rounded blobs with two round eyes each and no",
+      "other features — no horns, no teeth, no mouths, no arms beyond the ones",
+      "holding the controller. Their eyes are holes with the background showing",
+      "through.",
+      "Flat, chunky and extremely simple.",
+    ].join(" "),
+  },
+  {
+    id: "pair-white",
+    idea: "All one colour. The controller is white, so everything is.",
+    prompt: [
+      "Two friendly cartoon monsters standing side by side and facing forward,",
+      "drawn as simple bold flat silhouettes: a LARGE round monster on the left",
+      "and a SMALL one on the right about half its height. Between them, held by",
+      "both, is ONE simple video game controller seen flat from the front.",
+      "ONE COLOUR ONLY for everything: the monsters and the controller are all",
+      "the same warm off-white. There is no second colour anywhere in the",
+      "picture.",
+      "The monsters are simple rounded blobs with two round eyes each and no",
+      "other features — no horns, no teeth, no mouths. Their eyes, and the",
+      "controller's buttons, are holes with the dark background showing through,",
+      "which is the only contrast in the drawing.",
+      "Flat, chunky, and simple enough to read at the size of a favicon.",
+    ].join(" "),
+  },
+  {
+    id: "pair-outline",
+    idea: "Drawn as one continuous outline, like a single wire bent into shape.",
+    prompt: [
+      "Two friendly cartoon monsters standing side by side and facing forward,",
+      "and between them, held by both, ONE simple video game controller seen flat",
+      "from the front. A LARGE round monster on the left, a SMALL one on the",
+      "right about half its height.",
+      "Drawn entirely as an OUTLINE: even-weight strokes with nothing filled in,",
+      "like one continuous wire bent into the shape. The dark background shows",
+      "through everywhere inside the lines.",
+      "ONE COLOUR for every stroke, a warm off-white. No fills, no shading, no",
+      "second colour.",
+      "Each monster is a simple rounded shape with two small round eyes and no",
+      "other features.",
     ].join(" "),
   },
 ];
