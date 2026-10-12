@@ -92,6 +92,7 @@ export function Settings({
   viewport,
   newsUnread,
   onNewsRead,
+  onTutorial,
   onClose,
 }: {
   account: Account | null;
@@ -101,6 +102,8 @@ export function Settings({
   viewport: string;
   newsUnread: boolean;
   onNewsRead: () => void;
+  /** Start the tutorial again, from the top. */
+  onTutorial: () => void;
   onClose: () => void;
 }) {
   const [muted, setMuted] = useState(sfx.muted);
@@ -190,6 +193,31 @@ export function Settings({
             the privacy policy meant knowing it hid behind a word that was
             not "privacy", and the terms were not named at all.
           */}
+          {/*
+            ═══ AND "HOW TO PLAY", WHICH USED TO BE ON THE HOME SCREEN ═══
+
+            Or: *"the 'how to play' button — push it into the settings too."*
+
+            It sat beside "play against a bot" and "the playground", on the
+            argument that it is about PLAYING and belongs with the other ways
+            in. That argument was wrong in the same way the three legal
+            buttons were wrong before the gear existed: the home screen is
+            for the thing you came to do, and this is a thing you reach for
+            ONCE, if ever — most players press it never, and the one who
+            wants it goes looking rather than stumbling on it.
+
+            First in the list, because of everything in here it is the only
+            one that is about the game itself.
+          */}
+          <button
+            className="set__link"
+            onClick={() => {
+              onClose();
+              onTutorial();
+            }}
+          >
+            {t("s15c7730", "איך משחקים")}
+          </button>
           {DOCS.map((d) => (
             <button
               key={d.page}

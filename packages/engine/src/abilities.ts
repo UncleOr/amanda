@@ -1,4 +1,4 @@
-import { ARENA, SIMULATION } from "@amanda/shared";
+import { ARENA, BOARD, SIMULATION } from "@amanda/shared";
 import type { Element, LocalizedString } from "@amanda/shared";
 import { isAhead, sharesLane } from "./combat.js";
 import type { BattleState, Owner, Unit } from "./types.js";
@@ -323,6 +323,40 @@ export function damageSharer(
   return null;
 }
 
+/**
+ * Is this unit standing in one of its own King's two guard posts?
+ *
+ * ═══ WHY ANYTHING NEEDS TO ASK ═══
+ *
+ * Or, rewriting Goldenhorn: *"takes with it the weakest card next to it THAT
+ * IS NOT A GUARD OR THE KING, and turns it into armour."* The King was
+ * already excluded. The guards were not, so the card could eat one of the two
+ * squares that keep the King alive — and the player's own board would open
+ * its crown to the first attacker that walked up. A card that can lose you
+ * the match by being placed correctly is not a trade-off, it is a trap.
+ *
+ * ═══ EXPRESSED IN THE ARENA, NOT IN BOARD SQUARES ═══
+ *
+ * The client calls them guard posts and finds them at `x === 3` and the
+ * King's two lanes (BoardGrid.isGuardPost). A unit here has no x: it has an
+ * arena column, and the two sides are mirrored into one 8-wide space. So the
+ * same thing is said the way this side of the code can check it — the front
+ * column of your own half, in a lane your own King occupies.
+ *
+ * Which also keeps it true if a King is ever placed somewhere else: the
+ * guards are wherever the King is, not wherever the King usually is.
+ */
+function guardsTheKing(state: BattleState, u: Unit): boolean {
+  if (u.isKing) return false;
+  // facing 1 is side A, whose front is the last column of its own board;
+  // side B is mirrored, so its front is the first column of the other half.
+  const front = u.facing === 1 ? BOARD.width - 1 : BOARD.width;
+  if (u.col !== front) return false;
+  const king = state.units.find((k) => k.isKing && k.owner === u.owner && k.alive);
+  if (!king) return false;
+  return u.lanes.some((l) => king.lanes.includes(l));
+}
+
 /** One-time effects that fire when the battle begins. */
 export function runOnSpawn(state: BattleState, ops: BattleOps): void {
   for (const u of state.units) {
@@ -330,7 +364,8 @@ export function runOnSpawn(state: BattleState, ops: BattleOps): void {
     for (const ab of u.abilities) {
       if (ab.trigger !== "onSpawn") continue;
       if (ab.type === "sacrificeAdjacent") {
-        // Consume the weakest adjacent same-owner, non-King ally for armor.
+        // The weakest adjacent ally of the same side — but never the King,
+        // and never a guard. See guardsTheKing below for why not.
         const victim = state.units
           .filter(
             (o) =>
@@ -338,6 +373,7 @@ export function runOnSpawn(state: BattleState, ops: BattleOps): void {
               o !== u &&
               o.owner === u.owner &&
               !o.isKing &&
+              !guardsTheKing(state, o) &&
               o.lanes.some((l) => u.lanes.some((ul) => Math.abs(ul - l) <= 1)),
           )
           .sort((a, b) => a.hp - b.hp)[0];

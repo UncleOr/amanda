@@ -152,6 +152,129 @@ export const TUTORIAL_LINES: readonly TutorialLine[] = [
     when: t("s5a0fcb1", "סופג ביד כשיש לך קלף שביר שמכה חזק"),
   },
   /*
+   * ═══ THE FIRST LESSON, AS OR WROTE IT ═══
+   *
+   * He wrote this match out himself, line by line, naming the card and the
+   * square for every step: *"I'm writing out the tutorial here as I see it,
+   * step by step."* The rules above it still exist and still run for anyone
+   * who wanders off the script — but in the first match they no longer
+   * decide what she says.
+   *
+   * The two things he put at the top of that message are rules for both
+   * lessons and live elsewhere: the exit button at the top always works
+   * (App.tsx), and there is no clock (useMatch.ts).
+   *
+   * The order, the targets and the gates are in game/lessonScript.ts.
+   */
+  {
+    id: "l1-hello",
+    he: t("sfbcc457", "היי, אני אמנדה. הגעת כדי להילחם מולי, {kid}? בכיף, אני אראה לך איך עושים את זה."),
+    vars: ["kid"],
+    when: t("sc39b53f", "המשפט הראשון, לפני שהיא מצביעה על משהו"),
+  },
+  {
+    id: "l1-room",
+    he: t("sd9bc88a", "אנחנו כרגע בחדר המשחקים. אם מנצחים פה — מתקדמים למקומות אחרים."),
+    vars: [],
+    when: t("s9e32cd7", "המשפט השני, עדיין באמצע המסך"),
+  },
+  {
+    id: "l1-albums",
+    he: t("sf961c72", "זה האלבום שלי, זה האלבום שלך. כל אחד מדביק עליהם את הקלפים שלו. כשייגמר הזמן — האלבומים נלחמים אחד בשני."),
+    vars: [],
+    when: t("s6a53354", "שני הלוחות מודגשים"),
+  },
+  {
+    id: "l1-colossus",
+    he: t("s62d0dd0", "נתחיל בהדבקות. הנה הקלף הראשון: גולם אבן. קלף עם הרבה כוח ספיגה. נמקם אותו בעמדת השומר."),
+    vars: [],
+    when: t("s42dbb6c", "גולם אבן ביד, לוח ריק"),
+  },
+  {
+    id: "l1-dragon",
+    he: t("s4f0b0c7", "הקלף הבא: פליים דראגון — דרקון חזק. נמקם אותו מאחור. הוא יעופף מעל כולם ויתקוף את האויב."),
+    vars: [],
+    when: t("sdaca2bb", "פליים דראגון ביד"),
+  },
+  {
+    id: "l1-boost",
+    he: t("s195f0f7", "הקלף הבא: בוסט אנרגיה. זה קלף פעולה. ניקח אותו כדי להשתמש בו בהמשך."),
+    vars: [],
+    when: t("s37af730", "בוסט אנרגיה ביד"),
+  },
+  {
+    id: "l1-bar-open",
+    he: t("s1e604c6", "קלפי הפעולה נמצאים כאן, למקרה שנרצה להשתמש בהם."),
+    vars: [],
+    when: t("sedb61e0", "אחרי שהבוסט נכנס לבר"),
+  },
+  {
+    id: "l1-bar-close",
+    he: t("sd597bbf", "טוב, זה לאחר כך. בואו נמשיך."),
+    vars: [],
+    when: t("s325b7db", "מגירת קלפי הפעולה פתוחה"),
+  },
+  {
+    id: "l1-bin",
+    he: t("s5e4cdb0", "קוביית ג'לי — קלף, אממ... לא משהו. בואו נזרוק אותו. יגיעו טובים יותר."),
+    vars: [],
+    when: t("sb4d2832", "קוביית ג'לי ביד"),
+  },
+  {
+    id: "l1-unbin",
+    he: t("s2bd7018", "בעצם — לא בטוח שיגיע משהו טוב יותר. מזל שאפשר להתחרט על הקלף האחרון שזרקתם. הנה, כאן."),
+    vars: [],
+    when: t("s31f77d0", "מיד אחרי הזריקה"),
+  },
+  {
+    id: "l1-cube",
+    he: t("sd4b3818", "אוקיי, קוביית הג'לי בולעת קלפי יריב. נמקם אותה כאן למעלה מאחורה. היא לא תחסום את הדרקון, הוא מעופף."),
+    vars: [],
+    when: t("s253d8e7", "קוביית הג'לי חזרה מהפח"),
+  },
+  {
+    id: "l1-king",
+    he: t("s1ff71ce", "הופה, אבי-הענקים. קלף ענק וחזק. מושלם למשבצת המלך."),
+    vars: [],
+    when: t("s559179f", "אבי-הענקים ביד"),
+  },
+  {
+    id: "l1-king-why",
+    he: t("sd65daae", "הכוח של קלף המלך גדל פי 3, וזה חשוב. אם הוא מת — הפסדתם."),
+    vars: [],
+    when: t("sb25f12e", "מיד אחרי שהוכתר מלך"),
+  },
+  {
+    id: "l1-troll",
+    he: t("s503c2fe", "הופה, עוד ענק. טרול סלע, שמרפא את עצמו. נמקם אותו בעמדת השומר."),
+    vars: [],
+    when: t("s856075f", "טרול סלע ביד"),
+  },
+  {
+    id: "l1-guards",
+    he: t("see01751", "יש לך שני שומרים וזה חשוב מאוד! כל עוד השומרים חיים — המלך בלתי פגיע."),
+    vars: [],
+    when: t("s045e8b5", "שתי עמדות השומר תפוסות"),
+  },
+  {
+    id: "l1-go",
+    he: t("saa20106", "אוקיי, מספיק דיבורים. בואו ניגש לקרב ונראה מה קורה."),
+    vars: [],
+    when: t("scb6277d", "הכול בנוי, נשאר ללחוץ"),
+  },
+  {
+    id: "l1-crumbs",
+    he: t("s408dcff", "שימו לב — כל הריבועים הריקים מתמלאים במפלצות פירורים חלשות. כדאי למלא אותם בזמן!"),
+    vars: [],
+    when: t("sb842d99", "אחרי הלחיצה על התחל קרב, לפני הספירה"),
+  },
+  {
+    id: "l1-won",
+    he: t("s4a756c9", "ניצחת! אבל זה היה קל, כי עזרתי."),
+    vars: [],
+    when: t("sb08f699", "מסך התוצאה של המשחק הראשון"),
+  },
+  /*
    * ═══ THE SECOND LESSON IS WRITTEN, NOT REACTED TO ═══
    *
    * Everything above is a RULE — "a giant? put him in front of the King" —

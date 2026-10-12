@@ -36,6 +36,25 @@ const MAP = join(ROOT, "docs", "copy.map.json");
 const COPY_SHEET = join(ROOT, "docs", "COPY.xlsx");
 const TUT_SHEET = join(ROOT, "docs", "TUTORIAL.xlsx");
 const DRY = process.argv.includes("--dry-run");
+/**
+ * Treat a changed SOURCE cell as a new Hebrew text.
+ *
+ * ═══ WHY THIS EXISTS, AND WHY IT IS NOT THE DEFAULT ═══
+ *
+ * Or, ninety rows into the document: nine of his rewrites had been typed
+ * over the "source text" column instead of into the yellow one beside it.
+ * The check below caught every one and skipped them, which is the check
+ * doing its job — and would have lost nine rewrites.
+ *
+ * It must stay a flag rather than a default, because the two cases are
+ * indistinguishable from inside this script. A source cell that no longer
+ * matches the game means EITHER "I rewrote it here by mistake" OR "the game
+ * changed under this document since it was generated" — and accepting the
+ * second silently would write last week's wording back over today's.
+ *
+ * So it takes a human saying which it is, once, on the command line.
+ */
+const FROM_SOURCE = process.argv.includes("--from-source");
 
 /*
  * The column names, in one place, because they are Or's words and he
@@ -56,6 +75,8 @@ const entries = new Map(JSON.parse(readFileSync(MAP, "utf8")).map((e) => [e.id, 
 /** id → { he, en }, last one wins if a row somehow appears twice. */
 const edits = new Map();
 const stale = [];
+/** Rows whose rewrite was typed over the source text. See FROM_SOURCE. */
+const fromSource = [];
 const unknown = [];
 const notes = [];
 
@@ -93,7 +114,15 @@ function take(rows, { he, en, note, current }) {
     const seen = String(row[at[current]] ?? "").replace(/\s+/g, " ").trim();
     const truth = entry.text.replace(/\s+/g, " ").trim();
     if (seen && seen !== truth) {
-      stale.push({ id, seen, truth });
+      if (!FROM_SOURCE) {
+        stale.push({ id, seen, truth });
+        continue;
+      }
+      // Taken as the rewrite it is, unless the yellow column also has one —
+      // then that is the more deliberate of the two and it wins.
+      const prev = edits.get(id) ?? { he: "", en: "" };
+      edits.set(id, { he: nextHe || String(row[at[current]] ?? "").trim(), en: nextEn || prev.en });
+      fromSource.push(id);
       continue;
     }
 
@@ -184,6 +213,10 @@ if (missing.size)
 if (unknown.length) console.log(`  ${unknown.length} unknown ids: ${unknown.join(", ")}`);
 for (const s of stale)
   console.log(`  SKIPPED ${s.id} — the sheet says "${s.seen}", the game says "${s.truth}"`);
+if (fromSource.length)
+  console.log(
+    `  ${fromSource.length} taken from the SOURCE column (--from-source): ${fromSource.join(", ")}`,
+  );
 if (notes.length) {
   console.log(`\n${notes.length} notes for me, which no script can apply:`);
   for (const n of notes) console.log(`  ${n.id}  ${n.comment}`);

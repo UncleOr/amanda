@@ -47,6 +47,19 @@ let gender: Gender = null;
 export function setGender(g: Gender): void {
   gender = g;
 }
+/**
+ * What to call the player: "ילד", or "ילדה" when she knows.
+ *
+ * Or wrote his opening line as *"you came to fight me, {boy}/ {girl}?"* — a
+ * copywriter's way of saying "whichever this one is", not a slash he wants
+ * on screen. Unknown falls back to the masculine, the same way `say()`
+ * does: the game asks on the profile screen and plenty of players never
+ * answer.
+ */
+export function kid(): string {
+  return gender === "girl" ? t("s09c9dbd", "ילדה") : t("sd2076b4", "ילד");
+}
+
 export function getGender(): Gender {
   return gender;
 }

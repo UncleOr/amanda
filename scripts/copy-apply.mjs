@@ -25,6 +25,8 @@ const ROOT = fileURLToPath(new URL("..", import.meta.url));
 const DOC = join(ROOT, "docs", "COPY.md");
 const MAP = join(ROOT, "docs", "copy.map.json");
 const EN = join(ROOT, "data", "copy.en.json");
+/** id -> the date it went into the game. Read back by copy-inventory.mjs. */
+const APPLIED = join(ROOT, "docs", "copy.applied.json");
 const DRY = process.argv.includes("--dry-run");
 
 if (!existsSync(DOC) || !existsSync(MAP)) {
@@ -180,6 +182,56 @@ if (intoCatalogue) writeFileSync(EN, JSON.stringify(catalogue, null, 1) + "\n", 
 for (const [abs, json] of jsonFiles)
   writeFileSync(abs, JSON.stringify(json, null, 2) + "\n", "utf8");
 for (const [abs, lines] of sourceFiles) writeFileSync(abs, lines.join("\n"), "utf8");
+
+/*
+ * ═══ AND A NOTE OF WHAT WENT IN ═══
+ *
+ * Or, a hundred rows into editing: *"I'll carry on later, but mark for me
+ * somehow what has already been handled."*
+ *
+ * There was nothing to mark FROM. An applied edit BECOMES the source text
+ * and its "new text" cell empties, so a regenerated document looks exactly
+ * like one nobody has touched — correct, and useless to somebody working
+ * through a thousand rows over several evenings.
+ *
+ * Written AFTER the files, so a run that fell over half way cannot claim
+ * lines it never wrote. Merged rather than replaced: this is the log of
+ * everything ever applied, not of this run.
+ *
+ * ═══ KEYED BY THE TEXT, NOT BY THE ID ═══
+ *
+ * The first version of this logged `p.id`, and it marked ONE row out of
+ * sixteen. An id is `sha1(file \0 text \0 occurrence)` — derived from the
+ * words themselves, so that adding a string near the top of a file cannot
+ * shift every id below it. Which means that the moment an edit is applied
+ * the text changes, the id changes with it, and the id just written down
+ * refers to a string that no longer exists.
+ *
+ * The one row that did mark was the one whose "edit" was identical to the
+ * source: nothing changed, so nothing moved.
+ *
+ * The file and the FINAL text are stable under exactly this operation. If
+ * the same words appear twice in one file both get marked, which is right:
+ * both say the thing that was already dealt with.
+ */
+if (!DRY && planned.length) {
+  let log = [];
+  try {
+    const prev = JSON.parse(readFileSync(APPLIED, "utf8"));
+    if (Array.isArray(prev)) log = prev;
+  } catch {
+    /* the first run has nothing to merge with */
+  }
+  const today = new Date().toISOString().slice(0, 10);
+  const seen = new Set(log.map((r) => `${r.file}\u0000${r.text}`));
+  for (const p of planned) {
+    const key = `${p.file}\u0000${p.to}`;
+    if (seen.has(key)) continue;
+    seen.add(key);
+    log.push({ file: p.file, text: p.to, date: today });
+  }
+  writeFileSync(APPLIED, JSON.stringify(log, null, 1) + "\n", "utf8");
+}
 
 console.log(
   `\n${planned.length} Hebrew edits applied, ${intoJson + intoCatalogue} English written, ` +

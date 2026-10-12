@@ -32,6 +32,8 @@ export const MAP = join(ROOT, "docs", "copy.map.json");
  * already been written, and only the empty cells are work left to do.
  */
 export const EN = join(ROOT, "data", "copy.en.json");
+/** id -> the date it went into the game. Written by copy-apply.mjs. */
+const APPLIED = join(ROOT, "docs", "copy.applied.json");
 
 const HEBREW = /[֐-׿]/;
 /** Make a literal safe to drop into a RegExp. */
@@ -388,6 +390,23 @@ for (const e of entries) {
 
 const esc = (t) => t.replace(/\|/g, "\\|");
 const english = existsSync(EN) ? JSON.parse(readFileSync(EN, "utf8")) : {};
+/**
+ * file + text -> the date it went into the game.
+ *
+ * Keyed by the words rather than by the id, because an id is derived FROM
+ * the words: applying an edit changes the text, which changes its id, which
+ * is precisely the key you were hoping to look it up by. See copy-apply.mjs.
+ */
+const applied = (() => {
+  const by = new Map();
+  try {
+    const log = JSON.parse(readFileSync(APPLIED, "utf8"));
+    if (Array.isArray(log)) for (const r of log) by.set(`${r.file}\u0000${r.text}`, r.date);
+  } catch {
+    /* nothing has been applied yet, which is a fine answer */
+  }
+  return by;
+})();
 const translated = entries.filter((e) => english[e.id] ?? e.en).length;
 const parts = [
   "# הטקסטים של אמנדה",
@@ -468,6 +487,19 @@ writeXlsx(SHEET, [
     name: "טקסטים",
     columns: [
       { header: "מזהה", width: 11 },
+      /*
+       * ═══ WHERE WAS I ═══
+       *
+       * Or: *"I'll carry on later, but mark for me somehow what has already
+       * been handled."* An applied edit BECOMES the source text and leaves
+       * no trace of itself, so without this a document he has worked
+       * through for three evenings looks identical to a fresh one.
+       *
+       * The date it went into the game, from docs/copy.applied.json.
+       * Filterable, which is the point: show the blanks and the sheet is
+       * only what is left to do.
+       */
+      { header: "טופל", width: 11 },
       { header: "מסך", width: 30 },
       { header: "טקסט מקור (בעברית)", width: 62 },
       { header: "טקסט חדש עברית", width: 62, edit: true },
@@ -475,6 +507,7 @@ writeXlsx(SHEET, [
     ],
     rows: entries.map((e) => [
       e.id,
+      applied.get(`${e.where.file}\u0000${e.text}`) ?? "",
       e.section,
       e.text,
       "",

@@ -69,14 +69,26 @@ export const LESSONS: Lesson[] = [
    */
   {
     title: { he: t("s24e4af8", "משחק ראשון — איך בונים לוח") },
+    /*
+     * ═══ OR'S CAST, IN OR'S ORDER ═══
+     *
+     * He wrote this match out card by card. The hand is no longer "a clearly
+     * strong hand" that the rules react to — it is the script's cast, dealt
+     * in the order the script talks about it, so every line has the card it
+     * names already in hand.
+     *
+     * The order is the lesson: a tank for the guard post, a FLYER for the
+     * back row, an action card to take to the bar, a weak one to bin and
+     * then take back, a King, and a second tank for the second guard post.
+     */
     deck: [
-      "giants_10_titan_king", // a King worth crowning, and she says so
-      "giants_01_stone_colossus", // static, tough: the guard-post lesson
-      "dragons_03_thunderwing", // a flyer that snipes: the back-row lesson
-      "energy_boost", // an action card, so that line has something to point at
-      "insects_08_firefly", // the weak one she tells you to bin
+      "giants_01_stone_colossus", // "a card with a lot of absorbing power"
+      "dragons_01_flame_dragon", // flies, so the cube in front cannot block it
+      "energy_boost", // the action card: taken, not placed
+      "slimes_02_gelatinous_cube", // "a card, erm... not great" — binned, then recovered
+      "giants_10_titan_king", // the crown
+      "giants_04_rock_troll", // heals itself: the second guard post
       "plants_03_healing_bloom",
-      "slimes_01_basic_slime",
       "insects_01_ant_soldier",
     ],
     /*

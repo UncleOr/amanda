@@ -950,7 +950,6 @@ function Game() {
           signedIn={signedIn}
           promo={promo}
           onChest={setChest}
-          onTutorial={replayTutorial}
           viewport={viewport}
         />
       )}
@@ -1379,12 +1378,16 @@ function Game() {
                     )}
                   </button>
                 )}
-                <button onClick={m.discardHand} disabled={m.hand === null}>
+                {/* Named, so the walkthrough can point at them. A tutorial
+                    step targets a CSS selector, and these two were the only
+                    buttons on the screen without one — which is why the
+                    first lesson could say "bin it" and ring nothing. */}
+                <button className="hand__discard" onClick={m.discardHand} disabled={m.hand === null}>
                   {t("sd06d0bd", "זרוק")} <Icon name="discard" size={15} />
                 </button>
                 {/* One take-back a match. Once it is spent the button goes
                     out and stays out — see takeDiscard for why. */}
-                <button onClick={m.takeDiscard} disabled={!m.canTakeDiscard}>
+                <button className="hand__bin" onClick={m.takeDiscard} disabled={!m.canTakeDiscard}>
                   {t("s1bd8f04", "קח מהפח")} {m.canTakeDiscard && <Icon name="recycle" size={15} />}
                 </button>
               </div>
@@ -1661,8 +1664,18 @@ function Game() {
       {teaching && !metAmanda && (
         <Tutorial
           steps={[
-            { target: null, text: line("hello-1") },
-            { target: null, text: line("hello-2") },
+            /*
+             * The two Or opens with. They are handed over here rather than
+             * through the script because they are said before there is a
+             * board to point at — the script holds off until the build
+             * phase for exactly that reason (see scriptedCue).
+             *
+             * `{kid}` is filled from the account's own answer. He wrote it
+             * as "ילד/ ילדה", which is a copywriter saying "whichever this
+             * player is" rather than a slash he wants on screen.
+             */
+            { target: null, text: line("l1-hello", { kid: V.kid() }) },
+            { target: null, text: line("l1-room") },
           ]}
           onDone={() => setMetAmanda(true)}
           onQuit={() => {
@@ -1746,6 +1759,7 @@ function Game() {
           viewport={viewport}
           newsUnread={newsUnread}
           onNewsRead={() => setNewsUnread(false)}
+          onTutorial={replayTutorial}
           onClose={() => panel.close()}
         />
       )}

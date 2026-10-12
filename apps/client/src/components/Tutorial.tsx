@@ -167,6 +167,37 @@ export function Tutorial({ steps, onDone, onQuit }: Props) {
           ? was
           : { top: b.top, left: b.left, width: b.width, height: b.height },
       );
+
+      /*
+       * ═══ AND THE BUBBLE, IN THE SAME LOOP ═══
+       *
+       * Placing it in an effect of its own measured it ONCE — and the number
+       * it measured was the height the bubble had before `place` narrowed it
+       * to fit beside the hole, after which the text wrapped onto more lines
+       * and it grew back down over the thing it was pointing at.
+       *
+       * Measured on the action-card drawer at 844x390: placed at y=277 from
+       * a 48px bubble that ended up 73, covering 29% of a 698x34 target —
+       * and the 29% in the middle, which is where a thumb goes. Which is Or's
+       * oldest complaint about this overlay in its last hiding place: *"on
+       * some screens the little panel hides the thing I need to do."*
+       *
+       * A ResizeObserver was the obvious fix and it did not work; this loop
+       * is already running every frame to follow the target, it already has
+       * the live rect, and it already publishes only real changes. One
+       * instrument instead of two, and the height it uses cannot be stale by
+       * more than a frame.
+       */
+      const bub = bubbleRef.current;
+      if (bub) {
+        const r = bub.getBoundingClientRect();
+        if (r.height > 0) {
+          const at = place({ top: b.top, left: b.left, width: b.width, height: b.height }, r.width, r.height);
+          setBox((was) =>
+            was && was.top === at.top && was.left === at.left && was.width === at.width ? was : at,
+          );
+        }
+      }
     };
     const loop = () => {
       measure();
@@ -175,17 +206,6 @@ export function Tutorial({ steps, onDone, onQuit }: Props) {
     loop();
     return () => window.cancelAnimationFrame(raf);
   }, [step]);
-
-  // Place the bubble once it and the hole have both been measured.
-  useLayoutEffect(() => {
-    const el = bubbleRef.current;
-    if (!el || !spot) return;
-    const r = el.getBoundingClientRect();
-    const at = place(spot, r.width, r.height);
-    setBox((was) =>
-      was && was.top === at.top && was.left === at.left && was.width === at.width ? was : at,
-    );
-  }, [spot, step]);
 
   /*
    * ═══ DOING THE THING IS THE ANSWER ═══

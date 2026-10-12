@@ -10,9 +10,9 @@
   }
  },
  {
-  "id": "hbab6fe4",
+  "id": "h9f563dd",
   "section": "שם המשחק וכותרות הדפדפן",
-  "text": "בונים לוח 4×4 של מפלצות, והן נלחמות לבד. אמנדה שופטת, אמנדה אוכלת.",
+  "text": "אוספים קלפים. נלחמים במפלצות. אמנדה אוכלת את כולם.",
   "where": {
    "kind": "source",
    "file": "apps/client/index.html",
@@ -50,9 +50,9 @@
   }
  },
  {
-  "id": "h8264212",
+  "id": "h6ec6982",
   "section": "שם המשחק וכותרות הדפדפן",
-  "text": "בונים לוח 4×4 של מפלצות, ואז הן נלחמות לבד. אמנדה שופטת, אמנדה אוכלת.",
+  "text": "אוספים קלפים. נלחמים במפלצות. אמנדה אוכלת את כולם.",
   "where": {
    "kind": "source",
    "file": "apps/client/public/manifest.webmanifest",
@@ -74,9 +74,9 @@
   "en": "The Dragons"
  },
  {
-  "id": "d140e3f9",
+  "id": "dda5d4e9",
   "section": "סדרה — הדרקונים",
-  "text": "פינוי קו ראייה, נזק אזורי ופצצות מתקתקות",
+  "text": "נזק אזורי ופצצות מתקתקות",
   "where": {
    "kind": "json",
    "file": "data/series/01-dragons.json",
@@ -85,7 +85,7 @@
     "he"
    ]
   },
-  "en": "Clearing line of sight, area damage, and ticking bombs"
+  "en": "Area damage and ticking bombs"
  },
  {
   "id": "dc64864a",
@@ -103,9 +103,9 @@
   "en": "Dragon Scales"
  },
  {
-  "id": "d80d51ce",
+  "id": "da6ab0c0",
   "section": "סדרה — הדרקונים",
-  "text": "כל הדרקונים בלוח שלכם מקבלים הגנה פסיבית שמפחיתה את כל הנזק הנכנס אליהם ב-20%.",
+  "text": "שלושה צמודים מאותה משפחה מקבלים +20% עוצמה ו+20% חיים.",
   "where": {
    "kind": "json",
    "file": "data/series/01-dragons.json",
@@ -115,7 +115,7 @@
     "he"
    ]
   },
-  "en": "All your dragons gain a passive 20% reduction to all incoming damage."
+  "en": "Three touching cards of the same family get +20% power and +20% health."
  },
  {
   "id": "dd069f94",
@@ -134,9 +134,9 @@
   "en": "Flame Dragon"
  },
  {
-  "id": "d8cf349b",
+  "id": "d387c4a6",
   "section": "סדרה — הדרקונים",
-  "text": "יוזמה מהירה: מכה שהודפת את היריב, ממשיך לצעוד לתוך שטח היריב ומפנה קו ראייה לצלפים שמאחור.",
+  "text": "צועד לתוך שטח היריב",
   "where": {
    "kind": "json",
    "file": "data/series/01-dragons.json",
@@ -147,7 +147,7 @@
     "he"
    ]
   },
-  "en": "Fast initiative: knocks the enemy back, advances into enemy territory and clears line of sight for your snipers."
+  "en": "Advances into enemy territory"
  },
  {
   "id": "ddfe4de4",
@@ -166,9 +166,9 @@
   "en": "Obsidian Egg"
  },
  {
-  "id": "d05af5bf",
+  "id": "d9a746c1",
   "section": "סדרה — הדרקונים",
-  "text": "אחרי 10 שניות בוקע דרקון הרסני עם +1500 עוצמה.",
+  "text": "אחרי 10 שניות בוקע ממנה דרקון עם +1500 עוצמה.",
   "where": {
    "kind": "json",
    "file": "data/series/01-dragons.json",
@@ -181,7 +181,7 @@
     "he"
    ]
   },
-  "en": "After 10 seconds a destructive dragon hatches with +1500 power."
+  "en": "Hatches a dragon with +1500 Power after 10 seconds"
  },
  {
   "id": "dd171205",
@@ -200,9 +200,9 @@
   "en": "Ground-floor ticking bomb: place it under a tank; by the time the tank breaks, its timer is up."
  },
  {
-  "id": "d87bdbe8",
+  "id": "d1cdf43f",
   "section": "סדרה — הדרקונים",
-  "text": "רעם-כנף",
+  "text": "טורץ'",
   "where": {
    "kind": "json",
    "file": "data/series/01-dragons.json",
@@ -213,12 +213,12 @@
     "he"
    ]
   },
-  "en": "Thunderwing"
+  "en": "Torch"
  },
  {
-  "id": "d39052c3",
+  "id": "d0c38210",
   "section": "סדרה — הדרקונים",
-  "text": "צלף מותנה: יורה לקלף האחרון בנתיב המקביל, דורש קו ראייה פנוי.",
+  "text": "יורה בקלף האויב האחרון בנתיב שלו, כל עוד יש לו קו ראייה פנוי.",
   "where": {
    "kind": "json",
    "file": "data/series/01-dragons.json",
@@ -229,7 +229,7 @@
     "he"
    ]
   },
-  "en": "Conditional sniper: fires at the last card in its lane, requires a clear line of sight."
+  "en": "Shoots the last enemy card in its lane, as long as it has a clear line of sight"
  },
  {
   "id": "d751bd5b",
@@ -248,9 +248,9 @@
   "en": "Lava"
  },
  {
-  "id": "dc728737",
+  "id": "dd201848",
   "section": "סדרה — הדרקונים",
-  "text": "משאיר זרם געש בנתיב; כל מסתער נכנס לשלולית הלבה ונשרף.",
+  "text": "משאיר בנתיב שלו לבה רותחת, מי שנוגע בה נשרף ומאבד חיים",
   "where": {
    "kind": "json",
    "file": "data/series/01-dragons.json",
@@ -263,7 +263,7 @@
     "he"
    ]
   },
-  "en": "Leaves a lava stream in the lane; any advancer walks into the pool and burns."
+  "en": "Leaves a trail of molten lava in its lane. Enemies touching it burn and take damage"
  },
  {
   "id": "d4c2a5cc",
@@ -298,9 +298,9 @@
   "en": "Spike"
  },
  {
-  "id": "df748656",
+  "id": "d4bceedb",
   "section": "סדרה — הדרקונים",
-  "text": "מגן מחזיר-נזק לקומת קרקע: מחזיר 30% מהנזק שספג, מצוין תחת קלף מתפוצץ.",
+  "text": "מחזיר 30% מהנזק שספג, מצוין תחת קלף מתפוצץ.",
   "where": {
    "kind": "json",
    "file": "data/series/01-dragons.json",
@@ -311,12 +311,12 @@
     "he"
    ]
   },
-  "en": "Damage-reflect wall for the ground floor: returns 30% of damage taken, great under a bomb card."
+  "en": "Returns 30% of damage taken, great under a bomb card."
  },
  {
-  "id": "d501199d",
+  "id": "dd13f864",
   "section": "סדרה — הדרקונים",
-  "text": "נשיפת כפור",
+  "text": "דרקון הקרח",
   "where": {
    "kind": "json",
    "file": "data/series/01-dragons.json",
@@ -327,12 +327,12 @@
     "he"
    ]
   },
-  "en": "Frost Breath"
+  "en": "Ice Dragon"
  },
  {
-  "id": "d549c6db",
+  "id": "dcc2cd07",
   "section": "סדרה — הדרקונים",
-  "text": "בקרת קצב: מקפיא יריב מסתער ל-2 שניות ומאפס לו את זמן הטעינה.",
+  "text": "מקפיא יריב מסתער ל-2 שניות ומאפס לו את זמן הטעינה.",
   "where": {
    "kind": "json",
    "file": "data/series/01-dragons.json",
@@ -343,12 +343,12 @@
     "he"
    ]
   },
-  "en": "Crowd control: freezes an advancing enemy for 2s and resets its attack cooldown."
+  "en": "Freezes an advancing enemy for 2s and resets its attack cooldown."
  },
  {
-  "id": "d8932979",
+  "id": "d5bf3bd1",
   "section": "סדרה — הדרקונים",
-  "text": "גולד-הורן",
+  "text": "גולדנהורן",
   "where": {
    "kind": "json",
    "file": "data/series/01-dragons.json",
@@ -359,12 +359,12 @@
     "he"
    ]
   },
-  "en": "Gold-Horn"
+  "en": "Golden Horn"
  },
  {
-  "id": "d2db5085",
+  "id": "d97bf3bb",
   "section": "סדרה — הדרקונים",
-  "text": "מוחץ קלף חלש שלכם שלידו בתמורה לשריון, ואז צועד כטנק מוגן.",
+  "text": "לוקח איתו את הקלף הכי חלש שנמצא בסמוך אליו שאינו שומר או מלך והופך אותו לשריון",
   "where": {
    "kind": "json",
    "file": "data/series/01-dragons.json",
@@ -377,12 +377,12 @@
     "he"
    ]
   },
-  "en": "Crushes a weak adjacent ally for armor, then advances as a protected tank."
+  "en": "Turns the weakest adjacent card (except Guards and Kings) into Armor"
  },
  {
-  "id": "d4198710",
+  "id": "d168698d",
   "section": "סדרה — הדרקונים",
-  "text": "טנק כבד שניזון מהקרבה.",
+  "text": "טנק כבד שמתחזק כשמקריבים קלף אחר",
   "where": {
    "kind": "json",
    "file": "data/series/01-dragons.json",
@@ -412,9 +412,9 @@
   "en": "Ghost Dragon"
  },
  {
-  "id": "dc6cb2ed",
+  "id": "d016d527",
   "section": "סדרה — הדרקונים",
-  "text": "נחיל מתפרץ: נועד למות מהר, ואז בוקעות 3 רוחות שממשיכות להסתער.",
+  "text": "כשהוא מת - בוקעות ממנו 3 רוחות שממשיכות להסתער.",
   "where": {
    "kind": "json",
    "file": "data/series/01-dragons.json",
@@ -425,7 +425,7 @@
     "he"
    ]
   },
-  "en": "Bursting swarm: meant to die fast, then 3 spirits hatch and keep charging."
+  "en": "When destroyed, spawns 3 spirits that charge forward."
  },
  {
   "id": "d330d7d5",
@@ -571,9 +571,9 @@
   "en": "Thick Hide"
  },
  {
-  "id": "d503e2ab",
+  "id": "d5da4e5e",
   "section": "סדרה — הענקים",
-  "text": "כל הענקים שלכם מקבלים שריון פסיבי שחוסם חלק מכל מכה נכנסת.",
+  "text": "שלושה צמודים מאותה משפחה מקבלים +20% עוצמה ו+20% חיים.",
   "where": {
    "kind": "json",
    "file": "data/series/05-giants.json",
@@ -583,7 +583,7 @@
     "he"
    ]
   },
-  "en": "All your giants gain passive armor that blocks part of every incoming hit."
+  "en": "Three touching cards of the same family get +20% power and +20% health."
  },
  {
   "id": "dbbaccd6",
@@ -949,9 +949,9 @@
   "en": "Charged Fur"
  },
  {
-  "id": "d5852e1b",
+  "id": "d512f04e",
   "section": "סדרה — הפרוותיים",
-  "text": "כל הפרוותיים שלכם תוקפים מהר יותר ב-20%.",
+  "text": "שלושה צמודים מאותה משפחה מקבלים +20% עוצמה ו+20% חיים.",
   "where": {
    "kind": "json",
    "file": "data/series/06-furries.json",
@@ -961,7 +961,7 @@
     "he"
    ]
   },
-  "en": "All your Furries attack 20% faster."
+  "en": "Three touching cards of the same family get +20% power and +20% health."
  },
  {
   "id": "d267c630",
@@ -1039,9 +1039,9 @@
   "en": "The Swarm"
  },
  {
-  "id": "df12e1eb",
+  "id": "d5df62d0",
   "section": "סדרה — החרקים",
-  "text": "כל החרקים שלכם מקבלים +20% מהירות תקיפה כשהם נלחמים יחד.",
+  "text": "שלושה צמודים מאותה משפחה מקבלים +20% עוצמה ו+20% חיים.",
   "where": {
    "kind": "json",
    "file": "data/series/07-insects.json",
@@ -1051,7 +1051,7 @@
     "he"
    ]
   },
-  "en": "All your insects gain +20% attack speed when fighting together."
+  "en": "Three touching cards of the same family get +20% power and +20% health."
  },
  {
   "id": "d1e8dfab",
@@ -1417,9 +1417,9 @@
   "en": "Photosynthesis"
  },
  {
-  "id": "dc5c9b79",
+  "id": "d1c379cd",
   "section": "סדרה — הצמחים",
-  "text": "כל הצמחים שלכם מתרפאים לאט לאורך כל הקרב.",
+  "text": "שלושה צמודים מאותה משפחה מקבלים +20% עוצמה ו+20% חיים.",
   "where": {
    "kind": "json",
    "file": "data/series/14-plants.json",
@@ -1429,7 +1429,7 @@
     "he"
    ]
   },
-  "en": "All your plants slowly heal throughout the battle."
+  "en": "Three touching cards of the same family get +20% power and +20% health."
  },
  {
   "id": "d7f9ed67",
@@ -1795,9 +1795,9 @@
   "en": "Stickiness"
  },
  {
-  "id": "d86a9ebb",
+  "id": "d45c17b6",
   "section": "סדרה — הריריים",
-  "text": "כל קלף יריב שמנסה להסתער בנתיב שיש בו קלף רירי סובל מהאטה של 50% במהירות התנועה.",
+  "text": "שלושה צמודים מאותה משפחה מקבלים +20% עוצמה ו+20% חיים.",
   "where": {
    "kind": "json",
    "file": "data/series/17-slimes.json",
@@ -1807,7 +1807,7 @@
     "he"
    ]
   },
-  "en": "Any enemy advancing in a lane containing a slime suffers a 50% movement slow."
+  "en": "Three touching cards of the same family get +20% power and +20% health."
  },
  {
   "id": "d24312e8",
@@ -2922,13 +2922,33 @@
   "en": "Freezes the opponent for five seconds: they can still draw, discard and play action cards, but they cannot place a card on the board. Unplayable with under ten seconds of building left."
  },
  {
+  "id": "s09c9dbd",
+  "section": "הקול של אמנדה — שורות מתחלפות (כמה גרסאות לכל רגע)",
+  "text": "ילדה",
+  "where": {
+   "kind": "source",
+   "file": "apps/client/src/data/voice.ts",
+   "line": 60
+  }
+ },
+ {
+  "id": "sd2076b4",
+  "section": "הקול של אמנדה — שורות מתחלפות (כמה גרסאות לכל רגע)",
+  "text": "ילד",
+  "where": {
+   "kind": "source",
+   "file": "apps/client/src/data/voice.ts",
+   "line": 60
+  }
+ },
+ {
   "id": "sf076071",
   "section": "הקול של אמנדה — שורות מתחלפות (כמה גרסאות לכל רגע)",
   "text": "כבר הולך?",
   "where": {
    "kind": "source",
    "file": "apps/client/src/data/voice.ts",
-   "line": 70
+   "line": 83
   }
  },
  {
@@ -2938,7 +2958,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/data/voice.ts",
-   "line": 71
+   "line": 84
   }
  },
  {
@@ -2948,7 +2968,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/data/voice.ts",
-   "line": 72
+   "line": 85
   }
  },
  {
@@ -2958,7 +2978,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/data/voice.ts",
-   "line": 73
+   "line": 86
   }
  },
  {
@@ -2968,7 +2988,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/data/voice.ts",
-   "line": 74
+   "line": 87
   }
  },
  {
@@ -2978,7 +2998,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/data/voice.ts",
-   "line": 78
+   "line": 91
   }
  },
  {
@@ -2988,7 +3008,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/data/voice.ts",
-   "line": 78
+   "line": 91
   }
  },
  {
@@ -2998,7 +3018,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/data/voice.ts",
-   "line": 79
+   "line": 92
   }
  },
  {
@@ -3008,7 +3028,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/data/voice.ts",
-   "line": 80
+   "line": 93
   }
  },
  {
@@ -3018,7 +3038,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/data/voice.ts",
-   "line": 81
+   "line": 94
   }
  },
  {
@@ -3028,7 +3048,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/data/voice.ts",
-   "line": 82
+   "line": 95
   }
  },
  {
@@ -3038,7 +3058,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/data/voice.ts",
-   "line": 86
+   "line": 99
   }
  },
  {
@@ -3048,7 +3068,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/data/voice.ts",
-   "line": 87
+   "line": 100
   }
  },
  {
@@ -3058,7 +3078,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/data/voice.ts",
-   "line": 88
+   "line": 101
   }
  },
  {
@@ -3068,7 +3088,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/data/voice.ts",
-   "line": 89
+   "line": 102
   }
  },
  {
@@ -3078,7 +3098,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/data/voice.ts",
-   "line": 93
+   "line": 106
   }
  },
  {
@@ -3088,7 +3108,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/data/voice.ts",
-   "line": 94
+   "line": 107
   }
  },
  {
@@ -3098,7 +3118,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/data/voice.ts",
-   "line": 94
+   "line": 107
   }
  },
  {
@@ -3108,7 +3128,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/data/voice.ts",
-   "line": 95
+   "line": 108
   }
  },
  {
@@ -3118,7 +3138,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/data/voice.ts",
-   "line": 96
+   "line": 109
   }
  },
  {
@@ -3128,7 +3148,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/data/voice.ts",
-   "line": 104
+   "line": 117
   }
  },
  {
@@ -3138,7 +3158,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/data/voice.ts",
-   "line": 105
+   "line": 118
   }
  },
  {
@@ -3148,7 +3168,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/data/voice.ts",
-   "line": 106
+   "line": 119
   }
  },
  {
@@ -3158,7 +3178,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/data/voice.ts",
-   "line": 106
+   "line": 119
   }
  },
  {
@@ -3168,7 +3188,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/data/voice.ts",
-   "line": 107
+   "line": 120
   }
  },
  {
@@ -3178,7 +3198,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/data/voice.ts",
-   "line": 108
+   "line": 121
   }
  },
  {
@@ -3188,7 +3208,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/data/voice.ts",
-   "line": 112
+   "line": 125
   }
  },
  {
@@ -3198,7 +3218,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/data/voice.ts",
-   "line": 113
+   "line": 126
   }
  },
  {
@@ -3208,7 +3228,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/data/voice.ts",
-   "line": 114
+   "line": 127
   }
  },
  {
@@ -3218,7 +3238,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/data/voice.ts",
-   "line": 115
+   "line": 128
   }
  },
  {
@@ -3228,7 +3248,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/data/voice.ts",
-   "line": 116
+   "line": 129
   }
  },
  {
@@ -3238,7 +3258,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/data/voice.ts",
-   "line": 121
+   "line": 134
   }
  },
  {
@@ -3248,7 +3268,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/data/voice.ts",
-   "line": 122
+   "line": 135
   }
  },
  {
@@ -3258,7 +3278,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/data/voice.ts",
-   "line": 123
+   "line": 136
   }
  },
  {
@@ -3268,7 +3288,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/data/voice.ts",
-   "line": 124
+   "line": 137
   }
  },
  {
@@ -3278,7 +3298,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/data/voice.ts",
-   "line": 129
+   "line": 142
   }
  },
  {
@@ -3288,7 +3308,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/data/voice.ts",
-   "line": 129
+   "line": 142
   }
  },
  {
@@ -3298,7 +3318,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/data/voice.ts",
-   "line": 130
+   "line": 143
   }
  },
  {
@@ -3308,7 +3328,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/data/voice.ts",
-   "line": 130
+   "line": 143
   }
  },
  {
@@ -3318,7 +3338,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/data/voice.ts",
-   "line": 131
+   "line": 144
   }
  },
  {
@@ -3328,7 +3348,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/data/voice.ts",
-   "line": 132
+   "line": 145
   }
  },
  {
@@ -3338,7 +3358,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/data/voice.ts",
-   "line": 132
+   "line": 145
   }
  },
  {
@@ -3348,7 +3368,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/data/voice.ts",
-   "line": 137
+   "line": 150
   }
  },
  {
@@ -3358,7 +3378,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/data/voice.ts",
-   "line": 138
+   "line": 151
   }
  },
  {
@@ -3368,7 +3388,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/data/voice.ts",
-   "line": 139
+   "line": 152
   }
  },
  {
@@ -3378,7 +3398,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/data/voice.ts",
-   "line": 144
+   "line": 157
   }
  },
  {
@@ -3388,7 +3408,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/data/voice.ts",
-   "line": 144
+   "line": 157
   }
  },
  {
@@ -3398,7 +3418,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/data/voice.ts",
-   "line": 145
+   "line": 158
   }
  },
  {
@@ -3408,7 +3428,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/data/voice.ts",
-   "line": 146
+   "line": 159
   }
  },
  {
@@ -3418,7 +3438,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/data/voice.ts",
-   "line": 147
+   "line": 160
   }
  },
  {
@@ -3428,7 +3448,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/data/voice.ts",
-   "line": 147
+   "line": 160
   }
  },
  {
@@ -3438,7 +3458,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/data/voice.ts",
-   "line": 164
+   "line": 177
   }
  },
  {
@@ -3448,7 +3468,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/data/voice.ts",
-   "line": 165
+   "line": 178
   }
  },
  {
@@ -3458,7 +3478,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/data/voice.ts",
-   "line": 166
+   "line": 179
   }
  },
  {
@@ -3468,7 +3488,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/data/voice.ts",
-   "line": 167
+   "line": 180
   }
  },
  {
@@ -3478,7 +3498,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/data/voice.ts",
-   "line": 183
+   "line": 196
   }
  },
  {
@@ -3488,7 +3508,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/data/voice.ts",
-   "line": 184
+   "line": 197
   }
  },
  {
@@ -3498,7 +3518,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/data/voice.ts",
-   "line": 185
+   "line": 198
   }
  },
  {
@@ -3508,7 +3528,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/data/voice.ts",
-   "line": 186
+   "line": 199
   }
  },
  {
@@ -3518,7 +3538,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/data/voice.ts",
-   "line": 187
+   "line": 200
   }
  },
  {
@@ -3528,7 +3548,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/data/voice.ts",
-   "line": 202
+   "line": 215
   }
  },
  {
@@ -3538,7 +3558,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/data/voice.ts",
-   "line": 203
+   "line": 216
   }
  },
  {
@@ -3548,7 +3568,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/data/voice.ts",
-   "line": 204
+   "line": 217
   }
  },
  {
@@ -3558,7 +3578,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/data/voice.ts",
-   "line": 205
+   "line": 218
   }
  },
  {
@@ -3568,7 +3588,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/data/voice.ts",
-   "line": 206
+   "line": 219
   }
  },
  {
@@ -3578,7 +3598,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/data/voice.ts",
-   "line": 211
+   "line": 224
   }
  },
  {
@@ -3588,7 +3608,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/data/voice.ts",
-   "line": 212
+   "line": 225
   }
  },
  {
@@ -3598,7 +3618,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/data/voice.ts",
-   "line": 213
+   "line": 226
   }
  },
  {
@@ -3608,7 +3628,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/data/voice.ts",
-   "line": 214
+   "line": 227
   }
  },
  {
@@ -3618,7 +3638,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/data/voice.ts",
-   "line": 214
+   "line": 227
   }
  },
  {
@@ -3628,7 +3648,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/data/voice.ts",
-   "line": 215
+   "line": 228
   }
  },
  {
@@ -3718,7 +3738,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/App.tsx",
-   "line": 770
+   "line": 816
   }
  },
  {
@@ -3728,7 +3748,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/App.tsx",
-   "line": 771
+   "line": 817
   }
  },
  {
@@ -3738,7 +3758,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/App.tsx",
-   "line": 786
+   "line": 832
   }
  },
  {
@@ -3748,7 +3768,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/App.tsx",
-   "line": 808
+   "line": 854
   }
  },
  {
@@ -3758,7 +3778,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/App.tsx",
-   "line": 833
+   "line": 879
   }
  },
  {
@@ -3768,7 +3788,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/App.tsx",
-   "line": 833
+   "line": 879
   }
  },
  {
@@ -3778,7 +3798,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/App.tsx",
-   "line": 840
+   "line": 886
   }
  },
  {
@@ -3788,7 +3808,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/App.tsx",
-   "line": 850
+   "line": 896
   }
  },
  {
@@ -3798,7 +3818,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/App.tsx",
-   "line": 858
+   "line": 904
   }
  },
  {
@@ -3808,7 +3828,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/App.tsx",
-   "line": 881
+   "line": 927
   }
  },
  {
@@ -3818,7 +3838,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/App.tsx",
-   "line": 893
+   "line": 939
   }
  },
  {
@@ -3828,7 +3848,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/App.tsx",
-   "line": 932
+   "line": 977
   }
  },
  {
@@ -3838,7 +3858,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/App.tsx",
-   "line": 932
+   "line": 977
   }
  },
  {
@@ -3848,7 +3868,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/App.tsx",
-   "line": 932
+   "line": 977
   }
  },
  {
@@ -3858,7 +3878,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/App.tsx",
-   "line": 936
+   "line": 981
   }
  },
  {
@@ -3868,7 +3888,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/App.tsx",
-   "line": 948
+   "line": 993
   }
  },
  {
@@ -3878,7 +3898,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/App.tsx",
-   "line": 948
+   "line": 993
   }
  },
  {
@@ -3888,7 +3908,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/App.tsx",
-   "line": 954
+   "line": 999
   }
  },
  {
@@ -3898,7 +3918,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/App.tsx",
-   "line": 961
+   "line": 1006
   }
  },
  {
@@ -3908,7 +3928,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/App.tsx",
-   "line": 965
+   "line": 1010
   }
  },
  {
@@ -3918,7 +3938,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/App.tsx",
-   "line": 965
+   "line": 1010
   }
  },
  {
@@ -3928,7 +3948,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/App.tsx",
-   "line": 992
+   "line": 1037
   }
  },
  {
@@ -3938,7 +3958,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/App.tsx",
-   "line": 999
+   "line": 1044
   }
  },
  {
@@ -3948,7 +3968,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/App.tsx",
-   "line": 999
+   "line": 1044
   }
  },
  {
@@ -3958,7 +3978,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/App.tsx",
-   "line": 1006
+   "line": 1051
   }
  },
  {
@@ -3968,7 +3988,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/App.tsx",
-   "line": 1008
+   "line": 1053
   }
  },
  {
@@ -3978,7 +3998,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/App.tsx",
-   "line": 1016
+   "line": 1061
   }
  },
  {
@@ -3988,7 +4008,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/App.tsx",
-   "line": 1060
+   "line": 1105
   }
  },
  {
@@ -3998,7 +4018,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/App.tsx",
-   "line": 1081
+   "line": 1126
   }
  },
  {
@@ -4008,7 +4028,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/App.tsx",
-   "line": 1100
+   "line": 1145
   }
  },
  {
@@ -4018,7 +4038,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/App.tsx",
-   "line": 1110
+   "line": 1155
   }
  },
  {
@@ -4028,7 +4048,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/App.tsx",
-   "line": 1118
+   "line": 1163
   }
  },
  {
@@ -4038,7 +4058,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/App.tsx",
-   "line": 1169
+   "line": 1214
   }
  },
  {
@@ -4048,7 +4068,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/App.tsx",
-   "line": 1171
+   "line": 1216
   }
  },
  {
@@ -4058,7 +4078,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/App.tsx",
-   "line": 1172
+   "line": 1217
   }
  },
  {
@@ -4068,7 +4088,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/App.tsx",
-   "line": 1177
+   "line": 1222
   }
  },
  {
@@ -4078,7 +4098,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/App.tsx",
-   "line": 1180
+   "line": 1225
   }
  },
  {
@@ -4088,7 +4108,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/App.tsx",
-   "line": 1192
+   "line": 1237
   }
  },
  {
@@ -4098,7 +4118,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/App.tsx",
-   "line": 1209
+   "line": 1254
   }
  },
  {
@@ -4108,7 +4128,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/App.tsx",
-   "line": 1213
+   "line": 1258
   }
  },
  {
@@ -4118,7 +4138,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/App.tsx",
-   "line": 1215
+   "line": 1260
   }
  },
  {
@@ -4128,7 +4148,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/App.tsx",
-   "line": 1217
+   "line": 1262
   }
  },
  {
@@ -4138,7 +4158,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/App.tsx",
-   "line": 1218
+   "line": 1263
   }
  },
  {
@@ -4148,7 +4168,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/App.tsx",
-   "line": 1222
+   "line": 1267
   }
  },
  {
@@ -4158,7 +4178,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/App.tsx",
-   "line": 1254
+   "line": 1299
   }
  },
  {
@@ -4168,7 +4188,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/App.tsx",
-   "line": 1263
+   "line": 1308
   }
  },
  {
@@ -4178,7 +4198,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/App.tsx",
-   "line": 1266
+   "line": 1311
   }
  },
  {
@@ -4188,7 +4208,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/App.tsx",
-   "line": 1272
+   "line": 1317
   }
  },
  {
@@ -4198,7 +4218,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/App.tsx",
-   "line": 1288
+   "line": 1333
   }
  },
  {
@@ -4208,7 +4228,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/App.tsx",
-   "line": 1316
+   "line": 1361
   }
  },
  {
@@ -4218,7 +4238,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/App.tsx",
-   "line": 1320
+   "line": 1365
   }
  },
  {
@@ -4228,7 +4248,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/App.tsx",
-   "line": 1328
+   "line": 1373
   }
  },
  {
@@ -4238,7 +4258,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/App.tsx",
-   "line": 1331
+   "line": 1376
   }
  },
  {
@@ -4248,7 +4268,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/App.tsx",
-   "line": 1337
+   "line": 1386
   }
  },
  {
@@ -4258,7 +4278,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/App.tsx",
-   "line": 1342
+   "line": 1391
   }
  },
  {
@@ -4268,7 +4288,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/App.tsx",
-   "line": 1348
+   "line": 1397
   }
  },
  {
@@ -4278,7 +4298,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/App.tsx",
-   "line": 1353
+   "line": 1402
   }
  },
  {
@@ -4288,7 +4308,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/App.tsx",
-   "line": 1363
+   "line": 1412
   }
  },
  {
@@ -4298,7 +4318,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/App.tsx",
-   "line": 1365
+   "line": 1414
   }
  },
  {
@@ -4308,7 +4328,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/App.tsx",
-   "line": 1366
+   "line": 1415
   }
  },
  {
@@ -4318,7 +4338,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/App.tsx",
-   "line": 1371
+   "line": 1420
   }
  },
  {
@@ -4328,7 +4348,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/App.tsx",
-   "line": 1373
+   "line": 1422
   }
  },
  {
@@ -4338,7 +4358,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/App.tsx",
-   "line": 1374
+   "line": 1423
   }
  },
  {
@@ -4348,7 +4368,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/App.tsx",
-   "line": 1390
+   "line": 1439
   }
  },
  {
@@ -4358,7 +4378,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/App.tsx",
-   "line": 1394
+   "line": 1443
   }
  },
  {
@@ -4368,7 +4388,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/App.tsx",
-   "line": 1398
+   "line": 1447
   }
  },
  {
@@ -4378,7 +4398,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/App.tsx",
-   "line": 1549
+   "line": 1613
   }
  },
  {
@@ -4388,7 +4408,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/App.tsx",
-   "line": 1550
+   "line": 1614
   }
  },
  {
@@ -4398,7 +4418,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/App.tsx",
-   "line": 1560
+   "line": 1624
   }
  },
  {
@@ -4408,7 +4428,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/App.tsx",
-   "line": 1566
+   "line": 1630
   }
  },
  {
@@ -4418,7 +4438,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/App.tsx",
-   "line": 1567
+   "line": 1631
   }
  },
  {
@@ -4428,7 +4448,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/App.tsx",
-   "line": 1579
+   "line": 1644
   }
  },
  {
@@ -4438,7 +4458,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/App.tsx",
-   "line": 1702
+   "line": 1775
   }
  },
  {
@@ -4448,7 +4468,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/App.tsx",
-   "line": 1774
+   "line": 1847
   }
  },
  {
@@ -4458,7 +4478,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/App.tsx",
-   "line": 1774
+   "line": 1847
   }
  },
  {
@@ -4468,7 +4488,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/App.tsx",
-   "line": 1777
+   "line": 1850
   }
  },
  {
@@ -4478,7 +4498,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/App.tsx",
-   "line": 1780
+   "line": 1853
   }
  },
  {
@@ -7507,7 +7527,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/components/ChestReveal.tsx",
-   "line": 180
+   "line": 196
   }
  },
  {
@@ -7517,7 +7537,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/components/ChestReveal.tsx",
-   "line": 217
+   "line": 244
   }
  },
  {
@@ -7527,7 +7547,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/components/ChestReveal.tsx",
-   "line": 261
+   "line": 289
   }
  },
  {
@@ -7537,7 +7557,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/components/ChestReveal.tsx",
-   "line": 261
+   "line": 289
   }
  },
  {
@@ -7547,7 +7567,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/components/ChestReveal.tsx",
-   "line": 279
+   "line": 307
   }
  },
  {
@@ -7557,7 +7577,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/components/ChestReveal.tsx",
-   "line": 282
+   "line": 310
   }
  },
  {
@@ -7567,7 +7587,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/components/ChestReveal.tsx",
-   "line": 304
+   "line": 332
   }
  },
  {
@@ -7877,7 +7897,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/components/HomeScreen.tsx",
-   "line": 232
+   "line": 230
   }
  },
  {
@@ -7887,7 +7907,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/components/HomeScreen.tsx",
-   "line": 235
+   "line": 233
   }
  },
  {
@@ -7897,7 +7917,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/components/HomeScreen.tsx",
-   "line": 239
+   "line": 237
   }
  },
  {
@@ -7907,7 +7927,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/components/HomeScreen.tsx",
-   "line": 249
+   "line": 247
   }
  },
  {
@@ -7917,7 +7937,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/components/HomeScreen.tsx",
-   "line": 260
+   "line": 258
   }
  },
  {
@@ -7927,7 +7947,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/components/HomeScreen.tsx",
-   "line": 282
+   "line": 280
   }
  },
  {
@@ -7937,7 +7957,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/components/HomeScreen.tsx",
-   "line": 285
+   "line": 283
   }
  },
  {
@@ -7947,7 +7967,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/components/HomeScreen.tsx",
-   "line": 292
+   "line": 290
   }
  },
  {
@@ -7957,7 +7977,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/components/HomeScreen.tsx",
-   "line": 295
+   "line": 293
   }
  },
  {
@@ -7967,7 +7987,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/components/HomeScreen.tsx",
-   "line": 298
+   "line": 296
   }
  },
  {
@@ -7977,7 +7997,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/components/HomeScreen.tsx",
-   "line": 303
+   "line": 301
   }
  },
  {
@@ -7987,7 +8007,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/components/HomeScreen.tsx",
-   "line": 306
+   "line": 304
   }
  },
  {
@@ -7997,7 +8017,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/components/HomeScreen.tsx",
-   "line": 322
+   "line": 320
   }
  },
  {
@@ -8007,7 +8027,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/components/HomeScreen.tsx",
-   "line": 328
+   "line": 326
   }
  },
  {
@@ -8017,7 +8037,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/components/HomeScreen.tsx",
-   "line": 339
+   "line": 337
   }
  },
  {
@@ -8027,7 +8047,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/components/HomeScreen.tsx",
-   "line": 344
+   "line": 342
   }
  },
  {
@@ -8037,17 +8057,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/components/HomeScreen.tsx",
-   "line": 346
-  }
- },
- {
-  "id": "s1a9483e",
-  "section": "components/HomeScreen.tsx",
-  "text": "איך משחקים",
-  "where": {
-   "kind": "source",
-   "file": "apps/client/src/components/HomeScreen.tsx",
-   "line": 356
+   "line": 344
   }
  },
  {
@@ -8057,7 +8067,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/components/HomeScreen.tsx",
-   "line": 367
+   "line": 355
   }
  },
  {
@@ -8067,7 +8077,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/components/HomeScreen.tsx",
-   "line": 379
+   "line": 367
   }
  },
  {
@@ -8077,7 +8087,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/components/HomeScreen.tsx",
-   "line": 381
+   "line": 369
   }
  },
  {
@@ -8087,7 +8097,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/components/HomeScreen.tsx",
-   "line": 382
+   "line": 370
   }
  },
  {
@@ -8097,7 +8107,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/components/HomeScreen.tsx",
-   "line": 396
+   "line": 384
   }
  },
  {
@@ -8107,7 +8117,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/components/HomeScreen.tsx",
-   "line": 415
+   "line": 403
   }
  },
  {
@@ -8117,7 +8127,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/components/HomeScreen.tsx",
-   "line": 472
+   "line": 460
   }
  },
  {
@@ -8127,7 +8137,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/components/HomeScreen.tsx",
-   "line": 517
+   "line": 505
   }
  },
  {
@@ -8137,7 +8147,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/components/HomeScreen.tsx",
-   "line": 532
+   "line": 520
   }
  },
  {
@@ -8147,7 +8157,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/components/HomeScreen.tsx",
-   "line": 537
+   "line": 525
   }
  },
  {
@@ -8157,7 +8167,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/components/HomeScreen.tsx",
-   "line": 551
+   "line": 539
   }
  },
  {
@@ -8167,7 +8177,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/components/HomeScreen.tsx",
-   "line": 572
+   "line": 560
   }
  },
  {
@@ -8177,7 +8187,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/components/HomeScreen.tsx",
-   "line": 575
+   "line": 563
   }
  },
  {
@@ -8187,7 +8197,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/components/HomeScreen.tsx",
-   "line": 583
+   "line": 571
   }
  },
  {
@@ -8277,7 +8287,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/components/Intro.tsx",
-   "line": 98
+   "line": 112
   }
  },
  {
@@ -9287,8 +9297,8 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/components/Settings.tsx",
-   "line": 168,
-   "endLine": 168
+   "line": 171,
+   "endLine": 171
   }
  },
  {
@@ -9338,7 +9348,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/components/Settings.tsx",
-   "line": 120
+   "line": 123
   }
  },
  {
@@ -9348,7 +9358,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/components/Settings.tsx",
-   "line": 124
+   "line": 127
   }
  },
  {
@@ -9358,7 +9368,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/components/Settings.tsx",
-   "line": 137
+   "line": 140
   }
  },
  {
@@ -9368,7 +9378,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/components/Settings.tsx",
-   "line": 139
+   "line": 142
   }
  },
  {
@@ -9378,7 +9388,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/components/Settings.tsx",
-   "line": 139
+   "line": 142
   }
  },
  {
@@ -9388,7 +9398,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/components/Settings.tsx",
-   "line": 148
+   "line": 151
   }
  },
  {
@@ -9398,7 +9408,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/components/Settings.tsx",
-   "line": 150
+   "line": 153
   }
  },
  {
@@ -9408,7 +9418,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/components/Settings.tsx",
-   "line": 150
+   "line": 153
   }
  },
  {
@@ -9418,7 +9428,17 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/components/Settings.tsx",
-   "line": 161
+   "line": 164
+  }
+ },
+ {
+  "id": "s15c7730",
+  "section": "components/Settings.tsx",
+  "text": "איך משחקים",
+  "where": {
+   "kind": "source",
+   "file": "apps/client/src/components/Settings.tsx",
+   "line": 219
   }
  },
  {
@@ -9428,7 +9448,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/components/Settings.tsx",
-   "line": 213
+   "line": 241
   }
  },
  {
@@ -9438,7 +9458,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/components/Settings.tsx",
-   "line": 214
+   "line": 242
   }
  },
  {
@@ -9448,7 +9468,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/components/Settings.tsx",
-   "line": 223
+   "line": 251
   }
  },
  {
@@ -9458,7 +9478,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/components/Settings.tsx",
-   "line": 229
+   "line": 257
   }
  },
  {
@@ -9468,7 +9488,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/components/Settings.tsx",
-   "line": 233
+   "line": 261
   }
  },
  {
@@ -9478,7 +9498,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/components/Settings.tsx",
-   "line": 236
+   "line": 264
   }
  },
  {
@@ -9488,7 +9508,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/components/Settings.tsx",
-   "line": 253
+   "line": 281
   }
  },
  {
@@ -9498,7 +9518,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/components/Settings.tsx",
-   "line": 258
+   "line": 286
   }
  },
  {
@@ -9508,7 +9528,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/components/Settings.tsx",
-   "line": 261
+   "line": 289
   }
  },
  {
@@ -9518,7 +9538,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/components/Settings.tsx",
-   "line": 282
+   "line": 310
   }
  },
  {
@@ -9528,7 +9548,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/components/Settings.tsx",
-   "line": 286
+   "line": 314
   }
  },
  {
@@ -9538,7 +9558,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/components/Settings.tsx",
-   "line": 288
+   "line": 316
   }
  },
  {
@@ -9548,7 +9568,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/components/Settings.tsx",
-   "line": 305
+   "line": 333
   }
  },
  {
@@ -9558,7 +9578,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/components/Settings.tsx",
-   "line": 305
+   "line": 333
   }
  },
  {
@@ -9568,7 +9588,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/components/Settings.tsx",
-   "line": 308
+   "line": 336
   }
  },
  {
@@ -9578,7 +9598,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/components/Settings.tsx",
-   "line": 318
+   "line": 346
   }
  },
  {
@@ -9588,7 +9608,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/components/Settings.tsx",
-   "line": 320
+   "line": 348
   }
  },
  {
@@ -9598,7 +9618,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/components/Settings.tsx",
-   "line": 321
+   "line": 349
   }
  },
  {
@@ -9608,7 +9628,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/components/Settings.tsx",
-   "line": 324
+   "line": 352
   }
  },
  {
@@ -9618,7 +9638,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/components/Settings.tsx",
-   "line": 343
+   "line": 371
   }
  },
  {
@@ -9628,7 +9648,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/components/Settings.tsx",
-   "line": 343
+   "line": 371
   }
  },
  {
@@ -9638,7 +9658,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/components/Settings.tsx",
-   "line": 346
+   "line": 374
   }
  },
  {
@@ -9878,7 +9898,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/components/Tutorial.tsx",
-   "line": 292
+   "line": 334
   }
  },
  {
@@ -9888,7 +9908,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/components/Tutorial.tsx",
-   "line": 294
+   "line": 336
   }
  },
  {
@@ -9938,17 +9958,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/components/Versus.tsx",
-   "line": 55
-  }
- },
- {
-  "id": "s943b402",
-  "section": "components/Versus.tsx",
-  "text": "נגד",
-  "where": {
-   "kind": "source",
-   "file": "apps/client/src/components/Versus.tsx",
-   "line": 55
+   "line": 62
   }
  },
  {
@@ -9958,7 +9968,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/components/Versus.tsx",
-   "line": 96
+   "line": 103
   }
  },
  {
@@ -9968,7 +9978,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/components/Versus.tsx",
-   "line": 96
+   "line": 103
   }
  },
  {
@@ -10362,6 +10372,746 @@
   }
  },
  {
+  "id": "sfbcc457",
+  "section": "data/tutorialLines.ts",
+  "text": "היי, אני אמנדה. הגעת כדי להילחם מולי, {kid}? בכיף, אני אראה לך איך עושים את זה.",
+  "where": {
+   "kind": "source",
+   "file": "apps/client/src/data/tutorialLines.ts",
+   "line": 171
+  }
+ },
+ {
+  "id": "sc39b53f",
+  "section": "data/tutorialLines.ts",
+  "text": "המשפט הראשון, לפני שהיא מצביעה על משהו",
+  "where": {
+   "kind": "source",
+   "file": "apps/client/src/data/tutorialLines.ts",
+   "line": 173
+  }
+ },
+ {
+  "id": "sd9bc88a",
+  "section": "data/tutorialLines.ts",
+  "text": "אנחנו כרגע בחדר המשחקים. אם מנצחים פה — מתקדמים למקומות אחרים.",
+  "where": {
+   "kind": "source",
+   "file": "apps/client/src/data/tutorialLines.ts",
+   "line": 177
+  }
+ },
+ {
+  "id": "s9e32cd7",
+  "section": "data/tutorialLines.ts",
+  "text": "המשפט השני, עדיין באמצע המסך",
+  "where": {
+   "kind": "source",
+   "file": "apps/client/src/data/tutorialLines.ts",
+   "line": 179
+  }
+ },
+ {
+  "id": "sf961c72",
+  "section": "data/tutorialLines.ts",
+  "text": "זה האלבום שלי, זה האלבום שלך. כל אחד מדביק עליהם את הקלפים שלו. כשייגמר הזמן — האלבומים נלחמים אחד בשני.",
+  "where": {
+   "kind": "source",
+   "file": "apps/client/src/data/tutorialLines.ts",
+   "line": 183
+  }
+ },
+ {
+  "id": "s6a53354",
+  "section": "data/tutorialLines.ts",
+  "text": "שני הלוחות מודגשים",
+  "where": {
+   "kind": "source",
+   "file": "apps/client/src/data/tutorialLines.ts",
+   "line": 185
+  }
+ },
+ {
+  "id": "s62d0dd0",
+  "section": "data/tutorialLines.ts",
+  "text": "נתחיל בהדבקות. הנה הקלף הראשון: גולם אבן. קלף עם הרבה כוח ספיגה. נמקם אותו בעמדת השומר.",
+  "where": {
+   "kind": "source",
+   "file": "apps/client/src/data/tutorialLines.ts",
+   "line": 189
+  }
+ },
+ {
+  "id": "s42dbb6c",
+  "section": "data/tutorialLines.ts",
+  "text": "גולם אבן ביד, לוח ריק",
+  "where": {
+   "kind": "source",
+   "file": "apps/client/src/data/tutorialLines.ts",
+   "line": 191
+  }
+ },
+ {
+  "id": "s4f0b0c7",
+  "section": "data/tutorialLines.ts",
+  "text": "הקלף הבא: פליים דראגון — דרקון חזק. נמקם אותו מאחור. הוא יעופף מעל כולם ויתקוף את האויב.",
+  "where": {
+   "kind": "source",
+   "file": "apps/client/src/data/tutorialLines.ts",
+   "line": 195
+  }
+ },
+ {
+  "id": "sdaca2bb",
+  "section": "data/tutorialLines.ts",
+  "text": "פליים דראגון ביד",
+  "where": {
+   "kind": "source",
+   "file": "apps/client/src/data/tutorialLines.ts",
+   "line": 197
+  }
+ },
+ {
+  "id": "s195f0f7",
+  "section": "data/tutorialLines.ts",
+  "text": "הקלף הבא: בוסט אנרגיה. זה קלף פעולה. ניקח אותו כדי להשתמש בו בהמשך.",
+  "where": {
+   "kind": "source",
+   "file": "apps/client/src/data/tutorialLines.ts",
+   "line": 201
+  }
+ },
+ {
+  "id": "s37af730",
+  "section": "data/tutorialLines.ts",
+  "text": "בוסט אנרגיה ביד",
+  "where": {
+   "kind": "source",
+   "file": "apps/client/src/data/tutorialLines.ts",
+   "line": 203
+  }
+ },
+ {
+  "id": "s1e604c6",
+  "section": "data/tutorialLines.ts",
+  "text": "קלפי הפעולה נמצאים כאן, למקרה שנרצה להשתמש בהם.",
+  "where": {
+   "kind": "source",
+   "file": "apps/client/src/data/tutorialLines.ts",
+   "line": 207
+  }
+ },
+ {
+  "id": "sedb61e0",
+  "section": "data/tutorialLines.ts",
+  "text": "אחרי שהבוסט נכנס לבר",
+  "where": {
+   "kind": "source",
+   "file": "apps/client/src/data/tutorialLines.ts",
+   "line": 209
+  }
+ },
+ {
+  "id": "sd597bbf",
+  "section": "data/tutorialLines.ts",
+  "text": "טוב, זה לאחר כך. בואו נמשיך.",
+  "where": {
+   "kind": "source",
+   "file": "apps/client/src/data/tutorialLines.ts",
+   "line": 213
+  }
+ },
+ {
+  "id": "s325b7db",
+  "section": "data/tutorialLines.ts",
+  "text": "מגירת קלפי הפעולה פתוחה",
+  "where": {
+   "kind": "source",
+   "file": "apps/client/src/data/tutorialLines.ts",
+   "line": 215
+  }
+ },
+ {
+  "id": "s5e4cdb0",
+  "section": "data/tutorialLines.ts",
+  "text": "קוביית ג'לי — קלף, אממ... לא משהו. בואו נזרוק אותו. יגיעו טובים יותר.",
+  "where": {
+   "kind": "source",
+   "file": "apps/client/src/data/tutorialLines.ts",
+   "line": 219
+  }
+ },
+ {
+  "id": "sb4d2832",
+  "section": "data/tutorialLines.ts",
+  "text": "קוביית ג'לי ביד",
+  "where": {
+   "kind": "source",
+   "file": "apps/client/src/data/tutorialLines.ts",
+   "line": 221
+  }
+ },
+ {
+  "id": "s2bd7018",
+  "section": "data/tutorialLines.ts",
+  "text": "בעצם — לא בטוח שיגיע משהו טוב יותר. מזל שאפשר להתחרט על הקלף האחרון שזרקתם. הנה, כאן.",
+  "where": {
+   "kind": "source",
+   "file": "apps/client/src/data/tutorialLines.ts",
+   "line": 225
+  }
+ },
+ {
+  "id": "s31f77d0",
+  "section": "data/tutorialLines.ts",
+  "text": "מיד אחרי הזריקה",
+  "where": {
+   "kind": "source",
+   "file": "apps/client/src/data/tutorialLines.ts",
+   "line": 227
+  }
+ },
+ {
+  "id": "sd4b3818",
+  "section": "data/tutorialLines.ts",
+  "text": "אוקיי, קוביית הג'לי בולעת קלפי יריב. נמקם אותה כאן למעלה מאחורה. היא לא תחסום את הדרקון, הוא מעופף.",
+  "where": {
+   "kind": "source",
+   "file": "apps/client/src/data/tutorialLines.ts",
+   "line": 231
+  }
+ },
+ {
+  "id": "s253d8e7",
+  "section": "data/tutorialLines.ts",
+  "text": "קוביית הג'לי חזרה מהפח",
+  "where": {
+   "kind": "source",
+   "file": "apps/client/src/data/tutorialLines.ts",
+   "line": 233
+  }
+ },
+ {
+  "id": "s1ff71ce",
+  "section": "data/tutorialLines.ts",
+  "text": "הופה, אבי-הענקים. קלף ענק וחזק. מושלם למשבצת המלך.",
+  "where": {
+   "kind": "source",
+   "file": "apps/client/src/data/tutorialLines.ts",
+   "line": 237
+  }
+ },
+ {
+  "id": "s559179f",
+  "section": "data/tutorialLines.ts",
+  "text": "אבי-הענקים ביד",
+  "where": {
+   "kind": "source",
+   "file": "apps/client/src/data/tutorialLines.ts",
+   "line": 239
+  }
+ },
+ {
+  "id": "sd65daae",
+  "section": "data/tutorialLines.ts",
+  "text": "הכוח של קלף המלך גדל פי 3, וזה חשוב. אם הוא מת — הפסדתם.",
+  "where": {
+   "kind": "source",
+   "file": "apps/client/src/data/tutorialLines.ts",
+   "line": 243
+  }
+ },
+ {
+  "id": "sb25f12e",
+  "section": "data/tutorialLines.ts",
+  "text": "מיד אחרי שהוכתר מלך",
+  "where": {
+   "kind": "source",
+   "file": "apps/client/src/data/tutorialLines.ts",
+   "line": 245
+  }
+ },
+ {
+  "id": "s503c2fe",
+  "section": "data/tutorialLines.ts",
+  "text": "הופה, עוד ענק. טרול סלע, שמרפא את עצמו. נמקם אותו בעמדת השומר.",
+  "where": {
+   "kind": "source",
+   "file": "apps/client/src/data/tutorialLines.ts",
+   "line": 249
+  }
+ },
+ {
+  "id": "s856075f",
+  "section": "data/tutorialLines.ts",
+  "text": "טרול סלע ביד",
+  "where": {
+   "kind": "source",
+   "file": "apps/client/src/data/tutorialLines.ts",
+   "line": 251
+  }
+ },
+ {
+  "id": "see01751",
+  "section": "data/tutorialLines.ts",
+  "text": "יש לך שני שומרים וזה חשוב מאוד! כל עוד השומרים חיים — המלך בלתי פגיע.",
+  "where": {
+   "kind": "source",
+   "file": "apps/client/src/data/tutorialLines.ts",
+   "line": 255
+  }
+ },
+ {
+  "id": "s045e8b5",
+  "section": "data/tutorialLines.ts",
+  "text": "שתי עמדות השומר תפוסות",
+  "where": {
+   "kind": "source",
+   "file": "apps/client/src/data/tutorialLines.ts",
+   "line": 257
+  }
+ },
+ {
+  "id": "saa20106",
+  "section": "data/tutorialLines.ts",
+  "text": "אוקיי, מספיק דיבורים. בואו ניגש לקרב ונראה מה קורה.",
+  "where": {
+   "kind": "source",
+   "file": "apps/client/src/data/tutorialLines.ts",
+   "line": 261
+  }
+ },
+ {
+  "id": "scb6277d",
+  "section": "data/tutorialLines.ts",
+  "text": "הכול בנוי, נשאר ללחוץ",
+  "where": {
+   "kind": "source",
+   "file": "apps/client/src/data/tutorialLines.ts",
+   "line": 263
+  }
+ },
+ {
+  "id": "s408dcff",
+  "section": "data/tutorialLines.ts",
+  "text": "שימו לב — כל הריבועים הריקים מתמלאים במפלצות פירורים חלשות. כדאי למלא אותם בזמן!",
+  "where": {
+   "kind": "source",
+   "file": "apps/client/src/data/tutorialLines.ts",
+   "line": 267
+  }
+ },
+ {
+  "id": "sb842d99",
+  "section": "data/tutorialLines.ts",
+  "text": "אחרי הלחיצה על התחל קרב, לפני הספירה",
+  "where": {
+   "kind": "source",
+   "file": "apps/client/src/data/tutorialLines.ts",
+   "line": 269
+  }
+ },
+ {
+  "id": "s4a756c9",
+  "section": "data/tutorialLines.ts",
+  "text": "ניצחת! אבל זה היה קל, כי עזרתי.",
+  "where": {
+   "kind": "source",
+   "file": "apps/client/src/data/tutorialLines.ts",
+   "line": 273
+  }
+ },
+ {
+  "id": "sb08f699",
+  "section": "data/tutorialLines.ts",
+  "text": "מסך התוצאה של המשחק הראשון",
+  "where": {
+   "kind": "source",
+   "file": "apps/client/src/data/tutorialLines.ts",
+   "line": 275
+  }
+ },
+ {
+  "id": "s40cdf63",
+  "section": "data/tutorialLines.ts",
+  "text": "חזרת. יפה. עכשיו בוא נדבר על מה שקורה בצד השני.",
+  "where": {
+   "kind": "source",
+   "file": "apps/client/src/data/tutorialLines.ts",
+   "line": 296
+  }
+ },
+ {
+  "id": "s5263775",
+  "section": "data/tutorialLines.ts",
+  "text": "פתיחת המשחק השני",
+  "where": {
+   "kind": "source",
+   "file": "apps/client/src/data/tutorialLines.ts",
+   "line": 298
+  }
+ },
+ {
+  "id": "s2f0283d",
+  "section": "data/tutorialLines.ts",
+  "text": "שים לב ללוח שלי. רואה את השורה הקדמית? זה כל מה שאפשר לראות בשלב הזה.",
+  "where": {
+   "kind": "source",
+   "file": "apps/client/src/data/tutorialLines.ts",
+   "line": 302
+  }
+ },
+ {
+  "id": "s25ea352",
+  "section": "data/tutorialLines.ts",
+  "text": "מצביעה על הלוח של היריב, לפני שנגעת בקלף",
+  "where": {
+   "kind": "source",
+   "file": "apps/client/src/data/tutorialLines.ts",
+   "line": 304
+  }
+ },
+ {
+  "id": "s2feac9e",
+  "section": "data/tutorialLines.ts",
+  "text": "רנטגן. קלף פעולה ששובר את הכלל הזה. ניקח אותו ונשתמש בו.",
+  "where": {
+   "kind": "source",
+   "file": "apps/client/src/data/tutorialLines.ts",
+   "line": 308
+  }
+ },
+ {
+  "id": "s66dddf3",
+  "section": "data/tutorialLines.ts",
+  "text": "רנטגן ביד",
+  "where": {
+   "kind": "source",
+   "file": "apps/client/src/data/tutorialLines.ts",
+   "line": 310
+  }
+ },
+ {
+  "id": "s0a71ac4",
+  "section": "data/tutorialLines.ts",
+  "text": "עכשיו תלחץ עליו.",
+  "where": {
+   "kind": "source",
+   "file": "apps/client/src/data/tutorialLines.ts",
+   "line": 314
+  }
+ },
+ {
+  "id": "se52f43e",
+  "section": "data/tutorialLines.ts",
+  "text": "רנטגן בבר, לפני שהופעל",
+  "where": {
+   "kind": "source",
+   "file": "apps/client/src/data/tutorialLines.ts",
+   "line": 316
+  }
+ },
+ {
+  "id": "s734f906",
+  "section": "data/tutorialLines.ts",
+  "text": "הנה. שש שניות, כל הלוח שלי פתוח. עצים עתיקים מקדימה, גפנים בפינות.",
+  "where": {
+   "kind": "source",
+   "file": "apps/client/src/data/tutorialLines.ts",
+   "line": 320
+  }
+ },
+ {
+  "id": "s8f6cfb7",
+  "section": "data/tutorialLines.ts",
+  "text": "מיד אחרי שהרנטגן הופעל",
+  "where": {
+   "kind": "source",
+   "file": "apps/client/src/data/tutorialLines.ts",
+   "line": 322
+  }
+ },
+ {
+  "id": "s68e3bda",
+  "section": "data/tutorialLines.ts",
+  "text": "עץ עתיק. 2000 חיים, מתרפא לבד. בדיוק מה שצריך בעמדת השומר.",
+  "where": {
+   "kind": "source",
+   "file": "apps/client/src/data/tutorialLines.ts",
+   "line": 326
+  }
+ },
+ {
+  "id": "sd49b897",
+  "section": "data/tutorialLines.ts",
+  "text": "עץ עתיק ביד",
+  "where": {
+   "kind": "source",
+   "file": "apps/client/src/data/tutorialLines.ts",
+   "line": 328
+  }
+ },
+ {
+  "id": "s75ccaa2",
+  "section": "data/tutorialLines.ts",
+  "text": "קקטוס: דוקר את מי שנוגע בו. לעמדת השומר השנייה, צמוד לעץ.",
+  "where": {
+   "kind": "source",
+   "file": "apps/client/src/data/tutorialLines.ts",
+   "line": 332
+  }
+ },
+ {
+  "id": "s62b4ae3",
+  "section": "data/tutorialLines.ts",
+  "text": "קקטוס ביד, אחרי שהעץ הונח",
+  "where": {
+   "kind": "source",
+   "file": "apps/client/src/data/tutorialLines.ts",
+   "line": 334
+  }
+ },
+ {
+  "id": "s562a021",
+  "section": "data/tutorialLines.ts",
+  "text": "מה יש לנו כאן? שני קלפים מאותה משפחה. רואה את צבע המסגרת? בוא נוסיף להם עוד אחד.",
+  "where": {
+   "kind": "source",
+   "file": "apps/client/src/data/tutorialLines.ts",
+   "line": 338
+  }
+ },
+ {
+  "id": "s16619e1",
+  "section": "data/tutorialLines.ts",
+  "text": "שני צמחים צמודים על הלוח",
+  "where": {
+   "kind": "source",
+   "file": "apps/client/src/data/tutorialLines.ts",
+   "line": 340
+  }
+ },
+ {
+  "id": "se1b06e1",
+  "section": "data/tutorialLines.ts",
+  "text": "חמנייה. צמח. תדביק אותה צמוד לאחד מהם — לא באלכסון, צמוד ממש.",
+  "where": {
+   "kind": "source",
+   "file": "apps/client/src/data/tutorialLines.ts",
+   "line": 344
+  }
+ },
+ {
+  "id": "s3bb1a6a",
+  "section": "data/tutorialLines.ts",
+  "text": "חמנייה ביד",
+  "where": {
+   "kind": "source",
+   "file": "apps/client/src/data/tutorialLines.ts",
+   "line": 346
+  }
+ },
+ {
+  "id": "s2fb50f7",
+  "section": "data/tutorialLines.ts",
+  "text": "פוטוסינתזה! שלושה צמחים צמודים מקבלים +20% עוצמה ו+20% חיים. שווה לשים אותם יחד!",
+  "where": {
+   "kind": "source",
+   "file": "apps/client/src/data/tutorialLines.ts",
+   "line": 350
+  }
+ },
+ {
+  "id": "sd356bf5",
+  "section": "data/tutorialLines.ts",
+  "text": "ברגע שהשלישייה נדלקה",
+  "where": {
+   "kind": "source",
+   "file": "apps/client/src/data/tutorialLines.ts",
+   "line": 352
+  }
+ },
+ {
+  "id": "sa808c9e",
+  "section": "data/tutorialLines.ts",
+  "text": "צ'ופי! החבר הכי טוב, עם עוצמת חשמל אדירה — אבל כמעט בלי חיים. מקדימה הוא ימות ראשון. פה עדיף.",
+  "where": {
+   "kind": "source",
+   "file": "apps/client/src/data/tutorialLines.ts",
+   "line": 356
+  }
+ },
+ {
+  "id": "s6d14c48",
+  "section": "data/tutorialLines.ts",
+  "text": "צ'ופי ביד",
+  "where": {
+   "kind": "source",
+   "file": "apps/client/src/data/tutorialLines.ts",
+   "line": 358
+  }
+ },
+ {
+  "id": "s8e82b1e",
+  "section": "data/tutorialLines.ts",
+  "text": "אבי-הענקים. למשבצת המלך, כמו בפעם הקודמת.",
+  "where": {
+   "kind": "source",
+   "file": "apps/client/src/data/tutorialLines.ts",
+   "line": 362
+  }
+ },
+ {
+  "id": "s33be16b",
+  "section": "data/tutorialLines.ts",
+  "text": "אבי-הענקים ביד",
+  "where": {
+   "kind": "source",
+   "file": "apps/client/src/data/tutorialLines.ts",
+   "line": 364
+  }
+ },
+ {
+  "id": "scb28bb8",
+  "section": "data/tutorialLines.ts",
+  "text": "בוסט אנרגיה — נותן כוח לכל מה שכבר על הלוח. רק לכל מה שכבר שם. אז לא נשתמש בו עכשיו.",
+  "where": {
+   "kind": "source",
+   "file": "apps/client/src/data/tutorialLines.ts",
+   "line": 368
+  }
+ },
+ {
+  "id": "sb32330d",
+  "section": "data/tutorialLines.ts",
+  "text": "בוסט אנרגיה נכנס לבר, הלוח עוד לא מלא",
+  "where": {
+   "kind": "source",
+   "file": "apps/client/src/data/tutorialLines.ts",
+   "line": 370
+  }
+ },
+ {
+  "id": "s4f2f850",
+  "section": "data/tutorialLines.ts",
+  "text": "עכשיו. הלוח שלך מלא. עכשיו תפעיל אותו.",
+  "where": {
+   "kind": "source",
+   "file": "apps/client/src/data/tutorialLines.ts",
+   "line": 374
+  }
+ },
+ {
+  "id": "sceb7841",
+  "section": "data/tutorialLines.ts",
+  "text": "הלוח מלא, הבוסט עדיין לא הופעל",
+  "where": {
+   "kind": "source",
+   "file": "apps/client/src/data/tutorialLines.ts",
+   "line": 376
+  }
+ },
+ {
+  "id": "s8137a86",
+  "section": "data/tutorialLines.ts",
+  "text": "פאניקה. עשר השניות האחרונות. תסתכל — המלך שלי נחשף.",
+  "where": {
+   "kind": "source",
+   "file": "apps/client/src/data/tutorialLines.ts",
+   "line": 380
+  }
+ },
+ {
+  "id": "se8e0990",
+  "section": "data/tutorialLines.ts",
+  "text": "השנייה הראשונה של הפאניקה",
+  "where": {
+   "kind": "source",
+   "file": "apps/client/src/data/tutorialLines.ts",
+   "line": 382
+  }
+ },
+ {
+  "id": "s7c44eb4",
+  "section": "data/tutorialLines.ts",
+  "text": "אבל השורה האחורית שלי עדיין חשוכה. גם בפאניקה. בשביל זה היה שווה את הרנטגן.",
+  "where": {
+   "kind": "source",
+   "file": "apps/client/src/data/tutorialLines.ts",
+   "line": 386
+  }
+ },
+ {
+  "id": "s7298202",
+  "section": "data/tutorialLines.ts",
+  "text": "בפאניקה, על השורה האחורית המעורפלת",
+  "where": {
+   "kind": "source",
+   "file": "apps/client/src/data/tutorialLines.ts",
+   "line": 388
+  }
+ },
+ {
+  "id": "sb0dc9d8",
+  "section": "data/tutorialLines.ts",
+  "text": "סופת חול. מערבבת לי את השורה הקדמית. בנית נתיב מול משהו? עכשיו הוא במקום אחר.",
+  "where": {
+   "kind": "source",
+   "file": "apps/client/src/data/tutorialLines.ts",
+   "line": 392
+  }
+ },
+ {
+  "id": "scf7ab2b",
+  "section": "data/tutorialLines.ts",
+  "text": "סופת חול ביד, בפאניקה",
+  "where": {
+   "kind": "source",
+   "file": "apps/client/src/data/tutorialLines.ts",
+   "line": 394
+  }
+ },
+ {
+  "id": "sb32906f",
+  "section": "data/tutorialLines.ts",
+  "text": "מספיק. בוא נראה מה בנית.",
+  "where": {
+   "kind": "source",
+   "file": "apps/client/src/data/tutorialLines.ts",
+   "line": 398
+  }
+ },
+ {
+  "id": "s5706d6f",
+  "section": "data/tutorialLines.ts",
+  "text": "הכול בנוי, נשאר ללחוץ",
+  "where": {
+   "kind": "source",
+   "file": "apps/client/src/data/tutorialLines.ts",
+   "line": 400
+  }
+ },
+ {
+  "id": "s39b816e",
+  "section": "data/tutorialLines.ts",
+  "text": "ניצחת. והפעם לא עזרתי.",
+  "where": {
+   "kind": "source",
+   "file": "apps/client/src/data/tutorialLines.ts",
+   "line": 404
+  }
+ },
+ {
+  "id": "s88efec6",
+  "section": "data/tutorialLines.ts",
+  "text": "מסך התוצאה של המשחק השני",
+  "where": {
+   "kind": "source",
+   "file": "apps/client/src/data/tutorialLines.ts",
+   "line": 406
+  }
+ },
+ {
   "id": "s00ba05b",
   "section": "data/updates.ts",
   "text": "אוקטובר 2026",
@@ -10548,7 +11298,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/game/account.ts",
-   "line": 666
+   "line": 727
   }
  },
  {
@@ -10558,7 +11308,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/game/account.ts",
-   "line": 668
+   "line": 729
   }
  },
  {
@@ -10568,7 +11318,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/game/account.ts",
-   "line": 672
+   "line": 733
   }
  },
  {
@@ -10578,7 +11328,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/game/account.ts",
-   "line": 691
+   "line": 752
   }
  },
  {
@@ -10588,7 +11338,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/game/account.ts",
-   "line": 694
+   "line": 755
   }
  },
  {
@@ -10598,7 +11348,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/game/account.ts",
-   "line": 757
+   "line": 818
   }
  },
  {
@@ -10608,7 +11358,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/game/account.ts",
-   "line": 761
+   "line": 822
   }
  },
  {
@@ -10618,7 +11368,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/game/account.ts",
-   "line": 768
+   "line": 829
   }
  },
  {
@@ -10628,7 +11378,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/game/account.ts",
-   "line": 829
+   "line": 890
   }
  },
  {
@@ -10638,7 +11388,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/game/account.ts",
-   "line": 831
+   "line": 892
   }
  },
  {
@@ -10648,7 +11398,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/game/account.ts",
-   "line": 892
+   "line": 953
   }
  },
  {
@@ -10658,7 +11408,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/game/account.ts",
-   "line": 894
+   "line": 955
   }
  },
  {
@@ -10668,7 +11418,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/game/account.ts",
-   "line": 959
+   "line": 1020
   }
  },
  {
@@ -10678,7 +11428,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/game/account.ts",
-   "line": 963
+   "line": 1024
   }
  },
  {
@@ -10688,7 +11438,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/game/account.ts",
-   "line": 970
+   "line": 1031
   }
  },
  {
@@ -10698,7 +11448,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/game/account.ts",
-   "line": 972
+   "line": 1033
   }
  },
  {
@@ -10708,7 +11458,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/game/account.ts",
-   "line": 978
+   "line": 1039
   }
  },
  {
@@ -10718,7 +11468,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/game/account.ts",
-   "line": 982
+   "line": 1043
   }
  },
  {
@@ -10728,7 +11478,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/game/account.ts",
-   "line": 989
+   "line": 1050
   }
  },
  {
@@ -10738,7 +11488,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/game/account.ts",
-   "line": 1036
+   "line": 1097
   }
  },
  {
@@ -10748,7 +11498,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/game/account.ts",
-   "line": 1040
+   "line": 1101
   }
  },
  {
@@ -10758,7 +11508,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/game/account.ts",
-   "line": 1041
+   "line": 1102
   }
  },
  {
@@ -10768,7 +11518,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/game/coach.ts",
-   "line": 188
+   "line": 291
   }
  },
  {
@@ -10778,7 +11528,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/game/coach.ts",
-   "line": 189
+   "line": 292
   }
  },
  {
@@ -10788,7 +11538,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/game/coach.ts",
-   "line": 190
+   "line": 293
   }
  },
  {
@@ -10798,7 +11548,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/game/coach.ts",
-   "line": 191
+   "line": 294
   }
  },
  {
@@ -10808,7 +11558,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/game/coach.ts",
-   "line": 192
+   "line": 295
   }
  },
  {
@@ -10818,7 +11568,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/game/coach.ts",
-   "line": 193
+   "line": 296
   }
  },
  {
@@ -10828,7 +11578,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/game/coach.ts",
-   "line": 198
+   "line": 301
   }
  },
  {
@@ -10838,7 +11588,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/game/coach.ts",
-   "line": 199
+   "line": 302
   }
  },
  {
@@ -10848,7 +11598,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/game/coach.ts",
-   "line": 200
+   "line": 303
   }
  },
  {
@@ -10858,7 +11608,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/game/coach.ts",
-   "line": 367
+   "line": 521
   }
  },
  {
@@ -10868,7 +11618,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/game/coach.ts",
-   "line": 367
+   "line": 521
   }
  },
  {
@@ -10888,7 +11638,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/game/lessons.ts",
-   "line": 113
+   "line": 125
   }
  },
  {

@@ -71,6 +71,62 @@ const cells = (list: readonly string[]) =>
   list.map((c) => `[data-drop="${c}"]`).join(", ");
 
 /**
+ * ═══ THE FIRST MATCH, IN ORDER ═══
+ *
+ * Or wrote it out himself, line by line, naming the card and the square for
+ * each one. The deck in lessons.ts deals exactly this cast in exactly this
+ * order, so every line has the card it is about already in hand.
+ *
+ * ═══ WHAT THE SQUARES MEAN ═══
+ *
+ *   3-1, 3-2   the two guard posts: the front column, level with the King
+ *   0-0        back row, top — where a flyer belongs
+ *   1-0        in front of the flyer, which does not block it
+ *
+ * His own words for the last one: *"we'll put it up here at the back. It
+ * won't block the dragon, he flies."* Which is true of this dragon — Flame
+ * Dragon is a flyer in the data, so the sentence is a rule the engine has
+ * rather than a nice thing to say.
+ */
+export const LESSON_1: ScriptStep[] = [
+  { id: "l1-albums", target: ".boards" },
+
+  {
+    id: "l1-colossus",
+    target: `[data-drop="${GUARD_POSTS[0]}"]`,
+    awaits: { kind: "cell", cells: [GUARD_POSTS[0]] },
+  },
+  { id: "l1-dragon", target: '[data-drop="0-0"]', awaits: { kind: "cell", cells: ["0-0"] } },
+
+  // ── the action card, and the drawer it lives in ──
+  {
+    id: "l1-boost",
+    target: ".take-action",
+    awaits: { kind: "action", id: "energy_boost", where: "bar" },
+  },
+  { id: "l1-bar-open", target: ".actions__handle" },
+  { id: "l1-bar-close", target: ".actions__handle" },
+
+  // ── binning, and changing your mind ──
+  { id: "l1-bin", target: ".hand__discard", awaits: { kind: "discard", atLeast: 1 } },
+  { id: "l1-unbin", target: ".hand__bin" },
+  { id: "l1-cube", target: '[data-drop="1-0"]', awaits: { kind: "cell", cells: ["1-0"] } },
+
+  // ── the crown, and the two squares that keep it ──
+  { id: "l1-king", target: ".side--me .slot--king", awaits: { kind: "king" } },
+  { id: "l1-king-why", target: ".side--me .slot--king" },
+  {
+    id: "l1-troll",
+    target: `[data-drop="${GUARD_POSTS[1]}"]`,
+    awaits: { kind: "cell", cells: [GUARD_POSTS[1]] },
+  },
+  { id: "l1-guards", target: ".side--me .slot--guard" },
+
+  { id: "l1-crumbs", target: ".side--me .board" },
+  { id: "l1-go", target: ".hand .btn-fight" },
+];
+
+/**
  * ═══ THE SECOND MATCH, IN ORDER ═══
  *
  * Three action cards, each teaching a different thing: RÖNTGEN teaches that
@@ -138,4 +194,4 @@ export const LESSON_2: ScriptStep[] = [
   { id: "l2-go", target: ".hand .btn-fight" },
 ];
 
-export const SCRIPTS: Record<number, ScriptStep[]> = { 2: LESSON_2 };
+export const SCRIPTS: Record<number, ScriptStep[]> = { 1: LESSON_1, 2: LESSON_2 };

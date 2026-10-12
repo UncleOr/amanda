@@ -1,6 +1,6 @@
 # הטקסטים של אמנדה
 
-כל טקסט שהשחקן רואה — 1019 במספר, 1019 מהם כבר באנגלית.
+כל טקסט שהשחקן רואה — 1094 במספר, 1094 מהם כבר באנגלית.
 
 ## איך עורכים
 
@@ -32,39 +32,39 @@
 | מזהה | טקסט נוכחי | טקסט חדש | אנגלית |
 | --- | --- | --- | --- |
 | hfc09a93 | אמנדה \| משחק קלפים מפלצתי | | Amanda \| Monster card game |
-| hbab6fe4 | בונים לוח 4×4 של מפלצות, והן נלחמות לבד. אמנדה שופטת, אמנדה אוכלת. | | Build a 4x4 board of monsters and they fight on their own. Amanda judges. Amanda eats. |
+| h9f563dd | אוספים קלפים. נלחמים במפלצות. אמנדה אוכלת את כולם. | | Collect cards. Fight monsters. Amanda eats the lot. |
 | hafb233b | אמנדה | | Amanda |
 | h1b28f47 | אמנדה \| משחק קלפים מפלצתי | | Amanda \| Monster card game |
 | h9c383ea | אמנדה | | Amanda |
-| h8264212 | בונים לוח 4×4 של מפלצות, ואז הן נלחמות לבד. אמנדה שופטת, אמנדה אוכלת. | | Build a 4x4 board of monsters and then they fight on their own. Amanda judges. Amanda eats. |
+| h6ec6982 | אוספים קלפים. נלחמים במפלצות. אמנדה אוכלת את כולם. | | Collect cards. Fight monsters. Amanda eats the lot. |
 
 ## סדרה — הדרקונים
 
 | מזהה | טקסט נוכחי | טקסט חדש | אנגלית |
 | --- | --- | --- | --- |
 | d708c394 | הדרקונים | | The Dragons |
-| d140e3f9 | פינוי קו ראייה, נזק אזורי ופצצות מתקתקות | | Clearing line of sight, area damage, and ticking bombs |
+| dda5d4e9 | נזק אזורי ופצצות מתקתקות | | Area damage and ticking bombs |
 | dc64864a | קשקשי דרקון | | Dragon Scales |
-| d80d51ce | כל הדרקונים בלוח שלכם מקבלים הגנה פסיבית שמפחיתה את כל הנזק הנכנס אליהם ב-20%. | | All your dragons gain a passive 20% reduction to all incoming damage. |
+| da6ab0c0 | שלושה צמודים מאותה משפחה מקבלים +20% עוצמה ו+20% חיים. | | Three touching cards of the same family get +20% power and +20% health. |
 | dd069f94 | פליים דראגון | | Flame Dragon |
-| d8cf349b | יוזמה מהירה: מכה שהודפת את היריב, ממשיך לצעוד לתוך שטח היריב ומפנה קו ראייה לצלפים שמאחור. | | Fast initiative: knocks the enemy back, advances into enemy territory and clears line of sight for your snipers. |
+| d387c4a6 | צועד לתוך שטח היריב | | Advances into enemy territory |
 | ddfe4de4 | ביצת אובסידיאן | | Obsidian Egg |
-| d05af5bf | אחרי 10 שניות בוקע דרקון הרסני עם +1500 עוצמה. | | After 10 seconds a destructive dragon hatches with +1500 power. |
+| d9a746c1 | אחרי 10 שניות בוקע ממנה דרקון עם +1500 עוצמה. | | Hatches a dragon with +1500 Power after 10 seconds |
 | dd171205 | פצצה מתקתקת לקומת קרקע: מניחים אותה למטה ומעליה טנק; עד שהטנק נפרץ הטיימר נגמר. | | Ground-floor ticking bomb: place it under a tank; by the time the tank breaks, its timer is up. |
-| d87bdbe8 | רעם-כנף | | Thunderwing |
-| d39052c3 | צלף מותנה: יורה לקלף האחרון בנתיב המקביל, דורש קו ראייה פנוי. | | Conditional sniper: fires at the last card in its lane, requires a clear line of sight. |
+| d1cdf43f | טורץ' | | Torch |
+| d0c38210 | יורה בקלף האויב האחרון בנתיב שלו, כל עוד יש לו קו ראייה פנוי. | | Shoots the last enemy card in its lane, as long as it has a clear line of sight |
 | d751bd5b | לאבה | | Lava |
-| dc728737 | משאיר זרם געש בנתיב; כל מסתער נכנס לשלולית הלבה ונשרף. | | Leaves a lava stream in the lane; any advancer walks into the pool and burns. |
+| dd201848 | משאיר בנתיב שלו לבה רותחת, מי שנוגע בה נשרף ומאבד חיים | | Leaves a trail of molten lava in its lane. Enemies touching it burn and take damage |
 | d4c2a5cc | שליטת נתיבים / חסימת הסתערות עם נזק מתמשך. | | Lane control / advance-denial with damage over time. |
 | d20cc0d1 | ספייק | | Spike |
-| df748656 | מגן מחזיר-נזק לקומת קרקע: מחזיר 30% מהנזק שספג, מצוין תחת קלף מתפוצץ. | | Damage-reflect wall for the ground floor: returns 30% of damage taken, great under a bomb card. |
-| d501199d | נשיפת כפור | | Frost Breath |
-| d549c6db | בקרת קצב: מקפיא יריב מסתער ל-2 שניות ומאפס לו את זמן הטעינה. | | Crowd control: freezes an advancing enemy for 2s and resets its attack cooldown. |
-| d8932979 | גולד-הורן | | Gold-Horn |
-| d2db5085 | מוחץ קלף חלש שלכם שלידו בתמורה לשריון, ואז צועד כטנק מוגן. | | Crushes a weak adjacent ally for armor, then advances as a protected tank. |
-| d4198710 | טנק כבד שניזון מהקרבה. | | Heavy tank fueled by sacrifice. |
+| d4bceedb | מחזיר 30% מהנזק שספג, מצוין תחת קלף מתפוצץ. | | Returns 30% of damage taken, great under a bomb card. |
+| dd13f864 | דרקון הקרח | | Ice Dragon |
+| dcc2cd07 | מקפיא יריב מסתער ל-2 שניות ומאפס לו את זמן הטעינה. | | Freezes an advancing enemy for 2s and resets its attack cooldown. |
+| d5bf3bd1 | גולדנהורן | | Golden Horn |
+| d97bf3bb | לוקח איתו את הקלף הכי חלש שנמצא בסמוך אליו שאינו שומר או מלך והופך אותו לשריון | | Turns the weakest adjacent card (except Guards and Kings) into Armor |
+| d168698d | טנק כבד שמתחזק כשמקריבים קלף אחר | | Heavy tank fueled by sacrifice. |
 | d634b55d | דרקון רפאים | | Ghost Dragon |
-| dc6cb2ed | נחיל מתפרץ: נועד למות מהר, ואז בוקעות 3 רוחות שממשיכות להסתער. | | Bursting swarm: meant to die fast, then 3 spirits hatch and keep charging. |
+| d016d527 | כשהוא מת - בוקעות ממנו 3 רוחות שממשיכות להסתער. | | When destroyed, spawns 3 spirits that charge forward. |
 | d330d7d5 | דרקון הטייפון | | Typhoon Dragon |
 | de90eb52 | דוחף את היריב הצידה מעמודה לעמודה, מזיז צלפים מחוץ לנתיב. | | Pushes the enemy sideways between columns, moving snipers out of the lane. |
 | d0dd38e1 | שליטה מרחבית / הדף צדדי. | | Spatial control / lateral knockback. |
@@ -79,7 +79,7 @@
 | d8c365e1 | הענקים | | The Giants |
 | d1b5fe74 | טנקים, התגרות והחזרת נזק | | Tanks, taunts and damage reflection |
 | d27e8948 | עור עבה | | Thick Hide |
-| d503e2ab | כל הענקים שלכם מקבלים שריון פסיבי שחוסם חלק מכל מכה נכנסת. | | All your giants gain passive armor that blocks part of every incoming hit. |
+| d5da4e5e | שלושה צמודים מאותה משפחה מקבלים +20% עוצמה ו+20% חיים. | | Three touching cards of the same family get +20% power and +20% health. |
 | dbbaccd6 | גולם אבן | | Stone Colossus |
 | d3694c8e | טנק הליכה שמחזיר נזק. | | A walking tank that reflects damage. |
 | dd07b195 | שומר הפלדה | | Steel Warden |
@@ -108,7 +108,7 @@
 | d2cdcd05 | הפרוותיים | | The Furries |
 | d85387a0 | מכות חשמל מהירות — מעט חיים, הרבה כוח | | Fast electric strikes — little health, a lot of power |
 | de4a1b06 | פרווה טעונה | | Charged Fur |
-| d5852e1b | כל הפרוותיים שלכם תוקפים מהר יותר ב-20%. | | All your Furries attack 20% faster. |
+| d512f04e | שלושה צמודים מאותה משפחה מקבלים +20% עוצמה ו+20% חיים. | | Three touching cards of the same family get +20% power and +20% health. |
 | d267c630 | צ'ופי | | Chuppy |
 | d8d0f124 | החבר שלך מההתחלה. מכה חזק מרחוק ושובר שריון — אבל סופג כמעט כלום, אז הוא לא עומד בחזית. | | Your friend from the start. Hits hard at range and breaks armour, but takes almost nothing, so he does not belong in the front row. |
 
@@ -119,7 +119,7 @@
 | df172f20 | החרקים | | The Insects |
 | d0a8be11 | מלכודות, רעל ופגיעה ישירה במרכז | | Traps, poison and striking straight at the center |
 | db45ae8e | נחיל | | The Swarm |
-| df12e1eb | כל החרקים שלכם מקבלים +20% מהירות תקיפה כשהם נלחמים יחד. | | All your insects gain +20% attack speed when fighting together. |
+| d5df62d0 | שלושה צמודים מאותה משפחה מקבלים +20% עוצמה ו+20% חיים. | | Three touching cards of the same family get +20% power and +20% health. |
 | d1e8dfab | חייל נמלה | | Ant Soldier |
 | daff27cb | מסתער מהיר וזול להצפת נתיבים. | | A cheap, fast rusher to flood lanes. |
 | d56e0c0e | מלכת הנמלים | | Ant Queen |
@@ -148,7 +148,7 @@
 | d5696dab | הצמחים | | The Plants |
 | d180cb32 | התפשטות על הלוח, צמיחה ותוספת חיים | | Spreading across the board, growth and added health |
 | d1c33c0c | פוטוסינתזה | | Photosynthesis |
-| dc5c9b79 | כל הצמחים שלכם מתרפאים לאט לאורך כל הקרב. | | All your plants slowly heal throughout the battle. |
+| d1c379cd | שלושה צמודים מאותה משפחה מקבלים +20% עוצמה ו+20% חיים. | | Three touching cards of the same family get +20% power and +20% health. |
 | d7f9ed67 | נבט קוצני | | Thorn Sprout |
 | d16ff73d | קוצים שדוקרים את מי שנוגע. | | Thorns that prick whoever touches it. |
 | d301ef3d | עץ עתיק | | Ancient Tree |
@@ -177,7 +177,7 @@
 | d9349aef | הריריים | | The Slimes |
 | d477a268 | משאירים שובל ריר שמאט את היריב | | Leaving a slime trail that slows the enemy |
 | df041649 | דביקות | | Stickiness |
-| d86a9ebb | כל קלף יריב שמנסה להסתער בנתיב שיש בו קלף רירי סובל מהאטה של 50% במהירות התנועה. | | Any enemy advancing in a lane containing a slime suffers a 50% movement slow. |
+| d45c17b6 | שלושה צמודים מאותה משפחה מקבלים +20% עוצמה ו+20% חיים. | | Three touching cards of the same family get +20% power and +20% health. |
 | d24312e8 | סליים בסיסי | | Basic Slime |
 | d5a5e71a | בולם זעזועים: המבנה הג'לטיני סופג הדף, לא ניתן לדחוף אותו אחורה. | | Shock absorber: its gelatinous body soaks knockback — it cannot be pushed back. |
 | d9dab6c4 | קוביית ג'לי | | Gelatinous Cube |
@@ -264,6 +264,8 @@
 
 | מזהה | טקסט נוכחי | טקסט חדש | אנגלית |
 | --- | --- | --- | --- |
+| s09c9dbd | ילדה | | kid |
+| sd2076b4 | ילד | | kid |
 | sf076071 | כבר הולך? | | Leaving already? |
 | s2631ad1 | מה, זהו? | | What, that's it? |
 | sb4c1729 | ברצינות? | | Seriously? |
@@ -886,7 +888,6 @@
 | s2c8e767 | עוד מודים | | More modes |
 | s1dda509 | בלי שעון, שני הצדדים שלך | | No clock, both sides are yours |
 | s77f529a | מגרש המשחקים | | The playground |
-| s1a9483e | איך משחקים | | How to play |
 | s48c712b | החשבון הזה מושעה עד {0}. אפשר לשחק נגד המחשב בינתיים. | | This account is suspended until {0}. You can play against the computer meanwhile. |
 | sd01b2d8 | אין חדר כזה. אולי המצאת אותו. | | No such room. Maybe you made it up. |
 | sf8d116e | זה הקוד שלך. אתה לא יכול לאכול את עצמך. | | That is your own code. You cannot eat yourself. |
@@ -1084,6 +1085,7 @@
 | s6f43267 | דולקת | | On |
 | s3c95ca3 | כבויה | | Off |
 | s46dcd47 | שפה | | Language |
+| s15c7730 | איך משחקים | | How to play |
 | s8e11615 | מה חדש | | What's new |
 | s6eed161 | יש עדכון שלא קראתם | | There is an update you have not read |
 | s50fb087 | משהו לא עובד? | | Something not working? |
@@ -1161,7 +1163,6 @@
 | מזהה | טקסט נוכחי | טקסט חדש | אנגלית |
 | --- | --- | --- | --- |
 | s67c1f88 | ביחד | | Together |
-| s943b402 | נגד | | Against |
 | s91836d5 | אני | | Me |
 | sb1bf590 | היריב | | Opponent |
 
@@ -1208,6 +1209,80 @@
 | s4c27fff | שואב ביד מול יריב ששומר מרחק | | A puller in hand against an opponent keeping their distance |
 | se565ab8 | {ally} מכה חזק ושובר בקלות. {card} סופג חצי מכל מכה שמכוונת לשכן שלו — שים אותו ממש לידו ותן לו לחיות קצת. | | {ally} hits hard and breaks easily. {card} soaks up half of every blow aimed at its neighbor — put it right beside it and let it live a little. |
 | s5a0fcb1 | סופג ביד כשיש לך קלף שביר שמכה חזק | | A soaker in hand when you have a fragile card that hits hard |
+| sfbcc457 | היי, אני אמנדה. הגעת כדי להילחם מולי, {kid}? בכיף, אני אראה לך איך עושים את זה. | | Hi, I'm Amanda. Came to fight me, {kid}? Happily. I'll show you how it's done. |
+| sc39b53f | המשפט הראשון, לפני שהיא מצביעה על משהו | | the first line, before she points at anything |
+| sd9bc88a | אנחנו כרגע בחדר המשחקים. אם מנצחים פה — מתקדמים למקומות אחרים. | | We're in the games room. Win here and you move on to other places. |
+| s9e32cd7 | המשפט השני, עדיין באמצע המסך | | the second line, still in the middle of the screen |
+| sf961c72 | זה האלבום שלי, זה האלבום שלך. כל אחד מדביק עליהם את הקלפים שלו. כשייגמר הזמן — האלבומים נלחמים אחד בשני. | | That album is mine, this one is yours. Each of us sticks our own cards on. When the time is up — the albums fight each other. |
+| s6a53354 | שני הלוחות מודגשים | | both boards highlighted |
+| s62d0dd0 | נתחיל בהדבקות. הנה הקלף הראשון: גולם אבן. קלף עם הרבה כוח ספיגה. נמקם אותו בעמדת השומר. | | Let's start sticking. Here is the first card: Stone Colossus. A card that soaks up a lot. We'll put it in the guard post. |
+| s42dbb6c | גולם אבן ביד, לוח ריק | | Stone Colossus in hand, empty board |
+| s4f0b0c7 | הקלף הבא: פליים דראגון — דרקון חזק. נמקם אותו מאחור. הוא יעופף מעל כולם ויתקוף את האויב. | | Next card: Flame Dragon — a strong dragon. We'll put him at the back. He'll fly over everyone and hit the enemy. |
+| sdaca2bb | פליים דראגון ביד | | Flame Dragon in hand |
+| s195f0f7 | הקלף הבא: בוסט אנרגיה. זה קלף פעולה. ניקח אותו כדי להשתמש בו בהמשך. | | Next card: Energy Boost. That's an action card. We'll take it to use later. |
+| s37af730 | בוסט אנרגיה ביד | | Energy Boost in hand |
+| s1e604c6 | קלפי הפעולה נמצאים כאן, למקרה שנרצה להשתמש בהם. | | The action cards live here, in case we want them. |
+| sedb61e0 | אחרי שהבוסט נכנס לבר | | after the boost reaches the bar |
+| sd597bbf | טוב, זה לאחר כך. בואו נמשיך. | | Right, that's for later. Let's carry on. |
+| s325b7db | מגירת קלפי הפעולה פתוחה | | the action card drawer is open |
+| s5e4cdb0 | קוביית ג'לי — קלף, אממ... לא משהו. בואו נזרוק אותו. יגיעו טובים יותר. | | Gelatinous Cube — a card that is, erm... not great. Let's bin it. Better ones are coming. |
+| sb4d2832 | קוביית ג'לי ביד | | Gelatinous Cube in hand |
+| s2bd7018 | בעצם — לא בטוח שיגיע משהו טוב יותר. מזל שאפשר להתחרט על הקלף האחרון שזרקתם. הנה, כאן. | | Actually — not sure anything better is coming. Lucky you can change your mind about the last card you binned. Here, this one. |
+| s31f77d0 | מיד אחרי הזריקה | | right after the bin |
+| sd4b3818 | אוקיי, קוביית הג'לי בולעת קלפי יריב. נמקם אותה כאן למעלה מאחורה. היא לא תחסום את הדרקון, הוא מעופף. | | Okay, the Gelatinous Cube swallows enemy cards. We'll put it up here at the back. It won't block the dragon, he flies. |
+| s253d8e7 | קוביית הג'לי חזרה מהפח | | the cube is back from the bin |
+| s1ff71ce | הופה, אבי-הענקים. קלף ענק וחזק. מושלם למשבצת המלך. | | Oho, Titan King. A huge, strong card. Perfect for the King slot. |
+| s559179f | אבי-הענקים ביד | | Titan King in hand |
+| sd65daae | הכוח של קלף המלך גדל פי 3, וזה חשוב. אם הוא מת — הפסדתם. | | A King card hits three times harder, and that matters. If he dies — you lose. |
+| sb25f12e | מיד אחרי שהוכתר מלך | | right after a King is crowned |
+| s503c2fe | הופה, עוד ענק. טרול סלע, שמרפא את עצמו. נמקם אותו בעמדת השומר. | | Oho, another giant. Rock Troll, and he heals himself. We'll put him in the guard post. |
+| s856075f | טרול סלע ביד | | Rock Troll in hand |
+| see01751 | יש לך שני שומרים וזה חשוב מאוד! כל עוד השומרים חיים — המלך בלתי פגיע. | | You have two guards and that matters a lot! As long as the guards are alive — the King cannot be touched. |
+| s045e8b5 | שתי עמדות השומר תפוסות | | both guard posts are taken |
+| saa20106 | אוקיי, מספיק דיבורים. בואו ניגש לקרב ונראה מה קורה. | | Okay, enough talking. Let's get to the fight and see what happens. |
+| scb6277d | הכול בנוי, נשאר ללחוץ | | everything is built, all that is left is to press |
+| s408dcff | שימו לב — כל הריבועים הריקים מתמלאים במפלצות פירורים חלשות. כדאי למלא אותם בזמן! | | Watch out — every empty square fills up with weak crumb monsters. Worth filling them yourself while there's time! |
+| sb842d99 | אחרי הלחיצה על התחל קרב, לפני הספירה | | after pressing start, before the countdown |
+| s4a756c9 | ניצחת! אבל זה היה קל, כי עזרתי. | | You won! But that was easy, because I helped. |
+| sb08f699 | מסך התוצאה של המשחק הראשון | | the result screen of the first match |
+| s40cdf63 | חזרת. יפה. עכשיו בוא נדבר על מה שקורה בצד השני. | | You came back. Good. Now let's talk about the other side of the board. |
+| s5263775 | פתיחת המשחק השני | | the opening of the second match |
+| s2f0283d | שים לב ללוח שלי. רואה את השורה הקדמית? זה כל מה שאפשר לראות בשלב הזה. | | Look at my board. See the front row? That is all you get to see right now. |
+| s25ea352 | מצביעה על הלוח של היריב, לפני שנגעת בקלף | | pointing at the opponent's board, before you touch a card |
+| s2feac9e | רנטגן. קלף פעולה ששובר את הכלל הזה. ניקח אותו ונשתמש בו. | | X-Ray. An action card that breaks that rule. Let's take it and use it. |
+| s66dddf3 | רנטגן ביד | | X-Ray in hand |
+| s0a71ac4 | עכשיו תלחץ עליו. | | Now press it. |
+| se52f43e | רנטגן בבר, לפני שהופעל | | X-Ray in the bar, before it is played |
+| s734f906 | הנה. שש שניות, כל הלוח שלי פתוח. עצים עתיקים מקדימה, גפנים בפינות. | | There. Six seconds, my whole board open. Ancient Trees at the front, vines in the corners. |
+| s8f6cfb7 | מיד אחרי שהרנטגן הופעל | | right after the X-Ray is played |
+| s68e3bda | עץ עתיק. 2000 חיים, מתרפא לבד. בדיוק מה שצריך בעמדת השומר. | | Ancient Tree. 2000 health, heals itself. Exactly what a guard post wants. |
+| sd49b897 | עץ עתיק ביד | | Ancient Tree in hand |
+| s75ccaa2 | קקטוס: דוקר את מי שנוגע בו. לעמדת השומר השנייה, צמוד לעץ. | | Cactus: it pricks whatever touches it. Second guard post, right against the tree. |
+| s62b4ae3 | קקטוס ביד, אחרי שהעץ הונח | | Cactus in hand, after the tree is down |
+| s562a021 | מה יש לנו כאן? שני קלפים מאותה משפחה. רואה את צבע המסגרת? בוא נוסיף להם עוד אחד. | | What have we here? Two cards from the same family. See the colour of the frame? Let's give them a third. |
+| s16619e1 | שני צמחים צמודים על הלוח | | two plants touching on the board |
+| se1b06e1 | חמנייה. צמח. תדביק אותה צמוד לאחד מהם — לא באלכסון, צמוד ממש. | | Sunflower. A plant. Stick it against one of them — not corner to corner, properly touching. |
+| s3bb1a6a | חמנייה ביד | | Sunflower in hand |
+| s2fb50f7 | פוטוסינתזה! שלושה צמחים צמודים מקבלים +20% עוצמה ו+20% חיים. שווה לשים אותם יחד! | | Photosynthesis! Three plants touching get +20% power and +20% health. Worth keeping them together. |
+| sd356bf5 | ברגע שהשלישייה נדלקה | | the moment the trio lights up |
+| sa808c9e | צ'ופי! החבר הכי טוב, עם עוצמת חשמל אדירה — אבל כמעט בלי חיים. מקדימה הוא ימות ראשון. פה עדיף. | | Chuppy! Best friend you have, hits like lightning — and almost no health. At the front he dies first. Back here is better. |
+| s6d14c48 | צ'ופי ביד | | Chuppy in hand |
+| s8e82b1e | אבי-הענקים. למשבצת המלך, כמו בפעם הקודמת. | | Titan King. Into the King slot, same as last time. |
+| s33be16b | אבי-הענקים ביד | | Titan King in hand |
+| scb28bb8 | בוסט אנרגיה — נותן כוח לכל מה שכבר על הלוח. רק לכל מה שכבר שם. אז לא נשתמש בו עכשיו. | | Energy Boost — it powers up everything already on the board. Only what is already there. So not yet. |
+| sb32330d | בוסט אנרגיה נכנס לבר, הלוח עוד לא מלא | | Energy Boost reaches the bar, the board is not full yet |
+| s4f2f850 | עכשיו. הלוח שלך מלא. עכשיו תפעיל אותו. | | Now. Your board is full. Now play it. |
+| sceb7841 | הלוח מלא, הבוסט עדיין לא הופעל | | the board is full, the boost has not been played |
+| s8137a86 | פאניקה. עשר השניות האחרונות. תסתכל — המלך שלי נחשף. | | Panic. The last ten seconds. Look — my King is showing. |
+| se8e0990 | השנייה הראשונה של הפאניקה | | the first second of the panic phase |
+| s7c44eb4 | אבל השורה האחורית שלי עדיין חשוכה. גם בפאניקה. בשביל זה היה שווה את הרנטגן. | | But my back row is still dark. Even in panic. That is what the X-Ray was worth. |
+| s7298202 | בפאניקה, על השורה האחורית המעורפלת | | in panic, on the fogged back row |
+| sb0dc9d8 | סופת חול. מערבבת לי את השורה הקדמית. בנית נתיב מול משהו? עכשיו הוא במקום אחר. | | Sandstorm. It shuffles my front row. Built a lane against something? It is somewhere else now. |
+| scf7ab2b | סופת חול ביד, בפאניקה | | Sandstorm in hand, during panic |
+| sb32906f | מספיק. בוא נראה מה בנית. | | Enough. Let's see what you built. |
+| s5706d6f | הכול בנוי, נשאר ללחוץ | | everything is built, all that is left is to press |
+| s39b816e | ניצחת. והפעם לא עזרתי. | | You won. And this time I didn't help. |
+| s88efec6 | מסך התוצאה של המשחק השני | | the result screen of the second match |
 
 ## data/updates.ts
 
