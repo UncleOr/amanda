@@ -268,9 +268,13 @@ function Accessibility() {
     <>
       <h2>{t("s3bbb564", "הצהרת נגישות")}</h2>
       <p className="about__date">{t("s98d6639", "עודכן: אוקטובר 2026")}</p>
+      {/* Straight quotes inside the prose are what stopped the codemod here:
+          ת"י read as a string delimiter. */}
       <p>
-        אנחנו משתדלים שהמשחק יהיה נגיש לכמה שיותר אנשים, ומכוונים לתקן הישראלי
-        ת"י 5568 ולהנחיות WCAG 2.1 ברמה AA.
+        {t(
+          "s8de9bac",
+          "אנחנו משתדלים שהמשחק יהיה נגיש לכמה שיותר אנשים, ומכוונים לתקן הישראלי ת״י 5568 ולהנחיות WCAG 2.1 ברמה AA.",
+        )}
       </p>
 
       <h3>{t("s9e45ede", "מה כבר נעשה")}</h3>

@@ -129,7 +129,7 @@ export const COUNTDOWN_LABEL = [
   { m: t("s1661c13", "התכונן לקרב, ילד"), f: t("s0f9d55a", "התכונני לקרב, ילדה") },
   { m: t("s34b7fb9", "תתארגן, ילד"), f: t("s5361c59", "תתארגני, ילדה") },
   t("s353737f", "מתחילים. תנשום."),
-  { m: "קדימה, ילד", f: t("s9175f67", "קדימה, ילדה") },
+  { m: t("s5656766", "קדימה, ילד"), f: t("s9175f67", "קדימה, ילדה") },
 ] as const;
 
 /** The announcement that fills the screen when the fighting starts. */
@@ -141,7 +141,7 @@ export const BATTLE_PHASE = [
 
 /** The moment the boards lock and the battle begins. */
 export const BATTLE_START = [
-  { m: "הקרב מתחיל, ילד", f: t("sd988a9d", "הקרב מתחיל, ילדה") },
+  { m: t("sa21c01f", "הקרב מתחיל, ילד"), f: t("sd988a9d", "הקרב מתחיל, ילדה") },
   t("s647d2f6", "ועכשיו נראה מה בנית"),
   t("s361ec57", "מאוחר מדי לשנות"),
   { m: t("s32acee8", "בוא נראה אותך"), f: t("s6f30a3c", "בואי נראה אותך") },

@@ -1,0 +1,198 @@
+/*
+ * The settings panel. See components/Settings.tsx for what it is for.
+ *
+ * Every name in here starts `set__`, and that prefix is the point. The
+ * opening film called itself `.intro` and landed `position: fixed` on the
+ * home screen; the chest shelf called itself `.shelf` and quietly restyled
+ * every shop shelf for weeks. A new sheet gets a prefix nothing else uses,
+ * and styles/collisions.test.ts checks that it stayed that way.
+ *
+ * ═══ THREE TIERS, AND THEY ARE NOT CLOSE ═══
+ *
+ * The switches are why anybody opens this, so they are rows at --t-3 on a
+ * raised surface with an icon each. The small print is --t-3 but flat, no
+ * surface, no icon. The version and the deleting are --t-2 and grey, below a
+ * rule, where margin goes.
+ *
+ * Squint and you see three switches. That is correct: nothing else in here
+ * is a thing you came to do.
+ */
+
+.modal--settings {
+  inline-size: min(420px, 92vw);
+  max-block-size: 88vh;
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+  gap: var(--sp-2);
+}
+
+/* ── the switches ── */
+
+.set__group {
+  display: flex;
+  flex-direction: column;
+  gap: var(--sp-1);
+}
+
+/* Twice the inside gap, so the two groups read as two groups without a box
+   drawn round either of them. */
+.set__group--links {
+  margin-block-start: var(--sp-3);
+}
+
+.set__row {
+  display: flex;
+  align-items: center;
+  gap: var(--sp-2);
+  inline-size: 100%;
+  padding: var(--sp-2) var(--sp-3);
+  border: 1px solid var(--line);
+  border-radius: 12px;
+  background: var(--sur-1);
+  color: var(--text);
+  font-size: var(--t-3);
+  text-align: start;
+}
+
+.set__row:hover {
+  border-color: var(--line-lit);
+}
+
+/* The language row is not a button — its two children are. */
+.set__row--langs {
+  cursor: default;
+}
+.set__row--langs:hover {
+  border-color: var(--line);
+}
+
+.set__label {
+  flex: 1;
+}
+
+/*
+ * The word, not a dot. "דולק"/"כבוי" says which way the switch is without
+ * needing a colour to be learned first — and the one that is ON is the one
+ * wearing the accent, so the state is legible twice over.
+ */
+.set__state {
+  font-size: var(--t-2);
+  color: var(--muted);
+}
+.set__state--on {
+  color: var(--accent);
+}
+
+.set__langs {
+  display: flex;
+  gap: var(--sp-1);
+}
+
+.set__lang {
+  padding: 3px 10px;
+  border: 1px solid var(--line);
+  border-radius: 999px;
+  background: transparent;
+  color: var(--muted);
+  font-size: var(--t-2);
+}
+.set__lang--on {
+  border-color: var(--line-lit);
+  background: var(--sur-lit);
+  color: var(--accent);
+}
+
+/* ── the small print ── */
+
+.set__link {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  inline-size: 100%;
+  padding: 6px 2px;
+  border: none;
+  background: none;
+  color: var(--text);
+  font-size: var(--t-3);
+  text-align: start;
+}
+.set__link:hover {
+  color: var(--accent);
+}
+
+/* ── margin ── */
+
+.set__version {
+  display: flex;
+  align-items: center;
+  gap: var(--sp-2);
+  margin: var(--sp-3) 0 0;
+  padding-block-start: var(--sp-2);
+  border-block-start: 1px solid var(--line);
+  color: var(--muted);
+  font-size: var(--t-2);
+}
+
+.set__refresh {
+  padding: 2px 8px;
+  border: 1px solid var(--line);
+  border-radius: 999px;
+  background: none;
+  color: var(--muted);
+  font-size: var(--t-2);
+}
+
+.set__note {
+  margin: 0;
+  color: var(--muted);
+  font-size: var(--t-2);
+}
+
+/*
+ * ═══ DELETING: FINDABLE, NOT OFFERED ═══
+ *
+ * Or: *"it almost looks as though we are inviting them to do it."* It did —
+ * both of these were full-width `btn-fight`, the same class as the button
+ * that starts a match.
+ *
+ * So: last, closed, --t-2, grey, and inside it text links rather than
+ * buttons. Red appears nowhere until the confirmation, which is the screen
+ * that is supposed to be alarming. Play asks that the route exists and can
+ * be found; it does not ask for it to compete with playing.
+ */
+.set__danger {
+  margin-block-start: var(--sp-1);
+}
+
+.set__danger-open {
+  padding: 2px 0;
+  border: none;
+  background: none;
+  color: var(--muted);
+  font-size: var(--t-2);
+}
+.set__danger-open:hover {
+  color: var(--text);
+}
+
+.set__danger-body {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 2px;
+  padding-block-start: var(--sp-1);
+  padding-inline-start: var(--sp-3);
+}
+
+.set__danger-link {
+  padding: 2px 0;
+  border: none;
+  background: none;
+  color: var(--muted);
+  font-size: var(--t-2);
+  text-decoration: underline;
+}
+.set__danger-link:hover {
+  color: var(--bad, #e06464);
+}

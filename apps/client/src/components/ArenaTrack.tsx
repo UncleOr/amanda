@@ -56,7 +56,7 @@ export function ArenaTrack({ trophies }: { trophies: number }) {
               </>
             ) : (
               <>
-                <Icon name="win" size={12} /> {trophies} · הגעת לסוף הדרך
+                <Icon name="win" size={12} /> {trophies} · {t("s00844be", "הגעת לסוף הדרך")}
               </>
             )}
           </small>

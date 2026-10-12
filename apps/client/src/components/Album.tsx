@@ -203,7 +203,7 @@ export function Album({ account, onClose, onCardInfo, onChanged }: Props) {
                             ×{mine.copies}
                           </span>
                           {mine.level > 1 && (
-                            <span className="album__level">רמה {mine.level}</span>
+                            <span className="album__level">{tf("s4308b06", "רמה {0}", mine.level)}</span>
                           )}
                           {/* Width or height: keep the copies to put more of it
                               on the board, or spend them to make one stronger. */}

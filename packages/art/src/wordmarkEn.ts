@@ -22,10 +22,24 @@
  *
  * A checkerboard cannot be keyed out, because its two colours are also the
  * colours of the highlights inside the letters. A flat fill can. So it is
- * asked for the trailer's own #070a12 instead: the end card lays the mark on
- * exactly that colour and the seam is invisible without keying anything, and
- * if an alpha version is ever wanted, one colorkey on a colour that appears
- * nowhere in the mark will cut it.
+ * asked for the trailer's own #070a12 instead, and then keyed.
+ *
+ * ═══ THE KEY THRESHOLD IS 0.03, AND IT WAS MEASURED ═══
+ *
+ * Or, the moment it reached the home screen: *"in English the Amanda letters
+ * are not on a transparent background but on a black one."* They were — the
+ * trailer's end card is that same black so the seam was invisible there, and
+ * the home screen is a painting of Amanda, where it is a box.
+ *
+ * The background and the letters' own outline are both nearly black, so the
+ * threshold is the whole job. Composited over hot pink and looked at:
+ *
+ *   0.01   the background survives as a dark box
+ *   0.03   background gone, outline intact      <- this one
+ *   0.06   the outline goes with it and the letters lose their edge
+ *
+ * 0.08 of blend on top of that, so the fur's antialiased spikes do not come
+ * out as a stair.
  */
 import { execFileSync } from "node:child_process";
 import { existsSync } from "node:fs";
@@ -104,7 +118,7 @@ const WIDTH = 720;
 execFileSync(ffmpeg, [
   "-y", "-v", "error", "-i", OUT,
   "-vf", `crop=${w}:${h}:${x}:${y},pad=${w + PAD * 2}:${h + PAD * 2}:${PAD}:${PAD}:color=0x070a12,`
-    + `scale=${WIDTH}:-2:flags=lanczos`,
+    + `scale=${WIDTH}:-2:flags=lanczos,colorkey=0x070A12:0.03:0.08,format=rgba`,
   "-update", "1", OUT,
 ]);
 

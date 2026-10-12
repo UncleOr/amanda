@@ -252,7 +252,8 @@ export function BattleLog({ result, mySide }: { result: BattleResult; mySide: Ow
             <span><i className="log__swatch log__swatch--some" /> {t("s9c41951", "תרם נזק")}</span>
             <span><i className="log__swatch log__swatch--idle" /> {t("s3b86504", "ישן")}</span>
             <span>
-            <Icon name="skull" size={13} /> נפל · <Icon name="ready" size={13} /> שרד ·{" "}
+            <Icon name="skull" size={13} /> {t("s682e386", "נפל")} ·{" "}
+            <Icon name="ready" size={13} /> {t("s4acff09", "שרד")} ·{" "}
             <Icon name="frozen" size={13} /> {t("s57f747b", "לא זז")}
           </span>
             <span>{t("s65ef918", "לחץ על קלף ואספר לך")}</span>
@@ -492,7 +493,8 @@ function UnitReportModal({
               {unit.name}
             </h2>
             <p className="modal__subtitle">
-              {mine ? t("sa7d29bc", "שלך") : t("s8900b3c", "של היריב")} · {col}, מסלול {unit.lane + 1}
+              {mine ? t("sa7d29bc", "שלך") : t("s8900b3c", "של היריב")} · {col},{" "}
+              {tf("s548a9bf", "מסלול {0}", unit.lane + 1)}
             </p>
             <div className="modal__badges">
               {card && (
@@ -505,11 +507,11 @@ function UnitReportModal({
               <span className={`badge${unit.survived ? " badge--king" : ""}`}>
                 {unit.survived ? (
               <>
-                <Icon name="ready" size={14} /> {t("s4acff09", "שרד")}
+                <Icon name="ready" size={14} /> {t("sfea5ea2", "שרד")}
               </>
             ) : (
               <>
-                <Icon name="skull" size={14} /> נפל ב-{secs(unit.diedAtTick ?? 0)}s
+                <Icon name="skull" size={14} /> {tf("s99b51e8", "נפל ב-{0}s", secs(unit.diedAtTick ?? 0))}
               </>
             )}
               </span>

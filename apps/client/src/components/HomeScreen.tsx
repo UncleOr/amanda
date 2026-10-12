@@ -6,9 +6,7 @@ import { NachoBar } from "./NachoBar";
 import { ChallengeButton, Challenges } from "./Challenges";
 import { Lock } from "./SignedInOnly";
 import { shopItemArt } from "./Shop";
-import { hardRefresh } from "../game/refresh";
 import { useCompact } from "../game/useCompact";
-import { hasUnreadUpdate } from "../data/updates";
 import { listFriends, type Chest, type ShopItem } from "../game/account";
 import type { Overlays } from "../game/useOverlay";
 import type { MatchApi } from "../game/useMatch";
@@ -37,7 +35,6 @@ const BASE = import.meta.env.BASE_URL;
  *   home__progress  where you are and what you are two games from
  *   home__collect   the shop, what it is advertising, and the album
  *   home__social    other people
- *   home__meta      the small print
  *
  * Where each group LANDS is one set of grid-template-areas in
  * home-layout.css. Three were built and shown side by side — Or picked the
@@ -80,12 +77,6 @@ const BOT_LEVELS: ReadonlyArray<{ id: "easy" | "normal" | "hard"; he: string; no
  * opens, and never again while the tab is open.
  */
 let seenHome = false;
-
-const INSTALLED =
-  typeof window !== "undefined" &&
-  (window.matchMedia?.("(display-mode: standalone)").matches ||
-    // iOS does not report standalone through matchMedia.
-    (navigator as { standalone?: boolean }).standalone === true);
 
 export function HomeScreen({
   m,
@@ -145,16 +136,6 @@ export function HomeScreen({
       alive = false;
     };
   }, [signedIn]);
-  /*
-   * Is there a "what's new" nobody here has read?
-   *
-   * Read ONCE, into state, rather than on every render. The answer changes
-   * when the panel is opened, and a value recomputed during render would
-   * flip the dot off mid-paint while the panel that did it is still
-   * animating open. `unread && !panel.is("updates")` would read better and
-   * would do exactly that.
-   */
-  const [newsUnread, setNewsUnread] = useState(hasUnreadUpdate);
   /*
    * Or: *"so that people see Amanda's background, all the buttons should come
    * into the screen with an animation on load — at first you see the
@@ -378,13 +359,18 @@ export function HomeScreen({
           {/* Told, and told until when. */}
           {m.suspendedUntil && (
             <p className="warn warn--suspended">
-              החשבון הזה מושעה עד{" "}
-              {new Date(m.suspendedUntil).toLocaleDateString("he-IL", {
-                day: "numeric",
-                month: "long",
-                year: "numeric",
-              })}
-              {t("s23c3f2c", ". אפשר לשחק נגד המחשב בינתיים.")}
+              {/* The locale follows the game, not the country. It was pinned
+                  to he-IL, so an English player read an English sentence with
+                  a Hebrew month in the middle of it. */}
+              {tf(
+                "s48c712b",
+                "החשבון הזה מושעה עד {0}. אפשר לשחק נגד המחשב בינתיים.",
+                new Date(m.suspendedUntil).toLocaleDateString(lang() === "he" ? "he-IL" : "en-GB", {
+                  day: "numeric",
+                  month: "long",
+                  year: "numeric",
+                }),
+              )}
             </p>
           )}
           {m.roomError && (
@@ -588,61 +574,22 @@ export function HomeScreen({
         </section>
 
         {/*
-          The small print.
+          ═══ THE SMALL PRINT MOVED INTO THE GEAR ═══
 
-          Or: "אודות, פרטיות, נגישות and 'something not working?' can move to
-          the bottom left." They are not things anybody chooses between
-          matches, and the column they were in — the one with the actual game
-          in it — was running off the top of a short window partly because of
-          them. They stay reachable WITHOUT an account and without installing
-          anything, which a store will check.
+          אודות · פרטיות · נגישות, "מה חדש", "משהו לא עובד?" and the version
+          line were all down here. Or: *"language should be in settings.
+          Let's do a gear with sound and music on/off, language, about,
+          privacy, accessibility, what's new and something's-not-working, and
+          also a way to see the version."*
+
+          Which is all of it, so none of it is also here — two places showing
+          the same link is two places to change it and one of them to forget.
+          See components/Settings.tsx.
+
+          The unread dot went with them, onto the gear itself, because the
+          dot's whole job is to be seen by somebody who was not looking for
+          it.
         */}
-        <aside className="home__meta smallprint">
-          <button className="btn-link" onClick={() => panel.show("about")}>
-            {t("sdd48f4d", "אודות · פרטיות · נגישות")}
-          </button>
-          {/*
-            Or: "updates — what's new in this version, so there is a reason to
-            come back." It sits with the small print because it is not a thing
-            you choose between matches — and it carries a dot when there is
-            something unread, which is the part that does the bringing back.
-          */}
-          <button
-            className="btn-link btn-news"
-            onClick={() => {
-              setNewsUnread(false);
-              panel.show("updates");
-            }}
-          >
-            {t("s77b6cd1", "מה חדש")}
-            {newsUnread && <i className="btn-news__dot" aria-label={t("sb468431", "יש עדכון שלא קראתם")} />}
-          </button>
-          {/* Open to everybody: the player most likely to hit a bug is the one
-              who just arrived. Reporting a PERSON still needs an account, and
-              the server is where that is decided. */}
-          <button className="btn-link" onClick={() => panel.show({ kind: "report", about: "bug" })}>
-            {t("s9940578", "משהו לא עובד?")}
-          </button>
-          {/*
-            The version, and the way to force a fresh copy. The refresh button
-            only exists in a browser tab — installed as an app there is nothing
-            to hard-refresh in the same sense, and Or wants it gone from there:
-            "a button we will remove soon, or that should only appear in the
-            browser app".
-          */}
-          <p className="intro__version">
-            {tf("s6f3e4d6", "גרסה {0} · מסך {1}", __BUILD_ID__, viewport)}
-            {!INSTALLED && (
-              <button
-                className="btn-link"
-                title={t("s301358f", "מוריד אותי מחדש ומנקה גרסאות ישנות")}
-                onClick={() => void hardRefresh()}
-              >
-                {t("se6e2f22", "⟳ רענן")}
-              </button>
-            )}
-          </p>
-        </aside>
       </div>
     </main>
   );

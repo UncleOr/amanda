@@ -60,7 +60,7 @@ export function CardGallery() {
 
       <section className="gallery__series">
         <h3>
-          קלפי פעולה <small>({ACTIONS.size})</small>
+          {t("sccd4814", "קלפי פעולה")} <small>({ACTIONS.size})</small>
         </h3>
         <div className="gallery__row">
           {[...ACTIONS.keys()].map((id) => (

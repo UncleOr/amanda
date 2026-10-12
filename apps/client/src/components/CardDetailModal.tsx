@@ -80,7 +80,7 @@ export function CardDetailModal({
                   <Icon name="king" size={13} /> {t("s461e043", "ענק אמצע")}
                 </span>
               )}
-              {owned && <span className="badge badge--level">רמה {level}</span>}
+              {owned && <span className="badge badge--level">{tf("sf0837e4", "רמה {0}", level)}</span>}
             </div>
           </div>
         </div>
@@ -88,14 +88,14 @@ export function CardDetailModal({
         {owned && (
           <div className="modal__level">
             <span className="modal__level-n">
-              רמה {level}
+              {tf("se6317ab", "רמה {0}", level)}
               {level < LEVELS.max && <span className="modal__level-next"> / {LEVELS.max}</span>}
             </span>
             <span className="modal__level-bar" aria-hidden="true">
               <i style={{ width: `${(level / LEVELS.max) * 100}%` }} />
             </span>
             <span className="modal__level-note">
-              {owned.copies} עותקים
+              {tf("s50f1f7b", "{0} עותקים", owned.copies)}
               {level < LEVELS.max
                 ? " " + tf("sad22ee6", "· הרמה הבאה עולה {0}", levelCost(card.rarity, level))
                 : " " + t("s512576d", "· הגעת למקסימום")}
@@ -143,7 +143,7 @@ export function CardDetailModal({
         {series && (
           <div className="modal__section modal__synergy">
             <h3>
-              סינרגיית סדרה: {say(series.synergy.name)} (×{series.synergy.threshold})
+              {tf("s4261335", "סינרגיית סדרה: {0}", say(series.synergy.name))} (×{series.synergy.threshold})
             </h3>
             <p>{say(series.synergy.description)}</p>
           </div>

@@ -257,7 +257,9 @@ function NewCards({ ids, onClose }: { ids: string[]; onClose: () => void }) {
             />
           ))}
         </div>
-        <p className="newcard__tag">{many ? `${ids.length} קלפים חדשים!` : "קלף חדש!"}</p>
+        <p className="newcard__tag">
+          {many ? tf("s297ce81", "{0} קלפים חדשים!", ids.length) : t("s605a181", "קלף חדש!")}
+        </p>
         {/*
           Each card gets a CELL with a shape on it. `.card` is 100% of
           whatever holds it in both directions, so a card dropped straight
@@ -273,7 +275,9 @@ function NewCards({ ids, onClose }: { ids: string[]; onClose: () => void }) {
         </div>
         {/* The one that is not a card: more than three and the row stops
             being a row of cards and starts being a list. */}
-        {ids.length > 3 && <p className="newcard__more">ועוד {ids.length - 3}</p>}
+        {ids.length > 3 && (
+          <p className="newcard__more">{tf("s340e045", "ועוד {0}", ids.length - 3)}</p>
+        )}
         <button className="btn-fight" onClick={onClose}>
           {t("s70a58ef", "איזה יופי")}
         </button>

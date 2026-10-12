@@ -29,6 +29,8 @@ export type Overlay =
   | { kind: "shop" }
   | { kind: "inbox" }
   | { kind: "about" }
+  /** Sound, music, language, the small print, the version, and deleting. */
+  | { kind: "settings" }
   /** "What's new" — see data/updates.ts. */
   | { kind: "updates" }
   /** Today's challenges, when the screen is too small to hold the list. */

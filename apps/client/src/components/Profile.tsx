@@ -27,8 +27,6 @@ import { useEffect, useState } from "react";
 import {
   MIN_AGE,
   ageFrom,
-  deleteAccount,
-  scrubMyData,
   isAdmin,
   linkEmail,
   linkGoogle,
@@ -44,7 +42,7 @@ import { NO_PHRASE, ownedCatchphrases } from "@amanda/shared";
 import { Plaque } from "./Plaque";
 import * as V from "../data/voice";
 import { Overlay } from "./Overlay";
-import { line as t } from "../game/copy";
+import { line as t, lineF as tf } from "../game/copy";
 
 /**
  * The avatars drawn for this, matching packages/art/src/brandLooks.ts.
@@ -127,11 +125,6 @@ export function Profile({ account, onClose, onChanged }: Props) {
   /** The line thrown across the versus screen. NO_PHRASE means say nothing. */
   const [phrase, setPhrase] = useState(account?.catchphrase ?? NO_PHRASE);
   const [leaving, setLeaving] = useState(false);
-  const [deleting, setDeleting] = useState(false);
-  const [reallyDeleting, setReallyDeleting] = useState(false);
-  /** The gentler one: erase who you are, keep what you collected. */
-  const [scrubbing, setScrubbing] = useState(false);
-  const [reallyScrubbing, setReallyScrubbing] = useState(false);
   /** Whether to draw the admin link. The server decides; this only shows it. */
   const [admin, setAdmin] = useState(false);
   useEffect(() => {
@@ -242,88 +235,6 @@ export function Profile({ account, onClose, onChanged }: Props) {
           </section>
         )}
 
-        {deleting && (
-          <Overlay onClick={() => setDeleting(false)}>
-            <div className="modal modal--confirm" onClick={(e) => e.stopPropagation()}>
-              <h2>{t("s5846b62", "למחוק את החשבון?")}</h2>
-              <p>
-                הכול נמחק: האלבום, הקלפים, הגביעים, היהלומים וההיסטוריה. מיד,
-                בלי תקופת המתנה. <b>{t("s7e78db8", "אי אפשר לבטל.")}</b>
-              </p>
-              <p className="profile__note">
-                אם רק רצית לשחק מחשבון אחר — <b>{t("sa4507ca", "יציאה / החלפת משתמש")}</b> {t("s6253602", "עושה")}
-                {t("s7b07d58", "את זה בלי למחוק כלום.")}
-              </p>
-              <div className="result__buttons">
-                <button
-                  className="btn-fight profile__delete"
-                  disabled={reallyDeleting}
-                  onClick={() => {
-                    setReallyDeleting(true);
-                    void deleteAccount().then((err) => {
-                      setReallyDeleting(false);
-                      if (err) {
-                        setDeleting(false);
-                        setNote(err);
-                        return;
-                      }
-                      window.location.reload();
-                    });
-                  }}
-                >
-                  {reallyDeleting ? t("s3c685c0", "מוחק…") : t("s5f2eea0", "כן, למחוק הכול")}
-                </button>
-                <button className="btn-fight btn-ghost" onClick={() => setDeleting(false)}>
-                  {t("sae4c613", "ביטול")}
-                </button>
-              </div>
-            </div>
-          </Overlay>
-        )}
-
-        {/*
-          ═══ THE GENTLER ERASURE ═══
-
-          Google Play asks, separately from account deletion: "do you provide
-          a way for users to request that some or all of their data be deleted
-          WITHOUT requiring them to delete their account?" This is it, and it
-          is the better offer of the two: a child who is uncomfortable should
-          not have to burn a year of stickers to stop being findable.
-        */}
-        {scrubbing && (
-          <Overlay onClick={() => setScrubbing(false)}>
-            <div className="modal modal--confirm" onClick={(e) => e.stopPropagation()}>
-              <h2>{t("safed31c", "למחוק את הפרטים שלך?")}</h2>
-              <p>
-                הכינוי, הפרצוף, יום ההולדת, משפט המחץ, רשימת החברים וכל
-                המשחקים שלך — נמחקים. <b>{t("s9dc9a57", "האלבום, הקלפים, הגביעים והיהלומים")}
-                נשארים.</b>
-              </p>
-              <div className="result__buttons">
-                <button
-                  className="btn-fight profile__delete"
-                  disabled={reallyScrubbing}
-                  onClick={() => {
-                    setReallyScrubbing(true);
-                    void scrubMyData().then((err) => {
-                      setReallyScrubbing(false);
-                      setScrubbing(false);
-                      if (err) return setNote(err);
-                      // Everything on this screen just changed underneath it.
-                      window.location.reload();
-                    });
-                  }}
-                >
-                  {reallyScrubbing ? t("s4431549", "מוחק…") : t("s19e44e1", "כן, למחוק את הפרטים")}
-                </button>
-                <button className="btn-fight btn-ghost" onClick={() => setScrubbing(false)}>
-                  {t("s20d92b5", "ביטול")}
-                </button>
-              </div>
-            </div>
-          </Overlay>
-        )}
-
         {leaving && (
           <Overlay onClick={() => setLeaving(false)}>
             <div className="modal modal--confirm" onClick={(e) => e.stopPropagation()}>
@@ -344,7 +255,7 @@ export function Profile({ account, onClose, onChanged }: Props) {
                   {t("s9dc75cf", "כן, לצאת")}
                 </button>
                 <button className="btn-fight btn-ghost" onClick={() => setLeaving(false)}>
-                  {t("sa1d9361", "ביטול")}
+                  {t("sae4c613", "ביטול")}
                 </button>
               </div>
             </div>
@@ -469,7 +380,11 @@ export function Profile({ account, onClose, onChanged }: Props) {
               is the offence Or has named most often. The warning stays,
               because being turned away from online play without being told
               why is worse than a line of text — but it is four words. */}
-          {tooYoung && <p className="profile__note profile__note--loud">נגד אנשים — מגיל {MIN_AGE}</p>}
+          {tooYoung && (
+            <p className="profile__note profile__note--loud">
+              {tf("sde6d97c", "נגד אנשים — מגיל {0}", MIN_AGE)}
+            </p>
+          )}
         </section>
 
         {dirty && (
@@ -505,25 +420,25 @@ export function Profile({ account, onClose, onChanged }: Props) {
                 className="btn-fight btn-ghost profile__wide"
                 onClick={() => setLeaving(true)}
               >
-                <Icon name="back" size={15} /> {t("s40f4472", "יציאה / החלפת משתמש")}
+                <Icon name="back" size={15} /> {t("sa4507ca", "יציאה / החלפת משתמש")}
               </button>
               {/*
-                Deleting your own account, from inside the game. Both stores
-                have required this since 2022 and the route to it must not be
-                hidden — so it sits here, in plain sight, under the account.
+                ═══ DELETING MOVED INTO THE SETTINGS GEAR ═══
+
+                Both of them were here, full width, wearing `btn-fight` — the
+                same class as "המשך עם גוגל" directly above and as the button
+                that starts a match. Or: *"the delete-my-data / delete-my-
+                account buttons should not be so accessible. It almost looks
+                as though we are inviting them to do it."* He is right: the
+                most destructive pair of actions in the game looked exactly
+                like the most wanted one.
+
+                Play requires the route to account deletion to be FINDABLE
+                inside the app. It does not require it to be loud. It is a
+                closed section at the bottom of Settings now, and what is
+                inside it is text links. The confirmations are unchanged —
+                they are the part that is meant to be heavy.
               */}
-              <button
-                className="btn-fight btn-ghost profile__wide"
-                onClick={() => setScrubbing(true)}
-              >
-                {t("s18888a2", "מחיקת הפרטים שלי")}
-              </button>
-              <button
-                className="btn-fight profile__wide profile__delete"
-                onClick={() => setDeleting(true)}
-              >
-                {t("s971761e", "מחיקת החשבון שלי")}
-              </button>
             </>
           ) : (
             <>

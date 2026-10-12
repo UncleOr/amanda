@@ -104,6 +104,10 @@ export const ICON_LOOK: Record<string, string> = {
   // ── the chrome of the screen ──
   exit: "a thick rounded X cross, bold strokes, dusty red and cream",
   menu: "three thick stacked horizontal bars with rounded ends, cream and gold",
+  // Or: "a gear for settings". It is the one control on the top bar with no
+  // word on it, in a game that ships in two languages — which is the whole
+  // reason it is a cog and not a label.
+  gear: "a thick chunky cog wheel with six square teeth and a round hole through the middle, cream and warm gold",
   back: "a fat rounded arrow curving back to the left, pale cyan and white",
   again: "two thick arrows chasing each other in a closed circular loop, bright teal",
   plus: "a fat rounded plus sign, bright green with a thick outline",

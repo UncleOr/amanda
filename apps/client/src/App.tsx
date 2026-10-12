@@ -44,6 +44,8 @@ const prefetchArena = () => void import("./components/Arena");
 import { CardPicker } from "./components/CardPicker";
 import { About } from "./components/About";
 import { Updates } from "./components/Updates";
+import { Settings } from "./components/Settings";
+import { hasUnreadUpdate } from "./data/updates";
 import { MatePeek } from "./components/MatePeek";
 import { Challenges } from "./components/Challenges";
 import { Versus } from "./components/Versus";
@@ -219,8 +221,16 @@ function Game() {
   const m = useMatch();
   const [detail, setDetail] = useState<string | null>(null);
   const [actionDetail, setActionDetail] = useState<string | null>(null);
-  const [muted, setMuted] = useState(false);
-  const [musicOn, setMusicOn] = useState(music.isEnabled());
+  /*
+   * Whether there is an update nobody has read.
+   *
+   * It lived in HomeScreen while its dot did, and its dot is on the settings
+   * gear now — which is drawn here, in the top bar, on every screen. Read
+   * ONCE into state rather than on each render: the answer changes when the
+   * panel opens, and a value recomputed during render would flip the dot off
+   * mid-paint while the panel that did it is still animating.
+   */
+  const [newsUnread, setNewsUnread] = useState(hasUnreadUpdate);
   const [confirmExit, setConfirmExit] = useState(false);
   const [copied, setCopied] = useState(false);
   // On a phone the action cards are a drawer, so the board keeps its height.
@@ -802,35 +812,38 @@ function Game() {
             </button>
           )}
           {/*
-            The language switch lives here, beside sound, and not inside a
+            ═══ ONE GEAR WHERE THERE WERE THREE BUTTONS ═══
+
+            Language, music and sound each had their own button up here. At
+            844x390 that made this row 167px wide running to x=177 — and the
+            profile button starts at x=136, so the bell was sitting on top of
+            the first 41 pixels of it. Or found it: "the notifications button
+            hides the profile button on mobile, in both languages."
+
+            The old note on the language switch said it must not move into "a
             Hebrew-labelled settings screen — somebody who cannot read the
-            game has to be able to find it. The label is the language it
-            switches TO, in that language, which needs no translating.
+            game has to be able to find it." Still true, and still satisfied:
+            the way in is a COG, which is a picture, and the row inside offers
+            עברית and English each written in its own script. See Settings.
+
+            The bell stays out here. It carries a count, and a notification
+            you have to open a menu to discover is not a notification.
           */}
           <button
-            className="mute mute--lang"
-            title={lang() === "he" ? "Switch to English" : t("s2bd3e6a", "למעבר לעברית")}
-            onClick={() => setLang(lang() === "he" ? "en" : "he")}
-          >
-            {lang() === "he" ? "EN" : t("s853021b", "עב")}
-          </button>
-          <button
-            className={`mute${musicOn ? "" : " mute--off"}`}
-            title={musicOn ? t("s16f12ca", "כיבוי מוזיקה") : t("s745079b", "הפעלת מוזיקה")}
-            onClick={() => setMusicOn(music.toggleEnabled())}
-          >
-            <Icon name={musicOn ? "musicOn" : "musicOff"} size={19} />
-          </button>
-          <button
-            className="mute"
-            title={muted ? t("s0a41262", "הפעלת צליל") : t("s119a8c7", "השתקה")}
+            className={`mute${newsUnread ? " bell--new" : ""}`}
+            title={t("s0dad0ff", "הגדרות")}
             onClick={() => {
-              const nowMuted = sfx.toggleMute();
-              music.setMuted(nowMuted);
-              setMuted(nowMuted);
+              sfx.play("click");
+              panel.show("settings");
             }}
           >
-            <Icon name={muted ? "soundOff" : "soundOn"} size={19} />
+            <Icon name="gear" size={19} />
+            {/* "What's new" used to carry its dot in the home screen footer,
+                which is where it did the bringing-back. The footer is gone,
+                so the dot comes up here — otherwise an update announces
+                itself only to somebody already looking at the menu that
+                announces it. */}
+            {newsUnread && <i className="btn-news__dot" aria-label={t("s0eb9706", "יש עדכון שלא קראתם")} />}
           </button>
         </div>
       </header>
@@ -1110,7 +1123,11 @@ function Game() {
                   : m.firstPick
                     ? t("s1445cf1", "ועכשיו את השני")
                     : t("s4106038", "בחר קלף על הלוח שלך")}{" "}
-                עבור "{ACTIONS.get(m.targeting)?.name.he}"
+                {/* Typographic quotes, not ASCII ones: the straight pair has to
+                    be escaped inside the string, and the inventory and the
+                    verifier then disagree about what the text IS — one reads the
+                    source bytes, the other JSON.parses them. These need neither. */}
+                {tf("s8004b74", "עבור „{0}”", say(ACTIONS.get(m.targeting)?.name))}
               </span>
               <button className="targeting-bar__cancel" onClick={m.cancelTargeting}>
                 <Icon name="exit" size={13} /> {t("s7ab31ff", "ביטול")}
@@ -1125,7 +1142,7 @@ function Game() {
                 onClick={() => setActionsOpen((v) => !v)}
                 aria-expanded={actionsOpen}
               >
-                {actionsOpen ? "▾" : "▴"} קלפי פעולה
+                {actionsOpen ? "▾" : "▴"} {t("se6dcc04", "קלפי פעולה")}
                 <b className="actions__handle-count">{m.actionBar.length}/3</b>
               </button>
               {m.actionBar.map((a) => (
@@ -1270,18 +1287,18 @@ function Game() {
                   </button>
                 )}
                 <button onClick={m.discardHand} disabled={m.hand === null}>
-                  זרוק <Icon name="discard" size={15} />
+                  {t("sd06d0bd", "זרוק")} <Icon name="discard" size={15} />
                 </button>
                 {/* One take-back a match. Once it is spent the button goes
                     out and stays out — see takeDiscard for why. */}
                 <button onClick={m.takeDiscard} disabled={!m.canTakeDiscard}>
-                  קח מהפח {m.canTakeDiscard && <Icon name="recycle" size={15} />}
+                  {t("s1bd8f04", "קח מהפח")} {m.canTakeDiscard && <Icon name="recycle" size={15} />}
                 </button>
               </div>
               {m.stackSlots > 0 && (
                 <p className="hand__hint hand__hint--stack">
-                  <Icon name="build" size={14} /> אפשר להניח קלף על קלף שכבר הנחתם — נשארו{" "}
-                  {m.stackSlots}
+                  <Icon name="build" size={14} />{" "}
+                  {tf("sfbeaf8c", "אפשר להניח קלף על קלף שכבר הנחתם — נשארו {0}", m.stackSlots)}
                 </p>
               )}
               {m.stackCorners && (
@@ -1581,6 +1598,17 @@ function Game() {
 
       {panel.is("updates") && <Updates onClose={() => panel.close()} />}
 
+      {panel.is("settings") && (
+        <Settings
+          account={m.account}
+          panel={panel}
+          viewport={viewport}
+          newsUnread={newsUnread}
+          onNewsRead={() => setNewsUnread(false)}
+          onClose={() => panel.close()}
+        />
+      )}
+
       {/*
         Today's challenges, when the home screen had no room to show them.
         See ChallengeButton — on anything bigger this panel never opens,
@@ -1661,7 +1689,7 @@ function Game() {
         <Overlay onClick={m.declineInvitation}>
           <div className="modal modal--invite" onClick={(e) => e.stopPropagation()}>
             <Icon name="friend" size={44} />
-            <h2>{m.invitation.nickname ?? t("seaa865f", "חבר")} מזמין אותך למשחק</h2>
+            <h2>{tf("s7347353", "{0} מזמין אותך למשחק", m.invitation.nickname ?? t("seaa865f", "חבר"))}</h2>
             <div className="result__buttons">
               <button className="btn-fight" onClick={m.acceptInvitation}>
                 <Icon name="play" size={16} /> {t("sa2adcdb", "קדימה")}

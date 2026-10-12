@@ -16,12 +16,22 @@ export function verdictText(result: BattleResult, iWon: boolean): string {
     case "kingDown":
       return tf("s313e3b4", "המלך {0} נפל — זה מסיים את הקרב מיד.", whose);
     case "kingHp": {
-      const t = result.tiebreak!;
-      const mine = result.winner === "A" ? t.b : t.a;
-      const theirs = result.winner === "A" ? t.a : t.b;
-      return `נגמר הזמן ושני המלכים שרדו — הוכרע לפי חיי המלך: ${pct(
-        iWon ? theirs : mine,
-      )} שלך מול ${pct(iWon ? mine : theirs)} של היריב.`;
+      /*
+       * `tb`, not `t`. It was `t`, which SHADOWED the translator imported at
+       * the top of this file — so the one sentence inside this block is the
+       * one sentence in here the codemod could not convert, and it shipped
+       * in Hebrew to English players. A four-line scope, a one-letter name,
+       * and the bug is invisible because the code still compiles.
+       */
+      const tb = result.tiebreak!;
+      const mine = result.winner === "A" ? tb.b : tb.a;
+      const theirs = result.winner === "A" ? tb.a : tb.b;
+      return tf(
+        "sa74dbef",
+        "נגמר הזמן ושני המלכים שרדו — הוכרע לפי חיי המלך: {0} שלך מול {1} של היריב.",
+        pct(iWon ? theirs : mine),
+        pct(iWon ? mine : theirs),
+      );
     }
     case "totalHp":
       return t("sd1c6f72", "נגמר הזמן והמלכים שרדו עם אותו אחוז חיים — הוכרע לפי סך החיים על הלוח.");

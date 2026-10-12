@@ -1,6 +1,6 @@
 # הטקסטים של אמנדה
 
-כל טקסט שהשחקן רואה — 959 במספר, 953 מהם כבר באנגלית.
+כל טקסט שהשחקן רואה — 995 במספר, 995 מהם כבר באנגלית.
 
 ## איך עורכים
 
@@ -26,12 +26,12 @@
 
 | מזהה | טקסט נוכחי | טקסט חדש | אנגלית |
 | --- | --- | --- | --- |
-| hfc09a93 | אמנדה \| משחק קלפים מפלצתי | |  |
-| hbab6fe4 | בונים לוח 4×4 של מפלצות, והן נלחמות לבד. אמנדה שופטת, אמנדה אוכלת. | |  |
-| hafb233b | אמנדה | |  |
-| h1b28f47 | אמנדה \| משחק קלפים מפלצתי | |  |
-| h9c383ea | אמנדה | |  |
-| h8264212 | בונים לוח 4×4 של מפלצות, ואז הן נלחמות לבד. אמנדה שופטת, אמנדה אוכלת. | |  |
+| hfc09a93 | אמנדה \| משחק קלפים מפלצתי | | Amanda \| Monster card game |
+| hbab6fe4 | בונים לוח 4×4 של מפלצות, והן נלחמות לבד. אמנדה שופטת, אמנדה אוכלת. | | Build a 4x4 board of monsters and they fight on their own. Amanda judges. Amanda eats. |
+| hafb233b | אמנדה | | Amanda |
+| h1b28f47 | אמנדה \| משחק קלפים מפלצתי | | Amanda \| Monster card game |
+| h9c383ea | אמנדה | | Amanda |
+| h8264212 | בונים לוח 4×4 של מפלצות, ואז הן נלחמות לבד. אמנדה שופטת, אמנדה אוכלת. | | Build a 4x4 board of monsters and then they fight on their own. Amanda judges. Amanda eats. |
 
 ## סדרה — הדרקונים
 
@@ -350,12 +350,8 @@
 | s1703f49 | הודעות | | Messages |
 | s460b8e8 | חזרה לתפריט | | Back to the menu |
 | s7ee96f5 | יציאה | | Leave |
-| s2bd3e6a | למעבר לעברית | | Switch to Hebrew |
-| s853021b | עב | | HE |
-| s16f12ca | כיבוי מוזיקה | | Turn the music off |
-| s745079b | הפעלת מוזיקה | | Turn the music on |
-| s0a41262 | הפעלת צליל | | Turn the sound on |
-| s119a8c7 | השתקה | | Mute |
+| s0dad0ff | הגדרות | | Settings |
+| s0eb9706 | יש עדכון שלא קראתם | | There is an update you have not read |
 | se65fa4a | השרת לא עונה | | The server is not answering |
 | sa759290 | מחכה לחבר שלך… | | Waiting for your friend… |
 | s70fb9fd | מחפשת לך יריב… | | Finding you an opponent… |
@@ -380,7 +376,9 @@
 | sbcd9db8 | בחר קלף אצל היריב | | Pick a card on the opponent's side |
 | s1445cf1 | ועכשיו את השני | | And now the second one |
 | s4106038 | בחר קלף על הלוח שלך | | Pick a card on your board |
+| s8004b74 | עבור „{0}” | | for “{0}” |
 | s7ab31ff | ביטול | | Cancel |
+| se6dcc04 | קלפי פעולה | | Action cards |
 | s3cec9ca | מאוחר. תכננת גרוע. | | Too late. You planned badly. |
 | sb9a31bf | פעיל ∞ | | Active ∞ |
 | s34ec88c | נוצל | | Used |
@@ -396,6 +394,9 @@
 | s6c4fc10 | קלפים בפח | | Cards in the trash |
 | s7aacede | הבר מלא | | The bar is full |
 | s9f032e5 | קח לפעולה | | Take it to the bar |
+| sd06d0bd | זרוק | | Discard |
+| s1bd8f04 | קח מהפח | | Take from the bin |
+| sfbeaf8c | אפשר להניח קלף על קלף שכבר הנחתם — נשארו {0} | | You can stack a card on one you already placed — {0} left |
 | sb28db8b | ארבע הפינות פתוחות להנחה כפולה | | All four corners are open for a double placement |
 | s4a9f52a | התחל קרב! | | Start the battle! |
 | s72c3f50 | מוכן — לחץ לביטול | | Ready — tap to undo |
@@ -413,6 +414,7 @@
 | s80f3ec6 | עכשיו לך תאסוף קלפים. אני רעבה. | | Now go and collect cards. I'm hungry. |
 | s8e26ffe | יאללה | | Let's go |
 | s0e0ecca | סגירה | | Close |
+| s7347353 | {0} מזמין אותך למשחק | | {0} is inviting you to a match |
 | seaa865f | חבר | | Friend |
 | sa2adcdb | קדימה | | Go |
 | sfe483c6 | אולי אחר כך | | Maybe later |
@@ -468,6 +470,8 @@
 | s1d0a003 | הכי הרבה נזק | | Most damage |
 | s9c41951 | תרם נזק | | Dealt damage |
 | s3b86504 | ישן | | Asleep |
+| s682e386 | נפל | | fell |
+| s4acff09 | שרד | | Survived |
 | s57f747b | לא זז | | Did not move |
 | s65ef918 | לחץ על קלף ואספר לך | | Tap a card and I will tell you |
 | s3b1fddd | קלף | | Card |
@@ -491,7 +495,9 @@
 | sbf12851 | סגירה | | Close |
 | sa7d29bc | שלך | | Yours |
 | s8900b3c | של היריב | | Opponent's |
-| s4acff09 | שרד | | Survived |
+| s548a9bf | מסלול {0} | | lane {0} |
+| sfea5ea2 | שרד | | survived |
+| s99b51e8 | נפל ב-{0}s | | fell at {0}s |
 | s64a471a | נזק שעשה | | Damage dealt |
 | s6353210 | נזק שספג | | Damage taken |
 | s48e7c57 | הפלות | | Takedowns |
@@ -509,6 +515,9 @@
 | --- | --- | --- | --- |
 | s2027844 | סגירה | | Close |
 | s461e043 | ענק אמצע | | Middle giant |
+| sf0837e4 | רמה {0} | | Level {0} |
+| se6317ab | רמה {0} | | Level {0} |
+| s50f1f7b | {0} עותקים | | {0} copies |
 | sad22ee6 | · הרמה הבאה עולה {0} | | · the next level costs {0} |
 | s512576d | · הגעת למקסימום | | · you have reached the maximum |
 | sa1b7d2c | חיים | | Health |
@@ -521,6 +530,7 @@
 | sa3be69c | טווח | | Range |
 | s8fa9cc4 | יכולות | | Abilities |
 | s8efe7ee | תפקיד | | Role |
+| s4261335 | סינרגיית סדרה: {0} | | Series synergy: {0} |
 
 ## חלון פרטי קלף פעולה
 
@@ -584,13 +594,16 @@
 | --- | --- | --- | --- |
 | s30e62ac | גלריית קלפים | | Card gallery |
 | s537a98d | רק קלפים עם ציור | | Only cards with artwork |
+| sccd4814 | קלפי פעולה | | Action cards |
 
 ## מעבדת קרב (כלי פיתוח)
 
 | מזהה | טקסט נוכחי | טקסט חדש | אנגלית |
 | --- | --- | --- | --- |
 | sd2e39c8 | מעבדת קרב | | Battle lab |
+| se4ac52e | שמאל | | Left |
 | se019310 | מעורב | | Mixed |
+| sef32a80 | ימין | | Right |
 | s3962d65 | מעורב | | Mixed |
 | s1e70355 | ▶ הרץ שוב | | ▶ Run again |
 
@@ -700,6 +713,7 @@
 | s55a8220 | לשאלות על פרטיות או למחיקת מידע: amanda@orasul.in | | For privacy questions or to delete your data: amanda@orasul.in |
 | s3bbb564 | הצהרת נגישות | | Accessibility statement |
 | s98d6639 | עודכן: אוקטובר 2026 | | Updated: October 2026 |
+| s8de9bac | אנחנו משתדלים שהמשחק יהיה נגיש לכמה שיותר אנשים, ומכוונים לתקן הישראלי ת״י 5568 ולהנחיות WCAG 2.1 ברמה AA. | | We try to make the game usable by as many people as possible, and we aim at the Israeli standard SI 5568 and at WCAG 2.1 level AA. |
 | s9e45ede | מה כבר נעשה | | What has been done |
 | s0b8e183 | כל הכפתורים נגישים במקלדת וסימון המיקוד נשאר גלוי. | | Every button can be reached by keyboard, and the focus outline stays visible. |
 | s1897e21 | מי שביקש פחות תנועה במערכת ההפעלה — האנימציות נעצרות. זה כולל את ההבהובים, הניצוצות והתיבות הקופצות. | | If you have asked your operating system for less motion, the animations stop. That includes the flashing, the sparkles and the popping chests. |
@@ -733,6 +747,7 @@
 | sd969559 | עותקים | | Copies |
 | s3cfae6d | הקרבות האחרונים, החדש ביותר ראשון | | Your most recent battles, newest first |
 | s176d067 | עותקים — כמה פעמים אפשר להניח אותו | | Copies — how many times you can place it |
+| s4308b06 | רמה {0} | | Level {0} |
 | sdcf87da | שדרוג לרמה {0} — עולה {1} עותקים | | Upgrade to level {0} — costs {1} copies |
 
 ## components/ArenaTrack.tsx
@@ -741,6 +756,7 @@
 | --- | --- | --- | --- |
 | s84b983e | כל הארנות | | All the arenas |
 | sbdb539a | {0} · עוד {1} | | {0} · {1} more |
+| s00844be | הגעת לסוף הדרך | | you reached the end of the road |
 | s92d6d79 | סגירה | | Close |
 | s474cafb | הדרך | | The road |
 | s2411278 | אתה כאן | | You are here |
@@ -793,6 +809,9 @@
 | s5bba8e8 | תיבת זהב | | Gold chest |
 | s3a10489 | פתח {0} | | Open {0} |
 | sbcd9e71 | יפה | | Nice |
+| s297ce81 | {0} קלפים חדשים! | | {0} new cards! |
+| s605a181 | קלף חדש! | | A new card! |
+| s340e045 | ועוד {0} | | and {0} more |
 | s70a58ef | איזה יופי | | Lovely |
 | sb0e2d63 | חדש אצלך | | New to you |
 
@@ -865,7 +884,7 @@
 | s1dda509 | בלי שעון, שני הצדדים שלך | | No clock, both sides are yours |
 | s77f529a | מגרש המשחקים | | The playground |
 | s1a9483e | איך משחקים | | How to play |
-| s23c3f2c | . אפשר לשחק נגד המחשב בינתיים. | | . You can play against the computer in the meantime. |
+| s48c712b | החשבון הזה מושעה עד {0}. אפשר לשחק נגד המחשב בינתיים. | | This account is suspended until {0}. You can play against the computer meanwhile. |
 | sd01b2d8 | אין חדר כזה. אולי המצאת אותו. | | No such room. Maybe you made it up. |
 | sf8d116e | זה הקוד שלך. אתה לא יכול לאכול את עצמך. | | That is your own code. You cannot eat yourself. |
 | s1f6e5ea | החדר מלא. שניים מספיקים לי. | | The room is full. Two is enough for me. |
@@ -879,13 +898,6 @@
 | s0cab6b9 | חברים | | Friends |
 | s44d803c | חברים | | Friends |
 | sd0647c4 | מישהו מחכה לתשובה | | Somebody is waiting for an answer |
-| sdd48f4d | אודות · פרטיות · נגישות | | About · Privacy · Accessibility |
-| s77b6cd1 | מה חדש | | What's new |
-| sb468431 | יש עדכון שלא קראתם | | There is an update you have not read |
-| s9940578 | משהו לא עובד? | | Something not working? |
-| s6f3e4d6 | גרסה {0} · מסך {1} | | version {0} · screen {1} |
-| s301358f | מוריד אותי מחדש ומנקה גרסאות ישנות | | Downloads me again and clears out old versions |
-| se6e2f22 | ⟳ רענן | | ⟳ Refresh |
 
 ## components/Inbox.tsx
 
@@ -950,6 +962,7 @@
 | s42fb787 | זה אני | | That's me |
 | s8e369df | הכינוי שלך | | Your nickname |
 | sb359ace | קדימה | | Go |
+| sbccb202 | בשביל לשחק נגד אנשים אחרים צריך להיות בן {0} לפחות. נגד הבוט — תמיד אפשר. | | To play against other people you have to be {0} or older. Against the bot — always. |
 | sd694b8e | סיימנו | | Done |
 | scea7960 | בלי להגיד | | Not saying |
 
@@ -961,6 +974,7 @@
 | s1b4740d | אתגר הושלם | | Challenge complete |
 | s440773f | {0} אתגרים הושלמו | | {0} challenges complete |
 | s854fe19 | מספיק גביעים מהבוט להיום — נאצ'וס ואתגרים ממשיכים | | Enough trophies from the bot for today — nachos and challenges carry on |
+| s937aed8 | עוד {0} נאצ'וס ותיבה | | {0} more nachos and a chest |
 
 ## components/Profile.tsx
 
@@ -972,23 +986,10 @@
 | s5516565 | הכינוי שלך | | Your nickname |
 | safd776c | ניהול | | Admin |
 | s2cf62eb | פתח את לוח הניהול | | Open the admin panel |
-| s5846b62 | למחוק את החשבון? | | Delete the account? |
-| s7e78db8 | אי אפשר לבטל. | | This cannot be undone. |
-| sa4507ca | יציאה / החלפת משתמש | | Sign out / switch user |
-| s6253602 | עושה | | does |
-| s7b07d58 | את זה בלי למחוק כלום. | | that without deleting anything. |
-| s3c685c0 | מוחק… | | Deleting… |
-| s5f2eea0 | כן, למחוק הכול | | Yes, delete everything |
-| sae4c613 | ביטול | | Cancel |
-| safed31c | למחוק את הפרטים שלך? | | Delete your details? |
-| s9dc9a57 | האלבום, הקלפים, הגביעים והיהלומים | | the album, the cards, the trophies and the diamonds |
-| s4431549 | מוחק… | | Deleting… |
-| s19e44e1 | כן, למחוק את הפרטים | | Yes, delete the details |
-| s20d92b5 | ביטול | | Cancel |
 | s23e4e7c | לצאת מהחשבון? | | Sign out of the account? |
 | s6059eba | הכול נשמר, ואפשר לחזור. | | Everything is saved, and you can come back. |
 | s9dc75cf | כן, לצאת | | Yes, sign out |
-| sa1d9361 | ביטול | | Cancel |
+| sae4c613 | ביטול | | Cancel |
 | s56f3a93 | משפט המחץ שלי | | My catchphrase |
 | sf806fc3 | בלי משפט | | No catchphrase |
 | s878f7ab | איך לפנות אליך | | How to address you |
@@ -996,12 +997,11 @@
 | sb434f05 | בת | | Girl |
 | s95fa408 | למה להגדיר? | | Why set this? |
 | sf69f486 | יום ההולדת שלך | | Your birthday |
+| sde6d97c | נגד אנשים — מגיל {0} | | Against people — age {0}+ |
 | sf5092ae | שמור שינויים | | Save changes |
 | sc0f520f | החשבון שלך | | Your account |
 | sa8324d2 | מחובר | | Signed in |
-| s40f4472 | יציאה / החלפת משתמש | | Sign out / switch user |
-| s18888a2 | מחיקת הפרטים שלי | | Delete my details |
-| s971761e | מחיקת החשבון שלי | | Delete my account |
+| sa4507ca | יציאה / החלפת משתמש | | Sign out / switch user |
 | s2248739 | המשך עם גוגל | | Continue with Google |
 | s074bcb0 | או | | or |
 | sc8aa4b2 | אימייל | | Email |
@@ -1036,6 +1036,8 @@
 | --- | --- | --- | --- |
 | sb73e6cd | הצד שלך החזיק | | Your side held |
 | sb66c1e6 | הצד שמולך החזיק | | The side facing you held |
+| s6832cda | {0}ש׳ | | {0}s |
+| sb4b2aa8 | {0} נפלו | | {0} fell |
 | s6052ae4 | מתחילים… | | Starting… |
 | s30a40da | מחכה ליריב… | | Waiting for the opponent… |
 | s21914e7 | רוצים עוד אחד! קדימה | | We want another one! Come on |
@@ -1060,6 +1062,44 @@
 | s299e1cd | לא לראות הודעות | | Hide messages |
 | sf929198 | להראות הודעות שוב | | Show messages again |
 | sed1b7c0 | אין אימוג'ים | | No emoji |
+
+## components/Settings.tsx
+
+| מזהה | טקסט נוכחי | טקסט חדש | אנגלית |
+| --- | --- | --- | --- |
+| sbf142a2 | עברית | | Hebrew |
+| se811a27 | סגירה | | Close |
+| seb080a0 | הגדרות | | Settings |
+| s497670b | צלילים | | Sounds |
+| s6af16ba | כבוי | | Off |
+| s4e2eb6c | דולק | | On |
+| sa503b39 | מוזיקה | | Music |
+| s6f43267 | דולקת | | On |
+| s3c95ca3 | כבויה | | Off |
+| s46dcd47 | שפה | | Language |
+| s05245ec | אודות · פרטיות · נגישות | | About · Privacy · Accessibility |
+| s8e11615 | מה חדש | | What's new |
+| s6eed161 | יש עדכון שלא קראתם | | There is an update you have not read |
+| s50fb087 | משהו לא עובד? | | Something not working? |
+| s3d84a17 | גרסה {0} · מסך {1} | | version {0} · screen {1} |
+| s7dee97b | מוריד אותי מחדש ומנקה גרסאות ישנות | | Downloads me again and clears out old versions |
+| s1f572e7 | ⟳ רענן | | ⟳ Refresh |
+| sf4d6e5d | מחיקת מידע | | Delete my data |
+| sa694783 | מחיקת הפרטים שלי | | Delete my details |
+| s60338b2 | מחיקת החשבון שלי | | Delete my account |
+| s5a90022 | למחוק את הפרטים שלך? | | Delete your details? |
+| s926d0e0 | הכינוי, הפרצוף, יום ההולדת, משפט המחץ, רשימת החברים וכל המשחקים שלך — נמחקים. | | Your nickname, face, birthday, catchphrase, friends list and all your matches are erased. |
+| s6e1464d | האלבום, הקלפים, הגביעים והיהלומים נשארים. | | The album, the cards, the trophies and the gems stay. |
+| s9a33847 | מוחק… | | Deleting… |
+| sa2535e5 | כן, למחוק את הפרטים | | Yes, delete the details |
+| sf2fe2be | ביטול | | Cancel |
+| s119a2a3 | למחוק את החשבון? | | Delete the account? |
+| s57fde6a | הכול נמחק: האלבום, הקלפים, הגביעים, היהלומים וההיסטוריה. מיד, בלי תקופת המתנה. | | Everything goes: the album, the cards, the trophies, the gems and the history. Right away, with no waiting period. |
+| s06f4486 | אי אפשר לבטל. | | This cannot be undone. |
+| sc39a712 | אם רק רצית לשחק מחשבון אחר — יציאה / החלפת משתמש בפרופיל עושה את זה בלי למחוק כלום. | | If you only wanted to play from another account, Sign out / switch user in your profile does that without deleting anything. |
+| sa4bb51d | מוחק… | | Deleting… |
+| s15a335a | כן, למחוק הכול | | Yes, delete everything |
+| sfb7cc23 | ביטול | | Cancel |
 
 ## components/Shop.tsx
 
@@ -1262,6 +1302,7 @@
 | s656f60c | של היריב | | Opponent's |
 | s42347b7 | שלך | | Yours |
 | s313e3b4 | המלך {0} נפל — זה מסיים את הקרב מיד. | | King {0} fell — that ends the battle immediately. |
+| sa74dbef | נגמר הזמן ושני המלכים שרדו — הוכרע לפי חיי המלך: {0} שלך מול {1} של היריב. | | Time ran out and both kings survived — decided on king health: {0} yours against {1} theirs. |
 | sd1c6f72 | נגמר הזמן והמלכים שרדו עם אותו אחוז חיים — הוכרע לפי סך החיים על הלוח. | | Time ran out and both Kings survived on the same percentage of health — decided by total health on the board. |
 | s3d96736 | נגמר הזמן והחיים היו שווים — הוכרע לפי מספר הקלפים ששרדו. | | Time ran out and the health was equal — decided by how many cards survived. |
 | s9726494 | נגמר הזמן והכול יצא שווה לחלוטין — הוכרע בהטלת מטבע. | | Time ran out and everything came out exactly equal — decided by a coin toss. |

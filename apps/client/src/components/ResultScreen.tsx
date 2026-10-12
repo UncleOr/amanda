@@ -7,7 +7,7 @@ import * as V from "../data/voice";
 import { verdictText } from "../game/verdict";
 import type { MatchApi } from "../game/useMatch";
 import type { Overlays } from "../game/useOverlay";
-import { line as t } from "../game/copy";
+import { line as t, lineF as tf } from "../game/copy";
 
 /**
  * How it went, and what to do next.
@@ -78,11 +78,12 @@ export function ResultScreen({
               <p className="result__verdict">{verdictText(m.result, m.iWon)}</p>
               <p className="result__tally">
                 <span>
-                  <Icon name="timer" size={15} /> {(m.result.ticks / 30).toFixed(1)}ש׳
+                  <Icon name="timer" size={15} />{" "}
+                  {tf("s6832cda", "{0}ש׳", (m.result.ticks / 30).toFixed(1))}
                 </span>
                 <span>
                   <Icon name="skull" size={15} />{" "}
-                  {m.result.events.filter((e) => e.type === "death").length} נפלו
+                  {tf("sb4b2aa8", "{0} נפלו", m.result.events.filter((e) => e.type === "death").length)}
                 </span>
               </p>
             </>

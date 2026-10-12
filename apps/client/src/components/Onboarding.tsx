@@ -11,7 +11,7 @@ import { useState } from "react";
 import { MIN_AGE, ageFrom, saveProfile } from "../game/account";
 import { AVATAR_IDS } from "./Profile";
 import * as V from "../data/voice";
-import { line as t } from "../game/copy";
+import { line as t, lineF as tf } from "../game/copy";
 
 const BASE = import.meta.env.BASE_URL;
 
@@ -157,8 +157,7 @@ export function Onboarding({ initialNickname, onDone }: Props) {
             />
             {tooYoung && (
               <p className="ob__warn">
-                בשביל לשחק נגד אנשים אחרים צריך להיות בן {MIN_AGE} לפחות. נגד הבוט — תמיד
-                אפשר.
+                {tf("sbccb202", "בשביל לשחק נגד אנשים אחרים צריך להיות בן {0} לפחות. נגד הבוט — תמיד אפשר.", MIN_AGE)}
               </p>
             )}
             <div className="ob__row">

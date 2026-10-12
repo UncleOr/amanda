@@ -57,7 +57,7 @@ export function ArenaPreview() {
       <header className="gallery__bar">
         <h2>{t("sd2e39c8", "מעבדת קרב")}</h2>
         <label>
-          שמאל:{" "}
+          {t("se4ac52e", "שמאל")}:{" "}
           <select value={left} onChange={(e) => setLeft(e.target.value)}>
             {SERIES_IDS.map((s) => (
               <option key={s} value={s}>
@@ -67,7 +67,7 @@ export function ArenaPreview() {
           </select>
         </label>
         <label>
-          ימין:{" "}
+          {t("sef32a80", "ימין")}:{" "}
           <select value={right} onChange={(e) => setRight(e.target.value)}>
             {SERIES_IDS.map((s) => (
               <option key={s} value={s}>

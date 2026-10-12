@@ -30,9 +30,29 @@ const FIX = process.argv.includes("--fix");
 const map = JSON.parse(readFileSync("docs/copy.map.json", "utf8"));
 const byId = new Map(map.map((e) => [e.id, e]));
 
-/** t("id", "text") / tf("id", "text", …) — the id and the shipped string. */
-const CALL = /\btf?\("([a-z][0-9a-f]{7})",\s*("(?:[^"\\]|\\.)*")/g;
-const NESTED = /\b(tf?)\("([a-z][0-9a-f]{7})",\s*t\("([a-z][0-9a-f]{7})",\s*("(?:[^"\\]|\\.)*")\)/g;
+/**
+ * t("id", "text") / tf("id", "text", …) — the id and the shipped string.
+ *
+ * `\(\s*` and not `\("`, because a long string gets wrapped:
+ *
+ *     tf(
+ *       "s0000031",
+ *       "…",
+ *
+ * and with `(` glued to the quote, every call written like that was
+ * INVISIBLE here. The inventory has always seen them, so the document
+ * carried ids this check compared against nothing — it printed
+ * "0 ids disagree" and meant "0 ids looked at".
+ *
+ * The id being `[a-z]` plus seven HEX digits is load-bearing in the same
+ * way: a hand-written placeholder like "tg000001" has a g in it, matches
+ * nothing, and passed silently for exactly the same reason. Step 3 below
+ * is what stops that being silent.
+ */
+const CALL = /\btf?\(\s*"([a-z][0-9a-f]{7})",\s*("(?:[^"\\]|\\.)*")/g;
+const NESTED = /\b(tf?)\(\s*"([a-z][0-9a-f]{7})",\s*t\(\s*"([a-z][0-9a-f]{7})",\s*("(?:[^"\\]|\\.)*")\)/g;
+/** Anything id-SHAPED that the real pattern above would not accept. */
+const MALFORMED = /\btf?\(\s*"([A-Za-z][0-9A-Za-z]{7})"\s*,/g;
 
 const files = [];
 (function walk(dir) {
@@ -46,6 +66,7 @@ const files = [];
 let unnested = 0;
 let remapped = 0;
 const unknown = [];
+const malformed = [];
 
 for (const file of files) {
   let s = readFileSync(file, "utf8");
@@ -74,6 +95,13 @@ for (const file of files) {
     return whole.replace(`"${id}"`, `"${want}"`);
   });
 
+  // 3 — an id that is id-SHAPED but not well-formed matches nothing above,
+  //      so without this it sails through as a success. "tg000001" did.
+  for (const [, id] of s.matchAll(MALFORMED)) {
+    if (/^[a-z][0-9a-f]{7}$/.test(id)) continue;
+    malformed.push(`${file}: "${id}" is not [a-z] + 7 hex digits`);
+  }
+
   if (FIX && s !== before) writeFileSync(file, s, "utf8");
 }
 
@@ -83,4 +111,10 @@ if (unknown.length) {
   console.log(`${unknown.length} left alone — regenerate the document and run again:`);
   for (const u of unknown.slice(0, 10)) console.log(`   ${u}`);
 }
+if (malformed.length) {
+  console.log(`\n${malformed.length} id(s) not well-formed — nothing can check these:`);
+  for (const m of malformed) console.log(`   ${m}`);
+}
 if (!FIX) console.log("\nNothing written. Re-run with --fix.");
+// A malformed id is a silent hole in this check, so it is an exit code.
+if (malformed.length) process.exit(1);

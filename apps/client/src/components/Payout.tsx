@@ -114,5 +114,5 @@ export function Payout({
 function NextChestHint({ award }: { award: Award }) {
   const bar = nachoBar(award.total);
   if (bar.toGo > 2) return null;
-  return <span className="payout__near">עוד {bar.toGo} נאצ'וס ותיבה</span>;
+  return <span className="payout__near">{tf("s937aed8", "עוד {0} נאצ'וס ותיבה", bar.toGo)}</span>;
 }

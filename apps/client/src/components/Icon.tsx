@@ -48,6 +48,7 @@ export type IconName =
   | "musicOff"
   | "exit"
   | "menu"
+  | "gear"
   | "back"
   | "again"
   | "plus"
