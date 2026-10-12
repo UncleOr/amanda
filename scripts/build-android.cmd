@@ -65,6 +65,24 @@ REM
 REM  24 is Android 7.0, August 2016. Anything older cannot run a TWA
 REM  usefully anyway, because it needs a current Chrome underneath it.
 REM
+REM ============================================================
+REM  THERE ARE TWO VERSION FIELDS, AND BUBBLEWRAP READS THE SECOND
+REM
+REM  twa-manifest.json carries both `appVersionName` and `appVersion`. The
+REM  first successful build still came out as
+REM
+REM    versionName='y'
+REM
+REM  because only `appVersionName` had ever been corrected after the stray
+REM  keystroke, and the generator takes `appVersion`. Nothing warns: the
+REM  build succeeds, the bundle validates, and the wrong string is visible
+REM  only by reading the finished artifact -- which is why that is worth
+REM  doing before every upload:
+REM
+REM    aapt2 dump badging android\app-release-signed.apk
+REM
+REM  Keep the two in step.
+REM
 REM  Run it from the repository root:   scripts\build-android.cmd
 REM ============================================================
 
