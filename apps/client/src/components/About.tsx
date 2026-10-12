@@ -250,9 +250,15 @@ function Privacy() {
       </p>
 
       <h3>{t("sa910811", "איך מוחקים הכול")}</h3>
+      {/* The route has to match web/delete/index.html, which is the URL Play
+          Console is given for data deletion and the one a reviewer opens
+          beside the app. Both said "the profile" until deleting moved into
+          the settings gear. */}
       <p>
-        באזור האישי יש <b>{t("see1a564", "מחיקת חשבון")}</b>{t("sd864a74", ". היא מוחקת את החשבון, האלבום, הגביעים")}
-        {t("s0d6ac9b", "וההיסטוריה — מיד, בלי תקופת המתנה ובלי לשלוח אימייל. אי אפשר לבטל.")}
+        {t(
+          "s006c31b",
+          "בגלגל השיניים למעלה, תחת מחיקת מידע, יש מחיקת החשבון שלי. היא מוחקת את החשבון, האלבום, הגביעים וההיסטוריה — מיד, בלי תקופת המתנה ובלי לשלוח אימייל. אי אפשר לבטל.",
+        )}
       </p>
 
       <h3>{t("scf1e0b8", "יצירת קשר")}</h3>

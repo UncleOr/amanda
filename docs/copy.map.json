@@ -6811,33 +6811,13 @@
   }
  },
  {
-  "id": "see1a564",
+  "id": "s006c31b",
   "section": "components/About.tsx",
-  "text": "מחיקת חשבון",
+  "text": "בגלגל השיניים למעלה, תחת מחיקת מידע, יש מחיקת החשבון שלי. היא מוחקת את החשבון, האלבום, הגביעים וההיסטוריה — מיד, בלי תקופת המתנה ובלי לשלוח אימייל. אי אפשר לבטל.",
   "where": {
    "kind": "source",
    "file": "apps/client/src/components/About.tsx",
-   "line": 254
-  }
- },
- {
-  "id": "sd864a74",
-  "section": "components/About.tsx",
-  "text": ". היא מוחקת את החשבון, האלבום, הגביעים",
-  "where": {
-   "kind": "source",
-   "file": "apps/client/src/components/About.tsx",
-   "line": 254
-  }
- },
- {
-  "id": "s0d6ac9b",
-  "section": "components/About.tsx",
-  "text": "וההיסטוריה — מיד, בלי תקופת המתנה ובלי לשלוח אימייל. אי אפשר לבטל.",
-  "where": {
-   "kind": "source",
-   "file": "apps/client/src/components/About.tsx",
-   "line": 255
+   "line": 260
   }
  },
  {
@@ -6847,7 +6827,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/components/About.tsx",
-   "line": 258
+   "line": 264
   }
  },
  {
@@ -6857,7 +6837,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/components/About.tsx",
-   "line": 260
+   "line": 266
   }
  },
  {
@@ -6867,7 +6847,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/components/About.tsx",
-   "line": 269
+   "line": 275
   }
  },
  {
@@ -6877,7 +6857,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/components/About.tsx",
-   "line": 270
+   "line": 276
   }
  },
  {
@@ -6887,7 +6867,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/components/About.tsx",
-   "line": 276
+   "line": 282
   }
  },
  {
@@ -6897,7 +6877,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/components/About.tsx",
-   "line": 280
+   "line": 286
   }
  },
  {
@@ -6907,7 +6887,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/components/About.tsx",
-   "line": 282
+   "line": 288
   }
  },
  {
@@ -6917,7 +6897,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/components/About.tsx",
-   "line": 284
+   "line": 290
   }
  },
  {
@@ -6927,7 +6907,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/components/About.tsx",
-   "line": 286
+   "line": 292
   }
  },
  {
@@ -6937,7 +6917,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/components/About.tsx",
-   "line": 287
+   "line": 293
   }
  },
  {
@@ -6947,7 +6927,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/components/About.tsx",
-   "line": 288
+   "line": 294
   }
  },
  {
@@ -6957,7 +6937,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/components/About.tsx",
-   "line": 291
+   "line": 297
   }
  },
  {
@@ -6967,7 +6947,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/components/About.tsx",
-   "line": 293
+   "line": 299
   }
  },
  {
@@ -6977,7 +6957,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/components/About.tsx",
-   "line": 296
+   "line": 302
   }
  },
  {
@@ -6987,7 +6967,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/components/About.tsx",
-   "line": 297
+   "line": 303
   }
  },
  {
@@ -6997,7 +6977,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/components/About.tsx",
-   "line": 305
+   "line": 311
   }
  },
  {
@@ -7007,7 +6987,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/components/About.tsx",
-   "line": 306
+   "line": 312
   }
  },
  {
@@ -7017,7 +6997,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/components/About.tsx",
-   "line": 308
+   "line": 314
   }
  },
  {
@@ -7027,7 +7007,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/components/About.tsx",
-   "line": 309
+   "line": 315
   }
  },
  {
@@ -7037,7 +7017,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/components/About.tsx",
-   "line": 311
+   "line": 317
   }
  },
  {
@@ -7047,7 +7027,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/components/About.tsx",
-   "line": 314
+   "line": 320
   }
  },
  {
@@ -7057,7 +7037,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/components/About.tsx",
-   "line": 317
+   "line": 323
   }
  },
  {

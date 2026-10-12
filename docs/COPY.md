@@ -1,6 +1,6 @@
 # הטקסטים של אמנדה
 
-כל טקסט שהשחקן רואה — 1021 במספר, 1021 מהם כבר באנגלית.
+כל טקסט שהשחקן רואה — 1019 במספר, 1019 מהם כבר באנגלית.
 
 ## איך עורכים
 
@@ -708,9 +708,7 @@
 | s17cae8a | איפה זה יושב | | Where it is kept |
 | s5b4f8cf | על שרתי Supabase בפרנקפורט שבגרמניה (האיחוד האירופי). רק אתה יכול לקרוא את השורות שלך — בסיס הנתונים חוסם גישה לשורות של מישהו אחר ברמת המסד עצמו, לא רק באפליקציה. | | On Supabase servers in Frankfurt, Germany (the European Union). Only you can read your own rows — the database blocks access to anybody else's rows at the database itself, not only in the app. |
 | sa910811 | איך מוחקים הכול | | How to delete everything |
-| see1a564 | מחיקת חשבון | | Deleting your account |
-| sd864a74 | . היא מוחקת את החשבון, האלבום, הגביעים | | . It deletes the account, the album, the trophies |
-| s0d6ac9b | וההיסטוריה — מיד, בלי תקופת המתנה ובלי לשלוח אימייל. אי אפשר לבטל. | | and the history — immediately, with no waiting period and no email to send. It cannot be undone. |
+| s006c31b | בגלגל השיניים למעלה, תחת מחיקת מידע, יש מחיקת החשבון שלי. היא מוחקת את החשבון, האלבום, הגביעים וההיסטוריה — מיד, בלי תקופת המתנה ובלי לשלוח אימייל. אי אפשר לבטל. | | In the settings gear at the top, under Delete my data, there is Delete my account. It erases the account, the album, the trophies and the history — right away, with no waiting period and no confirmation email. It cannot be undone. |
 | scf1e0b8 | יצירת קשר | | Contact |
 | s55a8220 | לשאלות על פרטיות או למחיקת מידע: amanda@orasul.in | | For privacy questions or to delete your data: amanda@orasul.in |
 | s3bbb564 | הצהרת נגישות | | Accessibility statement |
