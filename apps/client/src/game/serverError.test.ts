@@ -74,11 +74,11 @@ describe("the server", () => {
       // The admin panel is a tool for one adult and answers in Hebrew.
       if (!file.endsWith(".ts") || file.startsWith("admin")) continue;
       const src = readFileSync(join(dir, file), "utf8");
-      for (const [, code] of src.matchAll(/return\s+"([a-z]+\.[a-zA-Z]+)"/g))
-        if (!known.has(code)) bad.push(`${file}: ${code}`);
+      for (const m of src.matchAll(/return\s+"([a-z]+\.[a-zA-Z]+)"/g))
+        if (m[1] && !known.has(m[1])) bad.push(`${file}: ${m[1]}`);
       // The template form, `shop.poor:${n}`.
-      for (const [, code] of src.matchAll(/return\s+`([a-z]+\.[a-zA-Z]+):\$\{/g))
-        if (!known.has(code)) bad.push(`${file}: ${code}`);
+      for (const m of src.matchAll(/return\s+`([a-z]+\.[a-zA-Z]+):\$\{/g))
+        if (m[1] && !known.has(m[1])) bad.push(`${file}: ${m[1]}`);
     }
     expect(bad).toEqual([]);
   });

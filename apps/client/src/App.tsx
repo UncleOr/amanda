@@ -214,6 +214,35 @@ export default function App() {
         <Admin />
       </Suspense>
     );
+
+  /*
+   * ═══ A LEGAL URL IS A DOCUMENT, NOT THE GAME ═══
+   *
+   * `?legal=privacy` is the URL Google Play Console is given, and it used to
+   * boot the whole game and then open the policy on top of it. Three
+   * different things then queued up in front of the document a reviewer had
+   * come to read: the opening film, the onboarding asking their birthday,
+   * and lesson one of the tutorial with Amanda's bubble across the text and
+   * a match clock ticking in the corner.
+   *
+   * I fixed the first two one at a time and the third appeared, which is the
+   * sign of fixing the wrong thing. Anything that gates a first visit will
+   * gate this one, because arriving at a policy URL IS a first visit — so
+   * the answer is not to list the gates but to not start the game at all.
+   *
+   * Closing it goes to the game by dropping the parameter, so the link is
+   * still a way in rather than a dead end.
+   */
+  if (LEGAL)
+    return (
+      <About
+        start={LEGAL}
+        onClose={() => {
+          window.location.search = "";
+        }}
+      />
+    );
+
   return <Game />;
 }
 
@@ -240,15 +269,6 @@ function Game() {
    * See useOverlay.ts for why that matters.
    */
   const panel = useOverlay();
-  /*
-   * Landing straight on the policy, for the URL Play Console is given. Once,
-   * on the first render — after that it is an ordinary panel the player can
-   * close, and re-opening it on every render would make it impossible to.
-   */
-  useEffect(() => {
-    if (LEGAL) panel.show("about");
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
   /** Set when a guest reaches for something that needs an account. */
   const [unread, setUnread] = useState(0);
   /** Turned off for the session the moment the clip fails to load. */

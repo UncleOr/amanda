@@ -32,6 +32,16 @@ const REPLAY = "amanda:intro";
  * nowhere to remember it.
  */
 export function shouldPlayIntro(): boolean {
+  /*
+   * Not over the legal pages.
+   *
+   * `?legal=privacy` is the URL Google Play is given for the privacy policy,
+   * and the first thing it did on a fresh browser was start the film over
+   * the top of the document — because a first visit is a first visit however
+   * you arrived. A reviewer opening that link watched ten seconds of monsters
+   * before they could read the policy they came for.
+   */
+  if (new URLSearchParams(location.search).has("legal")) return false;
   try {
     return localStorage.getItem(SEEN_KEY) !== "1";
   } catch {
