@@ -53,7 +53,7 @@ versionCode 2 · versionName 1.0.0 · com.asulins.amanda
 
 | סעיף | מה לענות |
 | --- | --- |
-| **Privacy policy** | `https://playamanda.com/play/?legal=privacy` |
+| **Privacy policy** | `https://playamanda.com/privacy` — **לא** הכתובת עם `?legal=`, ראה למטה |
 | **App access** | *All functionality is available without special access* — אין התחברות, חשבון אנונימי נוצר לבד |
 | **Ads** | **No** |
 | **Content rating** | למלא את השאלון (IARC). משחק, בלי אלימות גרפית, בלי הימורים, בלי צ'אט חופשי |
@@ -76,6 +76,21 @@ versionCode 2 · versionName 1.0.0 · com.asulins.amanda
 - מוצפן במעבר: **כן**
 - אפשר לבקש מחיקה: **כן** → `https://playamanda.com/delete`
 - משותף עם צד שלישי: **לא**
+
+---
+
+### למה לא `?legal=privacy`
+
+Play דחתה אותה עם *"Failed to validate your privacy policy page's SSL
+certificate"*, וזה לא היה SSL: התעודה תקינה (`curl` מאמת, הדף מחזיר 200).
+**הבודק של גוגל לא מריץ JavaScript.** `?legal=privacy` הוא מסלול של React,
+אז ה-HTML שהוא מקבל הוא קליפה ריקה — בלי מילה אחת ממדיניות הפרטיות.
+
+`playamanda.com/privacy` הוא HTML סטטי, **נוצר מאותו מקור** שהמשחק מציג
+(`node scripts/legal-pages.mjs`), אז אין שני עותקים שיסתרו זה את זה.
+
+הכתובת בתוך האפליקציה נשארה — גוגל דורשת גם *accessible from within your
+app*, וזה בדיוק מה שגלגל השיניים ← פרטיות עושה.
 
 ---
 
