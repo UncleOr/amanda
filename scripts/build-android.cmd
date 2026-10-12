@@ -45,6 +45,26 @@ REM  here, because on Windows it is built on a socket pair. Everything using
 REM  NIO selectors fails, and that includes the Android Gradle Plugin's aapt2
 REM  worker -- so beating the daemon would only move the failure later.
 REM
+REM ============================================================
+REM  minSdkVersion IS 24 AND MUST NOT GO BACK DOWN
+REM
+REM  android\twa-manifest.json said 21 -- bubblewrap's own default -- and
+REM  the build died in the manifest merger:
+REM
+REM    uses-sdk:minSdkVersion 21 cannot be smaller than version 24 declared
+REM    in library [com.google.androidbrowserhelper:androidbrowserhelper:2.7.4]
+REM
+REM  Bubblewrap's template has not kept up with its own library: the project
+REM  it generates asks for 21 and then depends on something that needs 24.
+REM
+REM  The error suggests tools:overrideLibrary. Do not. That ships a build
+REM  which compiles and then calls APIs that are absent on the devices it
+REM  just promised to support -- a crash on a real phone instead of an error
+REM  at a desk.
+REM
+REM  24 is Android 7.0, August 2016. Anything older cannot run a TWA
+REM  usefully anyway, because it needs a current Chrome underneath it.
+REM
 REM  Run it from the repository root:   scripts\build-android.cmd
 REM ============================================================
 
