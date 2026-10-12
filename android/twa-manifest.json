@@ -34,7 +34,7 @@
   "isChromeOSOnly": false,
   "isMetaQuest": false,
   "fullScopeUrl": "https://playamanda.com/play/",
-  "minSdkVersion": 21,
+  "minSdkVersion": 24,
   "orientation": "landscape",
   "fingerprints": [],
   "additionalTrustedOrigins": [],
