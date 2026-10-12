@@ -604,12 +604,42 @@ export function runBattle(setup: BattleSetup): BattleResult {
     state.ended = true;
   }
 
+  /**
+   * Everything that can change while a battle is still happening, as one
+   * string.
+   *
+   * Cheaper and more honest than instrumenting every mover, shooter and
+   * damage path separately: if a unit moved, fired to effect, took a hit,
+   * died or was revealed, this differs from last tick. If it does not
+   * differ, nothing happened — by definition rather than by my having
+   * remembered to flag it.
+   *
+   * A shot that MISSES nothing is the one case this calls "nothing", and
+   * that is correct: an attack dealing no damage to anybody, forever, is
+   * the stalemate.
+   */
+  function fingerprint(): string {
+    let s = "";
+    for (const u of state.units) s += `${u.alive ? 1 : 0}${u.hp}:${u.col}:${u.lanes[0]};`;
+    return s;
+  }
+
   // --- run ---
   runOnSpawn(state, ops);
   if (setup.recordFrames) captureFrame();
+  const stalemateTicks = Math.round(TPS * SIMULATION.stalemateSeconds);
+  let still = 0;
+  let last = fingerprint();
   while (!state.ended && state.winner === null && state.tick < totalTicks) {
     step();
     if (setup.recordFrames) captureFrame();
+    const now = fingerprint();
+    still = now === last ? still + 1 : 0;
+    last = now;
+    // Nothing has moved, fired to effect or lost a point of health for three
+    // seconds. The clock would spend the rest of the battle showing a
+    // photograph; resolve it the way the clock would have.
+    if (still >= stalemateTicks) break;
   }
   if (state.winner === null && !state.ended) resolveTimeout();
 

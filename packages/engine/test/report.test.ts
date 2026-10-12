@@ -113,8 +113,24 @@ describe("win conditions", () => {
       a: { owner: "A", placements: [{ cardId: "big_brick", x: 1, y: 1, king: true }] },
       b: { owner: "B", placements: [{ cardId: "brick", x: 1, y: 1, king: true }] },
     });
-    // Neither King can be reached, so the clock runs all the way out.
-    expect(r.ticks).toBe(SIMULATION.totalBattleTicks);
+    /*
+     * Neither King can be reached, so nothing at all happens.
+     *
+     * This used to assert the clock ran ALL THE WAY OUT, and that was a true
+     * description of the engine until Or sat through it: *"in the battle,
+     * make sure that if for 3-5 seconds no card moved and no card fired and
+     * no card lost health — the match ends automatically. I just waited 20
+     * seconds."* This board is precisely that case, which is why this test
+     * is the one that caught the change.
+     *
+     * What the test is FOR is unchanged and is the three lines below it:
+     * a battle decided on time still reports which tiebreak decided it and
+     * by what margin. Only the waiting is gone.
+     */
+    expect(r.ticks).toBeLessThan(SIMULATION.totalBattleTicks);
+    expect(r.ticks).toBeLessThanOrEqual(
+      Math.round(SIMULATION.ticksPerSecond * (SIMULATION.stalemateSeconds + 2)),
+    );
     expect(r.winReason).not.toBe("kingDown");
     expect(r.tiebreak).not.toBeNull();
     expect(r.tiebreak!.reason).toBe(r.winReason);

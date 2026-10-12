@@ -246,6 +246,30 @@
 .slot__hint {
   color: var(--muted);
   font-size: 16px;
+  /* Above the crumb ghost, which fills the cell behind it. */
+  position: relative;
+  z-index: 1;
+}
+
+/*
+ * ═══ THE GHOST IN AN EMPTY CELL ═══
+ *
+ * Every slot you leave empty is auto-filled with a Crumb Demon when the
+ * build clock runs out, and nothing on the screen said so. Or asked for it
+ * to be said; this shows it instead, which is the standard the empty crown
+ * set — the cell is already wearing the card it will become.
+ *
+ * A fifth opacity and desaturated: it has to read as "not yours yet" at a
+ * glance, or it is just a board that looks full. `pointer-events: none` so
+ * the cell underneath still takes the tap, and `inset: 0` so the ghost is
+ * exactly the size the real card will be.
+ */
+.slot__crumb {
+  position: absolute;
+  inset: 0;
+  opacity: 0.2;
+  filter: grayscale(0.55);
+  pointer-events: none;
 }
 .slot--target {
   cursor: pointer;

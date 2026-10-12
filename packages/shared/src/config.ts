@@ -50,7 +50,22 @@ export const KING = {
  * they resolved (Or, 2026-10-05).
  */
 export const PHASES = {
-  build: { seconds: 90, label: { he: "בונים את שדה הקרב", en: "Build Frenzy" } },
+  /*
+   * Or, after playing it start to finish: *"I finish placing the cards and
+   * only several seconds later the panic phase arrives. The build phase
+   * needs shortening significantly."*
+   *
+   * 90 → 45. The arithmetic says he is right and not just impatient: the
+   * board holds TWELVE monster slots beside the King, a deck deals 18
+   * monsters, and a card goes down in about a second once you know what you
+   * are doing. Ninety seconds was sized for somebody still reading every
+   * card — which Hod was in September and nobody is now.
+   *
+   * It stays turnable from the admin panel (TUNABLES "phases.build"), so
+   * the number that suits a seven-year-old meeting the game today does not
+   * need me to change it.
+   */
+  build: { seconds: 45, label: { he: "בונים את שדה הקרב", en: "Build Frenzy" } },
   /*
    * Or, having played it: *"the panic phase, let's put it back to 10
    * seconds, it feels too long again."* 15 → 10.
@@ -135,6 +150,27 @@ export const SIMULATION = {
   get totalBattleTicks() {
     return this.ticksPerSecond * PHASES.battle.seconds;
   },
+  /**
+   * End the battle when nothing has happened for this long.
+   *
+   * Or: *"in the battle, make sure that if for 3-5 seconds no card moved and
+   * no card fired and no card lost health — the match ends automatically. I
+   * just waited 20 seconds."*
+   *
+   * Two boards can reach a position neither can break: everything that could
+   * move is dead, and what is left is static and out of range of anything.
+   * The clock then runs to 58 seconds with a still picture on it. Sudden
+   * death does not save it either — escalation multiplies damage, and
+   * multiplying damage that is never dealt changes nothing.
+   *
+   * Three seconds of a LITERALLY unchanged board: same positions, same hp,
+   * same units alive. A battle that is still happening cannot hold that for
+   * ninety ticks — even a reload gap is under a second — so this cannot cut
+   * a live fight short. What follows is the ordinary timeout tiebreak, so
+   * the result is the same one the clock would have produced, just without
+   * the wait.
+   */
+  stalemateSeconds: 3,
 } as const;
 
 /** Deck composition — all values intentionally editable (GDD §12 dev note). */

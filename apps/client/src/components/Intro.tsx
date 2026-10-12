@@ -24,8 +24,18 @@
 import { useEffect, useRef, useState } from "react";
 import { markIntroSeen, onIntroRequest, shouldPlayIntro } from "../game/intro";
 import { line as t } from "../game/copy";
+import { lang } from "../game/lang";
 
-const SRC = `${import.meta.env.BASE_URL}brand/intro.mp4`;
+/*
+ * One film per language.
+ *
+ * Eight of its ten seconds are four monsters in a petrol station with not a
+ * word in them. The last two are the name — Or: *"let's add at the end there
+ * Amanda - monster card game, like a title card at the end of the film"* —
+ * and a title card has words, so there are two files. They are built by
+ * scripts/make-intro.sh and weigh 1.5MB each.
+ */
+const SRC = `${import.meta.env.BASE_URL}brand/intro-${lang()}.mp4`;
 
 /**
  * If the video has not started within this long, leave.

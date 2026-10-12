@@ -247,7 +247,36 @@ export function BoardGrid({
                 onInfo={onCardInfo ? () => onCardInfo(occ) : undefined}
               />
             ) : (
-              interactive && handActive && <span className="slot__hint">＋</span>
+              /*
+                ═══ AN EMPTY SLOT SHOWS WHAT IT WILL BECOME ═══
+
+                Or: *"if you decided that at some point you stop placing
+                cards and it fills up with crumb monsters — let's tell the
+                player that."*
+
+                Shown rather than told, which is this game's own standard:
+                an empty crown taught the King rule with no words at all.
+                Every cell you leave empty is already wearing the Crumb
+                Demon it will be filled with, at a fifth opacity, so the
+                board says "this is what happens if you stop" by looking
+                like it — and the ＋ on top still says you can place here.
+
+                It answers the other half of his question too, the one he
+                asked as an aside: *"is it possible I don't have enough
+                cards in my deck? A lot of the time I don't cover the
+                board."* He is right, and it is the design — an album
+                smaller than thirteen monsters cannot fill a board, and
+                the gaps are the reason to collect. A player who can SEE
+                the gaps filling with crumbs knows that without being told.
+              */
+              interactive && (
+                <>
+                  <span className="slot__crumb" aria-hidden="true">
+                    <CardView cardId="crumb_demon" size={size} />
+                  </span>
+                  {handActive && <span className="slot__hint">＋</span>}
+                </>
+              )
             )}
           </div>
         );
