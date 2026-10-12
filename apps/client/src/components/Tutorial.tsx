@@ -42,6 +42,11 @@ export interface Step {
   target: string | null;
   text: string;
   /**
+   * Wait for the target however long it takes, instead of skipping the step.
+   * Set on the steps of a WRITTEN lesson — see the give-up effect below.
+   */
+  patient?: boolean;
+  /**
    * When present, the step waits for the player to DO the thing and there is
    * no continue button. It is a value the parent recomputes every render, not
    * a callback: a callback captured the match state from the render that built
@@ -206,9 +211,26 @@ export function Tutorial({ steps, onDone, onQuit }: Props) {
     return () => document.removeEventListener("pointerup", onUp, true);
   }, [step, next]);
 
-  // A step whose target never appears would be a dead end, so move past it.
+  /*
+   * A step whose target never appears would be a dead end, so move past it.
+   *
+   * ═══ EXCEPT A WRITTEN ONE ═══
+   *
+   * That give-up is right for the RULES: "a dragon? put it at the back" has
+   * to be skippable, because you cannot make somebody draw a dragon.
+   *
+   * It is wrong for a script. Every step of the second lesson is meant to
+   * happen, and the first 1.2 seconds of a match is exactly when the board
+   * has not been painted yet — so the opening two lines were spoken to a
+   * screen with no board on it, skipped, and marked as said. From outside:
+   * Amanda opened the lesson with "x-ray, an action card that breaks that
+   * rule", with no rule ever mentioned.
+   *
+   * A patient step waits. If its square genuinely never arrives it holds,
+   * which is visible and fixable, rather than silently eating a line.
+   */
   useEffect(() => {
-    if (!step?.target) return;
+    if (!step?.target || step.patient) return;
     const selector = step.target;
     const t = window.setTimeout(() => {
       if (!document.querySelector(selector)) next();

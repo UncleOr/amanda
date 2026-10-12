@@ -14,6 +14,7 @@
  */
 import { readdirSync, readFileSync, writeFileSync, mkdirSync, statSync, existsSync } from "node:fs";
 import { idFor, slotify } from "./copy-slots.mjs";
+import { writeXlsx } from "./xlsx.mjs";
 import { join, relative } from "node:path";
 import { fileURLToPath } from "node:url";
 
@@ -395,6 +396,10 @@ const parts = [
   "",
   "## איך עורכים",
   "",
+  "**הקובץ הנוח הוא `docs/COPY.xlsx`** — אותם טקסטים בדיוק, באקסל, עם יישור",
+  "לימין, כותרות קפואות ופילטר לפי מסך. זה הקובץ לעבוד בו. ה-MD הזה נשאר",
+  "כדי שאפשר יהיה לראות בגיט מה השתנה.",
+  "",
   "**שתי עמודות למלא, ושתיהן אופציונליות.**",
   "",
   "| עמודה | למה היא |",
@@ -402,7 +407,8 @@ const parts = [
   "| `טקסט חדש` | לשנות את העברית. מה שנשאר ריק לא ישתנה |",
   "| `אנגלית` | התרגום. מה שנשאר ריק פשוט יישאר בעברית במשחק |",
   "",
-  "אחר כך אומרים לי, ואני מריץ `pnpm copy:apply`: העברית נכתבת בחזרה לקוד",
+  "אחר כך אומרים לי, ואני מריץ `pnpm copy:back` ואז `pnpm copy:apply`:",
+  "האקסל נכנס לקובץ הזה, ומכאן העברית נכתבת בחזרה לקוד",
   "— לכל טקסט יש מזהה שיודע בדיוק מאיפה הוא נלקח — והאנגלית נכתבת ל-",
   "`data/copy.en.json`, שהמשחק טוען כשבוחרים אנגלית.",
   "",
@@ -435,3 +441,45 @@ console.log(
 ` +
     `${translated} of them already carry English; ${entries.length - translated} to go.`,
 );
+
+/*
+ * ═══ AND THE SAME THING AS A SPREADSHEET ═══
+ *
+ * Or, three documents in: *"the MD files are simply awful in terms of user
+ * interface. It's very hard to work like this."*
+ *
+ * A markdown table lines its columns up with SPACES, and there is no
+ * arrangement of spaces that makes a column of Hebrew sit straight beside a
+ * column of English — so the document he has to write in is the one place
+ * the text he is writing cannot be read. On top of that every edit has to
+ * leave the pipes intact, which turns writing into formatting.
+ *
+ * The xlsx is written from the data right here rather than by parsing
+ * docs/COPY.md, so the two can never disagree about what the game says.
+ * `<sheetView rightToLeft="1"/>` is the one line that answers him: the grid
+ * mirrors, Hebrew runs from the right, and English cells still sit left
+ * inside their own box because alignment is per-cell.
+ *
+ * Filled in and handed back, it comes home through `pnpm copy:back`.
+ */
+const SHEET = join(ROOT, "docs", "COPY.xlsx");
+writeXlsx(SHEET, [
+  {
+    name: "טקסטים",
+    columns: [
+      { header: "מזהה", width: 11 },
+      { header: "מסך", width: 30 },
+      { header: "טקסט מקור (בעברית)", width: 62 },
+      { header: "טקסט חדש עברית", width: 62, edit: true },
+      { header: "טקסט חדש אנגלית", width: 62, edit: true },
+    ],
+    rows: entries.map((e) => [
+      e.id,
+      e.section,
+      e.text,
+      "",
+      english[e.id] ?? e.en ?? "",
+    ]),
+  },
+]);
+console.log(`${entries.length} strings -> docs/COPY.xlsx`);

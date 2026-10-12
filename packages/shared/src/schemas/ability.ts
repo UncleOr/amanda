@@ -53,6 +53,17 @@ export const ABILITY_TYPES = [
   "absorbOnCollision", // swallow a colliding enemy, stunning it
   "slowAura", // slow enemies advancing through the lane
   "attackSpeedAura", // buff attack speed of nearby allies
+  /*
+   * The series bonus, and now the ONLY series bonus.
+   *
+   * Or: *"make it +20% power and +20% health, the same for everyone."* Six
+   * families had six different bonuses — armour, attack speed, slow, healing
+   * — which is six rules to learn before the one thing they share, that
+   * three of a family TOUCHING is worth building for, has landed at all.
+   *
+   * Applied once at setup, not per tick: see packages/engine/src/setup.ts.
+   */
+  "statAura", // +pct% power and +pct% max health, for a touching family
   // --- spawn / transform / death ---
   "delayedTransform", // after a delay, transform into a stronger form
   "swarmOnDeath", // spawn small units on death

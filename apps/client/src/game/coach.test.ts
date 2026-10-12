@@ -1,5 +1,6 @@
 import { describe, expect, it } from "vitest";
 import { nextCue, type CoachView } from "./coach";
+import { LESSON_2 } from "./lessonScript";
 import { CATALOG } from "../data/catalog";
 
 /**
@@ -279,10 +280,34 @@ describe("the second lesson — countering what the opponent played", () => {
     ...over,
   });
 
+  /*
+   * ═══ THE WRITTEN LESSON COMES FIRST NOW ═══
+   *
+   * Or wrote the second match out step by step and approved it, so lesson 2
+   * is a SCRIPT rather than a set of rules (game/lessonScript.ts), and
+   * nextCue walks it before it considers anything below.
+   *
+   * These tests are about the counter RULES, so they hand over a lesson
+   * whose script has already been spoken — which is the state the real match
+   * is in by the time there is anything left to counter. Without it every
+   * one of them got "l2-back", the script's opening line, and the thing
+   * under test never ran at all.
+   */
+  const scriptSaid = (...also: string[]) =>
+    new Set([...LESSON_2.map((step) => step.id), ...also]);
+
+  it("walks the script before any rule, in the second lesson", () => {
+    const cue = nextCue(
+      panic({ hand: poisoner, opponent: { placements: { "3-1": wall }, king: null } }),
+      new Set(),
+    );
+    expect(cue?.id).toBe(LESSON_2[0]!.id);
+  });
+
   it("says nothing about counters during the first match", () => {
     const cue = nextCue(
       panic({ matchNo: 1, hand: poisoner, opponent: { placements: { "3-1": wall }, king: null } }),
-      new Set(),
+      scriptSaid(),
     );
     expect(cue?.id).not.toBe("x-poison");
   });
@@ -297,7 +322,7 @@ describe("the second lesson — countering what the opponent played", () => {
   it("counters during the build too, where their front row is already showing", () => {
     const cue = nextCue(
       { ...panic({ hand: poisoner, opponent: { placements: { "3-1": wall }, king: null } }), phase: "build" },
-      new Set(["king", "tank", "flyer"]),
+      scriptSaid("king", "tank", "flyer"),
     );
     expect(cue?.id).toBe("x-poison");
   });
@@ -305,7 +330,7 @@ describe("the second lesson — countering what the opponent played", () => {
   it("says nothing when the caller has shown her nothing", () => {
     const cue = nextCue(
       panic({ hand: poisoner, opponent: { placements: {}, king: null } }),
-      new Set(),
+      scriptSaid(),
     );
     expect(cue?.id).not.toBe("x-poison");
   });
@@ -313,7 +338,7 @@ describe("the second lesson — countering what the opponent played", () => {
   it("offers poison when they have a wall and you are holding poison", () => {
     const cue = nextCue(
       panic({ hand: poisoner, opponent: { placements: { "3-1": wall }, king: null } }),
-      new Set(),
+      scriptSaid(),
     );
     expect(cue?.id).toBe("x-poison");
   });
@@ -321,7 +346,7 @@ describe("the second lesson — countering what the opponent played", () => {
   it("does not offer poison when you are not holding any", () => {
     const cue = nextCue(
       panic({ hand: flyer, opponent: { placements: { "3-1": wall }, king: null } }),
-      new Set(),
+      scriptSaid(),
     );
     expect(cue?.id).not.toBe("x-poison");
   });
@@ -330,7 +355,7 @@ describe("the second lesson — countering what the opponent played", () => {
     const weakest = [...CATALOG.values()].sort((a, b) => a.stats.hp - b.stats.hp)[0]!.id;
     const cue = nextCue(
       panic({ hand: poisoner, opponent: { placements: { "3-1": weakest }, king: null } }),
-      new Set(),
+      scriptSaid(),
     );
     expect(cue?.id).not.toBe("x-poison");
   });
@@ -338,7 +363,7 @@ describe("the second lesson — countering what the opponent played", () => {
   it("offers a wide swing against something that multiplies", () => {
     const cue = nextCue(
       panic({ hand: wide, opponent: { placements: { "3-1": splitter }, king: null } }),
-      new Set(),
+      scriptSaid(),
     );
     expect(cue?.id).toBe("x-wide");
   });
@@ -348,19 +373,19 @@ describe("the second lesson — countering what the opponent played", () => {
     const ant = [...CATALOG.values()].find((c) => c.launch)!.id;
     const spread = nextCue(
       panic({ hand: lava, opponent: { placements: { "3-0": ant, "3-1": ant }, king: null } }),
-      new Set(),
+      scriptSaid(),
     );
     expect(spread?.id).not.toBe("x-lane");
     const queued = nextCue(
       panic({ hand: lava, opponent: { placements: { "3-1": ant, "2-1": ant }, king: null } }),
-      new Set(),
+      scriptSaid(),
     );
     expect(queued?.id).toBe("x-lane");
   });
 
   it("each counter line is said at most once", () => {
     const view = panic({ hand: poisoner, opponent: { placements: { "3-1": wall }, king: null } });
-    const cue = nextCue(view, new Set(["x-poison"]));
+    const cue = nextCue(view, scriptSaid("x-poison"));
     expect(cue?.id).not.toBe("x-poison");
   });
 });

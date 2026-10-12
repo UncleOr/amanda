@@ -6,12 +6,24 @@
 #   bash scripts/make-trailer.sh en     → store/trailer-en.mp4
 #   bash scripts/make-trailer.sh        → both
 #
-# Four segments, built separately and then joined:
+# Four segments, built separately and then joined — and then the studio
+# ident is laid in front of the finished thing:
 #
+#   IDENT     the Asulins mark, with its own sting             3.0s
 #   OPENING   8 generated shots in a dark petrol station      11.2s
 #   CARDS     four cards drop onto black                       1.4s
 #   GAMEPLAY  Or's screen recording, cut down                 14.5s
 #   CLOSING   a win, then the end card                         5.2s
+#
+# ═══ WHY THE IDENT IS ADDED LAST AND NOT FIRST ═══
+#
+# It is the one piece with sound of its own. The four segments are silent
+# and the score is laid over the whole join in a single pass — put the ident
+# among them and the sting would be buried under music written for a
+# different moment, which is the opposite of what an ident is for.
+#
+# So the trailer is finished, scored, and only then does the ident go on the
+# front with its own audio intact. The music starts when the trailer starts.
 #
 # ═══ TWO CUTS, AND ONLY THE END OF THEM DIFFERS ═══
 #
@@ -388,6 +400,33 @@ WARN
     -ss "$MUSIC_START" -i "$MUSIC" \
     -filter_complex "[0:v]fade=t=out:st=${FADEOUT}:d=1.4[v];\
 [1:a]atrim=0:${TOTAL},afade=t=in:st=0:d=1.2,afade=t=out:st=${FADEOUT}:d=1.4[a]" \
+    -map "[v]" -map "[a]" \
+    -c:v libx264 -preset slow -crf 19 -pix_fmt yuv420p -r "$FPS" \
+    -c:a aac -b:a 192k -movflags +faststart \
+    "$SEG/scored-${L}.mp4"
+
+  # ── 0 · the ident, on the front ─────────────────────────────────────
+  #
+  # Scaled from 720p rather than re-rendered at 1080: the mark's size is set
+  # in pixels inside make-ident.sh, so a bigger canvas there would give a
+  # bigger frame with the same small logo in the middle of it. It is flat
+  # shapes and one word, which is exactly the kind of picture that survives
+  # 1.5x — and the alternative is two sets of layout numbers to keep in step.
+  echo "  ident"
+  IDENT=apps/client/public/brand/ident.mp4
+  [ -f "$IDENT" ] || { echo "missing: $IDENT — run bash scripts/make-ident.sh" >&2; exit 1; }
+  ffmpeg -y -v error -i "$IDENT" \
+    -vf "$NORM" -af "aresample=48000" \
+    -c:v libx264 -preset slow -crf 19 -pix_fmt yuv420p -r "$FPS" \
+    -c:a aac -b:a 192k "$SEG/0-ident-${L}.mp4"
+
+  # Re-encoded rather than stream-copied. The two pieces agree on size, rate
+  # and pixel format by now, but not on how their audio was written, and a
+  # concat demuxer that is handed two different AAC headers produces a file
+  # that plays the first three seconds and goes silent.
+  ffmpeg -y -v warning -stats \
+    -i "$SEG/0-ident-${L}.mp4" -i "$SEG/scored-${L}.mp4" \
+    -filter_complex "[0:v][0:a][1:v][1:a]concat=n=2:v=1:a=1[v][a]" \
     -map "[v]" -map "[a]" \
     -c:v libx264 -preset slow -crf 19 -pix_fmt yuv420p -r "$FPS" \
     -c:a aac -b:a 192k -movflags +faststart \

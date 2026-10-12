@@ -25,7 +25,16 @@
    * Or: "on mobile the results bar hides the sound."
    */
   position: relative;
-  z-index: 60;
+  /*
+   * 61, above the tutorial's overlay at 60.
+   *
+   * A tutorial step with nothing to point at swallows clicks everywhere —
+   * `.tut--talking` is `pointer-events: auto`, because tapping anywhere is
+   * how you move past a line. That also swallowed the exit button, and Or's
+   * first rule is that it must always work. One above the overlay puts the
+   * bar back in front of it; the spotlight still dims everything below.
+   */
+  z-index: 61;
 }
 .topbar__title {
   font-weight: 800;

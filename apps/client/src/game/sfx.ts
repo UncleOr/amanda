@@ -29,6 +29,16 @@ type SoundName =
   | "crumbs"
   | "explode"
   | "win"
+  /**
+   * A card the album has never held.
+   *
+   * Its own sound, not `win`. Or: *"make a DIFFERENT victory sound for each
+   * of them."* They were the same clip, which is how a game teaches a child
+   * that nothing in particular just happened — two events that mean
+   * different things and sound identical cancel each other out, and the
+   * rarer of the two is the one that loses.
+   */
+  | "newcard"
   | "lose";
 
 let ctx: AudioContext | null = null;
@@ -115,6 +125,9 @@ const RECIPES: Record<SoundName, () => void> = {
     tone(120, 400, { type: "sawtooth", slideTo: 40, gain: 0.2 });
   },
   win: () => [523, 659, 784, 1047].forEach((f, i) => tone(f, 220, { type: "triangle", gain: 0.14, delayMs: i * 110 })),
+  // Higher, faster and with no bottom to it, so the fallback keeps the one
+  // distinction that matters: a win has weight, a new card sparkles.
+  newcard: () => [1047, 1319, 1568, 2093].forEach((f, i) => tone(f, 160, { type: "sine", gain: 0.1, delayMs: i * 70 })),
   lose: () => [392, 330, 262, 196].forEach((f, i) => tone(f, 260, { type: "sine", gain: 0.14, delayMs: i * 130 })),
 };
 

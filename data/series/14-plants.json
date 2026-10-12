@@ -16,14 +16,14 @@
       "en": "Photosynthesis"
     },
     "description": {
-      "he": "כל הצמחים שלכם מתרפאים לאט לאורך כל הקרב.",
-      "en": "All your plants slowly heal throughout the battle."
+      "he": "שלושה צמודים מאותה משפחה מקבלים +20% עוצמה ו+20% חיים.",
+      "en": "Three touching cards of the same family get +20% power and +20% health."
     },
     "ability": {
-      "type": "healAura",
+      "type": "statAura",
       "trigger": "aura",
       "params": {
-        "hpPerSecond": 40
+        "pct": 20
       }
     }
   },

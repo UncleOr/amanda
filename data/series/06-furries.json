@@ -16,11 +16,11 @@
       "en": "Charged Fur"
     },
     "description": {
-      "he": "כל הפרוותיים שלכם תוקפים מהר יותר ב-20%.",
-      "en": "All your Furries attack 20% faster."
+      "he": "שלושה צמודים מאותה משפחה מקבלים +20% עוצמה ו+20% חיים.",
+      "en": "Three touching cards of the same family get +20% power and +20% health."
     },
     "ability": {
-      "type": "attackSpeedAura",
+      "type": "statAura",
       "trigger": "aura",
       "params": {
         "pct": 20

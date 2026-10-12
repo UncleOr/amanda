@@ -39,7 +39,14 @@ export function Versus({
   /** Seconds left, drawn as the ring around the whole thing. */
   secondsLeft,
   total,
-  /** "נגד", or "ביחד" in Amanda mode where the other player is a partner. */
+  /**
+   * "Vs.", or "ביחד" in Amanda mode where the other player is a partner.
+   *
+   * Or: *"in the battle, write Vs. instead of Against. In Hebrew too."* So
+   * this one string is the same in both languages — it is a symbol more than
+   * a word, the way a scoreline is, and translating it made the English read
+   * like a court listing.
+   */
   joined = false,
 }: {
   me: PlayerCard;
@@ -52,7 +59,7 @@ export function Versus({
     <div className="versus" role="status">
       <Fighter who={me} saidTo={them?.gender ?? null} mine />
       <div className="versus__vs" aria-hidden="true">
-        <span className="versus__word">{joined ? t("s67c1f88", "ביחד") : t("s943b402", "נגד")}</span>
+        <span className="versus__word">{joined ? t("s67c1f88", "ביחד") : t("se875ce8", "Vs.")}</span>
         {/* The countdown, small, under the word — the number was the whole
             screen before and it is the least interesting thing on it now. */}
         <span className="versus__clock">{Math.max(1, Math.ceil(secondsLeft))}</span>

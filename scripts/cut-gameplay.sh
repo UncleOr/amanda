@@ -2,8 +2,16 @@
 #
 # Cut Or's screen recording down to the part that belongs in the trailer.
 #
-#   bash scripts/cut-gameplay.sh ["battel screenshot.mp4"]
-#   → store/gameplay.mp4
+#   bash scripts/cut-gameplay.sh          → store/gameplay.mp4    (Hebrew)
+#   bash scripts/cut-gameplay.sh en       → store/gameplay-en.mp4 (English)
+#
+# ═══ TWO RECORDINGS, AND THE CUTS ARE NOT THE SAME NUMBERS ═══
+#
+# Or recorded the game again once it spoke English: *"I put a video in the
+# main folder."* It is a different session — 156 seconds against 83, and two
+# matches rather than one — so the four moments are at different times in it
+# and each list below was found by scanning the file rather than by adjusting
+# the old numbers.
 #
 # ═══ WHY FOUR PIECES AND NOT ONE ═══
 #
@@ -38,8 +46,29 @@
 set -euo pipefail
 cd "$(dirname "$0")/.."
 
-SRC="${1:-battel screenshot.mp4}"
-OUT=store/gameplay.mp4
+LANG=${1:-he}
+if [ "$LANG" = "en" ]; then
+  SRC=store/recording-en.mp4
+  OUT=store/gameplay-en.mp4
+  # Found by contact sheet, second by second. The build piece is late in the
+  # match on purpose: the board is nearly full, which is what the game looks
+  # like when it is interesting rather than when it is starting.
+  PIECES=(
+    "47.0  4.0   build"
+    "56.6  3.4   countdown"
+    "71.0  5.2   battle"
+    "81.8  2.2   win"
+  )
+else
+  SRC="battel screenshot.mp4"
+  OUT=store/gameplay.mp4
+  PIECES=(
+    "5.0   4.0   build"
+    "65.4  3.9   countdown"
+    "69.3  5.2   battle"
+    "79.5  2.1   win"
+  )
+fi
 W=1920
 H=1080
 BG=0x070a12
@@ -47,14 +76,6 @@ FPS=25
 XF=0.25      # the crossfade between pieces
 
 [ -f "$SRC" ] || { echo "no recording at: $SRC" >&2; exit 1; }
-
-# start  length  what
-PIECES=(
-  "5.0   4.0   build"
-  "65.4  3.9   countdown"
-  "69.3  5.2   battle"
-  "79.5  2.1   win"
-)
 
 inputs=()
 filters=()

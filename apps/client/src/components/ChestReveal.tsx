@@ -29,7 +29,7 @@
  * a chest that shudders and glows when you touch it has already said it, and
  * Or was explicit — *"no need to write an explanation about this!!!"*
  */
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { CATALOG } from "../data/catalog";
 import { CardView, CardBack } from "./CardView";
 import { Icon } from "./Icon";
@@ -90,6 +90,21 @@ export function ChestReveal({ chest, onClose }: Props) {
   const fresh = (chest.fresh ?? []).filter((id) => CATALOG.has(id));
   /** The celebration, held back until every card has turned. */
   const [party, setParty] = useState(false);
+  /**
+   * Whether it has already happened, which is NOT the same as whether it is
+   * on screen.
+   *
+   * Or: *"when there's a new card it gets stuck and doesn't go back to the
+   * chest."* It did, and this is why. The effect below fired on `party`
+   * being false, so closing the celebration put the condition back exactly
+   * as it had been and the effect scheduled it again 420ms later — a loop
+   * with a timer in it, which is why it looked like a freeze rather than a
+   * flicker. The button worked every time; there was simply no way out.
+   *
+   * A ref rather than state because it must not cause a render of its own:
+   * the whole bug was a render putting the condition back.
+   */
+  const celebrated = useRef(false);
 
   // Turn them over one at a time once it is open.
   useEffect(() => {
@@ -137,15 +152,16 @@ export function ChestReveal({ chest, onClose }: Props) {
    * just the close button with confetti on it.
    */
   useEffect(() => {
-    if (!allShown || !fresh.length || party) return;
+    if (!allShown || !fresh.length || celebrated.current) return;
+    celebrated.current = true;
     const t = window.setTimeout(() => {
       setParty(true);
-      sfx.play("win");
+      sfx.play("newcard");
     }, 420);
     return () => window.clearTimeout(t);
     // `fresh` is derived from the chest and does not change under us.
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [allShown, party]);
+  }, [allShown]);
 
   return (
     <div className="chest" role="dialog">
@@ -213,9 +229,21 @@ export function ChestReveal({ chest, onClose }: Props) {
               one more tile in a row.
             */}
             {allShown && chest.items?.map((id) => <Prize key={id} id={id} />)}
-            <button className="btn-fight" disabled={!allShown} onClick={onClose}>
-              {allShown ? t("sbcd9e71", "יפה") : "…"}
-            </button>
+            {/*
+              Hidden while the celebration is up.
+              Or, with a screenshot of the two stacked: *"Lovely" above
+              "Nice"*. The new-card dialog sits OVER the chest on purpose —
+              the cards behind it are the rest of what you won — but its
+              backdrop is translucent, and a bright orange button showing
+              through at 18% does not read as scenery. It reads as a second
+              button, directly under the first, in a moment whose whole job
+              is to have one thing to press.
+            */}
+            {!party && (
+              <button className="btn-fight" disabled={!allShown} onClick={onClose}>
+                {allShown ? t("sbcd9e71", "יפה") : "…"}
+              </button>
+            )}
           </>
         )}
       </div>

@@ -22,6 +22,7 @@
  * replay from the About screen IS a gesture, so that one has sound.
  */
 import { useEffect, useRef, useState } from "react";
+import { Ident } from "./Ident";
 import { markIntroSeen, onIntroRequest, shouldPlayIntro } from "../game/intro";
 import { line as t } from "../game/copy";
 import { lang } from "../game/lang";
@@ -50,6 +51,18 @@ const START_BY = 2500;
 export function Intro() {
   // `auto` is the first-launch play (muted, by the browser's rules);
   // `replay` came from a tap and may have sound.
+  /*
+   * The studio ident runs first, on EVERY launch — see Ident.tsx.
+   *
+   * On a first visit that is two films in a row: three seconds of Asulins and
+   * then ten of monsters. They must not play over each other, so the film
+   * does not start until the ident says it has finished. On every later
+   * launch the ident plays and nothing follows it.
+   *
+   * A REPLAY skips the ident: "watch the opening again" is a request for the
+   * film, and nobody asking for it wants the studio logo first.
+   */
+  const [identDone, setIdentDone] = useState(false);
   const [mode, setMode] = useState<"auto" | "replay" | null>(() =>
     shouldPlayIntro() ? "auto" : null,
   );
@@ -58,7 +71,7 @@ export function Intro() {
   useEffect(() => onIntroRequest(() => setMode("replay")), []);
 
   useEffect(() => {
-    if (!mode) return;
+    if (!mode || (mode === "auto" && !identDone)) return;
     markIntroSeen();
 
     const give = window.setTimeout(() => {
@@ -69,8 +82,9 @@ export function Intro() {
     void video.current?.play().catch(() => setMode(null));
 
     return () => window.clearTimeout(give);
-  }, [mode]);
+  }, [mode, identDone]);
 
+  if (!identDone && mode !== "replay") return <Ident onDone={() => setIdentDone(true)} />;
   if (!mode) return null;
 
   return (

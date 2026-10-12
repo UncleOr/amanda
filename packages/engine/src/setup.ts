@@ -187,7 +187,32 @@ export function buildBattle(setup: BattleSetup): BattleState {
       const card = setup.catalog.get(placement.cardId);
       if (!card) throw new Error(`Unknown cardId in placement: ${placement.cardId}`);
       const unit = makeUnit(state, card, board.owner, placement);
-      if (inGroup.has(index)) unit.flags.synergy = true;
+      if (inGroup.has(index)) {
+        unit.flags.synergy = true;
+        /*
+         * ═══ THE BONUS ITSELF, AT SETUP ═══
+         *
+         * Or: *"make it +20% power and +20% health, the same for everyone."*
+         *
+         * Applied HERE and not in the tick loop, which is where every other
+         * synergy lives. Those work on multipliers that are rebuilt from
+         * scratch each tick — `damageTakenMult *= 0.8` is safe to run fifteen
+         * times a second because it starts from 1 every time. `power` and
+         * `maxHp` are the unit's own numbers: scaling them per tick would
+         * compound 20% until the first exchange decided the match.
+         *
+         * Health is raised AND filled. A card that gains 20% maximum health
+         * and starts the battle 20% wounded has been given nothing.
+         */
+        for (const syn of state.synergies) {
+          if (syn.seriesId !== unit.seriesId || syn.ability.type !== "statAura") continue;
+          const pct = syn.ability.params?.pct ?? 0;
+          if (typeof pct !== "number" || pct === 0) continue;
+          unit.power = Math.round(unit.power * (1 + pct / 100));
+          unit.maxHp = Math.round(unit.maxHp * (1 + pct / 100));
+          unit.hp = unit.maxHp;
+        }
+      }
       if (unit.isKing && board.kingAccountLevelHp) {
         unit.maxHp += board.kingAccountLevelHp;
         unit.hp = unit.maxHp;

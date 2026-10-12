@@ -30,8 +30,29 @@
  * "I don't know what it wants" happens. Those are marked.
  */
 import { readFileSync, readdirSync, writeFileSync } from "node:fs";
+import { writeXlsx } from "./xlsx.mjs";
 
 const read = (p) => readFileSync(p, "utf8");
+
+/**
+ * The English already written for a line, by its copy id.
+ *
+ * Pre-filled rather than left blank, because every one of these lines is
+ * already translated — handing back an empty English column would be
+ * asking for a thousand translations that exist.
+ */
+const ENGLISH = JSON.parse(read("data/copy.en.json"));
+const english = (id) => (id && ENGLISH[id]) || "";
+
+/**
+ * Hebrew → copy id, for the handful of strings this document names by sight
+ * rather than reads out of the tutorial data. Built from the inventory, so a
+ * string that is renamed in the game stops resolving here instead of
+ * resolving to the wrong thing.
+ */
+const byText = new Map(
+  JSON.parse(read("docs/copy.map.json")).map((e) => [e.text, e.id]),
+);
 
 /**
  * Card id → the Hebrew name.
@@ -56,6 +77,18 @@ const LINES_SRC = read("apps/client/src/data/tutorialLines.ts");
 const COACH_SRC = read("apps/client/src/game/coach.ts");
 const LESSONS_SRC = read("apps/client/src/game/lessons.ts");
 
+/**
+ * The copy id out of a t("id", "text") call, when there is one.
+ *
+ * It is what makes the spreadsheet APPLICABLE rather than a memo. Without it
+ * a rewritten line has to be found again by hand among a thousand rows of
+ * COPY.md before anything can be done with it, and that is the step where an
+ * edit quietly stops existing.
+ */
+function copyId(raw) {
+  return /\bt\(\s*"([a-z][0-9a-f]{7})"/.exec(raw)?.[1] ?? "";
+}
+
 /** The shipped Hebrew out of a t("id", "text") call, or a bare "text". */
 function shipped(raw) {
   const m = /\bt\(\s*"[a-z][0-9a-f]{7}",\s*"((?:[^"\\]|\\.)*)"\s*\)/.exec(raw);
@@ -69,11 +102,13 @@ const lines = new Map();
 for (const block of LINES_SRC.split(/\n  \{\n/).slice(1)) {
   const id = /id:\s*"([^"]+)"/.exec(block)?.[1];
   if (!id) continue;
-  const he = shipped(/he:\s*([\s\S]*?),\n\s*vars:/.exec(block)?.[1] ?? "");
+  const heRaw = /he:\s*([\s\S]*?),\n\s*vars:/.exec(block)?.[1] ?? "";
+  const he = shipped(heRaw);
+  const cid = copyId(heRaw);
   const vars = (/vars:\s*\[([^\]]*)\]/.exec(block)?.[1] ?? "")
     .split(",").map((v) => v.trim().replace(/"/g, "")).filter(Boolean);
   const when = shipped(/when:\s*([\s\S]*?),?\n\s*\}/.exec(block)?.[1] ?? "");
-  lines.set(id, { id, he, vars, when });
+  lines.set(id, { id, he, vars, when, cid });
 }
 
 // ── the order they fire in, and what each one waits for ───────────────
@@ -197,6 +232,15 @@ out.push(
 );
 
 const esc = (s) => String(s).replace(/\|/g, "\\|");
+/*
+ * The same rows, collected plainly, for the spreadsheet written at the
+ * bottom of this file — see there for why there is a spreadsheet at all.
+ * They are gathered AS the markdown is built rather than parsed back out
+ * of it, so the two documents are one document in two shapes and cannot
+ * drift apart.
+ */
+const sheetRows = [];
+const counterRows = [];
 let n = 0;
 for (const step of order) {
   const l = lines.get(step.id);
@@ -212,6 +256,7 @@ for (const step of order) {
   out.push(
     `| ${n}${warn} | ${esc(l.when)} | \`${step.target}\` | ${gate} | ${esc(l.he)} | | |`,
   );
+  sheetRows.push([l.cid, `${n}${warn}`, l.when, step.target, gate, l.he, "", english(l.cid), ""]);
 }
 
 // ── the counter cues, which are a second lesson thing ─────────────────
@@ -232,6 +277,7 @@ for (const step of counters) {
   out.push(
     `| ${n} | ${esc(l.when)} | \`${step.target}\` | — (כפתור המשך) | ${esc(l.he)} | | |`,
   );
+  counterRows.push([l.cid, String(n), l.when, step.target, "— (כפתור המשך)", l.he, "", english(l.cid), ""]);
 }
 
 out.push(
@@ -301,3 +347,79 @@ out.push(
 
 writeFileSync("docs/TUTORIAL.md", out.join("\n"), "utf8");
 console.log(`docs/TUTORIAL.md — ${n} lines, ${lessons.length} lessons`);
+
+/*
+ * ═══ AND THE SAME THING AS A SPREADSHEET ═══
+ *
+ * Or: *"the MD files are simply awful in terms of user interface. It's very
+ * hard to work like this. Any chance of an Excel file that works better for
+ * right and left alignment?"*
+ *
+ * This document is worse than COPY.md for exactly the reason he says: it is
+ * SEVEN columns wide, two of them hold whole sentences of Hebrew, and a
+ * markdown table aligns with spaces. So every row wraps into a paragraph of
+ * pipes, and the thing he is meant to be reading — Amanda's line, and the
+ * empty box beside it — is the hardest thing on the page to find.
+ *
+ * Three sheets rather than one, because these are three different jobs: the
+ * walkthrough is read in order, the counter cues only fire from the second
+ * match, and the fixed interface strings are three buttons.
+ */
+writeXlsx("docs/TUTORIAL.xlsx", [
+  {
+    name: "השורות לפי הסדר",
+    columns: [
+      { header: "מזהה", width: 11 },
+      { header: "#", width: 6 },
+      { header: "מתי", width: 26 },
+      { header: "מצביעה על", width: 22 },
+      { header: "מחכה ל", width: 24 },
+      { header: "טקסט מקור (בעברית)", width: 58 },
+      { header: "טקסט חדש עברית", width: 58, edit: true },
+      { header: "טקסט חדש אנגלית", width: 58, edit: true },
+      { header: "הערה שלך", width: 34, edit: true },
+    ],
+    rows: sheetRows,
+  },
+  {
+    name: "ממשחק שני",
+    columns: [
+      { header: "מזהה", width: 11 },
+      { header: "#", width: 6 },
+      { header: "מתי", width: 26 },
+      { header: "מצביעה על", width: 22 },
+      { header: "מחכה ל", width: 24 },
+      { header: "טקסט מקור (בעברית)", width: 58 },
+      { header: "טקסט חדש עברית", width: 58, edit: true },
+      { header: "טקסט חדש אנגלית", width: 58, edit: true },
+      { header: "הערה שלך", width: 34, edit: true },
+    ],
+    rows: counterRows,
+  },
+  {
+    name: "קבוע בממשק",
+    columns: [
+      /*
+       * These three carry their ids like every other row, because a sheet
+       * whose edits cannot be applied is a sheet whose edits get lost — and
+       * `copy-back` only reads a sheet that has a "מזהה" column at all.
+       * Looked up rather than typed: a wrong id writes the right words into
+       * the wrong string.
+       */
+      { header: "מזהה", width: 11 },
+      { header: "איפה", width: 34 },
+      { header: "טקסט מקור (בעברית)", width: 34 },
+      { header: "טקסט חדש עברית", width: 44, edit: true },
+      { header: "טקסט חדש אנגלית", width: 44, edit: true },
+    ],
+    rows: [
+      ["כפתור ההמשך בבועה", "המשך ←"],
+      ["הכפתור שמדלג על הכול", "אני יודע לשחק"],
+      ["הכניסה מהבית", "איך משחקים"],
+    ].map(([where, he]) => {
+      const id = byText.get(he) ?? "";
+      return [id, where, he, "", english(id)];
+    }),
+  },
+]);
+console.log(`docs/TUTORIAL.xlsx — ${sheetRows.length + counterRows.length} lines`);

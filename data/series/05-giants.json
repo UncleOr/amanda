@@ -16,14 +16,14 @@
       "en": "Thick Hide"
     },
     "description": {
-      "he": "כל הענקים שלכם מקבלים שריון פסיבי שחוסם חלק מכל מכה נכנסת.",
-      "en": "All your giants gain passive armor that blocks part of every incoming hit."
+      "he": "שלושה צמודים מאותה משפחה מקבלים +20% עוצמה ו+20% חיים.",
+      "en": "Three touching cards of the same family get +20% power and +20% health."
     },
     "ability": {
-      "type": "armorAura",
+      "type": "statAura",
       "trigger": "aura",
       "params": {
-        "armor": 120
+        "pct": 20
       }
     }
   },

@@ -111,15 +111,29 @@ export const LESSONS: Lesson[] = [
    */
   {
     title: { he: t("s078dd87", "משחק שני — מה מנצח את מה") },
+    /*
+     * ═══ DEALT IN THE ORDER SHE TALKS ABOUT IT ═══
+     *
+     * Or wrote this match out card by card and approved it, so the deck is
+     * no longer "a hand with the right answers in it somewhere" — it is the
+     * script's cast, in order. Every line in lessonScript.ts names the card
+     * that is in your hand when it is said, and this is what puts it there.
+     *
+     * Three plants in a row, because the trio has to be buildable: the first
+     * two take the guard posts and the third completes a touching group,
+     * which is the engine's actual rule (edges, not corners — synergy.ts).
+     */
     deck: [
-      "giants_10_titan_king",
-      "insects_10_insect_empress", // poison, for the wall opposite
-      "giants_09_thunder_giant", // a wide swing, for the splitters
-      "dragons_03_thunderwing",
-      "radioactive_eraser",
-      "insects_03_venom_scorpion", // a second poisoner: stacks add up
-      "dragons_04_lava",
-      "slimes_01_basic_slime",
+      "xray", // look first: the fog, and the one card that lifts it
+      "plants_02_ancient_tree", // 2000hp, regenerates: the guard post
+      "plants_08_cactus", // reflects damage: the second guard post
+      "plants_09_sunflower", // the third plant — פוטוסינתזה lights up
+      "furries_01_chuppy", // 1100 power, 610 health: where NOT to put it
+      "giants_10_titan_king", // the crown
+      "energy_boost", // and now, with the board full, the timing lesson
+      "sandstorm", // panic only — so it arrives when panic does
+      "plants_01_thorn_sprout",
+      "dragons_01_flame_dragon",
     ],
     /*
      * A board with a SHAPE — a guard pair in front of the crown and things

@@ -12,6 +12,7 @@
  */
 import { CATALOG, SERIES_BY_ID, synergyGroups } from "../data/catalog";
 import { line } from "../data/tutorialLines";
+import { SCRIPTS } from "./lessonScript";
 import type { Card } from "@amanda/shared";
 import { line as t } from "./copy";
 import { say } from "./lang";
@@ -22,6 +23,16 @@ export interface Cue {
   text: string;
   /** What to spotlight, if anything. */
   target?: string;
+  /**
+   * This step is written rather than matched, so it waits for its target
+   * instead of being skipped when the board has not been painted yet.
+   */
+  patient?: boolean;
+  /**
+   * Move the match on once this step is done — see ScriptStep.advance. There
+   * is no clock in a lesson, so the phases have to be caused by something.
+   */
+  advance?: "panic" | "prebattle";
   /**
    * What the player has to actually DO before this step will move on.
    *
@@ -54,7 +65,99 @@ export type Awaits =
   | { kind: "king" }
   | { kind: "placements"; atLeast: number }
   | { kind: "bar"; atLeast: number }
-  | { kind: "discard"; atLeast: number };
+  | { kind: "discard"; atLeast: number }
+  /*
+   * The three the WRITTEN lesson needs (see game/lessonScript.ts). The four
+   * above ask "has enough happened"; these three ask "has THE thing
+   * happened", which is what a step naming a square and a card has to wait
+   * for. "Two cards are down" is not an answer to "put the tree in the guard
+   * post".
+   */
+  /** One of these squares is filled. Keys are `"x-y"`, as BoardGrid writes them. */
+  | { kind: "cell"; cells: readonly string[] }
+  /** This action card has reached the bar, or been played. */
+  | { kind: "action"; id: string; where: "bar" | "used" }
+  /** The match has reached this phase. */
+  | { kind: "phase"; phase: string };
+
+/**
+ * Has this step been carried out?
+ *
+ * ═══ WHY IT IS A FUNCTION AND NOT A CALLBACK ON THE STEP ═══
+ *
+ * A callback would close over the board as it was when the step appeared and
+ * answer "is a King down?" with whatever was true back then, forever. The
+ * gate is DESCRIBED instead, and answered here against the live match on
+ * every render — this file has had that bug once already.
+ *
+ * ═══ AND WHY IT LIVES HERE RATHER THAN IN App.tsx ═══
+ *
+ * It was a nested ternary in the markup, which held four kinds. The written
+ * lesson needs seven, and the fifth is where a ternary chain stops being
+ * readable and starts being a place bugs hide.
+ */
+export function gateMet(awaits: Awaits, view: GateView): boolean {
+  /*
+   * `Awaits`, not `Awaits | undefined`. It took the optional form for one
+   * afternoon and returned `true` for a step with no gate — which Tutorial
+   * reads as "already done" and skips instantly. Every ungated line in both
+   * lessons disappeared before it could be read, and the tests were happy
+   * because they ask the coach what it would SAY, not what the screen does.
+   *
+   * A step with no gate has no answer here. The caller must not ask.
+   */
+  switch (awaits.kind) {
+    case "king":
+      return view.hasKing;
+    case "cell":
+      return awaits.cells.some((key) => key in view.placements);
+    case "action": {
+      const chip = view.actionBar.find((a) => a.id === awaits.id);
+      return awaits.where === "used" ? !!chip?.used : !!chip;
+    }
+    case "phase":
+      return view.phase === awaits.phase;
+    default:
+      break;
+  }
+  /*
+   * ═══ OR THE CARD IT IS ABOUT IS GONE ═══
+   *
+   * "Take it to the bar" and "bin this one" are both about the card IN YOUR
+   * HAND. If the hand is empty the card has already gone somewhere — onto
+   * the board, into the bin, into the bar — and the step is over however it
+   * ended.
+   *
+   * Without this it waits for a count that can no longer rise. The clock
+   * used to hide it: the build phase ran out and dragged everyone forward.
+   * Stopping the clock for lessons turned a step nobody noticed into a dead
+   * end, with Amanda asking a child to bin a card they are not holding and
+   * the bin button greyed out.
+   *
+   * It applies only to the COUNTING gates. A step that names a square is not
+   * about the card in your hand, and letting an empty hand satisfy it would
+   * skip the lesson the moment you put the card down somewhere else.
+   */
+  if (view.hand === null) return true;
+  switch (awaits.kind) {
+    case "placements":
+      return Object.keys(view.placements).length >= awaits.atLeast;
+    case "bar":
+      return view.actionBar.length >= awaits.atLeast;
+    case "discard":
+      return view.discardCount >= awaits.atLeast;
+  }
+}
+
+/** What answering a gate needs to look at. */
+export interface GateView {
+  phase: string;
+  hand: string | null;
+  hasKing: boolean;
+  placements: Record<string, string>;
+  actionBar: Array<{ id: string; used: boolean }>;
+  discardCount: number;
+}
 
 /** Everything the coach is allowed to look at. */
 export interface CoachView {
@@ -276,6 +379,49 @@ function counterCues(view: CoachView, inHand: Card | null): Array<() => Cue | nu
  * Order matters: the ones that comment on what is in your hand come first,
  * because they stop being true the moment you play it.
  */
+/**
+ * The next step of a WRITTEN lesson: the first one not yet said.
+ *
+ * No matching, no conditions — Or wrote the second match out step by step
+ * and the only question here is how far through it we are. A step whose
+ * moment "never comes" cannot happen, because the deck deals the card each
+ * step is about (see game/lessonScript.ts).
+ *
+ * Returns null when the script runs out, which hands the match back to the
+ * reactive rules below — so a child who wanders off the script is not left
+ * in silence.
+ */
+function scriptedCue(view: CoachView, said: Set<string>): Cue | null {
+  const script = view.matchNo ? SCRIPTS[view.matchNo] : undefined;
+  if (!script) return null;
+  /*
+   * ═══ NOT DURING THE COUNTDOWN ═══
+   *
+   * A match opens on three seconds of countdown, and the board is not on the
+   * screen yet. Tutorial.tsx gives a step 1.2s to find what it points at and
+   * then skips it rather than dead-ending — which is right, and which ate the
+   * first two lines of this lesson every single time: she opened on "x-ray, an
+   * action card that breaks that rule" with no idea what rule, because "look
+   * at my board" had been spoken to a screen that had no board on it.
+   *
+   * The reactive rules never hit this because they need a card in hand, and
+   * during a countdown there is none. A script does not wait for a card.
+   */
+  if (view.phase !== "build" && view.phase !== "panic") return null;
+  const step = script.find((s) => !said.has(s.id));
+  if (!step) return null;
+  const text = line(step.id);
+  if (!text) return null;
+  return {
+    id: step.id,
+    text,
+    patient: true,
+    ...(step.target ? { target: step.target } : {}),
+    ...(step.awaits ? { awaits: step.awaits } : {}),
+    ...(step.advance ? { advance: step.advance } : {}),
+  };
+}
+
 export function nextCue(view: CoachView, said: Set<string>): Cue | null {
   /*
    * ORDER IS THE POINT.
@@ -290,6 +436,14 @@ export function nextCue(view: CoachView, said: Set<string>): Cue | null {
    * A step whose moment never comes is simply skipped rather than stalling
    * the whole sequence behind it — you cannot make someone draw a dragon.
    */
+  /*
+   * A written lesson wins over every rule below it. The rules describe the
+   * game in general; the script describes THIS match, and where both have
+   * something to say the script is the one that was approved line by line.
+   */
+  const scripted = scriptedCue(view, said);
+  if (scripted) return scripted;
+
   const inHand = card(view.hand);
   const down = Object.keys(view.placements).length;
   const steps: Array<() => Cue | null> = [

@@ -16,14 +16,14 @@
       "en": "Stickiness"
     },
     "description": {
-      "he": "כל קלף יריב שמנסה להסתער בנתיב שיש בו קלף רירי סובל מהאטה של 50% במהירות התנועה.",
-      "en": "Any enemy advancing in a lane containing a slime suffers a 50% movement slow."
+      "he": "שלושה צמודים מאותה משפחה מקבלים +20% עוצמה ו+20% חיים.",
+      "en": "Three touching cards of the same family get +20% power and +20% health."
     },
     "ability": {
-      "type": "slowAura",
+      "type": "statAura",
       "trigger": "aura",
       "params": {
-        "pct": 50
+        "pct": 20
       }
     }
   },

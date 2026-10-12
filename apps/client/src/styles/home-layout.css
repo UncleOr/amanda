@@ -1739,10 +1739,48 @@
    * has to give way when the screen is 375 tall rather than 390, and a fixed
    * size means the top of the game's name goes off the screen instead.
    */
-  /* `.shelf` carries a 10px bottom padding from the social rail it was born
-     in, which on this row is ten pixels of nothing under a picture. */
-  .home__progress .shelf { padding: 3px 5px; }
-  .home__progress .shelf__chest { padding: 0; border: 0; background: none; line-height: 0; }
+  /*
+   * ═══ THE CHEST WAS 27 PIXELS AND A FINGER IS NOT ═══
+   *
+   * Or: *"when you press a chest from the main screen, the chest-opening
+   * screen only opens after several times."*
+   *
+   * Never the server and never the handler. Measured in the browser at the
+   * size this layout is built for — 844x390 — the button came out
+   * **27.3 x 27.3px**, because `7vh` is 27.3 at that height and the button
+   * has no padding, no border and `line-height: 0`, so the button IS the
+   * picture. Both platforms ask for 44 and neither is being generous: a
+   * thumb covers more than 27px, so the taps that "did nothing" landed in
+   * the 4px of gap between two chests, or just outside one.
+   *
+   * The PICTURE stays 27px, because the row is tight and nothing here needs
+   * to be bigger to be understood. The BUTTON becomes 44, and the row takes
+   * the five pixels of height back out of the panel's own padding, which was
+   * decoration. The shelf cell is `auto` in a grid whose first column is
+   * `1fr`, so the extra width comes out of the ~300px the row has spare —
+   * see the measurement above.
+   */
+  .home__progress .shelf {
+    /* Was `3px 5px`: on this row the vertical half was padding under a
+       picture, and the hit area is worth more than it was. */
+    padding: 0 5px;
+    display: flex;
+    align-items: center;
+    /* Enough that two 44px targets do not touch. The chests were 4.4px apart
+       on their own, from the whitespace between the tags. */
+    gap: 2px;
+  }
+  .home__progress .shelf__chest {
+    padding: 0;
+    border: 0;
+    background: none;
+    line-height: 0;
+    /* The whole fix. The art is centred in it and does not know. */
+    min-width: 44px;
+    min-height: 44px;
+    display: grid;
+    place-items: center;
+  }
   .home__progress .shelf__chest img {
     width: clamp(24px, 7vh, 34px);
     height: clamp(24px, 7vh, 34px);

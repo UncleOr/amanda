@@ -440,6 +440,67 @@ export interface Chest {
  * nothing to cheat at, and keeping it out of the database means a chest can
  * never get stuck half-shown.
  */
+/**
+ * How far into the tutorial you got, so stopping is not starting again.
+ *
+ * Or: *"you can always also press the exit button at the top and stop"*, and
+ * *"when you come back to the tutorial it goes back to where it stopped. If
+ * you finished — back to the start."*
+ *
+ * ═══ THE MATCH, NOT THE SENTENCE ═══
+ *
+ * The first version of this also remembered which of Amanda's lines she had
+ * already said, so she would pick up at the exact step. Playing it showed
+ * why that is wrong: the lines came back and the BOARD did not. She resumed
+ * at "the ancient tree goes in the guard post" while the hand held the
+ * x-ray, because the match had restarted and dealt from the top — a
+ * walkthrough talking about a card that is not there.
+ *
+ * A lesson is the smallest thing that can be resumed coherently, and with
+ * two of them that is the useful granularity anyway: you come back to the
+ * match you were in, from its beginning, with its deck.
+ *
+ * Local only, deliberately. It is a bookmark, not a possession: it belongs
+ * to the device you were playing on, nothing else reads it, and losing it
+ * costs one repeated sentence. `tutorial_done` on the account stays the
+ * thing that remembers you have finished.
+ */
+const TUTORIAL_AT = "amanda.tutorial.at";
+
+export interface TutorialMark {
+  /** Which of the two matches. */
+  lesson: number;
+}
+
+export function tutorialMark(): TutorialMark | null {
+  try {
+    const raw = localStorage.getItem(TUTORIAL_AT);
+    if (!raw) return null;
+    const mark = JSON.parse(raw) as TutorialMark;
+    // A mark from an older build, or a hand-edited one, is not worth a crash.
+    if (typeof mark?.lesson !== "number" || mark.lesson < 1) return null;
+    return mark;
+  } catch {
+    return null;
+  }
+}
+
+export function markTutorialAt(mark: TutorialMark): void {
+  try {
+    localStorage.setItem(TUTORIAL_AT, JSON.stringify(mark));
+  } catch {
+    /* a private window has no shelf to leave it on, and that is survivable */
+  }
+}
+
+export function clearTutorialMark(): void {
+  try {
+    localStorage.removeItem(TUTORIAL_AT);
+  } catch {
+    /* ignore */
+  }
+}
+
 const SEEN_CHESTS = "amanda.chests.seen";
 
 /**

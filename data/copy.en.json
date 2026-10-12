@@ -505,7 +505,6 @@
  "s0c0129b": "Nothing has happened yet. Come back.",
  "s912daec": "New",
  "s67c1f88": "Together",
- "s943b402": "Against",
  "s91836d5": "Me",
  "sb1bf590": "Opponent",
  "sec89d42": "Hi, I'm Amanda. You came to fight me, kid? Let's learn how it's done.",
@@ -835,5 +834,6 @@
  "saf78986": "Privacy",
  "sf13b7f5": "Accessibility",
  "sf28862a": "Terms",
- "s006c31b": "In the settings gear at the top, under Delete my data, there is Delete my account. It erases the account, the album, the trophies and the history — right away, with no waiting period and no confirmation email. It cannot be undone."
+ "s006c31b": "In the settings gear at the top, under Delete my data, there is Delete my account. It erases the account, the album, the trophies and the history — right away, with no waiting period and no confirmation email. It cannot be undone.",
+ "se875ce8": "Vs."
 }

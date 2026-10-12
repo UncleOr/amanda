@@ -425,20 +425,51 @@
    * and swallow their bottom row. Giving it its own track means the boards
    * are sized around it instead of fighting it.
    *
-   *   [ boards ][ hand ]
-   *   [ actions][ hand ]
+   *   [ hand ][ boards  ]
+   *   [ hand ][ actions ]
    *
-   * In RTL the columns flow right-to-left on their own, so the boards stay on
-   * the inline-start side exactly as before.
+   * ═══ THE HAND SITS ON YOUR SIDE, NOT ON THE PAGE'S SIDE ═══
+   *
+   * Or: *"it's very odd that the cards open on the right — to my mind this
+   * whole bar should still be on the left, next to my side."*
+   *
+   * He is right, and it was wrong in English only. Measured at 844px:
+   *
+   *            hand        your board   opponent
+   *     he     0..146      264..476     514..726      ✓ beside you
+   *     en     698..844    118..330     368..580      ✗ beside THEM
+   *
+   * The cause is that two things decided the layout and they disagreed.
+   * `.boards` forces `direction: ltr` so that YOU are always on the left and
+   * the fronts meet in the middle, whatever the page direction — that is the
+   * arena's geometry and it is not negotiable. The columns here, though, were
+   * laid out in the page's direction, so the hand flowed to the inline-end:
+   * the left in Hebrew, which happens to be your side, and the right in
+   * English, which is theirs.
+   *
+   * So the column order is pinned the same way the boards are. The hand is
+   * now the FIRST column in both languages, against your own half of the
+   * board, and the text inside it is handed its direction back below.
    */
   .build {
     display: grid;
-    grid-template-columns: 1fr 146px;
+    /* Placement only. See the two rules under it. */
+    direction: ltr;
+    grid-template-columns: 146px 1fr;
     grid-template-rows: 1fr auto;
     grid-template-areas:
-      "boards hand"
-      "actions hand";
+      "hand boards"
+      "hand actions";
     align-items: stretch;
+  }
+  /*
+   * …and the words get their own direction back. `.build` is ltr for the sake
+   * of the grid, which would otherwise leave Hebrew buttons and counters
+   * reading left-to-right inside a right-to-left game.
+   */
+  html[dir="rtl"] .hand,
+  html[dir="rtl"] .actions {
+    direction: rtl;
   }
   .boards {
     grid-area: boards;
@@ -541,7 +572,7 @@
   .action-chip__main,
   .action-chip__info { font-size: var(--t-1); padding: 1px 5px; }
 
-  /* the hand: a fixed-width column on the trailing edge */
+  /* the hand: a fixed-width column against your own half of the board */
   .hand {
     grid-area: hand;
     /*
@@ -560,7 +591,9 @@
     gap: 5px;
     padding: 6px 8px;
     border-top: none;
-    border-inline-start: 1px solid var(--line);
+    /* The rule divides the hand from the boards, so it is on the side the
+       boards are on — which is now the far side from the screen edge. */
+    border-inline-end: 1px solid var(--line);
     overflow-y: auto;
   }
   .hand__current {

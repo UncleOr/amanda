@@ -16,11 +16,11 @@
       "en": "Dragon Scales"
     },
     "description": {
-      "he": "כל הדרקונים בלוח שלכם מקבלים הגנה פסיבית שמפחיתה את כל הנזק הנכנס אליהם ב-20%.",
-      "en": "All your dragons gain a passive 20% reduction to all incoming damage."
+      "he": "שלושה צמודים מאותה משפחה מקבלים +20% עוצמה ו+20% חיים.",
+      "en": "Three touching cards of the same family get +20% power and +20% health."
     },
     "ability": {
-      "type": "damageReductionAura",
+      "type": "statAura",
       "trigger": "aura",
       "params": {
         "pct": 20

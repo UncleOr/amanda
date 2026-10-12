@@ -64,6 +64,7 @@ store/trailer.mp4
 store/trailer-he.mp4
 store/trailer-en.mp4
 store/raw/
+store/raw-en/
 
 # Single clips exported so Or can watch one shot on its own before the whole
 # cut is rebuilt. Throwaway: the clip they came from lives in assets/raw.
@@ -74,3 +75,13 @@ store/preview/
 /*.mp4
 /*.mov
 store/gameplay.mp4
+store/gameplay-en.mp4
+
+# And the screen recordings themselves. `/*.mp4` above only covers the repo
+# root, and the English one was filed into store/ where it is a 93MB source
+# that cut-gameplay.sh turns into four seconds. GitHub's own limit is 100MB
+# and a public repository is not a place to keep raw footage.
+store/recording-*.mp4
+
+# Excel's lock file, created while a workbook is open
+~$*.xlsx

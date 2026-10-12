@@ -151,6 +151,137 @@ export const TUTORIAL_LINES: readonly TutorialLine[] = [
     vars: ["ally", "card"],
     when: t("s5a0fcb1", "סופג ביד כשיש לך קלף שביר שמכה חזק"),
   },
+  /*
+   * ═══ THE SECOND LESSON IS WRITTEN, NOT REACTED TO ═══
+   *
+   * Everything above is a RULE — "a giant? put him in front of the King" —
+   * which fires against whatever you happen to draw. The lines below are a
+   * SCRIPT: Or wrote the second match out step by step, naming the card and
+   * the square for each one, and approved it.
+   *
+   * That is a real difference and it is deliberate. The first match teaches
+   * the shape of a turn, and a shape has to survive any hand. The second
+   * teaches three specific things — where a family bonus comes from, where a
+   * glass cannon does NOT go, and what the panic phase is — and none of the
+   * three can be taught by a rule that waits for the right card to turn up.
+   *
+   * The order they fire in is in game/lessonScript.ts, beside the deck that
+   * deals them. Nothing here decides when it is said.
+   */
+  {
+    id: "l2-back",
+    he: t("s40cdf63", "חזרת. יפה. עכשיו בוא נדבר על מה שקורה בצד השני."),
+    vars: [],
+    when: t("s5263775", "פתיחת המשחק השני"),
+  },
+  {
+    id: "l2-fog",
+    he: t("s2f0283d", "שים לב ללוח שלי. רואה את השורה הקדמית? זה כל מה שאפשר לראות בשלב הזה."),
+    vars: [],
+    when: t("s25ea352", "מצביעה על הלוח של היריב, לפני שנגעת בקלף"),
+  },
+  {
+    id: "l2-xray-take",
+    he: t("s2feac9e", "רנטגן. קלף פעולה ששובר את הכלל הזה. ניקח אותו ונשתמש בו."),
+    vars: [],
+    when: t("s66dddf3", "רנטגן ביד"),
+  },
+  {
+    id: "l2-xray-use",
+    he: t("s0a71ac4", "עכשיו תלחץ עליו."),
+    vars: [],
+    when: t("se52f43e", "רנטגן בבר, לפני שהופעל"),
+  },
+  {
+    id: "l2-xray-seen",
+    he: t("s734f906", "הנה. שש שניות, כל הלוח שלי פתוח. עצים עתיקים מקדימה, גפנים בפינות."),
+    vars: [],
+    when: t("s8f6cfb7", "מיד אחרי שהרנטגן הופעל"),
+  },
+  {
+    id: "l2-tree",
+    he: t("s68e3bda", "עץ עתיק. 2000 חיים, מתרפא לבד. בדיוק מה שצריך בעמדת השומר."),
+    vars: [],
+    when: t("sd49b897", "עץ עתיק ביד"),
+  },
+  {
+    id: "l2-cactus",
+    he: t("s75ccaa2", "קקטוס: דוקר את מי שנוגע בו. לעמדת השומר השנייה, צמוד לעץ."),
+    vars: [],
+    when: t("s62b4ae3", "קקטוס ביד, אחרי שהעץ הונח"),
+  },
+  {
+    id: "l2-family",
+    he: t("s562a021", "מה יש לנו כאן? שני קלפים מאותה משפחה. רואה את צבע המסגרת? בוא נוסיף להם עוד אחד."),
+    vars: [],
+    when: t("s16619e1", "שני צמחים צמודים על הלוח"),
+  },
+  {
+    id: "l2-sunflower",
+    he: t("se1b06e1", "חמנייה. צמח. תדביק אותה צמוד לאחד מהם — לא באלכסון, צמוד ממש."),
+    vars: [],
+    when: t("s3bb1a6a", "חמנייה ביד"),
+  },
+  {
+    id: "l2-synergy",
+    he: t("s2fb50f7", "פוטוסינתזה! שלושה צמחים צמודים מקבלים +20% עוצמה ו+20% חיים. שווה לשים אותם יחד!"),
+    vars: [],
+    when: t("sd356bf5", "ברגע שהשלישייה נדלקה"),
+  },
+  {
+    id: "l2-chuppy",
+    he: t("sa808c9e", "צ'ופי! החבר הכי טוב, עם עוצמת חשמל אדירה — אבל כמעט בלי חיים. מקדימה הוא ימות ראשון. פה עדיף."),
+    vars: [],
+    when: t("s6d14c48", "צ'ופי ביד"),
+  },
+  {
+    id: "l2-king",
+    he: t("s8e82b1e", "אבי-הענקים. למשבצת המלך, כמו בפעם הקודמת."),
+    vars: [],
+    when: t("s559179f", "אבי-הענקים ביד"),
+  },
+  {
+    id: "l2-boost-wait",
+    he: t("scb28bb8", "בוסט אנרגיה — נותן כוח לכל מה שכבר על הלוח. רק לכל מה שכבר שם. אז לא נשתמש בו עכשיו."),
+    vars: [],
+    when: t("sb32330d", "בוסט אנרגיה נכנס לבר, הלוח עוד לא מלא"),
+  },
+  {
+    id: "l2-boost-use",
+    he: t("s4f2f850", "עכשיו. הלוח שלך מלא. עכשיו תפעיל אותו."),
+    vars: [],
+    when: t("sceb7841", "הלוח מלא, הבוסט עדיין לא הופעל"),
+  },
+  {
+    id: "l2-panic-king",
+    he: t("s8137a86", "פאניקה. עשר השניות האחרונות. תסתכל — המלך שלי נחשף."),
+    vars: [],
+    when: t("se8e0990", "השנייה הראשונה של הפאניקה"),
+  },
+  {
+    id: "l2-panic-fog",
+    he: t("s7c44eb4", "אבל השורה האחורית שלי עדיין חשוכה. גם בפאניקה. בשביל זה היה שווה את הרנטגן."),
+    vars: [],
+    when: t("s7298202", "בפאניקה, על השורה האחורית המעורפלת"),
+  },
+  {
+    id: "l2-sandstorm",
+    he: t("sb0dc9d8", "סופת חול. מערבבת לי את השורה הקדמית. בנית נתיב מול משהו? עכשיו הוא במקום אחר."),
+    vars: [],
+    when: t("scf7ab2b", "סופת חול ביד, בפאניקה"),
+  },
+  {
+    id: "l2-go",
+    he: t("sb32906f", "מספיק. בוא נראה מה בנית."),
+    vars: [],
+    when: t("scb6277d", "הכול בנוי, נשאר ללחוץ"),
+  },
+  {
+    id: "l2-won",
+    he: t("s39b816e", "ניצחת. והפעם לא עזרתי."),
+    vars: [],
+    when: t("s88efec6", "מסך התוצאה של המשחק השני"),
+  },
 ] as const;
 
 const SHIPPED = new Map(TUTORIAL_LINES.map((l) => [l.id, l.he]));

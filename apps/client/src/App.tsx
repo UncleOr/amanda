@@ -2,12 +2,12 @@ import { lazy, Suspense, useCallback, useEffect, useMemo, useRef, useState } fro
 import { Icon } from "./components/Icon";
 import { Album } from "./components/Album";
 import { Tutorial, type Step } from "./components/Tutorial";
-import { nextCue } from "./game/coach";
+import { gateMet, nextCue } from "./game/coach";
 import { LESSONS } from "./game/lessons";
 import { Profile } from "./components/Profile";
 import { Onboarding } from "./components/Onboarding";
 import { ChestReveal } from "./components/ChestReveal";
-import { loadInbox, loadShop, markChestSeen, openChest, unopenedChests, type Chest, type ShopItem } from "./game/account";
+import { clearTutorialMark, loadInbox, loadShop, markChestSeen, markTutorialAt, openChest, tutorialMark, unopenedChests, type Chest, type ShopItem } from "./game/account";
 import { track } from "./game/track";
 import { markTutorialDone, tutorialSeenLocally } from "./game/account";
 import { line } from "./data/tutorialLines";
@@ -383,10 +383,22 @@ function Game() {
     if (seen) return;
     if (m.phase !== "intro") return;
     taughtRef.current = true;
-    setMetAmanda(false);
+    /*
+     * ═══ WHERE YOU LEFT OFF, NOT THE BEGINNING ═══
+     *
+     * Or: *"when you come back to the tutorial it goes back to where it
+     * stopped. If you finished — back to the start."* The second half is
+     * free: finishing clears the mark, so there is nothing to come back to.
+     *
+     * `metAmanda` is skipped when there IS a mark, because the two greeting
+     * lines are the part nobody wants twice.
+     */
+    const mark = tutorialMark();
+    // The greetings are the one part nobody wants twice.
+    setMetAmanda(!!mark);
     saidRef.current = new Set();
     setTeaching(true);
-    m.startLesson(1);
+    m.startLesson(mark?.lesson ?? 1);
   }, [m.phase, m.account, m.playground, m]);
 
   /**
@@ -420,6 +432,11 @@ function Game() {
      * exactly what it looks like from outside: a tutorial that never
      * introduces itself.
      */
+    /*
+     * Asking for it again is a restart, not a resume — the button says "how
+     * to play", and somebody who presses it wants the thing from the top.
+     */
+    clearTutorialMark();
     saidRef.current = new Set();
     setTeaching(true);
     m.startLesson(1);
@@ -446,7 +463,12 @@ function Game() {
    * the second example match can teach the things the first did not reach.
    */
   const saidRef = useRef<Set<string>>(new Set());
-  const [cue, setCue] = useState<Step | null>(null);
+  /*
+   * The step on screen, plus the one thing a Tutorial step does not have: the
+   * instruction to move the MATCH on when it is done (lessonScript.ts), which
+   * is how a lesson with no clock ever reaches the panic phase.
+   */
+  const [cue, setCue] = useState<(Step & { advance?: "panic" | "prebattle" }) | null>(null);
   /**
    * The cells on your board that a series bonus is lighting up right now.
    *
@@ -485,17 +507,37 @@ function Game() {
     return { placements, king: m.revealOpponentKing ? m.opponent.king : null };
   }, [m.opponent, m.revealOpponentCell, m.revealOpponentKing]);
   /*
-   * Which lesson this is. Or asked for "a match or two" against a light bot,
-   * and for the second one to be about the opponent rather than the buttons:
-   * which card of theirs you answer with which card of yours. The coach needs
-   * to know which match it is to know which of the two it is giving.
+   * ═══ WHICH LESSON THIS IS — AND THERE IS ONLY ONE ANSWER TO IT ═══
+   *
+   * Or asked for "a match or two" against a light bot, and for the second
+   * one to be about the opponent rather than the buttons. The coach needs to
+   * know which match it is to know which of the two it is giving.
+   *
+   * This used to be a SECOND counter, kept here and bumped on every
+   * countdown — so it read 2 from the first build phase of lesson ONE, a
+   * whole match ahead of `m.lesson`, which `startLesson` sets. Nothing
+   * noticed while the number only gated a few counter lines that then fired
+   * a lesson early. The moment lesson two became a written script it was
+   * unmissable: a child met Amanda, said hello, and was told to look at the
+   * x-ray card in the middle of their first game.
+   *
+   * There is one lesson number now and the match owns it.
    */
-  const [lesson, setLesson] = useState(1);
+  const lesson = m.lesson;
+  /*
+   * She starts again when the LESSON changes, not on every countdown.
+   *
+   * The reset used to hang off the countdown, which also fires when a match
+   * is replayed — so "again" inside a lesson wiped what she had said and
+   * started her from the top of a match already half built.
+   */
+  const lessonSaidRef = useRef(0);
   useEffect(() => {
-    if (!teaching || m.phase !== "countdown") return;
-    setLesson((n) => n + 1);
+    if (!teaching || m.lesson === 0) return;
+    if (lessonSaidRef.current === m.lesson) return;
+    lessonSaidRef.current = m.lesson;
     saidRef.current = new Set();
-  }, [teaching, m.phase]);
+  }, [teaching, m.lesson]);
   useEffect(() => {
     /*
      * ═══ NOT WHILE SHE IS STILL SAYING HELLO ═══
@@ -550,7 +592,11 @@ function Game() {
     );
     if (!next) return;
     saidRef.current.add(next.id);
+    // Which match she is in, written down as soon as she says anything in it.
+    markTutorialAt({ lesson });
     setCue({
+      ...(next.patient ? { patient: true } : {}),
+      ...(next.advance ? { advance: next.advance } : {}),
       target: next.target ?? ".side--me .board",
       text: next.text,
       // `awaits` is turned into a live boolean BELOW, on every render — not
@@ -1501,6 +1547,21 @@ function Game() {
                       mode: m.playground ? "playground" : m.online ? "online" : "bot",
                     });
                   setConfirmExit(false);
+                  /*
+                   * Or's first rule for the tutorial: *"you can always also
+                   * press the exit button at the top and stop"* — as well as
+                   * "I already know how to play".
+                   *
+                   * Without this, leaving mid-lesson reset the match while
+                   * `teaching` stayed on, so the tutorial simply started
+                   * again from the top: the exit button was the one button on
+                   * the screen that did not work.
+                   *
+                   * It is NOT marked done. Stopping is not finishing, and
+                   * coming back picks up where it stopped.
+                   */
+                  setTeaching(false);
+                  setCue(null);
                   m.reset();
                 }}
               >
@@ -1572,7 +1633,8 @@ function Game() {
                       setLessonDone(false);
                       setTeaching(false);
                       setCue(null);
-                      void markTutorialDone();
+                      clearTutorialMark();
+            void markTutorialDone();
                       m.reset();
                     }}
                   >
@@ -1607,6 +1669,7 @@ function Game() {
             setMetAmanda(true);
             setTeaching(false);
             setCue(null);
+            clearTutorialMark();
             void markTutorialDone();
           }}
         />
@@ -1625,38 +1688,34 @@ function Game() {
                * board — and it cannot go stale, because there is nothing held
                * from the render that produced the step.
                */
+              // No gate means a continue button, NOT "already done".
               done: !cue.awaits
                 ? undefined
-                : cue.awaits.kind === "king"
-                  ? m.hasKing
-                  : cue.awaits.kind === "placements"
-                    ? Object.keys(m.placements).length >= cue.awaits.atLeast
-                    : /*
-                       * ═══ OR THE CARD IT IS ABOUT IS GONE ═══
-                       *
-                       * "Take it to the bar" and "bin this one" are both
-                       * about the card IN YOUR HAND. If the hand is empty
-                       * the card has already gone somewhere — onto the
-                       * board, into the bin, into the bar — and the step is
-                       * over however it ended.
-                       *
-                       * Without this it waits for a count that can no longer
-                       * rise. The clock used to hide it: the build phase ran
-                       * out and dragged everyone forward. Stopping the clock
-                       * for lessons turned a step nobody noticed into a dead
-                       * end, with Amanda asking a child to bin a card they
-                       * are not holding and the bin button greyed out.
-                       */
-                      m.hand === null ||
-                      (cue.awaits.kind === "bar"
-                        ? m.actionBar.length >= cue.awaits.atLeast
-                        : m.discardCount >= cue.awaits.atLeast),
+                : gateMet(cue.awaits, {
+                    phase: m.phase,
+                    hand: m.hand,
+                    hasKing: m.hasKing,
+                    placements: m.placements,
+                    actionBar: m.actionBar,
+                    discardCount: m.discardCount,
+                  }),
             },
           ]}
-          onDone={() => setCue(null)}
+          onDone={() => {
+            /*
+             * There is no clock in a lesson — Or: *"and there is no time in
+             * either match"* — so the phases have to be caused by something,
+             * and the script is the thing that causes them. `advance` on a
+             * step means "this is the moment the build time would have run
+             * out", which is how the panic phase arrives at all.
+             */
+            if (cue.advance) m.toBattle();
+            setCue(null);
+          }}
           onQuit={() => {
             setTeaching(false);
             setCue(null);
+            clearTutorialMark();
             void markTutorialDone();
           }}
         />

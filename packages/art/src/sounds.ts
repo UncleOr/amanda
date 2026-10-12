@@ -11,7 +11,10 @@
  * these are recordings.
  *
  * Raw results are kept in `assets/raw/sfx/*.mp3` and never regenerated once
- * they exist (they cost money). The client copies are trimmed and loudness-
+ * they exist (they cost money). The two COMPUTED ones — `win` and `newcard`
+ * — are the exception and cost nothing: `pnpm art:fanfare` rebuilds them
+ * from fanfare.ts note by note, which is also the only way to get them back
+ * on a fresh clone, since assets/raw is not in git. The client copies are trimmed and loudness-
  * matched into `apps/client/public/sfx/`.
  *
  * The brief for every one of them: SHORT, DRY, CLOSE. A game sound plays a
@@ -47,7 +50,16 @@ export interface SoundSpec {
   id: string;
   /** What it is, in the game. Not sent to the model — it is for us. */
   what: string;
-  prompt: string;
+  /**
+   * What to ask the model for — absent when the sound is COMPUTED instead.
+   *
+   * `win` and `newcard` are built by fanfare.ts, note by note. Twice now a
+   * fanfare has been asked for and twice it came back as an error sound, and
+   * the reason is the method: this is an effects model, and a fanfare is
+   * music. Leaving the prompt off is what stops `pnpm art:sounds` from ever
+   * quietly putting a generated one back over the top.
+   */
+  prompt?: string;
   /** How long the clip ends up, after trimming. */
   seconds: number;
   /**
@@ -145,9 +157,22 @@ export const SOUNDS: SoundSpec[] = [
   {
     id: "win",
     what: "you won",
-    prompt: `A short triumphant dark-fantasy sting: low brass swell and one big drum hit, ending clean. Under two seconds. ${DRY}`,
-    seconds: 2.0,
+    // Computed — see fanfare.ts. Or: *"the win sound and the new-chest sound
+    // are really awful."* He picked the trumpets.
+    seconds: 1.35,
     level: 0.8,
+  },
+  {
+    id: "newcard",
+    what: "a card the album has never held",
+    /*
+     * Its own sound, and that is the point of it. It used to play `win`, so
+     * the rarest moment in the game sounded exactly like the commonest one.
+     * Bells only, nothing below C5 and no drum at all — weight means a
+     * result, and a new card is a surprise.
+     */
+    seconds: 1.1,
+    level: 0.75,
   },
   {
     id: "lose",
@@ -161,7 +186,9 @@ export const SOUNDS: SoundSpec[] = [
 /** Generate the missing ones (or the named ones) into assets/raw/sfx. */
 export async function generateSounds(only: string[]): Promise<void> {
   mkdirSync(RAW, { recursive: true });
-  const list = only.length ? SOUNDS.filter((s) => only.includes(s.id)) : SOUNDS;
+  const list = (only.length ? SOUNDS.filter((s) => only.includes(s.id)) : SOUNDS)
+    // The computed ones have no prompt and are not the model's to make.
+    .filter((s) => s.prompt);
   if (!list.length) {
     console.error(`No such sound. Options: ${SOUNDS.map((s) => s.id).join(", ")}`);
     process.exit(1);
@@ -176,7 +203,7 @@ export async function generateSounds(only: string[]): Promise<void> {
     }
     process.stdout.write(`   ${spec.id.padEnd(12)} ${spec.what.padEnd(34)} ... `);
     try {
-      const url = await sound(spec.prompt, {
+      const url = await sound(spec.prompt!, {
         seconds: spec.generate ?? Math.max(2, Math.ceil(spec.seconds)),
       });
       if (!url) throw new Error("no audio returned");

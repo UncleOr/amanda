@@ -144,6 +144,11 @@ export function runAuras(state: BattleState): void {
               if (e.alive && e.owner !== owner && members.some((m) => sharesLane(e, m)))
                 e.moveSlowMult *= 1 - pct / 100;
             break;
+          case "statAura":
+            // Already applied, once, in setup.ts — see the note there. It is
+            // listed rather than left to `default` so that reading this switch
+            // does not suggest the bonus is missing.
+            break;
           default:
             break;
         }
