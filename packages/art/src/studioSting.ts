@@ -235,6 +235,83 @@ function wav(buf: Buf): Buffer {
   return Buffer.concat([head, data]);
 }
 
+/* ── two more voices, for the weight ──────────────────────────────── */
+
+/**
+ * A band-limited sawtooth.
+ *
+ * Summed harmonics rather than a naive ramp: a ramp aliases — every partial
+ * above half the sample rate folds back down as an inharmonic whine — and
+ * this is the voice that carries the chord, so it is the one that must not
+ * buzz. The harmonic count is capped per note, so a high voice has fewer.
+ */
+function sawAt(freq: number, t: number): number {
+  const n = Math.max(1, Math.min(34, Math.floor(RATE / 2 / freq)));
+  let v = 0;
+  for (let k = 1; k <= n; k++) v += Math.sin(2 * Math.PI * k * freq * t) / k;
+  return v * 0.55;
+}
+
+/**
+ * The brass-ish voice: detuned saws through a lowpass that OPENS.
+ *
+ * A filter sweeping upward as the note starts is most of what "big" sounds
+ * like — it is a brass section leaning into a note, and it is why a static
+ * waveform reads as a beep however loud you make it.
+ *
+ * Three voices a few cents apart, because one oscillator is thin and two is
+ * an audible beat. `swell` is the slow attack that makes a note arrive
+ * rather than appear.
+ */
+function brass(
+  freq: number,
+  dur: number,
+  { gain = 1, swell = 0.05, decay = 1.6, open = 3.4, sub = 0.3 } = {},
+): Buf {
+  const n = seconds(dur);
+  const out = make(dur);
+  const detune = [-0.004, 0, 0.0045];
+  let lp1 = 0;
+  let lp2 = 0;
+  for (let i = 0; i < n; i++) {
+    const t = i / RATE;
+    let v = 0;
+    for (const d of detune) v += sawAt(freq * (1 + d), t);
+    v /= detune.length;
+    if (sub > 0) v += Math.sin(2 * Math.PI * (freq / 2) * t) * sub;
+
+    // Cutoff rides from an octave above the note up to `open` octaves,
+    // fastest at the start.
+    const k = 1 - Math.exp((-7 * i) / n);
+    const cutoff = Math.min(16000, freq * 2 * Math.pow(2, open * k));
+    const c = Math.min(1, (2 * Math.PI * cutoff) / RATE);
+    lp1 += c * (v - lp1);
+    lp2 += c * (lp1 - lp2);
+
+    const a = Math.min(1, t / swell);
+    out[i] = lp2 * a * Math.exp((-decay * i) / n) * gain;
+  }
+  return out;
+}
+
+/** Wide detuned voices with a slow attack. Warmth under a landing. */
+function choir(freq: number, dur: number, { gain = 1, swell = 0.12, decay = 2.2 } = {}): Buf {
+  const n = seconds(dur);
+  const out = make(dur);
+  const voices = [-0.007, -0.003, 0, 0.003, 0.007];
+  for (let i = 0; i < n; i++) {
+    const t = i / RATE;
+    let v = 0;
+    for (const d of voices) {
+      const f = freq * (1 + d);
+      v += Math.sin(2 * Math.PI * f * t) + 0.2 * Math.sin(4 * Math.PI * f * t);
+    }
+    const a = Math.min(1, t / swell);
+    out[i] = (v / voices.length) * a * Math.exp((-decay * i) / n) * gain * 0.6;
+  }
+  return out;
+}
+
 /* ── the idents ────────────────────────────────────────────────────── */
 
 interface Sting {
@@ -244,90 +321,130 @@ interface Sting {
   build: () => Buf;
 }
 
+/*
+ * ═══ WHY THE FIRST FIVE SOUNDED LIKE ERRORS ═══
+ *
+ * Or: *"there still aren't 5 options we could pick from. 3 is the only one
+ * that comes close. It can't sound like an error sound. It needs something
+ * slightly epic. Not too pretentious, but a bit big."*
+ *
+ * Two of them WERE error sounds, and one by construction without my noticing:
+ * #2 was a descending minor third, the universal interval for "wrong" —
+ * every game, lift and microwave on earth. #1 and #5 were two bare notes
+ * with a gap between them, which is the shape of an alert whatever the
+ * pitches are. #4 landed on a minor chord.
+ *
+ * #3 was the one that worked, and what it does differently is the lesson:
+ *
+ *   - it RISES. Upward motion reads as arrival; downward reads as failure.
+ *   - it lands on a MAJOR CHORD rather than stopping on one note.
+ *   - the landing SUSTAINS instead of being struck and dropped.
+ *
+ * So all five below rise, all five land on D major, and all five put weight
+ * under that landing — a sub octave and a filter that opens, which is what
+ * "big" actually is. They differ in the route up and in what is singing,
+ * which is a choice worth offering. "Two notes versus three notes" was not.
+ *
+ * Short, though. Epic for two seconds is a studio ident; epic for six is a
+ * film company, and this plays before a card game a seven-year-old opens
+ * forty times a week.
+ */
+const CHORD = ["D3", "F#3", "A3", "D4"];
+
 const STINGS: Sting[] = [
   {
-    id: "1-ta-dum",
-    idea: "Netflix's shape, in Amanda's key: a deep thud, then one bright note.",
+    id: "1-taller",
+    idea: "The one you liked, grown up: the same climb, but it lands on something.",
     build: () => {
-      const out = make(2.0);
-      // The big one.
-      at(out, thud(note("D1"), 1.5, { decay: 3.4, gain: 1.0 }), 0);
-      at(out, bell(note("D2"), 1.2, { ratio: 1.0, index: 1.4, decay: 4.0, gain: 0.5 }), 0);
-      at(out, air(0.18, { cutoff: 1400, decay: 9, gain: 0.1 }), 0);
-      // The small one answers, a tenth above. Not an octave: an octave is the
-      // same note again, and the point is that it is a different, smaller voice.
-      at(out, bell(note("F#4"), 1.3, { ratio: 2.0, index: 3.0, decay: 3.2, gain: 0.72 }), 0.38);
-      at(out, bell(note("D5"), 1.1, { ratio: 3.0, index: 1.6, decay: 3.6, gain: 0.26 }), 0.385);
+      const out = make(2.4);
+      ["D4", "F#4", "A4", "D5"].forEach((n, i) =>
+        at(out, bell(note(n), 0.9, { ratio: 2.0, index: 2.2, decay: 4.6, gain: 0.34 }), i * 0.08),
+      );
+      const L = 0.32;
+      CHORD.forEach((n, i) =>
+        at(out, brass(note(n), 1.9, { gain: 0.3 - i * 0.03, swell: 0.03, decay: 1.9 }), L),
+      );
+      at(out, thud(note("D1"), 1.3, { decay: 3.2, gain: 0.85 }), L);
+      at(out, bell(note("D5"), 1.7, { ratio: 2.0, index: 2.6, decay: 2.4, gain: 0.5 }), L);
+      at(out, bell(note("A5"), 1.5, { ratio: 3.0, index: 1.2, decay: 2.8, gain: 0.18 }), L + 0.01);
       return finish(room(out, { mix: 0.26 }));
     },
   },
   {
-    id: "2-uh-oh",
-    idea: "ICQ's two-note shrug, played on something soft. Short and cheeky.",
+    id: "2-two-voices",
+    idea: "The logo as sound, climbing: the big voice, the small one, then both.",
     build: () => {
-      const out = make(1.1);
-      // Up a fourth, then down — the shape of somebody saying "oh-hey".
-      at(out, bell(note("A4"), 0.42, { ratio: 1.01, index: 1.5, decay: 5.0, gain: 0.85 }), 0);
-      at(out, bell(note("A5"), 0.3, { ratio: 2.0, index: 0.9, decay: 6.0, gain: 0.2 }), 0.005);
-      at(out, bell(note("E5"), 0.75, { ratio: 1.01, index: 1.5, decay: 4.2, gain: 0.9 }), 0.2);
-      at(out, bell(note("E6"), 0.4, { ratio: 2.0, index: 0.8, decay: 6.0, gain: 0.16 }), 0.205);
-      at(out, thud(note("A1"), 0.5, { decay: 6, gain: 0.3 }), 0);
-      return finish(room(out, { mix: 0.16, size: 0.7 }));
+      const out = make(2.4);
+      // Up a fifth, not down a third. The same two characters, the opposite
+      // feeling — and the fifth is the interval nothing on earth uses to
+      // tell you that you got something wrong.
+      at(out, brass(note("D2"), 0.9, { gain: 0.42, swell: 0.04, decay: 3.0, open: 2.6 }), 0);
+      at(out, brass(note("A3"), 0.9, { gain: 0.34, swell: 0.03, decay: 3.0, open: 3.0 }), 0.2);
+      const L = 0.42;
+      CHORD.forEach((n, i) =>
+        at(out, brass(note(n), 1.9, { gain: 0.28 - i * 0.03, swell: 0.03, decay: 1.8 }), L),
+      );
+      at(out, choir(note("D4"), 1.8, { gain: 0.2, swell: 0.1, decay: 2.0 }), L);
+      at(out, thud(note("D1"), 1.4, { decay: 3.0, gain: 0.9 }), L);
+      at(out, bell(note("D5"), 1.6, { ratio: 2.0, index: 2.4, decay: 2.6, gain: 0.42 }), L);
+      return finish(room(out, { mix: 0.28 }));
     },
   },
   {
-    id: "3-power-up",
-    idea: "Supercell's brightness: four notes up a major chord, landing on a shimmer.",
+    id: "3-swell",
+    idea: "A short run-up into one wide open chord. The most cinematic of the five.",
     build: () => {
-      const out = make(1.9);
-      const rise = ["D4", "F#4", "A4", "D5"];
-      rise.forEach((n, i) => {
-        at(
-          out,
-          bell(note(n), 1.0, { ratio: 2.0, index: 2.4, decay: 4.4, gain: 0.42 }),
-          i * 0.075,
-        );
-      });
-      // The landing, held: the chord it was climbing, all at once.
-      at(out, bell(note("D5"), 1.5, { ratio: 2.0, index: 2.8, decay: 2.6, gain: 0.8 }), 0.3);
-      at(out, bell(note("A5"), 1.4, { ratio: 3.0, index: 1.4, decay: 2.8, gain: 0.3 }), 0.305);
-      at(out, bell(note("D6"), 1.2, { ratio: 4.0, index: 1.0, decay: 3.2, gain: 0.16 }), 0.31);
-      at(out, thud(note("D2"), 0.9, { decay: 4.5, gain: 0.55 }), 0.3);
+      const out = make(2.6);
+      const L = 0.5;
+      // The crescendo: air, and a fifth growing underneath it.
+      at(out, air(L + 0.05, { cutoff: 5200, gain: 0.26, rise: true }), 0);
+      at(out, brass(note("D2"), L + 0.1, { gain: 0.22, swell: L * 0.9, decay: 0.2, open: 2.2 }), 0);
+      at(out, brass(note("A2"), L + 0.1, { gain: 0.16, swell: L * 0.9, decay: 0.2, open: 2.2 }), 0);
+      // The arrival, across three octaves.
+      ["D2", "A2", "D3", "F#3", "A3", "D4", "F#4"].forEach((n, i) =>
+        at(out, brass(note(n), 2.0, { gain: 0.26 - i * 0.022, swell: 0.02, decay: 1.7 }), L),
+      );
+      at(out, thud(note("D1"), 1.6, { decay: 2.8, gain: 1.0 }), L);
+      at(out, bell(note("D5"), 1.8, { ratio: 2.0, index: 2.8, decay: 2.2, gain: 0.4 }), L);
+      at(out, air(0.4, { cutoff: 8000, decay: 9, gain: 0.12 }), L);
       return finish(room(out, { mix: 0.3 }));
     },
   },
   {
-    id: "4-the-hit",
-    idea: "EA Sports' confidence: a rush of air into one big chord, and done.",
+    id: "4-choir",
+    idea: "Voices rather than metal: warm, wide, opening out. The least shouty.",
     build: () => {
-      const out = make(1.9);
-      // The run-up.
-      at(out, air(0.34, { cutoff: 5200, gain: 0.3, rise: true }), 0);
-      // The hit: a minor chord, which is the monster half of the brief.
-      const hit = ["D3", "F3", "A3", "D4"];
-      hit.forEach((n, i) =>
-        at(out, bell(note(n), 1.4, { ratio: 1.0, index: 2.0, decay: 3.0, gain: 0.5 - i * 0.07 }), 0.34),
+      const out = make(2.6);
+      at(out, choir(note("A3"), 0.8, { gain: 0.42, swell: 0.14, decay: 2.4 }), 0);
+      at(out, choir(note("D4"), 0.8, { gain: 0.36, swell: 0.1, decay: 2.4 }), 0.22);
+      const L = 0.46;
+      ["D3", "A3", "D4", "F#4", "A4"].forEach((n, i) =>
+        at(out, choir(note(n), 2.0, { gain: 0.34 - i * 0.04, swell: 0.08, decay: 1.6 }), L),
       );
-      at(out, thud(note("D1"), 1.2, { decay: 3.2, gain: 1.0 }), 0.34);
-      at(out, air(0.3, { cutoff: 7000, decay: 10, gain: 0.16 }), 0.34);
-      return finish(room(out, { mix: 0.24 }));
+      at(out, brass(note("D2"), 1.9, { gain: 0.2, swell: 0.06, decay: 1.8, open: 2.4 }), L);
+      at(out, thud(note("D1"), 1.3, { decay: 3.4, gain: 0.62 }), L);
+      at(out, bell(note("D6"), 1.4, { ratio: 2.0, index: 1.6, decay: 3.0, gain: 0.14 }), L + 0.04);
+      return finish(room(out, { mix: 0.34 }));
     },
   },
   {
-    id: "5-big-and-small",
-    idea: "The logo, as sound: a big voice, and a small one answering it.",
+    id: "5-stomp",
+    idea: "Three steps and a landing with the most weight under it. The biggest.",
     build: () => {
-      const out = make(2.1);
-      // The big one: low, slow, a little growl in it.
-      at(out, thud(note("D1"), 1.3, { decay: 3.0, gain: 0.95 }), 0);
-      at(out, bell(note("D2"), 1.1, { ratio: 1.5, index: 2.2, decay: 3.6, gain: 0.45 }), 0.01);
-      // The small one: same note, two octaves up and half the length. The
-      // SAME note on purpose — it is the same family, not a different idea.
-      at(out, bell(note("D4"), 0.75, { ratio: 2.0, index: 2.6, decay: 4.4, gain: 0.6 }), 0.34);
-      // And then both together, which is the bit that makes it an ident.
-      at(out, bell(note("D3"), 1.5, { ratio: 2.0, index: 2.0, decay: 2.8, gain: 0.52 }), 0.62);
-      at(out, bell(note("A4"), 1.4, { ratio: 2.0, index: 2.2, decay: 2.9, gain: 0.4 }), 0.625);
-      at(out, bell(note("D5"), 1.2, { ratio: 3.0, index: 1.2, decay: 3.4, gain: 0.2 }), 0.63);
+      const out = make(2.5);
+      ["A3", "D4", "F#4"].forEach((n, i) =>
+        at(out, brass(note(n), 0.5, { gain: 0.3, swell: 0.015, decay: 5.0, open: 3.0 }), i * 0.1),
+      );
+      const L = 0.34;
+      // Two octaves of root under everything: this is the "bit big".
+      at(out, thud(note("D1"), 1.8, { decay: 2.4, gain: 1.0 }), L);
+      at(out, brass(note("D2"), 2.0, { gain: 0.34, swell: 0.02, decay: 1.5, open: 2.8, sub: 0.5 }), L);
+      ["F#3", "A3", "D4"].forEach((n, i) =>
+        at(out, brass(note(n), 1.9, { gain: 0.26 - i * 0.03, swell: 0.025, decay: 1.7 }), L),
+      );
+      at(out, bell(note("D5"), 1.6, { ratio: 2.0, index: 2.6, decay: 2.4, gain: 0.44 }), L);
+      at(out, bell(note("A5"), 1.4, { ratio: 3.0, index: 1.3, decay: 2.8, gain: 0.16 }), L + 0.01);
+      at(out, air(0.26, { cutoff: 7000, decay: 11, gain: 0.14 }), L);
       return finish(room(out, { mix: 0.28 }));
     },
   },
