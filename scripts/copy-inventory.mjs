@@ -13,6 +13,7 @@
  * installed-app manifest.
  */
 import { readdirSync, readFileSync, writeFileSync, mkdirSync, statSync, existsSync } from "node:fs";
+import { readXlsx } from "./xlsx.mjs";
 import { idFor, slotify } from "./copy-slots.mjs";
 import { writeXlsx } from "./xlsx.mjs";
 import { join, relative } from "node:path";
@@ -482,6 +483,83 @@ console.log(
  * Filled in and handed back, it comes home through `pnpm copy:back`.
  */
 const SHEET = join(ROOT, "docs", "COPY.xlsx");
+
+/*
+ * ═══ AND IT REFUSES TO OVERWRITE UNAPPLIED WORK ═══
+ *
+ * Or, after an evening in the document: *"all the changes I made to the file
+ * are lost! Is there any way to recover them?"*
+ *
+ * They were not lost — every one had already been applied, and an applied
+ * edit becomes the SOURCE text and empties the yellow cell it came from, so
+ * a regenerated sheet looks exactly like one nobody has touched. That is
+ * what the "טופל" column is for.
+ *
+ * But he was right to be frightened, because the hole was real and he had
+ * simply not fallen into it yet. This script OVERWRITES COPY.xlsx from the
+ * source code. Run it while the document holds an edit that has not been
+ * applied — a cell typed five minutes ago, a row he was in the middle of —
+ * and that edit is gone, with no copy anywhere.
+ *
+ * So it looks first. Any yellow cell holding something the game does not
+ * already say is unapplied work, and the generator stops rather than
+ * destroying it. `pnpm copy:back` is the way out, and the message says so.
+ */
+function unappliedEdits() {
+  if (!existsSync(SHEET)) return [];
+  let rows;
+  try {
+    rows = readXlsx(SHEET)["טקסטים"];
+  } catch {
+    // An unreadable workbook is not evidence that it is safe to replace.
+    return [{ row: 0, text: "(the workbook could not be read)" }];
+  }
+  if (!rows?.length) return [];
+  const at = {};
+  rows[0].forEach((h, i) => (at[String(h).trim()] = i));
+  const iHe = at["טקסט חדש עברית"];
+  const iEn = at["טקסט חדש אנגלית"];
+  if (iHe === undefined) return []; // an older sheet; nothing to protect
+  /*
+   * Compared BY ID, not against a bag of every string in the game.
+   *
+   * The first version compared the English cell against copy.en.json alone
+   * and flagged 181 rows that were perfectly in sync — because a card's
+   * English lives in the card's own data, not in that file. "Is this text
+   * anywhere in the game" is the wrong question; "is this the text this row
+   * already has" is the right one.
+   */
+  const byId = new Map(entries.map((e) => [e.id, e]));
+  const iId = at["מזהה"];
+  const out = [];
+  for (let i = 1; i < rows.length; i++) {
+    const id = String(rows[i][iId] ?? "").trim();
+    const entry = byId.get(id);
+    if (!entry) continue; // a row for a string that no longer exists
+    const he = String(rows[i][iHe] ?? "").trim();
+    const en = iEn === undefined ? "" : String(rows[i][iEn] ?? "").trim();
+    if (he && he !== entry.text) out.push({ row: i + 1, text: he });
+    else if (en && en !== (english[id] ?? entry.en ?? "")) out.push({ row: i + 1, text: en });
+  }
+  return out;
+}
+
+const unapplied = unappliedEdits();
+if (unapplied.length && !process.argv.includes("--force")) {
+  console.error(`
+  docs/COPY.xlsx holds ${unapplied.length} edit(s) that are not in the game yet.
+  Regenerating would overwrite them, so nothing was written.
+
+${unapplied
+  .slice(0, 8)
+  .map((u) => `    row ${u.row}  ${u.text.slice(0, 54)}`)
+  .join("\n")}${unapplied.length > 8 ? `\n    … and ${unapplied.length - 8} more` : ""}
+
+  Apply them first:   pnpm copy:back   then   pnpm copy:apply
+  Or throw them away: pnpm copy --force
+`);
+  process.exit(1);
+}
 writeXlsx(SHEET, [
   {
     name: "טקסטים",

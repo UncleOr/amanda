@@ -1,0 +1,71 @@
+{
+  "_comment": [
+    "The Android wrapper, after Play Games made the TWA impossible.",
+    "",
+    "A TWA is a real Chrome tab shown inside an app, and by design there is no",
+    "bridge between its JavaScript and any Android code — which is exactly what",
+    "makes it a browser rather than a WebView, and exactly why the page can",
+    "never call Play Games. See docs/PLAY-GAMES.md.",
+    "",
+    "Everything here that is not about the wrapper is deliberately the SAME as",
+    "android/twa-manifest.json: the package id, the key, the name, the colours.",
+    "The next version has to be an update to the app that is already in closed",
+    "testing, not a new listing — the testers, the clock and the rating all hang",
+    "off that one string.",
+    "",
+    "versionCode 3 because 2 is the TWA already uploaded."
+  ],
+
+  "packageId": "com.asulins.amanda",
+  "appName": "אמנדה",
+  "versionName": "1.1.0",
+  "versionCode": 3,
+
+  "_url": [
+    "The WebView loads the live site, which is what the TWA does today.",
+    "",
+    "Or chose this over bundling the build into the app, and the deciding fact",
+    "is that a code change reaches a phone in a minute instead of waiting for a",
+    "Play release. His own day-to-day change — the words — reaches players",
+    "without a release EITHER way, because the game fetches copy, cards and",
+    "live content from the server at runtime.",
+    "",
+    "Two things were checked before choosing it. The server answers with",
+    "`access-control-allow-origin: *`, so a WebView origin is not refused; and",
+    "the service worker registers normally inside a WebView, so the game still",
+    "opens without a connection after the first run."
+  ],
+  "serverUrl": "https://playamanda.com/play/",
+
+  "_games": [
+    "The number Play Console issues when the game is linked to Play Games",
+    "Services. It goes into AndroidManifest.xml as",
+    "com.google.android.gms.games.APP_ID, and the app CRASHES ON LAUNCH without",
+    "it — not a warning, a crash, which is worth knowing before a tester sees",
+    "it. Leave it empty and the prepare script refuses to build rather than",
+    "producing that app.",
+    "",
+    "Play Console -> Grow users -> Play Games services -> Setup and management",
+    "-> Configuration."
+  ],
+  "playGamesAppId": "",
+
+  "_signing": [
+    "The same upload key as the TWA. A different key would be a different app",
+    "to Google however much the package id matches."
+  ],
+  "keystore": "android/android.keystore",
+  "keyAlias": "amanda",
+
+  "backgroundColor": "#0B0E17",
+  "statusBarColor": "#000000",
+
+  "_plugin": [
+    "Checked on the npm registry rather than assumed. There is no",
+    "@capacitor-community/game-services; this one is real, a month old, and",
+    "peered to @capacitor/core ^8."
+  ],
+  "plugins": {
+    "@modbender/capacitor-play-games": "^0.5.0"
+  }
+}
