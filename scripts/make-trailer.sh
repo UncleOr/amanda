@@ -260,13 +260,20 @@ for L in "${LANGS[@]}"; do
   # Until they land, fall back — but say it every time, because the whole
   # point of an English cut is that an English speaker can read the screen.
   FELLBACK=0
+  # The cut is disposable: cut-gameplay.sh makes it from the recording in
+  # about a minute. So a missing one is rebuilt rather than worked around —
+  # which is what makes it safe to DELETE the cuts when disk is short, and
+  # this branch is here because deleting them is exactly what found that the
+  # English side could not rebuild itself.
   if [ ! -f "$GAMEPLAY" ]; then
-    if [ "$L" = "he" ]; then
-      echo "  gameplay cut missing — building it"
-      bash scripts/cut-gameplay.sh
-    else
+    if bash scripts/cut-gameplay.sh "$L" >/dev/null 2>&1 && [ -f "$GAMEPLAY" ]; then
+      echo "  gameplay cut missing — rebuilt it from the recording"
+    elif [ "$L" != "he" ] && [ -f store/gameplay.mp4 ]; then
       GAMEPLAY=store/gameplay.mp4
       FELLBACK=1
+    else
+      echo "  no gameplay for ${L}, and no recording to cut one from" >&2
+      exit 1
     fi
   fi
   [ -d "$SHOTS_DIR" ] && [ -f "$SHOTS_DIR/03-win.png" ] || { SHOTS_DIR=store/screenshots; FELLBACK=1; }
