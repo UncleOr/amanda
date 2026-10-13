@@ -169,25 +169,79 @@ export function earned(s: Snapshot, m?: MatchOutcome): AchievementId[] {
  */
 export const PLAY_IDS: Partial<Record<AchievementId, string>> = {};
 
-/** What the Android wrapper provides. Absent in a browser, which is the point. */
-interface Bridge {
-  unlock(playId: string): void;
-  increment(playId: string, steps: number): void;
-}
+/**
+ * ═══ THE PLUGIN, LOADED ONLY IF IT IS THERE ═══
+ *
+ * `@modbender/capacitor-play-games` — checked on the npm registry rather
+ * than assumed: v0.5.0, published a month ago, peered to `@capacitor/core`
+ * ^8. It exposes `unlockAchievement` and `incrementAchievement`, which is
+ * exactly the two calls this file needs, and it means the native half is a
+ * maintained plugin rather than a hundred lines of Java that could not be
+ * compiled on this machine.
+ *
+ * It is a 0.x, and that is worth saying out loud. The mitigation is the
+ * shape of this file: everything that decides anything is above, in a pure
+ * function with tests, and the plugin is reached through one `await import`
+ * that is allowed to fail. If it breaks or is dropped, what is lost is the
+ * reporting, not the game.
+ *
+ * Imported dynamically, never statically, so that the web build does not
+ * carry a native plugin it can never call — and so a browser, where there
+ * is no plugin at all, takes the quiet path instead of throwing on load.
+ */
+type Games = {
+  unlockAchievement(o: { id: string }): Promise<unknown>;
+  incrementAchievement(o: { id: string; steps?: number; amount?: number }): Promise<unknown>;
+};
 
-function bridge(): Bridge | null {
-  const w = window as unknown as { AmandaGames?: Bridge };
-  return w.AmandaGames ?? null;
-}
+let games: Games | null | undefined;
 
-/** Report everything true right now. Silent and free when there is no bridge. */
-export function report(s: Snapshot, m?: MatchOutcome): void {
-  const b = bridge();
-  if (!b) return;
-  for (const id of earned(s, m)) {
-    const playId = PLAY_IDS[id];
-    if (playId) b.unlock(playId);
+async function plugin(): Promise<Games | null> {
+  if (games !== undefined) return games;
+  try {
+    /*
+     * The specifier is a variable on purpose.
+     *
+     * The package is not installed yet — it arrives with the Android
+     * wrapper, and until then a static import would fail `tsc` and a
+     * bundler would try to resolve something that is not there. Written
+     * this way the web build is unaffected and this file is already
+     * complete, so installing the package is the only step left.
+     */
+    const specifier = "@modbender/capacitor-play-games";
+    const mod = (await import(/* @vite-ignore */ specifier)) as {
+      PlayGames?: Games;
+    };
+    games = mod.PlayGames ?? null;
+  } catch {
+    // A browser, or a build without the plugin. Both are normal.
+    games = null;
   }
+  return games;
+}
+
+/**
+ * Report everything true right now. Silent and free where there is no
+ * plugin, which is every browser the game runs in today.
+ *
+ * Nothing awaits this and nothing reads its result: an achievement that
+ * fails to register is a disappointment, and an achievement that blocks the
+ * result screen is a bug.
+ */
+export function report(s: Snapshot, m?: MatchOutcome): void {
+  void (async () => {
+    const g = await plugin();
+    if (!g) return;
+    for (const id of earned(s, m)) {
+      const playId = PLAY_IDS[id];
+      if (!playId) continue;
+      try {
+        await g.unlockAchievement({ id: playId });
+      } catch {
+        /* one failing unlock must not stop the rest */
+      }
+    }
+  })();
 }
 
 /**
@@ -203,7 +257,15 @@ export function report(s: Snapshot, m?: MatchOutcome): void {
  * Games all three would have needed a new column.
  */
 export function step(id: AchievementId, by = 1): void {
-  const b = bridge();
   const playId = PLAY_IDS[id];
-  if (b && playId) b.increment(playId, by);
+  if (!playId) return;
+  void (async () => {
+    const g = await plugin();
+    if (!g) return;
+    try {
+      await g.incrementAchievement({ id: playId, steps: by });
+    } catch {
+      /* best effort, like report */
+    }
+  })();
 }
