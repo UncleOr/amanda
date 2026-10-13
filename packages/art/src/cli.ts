@@ -14,13 +14,20 @@
  * the approved images into the client.
  */
 import { existsSync } from "node:fs";
+import { mkdir } from "node:fs/promises";
 import { join } from "node:path";
+import sharp from "sharp";
 import { CARDS, REPO_ROOT, SERIES, launchCards } from "./catalog.js";
 import { buildActionPrompt, buildAnchoredPrompt, buildPrompt } from "./prompt.js";
 import { STYLE_DIRECTIONS, TEST_MONSTERS } from "./styles.js";
 import { ARENA_LOOKS, buildArenaPrompt } from "./arenaLooks.js";
 import { BRAND_ASPECT, BRAND_LOOK, buildBrandPrompt } from "./brandLooks.js";
 import { ICON_LOOK, buildIconPrompt } from "./iconLooks.js";
+import {
+  ACHIEVEMENT_CROPS,
+  ACHIEVEMENT_LOOK,
+  buildAchievementPrompt,
+} from "./achievementLooks.js";
 import { EMOJI_LOOK, buildEmojiPrompt, emojiReference } from "./emojiLooks.js";
 import { generateSounds, processSounds } from "./sounds.js";
 import {
@@ -282,6 +289,81 @@ Generating ${ids.length} emoji (style: ${dir.id})
   console.log("\nDone -> assets/raw/emoji/  (run `pnpm art:process` to cut and compress)\n");
 }
 
+/**
+ * The eighteen achievement icons for Play Games.
+ *
+ *   pnpm art:achievements [style] [id]
+ *   → store/achievements/<id>.png, 512x512
+ *
+ * Six are CROPPED from artwork the game already has — the four arena
+ * paintings, Amanda's portrait and Chuppy's card — and twelve are drawn. See
+ * achievementLooks.ts for why that split, and for the constraint that shaped
+ * every brief: Play greys a locked icon out, and most players meet most of
+ * these locked.
+ */
+async function cmdAchievements(styleId?: string, only?: string): Promise<void> {
+  const dir = dirById(styleId ?? "");
+  const out = join(REPO_ROOT, "store", "achievements");
+  await mkdir(out, { recursive: true });
+
+  const crops = Object.entries(ACHIEVEMENT_CROPS).filter(([id]) => !only || id === only);
+  const drawn = Object.keys(ACHIEVEMENT_LOOK).filter((id) => !only || id === only);
+  console.log(`\n${crops.length} cropped, ${drawn.length} drawn (style: ${dir.id})\n`);
+
+  for (const [id, spec] of crops) {
+    const dest = join(out, `${id}.png`);
+    if (existsSync(dest)) {
+      console.log(`   skip  ${id} (exists)`);
+      continue;
+    }
+    const src = join(RAW, spec.from);
+    if (!existsSync(src)) {
+      console.log(`   MISS  ${id} — no ${spec.from}`);
+      continue;
+    }
+    const meta = await sharp(src).metadata();
+    const w = meta.width ?? 0;
+    const h = meta.height ?? 0;
+    // The crop is given in fractions of the SHORT side, so the same numbers
+    // mean the same thing whatever shape the painting happens to be.
+    const side = Math.round(Math.min(w, h) * spec.crop.size);
+    await sharp(src)
+      .extract({
+        left: Math.max(0, Math.min(w - side, Math.round(w * spec.crop.x))),
+        top: Math.max(0, Math.min(h - side, Math.round(h * spec.crop.y))),
+        width: side,
+        height: side,
+      })
+      .resize(512, 512, { fit: "cover" })
+      .flatten({ background: "#070a12" })
+      .png()
+      .toFile(dest);
+    console.log(`   crop  ${id.padEnd(16)} from ${spec.from}`);
+  }
+
+  for (const id of drawn) {
+    const dest = join(out, `${id}.png`);
+    if (existsSync(dest)) {
+      console.log(`   skip  ${id} (exists)`);
+      continue;
+    }
+    process.stdout.write(`   draw  ${id.padEnd(16)} ... `);
+    try {
+      const [img] = await generate(buildAchievementPrompt(id, dir.style), { aspectRatio: "1:1" });
+      if (!img) throw new Error("no image returned");
+      const raw = join(RAW, "achievements", `${id}.png`);
+      await mkdir(join(RAW, "achievements"), { recursive: true });
+      await download(img.url, raw);
+      // Play wants exactly 512 and no alpha channel.
+      await sharp(raw).resize(512, 512, { fit: "cover" }).flatten({ background: "#070a12" }).png().toFile(dest);
+      console.log("OK");
+    } catch (err) {
+      console.log(`FAIL ${(err as Error).message}`);
+    }
+  }
+  console.log(`\nDone -> store/achievements/\n`);
+}
+
 async function cmdIconSet(styleId?: string, only?: string): Promise<void> {
   const dir = dirById(styleId ?? "");
   const ids = Object.keys(ICON_LOOK).filter((id) => !only || id === only);
@@ -374,6 +456,8 @@ const run = async () => {
       return cmdBrand(args[0]);
     case "icons-set":
       return cmdIconSet(args[0], args[1]);
+    case "achievements":
+      return cmdAchievements(args[0], args[1]);
     case "emoji":
       return cmdEmoji(args[0], args[1]);
     case "card":
@@ -388,7 +472,7 @@ const run = async () => {
       return processSounds();
     default:
       console.log(
-        "Usage: style | anchor <style> | cards <style> [series|all] | card <cardId> <style> [notes…] | actions <style> | arena <style> | brand <style> | icons-set <style> [id] | emoji <style> [id] | sounds [ids…] | sounds-process",
+        "Usage: style | anchor <style> | cards <style> [series|all] | card <cardId> <style> [notes…] | actions <style> | arena <style> | brand <style> | icons-set <style> [id] | achievements <style> [id] | emoji <style> [id] | sounds [ids…] | sounds-process",
       );
   }
 };
