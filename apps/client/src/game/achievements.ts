@@ -39,6 +39,8 @@ export interface Snapshot {
   seriesSizes: Map<string, number>;
   /** Series id of each owned card, to count a complete family. */
   seriesOf: (cardId: string) => string | undefined;
+  /** Rarity of each owned card, for the one achievement that is about rarity. */
+  rarityOf: (cardId: string) => string | undefined;
 }
 
 /** What a finished match adds, when there was one. */
@@ -89,9 +91,35 @@ const ARENA_ACHIEVEMENT: Record<string, AchievementId> = {
   fuel: "arena_fuel",
 };
 
-/** The card that is its own achievement, and the family that is nearly empty. */
+/** The card that is its own achievement. */
 const CHUPPY = "furries_01_chuppy";
-const LEGENDS = "legends";
+
+/**
+ * ═══ WHAT "A LEGENDARY MONSTER" MEANS, AND WHY IT IS NOT THE LEGENDARY RARITY ═══
+ *
+ * It was. The achievement asked for a card of the `legends` series, and that
+ * series holds exactly one card: Amanda. Once she was correctly taken out of
+ * the chest pool (collectable.ts) nobody could ever earn it — and Google's
+ * quality checklist makes that a hard failure, item 2.5, marked REQUIRED:
+ * *"Ensure that all achievements are attainable. Players must be able to
+ * unlock all achievements you create."*
+ *
+ * I offered HIDDEN as a home for it, which was wrong and worth writing down:
+ * hidden is for avoiding spoilers (2.9, and 2.16 says to minimize even that).
+ * A hidden achievement that cannot be earned is still one that cannot be
+ * earned.
+ *
+ * Measured while looking for somewhere else to point it: 25 common cards, 21
+ * rare, 5 epic, and exactly one legendary. So there was no second legendary
+ * to name, and Or chose the epics — the big card at the end of each of the
+ * five full series — and named it *"מפלצת אגדית"*, a legendary monster.
+ *
+ * The NAME says legendary and the VALUE says epic, and that is deliberate
+ * rather than a slip: "epic" is the rarity tier a chest deals in, "legendary"
+ * is what a child calls the Sky King when it finally turns up. Or writes the
+ * copy; this is the rarity it rests on.
+ */
+const LEGENDARY_MONSTER_RARITY = "epic";
 
 /**
  * Everything earned by the state in this snapshot.
@@ -141,7 +169,9 @@ export function earned(s: Snapshot, m?: MatchOutcome): AchievementId[] {
 
   if (s.album.has(CHUPPY)) out.push("chuppy");
   for (const cardId of s.album) {
-    if (s.seriesOf(cardId) === LEGENDS) {
+    if (s.rarityOf(cardId) === LEGENDARY_MONSTER_RARITY) {
+      // The id stays `legend`, because it is also the icon's filename and
+      // the crown on a card still draws exactly what this rewards.
       out.push("legend");
       break;
     }

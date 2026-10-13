@@ -26,7 +26,41 @@ concurrency:
   cancel-in-progress: false
 
 jobs:
+  # ═══ NOTHING REACHES THE SITE THAT DOES NOT TYPECHECK AND PASS ═══
+  #
+  # This was missing, and it was missing in a way that is easy to miss: the
+  # build step below is `vite build`, and Vite does NOT typecheck. It strips
+  # the types and bundles. So a type error — or a failing test — went
+  # straight to playamanda.com, green tick and all.
+  #
+  # Found the way these things are found. I had been running
+  # `pnpm -s typecheck` and reading "no output" as "clean"; `-s` silences
+  # the child process, so a real tsc error printed nothing and the pipe
+  # returned 0. I was checking nothing, confidently, for a whole afternoon.
+  # The fix for my habit is to stop passing -s. The fix for the REPO is that
+  # it should never have depended on my habit.
+  #
+  # Seconds of runner time, and it stands between a mistake and twelve
+  # testers.
+  check:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: pnpm/action-setup@v4
+        with:
+          version: 9
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: pnpm
+      - run: pnpm install
+      - run: pnpm typecheck
+      - run: pnpm --filter @amanda/engine test -- --run
+      - run: pnpm --filter @amanda/server test -- --run
+      - run: pnpm --filter @amanda/client test -- --run
+
   build:
+    needs: check
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4

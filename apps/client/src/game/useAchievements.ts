@@ -51,6 +51,7 @@ function snapshotOf(a: Account | null): Snapshot {
     album: new Set(a ? a.album.keys() : []),
     seriesSizes: collectableBySeries(),
     seriesOf: (cardId) => CATALOG.get(cardId)?.seriesId,
+    rarityOf: (cardId) => CATALOG.get(cardId)?.rarity,
   };
 }
 

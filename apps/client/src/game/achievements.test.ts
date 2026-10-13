@@ -17,6 +17,11 @@ import {
  * decided in JavaScript is decided in `earned`, and these pin it.
  */
 
+/*
+ * The families, at the sizes the real game has them — and legends at ZERO,
+ * which is the point of it. Amanda is its only card and she is not a prize
+ * (collectable.ts), so the shelf gives nothing and the album is 51.
+ */
 const SERIES_SIZES = new Map([
   ["dragons", 10],
   ["giants", 10],
@@ -24,10 +29,17 @@ const SERIES_SIZES = new Map([
   ["plants", 10],
   ["slimes", 10],
   ["furries", 1],
-  ["legends", 1],
+  ["legends", 0],
 ]);
 
 const seriesOf = (cardId: string) => cardId.split("_")[0];
+
+/**
+ * A fixture card's rarity, following the real data's shape: the TENTH card
+ * of each full series is its epic — dragons_10_sky_king and the other four.
+ * Everything else is common, because the rule only asks about one value.
+ */
+const rarityOf = (cardId: string) => (cardId.split("_")[1] === "10" ? "epic" : "common");
 
 const base = (over: Partial<Snapshot> = {}): Snapshot => ({
   tutorialDone: false,
@@ -35,6 +47,7 @@ const base = (over: Partial<Snapshot> = {}): Snapshot => ({
   album: new Set(),
   seriesSizes: SERIES_SIZES,
   seriesOf,
+  rarityOf,
   ...over,
 });
 
@@ -53,6 +66,16 @@ const match = (over: Partial<MatchOutcome> = {}): MatchOutcome => ({
  * explicitly — he is his own achievement. A fixture that invented an id for
  * him tested nothing about the rule that mentions him.
  */
+/** Everything there is to own — the five tens plus Chuppy. Fifty-one. */
+const WHOLE_ALBUM = () => [
+  ...family("dragons", 10),
+  ...family("giants", 10),
+  ...family("insects", 10),
+  ...family("plants", 10),
+  ...family("slimes", 10),
+  ...family("furries", 1),
+];
+
 const family = (series: string, n: number) =>
   series === "furries"
     ? ["furries_01_chuppy"].slice(0, n)
@@ -104,15 +127,8 @@ describe("the album", () => {
   });
 
   it("gives the whole album only when nothing is missing", () => {
-    const all = [
-      ...family("dragons", 10),
-      ...family("giants", 10),
-      ...family("insects", 10),
-      ...family("plants", 10),
-      ...family("slimes", 10),
-      ...family("furries", 1),
-      ...family("legends", 1),
-    ];
+    const all = WHOLE_ALBUM();
+    expect(all).toHaveLength(51);
     expect(earned(base({ album: new Set(all) }))).toContain("album_full");
     const missingOne = new Set(all.slice(0, -1));
     expect(earned(base({ album: missingOne }))).not.toContain("album_full");
@@ -130,18 +146,57 @@ describe("a whole family", () => {
 
   it("is NOT a family of one", () => {
     /*
-     * Two of the seven families are a single card today. Owning Chuppy
-     * completes the Furries, technically — and calling that "a whole family"
-     * would hand out the achievement to anyone who happens to be given the
-     * starter card, which is everybody.
-     *
-     * Those two cards have achievements of their own instead.
+     * The Furries are a single card today. Owning Chuppy completes them,
+     * technically — and calling that "a whole family" would hand the
+     * achievement to anyone given the starter card, which is everybody. He
+     * has an achievement of his own instead.
      */
-    const only = new Set([...family("furries", 1), ...family("legends", 1)]);
-    const got = earned(base({ album: only }));
+    const got = earned(base({ album: new Set(family("furries", 1)) }));
     expect(got).not.toContain("family");
     expect(got).toContain("chuppy");
-    expect(got).toContain("legend");
+  });
+
+  it("is not the empty legends shelf either", () => {
+    // A family of NONE must not count as complete: "you have all zero of
+    // them" is true and is not an achievement.
+    expect(earned(base({ album: new Set() }))).not.toContain("family");
+  });
+});
+
+describe("a legendary monster", () => {
+  /*
+   * Or, after Google's rule ruled out the old version: *"do the epics, call
+   * it מפלצת אגדית."* The id stays `legend` because it is also the icon's
+   * filename, and the crown on a card still draws what this rewards.
+   */
+  it("is one of the five big cards at the end of a series", () => {
+    expect(earned(base({ album: new Set(["dragons_10_x"]) }))).toContain("legend");
+  });
+
+  it("is not an ordinary card, however many of them you have", () => {
+    expect(earned(base({ album: new Set(family("dragons", 9)) }))).not.toContain("legend");
+  });
+
+  it("is not Chuppy, who has his own", () => {
+    const got = earned(base({ album: new Set(family("furries", 1)) }));
+    expect(got).toContain("chuppy");
+    expect(got).not.toContain("legend");
+  });
+
+  it("is earned once, not once per epic", () => {
+    const five = ["dragons_10_x", "giants_10_x", "insects_10_x", "plants_10_x", "slimes_10_x"];
+    const got = earned(base({ album: new Set(five) }));
+    expect(got.filter((id) => id === "legend")).toHaveLength(1);
+  });
+
+  /*
+   * The whole reason this moved. Amanda is the only card of the legendary
+   * RARITY and she cannot be won, so an album holding every winnable card
+   * still has to earn this — otherwise it is unattainable, which Google's
+   * checklist item 2.5 forbids outright.
+   */
+  it("is reachable by somebody who owns everything that can be owned", () => {
+    expect(earned(base({ album: new Set(WHOLE_ALBUM()) }))).toContain("legend");
   });
 });
 
@@ -176,15 +231,7 @@ describe("the list itself", () => {
       base({
         tutorialDone: true,
         trophies: 9999,
-        album: new Set([
-          ...family("dragons", 10),
-          ...family("giants", 10),
-          ...family("insects", 10),
-          ...family("plants", 10),
-          ...family("slimes", 10),
-          ...family("furries", 1),
-          ...family("legends", 1),
-        ]),
+        album: new Set(WHOLE_ALBUM()),
       }),
       match({ won: true, synergy: true, kingUntouched: true, againstFriend: true }),
     );
@@ -201,15 +248,7 @@ describe("the list itself", () => {
       base({
         tutorialDone: true,
         trophies: 9999,
-        album: new Set([
-          ...family("dragons", 10),
-          ...family("giants", 10),
-          ...family("insects", 10),
-          ...family("plants", 10),
-          ...family("slimes", 10),
-          ...family("furries", 1),
-          ...family("legends", 1),
-        ]),
+        album: new Set(WHOLE_ALBUM()),
       }),
       match({ won: true, synergy: true, kingUntouched: true, againstFriend: true }),
     );
