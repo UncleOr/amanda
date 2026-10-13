@@ -48,7 +48,7 @@
     "Play Console -> Grow users -> Play Games services -> Setup and management",
     "-> Configuration."
   ],
-  "playGamesAppId": "",
+  "playGamesAppId": "717344155977",
 
   "_signing": [
     "The same upload key as the TWA. A different key would be a different app",
