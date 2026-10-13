@@ -20,17 +20,21 @@
  * it changed, whatever caused it.
  */
 import { useEffect, useRef } from "react";
-import { CATALOG, SERIES } from "../data/catalog";
+import { CATALOG, collectableBySeries } from "../data/catalog";
 import { outcomeOf, report, step, type Snapshot } from "./achievements";
 import type { Account } from "./account";
 import type { MatchApi } from "./useMatch";
 
-/**
- * How many cards each family holds — the same count the album screen prints
- * under each series, from the same data, so "a whole family" means on
- * Google's side exactly what the 7/10 on screen means.
+/*
+ * How many cards each family can give you — the same count the album screen
+ * prints under each series, from the same function, so "a whole family"
+ * means on Google's side exactly what the 7/10 on screen means.
+ *
+ * It excludes the two cards that are not prizes, which is what makes "the
+ * whole album" a number anybody can reach: it was 52 and Amanda was one of
+ * them. Read fresh each time, because the admin panel can add a card while
+ * the game is running.
  */
-const SERIES_SIZES = new Map(SERIES.map((s) => [s.id, s.cards.length]));
 
 /**
  * The account as the decider wants it.
@@ -45,7 +49,7 @@ function snapshotOf(a: Account | null): Snapshot {
     tutorialDone: a?.tutorialDone ?? false,
     trophies: a?.trophies ?? 0,
     album: new Set(a ? a.album.keys() : []),
-    seriesSizes: SERIES_SIZES,
+    seriesSizes: collectableBySeries(),
     seriesOf: (cardId) => CATALOG.get(cardId)?.seriesId,
   };
 }

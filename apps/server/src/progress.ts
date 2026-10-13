@@ -15,7 +15,13 @@
  * database must never stop a game.
  */
 import type { SupabaseClient } from "@supabase/supabase-js";
-import { CATCHPHRASES, EMOJI_PACKS, TUNED, type Card } from "@amanda/shared";
+import {
+  CATCHPHRASES,
+  EMOJI_PACKS,
+  TUNED,
+  collectableCards as pickCollectable,
+  type Card,
+} from "@amanda/shared";
 import { CATALOG } from "./content.js";
 import { refreshAlbumPowerSoon } from "./albumPower.js";
 /*
@@ -99,9 +105,16 @@ function treasureFor(spec: ChestKind, owned?: ReadonlySet<string>): string | nul
   return left.length ? left[Math.floor(Math.random() * left.length)]! : null;
 }
 
-/** Only real, collectable monsters — the filler that pads a board is not a prize. */
+/**
+ * Only real, collectable monsters.
+ *
+ * The rule moved to @amanda/shared, because this was one of three places
+ * that each had their own version of it — and between them Amanda's card,
+ * which is the opponent and not a prize, was being handed out in chests.
+ * See collectable.ts.
+ */
 function collectableCards(): Card[] {
-  return [...CATALOG.values()].filter((c) => c.id !== "crumb_demon" && Boolean(c.seriesId));
+  return pickCollectable(CATALOG.values());
 }
 
 /**

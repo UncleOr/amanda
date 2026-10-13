@@ -21,6 +21,9 @@ export * from "./config.js";
 // Amanda mode
 export * from "./amandaBoard.js";
 
+// Which cards can be WON — asked by the chest pool, the album and the achievements
+export * from "./collectable.js";
+
 // The ladder of arenas, and which one a trophy count puts you in.
 export * from "./arenas.js";
 

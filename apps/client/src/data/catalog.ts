@@ -4,6 +4,8 @@ import {
   parseSeries,
   type ActionCard,
   type Card,
+  collectableCards as pickCollectable,
+  isCollectable,
   type Series,
 } from "@amanda/shared";
 import actionsJson from "../../../../data/action-cards.json";
@@ -68,6 +70,30 @@ export function synergyGroups(
 /** Every playable monster card, keyed by id. */
 export const CATALOG: Map<string, Card> = new Map();
 for (const s of SERIES) for (const c of s.cards) CATALOG.set(c.id, c);
+
+/**
+ * The cards an album can actually hold — everything except the filler and
+ * the opponent. This is what "the whole album" counts, on the album screen
+ * and in the achievements alike; the rule itself is in @amanda/shared so
+ * that the server's chest pool is asking the same question.
+ */
+export function collectable(): Card[] {
+  return pickCollectable(CATALOG.values());
+}
+
+/**
+ * How many cards each family can give you.
+ *
+ * A function and not a constant computed once: the admin panel adds and
+ * removes cards at runtime (cardOverrides.ts writes straight into SERIES and
+ * CATALOG), so a total worked out at module load is a total from before the
+ * last change Or made.
+ */
+export function collectableBySeries(): Map<string, number> {
+  const out = new Map<string, number>();
+  for (const s of SERIES) out.set(s.id, s.cards.filter(isCollectable).length);
+  return out;
+}
 
 /**
  * The weak filler placed on empty slots when the build timer ends

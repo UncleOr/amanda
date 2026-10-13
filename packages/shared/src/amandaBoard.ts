@@ -10,7 +10,14 @@
 import { BOARD, KING } from "./config.js";
 import type { Card } from "./schemas/card.js";
 
-/** Her card. Never in a pack, never in an album — data/series/18-legends.json. */
+/**
+ * Her card. Never in a pack, never in an album — data/series/18-legends.json.
+ *
+ * That sentence was a description of intent for a long time and nothing
+ * enforced it: the chest pool handed her out. It is a RULE now, in
+ * collectable.ts, which is also where it gets undone on the day Or decides
+ * how you win her.
+ */
 export const AMANDA_CARD = "legends_01_amanda";
 
 /** Two 4×4 boards stacked: four lanes each, eight in all. */

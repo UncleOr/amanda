@@ -14,7 +14,7 @@
  * with gaps is the point — the empty slots are the reason to play another
  * match, and hiding them would hide the whole game.
  */
-import { CATALOG, SERIES } from "../data/catalog";
+import { CATALOG, SERIES, collectable } from "../data/catalog";
 import { CardView, CardBack } from "./CardView";
 import { Icon } from "./Icon";
 import { useEffect, useState } from "react";
@@ -59,12 +59,18 @@ export function Album({ account, onClose, onCardInfo, onChanged }: Props) {
   }
 
   const album = account?.album;
-  // Only cards that belong to a series are collectable, and only those are
-  // shown below. The Crumb Demon fills empty cells and is in the catalog but
-  // in no series — counting it made the header disagree with the grid.
-  const collectable = [...CATALOG.values()].filter((c) => SERIES.some((s) => s.id === c.seriesId));
-  const total = collectable.length;
-  const owned = collectable.filter((c) => album?.has(c.id)).length;
+  /*
+   * Only cards that can be WON are counted or shown — the rule is in
+   * @amanda/shared so the chest pool is answering the same question.
+   *
+   * Two cards are out. The Crumb Demon fills empty cells and is in no real
+   * series; counting it made the header disagree with the grid. And Amanda,
+   * who is the opponent: she was in the total, so the number this screen
+   * exists to answer could never reach its own maximum.
+   */
+  const collection = collectable();
+  const total = collection.length;
+  const owned = collection.filter((c) => album?.has(c.id)).length;
 
   return (
     <div className="album">
@@ -176,7 +182,13 @@ export function Album({ account, onClose, onCardInfo, onChanged }: Props) {
         )}
 
         {SERIES.map((series) => {
-          const cards = [...CATALOG.values()].filter((c) => c.seriesId === series.id);
+          /*
+           * A family with nothing to win in it is not shown at all. That is
+           * the legends shelf today: Amanda is its only card and she is not
+           * a prize, so an empty row headed 0/0 would be a promise with
+           * nothing behind it. It comes back by itself the day she does.
+           */
+          const cards = collection.filter((c) => c.seriesId === series.id);
           if (!cards.length) return null;
           const have = cards.filter((c) => album?.has(c.id)).length;
           return (
