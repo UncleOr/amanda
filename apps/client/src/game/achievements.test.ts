@@ -1,5 +1,12 @@
 import { describe, expect, it } from "vitest";
-import { earned, ACHIEVEMENTS, type Snapshot, type MatchOutcome } from "./achievements";
+import {
+  earned,
+  kingWasUntouched,
+  outcomeOf,
+  ACHIEVEMENTS,
+  type Snapshot,
+  type MatchOutcome,
+} from "./achievements";
 
 /*
  * The eighteen Or approved, and whether they are earned.
@@ -207,5 +214,126 @@ describe("the list itself", () => {
       match({ won: true, synergy: true, kingUntouched: true, againstFriend: true }),
     );
     expect(new Set(everything).size).toBe(15);
+  });
+});
+
+/*
+ * ═══ READING A FINISHED BATTLE ═══
+ *
+ * These build a BattleResult by hand rather than running one.
+ *
+ * The temptation was to set a King down, let `runBattle` fight, and assert on
+ * what came out — and that test would have been worth very little: it would
+ * pass or fail on the balance of two cards, which changes every time Or tunes
+ * a number, and it would never once put a healed King in front of the thing
+ * that has to know the difference. `outcomeOf` reads four fields. These are
+ * those four fields, including the shapes a real battle makes rarely.
+ */
+
+/** A unit, cut down to what `outcomeOf` actually looks at. */
+const unit = (over: Record<string, unknown>) =>
+  ({
+    uid: "u1",
+    cardId: "dragons_01_x",
+    owner: "A",
+    isKing: false,
+    hp: 10,
+    maxHp: 10,
+    flags: {},
+    ...over,
+  }) as never;
+
+const battle = (over: Record<string, unknown> = {}) =>
+  ({
+    winner: "A",
+    ticks: 100,
+    winReason: "kingDown",
+    tiebreak: null,
+    events: [],
+    finalUnits: [],
+    frames: [],
+    lanes: 4,
+    ...over,
+  }) as never;
+
+describe("who won", () => {
+  it("is you when the winner is your side, whichever side that is", () => {
+    expect(outcomeOf(battle({ winner: "B" }), "B", false).won).toBe(true);
+    expect(outcomeOf(battle({ winner: "B" }), "A", false).won).toBe(false);
+  });
+
+  it("is nobody on a draw", () => {
+    expect(outcomeOf(battle({ winner: null }), "A", false).won).toBe(false);
+  });
+});
+
+describe("a lit trio", () => {
+  it("counts when one of YOUR units carried the flag", () => {
+    const r = battle({ finalUnits: [unit({ flags: { synergy: true } })] });
+    expect(outcomeOf(r, "A", false).synergy).toBe(true);
+  });
+
+  it("does not count when it was the OPPONENT's trio", () => {
+    const r = battle({ finalUnits: [unit({ owner: "B", flags: { synergy: true } })] });
+    expect(outcomeOf(r, "A", false).synergy).toBe(false);
+  });
+
+  it("does not count a board with no group lit", () => {
+    expect(outcomeOf(battle({ finalUnits: [unit({})] }), "A", false).synergy).toBe(false);
+  });
+});
+
+describe("the untouched King", () => {
+  const king = unit({ uid: "k", isKing: true });
+  const hit = (over: Record<string, unknown> = {}) => ({
+    tick: 5,
+    type: "hit",
+    targetUid: "k",
+    damage: 7,
+    ...over,
+  });
+
+  it("is untouched when nothing ever hit him", () => {
+    const r = battle({ finalUnits: [king], events: [{ tick: 1, type: "attack", uid: "u1" }] });
+    expect(kingWasUntouched(r, "A")).toBe(true);
+  });
+
+  it("is not untouched when he took damage", () => {
+    expect(kingWasUntouched(battle({ finalUnits: [king], events: [hit()] }), "A")).toBe(false);
+  });
+
+  /*
+   * The reason this reads events and not the health bar. `healAura` is in the
+   * game and several cards carry it, so a King can finish on full health
+   * having been beaten most of the way down — and `hp === maxHp` would call
+   * that untouched.
+   */
+  it("is not untouched when he was hurt and then healed back to full", () => {
+    const r = battle({ finalUnits: [unit({ uid: "k", isKing: true, hp: 10, maxHp: 10 })], events: [hit()] });
+    expect(kingWasUntouched(r, "A")).toBe(false);
+  });
+
+  it("ignores a hit that did no damage", () => {
+    const r = battle({ finalUnits: [king], events: [hit({ damage: 0 })] });
+    expect(kingWasUntouched(r, "A")).toBe(true);
+  });
+
+  it("ignores hits on somebody else, and on the other King", () => {
+    const r = battle({
+      finalUnits: [king, unit({ uid: "ek", owner: "B", isKing: true })],
+      events: [hit({ targetUid: "u1" }), hit({ targetUid: "ek" })],
+    });
+    expect(kingWasUntouched(r, "A")).toBe(true);
+  });
+
+  it("is false when you had no King at all", () => {
+    expect(kingWasUntouched(battle({ finalUnits: [unit({})] }), "A")).toBe(false);
+  });
+});
+
+describe("against a friend", () => {
+  it("is carried through untouched — the match knows, this does not", () => {
+    expect(outcomeOf(battle(), "A", true).againstFriend).toBe(true);
+    expect(outcomeOf(battle(), "A", false).againstFriend).toBe(false);
   });
 });

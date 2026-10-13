@@ -26,6 +26,7 @@
  * no-op rather than a wrong unlock.
  */
 import { ARENAS } from "@amanda/shared";
+import type { BattleResult, Owner } from "@amanda/engine";
 
 /** Everything the decision needs, and nothing else. */
 export interface Snapshot {
@@ -157,6 +158,66 @@ export function earned(s: Snapshot, m?: MatchOutcome): AchievementId[] {
   return out;
 }
 
+/* ───────────── reading a finished battle ───────────── */
+
+/**
+ * What the match that just ended was worth, read from the battle itself.
+ *
+ * ═══ WHY FROM THE RESULT AND NOT FROM THE SCREEN ═══
+ *
+ * Both of the things this decides are visible on the board while you play —
+ * the lit trio glows, and the King's health bar is right there — and reading
+ * them from App's state would have been shorter. It would also have been
+ * wrong by the time it ran: this is called when the result ARRIVES, and by
+ * then `m.placements` is whatever survived the round being cleared.
+ *
+ * `BattleResult` is the one thing that cannot have moved on. It is what the
+ * server and the client both ran, it is already in hand, and it carries the
+ * answer to both questions.
+ */
+export function outcomeOf(
+  result: BattleResult,
+  side: Owner,
+  againstFriend: boolean,
+): MatchOutcome {
+  const mine = result.finalUnits.filter((u) => u.owner === side);
+  return {
+    won: result.winner === side,
+    /*
+     * The engine marks every unit that was in a touching group of its family
+     * when the board locked (`setup.ts` sets `flags.synergy`, and that is the
+     * same flag the +20% rides on). So the achievement asks the battle what
+     * was lit rather than recomputing the rule a third time.
+     */
+    synergy: mine.some((u) => u.flags.synergy === true),
+    kingUntouched: kingWasUntouched(result, side),
+    againstFriend,
+  };
+}
+
+/**
+ * Did your King come through without being hit even once?
+ *
+ * ═══ EVENTS, NOT THE HEALTH BAR ═══
+ *
+ * `king.hp === king.maxHp` is the obvious test and it is a lie: `healAura`
+ * is in the game (abilities.ts), several cards carry it, and a King that was
+ * beaten down and then healed back up finishes on full health having very
+ * much been touched. Or's own words for this one were *"a win without the
+ * King taking damage"* — damage, not health.
+ *
+ * So it reads the damage events. A hit that did nothing — a zero after
+ * mitigation — is not damage and does not count against it.
+ */
+export function kingWasUntouched(result: BattleResult, side: Owner): boolean {
+  const king = result.finalUnits.find((u) => u.isKing && u.owner === side);
+  // No King on the board at all is not an untouched King.
+  if (!king) return false;
+  return !result.events.some(
+    (e) => e.type === "hit" && e.targetUid === king.uid && (e.damage ?? 0) > 0,
+  );
+}
+
 /* ───────────── telling Google ───────────── */
 
 /**
@@ -232,7 +293,22 @@ export function report(s: Snapshot, m?: MatchOutcome): void {
   void (async () => {
     const g = await plugin();
     if (!g) return;
-    for (const id of earned(s, m)) {
+    const ids = earned(s, m);
+    /*
+     * ═══ THE ONE LINE THAT MAKES THIS DEBUGGABLE FROM A PHONE ═══
+     *
+     * Deliberately not behind DEV. The wrapper loads the LIVE site, so the
+     * build running on Or's phone IS the production one — a dev-only log
+     * would be invisible in the only place it is ever needed.
+     *
+     * It costs nothing in a browser, because a browser never gets here: no
+     * plugin, and the line above has already returned. So this prints on a
+     * device and nowhere else, which is exactly where the question "did it
+     * decide nothing, or did it decide something and fail to send it?" gets
+     * asked.
+     */
+    console.info("[play-games] earned:", ids.join(", ") || "(none)");
+    for (const id of ids) {
       const playId = PLAY_IDS[id];
       if (!playId) continue;
       try {

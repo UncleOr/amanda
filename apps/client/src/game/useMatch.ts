@@ -748,6 +748,14 @@ export interface MatchApi {
   suspendedUntil: string | null;
   /** Code of the private room you opened, once the server has given one. */
   roomCode: string | null;
+  /**
+   * This match is against somebody you chose, not somebody the queue found.
+   *
+   * Host, join and invite are the three ways into a private room and all
+   * three are it. Amanda mode is deliberately not: that pairs you WITH a
+   * partner against her, which is a different thing from playing a friend.
+   */
+  vsFriend: boolean;
   /** Why joining a room failed, if it did. */
   roomError: RoomError | null;
   iWon: boolean;
@@ -850,6 +858,7 @@ export function useMatch(): MatchApi {
   /** Set when the server refuses to start a match for this account. */
   const [suspendedUntil, setSuspendedUntil] = useState<string | null>(null);
   const [roomCode, setRoomCode] = useState<string | null>(null);
+  const [vsFriend, setVsFriend] = useState(false);
   const [roomError, setRoomError] = useState<RoomError | null>(null);
   /** Cards stacked underneath a placed card, revealed when the top one dies. */
   const [stacked, setStacked] = useState<Record<string, string>>({});
@@ -1696,6 +1705,7 @@ export function useMatch(): MatchApi {
     setNetError(false);
     setRoomCode(null);
     setRoomError(null);
+    setVsFriend(false);
     setCoop(false);
     setMyLane(0);
     soloAmandaRef.current = false;
@@ -1742,6 +1752,7 @@ export function useMatch(): MatchApi {
     setNetError(false);
     setRoomCode(null);
     setRoomError(null);
+    setVsFriend(intent.kind === "host" || intent.kind === "join" || intent.kind === "invite");
     matchStartedRef.current = false;
     setPhase("waiting");
     const net = new Net();
@@ -2251,6 +2262,7 @@ export function useMatch(): MatchApi {
     netError,
     suspendedUntil,
     roomCode,
+    vsFriend,
     roomError,
     mySide,
     oppLeft,

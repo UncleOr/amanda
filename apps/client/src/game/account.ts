@@ -15,6 +15,7 @@
 import { createClient, type SupabaseClient } from "@supabase/supabase-js";
 import { line as t, lineF as tf } from "./copy";
 import { serverError } from "./serverError";
+import { step } from "./achievements";
 
 /**
  * Publishable, and meant to be: row level security is what protects the data,
@@ -568,6 +569,13 @@ export async function openChest(chestId: string): Promise<Chest | null> {
       fresh?: string[];
     };
     if (!body.ok) return null;
+    /*
+     * Counted HERE rather than at the two buttons that open a chest — the
+     * shelf on the home screen and the one on the result screen — because
+     * this is the line that means a chest was really opened. A third button
+     * would otherwise be a third chance to forget.
+     */
+    step("chests_10");
     return {
       id: chestId,
       kind: body.kind ?? "wood",

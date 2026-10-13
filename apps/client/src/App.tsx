@@ -14,6 +14,7 @@ import { line } from "./data/tutorialLines";
 import { COOP_LANES, PHASES, arenaFor } from "@amanda/shared";
 import type { BattleResult } from "@amanda/engine";
 import { useMatch } from "./game/useMatch";
+import { useAchievements } from "./game/useAchievements";
 import { useOverlay } from "./game/useOverlay";
 import { HomeScreen } from "./components/HomeScreen";
 import { BattleScreen } from "./components/BattleScreen";
@@ -764,8 +765,16 @@ function Game() {
     else if (m.phase === "result")
       // The score keeps playing through the result — see music.ts. The name
       // still says which ending it is, for whatever wants to know later.
-      music.play(m.result?.winner === "A" ? "win" : "lose");
-  }, [m.phase, m.result]);
+      // `iWon`, not `winner === "A"`: online you are side B half the time,
+      // and this named every one of those wins a loss.
+      music.play(m.iWon ? "win" : "lose");
+  }, [m.phase, m.iWon]);
+
+  /*
+   * Play Games, watching from one place. Does nothing at all in a browser —
+   * see achievements.ts — so this is the whole of its cost on the web.
+   */
+  useAchievements(m);
 
   // The clock, out loud. Building is a race against a timer you cannot see
   // while you are looking at your board, so the last seconds have to be heard.
