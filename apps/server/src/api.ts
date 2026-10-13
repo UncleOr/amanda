@@ -501,6 +501,30 @@ async function health(res: ServerResponse): Promise<void> {
   }
   send(res, 200, {
     ok: true,
+    /*
+     * ═══ WHICH COMMIT THIS PROCESS IS ACTUALLY RUNNING ═══
+     *
+     * Or: *"tell me how you check in Railway."*
+     *
+     * The honest answer used to be that you cannot, from outside. A change
+     * to what a chest may contain lives entirely on the server, and nothing
+     * it serves said which version of itself it was. The only way to know
+     * was to open the dashboard and trust what the dashboard said.
+     *
+     * Railway sets RAILWAY_GIT_COMMIT_SHA on every deploy it starts from
+     * GitHub. Handing back the first seven characters makes "did my push
+     * reach production" a question anyone can answer in one request, by
+     * comparing it with `git log`. It is a public commit id in a public
+     * repository, so there is nothing here to leak.
+     *
+     * Null means the deploy did not come from GitHub — a manual or CLI
+     * deploy gets no git variables — and that is worth seeing too.
+     */
+    commit: (process.env.RAILWAY_GIT_COMMIT_SHA ?? "").slice(0, 7) || null,
+    /** The branch it came from, for the same reason. */
+    branch: process.env.RAILWAY_GIT_BRANCH ?? null,
+    /** How long this process has been up — a restart resets it. */
+    upSeconds: Math.round(process.uptime()),
     /** True when a key is present AND looks like one, rather than a stray word. */
     canSave: keyLength > 40,
     keyPresent: keyLength > 0,
