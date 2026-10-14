@@ -493,6 +493,17 @@
 .tut--talking { pointer-events: auto; cursor: pointer; }
 /* "tap to go on", without a button to press. */
 .tut__go { color: var(--muted); font-size: var(--t-2); }
+/*
+ * The four panels that make the dimming true. See Tutorial.tsx.
+ *
+ * They take clicks and keep them: during a pointing step the only thing on
+ * the screen that answers is the thing being pointed at.
+ */
+.tut__wall > i {
+  position: fixed;
+  display: block;
+  pointer-events: auto;
+}
 .tut__spot {
   position: fixed;
   border-radius: 14px;

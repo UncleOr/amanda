@@ -5772,9 +5772,9 @@
   }
  },
  {
-  "id": "s379a6ae",
+  "id": "sb1bd099",
   "section": "זירת הקרב",
-  "text": "🧑 אתה",
+  "text": "אתה",
   "where": {
    "kind": "source",
    "file": "apps/client/src/components/Arena.tsx",
@@ -5782,9 +5782,9 @@
   }
  },
  {
-  "id": "s2742a4b",
+  "id": "s8854c7a",
   "section": "זירת הקרב",
-  "text": "🤖 היריב",
+  "text": "היריב",
   "where": {
    "kind": "source",
    "file": "apps/client/src/components/Arena.tsx",

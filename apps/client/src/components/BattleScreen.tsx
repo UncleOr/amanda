@@ -64,6 +64,20 @@ export function BattleScreen({
             <Arena
               result={result}
               onFinish={m.finishBattle}
+              /*
+               * Who is actually fighting.
+               *
+               * Or: *"once the battle starts you should still see the
+               * opponent's NAME and not 'the opponent'. And instead of an
+               * emoji — in the build phase and in the battle itself — show
+               * the opponent's profile picture (bots have one too)."*
+               *
+               * The board screen has done this since it was asked for the
+               * first time; the arena never got the message and was still
+               * drawing two emoji and the word for a stranger.
+               */
+              me={m.me}
+              them={m.rival}
               flip={m.mySide === "B"}
               verdict={verdictText(result, m.iWon)}
               // Where you fight is where you have climbed to. A guest with

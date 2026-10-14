@@ -293,10 +293,50 @@ export function Tutorial({ steps, onDone, onQuit }: Props) {
       onClick={pointing ? undefined : next}
     >
       {spot && (
-        <div
-          className="tut__spot"
-          style={{ top: spot.top, left: spot.left, width: spot.width, height: spot.height }}
-        />
+        <>
+          {/*
+            ═══ ONLY THE LIT THING IS PRESSABLE ═══
+
+            Or: *"the tutorial still isn't smooth. There are screens where it
+            isn't clear what to press. You can also click on things outside
+            the screen."*
+
+            The dimming here is a box-shadow with a 9999px spread — it is a
+            PICTURE of everything being switched off, and nothing more.
+            `.tut` is `pointer-events: none` so that the board underneath can
+            be touched, which is the whole point of a pointing step; the
+            consequence nobody followed through is that the other 95% of the
+            screen was touchable too. A child being shown where to put a card
+            could open the shop, leave the match, or change the language, and
+            the tutorial would carry on talking about the board.
+
+            So the hole is cut for real: four panels around it, each one
+            swallowing what lands on it. The dim already tells you where you
+            may press; now it is true.
+
+            Four rectangles rather than one clip-path, because the hole has
+            rounded corners in the picture and square ones in the maths, and
+            a child aiming at the corner of a card should not find a dead
+            pixel where the radius was.
+          */}
+          <div className="tut__wall" onClick={(e) => e.stopPropagation()}>
+            <i style={{ top: 0, left: 0, right: 0, height: Math.max(0, spot.top) }} />
+            <i style={{ top: spot.top + spot.height, left: 0, right: 0, bottom: 0 }} />
+            <i style={{ top: spot.top, left: 0, width: Math.max(0, spot.left), height: spot.height }} />
+            <i
+              style={{
+                top: spot.top,
+                left: spot.left + spot.width,
+                right: 0,
+                height: spot.height,
+              }}
+            />
+          </div>
+          <div
+            className="tut__spot"
+            style={{ top: spot.top, left: spot.left, width: spot.width, height: spot.height }}
+          />
+        </>
       )}
       <div
         className={`tut__bubble${pointing ? " tut__bubble--at" : " tut__bubble--mid"}`}

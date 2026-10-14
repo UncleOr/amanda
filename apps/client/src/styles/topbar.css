@@ -36,6 +36,21 @@
    */
   z-index: 61;
 }
+/*
+ * ═══ DURING A LESSON, ONLY THE WAY OUT ═══
+ *
+ * Or: *"you can click on things outside the screen [during the tutorial]."*
+ * Tutorial.tsx now walls off everything around what is being pointed at —
+ * but this bar is at 61, deliberately ABOVE that overlay, because Or's first
+ * rule is that the exit always works. Which meant the gear and the sound
+ * were reachable too, mid-lesson, two taps from a child who was told to
+ * press a card.
+ *
+ * So the bar keeps its layer and gives up its clicks, except the one button
+ * it was raised for.
+ */
+.app--teaching .topbar { pointer-events: none; }
+.app--teaching .topbar__exit { pointer-events: auto; }
 .topbar__title {
   font-weight: 800;
   font-size: 18px;

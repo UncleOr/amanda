@@ -12,22 +12,28 @@
  * turn over one at a time — because the whole point of a chest is the moment
  * before you know.
  *
- * ═══ AND IT TAKES FOUR TAPS, NOT ONE ═══
+ * ═══ ONE TAP, AND THE CHEST DOES THE WAITING ═══
  *
- * Or: *"when you open a chest it should flash and be cool, and you should
- * open it by tapping it lots of times, and each time it almost opens, like in
- * Brawl Stars."*
+ * It took four. Or asked for that — *"you should open it by tapping it lots
+ * of times, and each time it almost opens, like in Brawl Stars"* — and I
+ * argued for it in this comment: a chest is worth the wait before it, four
+ * taps make the player do that waiting with their hands, and every one of
+ * them is allowed to be the one.
  *
- * The reason that works, and the reason a single tap does not: a chest is
- * worth exactly as much as the wait before it. One tap spends the moment
- * immediately. Four taps make the player do the waiting with their hands, and
- * every one of them is allowed to be the one — so the thing that is actually
- * being built is not a progress bar, it is a guess.
+ * He has now said twice that it is wrong. *"When you press a chest from the
+ * main screen, the chest-opening screen only opens after several times"*, and
+ * then: *"opening a chest still doesn't work on one smooth click."*
  *
- * So each tap jolts the lid harder, leaks more light, and resolves nothing.
- * The last one bursts. There is NO sentence anywhere telling anybody to tap:
- * a chest that shudders and glows when you touch it has already said it, and
- * Or was explicit — *"no need to write an explanation about this!!!"*
+ * Measured before changing anything, because "it does not respond" and "it
+ * responds and asks for more" are different bugs: every tap did land —
+ * `--built` ran 0 → 0.25 → 0.5 → 0.75 and the lid jolted each time. So it was
+ * never unresponsive. It was asking a seven year old to press four times for
+ * something he had already asked for once, and that is what reads as broken.
+ *
+ * The build-up is kept and moved OFF the player's thumb: one tap, and the
+ * chest jolts itself through the same four stages in 480ms and bursts. Same
+ * animation, same glow, same sound — the moment before is still there, and
+ * nobody has to earn it twice.
  */
 import { useEffect, useRef, useState } from "react";
 import { CATALOG } from "../data/catalog";
@@ -59,17 +65,19 @@ interface Props {
 }
 
 /**
- * Taps to open.
+ * The stages the lid goes through before it gives.
  *
- * Four. Three is over before the player notices it was a game; six turns the
- * best moment in the app into work, and a child is doing it on a phone with
- * one thumb.
+ * Still four, because that is what the artwork and the `--built` ramp were
+ * drawn for — they are frames of an animation now rather than presses.
  */
-const TAPS_TO_OPEN = 4;
+const STAGES = 4;
+
+/** How long one stage holds. Four of these is 480ms, which is a flinch. */
+const STAGE_MS = 120;
 
 export function ChestReveal({ chest, onClose }: Props) {
   const [opened, setOpened] = useState(false);
-  /** How many times it has been hit. 0 .. TAPS_TO_OPEN - 1 while it holds. */
+  /** Which stage the lid is at. 0 before the tap, then 1..STAGES on a timer. */
   const [taps, setTaps] = useState(0);
   /**
    * The flash, which outlives the chest by a beat.
@@ -120,18 +128,33 @@ export function ChestReveal({ chest, onClose }: Props) {
     return () => window.clearTimeout(t);
   }, [burst]);
 
+  /*
+   * One tap starts it, and the rest of the jolts are on a timer.
+   *
+   * Guarded on `taps` as well as on `opened`: the whole run takes 480ms and
+   * a child tapping an exciting thing will press it again inside that, which
+   * would otherwise start a second run on top of the first.
+   */
   const hit = () => {
-    if (opened) return;
-    const next = taps + 1;
-    if (next >= TAPS_TO_OPEN) {
+    if (opened || taps > 0) return;
+    sfx.play("click");
+    setTaps(1);
+  };
+
+  useEffect(() => {
+    if (opened || taps === 0) return;
+    if (taps >= STAGES) {
       sfx.play("explode");
       setBurst(true);
       setOpened(true);
       return;
     }
-    setTaps(next);
-    sfx.play("click");
-  };
+    const t = window.setTimeout(() => {
+      setTaps((n) => n + 1);
+      sfx.play("click");
+    }, STAGE_MS);
+    return () => window.clearTimeout(t);
+  }, [taps, opened]);
 
   const allShown = shown >= chest.cards.length;
 
@@ -196,7 +219,7 @@ export function ChestReveal({ chest, onClose }: Props) {
               aria-label={tf("s3a10489", "פתח {0}", look.he)}
               style={{
                 backgroundImage: `url("${BASE}scenes/${look.art}")`,
-                ["--built" as string]: `${taps / TAPS_TO_OPEN}`,
+                ["--built" as string]: `${taps / STAGES}`,
               }}
             />
             <p className="chest__says">{line}</p>

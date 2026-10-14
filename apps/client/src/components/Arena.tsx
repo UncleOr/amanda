@@ -1,7 +1,7 @@
 import { useEffect, useRef, useState } from "react";
 import { spriteFor } from "../game/skins";
 import { Application, Assets, Container, Graphics, Sprite, Text, Texture } from "pixi.js";
-import { ARENA, SIMULATION } from "@amanda/shared";
+import { ARENA, SIMULATION, type PlayerCard } from "@amanda/shared";
 import type { BattleResult, FrameUnit, Owner } from "@amanda/engine";
 import { cardColor, CATALOG } from "../data/catalog";
 import { seriesColor } from "../data/cardMeta";
@@ -142,9 +142,14 @@ export function Arena({
   flip = false,
   verdict,
   backdrop = BACKDROP,
+  me,
+  them,
 }: {
   result: BattleResult;
   onFinish: () => void;
+  /** You, and whoever is on the other side — for the two header banners. */
+  me?: PlayerCard | null;
+  them?: PlayerCard | null;
   /** Which arena to fight in. The caller knows the player's trophies; this does not. */
   backdrop?: string;
   /** Mirror horizontally so the local player (B) still sees themselves on the left. */
@@ -530,11 +535,26 @@ export function Arena({
         const inTime = <T,>(p: Promise<T>): Promise<T | null> =>
           Promise.race([p.catch(() => null), give_up]);
 
-        const [bgTexture] = await Promise.all([
+        /*
+          * The two faces, fetched with everything else rather than after it.
+          * A missing one is normal — a guest has no avatar — and `inTime`
+          * already turns any failure into null, so the banner falls back to
+          * the name alone and the battle is never held up for a picture.
+          */
+        const faceUrl = (who?: PlayerCard | null) =>
+          who?.avatar ? `${import.meta.env.BASE_URL}brand/${who.avatar}.webp` : null;
+        const myFaceUrl = faceUrl(me);
+        const theirFaceUrl = faceUrl(them);
+
+        const [bgTexture, , myFace, theirFace] = await Promise.all([
           inTime(
             Assets.load(`${import.meta.env.BASE_URL}arena/${backdrop}.webp`) as Promise<Texture>,
           ),
           urls.length ? inTime(Assets.load(urls)) : Promise.resolve(null),
+          myFaceUrl ? inTime(Assets.load(myFaceUrl) as Promise<Texture>) : Promise.resolve(null),
+          theirFaceUrl
+            ? inTime(Assets.load(theirFaceUrl) as Promise<Texture>)
+            : Promise.resolve(null),
         ]);
         initialized = true;
         if (disposed) {
@@ -592,9 +612,28 @@ export function Arena({
         bgLayer.addChild(bg);
 
         // Identity banners: you on the left (A), opponent on the right (B).
-        const banner = (text: string, x: number, color: number) => {
-          const t = new Text({
-            text,
+        /*
+          * ═══ A FACE AND A NAME, NOT AN EMOJI AND A NOUN ═══
+          *
+          * These were `🧑 אתה` and `🤖 היריב`: a picture drawn by whoever
+          * made the phone, and the word for "somebody". The face and the name
+          * are the two things the versus screen spent its whole three seconds
+          * establishing, and the battle threw both away at the moment they
+          * mattered most.
+          *
+          * The face is 20px against a 26px band — it has to sit INSIDE the
+          * header, because anything taller covers a unit in the back lane.
+          */
+        const banner = (
+          who: PlayerCard | null | undefined,
+          face: Texture | null,
+          fallback: string,
+          x: number,
+          color: number,
+        ) => {
+          const row = new Container();
+          const label = new Text({
+            text: who?.nickname ?? fallback,
             style: {
               fontFamily: "Segoe UI, sans-serif",
               fontSize: 15,
@@ -602,13 +641,36 @@ export function Arena({
               fontWeight: "800",
             },
           });
-          t.anchor.set(0.5, 0.5);
-          t.x = x;
-          t.y = HEAD / 2;
-          uiLayer.addChild(t);
+          label.anchor.set(0, 0.5);
+          const FACE = 20;
+          let width = label.width;
+          if (face) {
+            const sprite = new Sprite(face);
+            sprite.width = FACE;
+            sprite.height = FACE;
+            sprite.x = 0;
+            sprite.y = -FACE / 2;
+            /*
+              * A round face, the way it is drawn everywhere else. Pixi has no
+              * border-radius, so the circle is a mask over the sprite.
+              */
+            const ring = new Graphics().circle(FACE / 2, 0, FACE / 2).fill(0xffffff);
+            sprite.mask = ring;
+            row.addChild(sprite, ring);
+            label.x = FACE + 6;
+            width = FACE + 6 + label.width;
+          }
+          row.addChild(label);
+          /*
+            * Centred by hand: a Container's own width is the union of its
+            * children, and anchoring it would move the mask with it.
+            */
+          row.x = x - width / 2;
+          row.y = HEAD / 2;
+          uiLayer.addChild(row);
         };
-        banner(t("s379a6ae", "🧑 אתה"), W * 0.25, localTint);
-        banner(t("s2742a4b", "🤖 היריב"), W * 0.75, oppTint);
+        banner(me, myFace, t("sb1bd099", "אתה"), W * 0.25, localTint);
+        banner(them, theirFace, t("s8854c7a", "היריב"), W * 0.75, oppTint);
 
         // Battle clock, centred in the header band. A 30 second fight needs to
         // show how much of it is left, and shout when it is nearly gone.

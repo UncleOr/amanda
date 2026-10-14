@@ -776,11 +776,35 @@ function Game() {
    */
   useAchievements(m);
 
+  /*
+   * ═══ ONE COUNTDOWN, AND PANIC IS ITS LAST TEN SECONDS ═══
+   *
+   * Or: *"it is terribly confusing that the time runs out and THEN panic. The
+   * last ten seconds ARE panic. It should appear on screen when you reach the
+   * last ten seconds of the countdown — not reach 0 and then add another ten
+   * seconds."*
+   *
+   * He is right and the fix costs nothing, because the two phases were
+   * already adjacent: 45 seconds of building and then 10 of panic. The clock
+   * restarted between them, which is the whole of what he saw — a timer that
+   * reaches zero and then hands you more time has broken its own promise, and
+   * a child who was racing it learns not to believe it.
+   *
+   * So the numbers are untouched. 45 and 10 are both Or's own tunings and
+   * both still turnable from the admin panel; all that changes is that the
+   * build phase shows what is left INCLUDING the panic that follows it. The
+   * player now sees 55 run to 0 without a break, and at 10 — which is exactly
+   * where the phase changes anyway — the screen says פאניקה and the enemy
+   * King appears.
+   */
+  const clock =
+    m.phase === "build" ? m.timeLeft + PHASES.panic.seconds : m.timeLeft;
+
   // The clock, out loud. Building is a race against a timer you cannot see
   // while you are looking at your board, so the last seconds have to be heard.
   const secRef = useRef(-1);
   useEffect(() => {
-    const s = Math.ceil(m.timeLeft);
+    const s = Math.ceil(clock);
     if (s === secRef.current || s <= 0) return;
 
     if (m.phase === "countdown" || m.phase === "prebattle") {
@@ -796,7 +820,7 @@ function Game() {
       return;
     }
     secRef.current = -1;
-  }, [m.timeLeft, m.phase]);
+  }, [clock, m.phase]);
 
   // Settled when the result arrives, not on every render — the headline must
   // not reshuffle itself while the player is reading it.
@@ -817,7 +841,13 @@ function Game() {
   }, [m.phase, m.playground]);
 
   return (
-    <div className="app">
+    /*
+      * `app--teaching` is what lets the top bar step aside for a lesson —
+      * see topbar.css. The bar sits ABOVE the tutorial on purpose (the exit
+      * must always work), which also left the gear and the sound reachable
+      * while Amanda was pointing at something else.
+      */
+    <div className={`app${teaching && m.lesson > 0 ? " app--teaching" : ""}`}>
       {/* Two 4x4 boards of portrait cards only fit side by side in landscape,
           so on a phone held upright we ask for a turn instead of squashing. */}
       <div className="rotate-hint">
@@ -852,7 +882,7 @@ function Game() {
         */}
         {(m.phase === "build" || m.phase === "panic") && !m.playground && m.lesson === 0 && (
           <div className="topbar__timer">
-            <Icon name="timer" size={15} /> {Math.ceil(m.timeLeft)}s
+            <Icon name="timer" size={15} /> {Math.ceil(clock)}s
           </div>
         )}
         {/* Which match this is, when it is not the ordinary one. Without it a
