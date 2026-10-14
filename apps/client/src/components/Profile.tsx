@@ -186,6 +186,32 @@ export function Profile({ account, onClose, onChanged }: Props) {
       </header>
 
       <div className="profile__scroll">
+        {/*
+          ═══ THE CARD AND ITS FACE PICKER ARE ONE BLOCK ═══
+
+          Or: *"on the profile screen the profile picture is cut off, and it
+          also hides the heading of my catchphrases."*
+
+          Both halves of that were one bug and it only appeared after you
+          TAPPED the face — which is the only time anybody is looking at it.
+
+          The scroll area is a two-column grid in landscape. The picker was a
+          sibling spanning both columns, so opening it pushed the panel that
+          had been sitting beside the identity card down into the next row and
+          left the card alone in row one. Alone, it collapsed to 30px: the
+          phone block sets `min-height: 0` on it, the grid's rows are at their
+          base sizes because the content is taller than the scroll box, and a
+          base size is the item's MINIMUM contribution. The card then stretched
+          to that 30px row with `justify-content: center`, which spilled its
+          102px face 35px ABOVE the card and the name below it — over the
+          heading underneath. Measured: face top at y=-35 against a card at
+          y=38.
+
+          Wrapping the two means the card is never alone in a row, and the
+          picker opens attached to the face it changes rather than as a band
+          across the screen.
+        */}
+        <div className="profile__identity">
         {/* Your card: face, name, and what you have to show for it. */}
         <section className="profile__hero">
           <button
@@ -220,6 +246,25 @@ export function Profile({ account, onClose, onChanged }: Props) {
             </div>
           </div>
         </section>
+
+        {facesOpen && (
+          <div className="profile__faces">
+            {[...AVATAR_IDS, ...bought].map((id) => (
+              <button
+                key={id}
+                className={`profile__avatar${avatar === id ? " is-picked" : ""}`}
+                aria-pressed={avatar === id}
+                onClick={() => {
+                  setAvatar(id);
+                  setFacesOpen(false);
+                }}
+              >
+                <img src={`${BASE}brand/${id}.webp`} alt="" />
+              </button>
+            ))}
+          </div>
+        )}
+        </div>
 
         {/*
           The panel, for the people who have it. Asked of the server, because
@@ -260,24 +305,6 @@ export function Profile({ account, onClose, onChanged }: Props) {
               </div>
             </div>
           </Overlay>
-        )}
-
-        {facesOpen && (
-          <div className="profile__faces">
-            {[...AVATAR_IDS, ...bought].map((id) => (
-              <button
-                key={id}
-                className={`profile__avatar${avatar === id ? " is-picked" : ""}`}
-                aria-pressed={avatar === id}
-                onClick={() => {
-                  setAvatar(id);
-                  setFacesOpen(false);
-                }}
-              >
-                <img src={`${BASE}brand/${id}.webp`} alt="" />
-              </button>
-            ))}
-          </div>
         )}
 
         {/*

@@ -103,10 +103,25 @@ WORD_X=$((PAIR_X + PAIR_W + GAP))
 # Down six and back, over 0.3s, starting on the chord.
 DIP="if(lt(t,${LAND}),0,if(lt(t,${LAND}+0.12),(t-${LAND})/0.12*6,if(lt(t,${LAND}+0.30),6-(t-${LAND}-0.12)/0.18*6,0)))"
 
-# The word slides the last 40px into place while the chord is still opening,
-# and is home before the peak at 0.74. A logo that is still moving when its
-# own sound has finished reads as a video that buffered.
-SLIDE="${WORD_X}-40*(1-min(1,max(0,(t-0.56)/0.30)))"
+# ═══ ONE ARRIVAL, AND IT IS CENTRED THE WHOLE TIME ═══
+#
+# Or: *"the Asulins ident is not centred."* He was right, and the still frame
+# was not the problem — measured at the end, the mark sits 222px from the left
+# and 224px from the right, which is centred to within two pixels.
+#
+# It was the first half second. The pair faded in at 0.10 and the word did not
+# arrive until 0.56, so for 0.46s the ONLY thing on screen was the pair,
+# sitting at the left edge of a block whose right half was still empty —
+# measured 268px left of centre. A staged reveal is fine when what is on
+# screen is balanced at every moment, and this one never was.
+#
+# So both pieces fade in together now, over the same window, and land together
+# on the chord at 0.50. The word keeps its 40px settle, but INSIDE that window
+# rather than after it: a word that slides once it is already solid reads as a
+# glitch, and a word that slides while it is arriving reads as arriving.
+# During the slide the block is 20px narrow out of 1280 — 1.5%, while fading
+# up from transparent.
+SLIDE="${WORD_X}-40*(1-min(1,max(0,(t-0.10)/0.40)))"
 
 # ═══ -loop 1, AND IT IS THE WHOLE BUG ═══
 #
@@ -129,7 +144,7 @@ ffmpeg -y -v error -stats \
   -i "$SND" \
   -filter_complex "\
 [1:v]format=rgba,fade=t=in:st=0.10:d=0.40:alpha=1[p];\
-[2:v]format=rgba,fade=t=in:st=0.56:d=0.30:alpha=1[w];\
+[2:v]format=rgba,fade=t=in:st=0.10:d=0.40:alpha=1[w];\
 [0:v][p]overlay=x=${PAIR_X}:y='(H-h)/2+${DIP}':shortest=0[a];\
 [a][w]overlay=x='${SLIDE}':y='(H-h)/2+${DIP}':shortest=0[b];\
 [b]trim=0:3.0,fade=t=out:st=2.55:d=0.45:color=${BG},fps=${FPS},format=yuv420p[v];\

@@ -467,8 +467,24 @@
    * of the grid, which would otherwise leave Hebrew buttons and counters
    * reading left-to-right inside a right-to-left game.
    */
+  /*
+   * ═══ AND THE OVERLAY, WHICH WAS LEFT OFF THIS LIST ═══
+   *
+   * Or: *"the sentence you see at the start of the battle has no RTL in
+   * Hebrew."* Measured on the countdown: `.overlay__label` holding
+   * "תתארגן, ילד" computed `direction: ltr`, while the phase card two
+   * elements away computed `rtl`. The ancestor walk ended at `MAIN.build`.
+   *
+   * It is this rule. `.build` is ltr so the grid can place the hand beside
+   * your own half of the board, and the two children that hold words were
+   * handed their direction back — but the countdown and the prebattle
+   * screens render INTO `.build` as well, and nobody thought of them. Every
+   * Hebrew sentence on either of those has been reading left-to-right since
+   * the grid was written.
+   */
   html[dir="rtl"] .hand,
-  html[dir="rtl"] .actions {
+  html[dir="rtl"] .actions,
+  html[dir="rtl"] .overlay {
     direction: rtl;
   }
   .boards {

@@ -49,6 +49,52 @@ export function shouldPlayIntro(): boolean {
   }
 }
 
+/*
+ * ═══ AND WHY THE IDENT SOMETIMES PLAYED TWICE ═══
+ *
+ * Or: *"sometimes when you open the game there are two Asulins idents."*
+ *
+ * The game reloads itself when a new service worker takes over a page that
+ * was running an old one — main.tsx, and it is the only way a player on a
+ * phone home screen ever gets a new version. That reload is right. What was
+ * wrong is that it is indistinguishable, from here, from opening the game:
+ * the page starts again from nothing and the ident starts again with it. So
+ * after every deploy, the first launch showed Asulins, cut to black, and
+ * showed Asulins again.
+ *
+ * This remembers, for the TAB rather than the device, when the ident last
+ * played. A page that starts over within twenty seconds of one is a reload,
+ * not an opening — nobody closes a game and comes back inside twenty
+ * seconds, and if they somehow do, sessionStorage is gone with the tab and
+ * they get their ident.
+ *
+ * Keyed on time rather than on the service worker's own flag deliberately:
+ * the symptom is "the page restarted and the ident ran twice", and a guard
+ * that only knows about the one cause I found would miss the next one.
+ */
+const IDENT_AT = "amanda.ident.at";
+const A_RELOAD = 20_000;
+
+/** True when this page is a reload of one that just showed the ident. */
+export function identJustPlayed(): boolean {
+  try {
+    const at = Number(sessionStorage.getItem(IDENT_AT) ?? 0);
+    return at > 0 && Date.now() - at < A_RELOAD;
+  } catch {
+    // No session storage is no memory, so the ident plays. The worst case
+    // is the thing it has always done.
+    return false;
+  }
+}
+
+export function markIdentPlayed(): void {
+  try {
+    sessionStorage.setItem(IDENT_AT, String(Date.now()));
+  } catch {
+    /* it may play twice after a deploy; not worth failing over */
+  }
+}
+
 export function markIntroSeen(): void {
   try {
     localStorage.setItem(SEEN_KEY, "1");

@@ -266,6 +266,42 @@ export const BOT_CARDS: Record<BotLevel, PlayerCard> = {
   },
 };
 
+/**
+ * ═══ THE BOT GETS A HANDLE, NOT A JOB TITLE ═══
+ *
+ * Or: *"give the bot one of ten robotic options — CyberDeath365,
+ * stupidMonster13, that sort of thing."* The first two are his.
+ *
+ * It was called "Light bot", "The bot" and "Hard bot", which is a label for
+ * a difficulty setting rather than a name for somebody you are about to
+ * fight — and the versus screen exists precisely to make the opponent a
+ * somebody. A child playing the computer is not fooled, and that is not the
+ * point: the point is that the screen reads the same whoever is on the other
+ * side of it, so beating one of these feels like beating a player.
+ *
+ * NOT translated, in either direction. These are gamer tags, and a gamer tag
+ * is the same string in every language — transliterating "CyberDeath365" into
+ * Hebrew would make it a word rather than a handle. The trophy count beside
+ * it still says which bot this is, so nothing is lost by dropping the label.
+ */
+const BOT_NAMES = [
+  "CyberDeath365",
+  "stupidMonster13",
+  "xX_SlimeLord_Xx",
+  "BeepBoop_2000",
+  "GigaChomp99",
+  "pixel_goblin",
+  "RoboBurp42",
+  "NotAHuman77",
+  "TinCanTerror",
+  "lol_i_am_a_bot",
+] as const;
+
+/** A handle for this match. A new match is a new opponent. */
+function botName(): string {
+  return BOT_NAMES[Math.floor(Math.random() * BOT_NAMES.length)]!;
+}
+
 const SKILL: Record<BotLevel, Skill> = {
   /*
    * Beatable by a child, without being a pushover that teaches nothing.
@@ -1724,7 +1760,9 @@ export function useMatch(): MatchApi {
    * through startMatch.
    */
   const faceTheBot = useCallback(() => {
-    setRival(BOT_CARDS[botLevelRef.current]);
+    // The handle is drawn here rather than held in BOT_CARDS, so that the
+    // next match is somebody else. See BOT_NAMES.
+    setRival({ ...BOT_CARDS[botLevelRef.current], nickname: botName() });
   }, []);
 
   const startMatch = useCallback(() => {

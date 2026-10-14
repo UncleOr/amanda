@@ -232,7 +232,12 @@
    * face under it. The wash below is inside this element, so it mirrors too
    * and ends up darkening the correct side.
    */
-  transform: scaleX(-1);
+  /*
+   * The mirror is a VARIABLE because English does not want it — see the
+   * block at the end of this file. It is read by the breathe keyframes in
+   * profile.css too, which override this rule for as long as they run.
+   */
+  transform: scaleX(var(--art-flip, -1));
 }
 /*
  * The wash that keeps text readable over her.
@@ -351,6 +356,7 @@
 @media (max-height: 460px), (max-width: 560px) {
   .intro--hero { padding: 0 18px; }
   .intro__art { background-position: 70% center; }
+  html[dir="ltr"] .intro__art { background-position: 30% center; }
   .intro__wash {
     background: linear-gradient(
       to right,
@@ -617,4 +623,42 @@
 }
 @media (max-height: 460px) {
   .intro__name img { width: min(240px, 46vw); }
+}
+
+
+/*
+ * ════════ AND IN ENGLISH, ALL OF THAT IS BACKWARDS ════════
+ *
+ * Or: *"in English you have to flip Amanda's picture so she is on the right
+ * and is not hidden."*
+ *
+ * Every rule above assumes the menu is on the RIGHT, because that is where a
+ * Hebrew page starts. In English the whole grid mirrors and the menu moves to
+ * the left — and the artwork did not move with it, so she stood exactly where
+ * the play card now is, buried completely, while the empty half of her own
+ * painting filled the right of the screen. Measured on an 844x390 phone in
+ * English: nothing of her was visible but one hand.
+ *
+ * English is the simpler case, because she is drawn in the right half of the
+ * source to begin with: no mirror at all. The wash and the room follow her by
+ * reading `to left` instead of `to right` — the same stops, the same clear
+ * band where her head is, the other side of the screen.
+ */
+html[dir="ltr"] {
+  --art-flip: 1;
+}
+html[dir="ltr"] .intro__room {
+  -webkit-mask-image: linear-gradient(to left, #000 0%, transparent 14%, transparent 48%, #000 74%);
+  mask-image: linear-gradient(to left, #000 0%, transparent 14%, transparent 48%, #000 74%);
+}
+html[dir="ltr"] .intro__wash {
+  background: linear-gradient(
+    to left,
+    rgba(7, 10, 18, 0.7) 0%,
+    rgba(7, 10, 18, 0.28) 10%,
+    rgba(7, 10, 18, 0) 16%,
+    rgba(7, 10, 18, 0) 46%,
+    rgba(7, 10, 18, 0.72) 68%,
+    rgba(7, 10, 18, 0.92) 100%
+  );
 }

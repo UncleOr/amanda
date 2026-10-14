@@ -825,6 +825,18 @@
  */
 .versus {
   display: flex;
+  /*
+   * ═══ GEOMETRY, NOT LANGUAGE ═══
+   *
+   * You on the left, them on the right, in both languages — the same rule
+   * `.boards` states for the same reason, and the versus card is a picture
+   * of the match that is about to happen. Without this it inherited the
+   * page, so giving the overlay its Hebrew back (report.css) would have
+   * swapped the two fighters over.
+   *
+   * The words inside go back to the page's direction below.
+   */
+  direction: ltr;
   align-items: center;
   justify-content: center;
   gap: clamp(12px, 4vw, 48px);
@@ -877,6 +889,9 @@
   border-color: #ff5a5a;
   box-shadow: 0 0 24px rgba(255, 90, 90, 0.45);
 }
+html[dir="rtl"] .versus__side {
+  direction: rtl;
+}
 .versus__name {
   font-size: clamp(14px, 2.4vh, 19px);
   text-align: center;
@@ -889,8 +904,27 @@
 
 .versus__vs {
   position: relative;
-  display: grid;
-  place-items: center;
+  /*
+   * ═══ THE WORD AND THE COUNT ARE STACKED, NOT LAYERED ═══
+   *
+   * Or: *"the circle animation at the start of the battle hides the
+   * digit."* It did. Measured on an 844x390 phone: the ring occupied
+   * y 162..220 and the clock y 207..222, and the ring's opaque band — the
+   * outer 40% of its radius, where the mask stops being transparent —
+   * starts at y 215.6. So the bottom third of every digit was painted over
+   * by the ring, and the digit it mattered most for is 3, whose lower bowl
+   * is what tells it from 8.
+   *
+   * The clock was `position: absolute; bottom: -2px`, which put it exactly
+   * there. It is in the flow now, under the word, inside the clear middle —
+   * which measures 53px across at the smallest this box gets, against the
+   * 39px the two lines need.
+   */
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 1px;
   flex: none;
   width: clamp(62px, 11vh, 86px);
   height: clamp(62px, 11vh, 86px);
@@ -901,9 +935,12 @@
   color: var(--accent);
   letter-spacing: 1px;
 }
+.versus__word,
 .versus__clock {
-  position: absolute;
-  bottom: -2px;
+  position: relative;
+  z-index: 1;
+}
+.versus__clock {
   font-size: 12px;
   font-weight: 800;
   color: var(--muted);
@@ -914,6 +951,8 @@
 .versus__ring {
   position: absolute;
   inset: 0;
+  /* Behind the two lines it is counting for, not over them. */
+  z-index: 0;
   border-radius: 50%;
   background: conic-gradient(
     var(--accent) calc(var(--left, 1) * 360deg),
@@ -2277,11 +2316,17 @@
   .profile__scroll > * { min-width: 0; }
   .profile__scroll > .btn-fight,
   .profile__trace,
-  .profile__note,
-  .profile__faces { grid-column: 1 / -1; }
+  .profile__note { grid-column: 1 / -1; }
   /* The grid gap does the spacing now; a margin on top of it would double it. */
+  .profile__identity,
   .profile__hero,
   .profile__scroll > .panel,
   .profile__faces { margin-bottom: 0; }
+  /*
+   * The identity card is the grid item now, not the card and the picker
+   * separately — see Profile.tsx. The gap between them when the picker is
+   * open is the card's own, because they are one block.
+   */
+  .profile__identity > .profile__faces { margin-top: var(--sp-3); }
 }
 

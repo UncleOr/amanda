@@ -361,7 +361,7 @@ export const TUTORIAL_LINES: readonly TutorialLine[] = [
     id: "l2-king",
     he: t("s8e82b1e", "אבי-הענקים. למשבצת המלך, כמו בפעם הקודמת."),
     vars: [],
-    when: t("s559179f", "אבי-הענקים ביד"),
+    when: t("s33be16b", "אבי-הענקים ביד"),
   },
   {
     id: "l2-boost-wait",
@@ -397,7 +397,7 @@ export const TUTORIAL_LINES: readonly TutorialLine[] = [
     id: "l2-go",
     he: t("sb32906f", "מספיק. בוא נראה מה בנית."),
     vars: [],
-    when: t("scb6277d", "הכול בנוי, נשאר ללחוץ"),
+    when: t("s5706d6f", "הכול בנוי, נשאר ללחוץ"),
   },
   {
     id: "l2-won",

@@ -187,9 +187,14 @@
    * pixelated". The sizing lives in one place now (`background-size` in
    * album.css) and this does nothing but drift her a couple of percent.
    */
-  0%   { transform: scaleX(-1) translate3d(0, 0, 0); }
-  50%  { transform: scaleX(-1) translate3d(-1.6%, -0.9%, 0); }
-  100% { transform: scaleX(-1) translate3d(0.4%, 0.6%, 0); }
+  /*
+   * The mirror is a variable — English does not want it, and a keyframe beats
+   * the static rule in album.css for the whole time it runs, which is for
+   * ever. See the dir="ltr" block at the end of album.css.
+   */
+  0%   { transform: scaleX(var(--art-flip, -1)) translate3d(0, 0, 0); }
+  50%  { transform: scaleX(var(--art-flip, -1)) translate3d(-1.6%, -0.9%, 0); }
+  100% { transform: scaleX(var(--art-flip, -1)) translate3d(0.4%, 0.6%, 0); }
 }
 
 /* embers drifting up over the artwork */
@@ -246,7 +251,7 @@
 
 /* Nothing here is information, so when motion is unwelcome it simply stops. */
 @media (prefers-reduced-motion: reduce) {
-  .intro__art { animation: none; transform: scaleX(-1); }
+  .intro__art { animation: none; transform: scaleX(var(--art-flip, -1)); }
   .intro__motes { display: none; }
   .intro__name img { animation: none; }
 }

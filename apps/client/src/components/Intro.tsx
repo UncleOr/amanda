@@ -23,7 +23,13 @@
  */
 import { useEffect, useRef, useState } from "react";
 import { Ident } from "./Ident";
-import { markIntroSeen, onIntroRequest, shouldPlayIntro } from "../game/intro";
+import {
+  identJustPlayed,
+  markIdentPlayed,
+  markIntroSeen,
+  onIntroRequest,
+  shouldPlayIntro,
+} from "../game/intro";
 import { line as t } from "../game/copy";
 import { lang } from "../game/lang";
 
@@ -62,7 +68,12 @@ export function Intro() {
    * A REPLAY skips the ident: "watch the opening again" is a request for the
    * film, and nobody asking for it wants the studio logo first.
    */
-  const [identDone, setIdentDone] = useState(false);
+  /*
+    * Already true when this page is a RELOAD of one that just played it —
+    * the game restarts itself to pick up a new version, and that is not an
+    * opening. See identJustPlayed.
+    */
+  const [identDone, setIdentDone] = useState(identJustPlayed);
   const [mode, setMode] = useState<"auto" | "replay" | null>(() =>
     shouldPlayIntro() ? "auto" : null,
   );
@@ -84,7 +95,15 @@ export function Intro() {
     return () => window.clearTimeout(give);
   }, [mode, identDone]);
 
-  if (!identDone && mode !== "replay") return <Ident onDone={() => setIdentDone(true)} />;
+  if (!identDone && mode !== "replay")
+    return (
+      <Ident
+        onDone={() => {
+          markIdentPlayed();
+          setIdentDone(true);
+        }}
+      />
+    );
   if (!mode) return null;
 
   return (

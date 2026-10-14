@@ -1,6 +1,7 @@
 import { useCallback, useEffect, useState } from "react";
 import { periodEndsOn, type Period } from "@amanda/shared";
 import { challengesSoFar, claimChallenge, loadChallenges, type Standing } from "../game/meta";
+import { flyReward } from "../game/reward";
 import { Icon } from "./Icon";
 import { Lock } from "./SignedInOnly";
 import { line as t, lineF as tf } from "../game/copy";
@@ -72,16 +73,46 @@ export function Challenges({
 
   useEffect(reload, [reload, reloadKey]);
 
-  const take = async (id: string) => {
+  /*
+   * ═══ THE PRIZE IS SEEN TO MOVE ═══
+   *
+   * Or: *"when you take a challenge's prize there should be an animation of
+   * what was taken — the trophy, say — bursting open in a fun way, and then
+   * flying up to the bar, and the numbers there going up."*
+   *
+   * Before this, pressing "take" turned the row grey and a number somewhere
+   * else was different afterwards. Nothing connected the two, which is the
+   * whole of what a prize IS: this came from that.
+   *
+   * The token leaves the ROW's own prize icon rather than the button, because
+   * that icon is the thing being won — the gem or the nacho the child has
+   * been looking at while the bar filled.
+   *
+   * And the reload waits for it to land. Reloading first made the count
+   * change while the token was still in the air, so it arrived at a total
+   * that had already gone up; see reward.ts.
+   */
+  const take = async (id: string, button: HTMLElement) => {
     setBusy(id);
     setError(null);
+    const prize = live.find((c) => c.id === id)?.reward;
+    const flyFrom = button.closest("li")?.querySelector(".quests__pay");
     const failed = await claimChallenge(id);
     setBusy(null);
-    if (failed) setError(failed);
-    else {
-      reload();
-      onClaimed?.();
+    if (failed) {
+      setError(failed);
+      return;
     }
+    if (prize && flyFrom) {
+      await flyReward({
+        icon: prize.diamonds ? "gem" : "nacho",
+        // Both are optional in the type and exactly one is ever set.
+        amount: prize.diamonds ?? prize.nachos ?? 0,
+        from: flyFrom.getBoundingClientRect(),
+      });
+    }
+    reload();
+    onClaimed?.();
   };
 
   // Nothing to show is not an error: the server may simply not be reachable,
@@ -156,7 +187,9 @@ export function Challenges({
               <button
                 className="quests__take"
                 disabled={!c.done || busy === c.id}
-                onClick={signedIn ? () => void take(c.id) : gated(() => {})}
+                onClick={
+                  signedIn ? (e) => void take(c.id, e.currentTarget) : gated(() => {})
+                }
               >
                 {busy === c.id ? "…" : t("s1d3665c", "לקחת")}
                 {!signedIn && <Lock />}

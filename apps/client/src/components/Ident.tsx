@@ -27,6 +27,7 @@
  * does not, the picture is still there. Never the other way round.
  */
 import { useEffect, useRef, useState } from "react";
+import { markIdentPlayed } from "../game/intro";
 
 const SRC = `${import.meta.env.BASE_URL}brand/ident.mp4`;
 
@@ -46,6 +47,13 @@ export function Ident({ onDone }: { onDone: () => void }) {
   finish.current = onDone;
 
   useEffect(() => {
+    /*
+     * Marked on MOUNT, not on finish. The reload this guards against can
+     * land halfway through, and half an ident is still an ident the player
+     * watched — finishing is not what makes the second one unwanted.
+     */
+    markIdentPlayed();
+
     const leave = () => {
       setGone(true);
       finish.current();

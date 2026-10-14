@@ -143,8 +143,14 @@ export function ResultScreen({
                 <Icon name="again" size={17} /> {t("se3da978", "משחק חדש")}
               </button>
             )}
+            {/*
+              Or: *"on the result screen, instead of "menu" and a drawing of a
+              hamburger menu, write "back" and a house or an arrow."*
+              A hamburger is a promise of a list of options, and this button
+              opens no list — it goes back to where you came from.
+            */}
             <button className="btn-fight btn-ghost" onClick={m.reset}>
-              <Icon name="menu" size={16} /> {t("s11133bf", "תפריט")}
+              <Icon name="back" size={16} /> {t("s28e9a18", "חזרה")}
             </button>
             {/* Where a complaint about a person actually occurs to somebody:
                 right after playing them, not buried in a settings page. */}

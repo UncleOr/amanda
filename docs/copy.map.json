@@ -9161,9 +9161,9 @@
   }
  },
  {
-  "id": "s11133bf",
+  "id": "s28e9a18",
   "section": "components/ResultScreen.tsx",
-  "text": "תפריט",
+  "text": "חזרה",
   "where": {
    "kind": "source",
    "file": "apps/client/src/components/ResultScreen.tsx",
