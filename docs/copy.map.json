@@ -12680,5 +12680,15 @@
    "file": "apps/client/src/components/DeckBuilder.tsx",
    "line": 567
   }
+ },
+ {
+  "id": "s2c85215",
+  "section": "components/DeckBuilder.tsx",
+  "text": "מחזירים נזק",
+  "where": {
+   "kind": "source",
+   "file": "apps/client/src/components/DeckBuilder.tsx",
+   "line": 186
+  }
  }
 ]

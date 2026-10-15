@@ -109,7 +109,7 @@ const SORTS: Array<{ id: SortBy; label: () => string }> = [
  * returns forty-nine cards is a button that does nothing:
  *
  *     flying 11 · ranged 11 · hunts the King 5 · after death 7
- *     healers 6 · armoured 11 · moving 24 · still 27
+ *     healers 6 · returns damage 7 · armoured 4 · moving 24 · still 27
  *
  * `has an ability` was the obvious one to add and it is 49 of 51. Left out.
  */
@@ -171,6 +171,28 @@ export const FIXED_GROUPS: Group[] = [
         test: (c) => has(c, "regen", "healAura"),
       },
       {
+        /*
+         * Or: *"abilities needs 'returns damage' too."*
+         *
+         * It was inside "armoured", and it did not belong there: armour is
+         * about surviving a hit, and this is about the hit costing the
+         * attacker something. Seven cards do it — Spike, Stone Golem, the
+         * Iron Guard, Rock the Avenger, the Armour Beetle, Thorn Sprout and
+         * the Cactus — and not one of them is armoured as well, so the two
+         * do not overlap at all. It was never a sub-case of armour; it was a
+         * second thing I had filed under the first.
+         */
+        id: "reflect",
+        label: () => t("s2c85215", "מחזירים נזק"),
+        test: (c) => has(c, "damageReflect"),
+      },
+      {
+        /*
+         * `armorBreak` was in here too, which was simply wrong: breaking
+         * somebody else's armour is an attack. Taking it and the reflectors
+         * out leaves four cards that genuinely take less damage, and a
+         * filter that means one thing.
+         */
         id: "armour",
         label: () => t("s7966a9d", "משוריינים"),
         test: (c) =>
@@ -178,8 +200,6 @@ export const FIXED_GROUPS: Group[] = [
             c,
             "armorGain",
             "armorAura",
-            "armorBreak",
-            "damageReflect",
             "damageReductionAura",
             "damageShareAdjacent",
             "knockbackImmune",

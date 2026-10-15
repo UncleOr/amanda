@@ -116,6 +116,37 @@ describe("the album filter", () => {
     }
   });
 
+  /*
+   * "Returns damage" lived inside "armoured" until Or asked for it by name,
+   * and taking it out showed what had been wrong with the group: it also
+   * held `armorBreak`, which is breaking somebody ELSE's armour — an attack
+   * filed under defence. Both halves of that are easy to put back by
+   * accident, so both are stated here.
+   */
+  it("keeps returning damage and being armoured apart", () => {
+    const reflect = keep(ALL, GROUPS, pick("power:reflect"));
+    const armour = keep(ALL, GROUPS, pick("power:armour"));
+    expect(reflect.length).toBeGreaterThan(0);
+    expect(armour.length).toBeGreaterThan(0);
+    for (const c of reflect) {
+      expect(c.abilities.some((a) => a.type === "damageReflect")).toBe(true);
+      expect(armour, `${c.id} is in both`).not.toContain(c);
+    }
+  });
+
+  it("does not call breaking armour being armoured", () => {
+    const armour = keep(ALL, GROUPS, pick("power:armour"));
+    const breakers = ALL.filter((c) => c.abilities.some((a) => a.type === "armorBreak"));
+    expect(breakers.length).toBeGreaterThan(0);
+    for (const c of breakers) {
+      const alsoArmoured = c.abilities.some((a) =>
+        ["armorGain", "armorAura", "damageReductionAura", "damageShareAdjacent", "knockbackImmune"]
+          .includes(a.type),
+      );
+      if (!alsoArmoured) expect(armour, `${c.id} only BREAKS armour`).not.toContain(c);
+    }
+  });
+
   it("finds life after death, which is the one Or named", () => {
     const got = keep(ALL, GROUPS, pick("power:death"));
     expect(got.length).toBeGreaterThan(0);
