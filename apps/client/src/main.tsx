@@ -108,25 +108,95 @@ createRoot(document.getElementById("root")!).render(
 // Installable to a phone home screen, and playable on a bad connection.
 // Dev is left alone — a service worker there just gets in the way of HMR.
 if (import.meta.env.PROD && "serviceWorker" in navigator) {
-  // Whether this page was ALREADY running under a service worker. On a first
-  // ever visit the controller appears a moment later, and that is not a stale
-  // page — reloading for it would be a pointless flash.
+  /*
+   * ═══ A RUNNING APP HAS TO BE ABLE TO NOTICE A NEW VERSION ═══
+   *
+   * Or, after a deploy: *"do we need another version? I'm not seeing the
+   * changes, not in the browser and not in the app."*
+   *
+   * The site was live — the right bundle, the right strings, checked with the
+   * service worker and the caches wiped. What he had was an app that had been
+   * open, and none of the machinery below reached it: `update()` ran once, on
+   * load, and a page that is already running never loads again. On a phone,
+   * where the app is resumed from the task switcher rather than started, that
+   * is close to never.
+   *
+   * So it asks again whenever the app comes back to the front. Which is
+   * exactly the moment a player is about to look at it.
+   */
   const wasControlled = !!navigator.serviceWorker.controller;
   let reloading = false;
+  let registration: ServiceWorkerRegistration | null = null;
+  let lastAsked = Date.now();
 
-  navigator.serviceWorker.addEventListener("controllerchange", () => {
-    // A new version took over a page that was running an old one. Without this
-    // the player keeps the old app until they happen to close every tab, which
-    // on a phone home screen can be never.
-    if (!wasControlled || reloading) return;
+  /** At most this often, however many times the app is flicked back to. */
+  const ASK_EVERY = 10 * 60 * 1000;
+
+  /*
+   * ═══ AND IT MUST NOT RELOAD SOMEBODY MID-MATCH ═══
+   *
+   * This is the half that made the rest worth doing carefully. A reload takes
+   * the board away, and the ninety seconds a child spent building it. Asking
+   * for updates more often makes that more likely, not less.
+   *
+   * App.tsx writes the phase onto <html> (see the effect there), so the
+   * answer is one attribute read. "intro" is the home screen and absent means
+   * the game has not started yet; both are safe. Anything else waits — the
+   * new version is downloaded and sitting in the worker either way, and it
+   * lands the moment the match is over.
+   */
+  const idle = () => {
+    const phase = document.documentElement.dataset.phase;
+    return !phase || phase === "intro";
+  };
+
+  let pending = false;
+  const reloadWhenSafe = () => {
+    if (reloading) return;
+    if (!idle()) {
+      pending = true;
+      return;
+    }
     reloading = true;
     location.reload();
+  };
+
+  navigator.serviceWorker.addEventListener("controllerchange", () => {
+    // A new version took over a page that was running an old one. Without
+    // this the player keeps the old app until they happen to close every tab,
+    // which on a phone home screen can be never.
+    if (!wasControlled) return;
+    reloadWhenSafe();
   });
+
+  /*
+   * The match ended and an update was waiting. Polled rather than pushed,
+   * because the alternative is another global for one boolean — and once a
+   * minute, for a thing that is almost never true, costs nothing.
+   */
+  window.setInterval(() => {
+    if (pending) reloadWhenSafe();
+  }, 60 * 1000);
+
+  const ask = () => {
+    if (!registration || document.visibilityState !== "visible") return;
+    if (Date.now() - lastAsked < ASK_EVERY) return;
+    lastAsked = Date.now();
+    void registration.update().catch(() => {
+      /* offline, or the worker is gone; either is survivable */
+    });
+  };
+
+  document.addEventListener("visibilitychange", ask);
+  window.addEventListener("focus", ask);
 
   window.addEventListener("load", () => {
     void navigator.serviceWorker
       .register(`${import.meta.env.BASE_URL}sw.js`)
-      .then((reg) => reg.update())
+      .then((reg) => {
+        registration = reg;
+        return reg.update();
+      })
       .catch(() => {
         /* no service worker is survivable; the game still runs */
       });

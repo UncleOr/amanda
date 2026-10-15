@@ -810,6 +810,18 @@ function Game() {
   useAchievements(m);
 
   /*
+   * The phase, on <html>, for the one thing outside React that needs it.
+   *
+   * main.tsx reloads the page when a new version of the game takes over, and
+   * must not do that while somebody is building a board. This is how it asks:
+   * one attribute, read with no import and no bridge, from a file that is
+   * deliberately not part of this tree.
+   */
+  useEffect(() => {
+    document.documentElement.dataset.phase = m.phase;
+  }, [m.phase]);
+
+  /*
    * ═══ ONE COUNTDOWN, AND PANIC IS ITS LAST TEN SECONDS ═══
    *
    * Or: *"it is terribly confusing that the time runs out and THEN panic. The
