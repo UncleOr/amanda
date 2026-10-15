@@ -24,6 +24,7 @@
 import type { SupabaseClient } from "@supabase/supabase-js";
 import {
   challengesFor,
+  isCollectable,
   israelDay,
   nachoChestKind,
   nachosForScore,
@@ -53,12 +54,32 @@ const BACK_X = 0;
  * Built once. The catalogue does not change while the process is up, and
  * `challengesFor` is called after every single match.
  */
-const POOLS: Pools = {
-  cards: [...CATALOG.values()]
-    .filter((c) => c.id !== "crumb_demon" && c.launch)
-    .map((c) => ({ id: c.id, he: c.name.he })),
-  series: [...SERIES_NAMES].map(([id, he]) => ({ id, he })),
-};
+const POOLS: Pools = (() => {
+  const playable = [...CATALOG.values()].filter(
+    (c) => c.id !== "crumb_demon" && c.launch && isCollectable(c),
+  );
+  /*
+   * ═══ A FAMILY WITH NOTHING YOU CAN PLAY IS NOT A CHALLENGE ═══
+   *
+   * The card pool has always filtered on `launch`. The SERIES pool did not,
+   * and it took every name in the catalogue — including the legends, whose
+   * only card is Amanda. She is `launch: false` and, since the day she was
+   * correctly taken out of the chest pool, uncollectable too.
+   *
+   * So "put a card from the Legendaries in the back row" has been a daily
+   * challenge nobody could ever complete. Found on the live site, in the
+   * challenge list of a brand-new account, while checking something else.
+   *
+   * A series earns its place by having a card you could put on a board.
+   */
+  const families = new Set(playable.map((c) => c.seriesId));
+  return {
+    cards: playable.map((c) => ({ id: c.id, he: c.name.he })),
+    series: [...SERIES_NAMES]
+      .filter(([id]) => families.has(id))
+      .map(([id, he]) => ({ id, he })),
+  };
+})();
 
 /** What is being asked of everybody today. */
 export function liveChallenges(now: Date = new Date()): Challenge[] {
