@@ -12230,5 +12230,95 @@
    "file": "apps/client/src/components/HomeScreen.tsx",
    "line": 0
   }
+ },
+ {
+  "id": "sa92d994",
+  "section": "components/DeckBuilder.tsx",
+  "text": "מחיר",
+  "where": {
+   "kind": "source",
+   "file": "apps/client/src/components/DeckBuilder.tsx",
+   "line": 0
+  }
+ },
+ {
+  "id": "s57bf777",
+  "section": "components/DeckBuilder.tsx",
+  "text": "עוצמה",
+  "where": {
+   "kind": "source",
+   "file": "apps/client/src/components/DeckBuilder.tsx",
+   "line": 0
+  }
+ },
+ {
+  "id": "s1950df9",
+  "section": "components/DeckBuilder.tsx",
+  "text": "חיים",
+  "where": {
+   "kind": "source",
+   "file": "apps/client/src/components/DeckBuilder.tsx",
+   "line": 0
+  }
+ },
+ {
+  "id": "s39768fa",
+  "section": "components/DeckBuilder.tsx",
+  "text": "סדרה",
+  "where": {
+   "kind": "source",
+   "file": "apps/client/src/components/DeckBuilder.tsx",
+   "line": 0
+  }
+ },
+ {
+  "id": "s3451fcc",
+  "section": "components/DeckBuilder.tsx",
+  "text": "מיון",
+  "where": {
+   "kind": "source",
+   "file": "apps/client/src/components/DeckBuilder.tsx",
+   "line": 0
+  }
+ },
+ {
+  "id": "sa0f9456",
+  "section": "components/DeckBuilder.tsx",
+  "text": "סינון",
+  "where": {
+   "kind": "source",
+   "file": "apps/client/src/components/DeckBuilder.tsx",
+   "line": 0
+  }
+ },
+ {
+  "id": "s4c85e6b",
+  "section": "components/DeckBuilder.tsx",
+  "text": "הכל",
+  "where": {
+   "kind": "source",
+   "file": "apps/client/src/components/DeckBuilder.tsx",
+   "line": 0
+  }
+ },
+ {
+  "id": "s91ecd04",
+  "section": "components/DeckBuilder.tsx",
+  "text": "זזים",
+  "where": {
+   "kind": "source",
+   "file": "apps/client/src/components/DeckBuilder.tsx",
+   "line": 0
+  }
+ },
+ {
+  "id": "s3fc66d9",
+  "section": "components/DeckBuilder.tsx",
+  "text": "סטטיים",
+  "where": {
+   "kind": "source",
+   "file": "apps/client/src/components/DeckBuilder.tsx",
+   "line": 0
+  }
  }
 ]

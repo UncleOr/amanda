@@ -978,5 +978,14 @@
  "sd0c6462": "That did not save. Try again.",
  "s2c36448": "You can keep {0} decks. Delete one first.",
  "sb682ef4": "You already have a deck with that name.",
- "s3fc668a": "Deck"
+ "s3fc668a": "Deck",
+ "sa92d994": "Price",
+ "s57bf777": "Power",
+ "s1950df9": "Health",
+ "s39768fa": "Family",
+ "s3451fcc": "Sort",
+ "sa0f9456": "Filter",
+ "s4c85e6b": "All",
+ "s91ecd04": "Moving",
+ "s3fc66d9": "Static"
 }

@@ -124,8 +124,7 @@
  * shape. Without this the cards came out three pixels tall, which is exactly
  * what it looks like.
  */
-.builder__slot,
-.builder__pick {
+.builder__slot {
   aspect-ratio: 3 / 4;
 }
 .builder__slot {
@@ -168,21 +167,35 @@
  */
 .builder__pick.is-spent { opacity: 0.32; cursor: default; filter: grayscale(0.7); }
 
-/* The price, on the card, everywhere a card is drawn here. */
+/*
+ * ═══ THE PRICE SITS UNDER THE CARD ═══
+ *
+ * Or: *"put the price under each card, so it does not look odd."*
+ *
+ * It was a badge pinned to the top corner of the artwork, and that corner is
+ * not free: the card already draws a rarity gem and a level there. Three
+ * things in twenty pixels is the odd look. Below the card it has a line of
+ * its own and the artwork is left alone.
+ */
+.builder__art {
+  position: relative;
+  display: block;
+  aspect-ratio: 3 / 4;
+}
 .builder__price {
-  position: absolute;
-  inset-block-start: 3px;
-  inset-inline-start: 3px;
-  min-width: 17px;
-  padding: 1px 4px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 3px;
+  margin-block-start: 3px;
+  padding: 1px 0;
   border-radius: 999px;
-  background: rgba(8, 12, 22, 0.88);
-  border: 1px solid var(--accent);
+  background: rgba(8, 12, 22, 0.75);
+  border: 1px solid var(--line);
   color: var(--accent);
   font-size: var(--t-1);
   font-weight: 900;
-  line-height: 1.5;
-  text-align: center;
+  line-height: 1.6;
 }
 .builder__copies {
   position: absolute;
@@ -196,6 +209,49 @@
   font-size: var(--t-1);
   font-weight: 800;
   line-height: 1.5;
+}
+
+/*
+ * ═══ SORT AND FILTER, AS TWO ROWS OF CHIPS ═══
+ *
+ * Or: *"we also need filtering and sorting."*
+ *
+ * They scroll sideways rather than wrapping, because wrapping costs a ROW —
+ * and on a landscape phone this screen has four of them in 384 pixels. A
+ * row that can be flicked is a row that stays one row.
+ */
+.builder__sift {
+  display: flex;
+  flex-direction: column;
+  gap: var(--sp-1);
+  padding: var(--sp-2) var(--sp-3) 0;
+}
+.builder__chips {
+  display: flex;
+  gap: var(--sp-1);
+  overflow-x: auto;
+  scrollbar-width: none;
+  padding-block-end: 2px;
+}
+.builder__chips::-webkit-scrollbar { display: none; }
+.chip {
+  flex: none;
+  padding: 3px 11px;
+  border-radius: 999px;
+  border: 1px solid var(--line);
+  background: var(--sur-1);
+  color: var(--muted);
+  font: inherit;
+  font-size: var(--t-2);
+  font-weight: 700;
+  cursor: pointer;
+  white-space: nowrap;
+}
+/* The lit one IS the answer to "what am I looking at". */
+.chip.is-on {
+  border-color: var(--accent);
+  background: var(--sur-lit);
+  color: var(--text);
 }
 
 .builder__foot {
@@ -316,3 +372,42 @@
 
 /* The same door on a phone, where the ladder's buttons are hidden. */
 .rail__item--deck .btn-deck__back { width: 14px; height: 19px; }
+
+/*
+ * A landscape phone, which is the screen this is actually used on.
+ *
+ * The back picker was taking 44vh of a 384px screen — 169 pixels, two rows
+ * of it — and pushing the deck and the album off the bottom. It is one row
+ * that scrolls here, like the chips.
+ */
+@media (max-height: 460px) {
+  .builder__backs {
+    grid-template-columns: none;
+    grid-auto-flow: column;
+    grid-auto-columns: 76px;
+    overflow-x: auto;
+    max-height: none;
+    padding: var(--sp-2) var(--sp-3);
+  }
+  .builder__sift { padding-block-start: var(--sp-1); gap: 2px; }
+  .builder__chips { gap: 4px; }
+  .chip { padding: 2px 9px; }
+  .builder__price { margin-block-start: 2px; padding: 0; }
+
+  /*
+   * ═══ WHERE THE 384 PIXELS GO ═══
+   *
+   * Measured before touching anything, because "it is cramped" is not a
+   * number. On a 832x384 phone it was: header 47, deck 110, chips 55, album
+   * 97, footer 75 — and a card plus its price line needs 99, so the price
+   * was being cut off by two pixels. Two.
+   *
+   * The footer was the waste: seventy-five pixels of padding around one
+   * button, on the screen with the least room in the game. It and the header
+   * give back forty-odd between them and the album drawer takes all of it.
+   */
+  .builder__top { padding: var(--sp-1) var(--sp-3); }
+  .builder__foot { padding: var(--sp-2) var(--sp-3); }
+  .builder__foot .btn-fight { padding: 7px 20px; font-size: var(--t-3); }
+  .builder__deck { padding-block: var(--sp-1); }
+}
