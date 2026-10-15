@@ -3762,9 +3762,9 @@
   }
  },
  {
-  "id": "sc752be6",
+  "id": "sc18c32d",
   "section": "מסכי המשחק — פתיחה, בנייה, קרב, תוצאה",
-  "text": "חפיסה זהה",
+  "text": "דק זהה",
   "where": {
    "kind": "source",
    "file": "apps/client/src/App.tsx",
@@ -4222,9 +4222,9 @@
   }
  },
  {
-  "id": "s2f616ac",
+  "id": "sba4d2ee",
   "section": "מסכי המשחק — פתיחה, בנייה, קרב, תוצאה",
-  "text": "קלפים שנשארו בחפיסה",
+  "text": "קלפים שנשארו בדק",
   "where": {
    "kind": "source",
    "file": "apps/client/src/App.tsx",
@@ -7071,9 +7071,9 @@
   }
  },
  {
-  "id": "s9ed23d9",
+  "id": "sfb0ff51",
   "section": "components/Album.tsx",
-  "text": "אתה משחק מהחפיסה המלאה",
+  "text": "אתה משחק מהדק המלא",
   "where": {
    "kind": "source",
    "file": "apps/client/src/components/Album.tsx",
@@ -8331,9 +8331,9 @@
   }
  },
  {
-  "id": "s5c8a703",
+  "id": "s7c9fba9",
   "section": "components/MoreModes.tsx",
-  "text": "חפיסה זהה",
+  "text": "דק זהה",
   "where": {
    "kind": "source",
    "file": "apps/client/src/components/MoreModes.tsx",

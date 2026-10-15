@@ -105,7 +105,7 @@ export function Album({ account, onClose, onCardInfo, onChanged }: Props) {
       {/* Five words, not two sentences. Or has asked for this more times than
           any other thing in this game, and the audit now reads multi-line JSX
           so it can no longer be slipped past by pressing Enter. */}
-      {!account && <p className="album__none">{t("s9ed23d9", "אתה משחק מהחפיסה המלאה")}</p>}
+      {!account && <p className="album__none">{t("sfb0ff51", "אתה משחק מהדק המלא")}</p>}
 
       {note && <p className="album__none album__none--warn">{note}</p>}
 

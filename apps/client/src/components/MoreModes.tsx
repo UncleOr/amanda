@@ -44,7 +44,7 @@ export function MoreModes({
     {
       id: "mirror",
       icon: "deck",
-      title: t("s5c8a703", "חפיסה זהה"),
+      title: t("s7c9fba9", "דק זהה"),
       blurb: t("secbb695", "אותם קלפים לשני הצדדים."),
       start: onMirror,
     },

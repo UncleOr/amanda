@@ -923,7 +923,7 @@ function Game() {
             thing that makes it interesting is invisible. */}
         {m.mirrorSeed !== null && showBoards && (
           <div className="topbar__mode">
-            <Icon name="deck" size={14} /> {t("sc752be6", "חפיסה זהה")}
+            <Icon name="deck" size={14} /> {t("sc18c32d", "דק זהה")}
           </div>
         )}
         <div className="topbar__right">
@@ -1438,7 +1438,7 @@ function Game() {
               <div className="hand__counts">
                 <span
                   className={`count count--deck${m.deckLeft <= 3 ? " count--low" : ""}`}
-                  title={t("s2f616ac", "קלפים שנשארו בחפיסה")}
+                  title={t("sba4d2ee", "קלפים שנשארו בדק")}
                 >
                   <Icon name="deck" size={15} /> {m.deckLeft}
                 </span>
