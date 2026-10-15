@@ -908,13 +908,20 @@ function Game() {
           */}
           {m.phase === "intro" && (
             <button className="me" onClick={() => panel.show("profile")}>
-              {m.account?.avatar ? (
-                <img src={`${BASE}brand/${m.account.avatar}.webp`} alt="" />
+              {/*
+                `m.me`, not `m.account`: somebody who never chose a nickname
+                or a face now has both anyway (shared/identity.ts), and this
+                chip has to agree with what every other player is shown.
+                The crown is only for a guest, who has no account to be
+                anybody with.
+              */}
+              {m.me.avatar ? (
+                <img src={`${BASE}brand/${m.me.avatar}.webp`} alt="" />
               ) : (
                 <Icon name="king" size={20} />
               )}
               <span className="me__name">
-                {m.account?.nickname ??
+                {m.me.nickname ??
                   (m.account?.linked ? t("se2c2032", "הפרופיל שלי") : t("sda25897", "התחברות"))}
               </span>
             </button>

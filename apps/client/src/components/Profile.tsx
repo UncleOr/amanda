@@ -38,54 +38,25 @@ import {
   type Account,
 } from "../game/account";
 import { Icon } from "./Icon";
-import { NO_PHRASE, ownedCatchphrases } from "@amanda/shared";
+import {
+  AVATAR_IDS,
+  NO_PHRASE,
+  SHOP_AVATAR_IDS,
+  handleFor,
+  ownedCatchphrases,
+} from "@amanda/shared";
 import { Plaque } from "./Plaque";
 import * as V from "../data/voice";
 import { Overlay } from "./Overlay";
 import { line as t, lineF as tf } from "../game/copy";
 
-/**
- * The avatars drawn for this, matching packages/art/src/brandLooks.ts.
- * Interleaved on purpose so the grid does not read as "the boys, then the
- * girls, then the monsters" — the first row alone is a knight, a sorceress,
- * a robot and a warrior.
+/*
+ * The two face lists live in @amanda/shared now — the server has to be able
+ * to pick a face for somebody who never chose one, and it cannot import a
+ * React component. Re-exported here because four screens import them from
+ * this file and the lists are still what this screen is mostly about.
  */
-export const AVATAR_IDS = [
-  "av_knight",
-  "av_sorceress",
-  "av_robot",
-  "av_warrior",
-  "av_witch",
-  "av_pirate",
-  "av_goblin",
-  "av_fairy",
-  "av_ghost",
-  "av_vampire",
-  "av_cat",
-  "av_alien",
-  "av_slime",
-  "av_mummy",
-  "av_dragon",
-  "av_wolf",
-] as const;
-
-/**
- * The faces the shop sells.
- *
- * Kept apart from the free list above rather than mixed into it, because the
- * grid has to be able to answer "can I have this one" — and the answer is a
- * row in player_items, not a hard-coded list. A face that is not yours is not
- * drawn here at all: a locked thing you can see but not choose is an
- * advertisement inside the profile screen, and the shop is where the shop is.
- */
-export const SHOP_AVATAR_IDS = [
-  "av_astronaut",
-  "av_mechanic",
-  "av_skater",
-  "av_yeti",
-  "av_jellyking",
-  "av_mothgirl",
-] as const;
+export { AVATAR_IDS, SHOP_AVATAR_IDS };
 
 const BASE = import.meta.env.BASE_URL;
 
@@ -230,7 +201,13 @@ export function Profile({ account, onClose, onChanged }: Props) {
               className="profile__name"
               value={nickname}
               maxLength={16}
-              placeholder={t("s5516565", "הכינוי שלך")}
+              /*
+                The placeholder is the handle the game actually calls you by
+                when you have not chosen one — so this field shows what
+                everybody else is seeing, and typing over it is plainly a
+                replacement rather than a first naming. See identity.ts.
+              */
+              placeholder={handleFor(account?.playerId ?? "") || t("s5516565", "הכינוי שלך")}
               onChange={(e) => setNickname(e.target.value)}
             />
             <div className="profile__stats">

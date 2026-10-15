@@ -68,6 +68,15 @@ export const CardSchema = z.object({
   abilities: z.array(AbilitySchema).default([]),
   /** Design/tooltip text describing the card's role. Not read by the engine. */
   role: LocalizedStringSchema.optional(),
+  /*
+   * What this card costs in a deck, 1 to 5.
+   *
+   * Left out of almost every card on purpose: cardCost.ts works it out from
+   * the stats, which means a card Or rebalances in the admin panel re-prices
+   * itself. This is the override for when the formula is wrong about a
+   * particular card — Or: *"Chuppy should cost 4, not 5."*
+   */
+  cost: z.number().int().min(1).max(5).optional(),
   art: ArtSchema,
 });
 export type Card = z.infer<typeof CardSchema>;

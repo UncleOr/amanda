@@ -40,6 +40,7 @@
         "electric"
       ],
       "rarity": "rare",
+      "cost": 4,
       "stats": {
         "hp": 610,
         "power": 1100,

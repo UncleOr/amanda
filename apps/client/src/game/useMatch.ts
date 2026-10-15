@@ -2,11 +2,14 @@ import { useCallback, useEffect, useRef, useState } from "react";
 import {
   DECK,
   KING,
+  LEVELS,
   PHASES,
   COOP_LANES,
   buildAmandaBoard,
   levelMultiplier,
   emojiFromSayId,
+  shownAvatar,
+  shownName,
   tauntById,
   type BotLevel,
   type Card,
@@ -520,8 +523,14 @@ function buildPlayerBoard(
   mods: BattleMods,
   stacked: Record<string, string> = {},
   album?: Map<string, OwnedCard> | null,
+  levelCap: number = LEVELS.max,
 ): BoardInput {
-  const levelOf = (id: string) => album?.get(id)?.level ?? 1;
+  /*
+   * Capped, not just read. In a private room both friends fight at the lower
+   * of their two albums (levelCapRef) — a card below the cap still plays at
+   * its own level, and nobody is ever handed one they have not earned.
+   */
+  const levelOf = (id: string) => Math.min(album?.get(id)?.level ?? 1, levelCap);
   const resolved = resolveKing(state.king, state.placements);
   const ps: Placement[] = [];
   // No King is a real state — see resolveKing. Never crown a crumb.
@@ -895,6 +904,16 @@ export function useMatch(): MatchApi {
   const [suspendedUntil, setSuspendedUntil] = useState<string | null>(null);
   const [roomCode, setRoomCode] = useState<string | null>(null);
   const [vsFriend, setVsFriend] = useState(false);
+  /*
+   * The highest level this board may fight at.
+   *
+   * Sent by the server for a private room only — two friends play at the
+   * same level, see topLevel() in the server's progress.ts. A ref rather
+   * than state because the only thing that reads it is buildPlayerBoard,
+   * which is called from a callback and not from a render.
+   */
+  // Typed, because LEVELS.max is the literal 10 and this holds any level.
+  const levelCapRef = useRef<number>(LEVELS.max);
   const [roomError, setRoomError] = useState<RoomError | null>(null);
   /** Cards stacked underneath a placed card, revealed when the top one dies. */
   const [stacked, setStacked] = useState<Record<string, string>>({});
@@ -1568,7 +1587,13 @@ export function useMatch(): MatchApi {
       const now = !was;
       if (now)
         netRef.current?.lock(
-          buildPlayerBoard(fillGs(gsRef.current, barRef.current), modsRef.current, stackedRef.current, accountRef.current?.album),
+          buildPlayerBoard(
+            fillGs(gsRef.current, barRef.current),
+            modsRef.current,
+            stackedRef.current,
+            accountRef.current?.album,
+            levelCapRef.current,
+          ),
         );
       else netRef.current?.unready();
       sfx.play("click");
@@ -1585,7 +1610,15 @@ export function useMatch(): MatchApi {
     setTimeLeft(PREBATTLE_SECONDS);
     // In an online match, submit the locked board to the server now.
     if (onlineRef.current)
-      netRef.current?.lock(buildPlayerBoard(filled, modsRef.current, stackedRef.current, accountRef.current?.album));
+      netRef.current?.lock(
+        buildPlayerBoard(
+          filled,
+          modsRef.current,
+          stackedRef.current,
+          accountRef.current?.album,
+          levelCapRef.current,
+        ),
+      );
   }, []);
 
   /**
@@ -1621,6 +1654,7 @@ export function useMatch(): MatchApi {
       modsRef.current,
       stackedRef.current,
       accountRef.current?.album,
+      levelCapRef.current,
     );
     /*
      * In the solo preview, somebody stands in the other half.
@@ -1742,6 +1776,7 @@ export function useMatch(): MatchApi {
     setRoomCode(null);
     setRoomError(null);
     setVsFriend(false);
+    levelCapRef.current = LEVELS.max;
     setCoop(false);
     setMyLane(0);
     soloAmandaRef.current = false;
@@ -1803,6 +1838,9 @@ export function useMatch(): MatchApi {
         setRoomError(reason);
         netRef.current?.close();
         netRef.current = null;
+      },
+      onLevelCap: (cap) => {
+        levelCapRef.current = Math.max(1, Math.min(LEVELS.max, cap));
       },
       onStart: (side, isCoop, lane) => {
         matchStartedRef.current = true;
@@ -2215,7 +2253,13 @@ export function useMatch(): MatchApi {
   useEffect(() => {
     if (!online || !ready) return;
     netRef.current?.lock(
-      buildPlayerBoard(fillGs(gs, barRef.current), modsRef.current, stackedRef.current, accountRef.current?.album),
+      buildPlayerBoard(
+        fillGs(gs, barRef.current),
+        modsRef.current,
+        stackedRef.current,
+        accountRef.current?.album,
+        levelCapRef.current,
+      ),
     );
   }, [online, ready, gs, boardPowerAdd, boostedCells, stacked]);
 
@@ -2308,8 +2352,14 @@ export function useMatch(): MatchApi {
     award,
     rival,
     me: {
-      nickname: account?.nickname ?? null,
-      avatar: account?.avatar ?? null,
+      /*
+       * The same automatic handle the other player sees for you — the server
+       * fills it from the same function (shared/identity.ts), so the versus
+       * screen shows both of you the name you are actually known by rather
+       * than showing you a blank and them a handle.
+       */
+      nickname: shownName(account?.nickname, account?.playerId),
+      avatar: shownAvatar(account?.avatar, account?.playerId),
       trophies: account?.trophies ?? 0,
       catchphrase: account?.catchphrase ?? null,
       gender: account?.gender ?? null,

@@ -52,6 +52,8 @@ export interface NetHandlers {
   onRoom?: (code: string) => void;
   onRoomError?: (reason: RoomError) => void;
   onStart?: (side: Side, coop: boolean, lane: number) => void;
+  /** The highest level either board may fight at — a private room only. */
+  onLevelCap?: (cap: number) => void;
   onPhase?: (phase: string, timeLeft: number) => void;
   onOpp?: (view: BoardView) => void;
   /** Amanda mode: your partner's half, unfogged, and which half it is. */
@@ -203,6 +205,9 @@ export class Net {
           break;
         case "roomError":
           this.handlers.onRoomError?.(msg.reason);
+          break;
+        case "levelCap":
+          this.handlers.onLevelCap?.(msg.cap);
           break;
         case "start":
           this.handlers.onStart?.(msg.side, msg.coop ?? false, msg.lane ?? 0);

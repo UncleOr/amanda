@@ -10,7 +10,7 @@ import {
 import { Match } from "./match.js";
 import { arrived, deliver, left as presenceLeft, presenceCounts } from "./presence.js";
 import { areFriends } from "./friends.js";
-import { PROGRESS_ENABLED } from "./progress.js";
+import { PROGRESS_ENABLED, topLevel } from "./progress.js";
 import { handleApi } from "./api.js";
 import { cardOf, forget, loadProfile, profileOf } from "./profiles.js";
 import { refreshCards } from "./cards.js";
@@ -178,6 +178,30 @@ function beginMatch(a: WebSocket, b: WebSocket, how: string, coop = false): void
   matchOf.set(b, m);
   liveMatches.add(m);
   console.log(`[server] match started (${how})`);
+
+  /*
+   * Two friends fight at the same level. See topLevel() in progress.ts for
+   * why, and why it is a cap rather than a setting.
+   *
+   * Only for a room: everything else came through the matchmaker, which
+   * already refuses to put a deep album against a thin one. Deliberately not
+   * awaited — the match is already running and the boards are not locked for
+   * another forty-five seconds, so the cap arrives long before anything
+   * could use it, and a slow database delays nobody.
+   */
+  if (how.startsWith("room")) {
+    const sb = db();
+    if (sb) {
+      void Promise.all([
+        topLevel(sb, playerIdOf.get(a) ?? null),
+        topLevel(sb, playerIdOf.get(b) ?? null),
+      ]).then(([la, lb]) => {
+        const cap = Math.min(la, lb);
+        send(a, { t: "levelCap", cap });
+        send(b, { t: "levelCap", cap });
+      });
+    }
+  }
 }
 
 /** Read this player's record, so the queue knows who they are. */

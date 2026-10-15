@@ -176,6 +176,15 @@ export type ServerMessage =
    * is a worse screen and a perfectly good game.
    */
   | { t: "opponent"; who: PlayerCard }
+  /*
+   * The highest card level either board may fight at.
+   *
+   * Sent only for a private room, where two friends who chose each other
+   * would otherwise meet whatever gap a month of upgrading has opened. See
+   * topLevel() in progress.ts. Absent means no cap, which is every other
+   * kind of match.
+   */
+  | { t: "levelCap"; cap: number }
   | { t: "oppLeft" }
   /**
    * You are suspended and no match will start. Carries the date it lifts, so

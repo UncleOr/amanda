@@ -24,6 +24,13 @@ export * from "./amandaBoard.js";
 // Which cards can be WON — asked by the chest pool, the album and the achievements
 export * from "./collectable.js";
 
+// What a card costs in a deck — the budget the deck builder spends
+export * from "./cardCost.js";
+
+// The faces, and a name and a face for whoever never chose one
+export * from "./avatars.js";
+export * from "./identity.js";
+
 // The ladder of arenas, and which one a trophy count puts you in.
 export * from "./arenas.js";
 

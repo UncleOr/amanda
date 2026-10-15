@@ -18,6 +18,7 @@ import type { SupabaseClient } from "@supabase/supabase-js";
 import {
   CATCHPHRASES,
   EMOJI_PACKS,
+  LEVELS,
   TUNED,
   collectableCards as pickCollectable,
   type Card,
@@ -355,5 +356,46 @@ export async function recordMatch(opts: {
     // A match that finished is more important than a row that did not save.
     saves.lastError = (err as Error).message.slice(0, 300);
     console.error("[progress] could not record match", err);
+  }
+}
+
+/*
+ * ═══ TWO FRIENDS PLAY AT THE SAME LEVEL ═══
+ *
+ * Or: *"if two friends play, both albums' levels should be normalised to the
+ * lower of the two. Whoever got cards will have rare cards, but the level
+ * will be the same. No need to tell the users, just do it."*
+ *
+ * The matchmaker already stops a deep album meeting a thin one (albumPower,
+ * matchmaking.ts) — but a private room does not go through the matchmaker.
+ * That is the whole point of a private room: you play the person you chose.
+ * So the one thing that makes two friends unplayable together, one of them
+ * having spent a month upgrading, has to be handled here instead.
+ *
+ * The CAP is the lower player's highest card. Capping rather than setting:
+ * nobody is ever handed a level they have not earned, and a card below the
+ * cap still plays at its own level. When the gap is the one Or is worried
+ * about — level 8 against level 1 — the cap is 1 and both boards fight at
+ * their base stats, which is exactly the match he wants them to have.
+ */
+export async function topLevel(
+  sb: SupabaseClient,
+  playerId: string | null,
+): Promise<number> {
+  // A guest has no upgrades at all, so they are the floor.
+  if (!playerId) return 1;
+  try {
+    const { data } = await sb
+      .from("player_cards")
+      .select("level")
+      .eq("player_id", playerId)
+      .order("level", { ascending: false })
+      .limit(1)
+      .maybeSingle();
+    return Math.max(1, (data?.level as number) ?? 1);
+  } catch {
+    // Unknown is not the same as low: a database hiccup must not quietly
+    // flatten somebody's album. 10 is the ceiling, so this caps nothing.
+    return LEVELS.max;
   }
 }

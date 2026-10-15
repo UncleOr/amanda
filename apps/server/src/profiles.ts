@@ -26,7 +26,7 @@
  * the free emoji and nothing more, rather than nothing at all.
  */
 import type { WebSocket } from "ws";
-import type { PlayerCard } from "@amanda/shared";
+import { shownAvatar, shownName, type PlayerCard } from "@amanda/shared";
 import { db } from "./supabase.js";
 
 export interface Profile extends PlayerCard {
@@ -72,9 +72,25 @@ export async function loadProfile(ws: WebSocket, playerId: string): Promise<void
       sb.from("player_items").select("item_id").eq("player_id", playerId),
     ]);
     if (!row) return;
+    /*
+     * ═══ NOBODY ARRIVES WITHOUT A NAME OR A FACE ═══
+     *
+     * Or: *"in a 1v1 on the computer you don't see the opponent's name"*,
+     * and then: *"a player with no nickname gets an automatic handle like
+     * the bot's, and a default picture (but not an emoji)."*
+     *
+     * It was never a display bug. Asked of the database: 113 players, 10
+     * with a nickname. The screen that exists to make your opponent a person
+     * was introducing nine out of ten of them as "somebody".
+     *
+     * Filled HERE rather than at the screen, because the opponent's card is
+     * built from this row and sent across the wire — so one place covers the
+     * versus screen, the board label and the battle banner at once, and the
+     * player's own screens get the same answer from shared/identity.ts.
+     */
     profiles.set(ws, {
-      nickname: (row.nickname as string | null) ?? null,
-      avatar: (row.avatar as string | null) ?? null,
+      nickname: shownName(row.nickname as string | null, playerId),
+      avatar: shownAvatar(row.avatar as string | null, playerId),
       trophies: (row.trophies as number) ?? 0,
       catchphrase: (row.catchphrase as string | null) ?? null,
       gender: (row.gender as "boy" | "girl" | null) ?? null,
