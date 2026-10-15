@@ -412,7 +412,16 @@
 }
 .record__grid {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(96px, 1fr));
+  /*
+   * Capped, not stretched.
+   *
+   * `1fr` was right when there were five of these and they filled the row.
+   * With two — Or removed losses, chests and the copies total — each one
+   * grew to 599px: a stat tile the width of half the album with a single
+   * digit in the middle of it. A tile is a tile at any count.
+   */
+  grid-template-columns: repeat(auto-fit, minmax(96px, 176px));
+  justify-content: center;
   gap: 10px;
 }
 .record__cell {

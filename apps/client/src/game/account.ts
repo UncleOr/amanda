@@ -639,11 +639,8 @@ export function markChestSeen(id: string): void {
 export interface Stats {
   played: number;
   wins: number;
-  losses: number;
   /** Most recent first: true for a win. Used for the little streak row. */
   recent: boolean[];
-  chestsOpened: number;
-  copiesOwned: number;
   bestTrophies: number;
 }
 
@@ -661,30 +658,29 @@ export async function loadStats(): Promise<Stats | null> {
     const { data: auth } = await sb.auth.getSession();
     const id = auth.session?.user.id;
     if (!id) return null;
-    const [{ data: matches }, { count: chests }, { data: player }, { data: cards }] =
-      await Promise.all([
-        sb
-          .from("matches")
-          .select("winner, played_at")
-          .or(`player_a.eq.${id},player_b.eq.${id}`)
-          .order("played_at", { ascending: false })
-          .limit(100),
-        sb
-          .from("chests")
-          .select("id", { count: "exact", head: true })
-          .eq("player_id", id),
-        sb.from("players").select("best_trophies").eq("id", id).maybeSingle(),
-        sb.from("player_cards").select("copies").eq("player_id", id),
-      ]);
+    /*
+     * Two queries, and it used to be four.
+     *
+     * The chests count and every row of player_cards were read to fill two
+     * cells Or has since removed from the album — "there is no need to write
+     * how many chests we collected, and I don't know what 'copies' is". A
+     * query that feeds nothing is a query that should not run.
+     */
+    const [{ data: matches }, { data: player }] = await Promise.all([
+      sb
+        .from("matches")
+        .select("winner, played_at")
+        .or(`player_a.eq.${id},player_b.eq.${id}`)
+        .order("played_at", { ascending: false })
+        .limit(100),
+      sb.from("players").select("best_trophies").eq("id", id).maybeSingle(),
+    ]);
     const rows = matches ?? [];
     const recent = rows.map((m) => m.winner === id);
     return {
       played: rows.length,
       wins: recent.filter(Boolean).length,
-      losses: recent.filter((w) => !w).length,
       recent: recent.slice(0, 10),
-      chestsOpened: chests ?? 0,
-      copiesOwned: (cards ?? []).reduce((sum, c) => sum + (c.copies ?? 0), 0),
       bestTrophies: player?.best_trophies ?? 0,
     };
   } catch (err) {

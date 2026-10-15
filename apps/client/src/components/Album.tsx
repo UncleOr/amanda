@@ -153,10 +153,29 @@ export function Album({ account, onClose, onCardInfo, onChanged }: Props) {
                     sub: stats.played ? tf("s0ab9316", "{0} מתוך {1}", stats.wins, stats.played) : null,
                     tone: "good",
                   },
-                  { icon: "lose", n: stats.losses, k: t("s80eabb4", "הפסדים"), tone: "bad" },
+                  /*
+                   * ═══ AND THEN THERE WERE TWO ═══
+                   *
+                   * Or: *"in the album there is no need to write how many
+                   * chests we collected, and I don't know what 'copies' is —
+                   * it should be counted per card, not all of them together,
+                   * and it isn't needed. Counting losses either."*
+                   *
+                   * Three cells gone and nothing lost with them. LOSSES was
+                   * the same number twice: the line under the wins already
+                   * reads "11 of 19", and the other eight are the losses. The
+                   * COPIES total answered a question nobody asks — a copy is
+                   * worth something for ONE card, as the ×3 on that card's
+                   * corner, and summed across the album it is a number with
+                   * no meaning attached. And CHESTS is a thing that happened,
+                   * not a thing you have.
+                   *
+                   * It also made the screen faster: those two cells were the
+                   * only reason loadStats counted the chests table and read
+                   * every row of player_cards. Opening the album is two
+                   * queries now instead of four.
+                   */
                   { icon: "win", n: stats.bestTrophies, k: t("s2fd7491", "שיא גביעים"), tone: "gold" },
-                  { icon: "chest", n: stats.chestsOpened, k: t("s59e6cc5", "תיבות"), tone: "" },
-                  { icon: "deck", n: stats.copiesOwned, k: t("sd969559", "עותקים"), tone: "" },
                 ] as const
               ).map((cell) => (
                 <div key={cell.k} className={`record__cell record__cell--${cell.tone || "plain"}`}>
