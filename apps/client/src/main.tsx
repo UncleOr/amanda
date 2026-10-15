@@ -13,6 +13,7 @@ import { loadCardOverrides } from "./game/cardOverrides";
 import { loadLiveContent } from "./game/liveContent";
 import { track } from "./game/track";
 import { applyLang } from "./game/lang";
+import { watchViewport } from "./game/viewport";
 
 /*
  * Anything Or has rewritten, fetched in the background.
@@ -30,6 +31,14 @@ import { applyLang } from "./game/lang";
  * so the first paint is already the right way round.
  */
 applyLang();
+
+/*
+ * And how tall the screen really is, before the first overlay is drawn.
+ *
+ * See game/viewport.ts: this is the third attempt at centring the ident, and
+ * the first one that reads a number instead of trusting a unit.
+ */
+watchViewport();
 
 void loadCopy();
 /*

@@ -31,7 +31,6 @@ import {
   shouldPlayIntro,
 } from "../game/intro";
 import { line as t } from "../game/copy";
-import { lang } from "../game/lang";
 
 /*
  * One film per language.
@@ -42,7 +41,22 @@ import { lang } from "../game/lang";
  * and a title card has words, so there are two files. They are built by
  * scripts/make-intro.sh and weigh 1.5MB each.
  */
-const SRC = `${import.meta.env.BASE_URL}brand/intro-${lang()}.mp4`;
+/*
+ * ═══ ONE FILM, IN ENGLISH ═══
+ *
+ * Or: *"make sure it works in English too. In general I'd rather all the
+ * videos and so on were only in English and not in Hebrew."*
+ *
+ * So there is one. The eight seconds before the title card have not a word
+ * in them in any language, and the card itself now says AMANDA the way the
+ * store listing, the trailer and the studio ident already do — which is also
+ * the end of a whole class of bug, because the Hebrew card was the one whose
+ * wordmark kept coming out in the wrong place.
+ *
+ * `intro-he.mp4` is left in the repo rather than deleted: it is 1.5MB of
+ * finished work and the decision is a preference, not a fault.
+ */
+const SRC = `${import.meta.env.BASE_URL}brand/intro-en.mp4`;
 
 /**
  * If the video has not started within this long, leave.

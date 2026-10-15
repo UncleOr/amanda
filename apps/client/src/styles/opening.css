@@ -34,8 +34,15 @@
    * browser that does not know `dvh` keeps the old behaviour rather than
    * losing the rule.
    */
+  /*
+   * `--seen-h` is measured from visualViewport (game/viewport.ts) and is the
+   * only one of these three that is a FACT rather than a unit with opinions.
+   * The two under it are what browsers without that API get, in the order
+   * they are least wrong.
+   */
   height: 100vh;
   height: 100dvh;
+  height: var(--seen-h, 100dvh);
   z-index: 200;
   background: var(--bg, #070a12);
   display: grid;
@@ -53,6 +60,37 @@
  * rising above them. The bars are the game's own background and invisible.
  */
 .opening__film {
+  /*
+   * ═══ ABSOLUTE, AND THIS IS THE WHOLE BUG ═══
+   *
+   * Or, three times, eventually with arrows drawn on the screenshots: *"how
+   * annoyinggg that Asulins still isn't in the middle."* Twice I answered
+   * the wrong question — first `inset: 0` versus the visible viewport, then
+   * `100dvh` — and shipped both, and his measurement came back the same.
+   *
+   * Measured properly at last, on an 832x384 phone: the overlay is 832x384,
+   * exactly right, and the VIDEO inside it is **832x468 at y=0**. Taller
+   * than its own container, anchored at the top, 84 pixels hanging off the
+   * bottom. Half of 84 is 42, which is 11% of 384 — and 10.7% is what his
+   * photograph measured. The same number three times over.
+   *
+   * The cause is this element's `height: 100%` inside `display: grid;
+   * place-items: center`. Centred items do not stretch, so the row is sized
+   * by content; the content is a video whose height depends on the row;
+   * the browser breaks the circle with the intrinsic ratio at the available
+   * WIDTH — 832 wide is 468 tall — and then grid's safe alignment pins the
+   * overflow to the top rather than centring it.
+   *
+   * It only appears on a container WIDER than 16:9, which is a landscape
+   * phone and is not the desktop window I kept checking it in.
+   *
+   * Absolute positioning takes it out of the grid entirely: `inset: 0`
+   * against the fixed overlay is a definite box of exactly the right size,
+   * `contain` fits the film inside it, and there is nothing left to resolve
+   * circularly.
+   */
+  position: absolute;
+  inset: 0;
   width: 100%;
   height: 100%;
   object-fit: contain;
