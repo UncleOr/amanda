@@ -12560,5 +12560,125 @@
    "file": "apps/client/src/components/Friends.tsx",
    "line": 160
   }
+ },
+ {
+  "id": "sa1cd05d",
+  "section": "components/DeckBuilder.tsx",
+  "text": "א-ב",
+  "where": {
+   "kind": "source",
+   "file": "apps/client/src/components/DeckBuilder.tsx",
+   "line": 90
+  }
+ },
+ {
+  "id": "s7d2f2c0",
+  "section": "components/DeckBuilder.tsx",
+  "text": "תנועה",
+  "where": {
+   "kind": "source",
+   "file": "apps/client/src/components/DeckBuilder.tsx",
+   "line": 135
+  }
+ },
+ {
+  "id": "s1d926cf",
+  "section": "components/DeckBuilder.tsx",
+  "text": "עפים",
+  "where": {
+   "kind": "source",
+   "file": "apps/client/src/components/DeckBuilder.tsx",
+   "line": 139
+  }
+ },
+ {
+  "id": "sfeaf273",
+  "section": "components/DeckBuilder.tsx",
+  "text": "קרב",
+  "where": {
+   "kind": "source",
+   "file": "apps/client/src/components/DeckBuilder.tsx",
+   "line": 144
+  }
+ },
+ {
+  "id": "s2e7ed39",
+  "section": "components/DeckBuilder.tsx",
+  "text": "יורים מרחוק",
+  "where": {
+   "kind": "source",
+   "file": "apps/client/src/components/DeckBuilder.tsx",
+   "line": 148
+  }
+ },
+ {
+  "id": "s2845407",
+  "section": "components/DeckBuilder.tsx",
+  "text": "רודפים את המלך",
+  "where": {
+   "kind": "source",
+   "file": "apps/client/src/components/DeckBuilder.tsx",
+   "line": 153
+  }
+ },
+ {
+  "id": "sb15ae7e",
+  "section": "components/DeckBuilder.tsx",
+  "text": "יכולת",
+  "where": {
+   "kind": "source",
+   "file": "apps/client/src/components/DeckBuilder.tsx",
+   "line": 160
+  }
+ },
+ {
+  "id": "scae68e4",
+  "section": "components/DeckBuilder.tsx",
+  "text": "חיים אחרי המוות",
+  "where": {
+   "kind": "source",
+   "file": "apps/client/src/components/DeckBuilder.tsx",
+   "line": 165
+  }
+ },
+ {
+  "id": "s234a399",
+  "section": "components/DeckBuilder.tsx",
+  "text": "מרפאים",
+  "where": {
+   "kind": "source",
+   "file": "apps/client/src/components/DeckBuilder.tsx",
+   "line": 170
+  }
+ },
+ {
+  "id": "s7966a9d",
+  "section": "components/DeckBuilder.tsx",
+  "text": "משוריינים",
+  "where": {
+   "kind": "source",
+   "file": "apps/client/src/components/DeckBuilder.tsx",
+   "line": 175
+  }
+ },
+ {
+  "id": "sf621727",
+  "section": "components/DeckBuilder.tsx",
+  "text": "משפחה",
+  "where": {
+   "kind": "source",
+   "file": "apps/client/src/components/DeckBuilder.tsx",
+   "line": 341
+  }
+ },
+ {
+  "id": "se3355ce",
+  "section": "components/DeckBuilder.tsx",
+  "text": "לנקות",
+  "where": {
+   "kind": "source",
+   "file": "apps/client/src/components/DeckBuilder.tsx",
+   "line": 567
+  }
  }
 ]
