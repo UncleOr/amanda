@@ -12340,5 +12340,225 @@
    "file": "apps/client/src/components/ArenaUp.tsx",
    "line": 0
   }
+ },
+ {
+  "id": "s310399d",
+  "section": "components/Friends.tsx",
+  "text": "הקוד שלי",
+  "where": {
+   "kind": "source",
+   "file": "apps/client/src/components/Friends.tsx",
+   "line": 230
+  }
+ },
+ {
+  "id": "sec12a0d",
+  "section": "components/Friends.tsx",
+  "text": "קוד של חבר",
+  "where": {
+   "kind": "source",
+   "file": "apps/client/src/components/Friends.tsx",
+   "line": 237
+  }
+ },
+ {
+  "id": "s2a0da49",
+  "section": "components/Friends.tsx",
+  "text": "הוספה",
+  "where": {
+   "kind": "source",
+   "file": "apps/client/src/components/Friends.tsx",
+   "line": 247
+  }
+ },
+ {
+  "id": "sc5ab4b1",
+  "section": "components/Friends.tsx",
+  "text": "חזרה",
+  "where": {
+   "kind": "source",
+   "file": "apps/client/src/components/Friends.tsx",
+   "line": 341
+  }
+ },
+ {
+  "id": "scf8308e",
+  "section": "components/Friends.tsx",
+  "text": "רוצה להיות חבר שלך",
+  "where": {
+   "kind": "source",
+   "file": "apps/client/src/components/Friends.tsx",
+   "line": 349
+  }
+ },
+ {
+  "id": "se2994f6",
+  "section": "components/Friends.tsx",
+  "text": "מחכה שיאשר",
+  "where": {
+   "kind": "source",
+   "file": "apps/client/src/components/Friends.tsx",
+   "line": 351
+  }
+ },
+ {
+  "id": "s5855269",
+  "section": "components/Friends.tsx",
+  "text": "מחובר",
+  "where": {
+   "kind": "source",
+   "file": "apps/client/src/components/Friends.tsx",
+   "line": 353
+  }
+ },
+ {
+  "id": "sc89c440",
+  "section": "components/Friends.tsx",
+  "text": "לא מחובר",
+  "where": {
+   "kind": "source",
+   "file": "apps/client/src/components/Friends.tsx",
+   "line": 354
+  }
+ },
+ {
+  "id": "s93ea90a",
+  "section": "components/Friends.tsx",
+  "text": "יהלומים",
+  "where": {
+   "kind": "source",
+   "file": "apps/client/src/components/Friends.tsx",
+   "line": 361
+  }
+ },
+ {
+  "id": "s48d6a95",
+  "section": "components/Friends.tsx",
+  "text": "ארנה",
+  "where": {
+   "kind": "source",
+   "file": "apps/client/src/components/Friends.tsx",
+   "line": 366
+  }
+ },
+ {
+  "id": "s456c1ca",
+  "section": "components/Friends.tsx",
+  "text": "קלפים",
+  "where": {
+   "kind": "source",
+   "file": "apps/client/src/components/Friends.tsx",
+   "line": 373
+  }
+ },
+ {
+  "id": "s7e4bcf7",
+  "section": "components/Friends.tsx",
+  "text": "כן, חברים",
+  "where": {
+   "kind": "source",
+   "file": "apps/client/src/components/Friends.tsx",
+   "line": 383
+  }
+ },
+ {
+  "id": "sc40cb8d",
+  "section": "components/Friends.tsx",
+  "text": "בטוח?",
+  "where": {
+   "kind": "source",
+   "file": "apps/client/src/components/Friends.tsx",
+   "line": 406
+  }
+ },
+ {
+  "id": "seb9ab82",
+  "section": "components/Friends.tsx",
+  "text": "כן, להפסיק",
+  "where": {
+   "kind": "source",
+   "file": "apps/client/src/components/Friends.tsx",
+   "line": 408
+  }
+ },
+ {
+  "id": "s4075081",
+  "section": "components/Friends.tsx",
+  "text": "כן, לבטל",
+  "where": {
+   "kind": "source",
+   "file": "apps/client/src/components/Friends.tsx",
+   "line": 408
+  }
+ },
+ {
+  "id": "sb44edc2",
+  "section": "components/Friends.tsx",
+  "text": "לא",
+  "where": {
+   "kind": "source",
+   "file": "apps/client/src/components/Friends.tsx",
+   "line": 410
+  }
+ },
+ {
+  "id": "s97fbe28",
+  "section": "components/Friends.tsx",
+  "text": "להפסיק חברות",
+  "where": {
+   "kind": "source",
+   "file": "apps/client/src/components/Friends.tsx",
+   "line": 414
+  }
+ },
+ {
+  "id": "sd770e7d",
+  "section": "components/Friends.tsx",
+  "text": "לבטל את הבקשה",
+  "where": {
+   "kind": "source",
+   "file": "apps/client/src/components/Friends.tsx",
+   "line": 414
+  }
+ },
+ {
+  "id": "sc6d8f34",
+  "section": "game/serverError.ts",
+  "text": "אין קוד כזה.",
+  "where": {
+   "kind": "source",
+   "file": "apps/client/src/game/serverError.ts",
+   "line": 56
+  }
+ },
+ {
+  "id": "s7a9bffc",
+  "section": "game/account.ts",
+  "text": "לא הצליח",
+  "where": {
+   "kind": "source",
+   "file": "apps/client/src/game/account.ts",
+   "line": 1100
+  }
+ },
+ {
+  "id": "s2a6031b",
+  "section": "game/account.ts",
+  "text": "אין חיבור לשרת",
+  "where": {
+   "kind": "source",
+   "file": "apps/client/src/game/account.ts",
+   "line": 1295
+  }
+ },
+ {
+  "id": "s6bdffb3",
+  "section": "components/Friends.tsx",
+  "text": "להוסיף חבר",
+  "where": {
+   "kind": "source",
+   "file": "apps/client/src/components/Friends.tsx",
+   "line": 160
+  }
  }
 ]

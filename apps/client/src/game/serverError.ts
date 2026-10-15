@@ -52,6 +52,8 @@ function words(code: ServerError, value: number | null): string {
       return t("sa1cbf5f", "יש לך יותר מדי בקשות שמחכות לתשובה.");
     case "friend.noRequest":
       return t("s28541c5", "אין בקשה כזאת.");
+    case "friend.codeUnknown":
+      return t("sc6d8f34", "אין קוד כזה.");
 
     // ── reports ──
     case "report.needAccount":

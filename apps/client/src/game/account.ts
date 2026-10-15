@@ -852,6 +852,19 @@ export async function fileReport(input: {
 export interface Friend {
   id: string;
   nickname: string | null;
+  /*
+   * Everything the friend board shows, on the row that is already fetched.
+   *
+   * Or: *"tapping should open a friend's board — how many diamonds he has,
+   * which arena he is in, how many cards he has got."* A second request when
+   * a row is tapped would be a spinner on a board whose numbers were already
+   * on the wire; these are four columns of the same select.
+   */
+  avatar: string | null;
+  trophies: number;
+  diamonds: number;
+  /** Monsters in their album. */
+  cards: number;
   /** "friend" · "asked" (you asked them) · "asking" (they asked you). */
   state: "friend" | "asked" | "asking";
   online: boolean;
@@ -907,6 +920,26 @@ export async function friendAction(
     { error: t("s651f017", "אין חיבור לשרת") },
   );
   return r.ok ? null : (serverError(r.error) ?? t("sd13c7f9", "לא הצליח"));
+}
+
+/**
+ * Your own code, for reading out loud.
+ *
+ * Made by the server the first time it is asked for, so a player who never
+ * opens this screen never gets one — see friends.ts.
+ */
+export async function friendCode(): Promise<string | null> {
+  return (await friendsCall<{ code?: string | null }>("/api/friends/code", {}, {})).code ?? null;
+}
+
+/** Ask to be friends with whoever holds this code. A message, or null. */
+export async function askByCode(code: string): Promise<string | null> {
+  const r = await friendsCall<{ ok?: boolean; error?: string }>(
+    "/api/friends/by-code",
+    { code },
+    { error: t("sedc6c2a", "אין חיבור לשרת") },
+  );
+  return r.ok ? null : (serverError(r.error) ?? t("s54a1abe", "לא הצליח"));
 }
 
 export interface ShopItem {
@@ -967,9 +1000,9 @@ export async function buyItem(itemId: string): Promise<string | null> {
   const r = await friendsCall<{ ok?: boolean; error?: string }>(
     "/api/shop/buy",
     { itemId },
-    { error: t("sedc6c2a", "אין חיבור לשרת") },
+    { error: t("sac33701", "אין חיבור לשרת") },
   );
-  return r.ok ? null : (serverError(r.error) ?? t("s54a1abe", "לא הצליח"));
+  return r.ok ? null : (serverError(r.error) ?? t("s2afe5ef", "לא הצליח"));
 }
 
 export interface Notice {
@@ -1034,7 +1067,7 @@ export async function markInboxRead(): Promise<void> {
  */
 export async function scrubMyData(): Promise<string | null> {
   const sb = db();
-  if (!sb || !SERVER_HTTP) return t("sac33701", "אין חיבור לשרת");
+  if (!sb || !SERVER_HTTP) return t("s835acce", "אין חיבור לשרת");
   try {
     const { data } = await sb.auth.getSession();
     const token = data.session?.access_token;
@@ -1045,15 +1078,15 @@ export async function scrubMyData(): Promise<string | null> {
       body: "{}",
     });
     const body = (await res.json()) as { ok?: boolean; error?: string };
-    return body.ok ? null : (serverError(body.error) ?? t("s2afe5ef", "לא הצליח"));
+    return body.ok ? null : (serverError(body.error) ?? t("s58e9ecf", "לא הצליח"));
   } catch {
-    return t("s58e9ecf", "לא הצליח");
+    return t("s5da8d9e", "לא הצליח");
   }
 }
 
 export async function deleteAccount(): Promise<string | null> {
   const sb = db();
-  if (!sb || !SERVER_HTTP) return t("s835acce", "אין חיבור לשרת");
+  if (!sb || !SERVER_HTTP) return t("s115ddae", "אין חיבור לשרת");
   try {
     const { data } = await sb.auth.getSession();
     const token = data.session?.access_token;
@@ -1064,7 +1097,7 @@ export async function deleteAccount(): Promise<string | null> {
       body: "{}",
     });
     const body = (await res.json()) as { ok?: boolean; error?: string };
-    if (!body.ok) return serverError(body.error) ?? t("s5da8d9e", "לא הצליח");
+    if (!body.ok) return serverError(body.error) ?? t("s7a9bffc", "לא הצליח");
     await sb.auth.signOut();
     return null;
   } catch (err) {
@@ -1111,7 +1144,7 @@ export async function isAdmin(): Promise<boolean> {
 
 export async function linkGoogle(): Promise<string | null> {
   const sb = db();
-  if (!sb) return t("s115ddae", "אין חיבור לשרת");
+  if (!sb) return t("se7da992", "אין חיבור לשרת");
   try {
     const { data: session } = await sb.auth.getSession();
     const user = session.session?.user;
@@ -1255,11 +1288,11 @@ const DECK_SAVE_FAILED = () => t("sd0c6462", "לא הצלחתי לשמור. נס
 
 export async function saveDeck(deck: Deck): Promise<Deck | string> {
   const sb = db();
-  if (!sb) return t("se7da992", "אין חיבור לשרת");
+  if (!sb) return t("sb7305bc", "אין חיבור לשרת");
   try {
     const { data: auth } = await sb.auth.getSession();
     const id = auth.session?.user.id;
-    if (!id) return t("sb7305bc", "אין חיבור לשרת");
+    if (!id) return t("s2a6031b", "אין חיבור לשרת");
     const row = { player_id: id, name: deck.name.trim(), cards: deck.cards, back: deck.back };
     const { data, error } =
       deck.id && deck.id !== "auto"

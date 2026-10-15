@@ -22,6 +22,7 @@
  * is no second path to it.
  */
 import type { SupabaseClient } from "@supabase/supabase-js";
+import { ROOM_CODE_ALPHABET, shownAvatar, shownName } from "@amanda/shared";
 import { isRegistered, recentOpponents } from "./reports.js";
 
 /** How many requests one person may have waiting for an answer. */
@@ -30,16 +31,70 @@ const MAX_PENDING_OUT = 20;
 export interface FriendRow {
   id: string;
   nickname: string | null;
+  /*
+   * ═══ A FRIEND IS A PERSON, NOT A NAME AND A DOT ═══
+   *
+   * Or: *"it should show a friend's name and profile picture and
+   * connected/not connected… tapping should open a friend's board — how many
+   * diamonds he has, which arena he is in, how many cards he has got."*
+   *
+   * Everything here is already public between two people who have agreed to
+   * be friends — it is what the versus screen shows you about an opponent —
+   * and it costs one query, because they are all columns on the same row.
+   */
+  avatar: string | null;
+  trophies: number;
+  diamonds: number;
+  /** How many monsters are in their album. */
+  cards: number;
   /** "friend" · "asked" (you asked them) · "asking" (they asked you). */
   state: "friend" | "asked" | "asking";
   online: boolean;
 }
 
-/** Names for a set of ids, in one round trip. */
-async function namesOf(sb: SupabaseClient, ids: string[]): Promise<Map<string, string | null>> {
+interface Profile {
+  nickname: string | null;
+  avatar: string | null;
+  trophies: number;
+  diamonds: number;
+  cards: number;
+}
+
+/** Everything the list shows about a set of people, in two round trips. */
+async function profilesOf(sb: SupabaseClient, ids: string[]): Promise<Map<string, Profile>> {
   if (!ids.length) return new Map();
-  const { data } = await sb.from("players").select("id, nickname").in("id", ids);
-  return new Map((data ?? []).map((p) => [p.id as string, (p.nickname as string | null) ?? null]));
+  const [{ data: players }, { data: owned }] = await Promise.all([
+    sb.from("players").select("id, nickname, avatar, trophies, diamonds").in("id", ids),
+    /*
+     * One row per card they own, counted here rather than with a grouped
+     * count: PostgREST cannot group, and 51 rows per friend is nothing
+     * against the round trip a second query would cost.
+     */
+    sb.from("player_cards").select("player_id").in("player_id", ids),
+  ]);
+  const cards = new Map<string, number>();
+  for (const row of owned ?? []) {
+    const id = row.player_id as string;
+    cards.set(id, (cards.get(id) ?? 0) + 1);
+  }
+  return new Map(
+    (players ?? []).map((p) => [
+      p.id as string,
+      {
+        /*
+         * The automatic handle and face, exactly as the versus screen and
+         * the battle banner use them — see shared/identity.ts. Nine players
+         * in ten have never chosen either, and a friends list of blanks is
+         * the same bug as an opponent called "somebody".
+         */
+        nickname: shownName(p.nickname as string | null, p.id as string),
+        avatar: shownAvatar(p.avatar as string | null, p.id as string),
+        trophies: (p.trophies as number) ?? 0,
+        diamonds: (p.diamonds as number) ?? 0,
+        cards: cards.get(p.id as string) ?? 0,
+      },
+    ]),
+  );
 }
 
 /**
@@ -72,11 +127,15 @@ export async function listFriends(
   }
 
   const ids = [...out.keys()];
-  const names = await namesOf(sb, ids);
+  const profiles = await profilesOf(sb, ids);
   return ids
     .map((id) => ({
       id,
-      nickname: names.get(id) ?? null,
+      nickname: profiles.get(id)?.nickname ?? null,
+      avatar: profiles.get(id)?.avatar ?? null,
+      trophies: profiles.get(id)?.trophies ?? 0,
+      diamonds: profiles.get(id)?.diamonds ?? 0,
+      cards: profiles.get(id)?.cards ?? 0,
       state: out.get(id)!,
       online: isOnline(id),
     }))
@@ -113,15 +172,27 @@ export async function askFriend(
   sb: SupabaseClient,
   playerId: string,
   otherId: string,
+  /*
+   * A request that came from a code skips the "you have played them" rule.
+   *
+   * That rule exists so nobody can reach a child they have never met. A code
+   * is the same protection by another route: the only way to have somebody's
+   * is for them to have told you, which IS the consent the rule stands in
+   * for. Everything else — both registered, not already friends, not
+   * yourself — still applies.
+   */
+  opts?: { viaCode?: boolean },
 ): Promise<string | null> {
   if (playerId === otherId) return "friend.self";
   if (!(await isRegistered(sb, playerId)))
     return "friend.needAccount";
   if (!(await isRegistered(sb, otherId))) return "friend.theyNeedAccount";
 
-  // The rule that matters: you have actually played them.
-  const played = await recentOpponents(sb, playerId, 15);
-  if (!played.some((o) => o.id === otherId)) return "friend.notPlayed";
+  // The rule that matters, unless they handed you their code.
+  if (!opts?.viaCode) {
+    const played = await recentOpponents(sb, playerId, 15);
+    if (!played.some((o) => o.id === otherId)) return "friend.notPlayed";
+  }
 
   const { data: existing } = await sb
     .from("friends")
@@ -204,4 +275,94 @@ export async function areFriends(
     .eq("status", "accepted")
     .maybeSingle();
   return !!data;
+}
+
+
+/* ───────────── a code you can read out ───────────── */
+
+/**
+ * ═══ WHY A CODE AT ALL ═══
+ *
+ * Or: *"add a way to add a friend with a matching code, like a game."*
+ *
+ * The only way onto somebody's list was to have PLAYED them — see
+ * addableOpponents, and that rule is the right one for strangers, because it
+ * means nobody can look up a child they have never met. It is useless for
+ * the case Or actually has: two children in the same room, who want to be
+ * friends before they have played.
+ *
+ * A code they say out loud is the same permission in a different shape. You
+ * cannot guess one (31^6 is 887 million) and you cannot enumerate them — the
+ * only way to have somebody's is for them to have given it to you, which is
+ * exactly the consent the played-you rule was standing in for.
+ */
+const CODE_ALPHABET = ROOM_CODE_ALPHABET;
+const CODE_LENGTH = 6;
+
+function newCode(): string {
+  let out = "";
+  for (let i = 0; i < CODE_LENGTH; i++)
+    out += CODE_ALPHABET[Math.floor(Math.random() * CODE_ALPHABET.length)];
+  return out;
+}
+
+/**
+ * This player's code, made the first time they ask for it.
+ *
+ * The unique index is what settles a collision: a duplicate insert fails and
+ * the next attempt draws again. Three attempts against 887 million is more
+ * than enough, and the alternative — checking first — is a race.
+ */
+export async function friendCode(sb: SupabaseClient, playerId: string): Promise<string | null> {
+  try {
+    const { data } = await sb
+      .from("players")
+      .select("friend_code")
+      .eq("id", playerId)
+      .maybeSingle();
+    const existing = (data?.friend_code as string | null) ?? null;
+    if (existing) return existing;
+
+    for (let attempt = 0; attempt < 3; attempt++) {
+      const code = newCode();
+      const { error } = await sb
+        .from("players")
+        .update({ friend_code: code })
+        .eq("id", playerId);
+      if (!error) return code;
+    }
+    return null;
+  } catch {
+    return null;
+  }
+}
+
+/**
+ * Ask to be friends with whoever holds this code.
+ *
+ * Returns a sentence for the player, or null when the request was sent. The
+ * failures are deliberately all the same shape — a code that belongs to
+ * nobody and a code you typed wrong must not be told apart, or the field
+ * becomes a way to test whether a code exists.
+ */
+export async function askByCode(
+  sb: SupabaseClient,
+  playerId: string,
+  raw: string,
+): Promise<string | null> {
+  const code = raw.trim().toUpperCase();
+  if (code.length !== CODE_LENGTH) return "friend.codeUnknown";
+  try {
+    const { data } = await sb
+      .from("players")
+      .select("id")
+      .eq("friend_code", code)
+      .maybeSingle();
+    const other = (data?.id as string | null) ?? null;
+    if (!other) return "friend.codeUnknown";
+    if (other === playerId) return "friend.self";
+    return await askFriend(sb, playerId, other, { viaCode: true });
+  } catch {
+    return "friend.codeUnknown";
+  }
 }

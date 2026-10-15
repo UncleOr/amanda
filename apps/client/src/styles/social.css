@@ -246,7 +246,25 @@
 
 /* ---- friends ---- */
 .modal--friends { max-width: 440px; }
-.friends__title { margin: 0 0 var(--sp-3); font-size: var(--t-5); }
+.friends__title {
+  margin: 0 0 var(--sp-3);
+  font-size: var(--t-5);
+  display: flex;
+  align-items: center;
+  gap: var(--sp-2);
+}
+/* The way back out of the add panel, which is its own screen on a phone. */
+.friends__back {
+  display: grid;
+  place-items: center;
+  width: 28px;
+  height: 28px;
+  border-radius: 8px;
+  border: 1px solid var(--line);
+  background: var(--sur-1);
+  color: var(--text);
+  cursor: pointer;
+}
 .friends__hint { color: var(--text); font-size: var(--t-3); margin: 6px 0; line-height: 1.5; }
 .friends__note { color: var(--accent); font-size: var(--t-3); margin: 6px 0; }
 .friends__list {
@@ -256,50 +274,103 @@
   display: flex;
   flex-direction: column;
   gap: 5px;
-  max-height: 44vh;
+  /*
+   * Four rows on a 384px-tall landscape phone, which is the screen that
+   * decides this. 44vh fitted three and left the modal half empty under
+   * them; the modal's own ceiling is 90vh, and the title and the add button
+   * together take about 96px of it.
+   */
+  max-height: 55vh;
   overflow-y: auto;
 }
+/*
+ * The row IS the button.
+ *
+ * It used to be a <li> with a 26px cross at the end of it, which on Or's
+ * phone sat half outside the panel — and was the only thing on the row you
+ * could press. Nothing here is smaller than the row now: the whole thing
+ * opens the person, and everything you can do to them is on their own board.
+ */
 .friends__row {
+  width: 100%;
   display: flex;
   align-items: center;
   gap: 9px;
   padding: 8px 10px;
   border-radius: 10px;
   border: 1px solid var(--line);
-  background: rgba(255, 255, 255, 0.03);
+  background: var(--sur-1);
+  color: var(--text);
+  font: inherit;
+  text-align: start;
+  cursor: pointer;
 }
-/* Online is the whole point of the list, so it gets a light rather than a word
-   you have to read — the word is underneath for anyone who wants it. */
-.friends__dot {
+.friends__row:hover { border-color: var(--line-lit); }
+/*
+ * Online is the whole point of the list, so it is a lit ring round the face
+ * rather than a dot you have to find — the word is underneath either way.
+ */
+.friends__face {
   flex: none;
-  width: 9px;
-  height: 9px;
+  display: grid;
+  place-items: center;
+  width: 40px;
+  height: 40px;
   border-radius: 50%;
-  background: var(--line);
+  overflow: hidden;
+  border: 2px solid var(--line);
+  background: var(--sur-2);
 }
-.friends__dot.is-on {
-  background: #4ade80;
-  box-shadow: 0 0 9px rgba(74, 222, 128, 0.75);
+.friends__face.is-on {
+  border-color: #4ade80;
+  box-shadow: 0 0 10px rgba(74, 222, 128, 0.5);
 }
+.friends__face img { width: 100%; height: 100%; object-fit: cover; display: block; }
+.friends__face i { font-style: normal; font-size: var(--t-4); color: var(--muted); }
 .friends__who { flex: 1; min-width: 0; display: flex; flex-direction: column; gap: 1px; }
 .friends__who b { font-size: var(--t-3); }
 .friends__who small { color: var(--muted); font-size: var(--t-2); }
-.friends__do { display: flex; align-items: center; gap: 5px; flex: none; }
+/* The one thing on this screen that is waiting for the player to act. */
+.friends__flag { flex: none; display: grid; place-items: center; color: var(--accent); }
 .btn-small { padding: 5px 12px !important; font-size: var(--t-3) !important; }
-.friends__drop {
-  display: grid;
-  place-items: center;
-  width: 26px;
-  height: 26px;
-  border-radius: 7px;
-  border: 1px solid var(--line);
-  background: transparent;
-  color: var(--muted);
-  cursor: pointer;
-}
-.friends__drop:hover { color: #ff6b6b; border-color: #ff6b6b; }
 .friends__add { margin-top: 10px; }
-.friends__candidates { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 6px; }
+/* Big enough to read out across a room, which is the only thing it is for. */
+.friends__code {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--sp-3);
+  padding: 8px 12px;
+  border-radius: 10px;
+  border: 1px solid var(--line);
+  background: var(--sur-1);
+}
+.friends__codelabel { color: var(--muted); font-size: var(--t-2); }
+.friends__codeval {
+  font-size: var(--t-5);
+  letter-spacing: 0.18em;
+  color: var(--accent);
+  /* A code is read left to right whatever the page around it is doing. */
+  direction: ltr;
+  unicode-bidi: isolate;
+}
+.friends__codein { display: flex; gap: 6px; margin-top: var(--sp-2); }
+.friends__codein input {
+  flex: 1;
+  min-width: 0;
+  padding: 7px 11px;
+  border-radius: 10px;
+  border: 1px solid var(--line);
+  background: var(--sur-1);
+  color: var(--text);
+  font: inherit;
+  font-size: var(--t-3);
+  letter-spacing: 0.14em;
+  text-align: center;
+  direction: ltr;
+}
+.friends__codein input:focus { outline: none; border-color: var(--accent); }
+.friends__candidates { display: flex; flex-wrap: wrap; gap: 6px; margin-top: var(--sp-2); }
 .friends__candidates button {
   display: flex;
   align-items: center;
@@ -307,13 +378,84 @@
   padding: 7px 11px;
   border-radius: 999px;
   border: 1px solid var(--line);
-  background: rgba(255, 255, 255, 0.04);
+  background: var(--sur-1);
   color: var(--text);
   font: inherit;
   font-size: var(--t-3);
   cursor: pointer;
 }
 .friends__candidates button:hover { border-color: var(--accent); }
+
+/* ---- one friend ---- */
+/*
+ * The hero is the person: a face at 88px, their name at --t-5, and three
+ * numbers under it. Then the one thing you came to do, and — last, quietest,
+ * two taps deep — the way out of the friendship.
+ */
+.fboard { display: flex; flex-direction: column; align-items: center; gap: var(--sp-2); }
+/*
+ * `.btn-fight` carries `margin-inline-start: auto`, which is right on a row
+ * of buttons and wrong in a centred column — it pushed the one action on
+ * this board hard against the edge. Centred here, where the column is.
+ */
+.fboard .btn-fight { margin-inline-start: 0; }
+.fboard .friends__face { width: 72px; height: 72px; border-width: 3px; }
+.fboard .friends__face i { font-size: var(--t-6); }
+.fboard__name { margin: 0; font-size: var(--t-5); text-align: center; }
+.fboard__state { color: var(--muted); font-size: var(--t-2); margin-top: -4px; }
+.fboard__state.is-on { color: #4ade80; }
+.fboard__stats {
+  display: flex;
+  gap: var(--sp-4);
+  margin: var(--sp-2) 0;
+  justify-content: center;
+  flex-wrap: wrap;
+}
+.fboard__stats > span {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 2px;
+  min-width: 68px;
+}
+.fboard__stats b { font-size: var(--t-4); }
+.fboard__stats small { color: var(--muted); font-size: var(--t-2); }
+/*
+ * Quieter than anything else on the screen, and it does not remove anybody
+ * on its own — it only asks. §3 says --muted is not for a control's label,
+ * and this is the exception the rule is worth making: a control that must
+ * not be pressed by accident is the one thing that should be hard to see.
+ */
+.fboard__end {
+  margin-top: var(--sp-3);
+  padding: 4px 8px;
+  border: 0;
+  background: none;
+  color: var(--muted);
+  font: inherit;
+  font-size: var(--t-2);
+  text-decoration: underline;
+  cursor: pointer;
+}
+.fboard__end:hover { color: #ff6b6b; }
+.fboard__sure {
+  display: flex;
+  align-items: center;
+  gap: var(--sp-2);
+  margin-top: var(--sp-3);
+  font-size: var(--t-3);
+}
+.fboard__sure button {
+  padding: 5px 12px;
+  border-radius: 999px;
+  border: 1px solid var(--line);
+  background: var(--sur-1);
+  color: var(--text);
+  font: inherit;
+  font-size: var(--t-3);
+  cursor: pointer;
+}
+.fboard__sure button:first-of-type { border-color: #ff6b6b; color: #ff6b6b; }
 
 .modal--invite {
   max-width: 360px;

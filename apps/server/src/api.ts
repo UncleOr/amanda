@@ -16,7 +16,15 @@ import { LEVELS, levelCost } from "@amanda/shared";
 import { CATALOG } from "./content.js";
 import { grantChest, saves } from "./progress.js";
 import { fileReport, recentOpponents } from "./reports.js";
-import { acceptFriend, addableOpponents, askFriend, listFriends, removeFriend } from "./friends.js";
+import {
+  acceptFriend,
+  addableOpponents,
+  askByCode,
+  askFriend,
+  friendCode,
+  listFriends,
+  removeFriend,
+} from "./friends.js";
 import { isOnline } from "./presence.js";
 import { buy, ownedItems, shopWindow } from "./shop.js";
 import { inbox, markRead } from "./notify.js";
@@ -346,8 +354,25 @@ async function handleFriends(req: IncomingMessage, res: ServerResponse, path: st
   if (path === "/api/friends/addable") {
     return send(res, 200, { opponents: await addableOpponents(sb, playerId) });
   }
+  /* Your own code. Made the first time you look at it — see friendCode. */
+  if (path === "/api/friends/code") {
+    return send(res, 200, { code: await friendCode(sb, playerId) });
+  }
 
   const body = (await readBody(req)) as Record<string, unknown>;
+
+  /*
+   * The one route that takes a string the player typed rather than an id
+   * they could only have got by playing somebody. The code IS the
+   * permission — askByCode explains why that is safe, and why it fails the
+   * same way whether the code is wrong or merely not yours to use.
+   */
+  if (path === "/api/friends/by-code") {
+    const code = typeof body.code === "string" ? body.code : "";
+    const error = await askByCode(sb, playerId, code);
+    return send(res, error ? 400 : 200, error ? { error } : { ok: true });
+  }
+
   const other = typeof body.playerId === "string" ? body.playerId : "";
   if (!other) return send(res, 400, { error: "which player" });
 

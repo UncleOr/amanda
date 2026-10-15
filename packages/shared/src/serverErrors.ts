@@ -45,6 +45,14 @@ export const SERVER_ERRORS = [
   "friend.tooMany",
   /** The request being accepted or declined is gone. */
   "friend.noRequest",
+  /**
+   * No such code — or one you may not use.
+   *
+   * Deliberately ONE code for both. A field that answers "that code does
+   * not exist" differently from "that is not yours" is a field you can ask
+   * questions with, 887 million at a time.
+   */
+  "friend.codeUnknown",
 
   // ── reports ──
   "report.needAccount",
