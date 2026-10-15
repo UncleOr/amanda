@@ -48,6 +48,7 @@ import { track } from "./track";
 import {
   albumToPool,
   loadAccount,
+  loadDecks,
   onAccountChange,
   type Account,
   type OwnedCard,
@@ -132,13 +133,31 @@ function monsterPool(album?: Map<string, OwnedCard> | null): string[] {
  * from what you own is by definition not the same deck as your opponent's,
  * and the entire point of the mode is that nobody can blame their collection.
  */
-function matchDeck(album?: Map<string, OwnedCard> | null, seed?: number): string[] {
+function matchDeck(
+  album?: Map<string, OwnedCard> | null,
+  seed?: number,
+  /*
+   * The sixteen this player chose, if they have ever opened the builder.
+   *
+   * Or: *"you pick X cards from the ones you have and ONLY THEY will be in
+   * the deck."* So this replaces the draw from the album rather than biasing
+   * it — a built deck is a promise about what you will see, and a deck that
+   * sometimes deals something else is not one.
+   *
+   * Ignored in mirror mode for the same reason the album is: both sides get
+   * the same cards there, and the entire point is that nobody can blame
+   * their collection — or now, their deck.
+   */
+  built?: readonly string[] | null,
+): string[] {
   const rng = seed === undefined ? null : createRng(seed);
   const rnd = rng ? () => rng.next() : Math.random;
   // An album smaller than a full deck is not padded. Running thin IS the game:
   // the gaps become Crumb Demons, and that is the reason to collect.
+  const chosen = seed === undefined && built?.length ? built : null;
   const pool = seed === undefined ? monsterPool(album) : cardPool();
-  const monsters = shuffle(pool, rnd).slice(0, DECK.size);
+  // A built deck is dealt whole and shuffled; anything else is drawn.
+  const monsters = chosen ? shuffle([...chosen], rnd) : shuffle(pool, rnd).slice(0, DECK.size);
   // Fill cards are the dramatic ones — at most one per deck, and not every
   // deck. The rest of the action slots go to the active cards.
   const fills =
@@ -646,8 +665,11 @@ function fillGs(s: GameState, bar: string[]): GameState {
   return { ...s, king, placements, hand: null };
 }
 
-function initialGameState(album?: Map<string, OwnedCard> | null): GameState {
-  return { deck: matchDeck(album), hand: null, discard: [], placements: {}, king: null };
+function initialGameState(
+  album?: Map<string, OwnedCard> | null,
+  built?: readonly string[] | null,
+): GameState {
+  return { deck: matchDeck(album, undefined, built), hand: null, discard: [], placements: {}, king: null };
 }
 
 function drawIfEmpty(s: GameState): GameState {
@@ -784,6 +806,10 @@ export interface MatchApi {
   account: Account | null;
   /** Re-read it, after the player changes something about themselves. */
   reloadAccount: () => void;
+  /** The sixteen this player built, or null while the game deals its own. */
+  builtDeck: string[] | null;
+  /** Read the shelf again — the builder saved, deleted or switched deck. */
+  reloadDecks: () => void;
   onlineAvailable: boolean;
   mySide: Side;
   oppLeft: boolean;
@@ -914,6 +940,16 @@ export function useMatch(): MatchApi {
    */
   // Typed, because LEVELS.max is the literal 10 and this holds any level.
   const levelCapRef = useRef<number>(LEVELS.max);
+  /*
+   * The sixteen this player built, or null for "deal me one".
+   *
+   * A ref and a piece of state: the ref is what deals a match (from a
+   * callback, not a render), and the state is what the home screen draws. It
+   * is reloaded whenever the deck shelf changes — see `reloadDecks`.
+   */
+  const [builtDeck, setBuiltDeck] = useState<string[] | null>(null);
+  const builtRef = useRef<string[] | null>(null);
+  builtRef.current = builtDeck;
   const [roomError, setRoomError] = useState<RoomError | null>(null);
   /** Cards stacked underneath a placed card, revealed when the top one dies. */
   const [stacked, setStacked] = useState<Record<string, string>>({});
@@ -1035,6 +1071,16 @@ export function useMatch(): MatchApi {
         if (alive && a) setAccount(a);
       });
     });
+    /*
+     * Which deck they play with, alongside who they are. Deliberately not
+     * awaited together: a slow deck read must not hold up the account, and a
+     * missing one simply means the game deals a deck as it always has.
+     */
+    void loadDecks().then(({ decks, activeId }) => {
+      if (!alive) return;
+      const active = decks.find((d) => d.id === activeId);
+      setBuiltDeck(active?.cards.length ? active.cards : null);
+    });
     void loadAccount().then((a) => {
       if (!alive || !a) return;
       setAccount(a);
@@ -1055,7 +1101,7 @@ export function useMatch(): MatchApi {
         cur.hand === null &&
         cur.king === null &&
         Object.keys(cur.placements).length === 0
-          ? initialGameState(a.album)
+          ? initialGameState(a.album, builtRef.current)
           : cur,
       );
     });
@@ -1731,7 +1777,7 @@ export function useMatch(): MatchApi {
    */
   const clearRound = useCallback(() => {
     aiPlanRef.current = generateAiPlan(undefined, botLevelRef.current);
-    setGs(initialGameState(accountRef.current?.album));
+    setGs(initialGameState(accountRef.current?.album, builtRef.current));
     setResult(null);
     setAward(null);
     setRival(null);
@@ -2340,6 +2386,12 @@ export function useMatch(): MatchApi {
     online,
     account,
     reloadAccount: () => void loadAccount().then((a) => a && setAccount(a)),
+    builtDeck,
+    reloadDecks: () =>
+      void loadDecks().then(({ decks, activeId }) => {
+        const active = decks.find((d) => d.id === activeId);
+        setBuiltDeck(active?.cards.length ? active.cards : null);
+      }),
     onlineAvailable: ONLINE_AVAILABLE,
     netError,
     suspendedUntil,

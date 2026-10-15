@@ -464,3 +464,108 @@ button:disabled {
 .card--medium .card__plate {
   padding: 1px 6px 2px;
 }
+
+/* ════════ the eleven card backs ════════
+ *
+ * Or: *"each deck with a unique design for the card backs — every player
+ * starts with 5 and can buy more, add it to the shop exactly like the
+ * catchphrases."*
+ *
+ * Treatments, not pictures, for the same reason the catchphrases are: a back
+ * is a surface — a pattern, two colours and a faint mark — and in CSS it is
+ * sharp at every size, weighs nothing, and the twelfth one is four lines. The
+ * default above (`.card--back` on its own) is the fog, which every hidden
+ * card in the game has always worn.
+ *
+ * `--bk-1` and `--bk-2` are the two colours; the pattern on top is what makes
+ * each one itself. The free five are the five families, so the first thing
+ * you can do with the builder is make a deck that looks like what is in it.
+ */
+.card--back[class*="back--"] {
+  background:
+    var(--bk-pattern, none),
+    linear-gradient(160deg, var(--bk-1, #141d33), var(--bk-2, #0d1424));
+}
+/* The fog is the only one with weather in it, so the others turn it off. */
+.card--back[class*="back--"]:not(.back--fog)::before,
+.card--back[class*="back--"]:not(.back--fog)::after { content: none; }
+
+/* ── the free five ── */
+.back--scales {
+  --bk-1: #3a1f2b;
+  --bk-2: #1a0e16;
+  /* overlapping half-circles, the way scales lie */
+  --bk-pattern:
+    radial-gradient(circle at 50% 0, transparent 46%, rgba(255, 138, 110, 0.22) 47% 52%, transparent 53%);
+  background-size: 18px 12px;
+}
+.back--slime {
+  --bk-1: #16321f;
+  --bk-2: #0a1a10;
+  /* drips, hanging from the top edge */
+  --bk-pattern:
+    radial-gradient(circle at 50% 100%, rgba(126, 232, 150, 0.26) 0 28%, transparent 30%);
+  background-size: 16px 20px;
+}
+.back--web {
+  --bk-1: #2b2438;
+  --bk-2: #140f1d;
+  --bk-pattern:
+    repeating-linear-gradient(45deg, rgba(206, 192, 240, 0.16) 0 1px, transparent 1px 11px),
+    repeating-linear-gradient(-45deg, rgba(206, 192, 240, 0.16) 0 1px, transparent 1px 11px);
+}
+.back--leaf {
+  --bk-1: #1d3321;
+  --bk-2: #0c1a10;
+  --bk-pattern:
+    radial-gradient(ellipse 7px 3px at 50% 50%, rgba(154, 230, 142, 0.22) 0 60%, transparent 62%);
+  background-size: 20px 14px;
+}
+
+/* ── and the six the shop sells ── */
+.back--gold {
+  --bk-1: #5a4310;
+  --bk-2: #221806;
+  --bk-pattern:
+    repeating-linear-gradient(135deg, rgba(255, 214, 120, 0.22) 0 2px, transparent 2px 9px);
+}
+.back--circuit {
+  --bk-1: #0c2b33;
+  --bk-2: #05141a;
+  --bk-pattern:
+    repeating-linear-gradient(0deg, rgba(102, 240, 255, 0.18) 0 1px, transparent 1px 12px),
+    repeating-linear-gradient(90deg, rgba(102, 240, 255, 0.14) 0 1px, transparent 1px 12px);
+}
+.back--nacho {
+  --bk-1: #4a3310;
+  --bk-2: #1d1206;
+  /* triangles, because of course */
+  --bk-pattern:
+    repeating-linear-gradient(60deg, rgba(255, 196, 92, 0.2) 0 1px, transparent 1px 14px),
+    repeating-linear-gradient(-60deg, rgba(255, 196, 92, 0.2) 0 1px, transparent 1px 14px);
+}
+.back--stars {
+  --bk-1: #121a3a;
+  --bk-2: #06091c;
+  --bk-pattern:
+    radial-gradient(circle at 20% 30%, rgba(255, 255, 255, 0.5) 0 0.9px, transparent 1.2px),
+    radial-gradient(circle at 70% 65%, rgba(255, 255, 255, 0.38) 0 0.8px, transparent 1.1px),
+    radial-gradient(circle at 45% 85%, rgba(190, 220, 255, 0.4) 0 0.7px, transparent 1px);
+  background-size: 26px 26px, 34px 34px, 22px 22px;
+}
+.back--lava {
+  --bk-1: #4a1206;
+  --bk-2: #1a0603;
+  --bk-pattern:
+    radial-gradient(ellipse 10px 4px at 30% 20%, rgba(255, 140, 50, 0.32), transparent 70%),
+    radial-gradient(ellipse 12px 5px at 70% 70%, rgba(255, 90, 30, 0.28), transparent 72%);
+  background-size: 30px 26px;
+}
+.back--bones {
+  --bk-1: #2c2c30;
+  --bk-2: #121214;
+  --bk-pattern:
+    repeating-linear-gradient(90deg, rgba(231, 228, 216, 0.18) 0 2px, transparent 2px 10px);
+}
+/* The mark is louder on a patterned back than on the fog, which has none. */
+.card--back[class*="back--"]:not(.back--fog) .card-back__mark { opacity: 0.34; }

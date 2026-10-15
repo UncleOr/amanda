@@ -1,0 +1,289 @@
+/*
+ * The deck builder.
+ *
+ * Or: *"proper building that shows prices and so on, in a comfortable and fun
+ * interface… I want YouTubers showing what decks they built."*
+ *
+ * The layout follows §1 of the UI rules: ONE hero, and here it is the deck.
+ * Sixteen slots across the top half at the size of real cards, the album in a
+ * scrolling drawer beneath — so the thing being built is the thing being
+ * looked at, and one screenshot carries the name, the back and all sixteen.
+ */
+.builder {
+  position: fixed;
+  inset: 0;
+  z-index: 45;
+  display: flex;
+  flex-direction: column;
+  min-height: 0;
+  background: linear-gradient(180deg, #0c111d, #070a12);
+  padding: env(safe-area-inset-top) env(safe-area-inset-right) env(safe-area-inset-bottom)
+    env(safe-area-inset-left);
+}
+
+/* ── the name, the back, and the way out ── */
+.builder__top {
+  display: flex;
+  align-items: center;
+  gap: var(--sp-3);
+  padding: var(--sp-2) var(--sp-3);
+  border-block-end: 1px solid var(--line);
+}
+.builder__name {
+  flex: 1;
+  min-width: 0;
+  background: none;
+  border: none;
+  border-block-end: 1px dashed rgba(255, 255, 255, 0.25);
+  color: var(--text);
+  font: inherit;
+  font-size: var(--t-5);
+  font-weight: 900;
+  text-align: center;
+  padding-block-end: var(--sp-1);
+}
+.builder__name:focus { outline: none; border-block-end-color: var(--accent); }
+.builder__backpick {
+  flex: none;
+  padding: 0;
+  background: none;
+  border: 2px solid var(--line);
+  border-radius: 10px;
+  cursor: pointer;
+  line-height: 0;
+  overflow: hidden;
+}
+.builder__backpick:hover { border-color: var(--accent); }
+
+/* ── the eleven designs ── */
+.builder__backs {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(84px, 1fr));
+  gap: var(--sp-2);
+  padding: var(--sp-3);
+  border-block-end: 1px solid var(--line);
+  max-height: 44vh;
+  overflow-y: auto;
+}
+.builder__backopt {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--sp-1);
+  padding: var(--sp-2);
+  border-radius: 12px;
+  border: 1px solid var(--line);
+  background: var(--sur-1);
+  color: var(--text);
+  font: inherit;
+  font-size: var(--t-2);
+  cursor: pointer;
+}
+.builder__backopt.is-on { border-color: var(--accent); background: var(--sur-lit); }
+/* Drawn, not hidden — wanting it is the point. */
+.builder__backopt.is-locked { opacity: 0.45; cursor: default; }
+
+/* ── the deck itself ── */
+.builder__deck {
+  padding: var(--sp-3);
+  border-block-end: 1px solid var(--line);
+}
+.builder__counts {
+  display: flex;
+  align-items: center;
+  gap: var(--sp-4);
+  margin-block-end: var(--sp-2);
+  font-size: var(--t-4);
+  font-weight: 900;
+}
+.builder__counts span { display: inline-flex; align-items: center; gap: var(--sp-1); }
+.builder__counts .is-done { color: var(--accent); }
+/*
+ * Over budget is the one state that has to shout, because it is the only one
+ * the save button refuses for. No sentence: the number is red and the button
+ * is off, which between them say it.
+ */
+.builder__counts .is-over { color: #ff6b5a; }
+.builder__fill { margin-inline-start: auto; font-size: var(--t-3); }
+
+.builder__slots {
+  display: grid;
+  grid-template-columns: repeat(8, 1fr);
+  gap: var(--sp-2);
+  /*
+   * Capped, and centred. Eight columns of a 1280px window is a 150px card and
+   * two rows of those is 400px — the deck would fill the screen and push the
+   * album you build it from off the bottom. At 760 the sixteen read as a
+   * hand you can take in at once, which is what they are.
+   */
+  max-width: 760px;
+  margin-inline: auto;
+}
+/*
+ * `.card` inside is width:100%, height:100% — so the SLOT is what has a
+ * shape. Without this the cards came out three pixels tall, which is exactly
+ * what it looks like.
+ */
+.builder__slot,
+.builder__pick {
+  aspect-ratio: 3 / 4;
+}
+.builder__slot {
+  position: relative;
+  padding: 0;
+  border: none;
+  background: none;
+  cursor: pointer;
+  line-height: 0;
+}
+.builder__slot--empty {
+  border: 1px dashed rgba(255, 255, 255, 0.14);
+  border-radius: 10px;
+  background: var(--sur-1);
+}
+
+/* ── the album, as a drawer ── */
+.builder__album {
+  flex: 1;
+  min-height: 0;
+  overflow-y: auto;
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(72px, 1fr));
+  gap: var(--sp-2);
+  padding: var(--sp-3);
+  align-content: start;
+}
+.builder__pick {
+  position: relative;
+  padding: 0;
+  border: none;
+  background: none;
+  cursor: pointer;
+  line-height: 0;
+}
+/*
+ * A card you cannot afford, or already have three of. Greyed rather than
+ * removed: it is still yours, and a collection that rearranges itself while
+ * you build is a collection you cannot learn.
+ */
+.builder__pick.is-spent { opacity: 0.32; cursor: default; filter: grayscale(0.7); }
+
+/* The price, on the card, everywhere a card is drawn here. */
+.builder__price {
+  position: absolute;
+  inset-block-start: 3px;
+  inset-inline-start: 3px;
+  min-width: 17px;
+  padding: 1px 4px;
+  border-radius: 999px;
+  background: rgba(8, 12, 22, 0.88);
+  border: 1px solid var(--accent);
+  color: var(--accent);
+  font-size: var(--t-1);
+  font-weight: 900;
+  line-height: 1.5;
+  text-align: center;
+}
+.builder__copies {
+  position: absolute;
+  inset-block-end: 3px;
+  inset-inline-end: 3px;
+  padding: 1px 5px;
+  border-radius: 999px;
+  background: rgba(8, 12, 22, 0.88);
+  border: 1px solid var(--line-lit, var(--line));
+  color: var(--text);
+  font-size: var(--t-1);
+  font-weight: 800;
+  line-height: 1.5;
+}
+
+.builder__foot {
+  display: flex;
+  align-items: center;
+  gap: var(--sp-3);
+  padding: var(--sp-3);
+  border-block-start: 1px solid var(--line);
+}
+.builder__foot .warn { margin: 0; margin-inline-end: auto; }
+
+/* ════════ the shelf of decks ════════ */
+.shelf-decks {
+  display: flex;
+  gap: var(--sp-3);
+  flex-wrap: wrap;
+}
+.deckcard {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--sp-1);
+  padding: var(--sp-2);
+  border-radius: 14px;
+  border: 1px solid var(--line);
+  background: var(--sur-1);
+  color: var(--text);
+  font: inherit;
+  cursor: pointer;
+}
+/* The one you are playing with. */
+.deckcard.is-on { border-color: var(--accent); background: var(--sur-lit); }
+.deckcard__face {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--sp-1);
+  padding: 0;
+  border: none;
+  background: none;
+  color: inherit;
+  font: inherit;
+  cursor: pointer;
+}
+.deckcard__face b { font-size: var(--t-3); }
+.deckcard__face span {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  color: var(--muted);
+  font-size: var(--t-2);
+}
+.deckcard__edit { font-size: var(--t-2); }
+.deckcard--new { justify-content: center; min-height: 118px; min-width: 92px; color: var(--muted); }
+
+/* A landscape phone has no height to spare: the deck row halves and the
+   album drawer takes whatever is left. */
+@media (max-height: 460px) {
+  .builder__slots { grid-template-columns: repeat(16, 1fr); gap: var(--sp-1); }
+  .builder__name { font-size: var(--t-4); }
+  .builder__deck { padding: var(--sp-2) var(--sp-3); }
+  .builder__album { grid-template-columns: repeat(auto-fill, minmax(58px, 1fr)); }
+}
+
+/*
+ * The door on the home screen, beside the album.
+ *
+ * It wears the deck's own back, so what you built is visible from the first
+ * screen without opening anything — which is also the cheapest possible
+ * reminder that the thing exists.
+ */
+.btn-deck { display: inline-flex; align-items: center; gap: var(--sp-2); }
+.btn-deck__back {
+  width: 15px;
+  height: 20px;
+  border-radius: 3px;
+  border: 1px solid rgba(255, 255, 255, 0.28);
+  background:
+    var(--bk-pattern, none),
+    linear-gradient(160deg, var(--bk-1, #141d33), var(--bk-2, #0d1424));
+  background-size: inherit;
+  flex: none;
+}
+
+/* The shelf lives in a modal that has to be able to hold the builder too. */
+.modal--decks {
+  width: min(960px, 94vw);
+  max-height: 92vh;
+  overflow: auto;
+}
+.modal--decks h2 { margin: 0 0 var(--sp-3); font-size: var(--t-5); }

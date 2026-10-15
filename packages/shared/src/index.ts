@@ -31,6 +31,10 @@ export * from "./cardCost.js";
 export * from "./avatars.js";
 export * from "./identity.js";
 
+// The decks you build, and what their cards look like from the back
+export * from "./cardBacks.js";
+export * from "./decks.js";
+
 // The ladder of arenas, and which one a trophy count puts you in.
 export * from "./arenas.js";
 

@@ -1177,3 +1177,117 @@ export function albumToPool(album: Map<string, OwnedCard>): string[] {
     for (let i = 0; i < copies; i++) pool.push(cardId);
   return pool;
 }
+
+/* ───────────── the decks you build ───────────── */
+
+/**
+ * ═══ STRAIGHT TO THE DATABASE, NOT THROUGH THE SERVER ═══
+ *
+ * Everything that GRANTS something — a chest, a level-up, a purchase — goes
+ * through the server, because a client that can grant itself things is not a
+ * game. A deck grants nothing. It is a restriction you put on yourself: these
+ * sixteen and no others.
+ *
+ * It adds no attack surface either, which is the real test. The client
+ * already builds the board it locks, so somebody willing to tamper could
+ * always field whatever they liked; the deck is upstream of a decision that
+ * was never defended here. Row level security is what matters — the policies
+ * in the migration mean you can only ever read and write your own — and the
+ * rules in shared/decks.ts are what keep an honest deck honest.
+ */
+import {
+  DECK_RULES,
+  type Deck,
+} from "@amanda/shared";
+
+export interface DeckShelf {
+  decks: Deck[];
+  /** Which one is being played, or null for "build me one". */
+  activeId: string | null;
+}
+
+export async function loadDecks(): Promise<DeckShelf> {
+  const sb = db();
+  if (!sb) return { decks: [], activeId: null };
+  try {
+    const { data: auth } = await sb.auth.getSession();
+    const id = auth.session?.user.id;
+    if (!id) return { decks: [], activeId: null };
+    const [{ data: rows }, { data: me }] = await Promise.all([
+      sb.from("decks").select("id, name, cards, back").eq("player_id", id).order("created_at"),
+      sb.from("players").select("active_deck").eq("id", id).maybeSingle(),
+    ]);
+    return {
+      decks: (rows ?? []).map((r) => ({
+        id: r.id as string,
+        name: (r.name as string) ?? "",
+        cards: (r.cards as string[]) ?? [],
+        back: (r.back as string) ?? "fog",
+      })),
+      activeId: (me?.active_deck as string | null) ?? null,
+    };
+  } catch {
+    // No decks is a perfectly good state: the game builds one.
+    return { decks: [], activeId: null };
+  }
+}
+
+/**
+ * Write one, new or changed. Returns the saved deck, or a sentence to show.
+ *
+ * The two failures a player can actually cause are named, because "could not
+ * save" tells a child nothing: a fourth deck, and two decks with one name.
+ */
+/*
+ * Said at both ends of the same try. A function rather than a const because
+ * `line` reads the live copy overrides, which arrive after this module does.
+ */
+const DECK_SAVE_FAILED = () => t("sd0c6462", "לא הצלחתי לשמור. נסה שוב.");
+
+export async function saveDeck(deck: Deck): Promise<Deck | string> {
+  const sb = db();
+  if (!sb) return t("se7da992", "אין חיבור לשרת");
+  try {
+    const { data: auth } = await sb.auth.getSession();
+    const id = auth.session?.user.id;
+    if (!id) return t("sb7305bc", "אין חיבור לשרת");
+    const row = { player_id: id, name: deck.name.trim(), cards: deck.cards, back: deck.back };
+    const { data, error } =
+      deck.id && deck.id !== "auto"
+        ? await sb.from("decks").update(row).eq("id", deck.id).select("id").maybeSingle()
+        : await sb.from("decks").insert(row).select("id").maybeSingle();
+    if (error) {
+      if (error.message.includes("deck_limit"))
+        return tf("s5bcce82", "אפשר לשמור {0} חפיסות. תמחק אחת קודם.", DECK_RULES.maxDecks);
+      if (error.code === "23505") return t("sa2e70d6", "כבר יש לך חפיסה בשם הזה.");
+      return serverError(error.message) ?? DECK_SAVE_FAILED();
+    }
+    return { ...deck, id: (data?.id as string) ?? deck.id };
+  } catch (err) {
+    return serverError((err as Error).message) ?? DECK_SAVE_FAILED();
+  }
+}
+
+export async function deleteDeck(deckId: string): Promise<void> {
+  const sb = db();
+  if (!sb) return;
+  try {
+    await sb.from("decks").delete().eq("id", deckId);
+  } catch {
+    /* it is still there; the shelf reloads and shows it */
+  }
+}
+
+/** Play with this one. Null means "build me one each match", as before. */
+export async function setActiveDeck(deckId: string | null): Promise<void> {
+  const sb = db();
+  if (!sb) return;
+  try {
+    const { data: auth } = await sb.auth.getSession();
+    const id = auth.session?.user.id;
+    if (!id) return;
+    await sb.from("players").update({ active_deck: deckId }).eq("id", id);
+  } catch {
+    /* the shelf reloads and shows what actually stuck */
+  }
+}

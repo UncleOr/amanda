@@ -12030,5 +12030,195 @@
    "file": "apps/client/src/game/verdict.ts",
    "line": 41
   }
+ },
+ {
+  "id": "s814258b",
+  "section": "App.tsx",
+  "text": "החפיסות שלי",
+  "where": {
+   "kind": "source",
+   "file": "apps/client/src/App.tsx",
+   "line": 0
+  }
+ },
+ {
+  "id": "s4441b9b",
+  "section": "components/DeckBuilder.tsx",
+  "text": "שם לחפיסה",
+  "where": {
+   "kind": "source",
+   "file": "apps/client/src/components/DeckBuilder.tsx",
+   "line": 0
+  }
+ },
+ {
+  "id": "sd7b2e93",
+  "section": "components/DeckBuilder.tsx",
+  "text": "גב הקלפים",
+  "where": {
+   "kind": "source",
+   "file": "apps/client/src/components/DeckBuilder.tsx",
+   "line": 0
+  }
+ },
+ {
+  "id": "s8bbded0",
+  "section": "components/DeckBuilder.tsx",
+  "text": "החפיסה שלי",
+  "where": {
+   "kind": "source",
+   "file": "apps/client/src/components/DeckBuilder.tsx",
+   "line": 0
+  }
+ },
+ {
+  "id": "s7ec416f",
+  "section": "components/DeckBuilder.tsx",
+  "text": "מלא לי",
+  "where": {
+   "kind": "source",
+   "file": "apps/client/src/components/DeckBuilder.tsx",
+   "line": 0
+  }
+ },
+ {
+  "id": "s0163eb0",
+  "section": "components/DeckBuilder.tsx",
+  "text": "הורד מהחפיסה",
+  "where": {
+   "kind": "source",
+   "file": "apps/client/src/components/DeckBuilder.tsx",
+   "line": 0
+  }
+ },
+ {
+  "id": "s9db8c07",
+  "section": "components/DeckBuilder.tsx",
+  "text": "האלבום שלי",
+  "where": {
+   "kind": "source",
+   "file": "apps/client/src/components/DeckBuilder.tsx",
+   "line": 0
+  }
+ },
+ {
+  "id": "scba3d8d",
+  "section": "components/DeckBuilder.tsx",
+  "text": "שמור",
+  "where": {
+   "kind": "source",
+   "file": "apps/client/src/components/DeckBuilder.tsx",
+   "line": 0
+  }
+ },
+ {
+  "id": "se0c2a5c",
+  "section": "components/DeckBuilder.tsx",
+  "text": "מחק",
+  "where": {
+   "kind": "source",
+   "file": "apps/client/src/components/DeckBuilder.tsx",
+   "line": 0
+  }
+ },
+ {
+  "id": "sad4a141",
+  "section": "components/DeckBuilder.tsx",
+  "text": "לערוך",
+  "where": {
+   "kind": "source",
+   "file": "apps/client/src/components/DeckBuilder.tsx",
+   "line": 0
+  }
+ },
+ {
+  "id": "s2466b47",
+  "section": "components/DeckBuilder.tsx",
+  "text": "חפיסה {0}",
+  "where": {
+   "kind": "source",
+   "file": "apps/client/src/components/DeckBuilder.tsx",
+   "line": 0
+  }
+ },
+ {
+  "id": "s4d8e1e6",
+  "section": "components/HomeScreen.tsx",
+  "text": "החפיסה שלי",
+  "where": {
+   "kind": "source",
+   "file": "apps/client/src/components/HomeScreen.tsx",
+   "line": 0
+  }
+ },
+ {
+  "id": "sd0c6462",
+  "section": "game/account.ts",
+  "text": "לא הצלחתי לשמור. נסה שוב.",
+  "where": {
+   "kind": "source",
+   "file": "apps/client/src/game/account.ts",
+   "line": 0
+  }
+ },
+ {
+  "id": "s5bcce82",
+  "section": "game/account.ts",
+  "text": "אפשר לשמור {0} חפיסות. תמחק אחת קודם.",
+  "where": {
+   "kind": "source",
+   "file": "apps/client/src/game/account.ts",
+   "line": 0
+  }
+ },
+ {
+  "id": "sa2e70d6",
+  "section": "game/account.ts",
+  "text": "כבר יש לך חפיסה בשם הזה.",
+  "where": {
+   "kind": "source",
+   "file": "apps/client/src/game/account.ts",
+   "line": 0
+  }
+ },
+ {
+  "id": "sb3ce2e0",
+  "section": "App.tsx",
+  "text": "סגירה",
+  "where": {
+   "kind": "source",
+   "file": "apps/client/src/App.tsx",
+   "line": 0
+  }
+ },
+ {
+  "id": "sd87ddf0",
+  "section": "components/DeckBuilder.tsx",
+  "text": "חזרה",
+  "where": {
+   "kind": "source",
+   "file": "apps/client/src/components/DeckBuilder.tsx",
+   "line": 0
+  }
+ },
+ {
+  "id": "se7da992",
+  "section": "game/account.ts",
+  "text": "אין חיבור לשרת",
+  "where": {
+   "kind": "source",
+   "file": "apps/client/src/game/account.ts",
+   "line": 0
+  }
+ },
+ {
+  "id": "sb7305bc",
+  "section": "game/account.ts",
+  "text": "אין חיבור לשרת",
+  "where": {
+   "kind": "source",
+   "file": "apps/client/src/game/account.ts",
+   "line": 0
+  }
  }
 ]

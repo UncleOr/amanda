@@ -46,6 +46,8 @@ export type Overlay =
   | { kind: "updates" }
   /** Today's challenges, when the screen is too small to hold the list. */
   | { kind: "challenges" }
+  /** Your decks, and the one you are building. */
+  | { kind: "decks" }
   /** The "what an account gives you" prompt, shown at a locked door. */
   | { kind: "why" }
   | { kind: "report"; about: "bug" | "player" };

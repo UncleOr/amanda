@@ -1,7 +1,7 @@
 import type { CSSProperties } from "react";
 import { spriteFor } from "../game/skins";
 import { Icon } from "./Icon";
-import { KING } from "@amanda/shared";
+import { KING, cardBack } from "@amanda/shared";
 import { CATALOG } from "../data/catalog";
 import { ELEMENT_META, RANGE_META, RARITY_META, seriesColor } from "../data/cardMeta";
 import { say } from "../game/lang";
@@ -224,11 +224,27 @@ export function CardView({
  * is deliberately almost invisible — enough to feel a shape in there, not
  * enough to read as a label.
  */
-export function CardBack({ size = "small" }: { size?: "small" | "medium" }) {
+export function CardBack({
+  size = "small",
+  back,
+}: {
+  size?: "small" | "medium";
+  /**
+   * Which design. Omitted everywhere the game hides a card for its own
+   * reasons — the fog over an opponent's board is the fog, not a thing
+   * either player chose — and given only where the deck's own back is the
+   * point: the builder, and the shop. See cardBacks.ts.
+   */
+  back?: string;
+}) {
+  const look = cardBack(back);
   return (
-    <div className={`card card--back card--${size}`} aria-label={t("se274434", "מוסתר בערפל")}>
+    <div
+      className={`card card--back card--${size}${back ? ` back--${look.id}` : ""}`}
+      aria-label={back ? say(look) : t("se274434", "מוסתר בערפל")}
+    >
       <span className="card-back__mark">
-        <Icon name="hidden" size={20} />
+        <Icon name={look.mark as never} size={20} />
       </span>
     </div>
   );

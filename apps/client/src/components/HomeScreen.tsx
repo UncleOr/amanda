@@ -7,6 +7,7 @@ import { ChallengeButton, Challenges } from "./Challenges";
 import { Lock } from "./SignedInOnly";
 import { shopItemArt } from "./Shop";
 import { useCompact } from "../game/useCompact";
+import { DEFAULT_BACK } from "@amanda/shared";
 import { listFriends, type Chest, type ShopItem } from "../game/account";
 import type { Overlays } from "../game/useOverlay";
 import type { MatchApi } from "../game/useMatch";
@@ -86,7 +87,10 @@ export function HomeScreen({
   promo,
   onChest,
   viewport,
+  deckBack = DEFAULT_BACK,
 }: {
+  /** The back of the deck being played, drawn on the door to the builder. */
+  deckBack?: string;
   m: MatchApi;
   panel: Overlays;
   /** Run this, or show the sign-in prompt — see SignedInOnly.tsx. */
@@ -401,6 +405,21 @@ export function HomeScreen({
             <ArenaTrack trophies={m.account?.trophies ?? 0} />
             <button className="btn-album" onClick={() => panel.show("album")}>
               <Icon name="deck" size={18} /> {t("sac17bac", "האלבום שלי")}
+            </button>
+            {/*
+              ═══ STRAIGHT FROM THE HOME SCREEN ═══
+
+              Or: *"they need to reach it directly from the main screen."*
+
+              Beside the album rather than in the rail, because the two are
+              the same sentence read in order: here is everything you own,
+              and here are the sixteen you are taking. The card back on the
+              button is the deck's own, so the thing you built is visible
+              from the home screen without opening anything.
+            */}
+            <button className="btn-album btn-deck" onClick={() => panel.show("decks")}>
+              <span className={`btn-deck__back back--${deckBack}`} aria-hidden="true" />
+              {t("s4d8e1e6", "החפיסה שלי")}
             </button>
           </div>
           <NachoBar nachos={m.account?.nachos ?? 0} />

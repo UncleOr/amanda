@@ -1,0 +1,12 @@
+-- A player may change which deck they play with, and nothing else new.
+--
+-- The RLS policy on `players` already says "your own row". The GRANT is the
+-- other half of it, and it is column by column on purpose — see
+-- 20261006134724_revoke_unused_write_grants.sql, which is where that was
+-- deliberately narrowed.
+--
+-- Found the way these are found. The deck saved, the shelf drew it, and
+-- `active_deck` stayed null: a Postgres update with no granted columns
+-- affects no rows and raises nothing, so the client had nothing to report
+-- and reported nothing.
+grant update (active_deck) on public.players to authenticated;

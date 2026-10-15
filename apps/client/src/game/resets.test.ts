@@ -47,6 +47,8 @@ const OUTLIVES_A_MATCH: Record<string, string> = {
     "a friend calling you in. It arrives while you are between matches, which is exactly when clearMatch runs.",
   setBotLevelState:
     "how hard the computer tries. A per-browser choice, remembered on purpose — a child who found the easy bot should not have to find it again after every match.",
+  setBuiltDeck:
+    "the sixteen cards you built and saved. It is the OPPOSITE of match state: a deck that had to be rebuilt after every match would not be a deck. It changes when the builder saves, and reloadDecks is what says so.",
 };
 
 /** The body of a top-level `const NAME = useCallback(() => { … }, [...])`. */

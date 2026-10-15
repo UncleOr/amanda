@@ -7,11 +7,27 @@ import { LESSONS } from "./game/lessons";
 import { Profile } from "./components/Profile";
 import { Onboarding } from "./components/Onboarding";
 import { ChestReveal } from "./components/ChestReveal";
-import { clearTutorialMark, loadInbox, loadShop, markChestSeen, markTutorialAt, openChest, tutorialMark, unopenedChests, type Chest, type ShopItem } from "./game/account";
+import {
+  clearTutorialMark,
+  deleteDeck,
+  loadDecks,
+  loadInbox,
+  loadShop,
+  markChestSeen,
+  markTutorialAt,
+  openChest,
+  saveDeck,
+  setActiveDeck,
+  tutorialMark,
+  unopenedChests,
+  type Chest,
+  type DeckShelf,
+  type ShopItem,
+} from "./game/account";
 import { track } from "./game/track";
 import { markTutorialDone, tutorialSeenLocally } from "./game/account";
 import { line } from "./data/tutorialLines";
-import { COOP_LANES, PHASES, arenaFor } from "@amanda/shared";
+import { COOP_LANES, DEFAULT_BACK, PHASES, arenaFor, type Deck } from "@amanda/shared";
 import type { BattleResult } from "@amanda/engine";
 import { useMatch } from "./game/useMatch";
 import { useAchievements } from "./game/useAchievements";
@@ -49,6 +65,7 @@ import { Settings } from "./components/Settings";
 import { hasUnreadUpdate } from "./data/updates";
 import { MatePeek } from "./components/MatePeek";
 import { Challenges } from "./components/Challenges";
+import { DeckBuilder, DeckShelfView } from "./components/DeckBuilder";
 import { Versus } from "./components/Versus";
 import { Report } from "./components/Report";
 import { Friends } from "./components/Friends";
@@ -722,6 +739,22 @@ function Game() {
    * shop does after a purchase.
    */
   const [ownedItems, setOwnedItems] = useState<string[]>([]);
+  /*
+   * The decks, and the one being edited.
+   *
+   * Held here rather than inside the panel because the panel is unmounted
+   * every time it closes, and a child who taps away mid-build should not come
+   * back to an empty screen — `editing` outlives the overlay.
+   */
+  const [shelf, setShelf] = useState<DeckShelf>({ decks: [], activeId: null });
+  const [editing, setEditing] = useState<Deck | null>(null);
+  const [deckBusy, setDeckBusy] = useState(false);
+  const [deckError, setDeckError] = useState<string | null>(null);
+  const refreshDecks = useCallback(() => loadDecks().then(setShelf), []);
+  useEffect(() => {
+    if (m.phase !== "intro") return;
+    void refreshDecks();
+  }, [m.phase, m.account, refreshDecks]);
   useEffect(() => {
     if (m.phase !== "intro") return;
     void loadShop().then(({ items, owned }) => {
@@ -997,6 +1030,7 @@ function Game() {
           promo={promo}
           onChest={setChest}
           viewport={viewport}
+          deckBack={shelf.decks.find((d) => d.id === shelf.activeId)?.back ?? DEFAULT_BACK}
         />
       )}
 
@@ -1827,6 +1861,86 @@ function Game() {
               onClaimed={() => m.reloadAccount()}
               reloadKey={m.award}
             />
+          </div>
+        </Overlay>
+      )}
+
+      {/*
+        ═══ THE DECKS ═══
+
+        Or: *"there should be a way to save at least 3 decks, each with a
+        unique name and a unique card-back design… deck building is a
+        significant part of the appeal."*
+
+        Two screens behind one door: the shelf of what you have built, and
+        the builder for one of them. Not two panels, because moving between
+        them is the whole interaction — you look at three decks, you pick one,
+        you change four cards, you come back out.
+      */}
+      {panel.is("decks") && (
+        <Overlay onClick={() => (editing ? undefined : panel.close())}>
+          <div className="modal modal--decks" onClick={(e) => e.stopPropagation()}>
+            {editing ? (
+              <DeckBuilder
+                account={m.account}
+                items={ownedItems}
+                deck={editing}
+                busy={deckBusy}
+                error={deckError}
+                onCancel={() => {
+                  setEditing(null);
+                  setDeckError(null);
+                }}
+                onDelete={
+                  editing.id && editing.id !== "auto"
+                    ? () => {
+                        const id = editing.id;
+                        setEditing(null);
+                        void deleteDeck(id).then(() => {
+                          void refreshDecks();
+                          m.reloadDecks();
+                        });
+                      }
+                    : undefined
+                }
+                onSave={(d) => {
+                  setDeckBusy(true);
+                  setDeckError(null);
+                  void saveDeck(d).then((saved) => {
+                    setDeckBusy(false);
+                    if (typeof saved === "string") {
+                      setDeckError(saved);
+                      return;
+                    }
+                    setEditing(null);
+                    /* A deck you just built is the deck you want to play. */
+                    void setActiveDeck(saved.id).then(() => {
+                      void refreshDecks();
+                      m.reloadDecks();
+                    });
+                  });
+                }}
+              />
+            ) : (
+              <>
+                <button className="modal__close" onClick={() => panel.close()} title={t("sb3ce2e0", "סגירה")}>
+                  <Icon name="exit" size={15} />
+                </button>
+                <h2>{t("s814258b", "החפיסות שלי")}</h2>
+                <DeckShelfView
+                  decks={shelf.decks}
+                  activeId={shelf.activeId}
+                  onPlay={(id) =>
+                    void setActiveDeck(id).then(() => {
+                      void refreshDecks();
+                      m.reloadDecks();
+                    })
+                  }
+                  onEdit={(d) => setEditing(d)}
+                  onNew={() => setEditing({ id: "", name: "", cards: [], back: DEFAULT_BACK })}
+                />
+              </>
+            )}
           </div>
         </Overlay>
       )}
