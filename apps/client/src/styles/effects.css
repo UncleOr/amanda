@@ -317,3 +317,120 @@
   /* reward.ts does not draw the token at all here; this is the other half. */
   .is-gained { animation: none; }
 }
+
+/* ════════ climbing an arena ════════
+ *
+ * Or: *"I moved up an arena without any message on the screen, a
+ * celebration, fireworks, a huge chest with loads of presents."*
+ *
+ * It takes the whole screen because it happens five times in a player's
+ * life. z-index 150: above every panel and the board, below the studio ident
+ * at 200 — nothing should ever land on top of the ident, including good news.
+ */
+.arenaup {
+  position: fixed;
+  inset: 0;
+  height: 100vh;
+  height: 100dvh;
+  z-index: 150;
+  display: grid;
+  place-items: center;
+  /*
+   * Opaque, not a scrim.
+   *
+   * It was rgba(…, 0.82) and whatever happened to be behind — on the first
+   * run, the onboarding card — read straight through it and competed with
+   * the thing being celebrated. This happens five times in a player's life;
+   * for those few seconds it is the only screen.
+   */
+  background: #04070e;
+  cursor: pointer;
+  animation: arenaup-in 320ms ease-out;
+}
+@keyframes arenaup-in { from { opacity: 0; } to { opacity: 1; } }
+
+/* The floor you just earned, pushed back far enough to read as a place. */
+.arenaup__floor {
+  position: absolute;
+  inset: 0;
+  background-size: cover;
+  background-position: center;
+  opacity: 0.4;
+  filter: blur(2px);
+}
+
+.arenaup__card {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--sp-3);
+  padding: var(--sp-4) clamp(22px, 7vw, 54px);
+  border-radius: 22px;
+  border: 1px solid var(--accent);
+  background: linear-gradient(180deg, rgba(20, 28, 48, 0.92), rgba(10, 15, 27, 0.95));
+  box-shadow: 0 24px 60px rgba(0, 0, 0, 0.6);
+  text-align: center;
+  animation: arenaup-rise 460ms cubic-bezier(0.2, 0.9, 0.3, 1.3);
+}
+@keyframes arenaup-rise {
+  from { opacity: 0; transform: translateY(26px) scale(0.92); }
+  to { opacity: 1; transform: none; }
+}
+.arenaup__kicker {
+  font-size: var(--t-3);
+  font-weight: 800;
+  letter-spacing: 0.08em;
+  color: var(--accent);
+}
+.arenaup__name { margin: 0; font-size: var(--t-6); font-weight: 900; }
+.arenaup__loot { display: flex; align-items: center; gap: var(--sp-4); }
+.arenaup__chest img {
+  width: clamp(76px, 18vh, 128px);
+  height: auto;
+  display: block;
+  filter: drop-shadow(0 0 26px rgba(255, 196, 70, 0.55));
+  animation: arenaup-chest 2.4s ease-in-out infinite alternate;
+}
+@keyframes arenaup-chest {
+  from { transform: translateY(0) rotate(-2deg); }
+  to { transform: translateY(-7px) rotate(2deg); }
+}
+.arenaup__gems {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--sp-2);
+  font-size: var(--t-5);
+  font-weight: 900;
+  color: var(--text);
+}
+
+/* ── the fireworks ── */
+.arenaup__sparks { position: absolute; inset: 0; overflow: hidden; pointer-events: none; }
+.arenaup__sparks i {
+  position: absolute;
+  top: -8%;
+  width: 8px;
+  height: 14px;
+  border-radius: 2px;
+  background: var(--accent);
+  animation: arenaup-fall 2.8s linear infinite;
+}
+/* Four colours, cycled, so it reads as confetti rather than as one material. */
+.arenaup__sparks i:nth-child(4n + 1) { background: #ffd166; }
+.arenaup__sparks i:nth-child(4n + 2) { background: #5ce1e6; }
+.arenaup__sparks i:nth-child(4n + 3) { background: #ff8fab; }
+.arenaup__sparks i:nth-child(4n) { background: #9af06a; }
+@keyframes arenaup-fall {
+  from { transform: translateY(0) rotate(var(--spin, 0deg)); opacity: 0; }
+  12% { opacity: 1; }
+  85% { opacity: 1; }
+  to { transform: translateY(118vh) rotate(calc(var(--spin, 0deg) + 540deg)); opacity: 0; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .arenaup__sparks { display: none; }
+  .arenaup__card,
+  .arenaup { animation: none; }
+  .arenaup__chest img { animation: none; }
+}

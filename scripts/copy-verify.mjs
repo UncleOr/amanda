@@ -52,7 +52,20 @@ const byId = new Map(map.map((e) => [e.id, e]));
 const CALL = /\btf?\(\s*"([a-z][0-9a-f]{7})",\s*("(?:[^"\\]|\\.)*")/g;
 const NESTED = /\b(tf?)\(\s*"([a-z][0-9a-f]{7})",\s*t\(\s*"([a-z][0-9a-f]{7})",\s*("(?:[^"\\]|\\.)*")\)/g;
 /** Anything id-SHAPED that the real pattern above would not accept. */
-const MALFORMED = /\btf?\(\s*"([A-Za-z][0-9A-Za-z]{7})"\s*,/g;
+/*
+ * Anything id-SHAPED that the real pattern above would not accept.
+ *
+ * It used to require exactly eight characters, which left a hole the size
+ * of every id that is the wrong LENGTH. Building the arena celebration I
+ * wrote t("s00up1", …) as a placeholder and this file reported "0 ids
+ * disagree": six characters matched neither the real pattern nor this one,
+ * so the string had no row in the document, no English, and nothing
+ * anywhere said so. The check that exists to stop a silent hole had one.
+ *
+ * Any quoted first argument that is not [a-z] plus seven hex digits is a
+ * failure now, whatever its length.
+ */
+const MALFORMED = /\btf?\(\s*"([^"]{1,16})"\s*,/g;
 
 const files = [];
 (function walk(dir) {

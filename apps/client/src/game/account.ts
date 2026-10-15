@@ -48,6 +48,16 @@ export const MIN_AGE = 7;
 export interface Account {
   playerId: string;
   trophies: number;
+  /*
+   * The highest you have ever been, which is NOT the same as where you are.
+   *
+   * Read for one reason: climbing an arena is announced from it. Trophies go
+   * down on a loss, so a player sitting on the Court's threshold would cross
+   * it every other match and be congratulated every time; this only ever
+   * goes up, so each arena arrives exactly once. The server pays the gifts
+   * off the same number.
+   */
+  bestTrophies: number;
   diamonds: number;
   tutorialDone: boolean;
   nickname: string | null;
@@ -302,7 +312,9 @@ export async function loadAccount(): Promise<Account | null> {
       const [{ data: player }, { data: cards }] = await Promise.all([
         sb
           .from("players")
-          .select("trophies, diamonds, nachos, tutorial_done, nickname, avatar, birth_date, gender, catchphrase")
+          .select(
+            "trophies, best_trophies, diamonds, nachos, tutorial_done, nickname, avatar, birth_date, gender, catchphrase",
+          )
           .eq("id", userId)
           .maybeSingle(),
         sb.from("player_cards").select("card_id, copies, level").eq("player_id", userId),
@@ -318,6 +330,7 @@ export async function loadAccount(): Promise<Account | null> {
         return {
           playerId: userId,
           trophies: player.trophies ?? 0,
+          bestTrophies: (player.best_trophies as number | null) ?? player.trophies ?? 0,
           diamonds: player.diamonds ?? 0,
           nachos: player.nachos ?? 0,
           catchphrase: player.catchphrase ?? null,

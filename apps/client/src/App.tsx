@@ -27,7 +27,15 @@ import {
 import { track } from "./game/track";
 import { markTutorialDone, tutorialSeenLocally } from "./game/account";
 import { line } from "./data/tutorialLines";
-import { COOP_LANES, DEFAULT_BACK, PHASES, arenaFor, type Deck } from "@amanda/shared";
+import {
+  ARENAS,
+  COOP_LANES,
+  DEFAULT_BACK,
+  PHASES,
+  arenaFor,
+  type Arena,
+  type Deck,
+} from "@amanda/shared";
 import type { BattleResult } from "@amanda/engine";
 import { useMatch } from "./game/useMatch";
 import { useAchievements } from "./game/useAchievements";
@@ -66,6 +74,7 @@ import { hasUnreadUpdate } from "./data/updates";
 import { MatePeek } from "./components/MatePeek";
 import { Challenges } from "./components/Challenges";
 import { DeckBuilder, DeckShelfView } from "./components/DeckBuilder";
+import { ArenaUp } from "./components/ArenaUp";
 import { Versus } from "./components/Versus";
 import { Report } from "./components/Report";
 import { Friends } from "./components/Friends";
@@ -159,6 +168,15 @@ const IN_MATCH = ["countdown", "build", "panic", "prebattle", "battle"];
  * its hooks run, which breaks the rules of hooks (and Fast Refresh with it).
  */
 /** A room code from an invite link (?join=XXXX), used once on first load. */
+/*
+ * The arena this device last saw you in.
+ *
+ * Kept in storage rather than in a ref so that climbing one and closing the
+ * game before the screen appears does not lose it — you are told next time
+ * you open, which is the whole point of telling you at all.
+ */
+const ARENA_SEEN = "amanda.arena.seen";
+
 const INVITE_CODE = new URLSearchParams(location.search).get("join");
 /*
  * Take it out of the address bar the moment it is read.
@@ -508,6 +526,53 @@ function Game() {
    * needs it is .boards and nothing between here and there cares.
    */
   const arena = arenaFor(m.account?.trophies ?? 0);
+  /*
+   * ═══ NOTICING THAT YOU CLIMBED ═══
+   *
+   * Or: *"I moved up an arena without any message on the screen."*
+   *
+   * Worked out here rather than told by the server, because the client
+   * already has both numbers: the arena it was showing a moment ago and the
+   * one the reloaded account says. The server's job is the GIFTS, which have
+   * to be authoritative; the announcement does not.
+   *
+   * Keyed on BEST trophies for the same reason the server is — trophies go
+   * down on a loss, and a player hovering on a threshold must not be
+   * congratulated every other match. The ref starts at null so the first
+   * account load, which is somebody arriving at the game already in an
+   * arena, is remembered rather than celebrated.
+   */
+  const [climbed, setClimbed] = useState<Arena | null>(null);
+  useEffect(() => {
+    const best = m.account?.bestTrophies;
+    if (best === undefined) return;
+    const now = arenaFor(best);
+    let was: string | null = null;
+    try {
+      was = localStorage.getItem(ARENA_SEEN);
+      localStorage.setItem(ARENA_SEEN, now.id);
+    } catch {
+      // No storage: the climb is announced within this session or not at all,
+      // which is the old behaviour and still better than nothing.
+    }
+    /*
+     * `was === null` is the first time this device has ever looked, and that
+     * is somebody ARRIVING in an arena rather than reaching one — a new phone
+     * for an old player must not throw them a party for where they already
+     * live. Remembered, not celebrated.
+     */
+    /*
+     * And only UPWARDS. best_trophies never falls, so in the ordinary run of
+     * things this cannot go backwards — but a reset account or a restored
+     * backup can leave the stored arena ahead of the real one, and "well
+     * done, you are back in the playroom" is not a celebration.
+     */
+    const rose =
+      was !== null &&
+      was !== now.id &&
+      ARENAS.findIndex((a) => a.id === now.id) > ARENAS.findIndex((a) => a.id === was);
+    if (rose) setClimbed(now);
+  }, [m.account?.bestTrophies]);
   useEffect(() => {
     document.documentElement.style.setProperty(
       "--arena-floor",
@@ -1955,6 +2020,23 @@ function Game() {
             )}
           </div>
         </Overlay>
+      )}
+
+      {/*
+        Five times in a player's life, and it takes the screen — see
+        ArenaUp.tsx. The gifts are already granted and already on the shelf;
+        this says so.
+      */}
+      {climbed && (
+        <ArenaUp
+          arena={climbed}
+          diamonds={40 * ARENAS.findIndex((a) => a.id === climbed.id)}
+          onClose={() => {
+            setClimbed(null);
+            /* The chest and the diamonds landed while this was up. */
+            m.reloadAccount();
+          }}
+        />
       )}
 
       {/* The kind of report rides along with the panel itself, so it cannot

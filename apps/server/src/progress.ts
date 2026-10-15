@@ -16,15 +16,18 @@
  */
 import type { SupabaseClient } from "@supabase/supabase-js";
 import {
+  ARENAS,
   CATCHPHRASES,
   EMOJI_PACKS,
   LEVELS,
+  arenaFor,
   TUNED,
   collectableCards as pickCollectable,
   type Card,
 } from "@amanda/shared";
 import { CATALOG } from "./content.js";
 import { refreshAlbumPowerSoon } from "./albumPower.js";
+import { notify } from "./notify.js";
 /*
  * One client for the whole process. This module used to build its own, which
  * is how the admin endpoints came back to life while every match carried on
@@ -313,13 +316,69 @@ export async function recordMatch(opts: {
       // Every third win is a better chest, so there is something to count towards.
       const kind = trophies % 90 === 0 ? "gold" : trophies % 30 === 0 ? "silver" : "wood";
       const won = rollChest(kind);
+      /*
+       * ═══ CLIMBING AN ARENA IS AN EVENT, AND IT PAYS ═══
+       *
+       * Or: *"I noticed I moved up an arena without any message on the
+       * screen, a celebration, fireworks, a huge chest with loads of
+       * presents I got for the occasion."*
+       *
+       * He is right that nothing happened, and he is right that something
+       * should: the five arenas are the game's whole ladder and reaching one
+       * was, until now, a number quietly changing in the corner.
+       *
+       * Measured against BEST trophies, not current ones. Trophies go DOWN on
+       * a loss, so a player sitting on 150 would cross the Court's threshold
+       * every other match and be paid for it every time. `best_trophies`
+       * only ever goes up, so each arena pays exactly once in a lifetime.
+       *
+       * The prize grows with the rung — a gold chest either way, because
+       * that is the "huge chest" he asked for, and diamonds that are worth
+       * noticeably more at the top than at the bottom.
+       */
+      const bestBefore = data?.best_trophies ?? 0;
+      const bestAfter = Math.max(bestBefore, trophies);
+      const climbed =
+        arenaFor(bestAfter).id !== arenaFor(bestBefore).id ? arenaFor(bestAfter) : null;
+      const rung = climbed ? ARENAS.findIndex((a) => a.id === climbed.id) : 0;
+      const prizeDiamonds = climbed ? 40 * rung : 0;
+
       await sb
         .from("players")
         .update({
           trophies,
-          best_trophies: Math.max(data?.best_trophies ?? 0, trophies),
+          best_trophies: bestAfter,
+          ...(prizeDiamonds ? { diamonds: (data?.diamonds ?? 0) + prizeDiamonds } : {}),
         })
         .eq("id", winnerId);
+
+      if (climbed) {
+        /*
+         * The chest is sealed here like every other one — see below. It is a
+         * SECOND chest on top of the match's own, which is the point: the
+         * occasion is the thing being rewarded, not the win that happened to
+         * carry you over the line.
+         */
+        await sb.from("chests").insert({
+          player_id: winnerId,
+          kind: "gold",
+          opened_at: null,
+          contents: rollChest("gold"),
+        });
+        await notify(
+          sb,
+          winnerId,
+          "gift",
+          {
+            he: `עלית ל${climbed.name.he}!`,
+            en: `You have reached ${climbed.name.en}!`,
+          },
+          {
+            he: `תיבת זהב ו-${prizeDiamonds} יהלומים מחכים לך.`,
+            en: `A gold chest and ${prizeDiamonds} diamonds are waiting.`,
+          },
+        );
+      }
       /*
        * WON, NOT OPENED.
        *

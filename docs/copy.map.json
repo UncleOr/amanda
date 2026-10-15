@@ -12320,5 +12320,25 @@
    "file": "apps/client/src/components/DeckBuilder.tsx",
    "line": 0
   }
+ },
+ {
+  "id": "se7b9be7",
+  "section": "components/ArenaUp.tsx",
+  "text": "עלית ארנה",
+  "where": {
+   "kind": "source",
+   "file": "apps/client/src/components/ArenaUp.tsx",
+   "line": 0
+  }
+ },
+ {
+  "id": "s6a89081",
+  "section": "components/ArenaUp.tsx",
+  "text": "קדימה!",
+  "where": {
+   "kind": "source",
+   "file": "apps/client/src/components/ArenaUp.tsx",
+   "line": 0
+  }
  }
 ]
