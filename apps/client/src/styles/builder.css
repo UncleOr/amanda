@@ -287,3 +287,6 @@
   overflow: auto;
 }
 .modal--decks h2 { margin: 0 0 var(--sp-3); font-size: var(--t-5); }
+
+/* The same door on a phone, where the ladder's buttons are hidden. */
+.rail__item--deck .btn-deck__back { width: 14px; height: 19px; }

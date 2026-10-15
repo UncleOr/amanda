@@ -537,11 +537,38 @@ export function HomeScreen({
             doors instead. One button, one place, decided by whether there is
             room — not two copies that can drift.
           */}
+          {/*
+            ═══ AND THE DECK IS A DOOR HERE TOO ═══
+
+            Or, with a photograph of his phone: *"doesn't look like it
+            updated."* It had updated — his build stamp was 11:40 UTC, which
+            was my last deploy of the day. The deck door genuinely was not
+            there, and only on a phone.
+
+            Because the rule two files away is `.home__ladder .btn-album {
+            display: none }`, and I gave the new button `btn-album btn-deck`
+            so it would match the album beside it. On a phone that made it
+            match the album by DISAPPEARING with it.
+
+            The album has always had two renders for exactly this reason —
+            the ladder on a wide screen, this row on a narrow one. The deck
+            needed the same, and it goes FIRST, which is the order Or asked
+            for: the deck you are taking, then the collection it came out of.
+
+            Checked at 832x384, which is the screen in his photograph, rather
+            than at the desktop size I built it on.
+          */}
           {compact && (
-            <button className="rail__item" onClick={() => panel.show("album")}>
-              <Icon name="deck" size={19} />
-              <span>{t("sb1c5413", "האלבום")}</span>
-            </button>
+            <>
+              <button className="rail__item rail__item--deck" onClick={() => panel.show("decks")}>
+                <span className={`btn-deck__back back--${deckBack}`} aria-hidden="true" />
+                <span>{t("sf4980d4", "הדק")}</span>
+              </button>
+              <button className="rail__item" onClick={() => panel.show("album")}>
+                <Icon name="deck" size={19} />
+                <span>{t("sb1c5413", "האלבום")}</span>
+              </button>
+            </>
           )}
           <button className="rail__item" onClick={gated(() => panel.show("shop"))}>
             <Icon name="gem" size={19} />

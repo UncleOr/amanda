@@ -12220,5 +12220,15 @@
    "file": "apps/client/src/game/account.ts",
    "line": 0
   }
+ },
+ {
+  "id": "sf4980d4",
+  "section": "components/HomeScreen.tsx",
+  "text": "הדק",
+  "where": {
+   "kind": "source",
+   "file": "apps/client/src/components/HomeScreen.tsx",
+   "line": 0
+  }
  }
 ]
