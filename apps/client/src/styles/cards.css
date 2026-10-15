@@ -490,82 +490,121 @@ button:disabled {
 .card--back[class*="back--"]:not(.back--fog)::before,
 .card--back[class*="back--"]:not(.back--fog)::after { content: none; }
 
-/* ── the free five ── */
+/*
+ * ═══ BRIGHT, AND TELLABLE APART AT A GLANCE ═══
+ *
+ * Or: *"the back of the cards looks dark, and then the differences between
+ * them aren't really clear — make it more colourful, lit and alive."*
+ *
+ * He is right and the first version was timid: eleven near-black rectangles
+ * with a faint pattern, which is what you get from treating a card back like
+ * a panel. A back is not furniture — it is the thing the other player stares
+ * at for ninety seconds, and the one Or wants somebody to BUY.
+ *
+ * So each one is a lit colour rather than a dark one, the pattern is at an
+ * opacity you can see from across a room, and every back carries its own
+ * glow from the inside. The test is the shop grid at thumbnail size: if two
+ * of them read as the same tile there, the difference is not real.
+ */
+
+/* ── the free five, one per family ── */
 .back--scales {
-  --bk-1: #3a1f2b;
-  --bk-2: #1a0e16;
-  /* overlapping half-circles, the way scales lie */
+  --bk-1: #c0394b;
+  --bk-2: #5e1030;
   --bk-pattern:
-    radial-gradient(circle at 50% 0, transparent 46%, rgba(255, 138, 110, 0.22) 47% 52%, transparent 53%);
+    radial-gradient(circle at 50% 0, transparent 44%, rgba(255, 206, 150, 0.55) 46% 54%, transparent 56%);
   background-size: 18px 12px;
 }
 .back--slime {
-  --bk-1: #16321f;
-  --bk-2: #0a1a10;
-  /* drips, hanging from the top edge */
+  --bk-1: #37c86a;
+  --bk-2: #0d5c33;
   --bk-pattern:
-    radial-gradient(circle at 50% 100%, rgba(126, 232, 150, 0.26) 0 28%, transparent 30%);
+    radial-gradient(circle at 50% 100%, rgba(224, 255, 196, 0.6) 0 28%, transparent 31%);
   background-size: 16px 20px;
 }
 .back--web {
-  --bk-1: #2b2438;
-  --bk-2: #140f1d;
+  --bk-1: #8257d6;
+  --bk-2: #2d1559;
   --bk-pattern:
-    repeating-linear-gradient(45deg, rgba(206, 192, 240, 0.16) 0 1px, transparent 1px 11px),
-    repeating-linear-gradient(-45deg, rgba(206, 192, 240, 0.16) 0 1px, transparent 1px 11px);
+    repeating-linear-gradient(45deg, rgba(240, 232, 255, 0.4) 0 1.5px, transparent 1.5px 11px),
+    repeating-linear-gradient(-45deg, rgba(240, 232, 255, 0.4) 0 1.5px, transparent 1.5px 11px);
 }
 .back--leaf {
-  --bk-1: #1d3321;
-  --bk-2: #0c1a10;
+  --bk-1: #5fb63a;
+  --bk-2: #1b5415;
   --bk-pattern:
-    radial-gradient(ellipse 7px 3px at 50% 50%, rgba(154, 230, 142, 0.22) 0 60%, transparent 62%);
+    radial-gradient(ellipse 7px 3px at 50% 50%, rgba(226, 255, 190, 0.55) 0 60%, transparent 64%);
   background-size: 20px 14px;
 }
 
-/* ── and the six the shop sells ── */
+/* ── and the six the shop sells, which have to look worth it ── */
 .back--gold {
-  --bk-1: #5a4310;
-  --bk-2: #221806;
+  --bk-1: #f5c243;
+  --bk-2: #7a4e05;
   --bk-pattern:
-    repeating-linear-gradient(135deg, rgba(255, 214, 120, 0.22) 0 2px, transparent 2px 9px);
+    repeating-linear-gradient(135deg, rgba(255, 249, 214, 0.55) 0 2.5px, transparent 2.5px 9px);
 }
 .back--circuit {
-  --bk-1: #0c2b33;
-  --bk-2: #05141a;
+  --bk-1: #22c9e0;
+  --bk-2: #05414f;
   --bk-pattern:
-    repeating-linear-gradient(0deg, rgba(102, 240, 255, 0.18) 0 1px, transparent 1px 12px),
-    repeating-linear-gradient(90deg, rgba(102, 240, 255, 0.14) 0 1px, transparent 1px 12px);
+    repeating-linear-gradient(0deg, rgba(190, 255, 255, 0.45) 0 1.5px, transparent 1.5px 12px),
+    repeating-linear-gradient(90deg, rgba(190, 255, 255, 0.35) 0 1.5px, transparent 1.5px 12px);
 }
 .back--nacho {
-  --bk-1: #4a3310;
-  --bk-2: #1d1206;
-  /* triangles, because of course */
+  --bk-1: #ffb020;
+  --bk-2: #8a4a07;
   --bk-pattern:
-    repeating-linear-gradient(60deg, rgba(255, 196, 92, 0.2) 0 1px, transparent 1px 14px),
-    repeating-linear-gradient(-60deg, rgba(255, 196, 92, 0.2) 0 1px, transparent 1px 14px);
+    repeating-linear-gradient(60deg, rgba(255, 238, 180, 0.5) 0 1.5px, transparent 1.5px 14px),
+    repeating-linear-gradient(-60deg, rgba(255, 238, 180, 0.5) 0 1.5px, transparent 1.5px 14px);
 }
 .back--stars {
-  --bk-1: #121a3a;
-  --bk-2: #06091c;
+  --bk-1: #3b4fd8;
+  --bk-2: #0b1046;
   --bk-pattern:
-    radial-gradient(circle at 20% 30%, rgba(255, 255, 255, 0.5) 0 0.9px, transparent 1.2px),
-    radial-gradient(circle at 70% 65%, rgba(255, 255, 255, 0.38) 0 0.8px, transparent 1.1px),
-    radial-gradient(circle at 45% 85%, rgba(190, 220, 255, 0.4) 0 0.7px, transparent 1px);
+    radial-gradient(circle at 20% 30%, rgba(255, 255, 255, 0.95) 0 1.2px, transparent 1.6px),
+    radial-gradient(circle at 70% 65%, rgba(220, 240, 255, 0.8) 0 1px, transparent 1.4px),
+    radial-gradient(circle at 45% 85%, rgba(190, 220, 255, 0.85) 0 0.9px, transparent 1.3px);
   background-size: 26px 26px, 34px 34px, 22px 22px;
 }
 .back--lava {
-  --bk-1: #4a1206;
-  --bk-2: #1a0603;
+  --bk-1: #ff6a1e;
+  --bk-2: #6b1202;
   --bk-pattern:
-    radial-gradient(ellipse 10px 4px at 30% 20%, rgba(255, 140, 50, 0.32), transparent 70%),
-    radial-gradient(ellipse 12px 5px at 70% 70%, rgba(255, 90, 30, 0.28), transparent 72%);
+    radial-gradient(ellipse 10px 4px at 30% 20%, rgba(255, 232, 150, 0.7), transparent 72%),
+    radial-gradient(ellipse 12px 5px at 70% 70%, rgba(255, 170, 60, 0.6), transparent 74%);
   background-size: 30px 26px;
 }
 .back--bones {
-  --bk-1: #2c2c30;
-  --bk-2: #121214;
+  --bk-1: #d8d4c4;
+  --bk-2: #4a4740;
   --bk-pattern:
-    repeating-linear-gradient(90deg, rgba(231, 228, 216, 0.18) 0 2px, transparent 2px 10px);
+    repeating-linear-gradient(90deg, rgba(60, 56, 48, 0.4) 0 2.5px, transparent 2.5px 10px);
 }
-/* The mark is louder on a patterned back than on the fog, which has none. */
-.card--back[class*="back--"]:not(.back--fog) .card-back__mark { opacity: 0.34; }
+
+/*
+ * The light that makes them look alive rather than printed.
+ *
+ * One soft highlight from the top-left, the way a real card catches a lamp.
+ * It is the same on every back on purpose: what differs between them is the
+ * colour and the pattern, and giving each its own lighting as well would
+ * make the set look like eleven different games.
+ */
+.card--back[class*="back--"]:not(.back--fog) {
+  box-shadow:
+    inset 0 0 22px rgba(255, 255, 255, 0.14),
+    inset 0 1px 0 rgba(255, 255, 255, 0.35);
+}
+.card--back[class*="back--"]:not(.back--fog)::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(70% 55% at 28% 18%, rgba(255, 255, 255, 0.22), transparent 70%);
+  animation: none;
+  filter: none;
+}
+/* The mark reads as a watermark on a lit card, not a smudge on a dark one. */
+.card--back[class*="back--"]:not(.back--fog) .card-back__mark {
+  opacity: 0.5;
+  filter: drop-shadow(0 1px 2px rgba(0, 0, 0, 0.5));
+}

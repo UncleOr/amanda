@@ -16,6 +16,26 @@
 .opening {
   position: fixed;
   inset: 0;
+  /*
+   * ═══ 100dvh, AND IT IS WHY THE MARK SAT LOW ═══
+   *
+   * Or: *"notice that Asulins is not centred."* Measured off his photograph:
+   * horizontally it was centred to two pixels, and VERTICALLY it sat 100px
+   * below the middle of a 923px screen — eleven percent down.
+   *
+   * `inset: 0` is the LAYOUT viewport, and on a phone that is the whole
+   * screen including the strip under the browser's own furniture. His
+   * measured 2000x1127 while 2000x923 of it could be seen. 1127/2000 is
+   * 0.5635 and 16:9 is 0.5625, so `contain` fitted the film almost exactly
+   * to that taller box, centred the mark in it, and put the middle of the
+   * film 100px below the middle of what he could actually look at.
+   *
+   * `dvh` is the viewport you can see. The fallback above it matters: every
+   * browser that does not know `dvh` keeps the old behaviour rather than
+   * losing the rule.
+   */
+  height: 100vh;
+  height: 100dvh;
   z-index: 200;
   background: var(--bg, #070a12);
   display: grid;

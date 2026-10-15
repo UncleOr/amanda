@@ -261,24 +261,50 @@
 }
 
 /*
- * The door on the home screen, beside the album.
+ * ═══ THE DOOR WEARS A STACK OF CARDS, NOT A SQUARE ═══
  *
- * It wears the deck's own back, so what you built is visible from the first
- * screen without opening anything — which is also the cheapest possible
- * reminder that the thing exists.
+ * Or: *"put a different icon, it just looks like a square. Maybe something
+ * more like a deck of cards."*
+ *
+ * It was one rectangle in the deck's own pattern, and at 15px a rectangle is
+ * a rectangle. This is three of them, fanned and overlapping, with only the
+ * top one patterned — which is what a deck looks like from above and what
+ * makes it read as a PILE at a size where no detail survives.
+ *
+ * Drawn here rather than added to the icon set because it has to carry the
+ * chosen back's colours, and the icons are flat PNGs that cannot.
  */
 .btn-deck { display: inline-flex; align-items: center; gap: var(--sp-2); }
 .btn-deck__back {
-  width: 15px;
-  height: 20px;
+  position: relative;
+  width: 17px;
+  height: 22px;
+  flex: none;
+  /* The top card: the one wearing the player's chosen design. */
   border-radius: 3px;
-  border: 1px solid rgba(255, 255, 255, 0.28);
+  border: 1px solid rgba(255, 255, 255, 0.45);
   background:
     var(--bk-pattern, none),
     linear-gradient(160deg, var(--bk-1, #141d33), var(--bk-2, #0d1424));
   background-size: inherit;
-  flex: none;
+  box-shadow: inset 0 0 6px rgba(255, 255, 255, 0.18);
 }
+/* and the two under it, leaning out to the side */
+.btn-deck__back::before,
+.btn-deck__back::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: 3px;
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  background: linear-gradient(160deg, var(--bk-1, #141d33), var(--bk-2, #0d1424));
+  z-index: -1;
+}
+.btn-deck__back::before { transform: translate(-3px, 2px) rotate(-7deg); opacity: 0.75; }
+.btn-deck__back::after { transform: translate(-6px, 4px) rotate(-14deg); opacity: 0.5; }
+
+/* The same stack on a phone, where the ladder's buttons are hidden. */
+.rail__item--deck .btn-deck__back { width: 16px; height: 21px; }
 
 /* The shelf lives in a modal that has to be able to hold the builder too. */
 .modal--decks {

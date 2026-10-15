@@ -78,11 +78,57 @@ ffmpeg -y -v error -f lavfi -i "color=0x000000@0:s=900x160,format=rgba" \
 #
 # Measured, like the drawing above it, for the same reason: the font decides
 # how wide "A S U L I N S" is, not this file.
-WCROP=$(ffmpeg -v info -i "$TMP/word-wide.png" -vf "cropdetect=limit=8:round=2:skip=0" \
-  -frames:v 1 -f null - 2>&1 | grep -o "crop=[0-9:]*" | tail -1 | cut -d= -f2)
+# ═══ THE LETTERS ARE MEASURED, NOT DETECTED ═══
+#
+# Or, from a photograph of his phone: *"the letters are cut off at the
+# bottom."* They were, and cropdetect is why.
+#
+# It ran with `round=2:limit=8` and came back 490x62 for glyphs that measure
+# 496x64: rows 110 and 111 are SOLID letter — alpha 255 and 125 — and both
+# were thrown away, with six pixels of the width. `round=2` rounds the box to
+# even numbers and is free to round DOWN, and `limit=8` reads the faintest
+# row of anti-aliasing as background. Two pixels is nothing on a 1280-wide
+# canvas and everything on a letter: at the size this is drawn on a phone it
+# is the flat bottom edge in his photograph.
+#
+# Padding cropdetect's answer was the first fix and it was still wrong,
+# because the error is not symmetric — it had lost more on one side than the
+# other, so any single margin either clips or leaves a gap. So the box is
+# measured directly off the alpha channel, which is the thing that actually
+# says where a letter is, plus a two-pixel margin so no edge pixel of a
+# glyph ever lands on the edge of its own image.
+WCROP=$(python -c "
+from PIL import Image
+im = Image.open(r'$TMP/word-wide.png').convert('RGBA')
+w, h = im.size
+px = im.load()
+xs = [x for x in range(w) for y in range(h) if px[x, y][3] > 0]
+ys = [y for y in range(h) for x in range(w) if px[x, y][3] > 0]
+M = 2
+x0, x1 = max(0, min(xs) - M), min(w - 1, max(xs) + M)
+y0, y1 = max(0, min(ys) - M), min(h - 1, max(ys) + M)
+print('%d:%d:%d:%d' % (x1 - x0 + 1, y1 - y0 + 1, x0, y0))
+")
 [ -n "$WCROP" ] || { echo "could not find the letters in word-wide.png" >&2; exit 1; }
-ffmpeg -y -v error -i "$TMP/word-wide.png" -vf "crop=${WCROP},format=rgba" \
-  -frames:v 1 "$TMP/word.png"
+ffmpeg -y -v error -i "$TMP/word-wide.png" -vf "crop=${WCROP},format=rgba"   -frames:v 1 "$TMP/word.png"
+
+# And checked, because "the letters are cut off" is the kind of thing that
+# looks perfectly fine in a thumbnail.
+EDGE=$(python -c "
+from PIL import Image
+im = Image.open(r'$TMP/word.png').convert('RGBA')
+w, h = im.size
+px = im.load()
+hit = any(px[x, 0][3] > 8 or px[x, h - 1][3] > 8 for x in range(w)) or any(
+    px[0, y][3] > 8 or px[w - 1, y][3] > 8 for y in range(h)
+)
+print('touching' if hit else 'clear')
+")
+if [ "$EDGE" = "touching" ]; then
+  echo "  a letter is touching the edge of its own box — it is being cut" >&2
+  exit 1
+fi
+echo "  wordmark ${WCROP} · edges ${EDGE}"
 
 PW=$(ffprobe -v error -show_entries stream=width,height -of csv=p=0 "$TMP/pair.png")
 WW=$(ffprobe -v error -show_entries stream=width -of csv=p=0 "$TMP/word.png")

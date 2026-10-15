@@ -562,7 +562,7 @@ export function HomeScreen({
             <>
               <button className="rail__item rail__item--deck" onClick={() => panel.show("decks")}>
                 <span className={`btn-deck__back back--${deckBack}`} aria-hidden="true" />
-                <span>{t("sf4980d4", "הדק")}</span>
+                <span>{t("s3fc668a", "דק")}</span>
               </button>
               <button className="rail__item" onClick={() => panel.show("album")}>
                 <Icon name="deck" size={19} />

@@ -12222,9 +12222,9 @@
   }
  },
  {
-  "id": "sf4980d4",
+  "id": "s3fc668a",
   "section": "components/HomeScreen.tsx",
-  "text": "הדק",
+  "text": "דק",
   "where": {
    "kind": "source",
    "file": "apps/client/src/components/HomeScreen.tsx",
