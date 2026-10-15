@@ -1926,7 +1926,7 @@ function Game() {
                 <button className="modal__close" onClick={() => panel.close()} title={t("sb3ce2e0", "סגירה")}>
                   <Icon name="exit" size={15} />
                 </button>
-                <h2>{t("s814258b", "החפיסות שלי")}</h2>
+                <h2>{t("scb3bea3", "הדקים שלי")}</h2>
                 <DeckShelfView
                   decks={shelf.decks}
                   activeId={shelf.activeId}

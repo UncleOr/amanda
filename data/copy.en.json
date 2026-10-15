@@ -963,5 +963,19 @@
  "s408dcff": "Watch out — every empty square fills up with weak crumb monsters. Worth filling them yourself while there's time!",
  "sb842d99": "after pressing start, before the countdown",
  "s4a756c9": "You won! But that was easy, because I helped.",
- "sb08f699": "the result screen of the first match"
+ "sb08f699": "the result screen of the first match",
+ "scb3bea3": "My decks",
+ "s0ce23c9": "Name this deck",
+ "sd7b2e93": "Card back",
+ "s1cf2150": "My deck",
+ "s7ec416f": "Fill it for me",
+ "s1776336": "Take it out",
+ "scba3d8d": "Save",
+ "se0c2a5c": "Delete",
+ "sad4a141": "Edit",
+ "s4a9e250": "Deck {0}",
+ "s7c9dce4": "My deck",
+ "sd0c6462": "That did not save. Try again.",
+ "s2c36448": "You can keep {0} decks. Delete one first.",
+ "sb682ef4": "You already have a deck with that name."
 }

@@ -12032,9 +12032,9 @@
   }
  },
  {
-  "id": "s814258b",
+  "id": "scb3bea3",
   "section": "App.tsx",
-  "text": "החפיסות שלי",
+  "text": "הדקים שלי",
   "where": {
    "kind": "source",
    "file": "apps/client/src/App.tsx",
@@ -12042,9 +12042,9 @@
   }
  },
  {
-  "id": "s4441b9b",
+  "id": "s0ce23c9",
   "section": "components/DeckBuilder.tsx",
-  "text": "שם לחפיסה",
+  "text": "שם לדק",
   "where": {
    "kind": "source",
    "file": "apps/client/src/components/DeckBuilder.tsx",
@@ -12062,9 +12062,9 @@
   }
  },
  {
-  "id": "s8bbded0",
+  "id": "s1cf2150",
   "section": "components/DeckBuilder.tsx",
-  "text": "החפיסה שלי",
+  "text": "הדק שלי",
   "where": {
    "kind": "source",
    "file": "apps/client/src/components/DeckBuilder.tsx",
@@ -12082,9 +12082,9 @@
   }
  },
  {
-  "id": "s0163eb0",
+  "id": "s1776336",
   "section": "components/DeckBuilder.tsx",
-  "text": "הורד מהחפיסה",
+  "text": "הורד מהדק",
   "where": {
    "kind": "source",
    "file": "apps/client/src/components/DeckBuilder.tsx",
@@ -12132,9 +12132,9 @@
   }
  },
  {
-  "id": "s2466b47",
+  "id": "s4a9e250",
   "section": "components/DeckBuilder.tsx",
-  "text": "חפיסה {0}",
+  "text": "דק {0}",
   "where": {
    "kind": "source",
    "file": "apps/client/src/components/DeckBuilder.tsx",
@@ -12142,9 +12142,9 @@
   }
  },
  {
-  "id": "s4d8e1e6",
+  "id": "s7c9dce4",
   "section": "components/HomeScreen.tsx",
-  "text": "החפיסה שלי",
+  "text": "הדק שלי",
   "where": {
    "kind": "source",
    "file": "apps/client/src/components/HomeScreen.tsx",
@@ -12162,9 +12162,9 @@
   }
  },
  {
-  "id": "s5bcce82",
+  "id": "s2c36448",
   "section": "game/account.ts",
-  "text": "אפשר לשמור {0} חפיסות. תמחק אחת קודם.",
+  "text": "אפשר לשמור {0} דקים. תמחק אחד קודם.",
   "where": {
    "kind": "source",
    "file": "apps/client/src/game/account.ts",
@@ -12172,9 +12172,9 @@
   }
  },
  {
-  "id": "sa2e70d6",
+  "id": "sb682ef4",
   "section": "game/account.ts",
-  "text": "כבר יש לך חפיסה בשם הזה.",
+  "text": "כבר יש לך דק בשם הזה.",
   "where": {
    "kind": "source",
    "file": "apps/client/src/game/account.ts",

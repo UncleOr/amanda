@@ -403,23 +403,27 @@ export function HomeScreen({
           */}
           <div className="home__ladder">
             <ArenaTrack trophies={m.account?.trophies ?? 0} />
-            <button className="btn-album" onClick={() => panel.show("album")}>
-              <Icon name="deck" size={18} /> {t("sac17bac", "האלבום שלי")}
-            </button>
             {/*
-              ═══ STRAIGHT FROM THE HOME SCREEN ═══
+              ═══ STRAIGHT FROM THE HOME SCREEN, AND ABOVE THE ALBUM ═══
 
-              Or: *"they need to reach it directly from the main screen."*
+              Or: *"they need to reach it directly from the main screen"*, and
+              then: *"call it 'my deck', and put it above the album."*
 
-              Beside the album rather than in the rail, because the two are
-              the same sentence read in order: here is everything you own,
-              and here are the sixteen you are taking. The card back on the
-              button is the deck's own, so the thing you built is visible
-              from the home screen without opening anything.
+              Above, and he is right: the two are one sentence read in order,
+              and it runs the other way from how I first wrote it. The deck is
+              what you take into the next match — it is the nearer thing — and
+              the album is the collection it comes out of. The near thing goes
+              first.
+
+              The card back on the button is the deck's own, so what you built
+              is visible from the home screen without opening anything.
             */}
             <button className="btn-album btn-deck" onClick={() => panel.show("decks")}>
               <span className={`btn-deck__back back--${deckBack}`} aria-hidden="true" />
-              {t("s4d8e1e6", "החפיסה שלי")}
+              {t("s7c9dce4", "הדק שלי")}
+            </button>
+            <button className="btn-album" onClick={() => panel.show("album")}>
+              <Icon name="deck" size={18} /> {t("sac17bac", "האלבום שלי")}
             </button>
           </div>
           <NachoBar nachos={m.account?.nachos ?? 0} />

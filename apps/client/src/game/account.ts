@@ -1258,8 +1258,8 @@ export async function saveDeck(deck: Deck): Promise<Deck | string> {
         : await sb.from("decks").insert(row).select("id").maybeSingle();
     if (error) {
       if (error.message.includes("deck_limit"))
-        return tf("s5bcce82", "אפשר לשמור {0} חפיסות. תמחק אחת קודם.", DECK_RULES.maxDecks);
-      if (error.code === "23505") return t("sa2e70d6", "כבר יש לך חפיסה בשם הזה.");
+        return tf("s2c36448", "אפשר לשמור {0} דקים. תמחק אחד קודם.", DECK_RULES.maxDecks);
+      if (error.code === "23505") return t("sb682ef4", "כבר יש לך דק בשם הזה.");
       return serverError(error.message) ?? DECK_SAVE_FAILED();
     }
     return { ...deck, id: (data?.id as string) ?? deck.id };

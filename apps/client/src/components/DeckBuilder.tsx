@@ -121,7 +121,7 @@ export function DeckBuilder({
   const canSave = name.trim().length > 0 && cards.length === DECK_RULES.size && !over && !busy;
   // Said twice — as the placeholder and as the label — and one row in the
   // copy document, not two.
-  const nameLabel = t("s4441b9b", "שם לחפיסה");
+  const nameLabel = t("s0ce23c9", "שם לדק");
 
   return (
     <div className="builder">
@@ -173,7 +173,7 @@ export function DeckBuilder({
         </div>
       )}
 
-      <section className="builder__deck" aria-label={t("s8bbded0", "החפיסה שלי")}>
+      <section className="builder__deck" aria-label={t("s1cf2150", "הדק שלי")}>
         <div className="builder__counts">
           <span className={full ? "is-done" : undefined}>
             <Icon name="monster" size={15} /> {cards.length}/{DECK_RULES.size}
@@ -197,7 +197,7 @@ export function DeckBuilder({
                 key={`${id}-${i}`}
                 className="builder__slot"
                 onClick={() => removeAt(i)}
-                title={t("s0163eb0", "הורד מהחפיסה")}
+                title={t("s1776336", "הורד מהדק")}
               >
                 <CardView cardId={id} size="small" />
                 <span className="builder__price">{cardCost(of(id)!)}</span>
@@ -285,7 +285,7 @@ export function DeckShelfView({
       {decks.length < DECK_RULES.maxDecks && (
         <button className="deckcard deckcard--new" onClick={onNew}>
           <Icon name="plus" size={26} />
-          <b>{tf("s2466b47", "חפיסה {0}", decks.length + 1)}</b>
+          <b>{tf("s4a9e250", "דק {0}", decks.length + 1)}</b>
         </button>
       )}
     </div>
