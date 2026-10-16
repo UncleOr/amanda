@@ -57,13 +57,39 @@ export function ChestShelf({
           className={`shelf__chest shelf__chest--${chest.kind}`}
           disabled={busy === chest.id}
           title={t("s97a626f", "פתח")}
+          /*
+           * ═══ THE CHEST OPENS NOW, NOT WHEN THE SERVER ANSWERS ═══
+           *
+           * Or: *"chests take a while to open, it's annoying."*
+           *
+           * Measured: the tap fired a request to Railway, which asks
+           * Supabase to check the chest, mark it open, grant the cards and
+           * add the diamonds — half a dozen round trips — and ONLY then did
+           * the reveal screen appear. A quarter of a second of nothing after
+           * a seven-year-old presses a treasure chest.
+           *
+           * And it was never necessary: `unopenedChests` already reads
+           * `contents` out of the player's own row, so the browser knows
+           * what is inside before it asks. The server call is what makes it
+           * TRUE — marks it open, puts the cards in the album, pays the
+           * diamonds — and none of that is anything the reveal has to wait
+           * for.
+           *
+           * So the screen opens on the tap, with what we already hold, and
+           * the answer lands during the chest's own 480ms of rattling. The
+           * second `onOpened` fills in `fresh` — which cards were new — and
+           * that is not read until every card has turned over, a second and
+           * a half later.
+           */
           onClick={() => {
             setBusy(chest.id);
+            onOpened(chest);
+            setChests((list) => list.filter((c) => c.id !== chest.id));
             void openChest(chest.id).then((opened) => {
               setBusy(null);
-              if (!opened) return; // still there; try again
-              setChests((list) => list.filter((c) => c.id !== chest.id));
-              onOpened(opened);
+              // Which of them the album had never held — the one thing only
+              // the server can say, arriving while the lid is still shut.
+              if (opened) onOpened(opened);
               reload();
             });
           }}

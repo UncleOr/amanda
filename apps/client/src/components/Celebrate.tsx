@@ -32,12 +32,65 @@ const BASE = import.meta.env.BASE_URL;
 /** How many sparks. Enough to read as a burst, few enough to stay smooth. */
 const SPARKS = 18;
 
+/**
+ * Fireworks, for the occasions that deserve them on top of the confetti.
+ *
+ * Or asked for both by name: *"an animation, fireworks."* Confetti falls and
+ * fireworks GO OFF, and the difference is the whole point — one is the room
+ * being decorated, the other is something happening.
+ *
+ * Three shells, each twelve sparks thrown outward from a point on their own
+ * delay. The angles are computed rather than written out: twelve hand-typed
+ * rotations is twelve chances to put one in the wrong place, and the comment
+ * explaining them would be longer than the loop.
+ */
+/*
+ * Where they go off, and it is not the middle.
+ *
+ * Measured at 832x384: the card is 297 wide and sits at x 268–565, so a
+ * shell at 50% is a shell behind an opaque panel. Four of them, outside the
+ * card on both sides, where an 86px burst has room to open.
+ */
+const SHELLS = [
+  { x: 14, y: 26, delay: 0.1, hue: "#ffd166" },
+  { x: 86, y: 32, delay: 0.55, hue: "#5ce1e6" },
+  { x: 22, y: 72, delay: 1.0, hue: "#ff8fab" },
+  { x: 78, y: 78, delay: 1.45, hue: "#9af06a" },
+];
+const PER_SHELL = 12;
+
+function Fireworks() {
+  return (
+    <div className="party__fw" aria-hidden="true">
+      {SHELLS.map((shell, s) => (
+        <span
+          key={s}
+          className="party__shell"
+          style={{ left: `${shell.x}%`, top: `${shell.y}%`, color: shell.hue }}
+        >
+          {Array.from({ length: PER_SHELL }, (_, i) => (
+            <i
+              key={i}
+              style={{
+                ["--a" as string]: `${(360 / PER_SHELL) * i}deg`,
+                animationDelay: `${shell.delay}s`,
+              }}
+            />
+          ))}
+        </span>
+      ))}
+    </div>
+  );
+}
+
 export function Celebrate({
   kicker,
   title,
   /** A background image, pushed back far enough to read as a place. */
   scene,
   sound = "newcard",
+  /** Bursts as well as confetti. For the rarest things only. */
+  fireworks = false,
   children,
   onClose,
 }: {
@@ -45,6 +98,7 @@ export function Celebrate({
   title: ReactNode;
   scene?: string | null;
   sound?: Parameters<typeof sfx.play>[0] | null;
+  fireworks?: boolean;
   children?: ReactNode;
   onClose: () => void;
 }) {
@@ -64,6 +118,7 @@ export function Celebrate({
           aria-hidden="true"
         />
       )}
+      {fireworks && <Fireworks />}
       <div className="party__sparks" aria-hidden="true">
         {Array.from({ length: SPARKS }, (_, i) => (
           <i

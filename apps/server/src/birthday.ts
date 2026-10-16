@@ -58,14 +58,26 @@ export interface BirthdayGift {
 }
 
 /**
- * Mint this year's birthday chest, if it is the day and it has not been paid.
+ * What today is worth, if today is the day.
  *
- * Returns what was given, or null — which is almost always, so this is one
- * `select` of two columns on the way into the home screen and nothing else.
+ * ═══ MINTING AND ANNOUNCING ARE DIFFERENT QUESTIONS ═══
  *
- * `birthday_year` is the year this was last paid. Checking it is what makes
- * the call idempotent: the home screen asks `/api/meta` on every visit and a
- * player may open the game twenty times on their birthday.
+ * The first version answered only "did I just mint one", and Or lost his
+ * birthday to it. The server deployed before the browser did: it minted the
+ * chest and the diamonds on his first visit, the old build on his phone did
+ * not know what the `birthday` field was, and `birthday_year` was 2026 for
+ * ever after. The present arrived; the party did not.
+ *
+ * Verified afterwards in the database rather than guessed — birthday_year
+ * 2026, a gold chest at 13:07, diamonds 361 → 556, which is exactly the 150
+ * plus the chest's own 40 plus 5 from a wood chest. Everything worked except
+ * the one part he could see.
+ *
+ * So: this says IT IS YOUR BIRTHDAY for the whole of the day, every time it
+ * is asked, and mints at most once. Whether the party has already been
+ * thrown is a question about this browser, and it is answered in this
+ * browser (game/meta.ts). A present is minted once; being told about it is
+ * not a resource that can run out.
  */
 export async function birthdayGift(
   sb: SupabaseClient,
@@ -84,7 +96,12 @@ export async function birthdayGift(
 
     const birthDate = (data?.birth_date as string | null) ?? null;
     if (!birthDate || !isBirthday(birthDate, today)) return null;
-    if ((data?.birthday_year as number | null) === year) return null;
+
+    const age = year - Number(birthDate.slice(0, 4));
+    const gift = { diamonds: DIAMONDS, age };
+
+    // Already paid today. Still their birthday, so still say so.
+    if ((data?.birthday_year as number | null) === year) return gift;
 
     /*
      * The year is claimed FIRST.
@@ -95,8 +112,8 @@ export async function birthdayGift(
      * was marked and not paid — which is recoverable by hand — rather than
      * two gold chests, which is not.
      *
-     * `.is("birthday_year", null)` makes the update itself the lock: only one
-     * of the two can match a row.
+     * The `or` makes the update itself the lock: only one of the two can
+     * match a row whose year is not yet this one.
      */
     const { data: claimed } = await sb
       .from("players")
@@ -104,7 +121,8 @@ export async function birthdayGift(
       .eq("id", playerId)
       .or(`birthday_year.is.null,birthday_year.neq.${year}`)
       .select("id");
-    if (!claimed?.length) return null;
+    // Somebody else's call got there first. It is still their birthday.
+    if (!claimed?.length) return gift;
 
     await sb.from("chests").insert({
       player_id: playerId,
@@ -113,7 +131,6 @@ export async function birthdayGift(
       contents: rollChest("gold"),
     });
 
-    const age = year - Number(birthDate.slice(0, 4));
     await notify(
       sb,
       playerId,
@@ -124,7 +141,7 @@ export async function birthdayGift(
         en: `A gold chest and ${DIAMONDS} diamonds are waiting for you.`,
       },
     );
-    return { diamonds: DIAMONDS, age };
+    return gift;
   } catch {
     // A birthday is a present, not a gate. If the database is unhappy the
     // home screen still has to open.

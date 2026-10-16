@@ -38,6 +38,16 @@ type SoundName =
    */
   | "clock"
   | "clockLow"
+  /**
+   * Happy Birthday, three seconds of it.
+   *
+   * Public domain since 2016 in the US and 2017 in Europe — the Warner
+   * copyright was found invalid and the settlement ended it. Synthesised
+   * rather than sampled all the same, because a RECORDING of a public-domain
+   * tune has its own copyright: see scripts/make-birthday-tune.mjs, which
+   * generates it from a list of note names.
+   */
+  | "birthday"
   | "tick"
   | "tickUrgent"
   | "timeUp"
@@ -119,6 +129,23 @@ const RECIPES: Record<SoundName, () => void> = {
   // Short and resonant, and the fallbacks alternate like the clips do.
   clock: () => tone(2200, 45, { type: "triangle", gain: 0.1 }),
   clockLow: () => tone(1600, 45, { type: "triangle", gain: 0.1 }),
+  /*
+   * The same six notes, in oscillators, for a browser that could not fetch
+   * the clip. G G A G C B — "happy birthday to you". The timings are the
+   * same 150bpm; what is missing is the detuned fifth underneath it, which
+   * a fallback does not need.
+   */
+  birthday: () =>
+    [
+      [392, 300, 0],
+      [392, 100, 300],
+      [440, 400, 400],
+      [392, 400, 800],
+      [523, 400, 1200],
+      [494, 800, 1600],
+    ].forEach(([f, ms, at]) =>
+      tone(f!, ms!, { type: "triangle", gain: 0.12, delayMs: at }),
+    ),
   // A clock, not an alarm: quiet and low while there is still time…
   tick: () => tone(520, 55, { type: "square", gain: 0.05 }),
   // …then higher and harder once seconds actually matter.

@@ -537,13 +537,25 @@ export async function unopenedChests(): Promise<Chest[]> {
       .eq("player_id", id)
       .is("opened_at", null)
       .order("earned_at", { ascending: true });
+    /*
+     * The contents come back with the list, which is why opening one does
+     * not have to wait for the server — see ChestShelf. So everything the
+     * reveal draws is mapped here, `items` included; it used to be dropped,
+     * and a chest holding a catchphrase showed nothing where the phrase goes
+     * until the server's answer arrived.
+     */
     return (data ?? []).map((row) => {
-      const contents = (row.contents ?? {}) as { cards?: string[]; diamonds?: number };
+      const contents = (row.contents ?? {}) as {
+        cards?: string[];
+        diamonds?: number;
+        items?: string[];
+      };
       return {
         id: row.id,
         kind: row.kind,
         cards: contents.cards ?? [],
         diamonds: contents.diamonds ?? 0,
+        ...(contents.items?.length ? { items: contents.items } : {}),
         earnedAt: row.earned_at,
       };
     });

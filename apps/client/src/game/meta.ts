@@ -82,7 +82,32 @@ export interface BirthdayGift {
  * component that has to SHOW it is App. A module-level handoff rather than a
  * prop, and it works in either order: a watcher that subscribes after the
  * answer landed is told immediately.
+ *
+ * ═══ AND WHETHER THE PARTY HAS BEEN THROWN IS A LOCAL QUESTION ═══
+ *
+ * It used to be the server's: it reported a birthday only on the visit that
+ * minted the chest, and Or lost his to that. The server deployed before the
+ * browser did, so the old build threw away a field it had never heard of —
+ * and the row said `birthday_year = 2026` for ever after. The present was in
+ * his album; the party never happened.
+ *
+ * The server now says "it is your birthday" all day, every time it is asked,
+ * and THIS decides whether it has already been celebrated here. A year in
+ * localStorage: wrong only if somebody clears their browser on their own
+ * birthday, which costs them a second showing of a card they liked.
  */
+const SHOWN = "amanda.birthday.shown";
+
+function alreadyShown(year: number): boolean {
+  try {
+    return localStorage.getItem(SHOWN) === String(year);
+  } catch {
+    // A private window has no shelf to leave it on. Showing it twice is a
+    // better failure than not showing it at all.
+    return false;
+  }
+}
+
 let pending: BirthdayGift | null = null;
 const watchers = new Set<(gift: BirthdayGift) => void>();
 
@@ -94,9 +119,14 @@ export function onBirthday(fn: (gift: BirthdayGift) => void): () => void {
   };
 }
 
-/** Once it has been shown, it is over — a reload must not throw it again. */
+/** Once it has been shown, it is over for this year. */
 export function birthdayShown(): void {
   pending = null;
+  try {
+    localStorage.setItem(SHOWN, String(new Date().getFullYear()));
+  } catch {
+    /* see alreadyShown */
+  }
 }
 
 /**
@@ -115,7 +145,7 @@ export async function loadChallenges(): Promise<Standing[]> {
     });
     if (!res.ok) return [];
     const body = (await res.json()) as { challenges?: Standing[]; birthday?: BirthdayGift | null };
-    if (body.birthday) {
+    if (body.birthday && !alreadyShown(new Date().getFullYear())) {
       pending = body.birthday;
       for (const w of watchers) w(body.birthday);
     }
