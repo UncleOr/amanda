@@ -4,6 +4,7 @@ import {
   kingWasUntouched,
   outcomeOf,
   ACHIEVEMENTS,
+  PLAY_IDS,
   type Snapshot,
   type MatchOutcome,
 } from "./achievements";
@@ -374,5 +375,43 @@ describe("against a friend", () => {
   it("is carried through untouched — the match knows, this does not", () => {
     expect(outcomeOf(battle(), "A", true).againstFriend).toBe(true);
     expect(outcomeOf(battle(), "A", false).againstFriend).toBe(false);
+  });
+});
+
+/**
+ * The eighteen ids the Play Console issued.
+ *
+ * They were empty until the achievements existed; now they are eighteen
+ * near-identical strings that differ in their last two characters, typed
+ * into a file by hand. Nothing else in this codebase can tell a wrong one
+ * from a right one — a mistyped id is a silent no-op on a device nobody is
+ * holding, which is the worst shape a bug can have.
+ *
+ * So: every achievement has one, no two share one, and they all look like
+ * what Google issues. That is everything checkable without the Console in
+ * front of you, and it would have caught a copy-paste that duplicated a row.
+ */
+describe("the Play Games ids", () => {
+  it("covers every achievement", () => {
+    for (const id of ACHIEVEMENTS) {
+      expect(PLAY_IDS[id], `${id} has no Play Games id`).toBeTruthy();
+    }
+  });
+
+  it("gives each one its own", () => {
+    const seen = new Map<string, string>();
+    for (const id of ACHIEVEMENTS) {
+      const play = PLAY_IDS[id]!;
+      expect(seen.has(play), `${id} and ${seen.get(play)} share ${play}`).toBe(false);
+      seen.set(play, id);
+    }
+    expect(seen.size).toBe(ACHIEVEMENTS.length);
+  });
+
+  it("uses the shape Google issues", () => {
+    for (const id of ACHIEVEMENTS) {
+      // Base64url of a protobuf: "CgkI", the project, then the achievement.
+      expect(PLAY_IDS[id]!, id).toMatch(/^CgkI[A-Za-z0-9_-]{10,}$/);
+    }
   });
 });

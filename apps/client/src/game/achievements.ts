@@ -253,12 +253,38 @@ export function kingWasUntouched(result: BattleResult, side: Owner): boolean {
 /**
  * Our id → the id Google issued.
  *
- * Filled in from the Play Console once the eighteen are created there. An id
- * that is not here is simply not reported: a missing mapping must never
- * unlock the wrong achievement, and on the web every one of them is missing
- * anyway.
+ * Created in the Play Console on 16 October 2026 by importing them as a ZIP
+ * — see scripts/make-achievements-zip.mjs, which builds that ZIP from the
+ * same list and refuses to run if the two have drifted apart.
+ *
+ * Read out of the Console's own table rather than off a screenshot, because
+ * these strings differ by one character and two of the characters they use
+ * are `I` and `l`.
+ *
+ * The map is still Partial: an id that is not here is not reported, because
+ * a missing mapping must never unlock the WRONG achievement — and on the
+ * web every one of them is unreachable anyway, since there is no plugin.
  */
-export const PLAY_IDS: Partial<Record<AchievementId, string>> = {};
+export const PLAY_IDS: Partial<Record<AchievementId, string>> = {
+  taught: "CgkIydKsqPAUEAIQEA",
+  first_win: "CgkIydKsqPAUEAIQCA",
+  arena_court: "CgkIydKsqPAUEAIQEQ",
+  arena_station: "CgkIydKsqPAUEAIQDA",
+  arena_alley: "CgkIydKsqPAUEAIQBg",
+  arena_fuel: "CgkIydKsqPAUEAIQAA",
+  cards_10: "CgkIydKsqPAUEAIQDQ",
+  album_half: "CgkIydKsqPAUEAIQCQ",
+  album_full: "CgkIydKsqPAUEAIQDg",
+  family: "CgkIydKsqPAUEAIQAw",
+  chuppy: "CgkIydKsqPAUEAIQCw",
+  legend: "CgkIydKsqPAUEAIQBA",
+  trio: "CgkIydKsqPAUEAIQCg",
+  untouched_king: "CgkIydKsqPAUEAIQBQ",
+  wins_10: "CgkIydKsqPAUEAIQAQ",
+  wins_50: "CgkIydKsqPAUEAIQDw",
+  chests_10: "CgkIydKsqPAUEAIQBw",
+  friend: "CgkIydKsqPAUEAIQAg",
+};
 
 /**
  * ═══ THE PLUGIN, LOADED ONLY IF IT IS THERE ═══

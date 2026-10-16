@@ -89,3 +89,8 @@ store/recording-*.mp4
 
 # Excel's lock file, created while a workbook is open
 ~$*.xlsx
+
+# Built by scripts/make-achievements-zip.mjs — the icons it packs are already
+# in the repo beside it, so the ZIP would be five megabytes of duplicate.
+store/achievements/play-import/
+store/achievements/play-import.zip
