@@ -318,16 +318,22 @@
   .is-gained { animation: none; }
 }
 
-/* ════════ climbing an arena ════════
+/* ════════ a party ════════
  *
- * Or: *"I moved up an arena without any message on the screen, a
- * celebration, fireworks, a huge chest with loads of presents."*
+ * Or, three times for three different occasions: *"a message on the screen,
+ * a celebration, fireworks, a huge chest with loads of presents"* (climbing
+ * an arena); *"confetti and fireworks and a happy sound"* (upgrading a
+ * card); *"a gold chest with presents"* (your birthday).
  *
- * It takes the whole screen because it happens five times in a player's
- * life. z-index 150: above every panel and the board, below the studio ident
- * at 200 — nothing should ever land on top of the ident, including good news.
+ * One set of rules, used by Celebrate.tsx. It was called `arenaup` while
+ * there was only one of these, and the second one would have been a copy of
+ * it that slowly stopped matching.
+ *
+ * It takes the whole screen because none of these happen often. z-index 150:
+ * above every panel and the board, below the studio ident at 200 — nothing
+ * should ever land on top of the ident, including good news.
  */
-.arenaup {
+.party {
   position: fixed;
   inset: 0;
   height: 100vh;
@@ -345,12 +351,12 @@
    */
   background: #04070e;
   cursor: pointer;
-  animation: arenaup-in 320ms ease-out;
+  animation: party-in 320ms ease-out;
 }
-@keyframes arenaup-in { from { opacity: 0; } to { opacity: 1; } }
+@keyframes party-in { from { opacity: 0; } to { opacity: 1; } }
 
 /* The floor you just earned, pushed back far enough to read as a place. */
-.arenaup__floor {
+.party__floor {
   position: absolute;
   inset: 0;
   background-size: cover;
@@ -359,7 +365,7 @@
   filter: blur(2px);
 }
 
-.arenaup__card {
+.party__card {
   position: relative;
   display: flex;
   flex-direction: column;
@@ -371,32 +377,32 @@
   background: linear-gradient(180deg, rgba(20, 28, 48, 0.92), rgba(10, 15, 27, 0.95));
   box-shadow: 0 24px 60px rgba(0, 0, 0, 0.6);
   text-align: center;
-  animation: arenaup-rise 460ms cubic-bezier(0.2, 0.9, 0.3, 1.3);
+  animation: party-rise 460ms cubic-bezier(0.2, 0.9, 0.3, 1.3);
 }
-@keyframes arenaup-rise {
+@keyframes party-rise {
   from { opacity: 0; transform: translateY(26px) scale(0.92); }
   to { opacity: 1; transform: none; }
 }
-.arenaup__kicker {
+.party__kicker {
   font-size: var(--t-3);
   font-weight: 800;
   letter-spacing: 0.08em;
   color: var(--accent);
 }
-.arenaup__name { margin: 0; font-size: var(--t-6); font-weight: 900; }
-.arenaup__loot { display: flex; align-items: center; gap: var(--sp-4); }
-.arenaup__chest img {
+.party__name { margin: 0; font-size: var(--t-6); font-weight: 900; }
+.party__loot { display: flex; align-items: center; gap: var(--sp-4); }
+.party__chest img {
   width: clamp(76px, 18vh, 128px);
   height: auto;
   display: block;
   filter: drop-shadow(0 0 26px rgba(255, 196, 70, 0.55));
-  animation: arenaup-chest 2.4s ease-in-out infinite alternate;
+  animation: party-chest 2.4s ease-in-out infinite alternate;
 }
-@keyframes arenaup-chest {
+@keyframes party-chest {
   from { transform: translateY(0) rotate(-2deg); }
   to { transform: translateY(-7px) rotate(2deg); }
 }
-.arenaup__gems {
+.party__gems {
   display: inline-flex;
   align-items: center;
   gap: var(--sp-2);
@@ -406,22 +412,22 @@
 }
 
 /* ── the fireworks ── */
-.arenaup__sparks { position: absolute; inset: 0; overflow: hidden; pointer-events: none; }
-.arenaup__sparks i {
+.party__sparks { position: absolute; inset: 0; overflow: hidden; pointer-events: none; }
+.party__sparks i {
   position: absolute;
   top: -8%;
   width: 8px;
   height: 14px;
   border-radius: 2px;
   background: var(--accent);
-  animation: arenaup-fall 2.8s linear infinite;
+  animation: party-fall 2.8s linear infinite;
 }
 /* Four colours, cycled, so it reads as confetti rather than as one material. */
-.arenaup__sparks i:nth-child(4n + 1) { background: #ffd166; }
-.arenaup__sparks i:nth-child(4n + 2) { background: #5ce1e6; }
-.arenaup__sparks i:nth-child(4n + 3) { background: #ff8fab; }
-.arenaup__sparks i:nth-child(4n) { background: #9af06a; }
-@keyframes arenaup-fall {
+.party__sparks i:nth-child(4n + 1) { background: #ffd166; }
+.party__sparks i:nth-child(4n + 2) { background: #5ce1e6; }
+.party__sparks i:nth-child(4n + 3) { background: #ff8fab; }
+.party__sparks i:nth-child(4n) { background: #9af06a; }
+@keyframes party-fall {
   from { transform: translateY(0) rotate(var(--spin, 0deg)); opacity: 0; }
   12% { opacity: 1; }
   85% { opacity: 1; }
@@ -429,8 +435,40 @@
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .arenaup__sparks { display: none; }
-  .arenaup__card,
-  .arenaup { animation: none; }
-  .arenaup__chest img { animation: none; }
+  .party__sparks { display: none; }
+  .party__card,
+  .party { animation: none; }
+  .party__chest img { animation: none; }
+}
+
+/* ── the card that just levelled up ── */
+/*
+ * The card is the hero here, not a chest: it is the thing that changed, and
+ * seeing it at full size is most of the reward for the dozen chests it took.
+ */
+.levelup__card { position: relative; width: clamp(110px, 26vh, 170px); }
+.levelup__badge {
+  position: absolute;
+  inset-block-start: -10px;
+  inset-inline-end: -10px;
+  display: grid;
+  place-items: center;
+  min-width: 34px;
+  height: 34px;
+  padding: 0 8px;
+  border-radius: 999px;
+  border: 2px solid #052;
+  background: rgba(60, 190, 120, 0.98);
+  color: #042;
+  font-size: var(--t-4);
+  font-weight: 900;
+  box-shadow: 0 0 22px rgba(60, 190, 120, 0.6);
+  animation: levelup-pop 520ms cubic-bezier(0.2, 0.9, 0.3, 1.6) 180ms both;
+}
+@keyframes levelup-pop {
+  from { opacity: 0; transform: scale(0.3) rotate(-25deg); }
+  to { opacity: 1; transform: none; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .levelup__badge { animation: none; }
 }

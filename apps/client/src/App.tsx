@@ -75,6 +75,8 @@ import { MatePeek } from "./components/MatePeek";
 import { Challenges } from "./components/Challenges";
 import { DeckBuilder, DeckShelfView } from "./components/DeckBuilder";
 import { ArenaUp } from "./components/ArenaUp";
+import { BirthdayCard } from "./components/BirthdayCard";
+import { birthdayShown, onBirthday, type BirthdayGift } from "./game/meta";
 import { Versus } from "./components/Versus";
 import { Report } from "./components/Report";
 import { Friends } from "./components/Friends";
@@ -543,6 +545,14 @@ function Game() {
    * arena, is remembered rather than celebrated.
    */
   const [climbed, setClimbed] = useState<Arena | null>(null);
+  /*
+   * The birthday present, if the server minted one on the way in.
+   *
+   * Subscribed rather than fetched: the call that mints it is the challenges
+   * one, made by a different component — see onBirthday in game/meta.ts.
+   */
+  const [birthday, setBirthday] = useState<BirthdayGift | null>(null);
+  useEffect(() => onBirthday(setBirthday), []);
   useEffect(() => {
     const best = m.account?.bestTrophies;
     if (best === undefined) return;
@@ -919,7 +929,16 @@ function Game() {
 
     if (m.phase === "countdown" || m.phase === "prebattle") {
       secRef.current = s;
-      sfx.play("beep");
+      /*
+       * A clock, and it alternates.
+       *
+       * Or: *"the 3 2 1 at the start of a match sounds like gunshots. Change
+       * it to a clock ticking."* It was three of `beep` — a 400ms broadband
+       * thud — and three of those in a row is a fair description of
+       * gunshots. Odd seconds tick and even ones tock, so even a count of
+       * three carries the rhythm that makes it a clock. See sfx.ts.
+       */
+      sfx.play(s % 2 === 1 ? "clock" : "clockLow");
       return;
     }
     // Running out of build time: a quiet tick from ten seconds, urgent at three.
@@ -2027,6 +2046,23 @@ function Game() {
         ArenaUp.tsx. The gifts are already granted and already on the shelf;
         this says so.
       */}
+      {/*
+        A present rather than a prize — the only thing in the game that
+        happens because of who you are and not what you did. See
+        BirthdayCard.tsx; the chest is already on the shelf.
+      */}
+      {birthday && (
+        <BirthdayCard
+          age={birthday.age}
+          diamonds={birthday.diamonds}
+          onClose={() => {
+            setBirthday(null);
+            birthdayShown();
+            m.reloadAccount();
+          }}
+        />
+      )}
+
       {climbed && (
         <ArenaUp
           arena={climbed}

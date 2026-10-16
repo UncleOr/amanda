@@ -54,6 +54,20 @@ export const SERVER_ERRORS = [
    */
   "friend.codeUnknown",
 
+  // ── upgrading a card ──
+  /*
+   * These were English developer strings — "you do not have that card",
+   * "already at the top" — sent straight to a child's screen. serverError.ts
+   * had already noticed the leak and closed it with a generic message; this
+   * is the other half, so the screen can say what actually happened.
+   */
+  /** Not enough copies yet. Carries `short`: how many are missing. */
+  "level.copies",
+  /** Level 10. There is nowhere above it. */
+  "level.max",
+  /** The album has no such card, which means it is not yours to upgrade. */
+  "level.notYours",
+
   // ── reports ──
   "report.needAccount",
   /** A bug report with nothing in it. */

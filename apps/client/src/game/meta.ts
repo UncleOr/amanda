@@ -64,6 +64,41 @@ export function challengesSoFar(): Standing[] {
   return lastChallenges;
 }
 
+/** A gold chest and some diamonds, because it is your birthday. */
+export interface BirthdayGift {
+  diamonds: number;
+  /** The age just turned, or 0 when no birth year is on file. */
+  age: number;
+}
+
+/*
+ * ═══ THE PRESENT ARRIVES ON SOMEBODY ELSE'S REQUEST ═══
+ *
+ * The birthday is minted by `/api/meta` — the call the home screen makes for
+ * today's challenges — because that is the first thing that happens when the
+ * game opens, and a present you have to go and fetch is not one.
+ *
+ * Which means the component that ASKS is the challenges badge, and the
+ * component that has to SHOW it is App. A module-level handoff rather than a
+ * prop, and it works in either order: a watcher that subscribes after the
+ * answer landed is told immediately.
+ */
+let pending: BirthdayGift | null = null;
+const watchers = new Set<(gift: BirthdayGift) => void>();
+
+export function onBirthday(fn: (gift: BirthdayGift) => void): () => void {
+  if (pending) fn(pending);
+  watchers.add(fn);
+  return () => {
+    watchers.delete(fn);
+  };
+}
+
+/** Once it has been shown, it is over — a reload must not throw it again. */
+export function birthdayShown(): void {
+  pending = null;
+}
+
 /**
  * Today's challenges, with this player's progress.
  *
@@ -79,7 +114,11 @@ export async function loadChallenges(): Promise<Standing[]> {
       headers: token ? { authorization: `Bearer ${token}` } : {},
     });
     if (!res.ok) return [];
-    const body = (await res.json()) as { challenges?: Standing[] };
+    const body = (await res.json()) as { challenges?: Standing[]; birthday?: BirthdayGift | null };
+    if (body.birthday) {
+      pending = body.birthday;
+      for (const w of watchers) w(body.birthday);
+    }
     // Only a real answer is remembered. An empty one means the server could
     // not be reached, and replacing a good list with nothing would make the
     // panel go blank on a dropped connection.

@@ -52,7 +52,43 @@ export const TUNED = {
   soloTrophiesNormal: 8,
   soloTrophiesHard: 12,
   soloTrophiesPerDay: 60,
+  /*
+   * ═══ AN UPGRADE COSTS DIAMONDS AS WELL AS COPIES ═══
+   *
+   * Or, asking for the upgrade button: *"'3/4 cards to upgrade', and then an
+   * upgrade button (+ what the diamond cost is)."*
+   *
+   * There was no diamond cost — an upgrade took copies and nothing else —
+   * and the bracket is the interesting half of that sentence. Copies arrive
+   * on their own from chests, so an upgrade you can afford is an upgrade you
+   * simply take; there is no decision in it. Diamonds are the one thing you
+   * spend somewhere ELSE, so a price in diamonds is what turns "upgrade this
+   * card" into a choice against the shop.
+   *
+   * `levelDiamonds` multiplies this by the level being left, so going 1→2 is
+   * 10 and 9→10 is 90: four hundred and fifty to take one card all the way,
+   * against the hundreds a season of chests pays out. Cheap enough that a
+   * seven-year-old is never stuck, dear enough to be a decision.
+   *
+   * Tunable, because this is exactly the number Or will want to move once
+   * they have played a week with it.
+   */
+  diamondsPerLevel: 10,
 };
+
+/**
+ * Diamonds to take a card from `level` to the next.
+ *
+ * Here rather than beside `levelCost` in config.ts because it reads TUNED,
+ * and tunables.ts already imports config.ts — a cycle between the two would
+ * be a strange way to find out that a constant moved.
+ *
+ * Read at CALL time, so turning the dial in the admin panel changes the next
+ * upgrade rather than the next deploy.
+ */
+export function levelDiamonds(level: number): number {
+  return TUNED.diamondsPerLevel * Math.max(1, level);
+}
 
 export interface Tunable {
   id: string;
@@ -155,6 +191,16 @@ export const TUNABLES: Tunable[] = [
     step: 5,
     get: () => TUNED.soloTrophiesPerDay,
     set: (v) => (TUNED.soloTrophiesPerDay = v),
+  },
+  {
+    id: "levels.diamonds",
+    he: "יהלומים לשדרוג",
+    note: "המחיר ביהלומים לעלות רמה, כפול הרמה הנוכחית. 10 = 10 לרמה 2, 90 לרמה 10. גבוה מדי והשדרוג נעצר; אפס והוא חינם.",
+    min: 0,
+    max: 100,
+    step: 1,
+    get: () => TUNED.diamondsPerLevel,
+    set: (v) => (TUNED.diamondsPerLevel = v),
   },
   {
     id: "trophies.loss",

@@ -123,6 +123,8 @@ export function Profile({ account, onClose, onChanged }: Props) {
   const [busy, setBusy] = useState(false);
 
   const tooYoung = birthDate !== "" && ageFrom(birthDate) < MIN_AGE;
+  /** A birthday already on file. See the note beside the field. */
+  const locked = Boolean(account?.birthDate);
   const dirty =
     nickname !== (account?.nickname ?? "") ||
     birthDate !== (account?.birthDate ?? "") ||
@@ -374,10 +376,28 @@ export function Profile({ account, onClose, onChanged }: Props) {
 
         <section className="panel">
           <h3>{t("sf69f486", "יום ההולדת שלך")}</h3>
+          {/*
+            ═══ WRITTEN ONCE ═══
+
+            Or, asking for the birthday chest: *"obviously that means the
+            birth date can only be set when you sign up and not changed
+            afterwards in the profile."*
+
+            He spotted the hole in the same breath as the idea: a gold chest
+            that arrives on a date the player can edit is a gold chest the
+            player can have every morning. Set today, collect, set tomorrow.
+
+            So once there is one, this shows it and will not take a new one.
+            `readOnly` is the courtesy; the rule is a trigger in the database
+            (db/migrations/20261016090000_birthday.sql), because a rule that
+            lives in a React component lives in the browser.
+          */}
           <input
             className="profile__input"
             type="date"
             value={birthDate}
+            readOnly={locked}
+            disabled={locked}
             onChange={(e) => setBirthDate(e.target.value)}
           />
           {/* "This is only for your age" explained the field above it, which

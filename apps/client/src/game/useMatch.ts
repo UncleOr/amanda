@@ -1072,38 +1072,26 @@ export function useMatch(): MatchApi {
       });
     });
     /*
-     * Which deck they play with, alongside who they are. Deliberately not
-     * awaited together: a slow deck read must not hold up the account, and a
-     * missing one simply means the game deals a deck as it always has.
+     * Which deck they play with, alongside who they are. Still not awaited
+     * together — a slow deck read must not hold up the account — but each
+     * one now writes its ref before it deals, so the order cannot matter.
+     * See dealAgain.
      */
     void loadDecks().then(({ decks, activeId }) => {
       if (!alive) return;
       const active = decks.find((d) => d.id === activeId);
-      setBuiltDeck(active?.cards.length ? active.cards : null);
+      const cards = active?.cards.length ? active.cards : null;
+      // The ref first, and by hand: render is what normally assigns it, and
+      // render has not happened yet when the account's callback runs next.
+      builtRef.current = cards;
+      setBuiltDeck(cards);
+      dealAgain();
     });
     void loadAccount().then((a) => {
       if (!alive || !a) return;
+      accountRef.current = a;
       setAccount(a);
-      setGs((cur) =>
-        /*
-         * Only re-deal an untouched deck, and never one that was dealt on
-         * purpose.
-         *
-         * A mirror deck comes from the shared seed and a lesson deck is
-         * written down in lessons.ts — and "untouched" is true of both of
-         * them during the countdown, so without this the account arriving a
-         * second later quietly replaced them with a deck drawn from the
-         * player's album. The tutorial's first card stopped being the King
-         * that Amanda's first line talks about.
-         */
-        mirrorRef.current === null &&
-        lessonRef.current === 0 &&
-        cur.hand === null &&
-        cur.king === null &&
-        Object.keys(cur.placements).length === 0
-          ? initialGameState(a.album, builtRef.current)
-          : cur,
-      );
+      dealAgain();
     });
     return () => {
       alive = false;
@@ -1139,6 +1127,46 @@ export function useMatch(): MatchApi {
   mirrorRef.current = mirrorSeed;
   const lessonRef = useRef(lesson);
   lessonRef.current = lesson;
+  /**
+   * Deal the opening deck again, if nobody has touched it yet.
+   *
+   * ═══ WHO YOU ARE AND WHAT YOU BUILT ARRIVE SEPARATELY ═══
+   *
+   * Or: *"are you sure the deck I picked is the one being used?"*
+   *
+   * He was right to ask. The album and the deck shelf are two reads that
+   * race, and only the account's callback dealt a deck — so when it won, it
+   * dealt from the ALBUM with `builtRef.current` still null, and the shelf
+   * landing a moment later changed nothing. Worse, `builtRef.current` is
+   * assigned during render, so even "the decks read finished first" did not
+   * make it true: React had to have rendered in between.
+   *
+   * A solo match hid all of this, because startMatch clears the round and
+   * deals again by then. An online match does not: the server says
+   * "countdown" down a socket that was already open, and whatever deck was
+   * sitting in state is the deck you play. So the one place it bit is the
+   * one place where somebody is watching.
+   *
+   * The fix is not to win the race but to stop having one: each read writes
+   * its own ref the moment it lands and then calls this, so the second one
+   * home deals with both halves in hand, whichever order they come in.
+   *
+   * The guard is the same one the account path always had — an untouched
+   * board, no mirror seed, no lesson — because a deck dealt on purpose must
+   * never be replaced by one dealt on arrival.
+   */
+  const dealAgain = useCallback(() => {
+    setGs((cur) =>
+      mirrorRef.current === null &&
+      lessonRef.current === 0 &&
+      cur.hand === null &&
+      cur.king === null &&
+      Object.keys(cur.placements).length === 0
+        ? initialGameState(accountRef.current?.album, builtRef.current)
+        : cur,
+    );
+  }, []);
+
   const editSideRef = useRef(editSide);
   editSideRef.current = editSide;
   const foeRef = useRef(foe);
@@ -2387,10 +2415,19 @@ export function useMatch(): MatchApi {
     account,
     reloadAccount: () => void loadAccount().then((a) => a && setAccount(a)),
     builtDeck,
+    /*
+     * Changing which deck is active changes the deck you are about to be
+     * dealt — so this deals again too, under the same untouched-board guard.
+     * Picking a deck on the home screen and then being handed the old one is
+     * the same bug one screen later.
+     */
     reloadDecks: () =>
       void loadDecks().then(({ decks, activeId }) => {
         const active = decks.find((d) => d.id === activeId);
-        setBuiltDeck(active?.cards.length ? active.cards : null);
+        const cards = active?.cards.length ? active.cards : null;
+        builtRef.current = cards;
+        setBuiltDeck(cards);
+        dealAgain();
       }),
     onlineAvailable: ONLINE_AVAILABLE,
     netError,

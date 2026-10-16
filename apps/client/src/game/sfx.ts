@@ -22,6 +22,22 @@ type SoundName =
   | "place"
   | "discard"
   | "beep"
+  /**
+   * The match countdown: a clock, alternating two pitches.
+   *
+   * Or: *"the 3 2 1 at the start of a match sounds like gunshots. Change it
+   * to a clock ticking."* It was playing `beep`, which measures as a 400ms
+   * broadband hit with a 34ms attack and a tonality of 0.16 — a percussive
+   * thud with no pitch in it, three in a row.
+   *
+   * `tick` was the obvious thing to point at instead and it is not a clock
+   * either: 300ms long with its peak 212ms in, which is a swell. These are
+   * 60ms, resonant at 2.2kHz and 1.6kHz, and gone. Two of them because the
+   * alternation is most of what makes a sound read as a clock rather than
+   * as a click. See scripts/make-clock.sh.
+   */
+  | "clock"
+  | "clockLow"
   | "tick"
   | "tickUrgent"
   | "timeUp"
@@ -100,6 +116,9 @@ const RECIPES: Record<SoundName, () => void> = {
   place: () => tone(360, 100, { type: "triangle", slideTo: 150, gain: 0.16 }),
   discard: () => tone(420, 110, { type: "sawtooth", slideTo: 120, gain: 0.1 }),
   beep: () => tone(880, 120, { type: "sine", gain: 0.14 }),
+  // Short and resonant, and the fallbacks alternate like the clips do.
+  clock: () => tone(2200, 45, { type: "triangle", gain: 0.1 }),
+  clockLow: () => tone(1600, 45, { type: "triangle", gain: 0.1 }),
   // A clock, not an alarm: quiet and low while there is still time…
   tick: () => tone(520, 55, { type: "square", gain: 0.05 }),
   // …then higher and harder once seconds actually matter.

@@ -12,7 +12,7 @@
  * anyone could level anyone's cards, or their own for free.
  */
 import type { IncomingMessage, ServerResponse } from "node:http";
-import { LEVELS, levelCost } from "@amanda/shared";
+import { LEVELS, levelCost, levelDiamonds } from "@amanda/shared";
 import { CATALOG } from "./content.js";
 import { grantChest, saves } from "./progress.js";
 import { fileReport, recentOpponents } from "./reports.js";
@@ -31,6 +31,7 @@ import { inbox, markRead } from "./notify.js";
 import { handleAdmin, handleCopy } from "./admin.js";
 import { awardMatch, claim, factsFor, standings } from "./meta.js";
 import { soloResult } from "./solo.js";
+import { birthdayGift } from "./birthday.js";
 
 import { SUPABASE_URL as URL, db, keyHasWhitespace, keyLength, keyStartsWith } from "./supabase.js";
 import { phraseOverrides, seriesOverrides, tunableValues, tutorialOverrides } from "./live.js";
@@ -117,7 +118,7 @@ async function levelUp(req: IncomingMessage, res: ServerResponse): Promise<void>
   const body = (await readBody(req)) as { cardId?: unknown };
   const cardId = typeof body.cardId === "string" ? body.cardId : "";
   const card = CATALOG.get(cardId);
-  if (!card) return send(res, 400, { error: "no such card" });
+  if (!card) return send(res, 400, { error: "level.notYours" });
 
   const { data: owned } = await sb
     .from("player_cards")
@@ -125,20 +126,73 @@ async function levelUp(req: IncomingMessage, res: ServerResponse): Promise<void>
     .eq("player_id", playerId)
     .eq("card_id", cardId)
     .maybeSingle();
-  if (!owned) return send(res, 400, { error: "you do not have that card" });
-  if (owned.level >= LEVELS.max) return send(res, 400, { error: "already at the top" });
+  if (!owned) return send(res, 400, { error: "level.notYours" });
+  if (owned.level >= LEVELS.max) return send(res, 400, { error: "level.max" });
 
   const cost = levelCost(card.rarity, owned.level);
-  if (owned.copies < cost) return send(res, 400, { error: "not enough copies", cost });
+  if (owned.copies < cost)
+    return send(res, 400, { error: `level.copies:${cost - owned.copies}`, cost });
+
+  /*
+   * ═══ AND DIAMONDS ═══
+   *
+   * Or: *"an upgrade button (+ what the diamond cost is)."* There was no
+   * diamond cost; see tunables.ts for why there is one now.
+   *
+   * Charged HERE and not merely shown on the button, because a price the
+   * browser knows about and the server does not is not a price.
+   */
+  const price = levelDiamonds(owned.level);
+  const { data: purse } = await sb
+    .from("players")
+    .select("diamonds")
+    .eq("id", playerId)
+    .maybeSingle();
+  const have = purse?.diamonds ?? 0;
+  if (have < price) return send(res, 400, { error: `shop.poor:${price - have}` });
+
+  /*
+   * The diamonds first, and only then the card.
+   *
+   * There is no transaction across two tables here, so one of the two has to
+   * go first and the question is which failure is survivable. Charging first
+   * and failing to upgrade costs the player diamonds, which is bad; granting
+   * the level first and failing to charge gives a free upgrade to anybody who
+   * can make the second call fail, which is worse and is repeatable.
+   *
+   * `.gte("diamonds", price)` makes the charge itself the check, so two taps
+   * arriving together cannot both pass the read above and both be paid.
+   */
+  if (price > 0) {
+    const { data: paid } = await sb
+      .from("players")
+      .update({ diamonds: have - price })
+      .eq("id", playerId)
+      .gte("diamonds", price)
+      .select("id");
+    if (!paid?.length) return send(res, 400, { error: `shop.poor:${Math.max(0, price - have)}` });
+  }
 
   const { error } = await sb
     .from("player_cards")
     .update({ copies: owned.copies - cost, level: owned.level + 1 })
     .eq("player_id", playerId)
     .eq("card_id", cardId);
-  if (error) return send(res, 500, { error: error.message });
+  if (error) {
+    // Put the diamonds back. The upgrade did not happen, so the charge for
+    // it must not stand.
+    if (price > 0) await sb.from("players").update({ diamonds: have }).eq("id", playerId);
+    return send(res, 500, { error: error.message });
+  }
 
-  send(res, 200, { ok: true, level: owned.level + 1, copies: owned.copies - cost, spent: cost });
+  send(res, 200, {
+    ok: true,
+    level: owned.level + 1,
+    copies: owned.copies - cost,
+    spent: cost,
+    diamonds: have - price,
+    spentDiamonds: price,
+  });
 }
 
 /** Returns true when it handled the request. */
@@ -433,7 +487,13 @@ async function handleMeta(req: IncomingMessage, res: ServerResponse, path: strin
 
   if (path === "/api/meta") {
     if (!sb) return send(res, 200, { challenges: [] });
-    return send(res, 200, { challenges: await standings(sb, playerId) });
+    /*
+     * The way into the home screen, which is also the only moment anybody
+     * asks whether it is your birthday. Almost always two columns and a
+     * `null` — see birthday.ts.
+     */
+    const birthday = playerId ? await birthdayGift(sb, playerId) : null;
+    return send(res, 200, { challenges: await standings(sb, playerId), birthday });
   }
 
   if (!sb) return send(res, 200, { nachos: 0, chests: [], moved: [] });

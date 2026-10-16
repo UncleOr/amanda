@@ -202,6 +202,27 @@ export const CRUMB_DEMON = {
   hp: 1,
   power: 1,
   attackSpeed: 2,
+  /*
+   * ═══ IT HAS TO WALK ═══
+   *
+   * Or: *"crumb monsters need to move, otherwise they jam the whole game."*
+   *
+   * It was 0, and 0 is what makes a thin album unplayable rather than merely
+   * weak. A board whose empty slots filled with rooted 1hp filler has
+   * nothing on it that can ever reach the other side: the fight does not
+   * happen, the stalemate detector notices after three seconds and the
+   * result is decided by counting hit points. The punishment for not having
+   * cards was not losing — it was not getting a battle.
+   *
+   * 0.5 is the slowest speed any real card has, which is the point: the
+   * filler is the slowest thing on the board and still arrives.
+   *
+   * Here and not in the two card definitions, because there are two — the
+   * client's catalog.ts and the server's content.ts — and the server is the
+   * one that runs an online match. Two numbers that have to agree are a
+   * number that will eventually not.
+   */
+  moveSpeed: 0.5,
 } as const;
 
 /** Card upgrade scaling (GDD §7). */

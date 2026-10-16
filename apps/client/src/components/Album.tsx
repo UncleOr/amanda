@@ -18,8 +18,15 @@ import { CATALOG, SERIES, collectable } from "../data/catalog";
 import { CardView, CardBack } from "./CardView";
 import { Icon } from "./Icon";
 import { useEffect, useState } from "react";
-import { LEVELS, levelCost } from "@amanda/shared";
-import { levelUpCard, loadStats, type Account, type Stats } from "../game/account";
+import { LEVELS, levelCost, levelDiamonds, type Card } from "@amanda/shared";
+import {
+  levelUpCard,
+  loadStats,
+  type Account,
+  type OwnedCard,
+  type Stats,
+} from "../game/account";
+import { LevelUp } from "./LevelUp";
 import { line as t, lineF as tf } from "../game/copy";
 import { say } from "../game/lang";
 
@@ -50,12 +57,27 @@ export function Album({ account, onClose, onCardInfo, onChanged }: Props) {
     };
   }, [account]);
 
+  /*
+   * ═══ AN UPGRADE IS AN OCCASION ═══
+   *
+   * Or: *"and of course when it upgrades, confetti and fireworks and a happy
+   * sound."*
+   *
+   * It used to be a number changing on a tile. A card going from 4 to 5 is
+   * the pay-off for every chest since the last one, and it looked like
+   * nothing at all — which is also why nobody noticed the button.
+   */
+  const [levelled, setLevelled] = useState<{ cardId: string; level: number } | null>(null);
+
   async function buyLevel(cardId: string) {
     setBusy(cardId);
     const out = await levelUpCard(cardId);
     setBusy(null);
     setNote(out.error ?? null);
-    if (!out.error) onChanged?.();
+    if (!out.error) {
+      if (out.level) setLevelled({ cardId, level: out.level });
+      onChanged?.();
+    }
   }
 
   const album = account?.album;
@@ -230,29 +252,35 @@ export function Album({ account, onClose, onCardInfo, onChanged }: Props) {
                       {mine ? (
                         <>
                           <CardView cardId={card.id} size="small" />
+                          {/* How many times it can go on a board — a
+                              different fact from how close an upgrade is,
+                              and the one the deck builder cares about. */}
                           <span className="album__copies" title={t("s176d067", "עותקים — כמה פעמים אפשר להניח אותו")}>
                             ×{mine.copies}
                           </span>
-                          {mine.level > 1 && (
-                            <span className="album__level">{tf("s4308b06", "רמה {0}", mine.level)}</span>
-                          )}
-                          {/* Width or height: keep the copies to put more of it
-                              on the board, or spend them to make one stronger. */}
-                          {mine.level < LEVELS.max && (
-                            <button
-                              className="album__up"
-                              disabled={
-                                busy === card.id || mine.copies < levelCost(card.rarity, mine.level)
-                              }
-                              title={tf("sdcf87da", "שדרוג לרמה {0} — עולה {1} עותקים", mine.level + 1, levelCost(card.rarity, mine.level))}
-                              onClick={(e) => {
-                                e.stopPropagation();
-                                void buyLevel(card.id);
-                              }}
-                            >
-                              ▲ {levelCost(card.rarity, mine.level)}
-                            </button>
-                          )}
+                          {/*
+                            ═══ THE LEVEL, ON THE CARD ═══
+
+                            Or: *"and some kind of level indicator on the card
+                            itself."* It only appeared above level 1, so a
+                            card at level 1 looked like a card with no level
+                            — and the whole idea that cards HAVE levels was
+                            invisible until the first upgrade. Always shown
+                            now, and quiet at level 1.
+                          */}
+                          <span
+                            className={`album__level${mine.level > 1 ? " is-up" : ""}`}
+                            title={tf("s4308b06", "רמה {0}", mine.level)}
+                          >
+                            {mine.level}
+                          </span>
+                          <Upgrade
+                            card={card}
+                            mine={mine}
+                            diamonds={account?.diamonds ?? 0}
+                            busy={busy === card.id}
+                            onBuy={() => void buyLevel(card.id)}
+                          />
                         </>
                       ) : (
                         <CardBack size="small" />
@@ -265,6 +293,98 @@ export function Album({ account, onClose, onCardInfo, onChanged }: Props) {
           );
         })}
       </div>
+
+      {/*
+        Confetti, fireworks and a happy sound — see LevelUp.tsx. It sits
+        outside the scrolling list because it takes the whole screen.
+      */}
+      {levelled && (
+        <LevelUp
+          cardId={levelled.cardId}
+          level={levelled.level}
+          onClose={() => setLevelled(null)}
+        />
+      )}
     </div>
+  );
+}
+
+/**
+ * **How far off an upgrade is, and what it costs.**
+ *
+ * Or: *"Ice Dragon has already reached the 4 cards needed for an upgrade.
+ * The indicator there needs to be clearer — '3/4 cards to upgrade' — and
+ * then an upgrade button (+ what the diamond cost is)."*
+ *
+ * ═══ WHAT WAS THERE, AND WHY HE MISSED IT ═══
+ *
+ * A grey `▲ 4` that went gold when you could afford it. Three things wrong
+ * with that in one tiny button: 4 is the PRICE and reads as a quantity you
+ * have; nothing anywhere said how close you were; and the one moment it
+ * mattered — the card is ready — looked like the twenty cards either side of
+ * it. He reached the threshold on a card and the game did not tell him.
+ *
+ * So the progress is always visible and always says what it is counting, and
+ * the button only appears when it can actually be pressed. A control you
+ * cannot use is not information; a bar that is 3/4 full is.
+ */
+function Upgrade({
+  card,
+  mine,
+  diamonds,
+  busy,
+  onBuy,
+}: {
+  card: Card;
+  mine: OwnedCard;
+  /** The purse, so the price can say whether it is affordable. */
+  diamonds: number;
+  busy: boolean;
+  onBuy: () => void;
+}) {
+  if (mine.level >= LEVELS.max) {
+    return <span className="album__topped">{t("s3e3750f", "מקסימום")}</span>;
+  }
+
+  const need = levelCost(card.rarity, mine.level);
+  const price = levelDiamonds(mine.level);
+  const have = Math.min(mine.copies, need);
+  const ready = mine.copies >= need;
+  const canPay = diamonds >= price;
+
+  /*
+   * Not ready: a bar and the count. The two numbers Or asked for, and no
+   * button — "3/4 cards to upgrade" is the whole message, and a dead button
+   * under it would only be something else to press.
+   */
+  if (!ready) {
+    return (
+      <span className="album__toup" title={tf("s6c954dd", "{0} מתוך {1} קלפים לשדרוג", have, need)}>
+        <i style={{ ["--fill" as string]: `${(have / need) * 100}%` }} aria-hidden="true" />
+        {have}/{need}
+      </span>
+    );
+  }
+
+  /*
+   * Ready: the button, carrying both prices. Copies are what you have been
+   * collecting; diamonds are what you could have spent in the shop instead.
+   * Showing only one of them would hide the decision.
+   */
+  return (
+    <button
+      className={`album__up${canPay ? " is-ready" : " is-poor"}`}
+      disabled={busy || !canPay}
+      title={tf("s15650ab", "שדרוג לרמה {0}", mine.level + 1)}
+      onClick={(e) => {
+        e.stopPropagation();
+        onBuy();
+      }}
+    >
+      <b>{t("sac15acb", "שדרוג")}</b>
+      <span>
+        <Icon name="gem" size={10} /> {price}
+      </span>
+    </button>
   );
 }

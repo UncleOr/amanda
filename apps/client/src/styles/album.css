@@ -119,14 +119,85 @@
   font-size: var(--t-1);
   font-weight: 800;
 }
+/*
+ * ═══ THE LEVEL IS ALWAYS THERE ═══
+ *
+ * Or: *"and some kind of level indicator on the card itself."*
+ *
+ * It used to be drawn only above level 1, which meant a card at level 1
+ * looked like a card with no level at all — and the idea that cards HAVE
+ * levels stayed invisible until the first upgrade, which is exactly when a
+ * player needs to already know about it. Always drawn, quiet at 1 and lit
+ * once it has been earned.
+ */
 .album__level {
   position: absolute;
   inset-block-start: 4px;
   inset-inline-end: 4px;
+  display: grid;
+  place-items: center;
+  min-width: 16px;
+  height: 16px;
+  padding: 0 3px;
+  border-radius: 999px;
+  border: 1px solid rgba(255, 255, 255, 0.35);
+  background: rgba(8, 12, 22, 0.88);
+  color: var(--text);
+  font-size: var(--t-1);
+  font-weight: 900;
+  line-height: 1;
+}
+.album__level.is-up {
+  border-color: rgba(60, 190, 120, 0.9);
   background: rgba(60, 190, 120, 0.92);
   color: #052;
-  border-radius: 999px;
+}
+
+/*
+ * ═══ HOW CLOSE THE UPGRADE IS ═══
+ *
+ * Or: *"the indicator there needs to be clearer — '3/4 cards to upgrade' —
+ * and then an upgrade button."*
+ *
+ * It was a grey `▲ 4`, where 4 is the PRICE and reads as a quantity you
+ * have. This is the count, over a bar that fills: two readings of the same
+ * fact, one for a glance across a grid of fifty and one for the card you
+ * are actually looking at.
+ */
+.album__toup {
+  position: absolute;
+  inset-block-end: 4px;
+  inset-inline-end: 4px;
+  overflow: hidden;
   padding: 0 6px;
+  border-radius: 999px;
+  border: 1px solid rgba(255, 255, 255, 0.22);
+  background: rgba(8, 12, 22, 0.88);
+  color: var(--text);
+  font-size: var(--t-1);
+  font-weight: 800;
+}
+/* The fill, behind the number rather than beside it — there is no room
+   beside it on a 60px tile. */
+.album__toup i {
+  position: absolute;
+  inset-block: 0;
+  inset-inline-start: 0;
+  width: var(--fill, 0%);
+  background: rgba(60, 190, 120, 0.45);
+}
+.album__toup { position: absolute; z-index: 1; }
+
+/* Level 10. Nothing to count towards, so nothing that looks like a button. */
+.album__topped {
+  position: absolute;
+  inset-block-end: 4px;
+  inset-inline-end: 4px;
+  padding: 0 6px;
+  border-radius: 999px;
+  background: rgba(8, 12, 22, 0.88);
+  border: 1px solid var(--accent);
+  color: var(--accent);
   font-size: var(--t-1);
   font-weight: 800;
 }

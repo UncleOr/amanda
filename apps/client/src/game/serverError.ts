@@ -55,6 +55,16 @@ function words(code: ServerError, value: number | null): string {
     case "friend.codeUnknown":
       return t("sc6d8f34", "אין קוד כזה.");
 
+    // ── upgrading a card ──
+    case "level.copies":
+      return value === null
+        ? t("s1ea1328", "אין מספיק עותקים.")
+        : tf("s4cfc2af", "חסרים {0} עותקים.", value);
+    case "level.max":
+      return t("sd0abc03", "זאת הרמה הכי גבוהה.");
+    case "level.notYours":
+      return t("sce3da7e", "הקלף הזה עוד לא שלך.");
+
     // ── reports ──
     case "report.needAccount":
       return t("s0c9162c", "צריך חשבון כדי לדווח על שחקן. אפשר להתחבר באזור האישי.");

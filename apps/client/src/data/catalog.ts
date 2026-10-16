@@ -110,7 +110,7 @@ export const CRUMB_DEMON_CARD: Card = {
     hp: CRUMB_DEMON.hp,
     power: CRUMB_DEMON.power,
     attackSpeed: CRUMB_DEMON.attackSpeed,
-    moveSpeed: 0,
+    moveSpeed: CRUMB_DEMON.moveSpeed,
     range: "melee",
   },
   flying: false,

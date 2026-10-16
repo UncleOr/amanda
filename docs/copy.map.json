@@ -12690,5 +12690,155 @@
    "file": "apps/client/src/components/DeckBuilder.tsx",
    "line": 186
   }
+ },
+ {
+  "id": "s3e3750f",
+  "section": "components/Album.tsx",
+  "text": "מקסימום",
+  "where": {
+   "kind": "source",
+   "file": "apps/client/src/components/Album.tsx",
+   "line": 346
+  }
+ },
+ {
+  "id": "s6c954dd",
+  "section": "components/Album.tsx",
+  "text": "{0} מתוך {1} קלפים לשדרוג",
+  "where": {
+   "kind": "source",
+   "file": "apps/client/src/components/Album.tsx",
+   "line": 362
+  }
+ },
+ {
+  "id": "s15650ab",
+  "section": "components/Album.tsx",
+  "text": "שדרוג לרמה {0}",
+  "where": {
+   "kind": "source",
+   "file": "apps/client/src/components/Album.tsx",
+   "line": 378
+  }
+ },
+ {
+  "id": "sac15acb",
+  "section": "components/Album.tsx",
+  "text": "שדרוג",
+  "where": {
+   "kind": "source",
+   "file": "apps/client/src/components/Album.tsx",
+   "line": 384
+  }
+ },
+ {
+  "id": "sfe72726",
+  "section": "components/BirthdayCard.tsx",
+  "text": "יום הולדת שמח",
+  "where": {
+   "kind": "source",
+   "file": "apps/client/src/components/BirthdayCard.tsx",
+   "line": 36
+  }
+ },
+ {
+  "id": "sb4b4284",
+  "section": "components/BirthdayCard.tsx",
+  "text": "בן {0} היום!",
+  "where": {
+   "kind": "source",
+   "file": "apps/client/src/components/BirthdayCard.tsx",
+   "line": 43
+  }
+ },
+ {
+  "id": "s5dc59d0",
+  "section": "components/BirthdayCard.tsx",
+  "text": "היום זה היום שלך!",
+  "where": {
+   "kind": "source",
+   "file": "apps/client/src/components/BirthdayCard.tsx",
+   "line": 43
+  }
+ },
+ {
+  "id": "sf6a63bb",
+  "section": "components/BirthdayCard.tsx",
+  "text": "תודה!",
+  "where": {
+   "kind": "source",
+   "file": "apps/client/src/components/BirthdayCard.tsx",
+   "line": 55
+  }
+ },
+ {
+  "id": "sc54710e",
+  "section": "components/LevelUp.tsx",
+  "text": "שדרוג!",
+  "where": {
+   "kind": "source",
+   "file": "apps/client/src/components/LevelUp.tsx",
+   "line": 51
+  }
+ },
+ {
+  "id": "s63923f0",
+  "section": "components/LevelUp.tsx",
+  "text": "חזק ב-{0}%",
+  "where": {
+   "kind": "source",
+   "file": "apps/client/src/components/LevelUp.tsx",
+   "line": 59
+  }
+ },
+ {
+  "id": "sfe8cfe5",
+  "section": "components/LevelUp.tsx",
+  "text": "מגניב!",
+  "where": {
+   "kind": "source",
+   "file": "apps/client/src/components/LevelUp.tsx",
+   "line": 61
+  }
+ },
+ {
+  "id": "s1ea1328",
+  "section": "game/serverError.ts",
+  "text": "אין מספיק עותקים.",
+  "where": {
+   "kind": "source",
+   "file": "apps/client/src/game/serverError.ts",
+   "line": 61
+  }
+ },
+ {
+  "id": "s4cfc2af",
+  "section": "game/serverError.ts",
+  "text": "חסרים {0} עותקים.",
+  "where": {
+   "kind": "source",
+   "file": "apps/client/src/game/serverError.ts",
+   "line": 62
+  }
+ },
+ {
+  "id": "sd0abc03",
+  "section": "game/serverError.ts",
+  "text": "זאת הרמה הכי גבוהה.",
+  "where": {
+   "kind": "source",
+   "file": "apps/client/src/game/serverError.ts",
+   "line": 64
+  }
+ },
+ {
+  "id": "sce3da7e",
+  "section": "game/serverError.ts",
+  "text": "הקלף הזה עוד לא שלך.",
+  "where": {
+   "kind": "source",
+   "file": "apps/client/src/game/serverError.ts",
+   "line": 66
+  }
  }
 ]
