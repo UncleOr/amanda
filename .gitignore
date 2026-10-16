@@ -94,3 +94,12 @@ store/recording-*.mp4
 # in the repo beside it, so the ZIP would be five megabytes of duplicate.
 store/achievements/play-import/
 store/achievements/play-import.zip
+
+# Google OAuth client files land in the repo root when they are downloaded
+# from the Cloud console. The Android one holds no secret — an installed
+# client is identified by package name and signing fingerprint, not by a
+# password — but a file called client_secret_* does not belong in a public
+# repo whatever is in it, and the next one downloaded might be a web client,
+# which does.
+client_secret_*.json
+.secrets/
