@@ -512,22 +512,6 @@
   "en": "A wing sweep across 3 lanes every 5 seconds with knockback."
  },
  {
-  "id": "dd7fb407",
-  "section": "סדרה — הדרקונים",
-  "text": "ענק אמצע למשבצת ה-2×2: שליטת חזית מוחלטת עם נזק אזורי.",
-  "where": {
-   "kind": "json",
-   "file": "data/series/01-dragons.json",
-   "path": [
-    "cards",
-    9,
-    "role",
-    "he"
-   ]
-  },
-  "en": "Mid-boss for the 2×2 King slot: total front control with area damage."
- },
- {
   "id": "d8c365e1",
   "section": "סדרה — הענקים",
   "text": "הענקים",
@@ -888,22 +872,6 @@
    ]
   },
   "en": "Titan King"
- },
- {
-  "id": "dfdbffd8",
-  "section": "סדרה — הענקים",
-  "text": "ענק אמצע למשבצת ה-2×2: טנק עצום שמגן על כל הלוח.",
-  "where": {
-   "kind": "json",
-   "file": "data/series/05-giants.json",
-   "path": [
-    "cards",
-    9,
-    "role",
-    "he"
-   ]
-  },
-  "en": "Mid-boss for the 2×2 King slot: a colossal tank that shields the whole board."
  },
  {
   "id": "d2cdcd05",
@@ -1356,22 +1324,6 @@
    ]
   },
   "en": "Insect Empress"
- },
- {
-  "id": "d6a9f6a3",
-  "section": "סדרה — החרקים",
-  "text": "ענק אמצע למשבצת ה-2×2: מרעילה מרחוק ובוקעת נחיל במוות.",
-  "where": {
-   "kind": "json",
-   "file": "data/series/07-insects.json",
-   "path": [
-    "cards",
-    9,
-    "role",
-    "he"
-   ]
-  },
-  "en": "Mid-boss for the 2×2 King slot: poisons from afar and bursts a swarm on death."
  },
  {
   "id": "d5696dab",
@@ -4280,7 +4232,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/App.tsx",
-   "line": 2022
+   "line": 2026
   }
  },
  {
@@ -4290,7 +4242,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/App.tsx",
-   "line": 2025
+   "line": 2029
   }
  },
  {
@@ -4300,7 +4252,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/App.tsx",
-   "line": 2137
+   "line": 2141
   }
  },
  {
@@ -4310,7 +4262,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/App.tsx",
-   "line": 2137
+   "line": 2141
   }
  },
  {
@@ -4320,7 +4272,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/App.tsx",
-   "line": 2140
+   "line": 2144
   }
  },
  {
@@ -4330,7 +4282,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/App.tsx",
-   "line": 2143
+   "line": 2147
   }
  },
  {
@@ -7329,7 +7281,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/components/Challenges.tsx",
-   "line": 126
+   "line": 150
   }
  },
  {
@@ -7339,7 +7291,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/components/Challenges.tsx",
-   "line": 129
+   "line": 153
   }
  },
  {
@@ -7349,7 +7301,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/components/Challenges.tsx",
-   "line": 144
+   "line": 168
   }
  },
  {
@@ -7359,7 +7311,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/components/Challenges.tsx",
-   "line": 175
+   "line": 199
   }
  },
  {
@@ -7369,7 +7321,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/components/Challenges.tsx",
-   "line": 194
+   "line": 218
   }
  },
  {
@@ -7379,7 +7331,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/components/Challenges.tsx",
-   "line": 239
+   "line": 263
   }
  },
  {
@@ -8969,7 +8921,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/components/Payout.tsx",
-   "line": 70
+   "line": 89
   }
  },
  {
@@ -8979,7 +8931,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/components/Payout.tsx",
-   "line": 76
+   "line": 95
   }
  },
  {
@@ -8989,7 +8941,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/components/Payout.tsx",
-   "line": 76
+   "line": 95
   }
  },
  {
@@ -8999,7 +8951,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/components/Payout.tsx",
-   "line": 92
+   "line": 111
   }
  },
  {
@@ -9009,7 +8961,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/components/Payout.tsx",
-   "line": 117
+   "line": 136
   }
  },
  {
@@ -10060,7 +10012,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/components/Shop.tsx",
-   "line": 50
+   "line": 65
   }
  },
  {
@@ -10070,7 +10022,17 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/components/Shop.tsx",
-   "line": 51
+   "line": 66
+  }
+ },
+ {
+  "id": "s0185a61",
+  "section": "components/Shop.tsx",
+  "text": "גב לקלפים",
+  "where": {
+   "kind": "source",
+   "file": "apps/client/src/components/Shop.tsx",
+   "line": 69
   }
  },
  {
@@ -10080,7 +10042,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/components/Shop.tsx",
-   "line": 52
+   "line": 70
   }
  },
  {
@@ -10090,7 +10052,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/components/Shop.tsx",
-   "line": 53
+   "line": 71
   }
  },
  {
@@ -10100,7 +10062,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/components/Shop.tsx",
-   "line": 54
+   "line": 72
   }
  },
  {
@@ -10110,7 +10072,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/components/Shop.tsx",
-   "line": 55
+   "line": 73
   }
  },
  {
@@ -10120,7 +10082,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/components/Shop.tsx",
-   "line": 121
+   "line": 159
   }
  },
  {
@@ -10130,7 +10092,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/components/Shop.tsx",
-   "line": 127
+   "line": 165
   }
  },
  {
@@ -10140,7 +10102,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/components/Shop.tsx",
-   "line": 134
+   "line": 172
   }
  },
  {
@@ -10150,7 +10112,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/components/Shop.tsx",
-   "line": 136
+   "line": 174
   }
  },
  {
@@ -10160,7 +10122,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/components/Shop.tsx",
-   "line": 184
+   "line": 238
   }
  },
  {
@@ -10170,7 +10132,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/components/Shop.tsx",
-   "line": 191
+   "line": 245
   }
  },
  {
@@ -10180,7 +10142,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/components/Shop.tsx",
-   "line": 199
+   "line": 253
   }
  },
  {
@@ -10350,7 +10312,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/components/Versus.tsx",
-   "line": 62
+   "line": 78
   }
  },
  {
@@ -10360,7 +10322,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/components/Versus.tsx",
-   "line": 103
+   "line": 134
   }
  },
  {
@@ -10370,7 +10332,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/components/Versus.tsx",
-   "line": 103
+   "line": 134
   }
  },
  {
@@ -11640,7 +11602,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/game/account.ts",
-   "line": 275
+   "line": 276
   }
  },
  {
@@ -11650,7 +11612,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/game/account.ts",
-   "line": 296
+   "line": 297
   }
  },
  {
@@ -11660,7 +11622,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/game/account.ts",
-   "line": 400
+   "line": 401
   }
  },
  {
@@ -11670,7 +11632,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/game/account.ts",
-   "line": 404
+   "line": 405
   }
  },
  {
@@ -11680,7 +11642,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/game/account.ts",
-   "line": 413
+   "line": 414
   }
  },
  {
@@ -11690,7 +11652,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/game/account.ts",
-   "line": 756
+   "line": 757
   }
  },
  {
@@ -11700,7 +11662,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/game/account.ts",
-   "line": 758
+   "line": 759
   }
  },
  {
@@ -11710,7 +11672,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/game/account.ts",
-   "line": 762
+   "line": 763
   }
  },
  {
@@ -11720,7 +11682,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/game/account.ts",
-   "line": 781
+   "line": 782
   }
  },
  {
@@ -11730,7 +11692,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/game/account.ts",
-   "line": 784
+   "line": 785
   }
  },
  {
@@ -11740,7 +11702,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/game/account.ts",
-   "line": 847
+   "line": 848
   }
  },
  {
@@ -11750,7 +11712,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/game/account.ts",
-   "line": 851
+   "line": 852
   }
  },
  {
@@ -11760,7 +11722,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/game/account.ts",
-   "line": 858
+   "line": 859
   }
  },
  {
@@ -11770,7 +11732,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/game/account.ts",
-   "line": 932
+   "line": 933
   }
  },
  {
@@ -11780,7 +11742,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/game/account.ts",
-   "line": 934
+   "line": 935
   }
  },
  {
@@ -11790,7 +11752,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/game/account.ts",
-   "line": 952
+   "line": 953
   }
  },
  {
@@ -11800,7 +11762,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/game/account.ts",
-   "line": 954
+   "line": 955
   }
  },
  {
@@ -11810,7 +11772,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/game/account.ts",
-   "line": 1015
+   "line": 1021
   }
  },
  {
@@ -11820,7 +11782,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/game/account.ts",
-   "line": 1017
+   "line": 1023
   }
  },
  {
@@ -11830,7 +11792,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/game/account.ts",
-   "line": 1082
+   "line": 1088
   }
  },
  {
@@ -11840,7 +11802,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/game/account.ts",
-   "line": 1086
+   "line": 1092
   }
  },
  {
@@ -11850,7 +11812,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/game/account.ts",
-   "line": 1093
+   "line": 1099
   }
  },
  {
@@ -11860,7 +11822,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/game/account.ts",
-   "line": 1095
+   "line": 1101
   }
  },
  {
@@ -11870,7 +11832,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/game/account.ts",
-   "line": 1101
+   "line": 1107
   }
  },
  {
@@ -11880,7 +11842,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/game/account.ts",
-   "line": 1105
+   "line": 1111
   }
  },
  {
@@ -11890,7 +11852,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/game/account.ts",
-   "line": 1112
+   "line": 1118
   }
  },
  {
@@ -11900,7 +11862,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/game/account.ts",
-   "line": 1159
+   "line": 1165
   }
  },
  {
@@ -11910,7 +11872,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/game/account.ts",
-   "line": 1163
+   "line": 1169
   }
  },
  {
@@ -11920,7 +11882,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/game/account.ts",
-   "line": 1164
+   "line": 1170
   }
  },
  {
@@ -11930,7 +11892,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/game/account.ts",
-   "line": 1299
+   "line": 1305
   }
  },
  {
@@ -11940,7 +11902,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/game/account.ts",
-   "line": 1303
+   "line": 1309
   }
  },
  {
@@ -11950,7 +11912,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/game/account.ts",
-   "line": 1307
+   "line": 1313
   }
  },
  {
@@ -11960,7 +11922,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/game/account.ts",
-   "line": 1315
+   "line": 1321
   }
  },
  {
@@ -11970,7 +11932,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/game/account.ts",
-   "line": 1316
+   "line": 1322
   }
  },
  {
@@ -12460,7 +12422,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/game/useMatch.ts",
-   "line": 276
+   "line": 281
   }
  },
  {
@@ -12470,7 +12432,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/game/useMatch.ts",
-   "line": 283
+   "line": 289
   }
  },
  {

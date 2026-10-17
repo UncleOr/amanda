@@ -66,7 +66,7 @@ const SHELF_LABELS: Record<ShopKind, string> = {
   skin: t("sa52276e", "מראה לקלפים"),
   // Next to "מראה לקלפים" because it is the same shopping decision: what
   // your cards look like, front and back.
-  back: t("sb1a0ce9", "גב לקלפים"),
+  back: t("s0185a61", "גב לקלפים"),
   emoji: t("s63ae982", "אימוג׳ים"),
   phrase: t("se3cd8fd", "משפטי מחץ"),
   chest: t("sd9e67b5", "תיבות"),

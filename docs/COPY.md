@@ -1,6 +1,6 @@
 # הטקסטים של אמנדה
 
-כל טקסט שהשחקן רואה — 1149 במספר, 1146 מהם כבר באנגלית.
+כל טקסט שהשחקן רואה — 1147 במספר, 1147 מהם כבר באנגלית.
 
 ## איך עורכים
 
@@ -70,7 +70,6 @@
 | d0dd38e1 | שליטה מרחבית / הדף צדדי. | | Spatial control / lateral knockback. |
 | dbcd6ba4 | מלך השחקים | | Sky King |
 | d1cbbaba | מכת כנפיים לרוחב 3 נתיבים כל 5 שניות עם הדף. | | A wing sweep across 3 lanes every 5 seconds with knockback. |
-| dd7fb407 | ענק אמצע למשבצת ה-2×2: שליטת חזית מוחלטת עם נזק אזורי. | | Mid-boss for the 2×2 King slot: total front control with area damage. |
 
 ## סדרה — הענקים
 
@@ -99,7 +98,6 @@
 | dc8d0506 | ענק הרעם | | Thunder Giant |
 | d0768b12 | מכת רעם שפוגעת בשני נתיבים. | | A thunderclap that strikes two lanes. |
 | d28e30a0 | אבי-הענקים | | Titan King |
-| dfdbffd8 | ענק אמצע למשבצת ה-2×2: טנק עצום שמגן על כל הלוח. | | Mid-boss for the 2×2 King slot: a colossal tank that shields the whole board. |
 
 ## סדרה — הפרוותיים
 
@@ -139,7 +137,6 @@
 | de11f78a | חרק פצצה | | Bombardier |
 | de11c8f1 | מתפוצץ במוות לשני חרקים קטנים. | | Explodes on death into two small bugs. |
 | d737d9d3 | קיסרית החרקים | | Insect Empress |
-| d6a9f6a3 | ענק אמצע למשבצת ה-2×2: מרעילה מרחוק ובוקעת נחיל במוות. | | Mid-boss for the 2×2 King slot: poisons from afar and bursts a swarm on death. |
 
 ## סדרה — הצמחים
 
@@ -410,7 +407,7 @@
 | s80f3ec6 | עכשיו לך תאסוף קלפים. אני רעבה. | | Now go and collect cards. I'm hungry. |
 | s8e26ffe | יאללה | | Let's go |
 | s0e0ecca | סגירה | | Close |
-| sb3ce2e0 | סגירה | |  |
+| sb3ce2e0 | סגירה | | Close |
 | scb3bea3 | הדקים שלי | | My decks |
 | s7347353 | {0} מזמין אותך למשחק | | {0} is inviting you to a match |
 | seaa865f | חבר | | Friend |
@@ -1180,6 +1177,7 @@
 | --- | --- | --- | --- |
 | s509b97d | פרצופים | | Faces |
 | sa52276e | מראה לקלפים | | Card looks |
+| s0185a61 | גב לקלפים | | Card backs |
 | s63ae982 | אימוג׳ים | | Emoji |
 | se3cd8fd | משפטי מחץ | | Catchphrases |
 | sd9e67b5 | תיבות | | Chests |
@@ -1397,11 +1395,11 @@
 | s115ddae | אין חיבור לשרת | | No connection to the server |
 | s2d85691 | אין חשבון | | No account |
 | s7a9bffc | לא הצליח | | That didn't work |
-| se7da992 | אין חיבור לשרת | |  |
+| se7da992 | אין חיבור לשרת | | No connection to the server |
 | sf5f2796 | צריך להתחיל לשחק קודם | | You have to start playing first |
 | s79d47ae | כבר מחובר | | Already signed in |
 | sd0c6462 | לא הצלחתי לשמור. נסה שוב. | | That did not save. Try again. |
-| sb7305bc | אין חיבור לשרת | |  |
+| sb7305bc | אין חיבור לשרת | | No connection to the server |
 | s2a6031b | אין חיבור לשרת | | No connection to the server |
 | s2c36448 | אפשר לשמור {0} דקים. תמחק אחד קודם. | | You can keep {0} decks. Delete one first. |
 | sb682ef4 | כבר יש לך דק בשם הזה. | | You already have a deck with that name. |
