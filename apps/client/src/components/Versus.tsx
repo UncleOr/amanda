@@ -1,5 +1,6 @@
-import { catchphraseById, phraseText, type PlayerCard } from "@amanda/shared";
+import { DEFAULT_BACK, catchphraseById, phraseText, type PlayerCard } from "@amanda/shared";
 import { Plaque } from "./Plaque";
+import { CardBack } from "./CardView";
 import { Icon } from "./Icon";
 import { line as t } from "../game/copy";
 
@@ -32,6 +33,21 @@ const BASE = import.meta.env.BASE_URL;
  * A missing opponent is a normal state, not an error: the card comes from a
  * database read and a match must never wait on one. The other side then says
  * "היריב" and the screen still works.
+ *
+ * ═══ AND THE DECK IS HERE BECAUSE THERE WAS NOWHERE ELSE ═══
+ *
+ * Or: *"you should see the deck at the start of the battle."* A card back
+ * cost up to 180 diamonds and was, until this, invisible: the fog over an
+ * opponent's board is the fog rather than anything they chose, and the
+ * builder's picker is a screen you choose on and then leave. So the one
+ * thing in the shop that is described as *"your opponent looks at it all
+ * match"* was the one thing nobody ever looked at.
+ *
+ * It is tucked against the avatar rather than given a row of its own. The
+ * screen that matters here is a landscape phone 384px tall and this card is
+ * already five things deep — a sixth row would push the catchphrase off the
+ * bottom, which would be trading something people chose for something they
+ * bought.
  */
 export function Versus({
   me,
@@ -100,6 +116,21 @@ function Fighter({
           <Icon name="king" size={38} />
         )}
       </div>
+      {/*
+        The deck they are about to play, leaning against them.
+
+        OUTSIDE `.versus__face`, which is `overflow: hidden` so a square
+        avatar can be a circle — anything drawn inside it that reaches past
+        the avatar is cut on that circle. It is positioned against the side
+        instead, and the side is the element that owns the stacking context.
+
+        `back` is optional on the wire, so an older client or a profile that
+        could not be read falls back to the default — which is what a player
+        who has never opened the builder genuinely has, not an error state.
+      */}
+      <span className="versus__deck" aria-hidden="true">
+        <CardBack size="small" back={who?.back ?? DEFAULT_BACK} />
+      </span>
       <b className="versus__name">{who?.nickname ?? (mine ? t("s91836d5", "אני") : t("sb1bf590", "היריב"))}</b>
       <span className="versus__cups">
         <Icon name="win" size={14} /> {who?.trophies ?? 0}

@@ -1,7 +1,8 @@
 import { useCallback, useEffect, useState } from "react";
 import { Icon } from "./Icon";
 import { Plaque } from "./Plaque";
-import { CATCHPHRASES, EMOJI } from "@amanda/shared";
+import { CARD_BACKS, CATCHPHRASES, EMOJI, SHOP_KINDS, type ShopKind } from "@amanda/shared";
+import { CardBack } from "./CardView";
 import { priceNow } from "../game/account";
 import { buyItem, loadShop, type ShopItem } from "../game/account";
 import { Overlay } from "./Overlay";
@@ -45,15 +46,52 @@ import { say } from "../game/lang";
  */
 const BASE = import.meta.env.BASE_URL;
 
-/** The shelves, in the order a small shop stacks them. */
-const SECTIONS: Array<{ kind: ShopItem["kind"]; he: string }> = [
-  { kind: "avatar", he: t("s509b97d", "פרצופים") },
-  { kind: "skin", he: t("sa52276e", "מראה לקלפים") },
-  { kind: "emoji", he: t("s63ae982", "אימוג׳ים") },
-  { kind: "phrase", he: t("se3cd8fd", "משפטי מחץ") },
-  { kind: "chest", he: t("sd9e67b5", "תיבות") },
-  { kind: "card", he: t("s26df959", "קלפים") },
+/**
+ * What each shelf is called.
+ *
+ * ═══ `back` WAS MISSING, AND THE GOODS WERE ON THE SHELF THE WHOLE TIME ═══
+ *
+ * Or: *"there is no way to buy card backs in the shop."* There wasn't — but
+ * nothing was unfinished. All six rows were in `shop_items`, active, priced
+ * 100-180, with Hebrew names and blurbs, and the server sent every one of
+ * them. `kind = 'back'` simply was not in the list this screen loops over, so
+ * the screen dropped them on the floor and said nothing.
+ *
+ * `Record<ShopKind, string>` and not an array, because that is the part that
+ * stops it happening again: a kind with no label will not COMPILE. An array
+ * was free to be one short, and was.
+ */
+const SHELF_LABELS: Record<ShopKind, string> = {
+  avatar: t("s509b97d", "פרצופים"),
+  skin: t("sa52276e", "מראה לקלפים"),
+  // Next to "מראה לקלפים" because it is the same shopping decision: what
+  // your cards look like, front and back.
+  back: t("sb1a0ce9", "גב לקלפים"),
+  emoji: t("s63ae982", "אימוג׳ים"),
+  phrase: t("se3cd8fd", "משפטי מחץ"),
+  chest: t("sd9e67b5", "תיבות"),
+  card: t("s26df959", "קלפים"),
+};
+
+/**
+ * The shelves, in the order a small shop stacks them.
+ *
+ * The ORDER is the only thing written out by hand here, and shopKinds.test.ts
+ * pins that it still names every kind — the labels are already guaranteed by
+ * the Record above, but an order list can go one short the same way the old
+ * array did.
+ */
+export const SHELF_ORDER: ShopKind[] = [
+  "avatar",
+  "skin",
+  "back",
+  "emoji",
+  "phrase",
+  "chest",
+  "card",
 ];
+
+const SECTIONS = SHELF_ORDER.map((kind) => ({ kind, he: SHELF_LABELS[kind] }));
 
 /**
  * The picture for a shop item.
@@ -148,6 +186,16 @@ export function Shop({
                       const art = shopItemArt(item);
                       // A phrase tile draws the line itself; see below.
                       const phrase = CATCHPHRASES.find((p) => p.item === item.id);
+                      /*
+                       * And a back tile draws the back, for exactly the same
+                       * reason: what is being sold IS the picture. These have
+                       * no `art` column and never will — a back is drawn in
+                       * CSS, not stored as a file (see cardBacks.ts) — so
+                       * without this they fell through to the generic gem and
+                       * the shelf would have been six identical tiles with
+                       * six different names.
+                       */
+                      const back = CARD_BACKS.find((b) => b.item === item.id);
                       // What it costs TODAY. The same arithmetic the server
                       // does at the till, so a sale cannot be shown and not
                       // charged (or the reverse) — see priceNow in shop.ts.
@@ -166,9 +214,15 @@ export function Shop({
                             treatment you would be buying. A generic gem
                             there would be selling it blind.
                           */}
-                          <div className={`good__art${phrase ? " good__art--phrase" : ""}`}>
+                          <div
+                            className={`good__art${phrase ? " good__art--phrase" : ""}${
+                              back ? " good__art--back" : ""
+                            }`}
+                          >
                             {phrase ? (
                               <Plaque phrase={phrase} />
+                            ) : back ? (
+                              <CardBack size="small" back={back.id} />
                             ) : art ? (
                               <img src={art} alt="" />
                             ) : (

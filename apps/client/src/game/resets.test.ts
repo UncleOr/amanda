@@ -49,6 +49,8 @@ const OUTLIVES_A_MATCH: Record<string, string> = {
     "how hard the computer tries. A per-browser choice, remembered on purpose — a child who found the easy bot should not have to find it again after every match.",
   setBuiltDeck:
     "the sixteen cards you built and saved. It is the OPPOSITE of match state: a deck that had to be rebuilt after every match would not be a deck. It changes when the builder saves, and reloadDecks is what says so.",
+  setMyBack:
+    "the back on that same deck, drawn on the versus screen. It travels with the cards for exactly the reason they do, and from the same read — clearing it between matches would show you holding your own deck in the first match of a session and the default fog in every one after it.",
 };
 
 /** The body of a top-level `const NAME = useCallback(() => { … }, [...])`. */

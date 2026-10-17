@@ -271,6 +271,11 @@ export const BOT_CARDS: Record<BotLevel, PlayerCard> = {
     trophies: 40,
     catchphrase: null,
     gender: null,
+    // A back each, and not the same one: the versus screen now shows both
+    // decks, and three identical fogs would have said the three bots are
+    // one bot. These are free backs, so none of them is showing off
+    // something a player cannot have.
+    back: "web",
   },
   normal: {
     nickname: t("s69fcaa6", "הבוט"),
@@ -278,6 +283,7 @@ export const BOT_CARDS: Record<BotLevel, PlayerCard> = {
     trophies: 300,
     catchphrase: "phrase.fight",
     gender: null,
+    back: "slime",
   },
   hard: {
     nickname: t("s38e97db", "בוט קשה"),
@@ -285,6 +291,7 @@ export const BOT_CARDS: Record<BotLevel, PlayerCard> = {
     trophies: 700,
     catchphrase: "phrase.onlyamanda",
     gender: null,
+    back: "scales",
   },
 };
 
@@ -967,6 +974,13 @@ export function useMatch(): MatchApi {
   const [builtDeck, setBuiltDeck] = useState<string[] | null>(null);
   const builtRef = useRef<string[] | null>(null);
   builtRef.current = builtDeck;
+  /*
+   * The back on that deck, which is the only part of it the OTHER player
+   * ever sees — and until the versus screen drew it, the only part nobody
+   * saw at all. Loaded from the same read as the cards, so the deck you are
+   * dealt and the back you are shown holding cannot disagree.
+   */
+  const [myBack, setMyBack] = useState<string | null>(null);
   const [roomError, setRoomError] = useState<RoomError | null>(null);
   /** Cards stacked underneath a placed card, revealed when the top one dies. */
   const [stacked, setStacked] = useState<Record<string, string>>({});
@@ -1102,6 +1116,7 @@ export function useMatch(): MatchApi {
       // render has not happened yet when the account's callback runs next.
       builtRef.current = cards;
       setBuiltDeck(cards);
+      setMyBack(active?.back ?? null);
       dealAgain();
     });
     void loadAccount().then((a) => {
@@ -2444,6 +2459,7 @@ export function useMatch(): MatchApi {
         const cards = active?.cards.length ? active.cards : null;
         builtRef.current = cards;
         setBuiltDeck(cards);
+        setMyBack(active?.back ?? null);
         dealAgain();
       }),
     onlineAvailable: ONLINE_AVAILABLE,
@@ -2469,6 +2485,7 @@ export function useMatch(): MatchApi {
       trophies: account?.trophies ?? 0,
       catchphrase: account?.catchphrase ?? null,
       gender: account?.gender ?? null,
+      back: myBack,
     },
     mirrorSeed,
     startMirror,

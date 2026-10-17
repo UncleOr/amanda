@@ -13,6 +13,7 @@
  * never be the reason a child cannot play.
  */
 import { createClient, type SupabaseClient } from "@supabase/supabase-js";
+import type { ShopKind } from "@amanda/shared";
 import { line as t, lineF as tf } from "./copy";
 import { serverError } from "./serverError";
 import { step } from "./achievements";
@@ -956,7 +957,12 @@ export async function askByCode(code: string): Promise<string | null> {
 
 export interface ShopItem {
   id: string;
-  kind: "avatar" | "emoji" | "skin" | "card" | "chest" | "phrase";
+  /**
+   * Hand-written here once, as a union that was missing `back` — which is how
+   * six priced, active card backs ended up with no shelf. It is derived from
+   * SHOP_KINDS now, so it cannot be narrower than the thing it mirrors.
+   */
+  kind: ShopKind;
   name: { he: string; en?: string };
   blurb?: { he: string; en?: string } | null;
   grants: Record<string, unknown>;

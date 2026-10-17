@@ -124,6 +124,21 @@ export interface PlayerCard {
   catchphrase: string | null;
   /** Which way to word a line said TO them. Null means "did not say". */
   gender: "boy" | "girl" | null;
+  /**
+   * The back on the deck they are about to play, from cardBacks.ts.
+   *
+   * Or: *"you should see the deck at the start of the battle."* It is also
+   * the answer to a question the shop could not answer before — a back costs
+   * 150 diamonds and, until this, LITERALLY NOBODY ever saw it. The fog over
+   * an opponent's board is the fog; the builder's picker is a screen you
+   * choose on and then leave. The versus card is the one moment both players
+   * are looking at each other with nothing else happening, which makes it the
+   * only place a bought back is worth anything.
+   *
+   * Null for "the default", which is also what a missing profile or a player
+   * who has never opened the builder looks like.
+   */
+  back?: string | null;
 }
 
 // ── server → client ────────────────────────────────────────────────

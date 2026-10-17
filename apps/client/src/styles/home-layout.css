@@ -914,6 +914,97 @@ html[dir="rtl"] .versus__side {
 }
 .versus__cups { display: inline-flex; align-items: center; gap: 5px; color: var(--muted); font-size: 13px; }
 
+/* ════════ the deck, leaning against the fighter ════════
+ *
+ * Or: *"you should see the deck at the start of the battle."*
+ *
+ * ═══ WHY IT IS ABSOLUTE AND NOT A ROW ═══
+ *
+ * The side is already five things tall — face, name, trophies, catchphrase
+ * plaque — on a screen that is 384px. A sixth row would take roughly 56px
+ * including the gap, and the plaque is what goes off the bottom when the
+ * column runs out. That would be spending something a player CHOSE to lose
+ * something they may have BOUGHT, to show the thing they bought.
+ *
+ * Out of flow it costs nothing: the face already reserves
+ * clamp(64px, 16vh, 104px) of height and the deck sits inside that band,
+ * overlapping the circle's outer edge.
+ */
+.versus__side { position: relative; }
+.versus__deck {
+  position: absolute;
+  /*
+   * Vertically centred on the avatar rather than pinned to its bottom.
+   * The face is a clamp, so a bottom-pinned card would drift as the screen
+   * changes height; half of the face's own height does not.
+   */
+  top: calc(clamp(64px, 16vh, 104px) / 2);
+  transform: translateY(-50%) rotate(var(--lean));
+  /*
+   * Measured at 832x384, which is the phone Or plays on.
+   *
+   * The first pass was 30.6px wide sitting 15px off centre, and the numbers
+   * said why that was wrong: the face is a 62.5px circle, so only 14.3px of
+   * the card cleared it — and the mark is drawn at the card's CENTRE, which
+   * means the one thing identifying which back it is was behind the avatar.
+   * A back nobody can tell apart is the same problem as a back nobody sees.
+   *
+   * Wider, and pushed out far enough that the overlap is about 5px of the
+   * circle: enough to read as tucked behind a shoulder, not enough to hide
+   * what it is.
+   */
+  width: clamp(30px, 7.4vh, 44px);
+  /* Playing-card proportions, the same 1:1.4 the board uses. */
+  aspect-ratio: 1 / 1.4;
+  pointer-events: none;
+  /* Behind the face, so it reads as tucked BEHIND the player rather than
+     held up in front of them. The side owns the stacking context. */
+  z-index: 0;
+  filter: drop-shadow(0 3px 7px rgba(0, 0, 0, 0.55));
+}
+/*
+ * On the outer edge, away from the "Vs." in the middle — crowding the centre
+ * would put two decks either side of the countdown and make the ring the
+ * least legible thing on the screen. `.versus` is forced to `direction: ltr`
+ * (you are always on the left), so these are physical sides on purpose: a
+ * logical property here would swap them back in Hebrew.
+ */
+.versus__side--mine .versus__deck {
+  --lean: -9deg;
+  --fan: -1;
+  right: calc(50% + clamp(26px, 6.6vh, 40px));
+}
+.versus__side:not(.versus__side--mine) .versus__deck {
+  --lean: 9deg;
+  --fan: 1;
+  left: calc(50% + clamp(26px, 6.6vh, 40px));
+}
+/* The face is opaque and drawn over the deck's inner edge, which is what
+   makes the two read as one object instead of two. */
+.versus__face { position: relative; z-index: 1; }
+/* A deck is more than one card. Two thin slivers behind, no extra elements:
+   the card itself is the third. */
+.versus__deck::before,
+.versus__deck::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: 8px;
+  border: 1px solid rgba(255, 255, 255, 0.16);
+  background: #1b2029;
+  z-index: -1;
+}
+/*
+ * The fan goes AWAY from the face on both sides. `--fan` is the only thing
+ * that differs, and it has to: a fixed +2px pushed the left-hand player's
+ * stack further UNDER their own avatar, so one deck fanned out and the other
+ * fanned into a wall.
+ */
+.versus__deck::before { transform: translate(calc(var(--fan) * 2px), 2px) rotate(calc(var(--fan) * 3deg)); }
+.versus__deck::after { transform: translate(calc(var(--fan) * 4px), 4px) rotate(calc(var(--fan) * 6deg)); }
+.versus__deck .card { border-width: 1px; border-radius: 8px; }
+.versus__deck .card-back__mark { opacity: 0.8; }
+
 .versus__vs {
   position: relative;
   /*
@@ -1269,6 +1360,26 @@ html[dir="rtl"] .versus__side {
 }
 .good__art--phrase .plaque { font-size: calc(10.5px * var(--pl-scale, 1)); }
 .good__art--phrase .plaque__words { padding: 4px 9px; }
+
+/*
+ * A card back in the shop is drawn as a CARD, not cropped into the round
+ * slot the avatars use.
+ *
+ * `.good__art` is a 66px circle with `overflow: hidden`, which is right for a
+ * face and wrong for everything else: a back pushed through it would come out
+ * a circle with its corners cut off, and the thing being sold is a rectangle
+ * with a border. These backs have no image file and never will — they are
+ * drawn in CSS (see cardBacks.ts) — so the tile renders the real component at
+ * card proportions and the shelf shows exactly what you are buying.
+ */
+.good__art--back {
+  border-radius: 10px;
+  background: none;
+  overflow: visible;
+  /* 66px tall at the board's own 1:1.4, so it matches the deck on the versus
+     screen rather than being a second, slightly different card shape. */
+  width: 47px;
+}
 
 /* ---- something from the shop, found in a chest ---- */
 /*
@@ -2290,6 +2401,8 @@ html[dir="rtl"] .versus__side {
   }
   .good { width: auto; gap: var(--sp-1); padding: var(--sp-2) var(--sp-1); }
   .good__art { width: 60px; height: 60px; }
+  /* Follows the slot down, keeping the same 1:1.4 — 60 / 1.4 = 43. */
+  .good__art--back { width: 43px; }
   /* Amanda's line survives, at a size it can be read at, and stops deciding
      how tall the tile is. */
   .good__blurb {

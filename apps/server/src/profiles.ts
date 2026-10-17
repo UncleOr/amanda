@@ -25,6 +25,7 @@
  * match that never starts. Likewise an unknown item list lets a player send
  * the free emoji and nothing more, rather than nothing at all.
  */
+import type { SupabaseClient } from "@supabase/supabase-js";
 import type { WebSocket } from "ws";
 import { shownAvatar, shownName, type PlayerCard } from "@amanda/shared";
 import { db } from "./supabase.js";
@@ -49,6 +50,7 @@ const STRANGER: Profile = {
   trophies: 0,
   catchphrase: null,
   gender: null,
+  back: null,
   items: [],
   suspendedUntil: 0,
 };
@@ -66,12 +68,24 @@ export async function loadProfile(ws: WebSocket, playerId: string): Promise<void
     const [{ data: row }, { data: items }] = await Promise.all([
       sb
         .from("players")
-        .select("nickname, avatar, trophies, catchphrase, gender, suspended_until")
+        .select("nickname, avatar, trophies, catchphrase, gender, suspended_until, active_deck")
         .eq("id", playerId)
         .maybeSingle(),
       sb.from("player_items").select("item_id").eq("player_id", playerId),
     ]);
     if (!row) return;
+    /*
+     * The back on the deck they are about to play, for the versus screen.
+     *
+     * A SECOND query rather than an embed, and that is the whole decision:
+     * `decks(back)` is ambiguous to PostgREST — `decks` points back at
+     * `players` as well — so it would need the constraint name spelled out,
+     * and a select string that goes stale takes the WHOLE profile down with
+     * it. Names, faces and trophies would vanish from the versus screen
+     * because a card back could not be found. Its own query, its own
+     * try/catch, and the worst case is a default back.
+     */
+    const back = await deckBack(sb, row.active_deck as string | null);
     /*
      * ═══ NOBODY ARRIVES WITHOUT A NAME OR A FACE ═══
      *
@@ -94,11 +108,30 @@ export async function loadProfile(ws: WebSocket, playerId: string): Promise<void
       trophies: (row.trophies as number) ?? 0,
       catchphrase: (row.catchphrase as string | null) ?? null,
       gender: (row.gender as "boy" | "girl" | null) ?? null,
+      back,
       items: (items ?? []).map((i) => i.item_id as string),
       suspendedUntil: row.suspended_until ? Date.parse(row.suspended_until as string) : 0,
     });
   } catch {
     // A database that cannot be reached must not stop anybody playing.
+  }
+}
+
+/**
+ * The back on a deck, or null.
+ *
+ * Null covers every uninteresting case at once: no deck chosen, a deck that
+ * was deleted out from under the pointer, an unreachable database. The screen
+ * draws the default fog for all of them, which is exactly right — it is what
+ * a player who has never opened the builder actually has.
+ */
+async function deckBack(sb: SupabaseClient, deckId: string | null): Promise<string | null> {
+  if (!deckId) return null;
+  try {
+    const { data } = await sb.from("decks").select("back").eq("id", deckId).maybeSingle();
+    return (data?.back as string | null) ?? null;
+  } catch {
+    return null;
   }
 }
 
@@ -109,8 +142,8 @@ export function profileOf(ws: WebSocket): Profile {
 
 /** Just the part the other player is allowed to see. */
 export function cardOf(ws: WebSocket): PlayerCard {
-  const { nickname, avatar, trophies, catchphrase, gender } = profileOf(ws);
-  return { nickname, avatar, trophies, catchphrase, gender };
+  const { nickname, avatar, trophies, catchphrase, gender, back } = profileOf(ws);
+  return { nickname, avatar, trophies, catchphrase, gender, back };
 }
 
 /** Shop items this connection holds. */
