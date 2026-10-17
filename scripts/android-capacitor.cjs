@@ -163,11 +163,32 @@ const cfg = ${JSON.stringify(
   )};
 
 const APP = path.join(__dirname, "android", "app");
-const edit = (file, fn) => {
+
+/*
+ * Apply one patch, and refuse to be quiet about one that missed.
+ *
+ * A patch that changes nothing is nearly always a regular expression that
+ * stopped matching after a Capacitor upgrade. The build then succeeds and
+ * ships an app with no Play Games id in it, which crashes on launch — so
+ * the default is to throw.
+ *
+ * The third argument is the exception, and it earns its place: setting
+ * app_name to the Hebrew name does nothing because Capacitor ALREADY writes
+ * it there from capacitor.config.json. That is the patch being unnecessary,
+ * not the patch failing, and the two have to be told apart. The first real
+ * build of this wrapper died on exactly that.
+ */
+const edit = (file, fn, already) => {
   const p = path.join(APP, file);
   const before = fs.readFileSync(p, "utf8");
   const after = fn(before);
-  if (after === before) throw new Error("patch did nothing: " + file);
+  if (after === before) {
+    if (already && already(before)) {
+      console.log("   already right: " + file);
+      return;
+    }
+    throw new Error("patch did nothing: " + file);
+  }
   fs.writeFileSync(p, after, "utf8");
   console.log("   patched " + file);
 };
@@ -192,11 +213,29 @@ edit("build.gradle", (s) => {
 \$1\`,
     );
   }
-  // The release build type must actually USE it; Capacitor leaves it unsigned.
-  out = out.replace(
-    /(release\\s*\\{)/,
-    "$1\\n            signingConfig signingConfigs.release",
-  );
+  /*
+   * The release BUILD TYPE must actually use it; Capacitor leaves it
+   * unsigned.
+   *
+   * Anchored on \`buildTypes { release {\` and not on the first \`release {\`
+   * in the file, which is the bug this replaces: by the time this line ran,
+   * the block above had already inserted a \`signingConfigs { release {\`
+   * ABOVE buildTypes, so the first match was that one. The result was
+   *
+   *     signingConfigs {
+   *         release {
+   *             signingConfig signingConfigs.release   <- here
+   *
+   * — a signing config that refers to itself while it is being defined, and
+   * a release build type with no signing at all. Gradle never got far enough
+   * on this machine to complain, which is exactly why it survived.
+   */
+  if (!out.includes("signingConfig signingConfigs.release")) {
+    out = out.replace(
+      /(buildTypes\\s*\\{\\s*release\\s*\\{)/,
+      "$1\\n            signingConfig signingConfigs.release",
+    );
+  }
   return out;
 });
 
@@ -221,9 +260,61 @@ edit("src/main/AndroidManifest.xml", (s) =>
 );
 
 // ── what it is called under the icon ──
-edit("src/main/res/values/strings.xml", (s) =>
-  s.replace(/(<string name="app_name">)[^<]*(<\\/string>)/, "$1" + cfg.appName + "$2"),
+edit(
+  "src/main/res/values/strings.xml",
+  (s) => s.replace(/(<string name="app_name">)[^<]*(<\\/string>)/, "$1" + cfg.appName + "$2"),
+  // Capacitor writes it from capacitor.config.json, so by the time this runs
+  // it is usually already the Hebrew name.
+  (s) => s.includes('<string name="app_name">' + cfg.appName + "</string>"),
 );
+
+/*
+ * ═══ THE LOOPBACK FAILURE, AND WHAT IT ACTUALLY WAS ═══
+ *
+ * For weeks the Android build was "a command only Or can run": Gradle died
+ * with \`java.io.IOException: Unable to establish loopback connection\` before
+ * it compiled a line, and docs/TODO-OPS.md blamed the sandbox for blocking
+ * local sockets.
+ *
+ * That was wrong, and wrong in a way that was easy to check and never
+ * checked. Run unsandboxed: identical failure. A plain Java socket binding
+ * and connecting to 127.0.0.1: works.
+ *
+ * The daemon log had the real answer under two layers of wrapping:
+ *
+ *     Selector.open() -> WEPollSelectorProvider -> PipeImpl
+ *       -> UnixDomainSockets.connect
+ *       -> java.net.SocketException: Invalid argument: connect
+ *
+ * Java on Windows opens its NIO wakeup pipe over an AF_UNIX socket, and puts
+ * that socket's file in \`jdk.net.unixdomain.tmpdir\`, which defaults to
+ * java.io.tmpdir. Here that is C:\\\\Users\\\\E958~1\\\\AppData\\\\Local\\\\Temp — the
+ * 8.3 short name Windows generates for the Hebrew user folder. AF_UNIX
+ * cannot use it, so EVERY Selector.open() in every JVM on this machine
+ * fails, and Gradle reports it as a loopback problem because that is the
+ * layer Gradle can see.
+ *
+ * Proven by one line: with this property pointed at an ASCII path,
+ * Selector.open() succeeds and Gradle runs its fifty tasks.
+ *
+ * The same Hebrew letter that forces this whole project to be built outside
+ * the repository in the first place. Written into gradle.properties so the
+ * build does not depend on anybody remembering it.
+ */
+const props = path.join(__dirname, "android", "gradle.properties");
+const unix = "-Djdk.net.unixdomain.tmpdir=C:/Users/Public/amanda-tmp";
+fs.mkdirSync("C:/Users/Public/amanda-tmp", { recursive: true });
+{
+  const before = fs.readFileSync(props, "utf8");
+  if (!before.includes("unixdomain.tmpdir")) {
+    fs.writeFileSync(
+      props,
+      before.replace(/^(org\\.gradle\\.jvmargs=.*)$/m, "$1 " + unix),
+      "utf8",
+    );
+    console.log("   patched gradle.properties");
+  }
+}
 
 console.log("\\n   android project patched\\n");
 `,

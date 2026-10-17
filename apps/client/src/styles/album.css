@@ -107,9 +107,10 @@
    failed to load. At 0.4 on an already-dark back, eight of the ten cells in
    a series were a loading skeleton. */
 .album__cell--missing { opacity: 0.58; filter: grayscale(0.7); }
+/* Moved up out of the level badge's corner — see .album__level. */
 .album__copies {
   position: absolute;
-  inset-block-end: 4px;
+  inset-block-start: 4px;
   inset-inline-start: 4px;
   background: rgba(8, 12, 22, 0.92);
   border: 1px solid var(--accent);
@@ -132,8 +133,20 @@
  */
 .album__level {
   position: absolute;
-  inset-block-start: 4px;
-  inset-inline-end: 4px;
+  /*
+   * Bottom-LEFT, where Or drew the red circles.
+   *
+   * It was top-right, which on these cards is where the element icons and
+   * the rarity gem already live — three small round things in one corner,
+   * and the one that is about YOUR copy of the card was the one that got
+   * lost. The bottom-left corner is empty on every card in the set.
+   *
+   * Album only. Nothing in a match draws this class: a level belongs to the
+   * collection screen, and on a board the number that matters is the one on
+   * the card's own stats.
+   */
+  inset-block-end: 4px;
+  inset-inline-start: 4px;
   display: grid;
   place-items: center;
   min-width: 16px;

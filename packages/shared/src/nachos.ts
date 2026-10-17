@@ -43,6 +43,45 @@ export function nachosForScore(score: Score): 0 | 1 | 2 | 3 {
   return 0;
 }
 
+/** Who the match was against, which is now what a nacho is paid for. */
+export type Opponent =
+  | { kind: "bot"; level: "easy" | "normal" | "hard" }
+  | { kind: "friend" }
+  | { kind: "stranger" };
+
+/**
+ * ═══ NACHOS ARE PAID FOR WHO YOU PLAYED, NOT HOW WELL ═══
+ *
+ * Or, closing the question: *"a match against the easy bot gives no nachos.
+ * A win against the medium bot — 2 nachos. A win against the hard bot or a
+ * friend — 3. A loss to a friend — one nacho (at this stage I want to
+ * encourage games against friends)."*
+ *
+ * This replaces `nachosForScore`, and the replacement is a change of
+ * subject. The grade measured how well the board did, which is a fine thing
+ * to measure and the wrong thing to pay for: it paid the same for beating
+ * the easy bot as for losing a close one to a person, so the cheapest way to
+ * fill the bar was always the opponent who could not fight back.
+ *
+ * Two deliberate readings of a sentence that did not cover every case:
+ *
+ * - **A loss to a bot is nothing.** He named only wins for the bots, and the
+ *   easy one pays nothing even for a win — paying for losing to a machine
+ *   would undo the whole point.
+ * - **A stranger is a friend who pays nothing when you lose.** He did not
+ *   say, and the sentence says why: friends are the thing being encouraged
+ *   right now. Equal on a win, better on a loss.
+ */
+export function nachosFor(opponent: Opponent, won: boolean): 0 | 1 | 2 | 3 {
+  if (opponent.kind === "bot") {
+    if (!won || opponent.level === "easy") return 0;
+    return opponent.level === "normal" ? 2 : 3;
+  }
+  if (won) return 3;
+  // Losing is worth something only against somebody you chose to play.
+  return opponent.kind === "friend" ? 1 : 0;
+}
+
 /**
  * How many nachos fill one chest.
  *

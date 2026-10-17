@@ -1,6 +1,7 @@
 import { describe, expect, it } from "vitest";
 import {
   DECK_RULES,
+  deckBudget,
   autoDeck,
   canAdd,
   cardCost,
@@ -77,15 +78,28 @@ describe("the budget", () => {
     expect(deckIsLegal(deck(greedy), of)).toBe(false);
   });
 
-  it("allows roughly nine of your best and seven cheap ones", () => {
+  /*
+   * The budget is a trade, not a wall, and this is the size of the trade.
+   *
+   * It used to assert NINE of the top price plus seven cheap ones, which fit
+   * in 55 and is the deck Or called "too easy". At 47 that costs 52 and does
+   * not fit — which is the whole point of moving it — so the test moves to
+   * the number that is now true: SIX at the top price and ten cheap ones is
+   * 40, and still leaves change.
+   */
+  it("allows six of your best and ten cheap ones, but not nine", () => {
     const sorted = collectable().slice().sort((a, b) => cardCost(b) - cardCost(a));
-    const best = sorted.filter((c) => cardCost(c) === 5).slice(0, 3).map((c) => c.id);
+    const best = sorted.filter((c) => cardCost(c) === 5).slice(0, 2).map((c) => c.id);
     const cheap = sorted.filter((c) => cardCost(c) === 1).map((c) => c.id);
-    // three cards at 5, three times over = nine at the top price
-    const nine = [...best, ...best, ...best];
-    const seven = cheap.slice(0, 7);
-    expect(nine).toHaveLength(9);
-    expect(deckCost([...nine, ...seven], of)).toBeLessThanOrEqual(DECK_RULES.budget);
+    // two cards at 5, three times over = six at the top price
+    const six = [...best, ...best, ...best];
+    expect(six).toHaveLength(6);
+    expect(deckCost([...six, ...cheap.slice(0, 10)], of)).toBeLessThanOrEqual(deckBudget());
+
+    // And nine of them no longer fits, which is the change Or asked for.
+    const three = sorted.filter((c) => cardCost(c) === 5).slice(0, 3).map((c) => c.id);
+    const nine = [...three, ...three, ...three];
+    expect(deckCost([...nine, ...cheap.slice(0, 7)], of)).toBeGreaterThan(deckBudget());
   });
 
   it("will not let you add a card you cannot afford", () => {

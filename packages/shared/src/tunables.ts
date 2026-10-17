@@ -71,23 +71,59 @@ export const TUNED = {
    * seven-year-old is never stuck, dear enough to be a decision.
    *
    * Tunable, because this is exactly the number Or will want to move once
-   * they have played a week with it.
+   * they have played a week with it. It is the price of the FIRST upgrade;
+   * see `levelDiamonds` for how it climbs from there.
    */
   diamondsPerLevel: 10,
+  /*
+   * What sixteen cards may cost between them.
+   *
+   * Or: *"I think we should lower the deck budget a bit, it's too easy.
+   * Let's try 40 (this is the kind of thing I need control over from the
+   * admin panel)."*
+   *
+   * 47 and not 40, and the floor is measured rather than argued: a new
+   * player owns six cards at three copies each, and the cheapest legal
+   * sixteen of those costs 47. At 40 nobody who installed the game today can
+   * save a deck at all. The dial below goes down to 16 so he can try 40 the
+   * moment the testers have a chest or two in them — see decks.ts.
+   */
+  deckBudget: 47,
 };
 
 /**
  * Diamonds to take a card from `level` to the next.
  *
+ * ═══ IT GETS DEARER, AND NOT IN A STRAIGHT LINE ═══
+ *
+ * Or: *"note that upgrading from 1 to 2 for 10 diamonds is fine, but it
+ * should go up gradually, so that 4 to 5 is already expensive and not a
+ * freebie."*
+ *
+ * It was `10 x level` — 10, 20, 30, 40 — which is a straight line, and a
+ * straight line is exactly what he is describing as wrong: the tenth
+ * upgrade should not feel like the first one four times over.
+ *
+ * Geometric at 1.6, which is not a new number: it is the same growth
+ * `levelCost` already uses for the COPIES an upgrade costs (LEVELS.
+ * costGrowth). The two prices of one upgrade now climb together instead of
+ * one flattening out under the other.
+ *
+ *     level  1->2   2->3   3->4   4->5   5->6   ...   9->10
+ *     copies    4      7     11     17     27           172
+ *     gems     10     16     26     41     66           430
+ *
+ * Four to five is 41 diamonds and seventeen copies, against a chest that
+ * pays 5 to 40. That is the "not a freebie" he asked for.
+ *
  * Here rather than beside `levelCost` in config.ts because it reads TUNED,
  * and tunables.ts already imports config.ts — a cycle between the two would
- * be a strange way to find out that a constant moved.
- *
- * Read at CALL time, so turning the dial in the admin panel changes the next
- * upgrade rather than the next deploy.
+ * be a strange way to find out that a constant moved. Read at CALL time, so
+ * the dial changes the next upgrade rather than the next deploy.
  */
 export function levelDiamonds(level: number): number {
-  return TUNED.diamondsPerLevel * Math.max(1, level);
+  const base = TUNED.diamondsPerLevel;
+  return Math.round(base * Math.pow(1.6, Math.max(1, level) - 1));
 }
 
 export interface Tunable {
@@ -195,12 +231,22 @@ export const TUNABLES: Tunable[] = [
   {
     id: "levels.diamonds",
     he: "יהלומים לשדרוג",
-    note: "המחיר ביהלומים לעלות רמה, כפול הרמה הנוכחית. 10 = 10 לרמה 2, 90 לרמה 10. גבוה מדי והשדרוג נעצר; אפס והוא חינם.",
+    note: "המחיר ביהלומים לשדרוג הראשון. משם הוא מטפס פי 1.6 לרמה, כמו מחיר העותקים. 10 = 10 לרמה 2, 41 לרמה 5, 430 לרמה 10.",
     min: 0,
     max: 100,
     step: 1,
     get: () => TUNED.diamondsPerLevel,
     set: (v) => (TUNED.diamondsPerLevel = v),
+  },
+  {
+    id: "decks.budget",
+    he: "תקציב דק",
+    note: "כמה 16 הקלפים יכולים לעלות ביחד. מתחת ל-47 שחקן חדש לא יכול לבנות דק בכלל — האלבום ההתחלתי הוא שישה קלפים והזול שבהם עולה 47.",
+    min: 16,
+    max: 80,
+    step: 1,
+    get: () => TUNED.deckBudget,
+    set: (v) => (TUNED.deckBudget = v),
   },
   {
     id: "trophies.loss",

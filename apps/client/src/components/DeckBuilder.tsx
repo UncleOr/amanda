@@ -30,6 +30,7 @@ import {
   CARD_BACKS,
   DECK_RULES,
   autoDeck,
+  deckBudget,
   canAdd,
   cardCost,
   deckCost,
@@ -437,7 +438,10 @@ export function DeckBuilder({
 
   const spent = deckCost(cards, of);
   const full = cards.length >= DECK_RULES.size;
-  const over = spent > DECK_RULES.budget;
+  // Read through deckBudget() and not off DECK_RULES, so the admin panel
+  // moves the number the builder enforces AND the number it draws.
+  const budget = deckBudget();
+  const over = spent > budget;
 
   const copies = useMemo(() => {
     const m = new Map<string, number>();
@@ -525,7 +529,7 @@ export function DeckBuilder({
             <Icon name="monster" size={15} /> {cards.length}/{DECK_RULES.size}
           </span>
           <span className={over ? "is-over" : undefined}>
-            <Icon name="power" size={15} /> {spent}/{DECK_RULES.budget}
+            <Icon name="power" size={15} /> {spent}/{budget}
           </span>
           <button className="btn-link builder__fill" onClick={fill}>
             {t("s7ec416f", "מלא לי")}

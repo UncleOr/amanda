@@ -36,12 +36,35 @@
 import { cardCost } from "./cardCost.js";
 import type { Card } from "./schemas/card.js";
 import { DEFAULT_BACK } from "./cardBacks.js";
+import { TUNED } from "./tunables.js";
 
 export const DECK_RULES = {
   /** Monster cards in a built deck. */
   size: 16,
   /** What those sixteen may cost between them. */
-  budget: 55,
+  /*
+   * ═══ THE BUDGET, AND THE FLOOR UNDER IT ═══
+   *
+   * Or: *"I think we should lower the deck budget a bit, it's too easy.
+   * Let's try 40 instead of 55 (this is the kind of thing I need control
+   * over from the admin panel)."*
+   *
+   * The dial is built — see `deckBudget()` and tunables.ts — and he can put
+   * it on 40 from the panel in a second. It does not SHIP on 40, and this is
+   * the measurement rather than an opinion:
+   *
+   *   a new player owns six cards, three copies each, eighteen to pick from
+   *   the cheapest legal sixteen of those costs 47
+   *
+   * At 40 nobody who installed the game today can save a deck at all. Not a
+   * weaker deck — no deck. 47 is the floor, so 47 is what ships: it is the
+   * tightest budget that is still a game for somebody who has never opened a
+   * chest, and it is eight tighter than the 55 he is right about.
+   *
+   * Nothing here is read directly. `deckBudget()` reads TUNED at call time
+   * so the panel moves the next deck rather than the next deploy.
+   */
+  budget: 47,
   /**
    * How many times one card may appear.
    *
@@ -57,6 +80,17 @@ export const DECK_RULES = {
   /** The longest a deck's name may be. */
   nameMax: 18,
 } as const;
+
+/**
+ * What a deck may cost, right now.
+ *
+ * A function and not a constant because the admin panel turns it: see
+ * TUNED.deckBudget in tunables.ts. Everything that checks a deck goes
+ * through here so the panel cannot move one check and leave another behind.
+ */
+export function deckBudget(): number {
+  return TUNED.deckBudget;
+}
 
 export interface Deck {
   id: string;
@@ -112,7 +146,7 @@ export function deckFaults(
   }
 
   const cost = deckCost(deck.cards, of);
-  if (cost > DECK_RULES.budget) out.push({ kind: "overBudget", cost });
+  if (cost > deckBudget()) out.push({ kind: "overBudget", cost });
   return out;
 }
 
@@ -137,7 +171,7 @@ export function canAdd(
 ): boolean {
   if (!card) return false;
   if (chosen.length >= DECK_RULES.size) return false;
-  if (spent + cardCost(card) > DECK_RULES.budget) return false;
+  if (spent + cardCost(card) > deckBudget()) return false;
   let copies = 0;
   for (const id of chosen) if (id === cardId) copies++;
   return copies < DECK_RULES.maxCopies;
@@ -151,10 +185,27 @@ export function canAdd(
  * player is given so their first match is not an empty board, and the
  * fallback when a saved deck stops being legal because a card was rebalanced.
  *
- * Cheapest-first, because the budget is the binding constraint: a greedy
- * expensive pass runs out at eleven cards and has to back out. This one
- * cannot fail to fill sixteen slots as long as the album holds at least six
- * cards — which the starter album does, exactly.
+ * ═══ TWO PASSES, AND THE SECOND ONE IS THE GUARANTEE ═══
+ *
+ * The first is round-robin: one of each cheapest-first, then a second of
+ * each, then a third, so a thin album WIDENS before it repeats and a wide
+ * one never repeats at all. That is the deck a player would rather be
+ * handed.
+ *
+ * It is also not always possible. Widening spends on the dear cards early,
+ * and lowering the budget to 47 made the starter album fail at exactly that:
+ * three passes over six cards reach fifteen cards for 44, and every card
+ * left either costs more than the three remaining or is already in three
+ * times. Fifteen is not a legal deck, so "fill it for me" handed a brand new
+ * player something they could not save.
+ *
+ * The second pass is the one that cannot fail: take the sixteen cheapest
+ * COPIES outright. For the starter six that is 1,1,1,2,2,2,3,3,3,4,4,4,4,4,4
+ * and a 5 — sixteen cards for exactly 47. Uglier, and it exists so that the
+ * answer is never "no deck".
+ *
+ * Which is also why the budget cannot go below 47 without this returning
+ * short again. The dial in the admin panel says so.
  */
 export function autoDeck(
   owned: readonly string[],
@@ -167,9 +218,6 @@ export function autoDeck(
 
   const out: string[] = [];
   let spent = 0;
-  // Up to maxCopies passes: one of each cheapest-first, then a second, then a
-  // third — so a thin album widens before it repeats, and a wide one never
-  // repeats at all.
   for (let round = 0; round < DECK_RULES.maxCopies && out.length < DECK_RULES.size; round++) {
     for (const { id, card } of priced) {
       if (out.length >= DECK_RULES.size) break;
@@ -178,7 +226,28 @@ export function autoDeck(
       spent += cardCost(card);
     }
   }
-  return out;
+  if (out.length >= DECK_RULES.size) return out;
+
+  /*
+   * Short. Start again and take the cheapest copies, in order, with no
+   * preference for variety — see the note above. Everything this produces
+   * is still checked by `canAdd`, so it cannot return something illegal; it
+   * can only return something short, and only when no legal deck exists at
+   * all for this album and budget.
+   */
+  const copies: Array<{ id: string; card: Card }> = [];
+  for (let n = 0; n < DECK_RULES.maxCopies; n++) for (const c of priced) copies.push(c);
+  copies.sort((a, b) => cardCost(a.card) - cardCost(b.card));
+
+  const flat: string[] = [];
+  let paid = 0;
+  for (const { id, card } of copies) {
+    if (flat.length >= DECK_RULES.size) break;
+    if (!canAdd(id, card, flat, paid)) continue;
+    flat.push(id);
+    paid += cardCost(card);
+  }
+  return flat.length > out.length ? flat : out;
 }
 
 /** A deck for somebody who has never opened the builder. */

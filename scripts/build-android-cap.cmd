@@ -15,13 +15,27 @@ REM  key, in a WebView that does have that bridge. The app still LOADS the
 REM  live site, exactly as the TWA does, so a code change still reaches a
 REM  phone in a minute instead of waiting for a Play release.
 REM
-REM  WHY YOU RUN THIS AND NOT CLAUDE
+REM  THE LOOPBACK FAILURE IS FIXED, AND IT WAS NEVER THE SANDBOX
 REM
-REM  Unchanged, and re-tested on 13 October: Gradle talks to itself over a
-REM  loopback socket, and although a plain node socket now connects, the
-REM  Gradle daemon still dies with "Unable to establish loopback connection".
-REM  Every line below is written to fail loudly rather than quietly, because
-REM  the person who sees the failure is not the person who wrote it.
+REM  This used to be "a command only Or can run": Gradle died with
+REM  "Unable to establish loopback connection" before compiling a line, and
+REM  the sandbox was blamed. Run unsandboxed it failed identically, and a
+REM  plain Java socket on 127.0.0.1 worked fine, so the sandbox was never it.
+REM
+REM  The daemon log had the real cause under two layers of wrapping:
+REM    Selector.open -> PipeImpl -> UnixDomainSockets.connect
+REM      -> java.net.SocketException: Invalid argument: connect
+REM
+REM  Java on Windows opens its NIO wakeup pipe over an AF_UNIX socket and
+REM  puts the socket file in jdk.net.unixdomain.tmpdir, which defaults to
+REM  java.io.tmpdir -- here C:\Users\E958~1\AppData\Local\Temp, the 8.3
+REM  short name for the Hebrew user folder. AF_UNIX cannot use it, so every
+REM  Selector.open on this machine failed.
+REM
+REM  JAVA_TOOL_OPTIONS below points it at an ASCII path, for the launcher
+REM  JVM and the forked daemon alike. Every line is still written to fail
+REM  loudly, because the person who sees the failure is not the one who
+REM  wrote it.
 REM
 REM  BEFORE THE FIRST RUN
 REM
@@ -41,12 +55,29 @@ REM ============================================================
 
 setlocal
 
-set "JAVA_HOME=C:\Program Files\Microsoft\jdk-17.0.20.101-hotspot"
+REM Capacitor 8 and the Play Games plugin both declare Java 21 for their own
+REM modules, so a 17 toolchain fails at :capacitor-android with
+REM "invalid source release: 21". Lowering it from Gradle does not work --
+REM the Android plugin writes compileOptions itself and wins.
+set "JAVA_HOME=C:\Users\Public\jdk-21"
 set "ANDROID_HOME=C:\Users\Public\android-sdk"
 REM Behind the Hebrew letter by default, same as the project path. Moved for
 REM the same reason, and this one is easy to miss.
 set "GRADLE_USER_HOME=C:\Users\Public\.gradle"
 set "WORK=C:\Users\Public\amanda-android-cap"
+
+REM See the long note above. Without this the Gradle daemon cannot open a
+REM selector and dies before it compiles anything.
+set "JAVA_TOOL_OPTIONS=-Djdk.net.unixdomain.tmpdir=C:/Users/Public/amanda-tmp"
+if not exist "C:\Users\Public\amanda-tmp" mkdir "C:\Users\Public\amanda-tmp"
+
+if not exist "%JAVA_HOME%\bin\javac.exe" (
+  echo.
+  echo   No JDK at %JAVA_HOME%
+  echo   Capacitor 8 needs Java 21. Point JAVA_HOME at a 21 and run again.
+  echo.
+  exit /b 1
+)
 
 if "%KEYPASS%"=="" (
   echo.

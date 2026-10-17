@@ -75,7 +75,15 @@
  */
 .album__up {
   position: absolute;
-  inset-block-end: 4px;
+  /*
+   * Above the card's own name strip, not across it.
+   *
+   * In Or's screenshot the green button sat over the bottom of the card and
+   * covered the name on half of them — "Stone…", "Steel…", "Wall…" with the
+   * word hidden behind the price. A control that hides what it is for is
+   * worse than one that is slightly higher up.
+   */
+  inset-block-end: 22px;
   /*
    * Right-hand end only, not stretched across. Full width covered the
    * copies badge in the opposite corner, and "how many can I place" does
