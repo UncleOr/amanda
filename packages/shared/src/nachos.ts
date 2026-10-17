@@ -22,6 +22,9 @@
  */
 
 /** 1–10, as `Grade.score` gives it. */
+// One definition of "who did I play", shared with the trophy rule.
+import type { Opponent } from "./trophies.js";
+
 export type Score = number;
 
 /**
@@ -42,12 +45,6 @@ export function nachosForScore(score: Score): 0 | 1 | 2 | 3 {
   if (score >= 3) return 1;
   return 0;
 }
-
-/** Who the match was against, which is now what a nacho is paid for. */
-export type Opponent =
-  | { kind: "bot"; level: "easy" | "normal" | "hard" }
-  | { kind: "friend" }
-  | { kind: "stranger" };
 
 /**
  * ═══ NACHOS ARE PAID FOR WHO YOU PLAYED, NOT HOW WELL ═══

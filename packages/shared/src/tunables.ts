@@ -89,6 +89,21 @@ export const TUNED = {
    * moment the testers have a chest or two in them — see decks.ts.
    */
   deckBudget: 50,
+  /*
+   * ═══ MORE TROPHIES FOR A BETTER GAME ═══
+   *
+   * Or: *"you should get more trophies if you win with a high score."*
+   *
+   * `score` is the 1–10 grade the battle report already computes. Only the
+   * part ABOVE `trophyScoreFrom` earns, because five is an ordinary game and
+   * paying a bonus for an ordinary game is paying a bonus for turning up.
+   *
+   * At 5 and 1: a perfect ten is worth five more trophies against a person
+   * and two more against a bot (halved there — see trophies.ts). The median
+   * win is worth exactly the base, which is the point.
+   */
+  trophyScoreFrom: 5,
+  trophiesPerScorePoint: 1,
 };
 
 /**
@@ -237,6 +252,16 @@ export const TUNABLES: Tunable[] = [
     step: 1,
     get: () => TUNED.diamondsPerLevel,
     set: (v) => (TUNED.diamondsPerLevel = v),
+  },
+  {
+    id: "trophies.scorePoint",
+    he: "גביעים לכל נקודת ציון",
+    note: "כמה גביעים מוסיפה כל נקודת ציון מעל 5. 1 = ניצחון בציון 10 שווה 5 גביעים נוספים מול בן אדם, 2 מול בוט. אפס מבטל את הבונוס.",
+    min: 0,
+    max: 10,
+    step: 1,
+    get: () => TUNED.trophiesPerScorePoint,
+    set: (v) => (TUNED.trophiesPerScorePoint = v),
   },
   {
     id: "decks.budget",

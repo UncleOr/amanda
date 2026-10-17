@@ -442,10 +442,6 @@
           }
         }
       ],
-      "role": {
-        "he": "ענק אמצע למשבצת ה-2×2: שליטת חזית מוחלטת עם נזק אזורי.",
-        "en": "Mid-boss for the 2×2 King slot: total front control with area damage."
-      },
       "art": {
         "placeholderColor": "#9fd6e8",
         "sprite": "cards/dragons_10_sky_king.webp"

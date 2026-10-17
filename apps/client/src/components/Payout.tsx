@@ -42,10 +42,29 @@ export function Payout({
 
   return (
     <p className="payout">
-      {/* Trophies first: they are the only thing here that moves the arena. */}
-      {award.trophies > 0 && (
-        <span className="payout__bit payout__bit--cup">
-          <Icon name="win" size={17} /> +{award.trophies}
+      {/*
+        Trophies first: they are the only thing here that moves the arena.
+
+        ═══ AND A FALL IS SHOWN, NOT HIDDEN ═══
+
+        This read `award.trophies > 0`, from when a loss was worth exactly
+        nothing and there was no number to draw. Or asked for the other
+        direction — *"if I lose I should lose some trophies, that way it's
+        also possible to go DOWN arenas"* — and the first version of that
+        subtracted silently: the pile went down, the result screen said
+        nothing, and the next time the arena name changed it would have
+        looked like a bug rather than a consequence.
+
+        A ladder that only announces the rungs you climb is not honest about
+        being a ladder. So the sign is the only difference, and red is the
+        only other one.
+      */}
+      {award.trophies !== 0 && (
+        <span
+          className={`payout__bit payout__bit--cup${award.trophies < 0 ? " payout__bit--down" : ""}`}
+        >
+          <Icon name="win" size={17} /> {award.trophies > 0 ? "+" : "−"}
+          {Math.abs(award.trophies)}
         </span>
       )}
       {award.nachos > 0 && (

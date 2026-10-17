@@ -423,10 +423,6 @@
           }
         }
       ],
-      "role": {
-        "he": "ענק אמצע למשבצת ה-2×2: מרעילה מרחוק ובוקעת נחיל במוות.",
-        "en": "Mid-boss for the 2×2 King slot: poisons from afar and bursts a swarm on death."
-      },
       "art": {
         "placeholderColor": "#6fbf3b",
         "sprite": "cards/insects_10_insect_empress.webp"

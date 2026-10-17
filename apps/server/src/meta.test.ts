@@ -309,6 +309,14 @@ describe("challenges", () => {
  * ceiling and the zero, and both are here.
  */
 describe("trophies from the computer", () => {
+  /*
+   * This one caught a real bug when trophiesFor() was written, and it is
+   * worth saying which: the first version read `base + scoreBonus(...)`,
+   * so a 10/10 against the setting that pays nothing paid 2. The bonus had
+   * been added before anything asked whether this match counts at all.
+   * "However well it went" is in the name because that is the half that
+   * broke.
+   */
   it("pays nothing for the easy bot, however well it went", async () => {
     const { sb, state } = fakeDb({ players: { [ME]: {} } });
     const got = await awardMatch(sb, ME, facts({ score: 10 }), DAY, "easy");
@@ -323,7 +331,12 @@ describe("trophies from the computer", () => {
     const two = fakeDb({ players: { [ME]: {} } });
     const normal = await awardMatch(one.sb, ME, facts(), DAY, "normal");
     const hard = await awardMatch(two.sb, ME, facts(), DAY, "hard");
-    expect(normal.trophies).toBe(TUNED.soloTrophiesNormal);
+    // facts() is a 10/10, so both carry the bonus for playing well — halved
+    // against a machine, because a high score against a generated board
+    // measures the generator as much as the player.
+    const bonus = Math.floor((10 - TUNED.trophyScoreFrom) * TUNED.trophiesPerScorePoint / 2);
+    expect(normal.trophies).toBe(TUNED.soloTrophiesNormal + bonus);
+    expect(hard.trophies).toBe(TUNED.soloTrophiesHard + bonus);
     expect(hard.trophies).toBeGreaterThan(normal.trophies);
   });
 
@@ -343,8 +356,15 @@ describe("trophies from the computer", () => {
   it("costs half of what the same bot pays for a win", async () => {
     const { sb, state } = fakeDb({ players: { [ME]: { trophies: 100 } } });
     const got = await awardMatch(sb, ME, facts({ won: false, score: 4 }), DAY, "hard");
-    // Nothing is PAID for a loss; what changes is the pile.
-    expect(got.trophies).toBe(0);
+    /*
+     * The fall is RETURNED, not just written.
+     *
+     * It used to return 0 here and quietly subtract, which meant the result
+     * screen could not tell a loss that cost six trophies from a loss that
+     * cost nothing. Or asked to be able to go down arenas; a drop nobody is
+     * shown is a drop that reads as a bug the next time the arena changes.
+     */
+    expect(got.trophies).toBe(-Math.floor(TUNED.soloTrophiesHard / 2));
     expect(state.players[ME]!.trophies).toBe(100 - Math.floor(TUNED.soloTrophiesHard / 2));
   });
 
@@ -360,11 +380,37 @@ describe("trophies from the computer", () => {
     expect(state.players[ME]!.trophies).toBe(0);
   });
 
-  it("pays nothing at all for a match against a person — the match server did that", async () => {
+  /*
+   * ═══ THIS TEST USED TO ASSERT THE OPPOSITE ═══
+   *
+   * It was called "pays nothing at all for a match against a person — the
+   * match server did that", and it was true: recordMatch in progress.ts
+   * paid a flat +30 / −20 and this function stayed out of it.
+   *
+   * Two functions answering "what did this match do to my trophies" is how
+   * a win against a person ended up worth the same whether it was a rout or
+   * a coin toss — the score never reached the code that paid. There is one
+   * answer now (trophiesFor) and one caller, and recordMatch only READS the
+   * pile. So the assertion flips with the rule.
+   */
+  it("pays for a match against a person, and pays more than any bot", async () => {
     const { sb, state } = fakeDb({ players: { [ME]: {} } });
     const got = await awardMatch(sb, ME, facts(), DAY);
-    expect(got.trophies).toBe(0);
-    expect(state.players[ME]!.trophies).toBe(0);
+    const full = (10 - TUNED.trophyScoreFrom) * TUNED.trophiesPerScorePoint;
+    expect(got.trophies).toBe(TUNED.trophiesPerWin + full);
+    expect(state.players[ME]!.trophies).toBe(TUNED.trophiesPerWin + full);
+    // A person is worth more than the hardest setting of the machine, which
+    // is the whole reason the ladder means anything.
+    expect(got.trophies).toBeGreaterThan(TUNED.soloTrophiesHard);
+  });
+
+  it("takes trophies for a loss to a person, and does not cap the fall", async () => {
+    const { sb, state } = fakeDb({ players: { [ME]: { trophies: 100 } } });
+    const got = await awardMatch(sb, ME, facts({ won: false, score: 3 }), DAY);
+    expect(got.trophies).toBe(-TUNED.trophiesPerLoss);
+    expect(state.players[ME]!.trophies).toBe(100 - TUNED.trophiesPerLoss);
+    // Smaller than a win, so an evening of playing moves forward on balance.
+    expect(TUNED.trophiesPerLoss).toBeLessThan(TUNED.trophiesPerWin);
   });
 
   it("stops at the day's ceiling, and says that is why", async () => {
@@ -391,16 +437,18 @@ describe("trophies from the computer", () => {
     expect(state.players[ME]!.solo_trophies).toBe(TUNED.soloTrophiesPerDay);
 
     const tomorrow = new Date("2026-10-08T12:00:00Z");
+    const bonus = Math.floor((10 - TUNED.trophyScoreFrom) * TUNED.trophiesPerScorePoint / 2);
     const fresh = await awardMatch(sb, ME, facts(), tomorrow, "hard");
-    expect(fresh.trophies).toBe(TUNED.soloTrophiesHard);
+    expect(fresh.trophies).toBe(TUNED.soloTrophiesHard + bonus);
     // Yesterday's counter was never cleared — it was simply not read.
     expect(state.players[ME]!.solo_day).toBe("2026-10-08");
-    expect(state.players[ME]!.solo_trophies).toBe(TUNED.soloTrophiesHard);
+    expect(state.players[ME]!.solo_trophies).toBe(TUNED.soloTrophiesHard + bonus);
   });
 
   it("carries the best-ever mark up with it", async () => {
     const { sb, state } = fakeDb({ players: { [ME]: { trophies: 90, best_trophies: 90 } } });
+    const bonus = Math.floor((10 - TUNED.trophyScoreFrom) * TUNED.trophiesPerScorePoint / 2);
     await awardMatch(sb, ME, facts(), DAY, "hard");
-    expect(state.players[ME]!.best_trophies).toBe(90 + TUNED.soloTrophiesHard);
+    expect(state.players[ME]!.best_trophies).toBe(90 + TUNED.soloTrophiesHard + bonus);
   });
 });

@@ -307,12 +307,27 @@ export async function recordMatch(opts: {
     });
 
     if (winnerId) {
+      /*
+       * ═══ THIS NO LONGER PAYS TROPHIES; IT READS THEM ═══
+       *
+       * It used to add a flat +30 here and take a flat −20 off the loser
+       * below, which made it a second authority on a question that now has
+       * one: `awardMeta` in meta.ts moved the pile before this ran, from a
+       * rule that knows the score and the opponent (trophies.ts). Two
+       * places paying for the same match is how a win against a person came
+       * to be worth the same whether it was a rout or a coin toss — and,
+       * once both existed, how it would have been paid twice.
+       *
+       * What stays here is everything that is ABOUT the win rather than
+       * about the ladder: the chest, and the arena celebration, both of
+       * which need to know where the pile landed.
+       */
       const { data } = await sb
         .from("players")
         .select("trophies, best_trophies, diamonds")
         .eq("id", winnerId)
         .maybeSingle();
-      const trophies = (data?.trophies ?? 0) + TUNED.trophiesPerWin;
+      const trophies = data?.trophies ?? 0;
       // Every third win is a better chest, so there is something to count towards.
       const kind = trophies % 90 === 0 ? "gold" : trophies % 30 === 0 ? "silver" : "wood";
       const won = rollChest(kind);
@@ -400,15 +415,11 @@ export async function recordMatch(opts: {
       });
     }
 
-    if (loserId) {
-      const { data } = await sb.from("players").select("trophies").eq("id", loserId).maybeSingle();
-      // Losing costs less than winning pays, so an evening of play always
-      // moves forward. Never below zero.
-      await sb
-        .from("players")
-        .update({ trophies: Math.max(0, (data?.trophies ?? 0) - TUNED.trophiesPerLoss) })
-        .eq("id", loserId);
-    }
+    /*
+     * The loser's trophies are not touched here either, for the same reason
+     * — see the note above. `trophiesFor` takes them off, with the same
+     * "never below zero" and the same single source of the number.
+     */
     saves.succeeded++;
     saves.lastError = null;
   } catch (err) {

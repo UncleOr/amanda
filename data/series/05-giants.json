@@ -426,10 +426,6 @@
           }
         }
       ],
-      "role": {
-        "he": "ענק אמצע למשבצת ה-2×2: טנק עצום שמגן על כל הלוח.",
-        "en": "Mid-boss for the 2×2 King slot: a colossal tank that shields the whole board."
-      },
       "art": {
         "placeholderColor": "#8a6d3b",
         "sprite": "cards/giants_10_titan_king.webp"

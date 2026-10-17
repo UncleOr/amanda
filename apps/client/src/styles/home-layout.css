@@ -582,6 +582,18 @@
   to { box-shadow: 0 0 16px rgba(255, 176, 32, 0.55); }
 }
 .payout__bit--cup { border-color: rgba(255, 211, 107, 0.6); }
+/*
+ * The same chip, falling.
+ *
+ * Not grey — grey reads as "this is less important", and a trophy loss is
+ * the most consequential number on the screen. It is the one that can move
+ * you down an arena. So it keeps the full weight and only changes direction.
+ */
+.payout__bit--down {
+  border-color: rgba(248, 113, 113, 0.55);
+  background: rgba(248, 113, 113, 0.14);
+  color: #fca5a5;
+}
 .payout__bit--quest { border-color: rgba(74, 222, 128, 0.5); background: rgba(74, 222, 128, 0.14); }
 .payout__near { color: var(--muted); font-size: 12.5px; }
 @media (prefers-reduced-motion: reduce) {

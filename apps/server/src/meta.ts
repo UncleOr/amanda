@@ -30,7 +30,8 @@ import {
   nachosForScore,
   progressFrom,
   soloTrophiesFor,
-  soloTrophiesLost,
+  trophiesFor,
+  type Opponent,
   withinDailyCap,
   type BotLevel,
   type Challenge,
@@ -163,13 +164,27 @@ export async function awardMatch(
     const { chests, total } = await addNachos(sb, playerId, nachos);
     const moved = await advanceChallenges(sb, playerId, facts, now);
     /*
-     * A bot match moves the ladder in both directions now — see
-     * soloTrophiesLost. A win is capped by the day's ceiling; a loss is
-     * not, because a ceiling on what you can LOSE would mean the ladder
-     * stops being honest once you have played enough.
+     * ═══ ONE PLACE DECIDES WHAT A MATCH DOES TO YOUR TROPHIES ═══
+     *
+     * Or, setting out the economy: *"trophies — plus or minus by win or
+     * loss. More if you win with a high score, more if you win against a
+     * person. A loss takes trophies off you. It's a global variable per
+     * user."*
+     *
+     * It used to be two rules in two files. A match against a PERSON was
+     * paid in progress.ts by recordMatch — flat +30 and −20, the score
+     * never entering into it — and a match against the computer was paid
+     * here from different numbers. "More for a better game" could not be
+     * added without writing it twice, and a rout against a person was
+     * worth exactly what a coin-toss win was worth.
+     *
+     * `trophiesFor` is the only answer now, and this is the only caller.
+     * recordMatch no longer touches trophies at all.
      */
-    const won = botLevel && facts.won ? await addSoloTrophies(sb, playerId, botLevel, now) : null;
-    if (botLevel && !facts.won) await takeSoloTrophies(sb, playerId, botLevel);
+    const opponent: Opponent = botLevel
+      ? { kind: "bot", level: botLevel }
+      : { kind: "stranger" };
+    const won = await moveTrophies(sb, playerId, facts, opponent, now);
     /*
      * Write the match down. Every finished match comes through here —
      * against a person and against the computer — which makes this the one
@@ -205,24 +220,23 @@ export async function awardMatch(
 }
 
 /**
- * Trophies for a win against the computer, under the day's ceiling.
+ * Add what this match was worth, and say how much was actually given.
  *
- * ═══ WHY THE DAY IS READ AND WRITTEN IN ONE GO ═══
- *
- * `solo_day` is the Israeli calendar day the counter belongs to, and a row
- * whose day is not today is treated as a zero rather than being cleared by
- * anything — so there is no job to run at midnight and no window in which a
- * stale counter is still being spent. The first solo win of a new day
- * overwrites both columns together.
+ * The daily ceiling applies to what a BOT pays and to nothing else: it is
+ * there so an evening against the computer cannot forge the ladder (see
+ * soloTrophies.ts). A win against a person is not capped, and a LOSS is
+ * never capped in either case — a ceiling on what you can lose would mean
+ * the ladder stops being honest once you have played enough.
  */
-async function addSoloTrophies(
+async function moveTrophies(
   sb: SupabaseClient,
   playerId: string,
-  level: BotLevel,
+  facts: MatchFacts,
+  opponent: Opponent,
   now: Date,
 ): Promise<{ gave: number; cappedOut: boolean }> {
-  const want = soloTrophiesFor(level);
-  if (want <= 0) return { gave: 0, cappedOut: false };
+  const worth = trophiesFor({ won: facts.won, score: facts.score, opponent });
+  if (worth === 0) return { gave: 0, cappedOut: false };
 
   const today = israelDay(now);
   const { data } = await sb
@@ -231,49 +245,34 @@ async function addSoloTrophies(
     .eq("id", playerId)
     .maybeSingle();
 
-  // Yesterday's total is not today's. Not cleared anywhere — simply not read.
+  let gave = worth;
+  let cappedOut = false;
   const already = data?.solo_day === today ? (data?.solo_trophies ?? 0) : 0;
-  const gave = withinDailyCap(already, want);
-  if (gave <= 0) return { gave: 0, cappedOut: true };
+  if (worth > 0 && opponent.kind === "bot") {
+    gave = withinDailyCap(already, worth);
+    cappedOut = gave < worth;
+    if (gave <= 0) return { gave: 0, cappedOut: true };
+  }
 
-  const trophies = (data?.trophies ?? 0) + gave;
+  // Never below zero. A child who has just started cannot go into debt.
+  const trophies = Math.max(0, (data?.trophies ?? 0) + gave);
   await sb
     .from("players")
     .update({
       trophies,
+      // Only ever goes up: it is the high-water mark the arena celebration
+      // is measured against, so each arena pays exactly once in a lifetime
+      // however many times you fall back through it.
       best_trophies: Math.max(data?.best_trophies ?? 0, trophies),
-      solo_day: today,
-      solo_trophies: already + gave,
+      ...(gave > 0 && opponent.kind === "bot"
+        ? { solo_day: today, solo_trophies: already + gave }
+        : {}),
     })
     .eq("id", playerId);
-  // Trimmed by the ceiling rather than paid in full — the screen says so, so
-  // that a win that quietly paid 4 instead of 12 does not look like a bug.
-  return { gave, cappedOut: gave < want };
+  return { gave, cappedOut };
 }
 
-/**
- * What losing to the computer costs, taken off the pile.
- *
- * `best_trophies` is deliberately left alone: it is the high-water mark the
- * arena celebration is measured against (progress.ts), so each arena still
- * pays exactly once in a lifetime however many times you fall back through
- * it. What falls is `trophies`, which is what the ladder reads — so the
- * arena can go down, which is the whole of what Or asked for.
- */
-async function takeSoloTrophies(
-  sb: SupabaseClient,
-  playerId: string,
-  level: BotLevel,
-): Promise<void> {
-  const cost = soloTrophiesLost(level);
-  if (cost <= 0) return;
-  const { data } = await sb.from("players").select("trophies").eq("id", playerId).maybeSingle();
-  // Never below zero. A child who has just started cannot go into debt.
-  await sb
-    .from("players")
-    .update({ trophies: Math.max(0, (data?.trophies ?? 0) - cost) })
-    .eq("id", playerId);
-}
+
 
 /**
  * The same thing for a caller that has no database client in its hand.
