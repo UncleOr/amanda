@@ -1954,6 +1954,10 @@ function Game() {
             <Challenges
               signedIn={signedIn}
               gated={gated}
+              // Close before the prize flies: the purse and the nacho bar it
+              // flies to are on the home screen, behind this panel. See
+              // onTaking in Challenges.tsx.
+              onTaking={() => panel.close()}
               onClaimed={() => m.reloadAccount()}
               reloadKey={m.award}
             />

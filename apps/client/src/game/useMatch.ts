@@ -654,6 +654,23 @@ function fillGs(s: GameState, bar: string[]): GameState {
     king = resolved.king;
     placements = resolved.placements;
   }
+  /*
+   * ═══ THE CROWN IS NEVER EMPTY ═══
+   *
+   * Or: *"I started a match without placing a King and saw I had no Crumb
+   * Demon in the King slot — there has to be a King, otherwise it's
+   * strange."*
+   *
+   * He is right and this overrules an earlier decision of mine. `resolveKing`
+   * promotes the best card on the board, and if the player placed nothing at
+   * all it returns nobody, on the reasoning that a King you did not choose is
+   * not a King. That reads as a bug on the screen: every other empty cell
+   * fills with a crumb at the buzzer, and the one in the middle — the one
+   * with a crown drawn around it — stayed a hole.
+   *
+   * The King slot is a slot. It fills like the rest.
+   */
+  if (!king) king = "crumb_demon";
 
   const empties = shuffle(perimeterCells().filter((c) => !placements[cellKey(c.x, c.y)]));
   let idx = 0;

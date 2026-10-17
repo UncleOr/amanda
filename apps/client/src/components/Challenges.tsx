@@ -48,12 +48,30 @@ export function Challenges({
   gated,
   /** Run after a reward is taken, so the purse on screen catches up. */
   onClaimed,
+  /**
+   * Run the moment the server says yes, BEFORE the prize flies.
+   *
+   * Or: *"I had a challenge, I pressed to take the things, but I didn't see
+   * any cool animation."*
+   *
+   * On a phone this list is a modal over the home screen (see App.tsx), and
+   * the places the prize flies TO — the diamond in the purse, the nacho bar
+   * — are on the home screen, still in the DOM and completely covered by
+   * that modal. So the animation ran every time, correctly, underneath an
+   * opaque panel.
+   *
+   * The caller uses this to close the panel first. Nothing is lost by
+   * closing it: the button has already done its job, and the prize landing
+   * in the bar is the thing that replaces it.
+   */
+  onTaking,
   /** Bumped by the caller after a match, to re-read the progress. */
   reloadKey,
 }: {
   signedIn: boolean;
   gated: (open: () => void) => () => void;
   onClaimed?: () => void;
+  onTaking?: () => void;
   reloadKey?: unknown;
 }) {
   /*
@@ -103,6 +121,12 @@ export function Challenges({
       setError(failed);
       return;
     }
+    /*
+     * Get out of the way before the prize flies — see onTaking. The
+     * rectangle was measured above, while the button was still on screen,
+     * so the flight still starts from where the player pressed.
+     */
+    onTaking?.();
     if (prize && flyFrom) {
       await flyReward({
         icon: prize.diamonds ? "gem" : "nacho",

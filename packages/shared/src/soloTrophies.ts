@@ -20,12 +20,29 @@
  * nobody is online you can still climb; on the thirtieth night you cannot
  * have climbed thirty times as far as somebody who plays people.
  *
- * ═══ AND WHY A LOSS COSTS NOTHING ═══
+ * ═══ AND WHAT A LOSS COSTS ═══
  *
- * Against a person a loss is −20, because somebody else won those trophies
- * and the ladder has to stay honest. Nobody wins anything when the computer
- * does, and a seven-year-old who tries the hard bot twice and drops forty
- * trophies has been taught to stop trying the hard bot.
+ * It used to cost nothing, and the argument was a good one: nobody wins
+ * anything when the computer does, and a seven-year-old who tries the hard
+ * bot twice and drops forty trophies has been taught to stop trying the
+ * hard bot.
+ *
+ * Or: *"if I lose I should lose some trophies (not as many as you earn for
+ * a win, but still lose some) — that way it's also possible to go DOWN
+ * arenas."* Which is the half I had not weighed: a ladder you can only
+ * climb is not a ladder, it is a counter, and an arena you cannot fall out
+ * of is a badge for having played rather than for playing well.
+ *
+ * So: half of what the same bot pays for a win, rounded down. Easy costs
+ * nothing because easy pays nothing — it is the setting you learn on.
+ *
+ *     easy    win 0    loss 0
+ *     normal  win 8    loss 4
+ *     hard    win 12   loss 6
+ *
+ * Against a person it stays −20 (TUNED.trophiesPerLoss, in the admin
+ * panel): somebody else won those, so the ladder has to carry the full
+ * weight of it.
  */
 import { TUNED } from "./tunables.js";
 
@@ -43,6 +60,15 @@ export function soloTrophiesFor(level: BotLevel): number {
   if (level === "hard") return TUNED.soloTrophiesHard;
   if (level === "normal") return TUNED.soloTrophiesNormal;
   return 0;
+}
+
+/**
+ * What losing to the computer costs. Derived from what winning pays, so
+ * there is one number per difficulty to turn and the two can never drift
+ * into a setting that pays less for a win than it takes for a loss.
+ */
+export function soloTrophiesLost(level: BotLevel): number {
+  return Math.floor(soloTrophiesFor(level) / 2);
 }
 
 /**

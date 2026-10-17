@@ -30,6 +30,7 @@ import {
   nachosForScore,
   progressFrom,
   soloTrophiesFor,
+  soloTrophiesLost,
   withinDailyCap,
   type BotLevel,
   type Challenge,
@@ -161,7 +162,14 @@ export async function awardMatch(
     const nachos = nachosForScore(facts.score);
     const { chests, total } = await addNachos(sb, playerId, nachos);
     const moved = await advanceChallenges(sb, playerId, facts, now);
+    /*
+     * A bot match moves the ladder in both directions now — see
+     * soloTrophiesLost. A win is capped by the day's ceiling; a loss is
+     * not, because a ceiling on what you can LOSE would mean the ladder
+     * stops being honest once you have played enough.
+     */
     const won = botLevel && facts.won ? await addSoloTrophies(sb, playerId, botLevel, now) : null;
+    if (botLevel && !facts.won) await takeSoloTrophies(sb, playerId, botLevel);
     /*
      * Write the match down. Every finished match comes through here —
      * against a person and against the computer — which makes this the one
@@ -241,6 +249,30 @@ async function addSoloTrophies(
   // Trimmed by the ceiling rather than paid in full — the screen says so, so
   // that a win that quietly paid 4 instead of 12 does not look like a bug.
   return { gave, cappedOut: gave < want };
+}
+
+/**
+ * What losing to the computer costs, taken off the pile.
+ *
+ * `best_trophies` is deliberately left alone: it is the high-water mark the
+ * arena celebration is measured against (progress.ts), so each arena still
+ * pays exactly once in a lifetime however many times you fall back through
+ * it. What falls is `trophies`, which is what the ladder reads — so the
+ * arena can go down, which is the whole of what Or asked for.
+ */
+async function takeSoloTrophies(
+  sb: SupabaseClient,
+  playerId: string,
+  level: BotLevel,
+): Promise<void> {
+  const cost = soloTrophiesLost(level);
+  if (cost <= 0) return;
+  const { data } = await sb.from("players").select("trophies").eq("id", playerId).maybeSingle();
+  // Never below zero. A child who has just started cannot go into debt.
+  await sb
+    .from("players")
+    .update({ trophies: Math.max(0, (data?.trophies ?? 0) - cost) })
+    .eq("id", playerId);
 }
 
 /**
@@ -339,10 +371,26 @@ async function advanceChallenges(
 
   const moved: MetaAward["moved"] = [];
   const rows = live.map((c) => {
+    const was = at.get(c.id) ?? 0;
     // Capped at `need`: a challenge that keeps counting past its goal would
     // show "7/3" on the screen and tempt somebody to pay out the difference.
-    const progress = Math.min(c.need, (at.get(c.id) ?? 0) + 1);
-    moved.push({ id: c.id, progress, need: c.need, done: progress >= c.need });
+    const progress = Math.min(c.need, was + 1);
+    /*
+     * ═══ "DONE" MEANS "DONE BY THIS MATCH" ═══
+     *
+     * Or: *"at the end of a match it said 'challenge completed' but I hadn't
+     * completed any challenge and I didn't get anything either."*
+     *
+     * It was `progress >= c.need`, which is true of a finished challenge
+     * for ever — and a challenge stays finished until it is CLAIMED, which
+     * is a separate button on a separate screen. So every match after the
+     * one that finished it announced it again, and nothing arrived, because
+     * nothing was owed: the reward comes from claiming.
+     *
+     * Crossing the line is an event and the result screen reports events.
+     * `was < need` is what makes this one.
+     */
+    moved.push({ id: c.id, progress, need: c.need, done: was < c.need && progress >= c.need });
     return {
       player_id: playerId,
       challenge_id: c.id,

@@ -327,11 +327,37 @@ describe("trophies from the computer", () => {
     expect(hard.trophies).toBeGreaterThan(normal.trophies);
   });
 
-  it("pays nothing for losing to it — nobody won those trophies", async () => {
+  /*
+   * ═══ A LADDER YOU CAN ONLY CLIMB IS A COUNTER ═══
+   *
+   * This used to assert that losing to the computer cost nothing, and the
+   * argument was sound: nobody wins anything when the machine does, and a
+   * seven-year-old who tries the hard bot twice and drops forty trophies has
+   * been taught to stop trying it.
+   *
+   * Or: *"if I lose I should lose some trophies (not as many as you earn for
+   * a win, but still some) — that way it's also possible to go DOWN
+   * arenas."* The half I had not weighed. So it costs half of what the same
+   * bot pays, and these three cases are what "half, and gently" means.
+   */
+  it("costs half of what the same bot pays for a win", async () => {
     const { sb, state } = fakeDb({ players: { [ME]: { trophies: 100 } } });
     const got = await awardMatch(sb, ME, facts({ won: false, score: 4 }), DAY, "hard");
+    // Nothing is PAID for a loss; what changes is the pile.
     expect(got.trophies).toBe(0);
+    expect(state.players[ME]!.trophies).toBe(100 - Math.floor(TUNED.soloTrophiesHard / 2));
+  });
+
+  it("costs nothing for the easy bot, which pays nothing either", async () => {
+    const { sb, state } = fakeDb({ players: { [ME]: { trophies: 100 } } });
+    await awardMatch(sb, ME, facts({ won: false, score: 4 }), DAY, "easy");
     expect(state.players[ME]!.trophies).toBe(100);
+  });
+
+  it("never pushes a new player below zero", async () => {
+    const { sb, state } = fakeDb({ players: { [ME]: { trophies: 2 } } });
+    await awardMatch(sb, ME, facts({ won: false, score: 4 }), DAY, "hard");
+    expect(state.players[ME]!.trophies).toBe(0);
   });
 
   it("pays nothing at all for a match against a person — the match server did that", async () => {
