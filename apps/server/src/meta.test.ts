@@ -51,6 +51,8 @@ function fakeDb(seed: {
   >;
   challenges?: Row[];
   cards?: Row[];
+  /** `{ player_id, friend_id, status }` rows, as the real table holds them. */
+  friends?: Row[];
 }) {
   const players: Record<string, Row> = {};
   for (const [id, p] of Object.entries(seed.players ?? {}))
@@ -67,6 +69,7 @@ function fakeDb(seed: {
   const challenges: Row[] = [...(seed.challenges ?? [])];
   const chests: Row[] = [];
   const cards: Row[] = [...(seed.cards ?? [])];
+  const friends: Row[] = [...(seed.friends ?? [])];
 
   function table(name: string) {
     const filters: Array<(r: Row) => boolean> = [];
@@ -75,8 +78,26 @@ function fakeDb(seed: {
 
     api.select = chain;
     api.order = chain;
-    api.or = chain;
+    api.limit = chain;
     api.not = chain;
+    /*
+     * `.or()` is ignored everywhere except `friends`, and the exception is
+     * the point.
+     *
+     * A friendship is stored one way round, so the lookup asks for both —
+     * `and(player_id.eq.me,friend_id.eq.them),and(player_id.eq.them,...)`.
+     * A stub that waved that through would pass a query that matched every
+     * friendship in the table, which is exactly the bug worth catching here:
+     * it would make strangers into friends and pay nachos for losing to
+     * them. So for this one table the filter is really applied.
+     *
+     * Everywhere else it stays a no-op, because the tests that rely on it
+     * are about the filtered UPDATE and nothing turns on the or-clause.
+     */
+    api.or = (clause: string) => {
+      if (name === "friends") filters.push(matchesOr(clause));
+      return api;
+    };
     api.lte = chain;
     api.gte = chain;
     api.eq = (col: string, val: unknown) => {
@@ -97,6 +118,7 @@ function fakeDb(seed: {
       if (name === "player_challenges") return challenges;
       if (name === "chests") return chests;
       if (name === "player_cards") return cards;
+      if (name === "friends") return friends;
       return [];
     };
     const matching = () => rowsOf().filter((r) => filters.every((f) => f(r)));
@@ -163,7 +185,47 @@ function fakeDb(seed: {
     return api;
   }
 
-  return { sb: { from: table } as unknown as SupabaseClient, state: { players, challenges, chests } };
+  return {
+    sb: { from: table } as unknown as SupabaseClient,
+    state: { players, challenges, chests, friends },
+  };
+}
+
+/**
+ * Enough of PostgREST's `or=` grammar to mean what the friends lookup means:
+ * a comma-separated list of `col.eq.value` terms and `and(...)` groups, where
+ * a row matches if it satisfies ANY term.
+ *
+ * Splitting on top-level commas only — `and(a.eq.1,b.eq.2)` is one term, not
+ * two, and a split that does not know that turns an AND into an OR and makes
+ * the test pass for the wrong reason.
+ */
+function matchesOr(clause: string): (r: Row) => boolean {
+  const terms: string[] = [];
+  let depth = 0;
+  let at = 0;
+  for (let i = 0; i <= clause.length; i++) {
+    const c = clause[i];
+    if (c === "(") depth++;
+    else if (c === ")") depth--;
+    if (i === clause.length || (c === "," && depth === 0)) {
+      terms.push(clause.slice(at, i));
+      at = i + 1;
+    }
+  }
+  const one = (term: string) => {
+    const [col, op, ...rest] = term.split(".");
+    if (op !== "eq") throw new Error("fakeDb only knows eq in or(): " + term);
+    const want = rest.join(".");
+    return (r: Row) => String(r[col!]) === want;
+  };
+  const tests = terms.map((term) => {
+    const group = /^and\((.*)\)$/s.exec(term.trim());
+    if (!group) return one(term.trim());
+    const inner = group[1]!.split(",").map((t) => one(t.trim()));
+    return (r: Row) => inner.every((f) => f(r));
+  });
+  return (r) => tests.some((f) => f(r));
 }
 
 const ME = "player-1";
@@ -178,12 +240,73 @@ const facts = (over: Partial<MatchFacts> = {}): MatchFacts => ({
   ...over,
 });
 
+/*
+ * ═══ PAID FOR WHO YOU PLAYED, NOT FOR HOW WELL ═══
+ *
+ * These tests used to read `facts({ score: 10 })` and expect three, because
+ * nachos were paid off the 1-10 grade. Or replaced that rule — *"a match
+ * against the easy bot gives no nachos. A win against the medium bot — 2. A
+ * win against the hard bot or a friend — 3. A loss to a friend — one"* — and
+ * the replacement sat in shared, exported and never called, while the old
+ * rule carried on paying. The score is now irrelevant here, so it is gone
+ * from every case below rather than left in looking meaningful.
+ */
 describe("nachos", () => {
-  it("pays by the grade, and a collapse pays nothing", async () => {
+  it("pays by the opponent, and nothing at all for the easy bot", async () => {
     const { sb, state } = fakeDb({ players: { [ME]: {} } });
-    expect((await awardMatch(sb, ME, facts({ score: 10 }), DAY)).nachos).toBe(3);
-    expect((await awardMatch(sb, ME, facts({ score: 1 }), DAY)).nachos).toBe(0);
-    expect(state.players[ME]!.nachos).toBe(3);
+    expect((await awardMatch(sb, ME, facts(), DAY, "hard")).nachos).toBe(3);
+    expect((await awardMatch(sb, ME, facts(), DAY, "normal")).nachos).toBe(2);
+    expect((await awardMatch(sb, ME, facts({ score: 10 }), DAY, "easy")).nachos).toBe(0);
+    expect(state.players[ME]!.nachos).toBe(5);
+  });
+
+  it("pays nothing for losing to a machine, however close it was", async () => {
+    const { sb } = fakeDb({ players: { [ME]: {} } });
+    for (const level of ["easy", "normal", "hard"] as const) {
+      expect((await awardMatch(sb, ME, facts({ won: false, score: 9 }), DAY, level)).nachos).toBe(0);
+    }
+  });
+
+  /*
+   * The one rule in the whole economy that pays for losing, and the reason
+   * `awardMatch` takes an opponent id at all. Or: *"a loss to a friend — one
+   * nacho. At this stage I want to encourage games against friends."*
+   */
+  it("pays a nacho for losing to a friend, and nothing for losing to a stranger", async () => {
+    const mate = "00000000-0000-4000-8000-0000000000ff";
+    const friends = fakeDb({
+      players: { [ME]: {} },
+      friends: [{ player_id: ME, friend_id: mate, status: "accepted" }],
+    });
+    expect((await awardMatch(friends.sb, ME, facts({ won: false }), DAY, undefined, mate)).nachos)
+      .toBe(1);
+
+    const nobody = fakeDb({ players: { [ME]: {} } });
+    expect((await awardMatch(nobody.sb, ME, facts({ won: false }), DAY, undefined, mate)).nachos)
+      .toBe(0);
+  });
+
+  /*
+   * A friendship that has been ASKED for is not a friendship.
+   *
+   * A mutation found this: dropping `.eq("status", "accepted")` from the
+   * lookup broke nothing, which meant an unanswered request paid the friend
+   * rate. It is a small sum, but it is a sum anybody can mint — send a
+   * request to a stranger, never wait for an answer, and every loss to them
+   * is worth a nacho. The `friends` table holds a pending row from the
+   * moment somebody asks, so this is the only thing standing between those
+   * two cases.
+   */
+  it("does not count a friend request that has not been accepted", async () => {
+    const mate = "00000000-0000-4000-8000-0000000000ff";
+    for (const pending of [
+      { player_id: ME, friend_id: mate, status: "pending" },
+      { player_id: mate, friend_id: ME, status: "pending" },
+    ]) {
+      const { sb } = fakeDb({ players: { [ME]: {} }, friends: [pending] });
+      expect((await awardMatch(sb, ME, facts({ won: false }), DAY, undefined, mate)).nachos)
+        .toBe(0);
+    }
   });
 
   it("mints a chest when the bar fills, and not before", async () => {
@@ -191,10 +314,10 @@ describe("nachos", () => {
       players: { [ME]: { nachos: NACHOS_PER_CHEST - 3, nacho_chests: 0 } },
     });
     // Two short of the line: still nothing.
-    expect((await awardMatch(sb, ME, facts({ score: 5 }), DAY)).chests).toEqual([]);
+    expect((await awardMatch(sb, ME, facts(), DAY, "normal")).chests).toEqual([]);
     expect(state.chests).toHaveLength(0);
     // And over it.
-    expect((await awardMatch(sb, ME, facts({ score: 10 }), DAY)).chests).toEqual(["wood"]);
+    expect((await awardMatch(sb, ME, facts(), DAY, "hard")).chests).toEqual(["wood"]);
     expect(state.chests).toHaveLength(1);
     expect(state.chests[0]!.opened_at).toBeNull();
   });
@@ -205,12 +328,18 @@ describe("nachos", () => {
    * `nachos / 5` and conclude that one is owed all over again.
    */
   it("does not mint the same chest twice", async () => {
+    const mate = "00000000-0000-4000-8000-0000000000ff";
     const { sb, state } = fakeDb({
       players: { [ME]: { nachos: NACHOS_PER_CHEST, nacho_chests: 1 } },
+      friends: [{ player_id: mate, friend_id: ME, status: "accepted" }],
     });
-    // The bar is at zero, so it takes a full bar's worth to fill it again —
-    // one nacho a match, NACHOS_PER_CHEST matches, exactly one chest.
-    for (let i = 0; i < NACHOS_PER_CHEST; i++) await awardMatch(sb, ME, facts({ score: 4 }), DAY);
+    /*
+     * The bar is at zero, so it takes a full bar's worth to fill it again.
+     * A loss to a friend is the only match that pays exactly one, which
+     * makes it the only way to walk the bar up a nacho at a time.
+     */
+    for (let i = 0; i < NACHOS_PER_CHEST; i++)
+      await awardMatch(sb, ME, facts({ won: false }), DAY, undefined, mate);
     expect(state.players[ME]!.nachos).toBe(NACHOS_PER_CHEST * 2);
     expect(state.chests).toHaveLength(1);
   });
@@ -218,11 +347,11 @@ describe("nachos", () => {
   it("hands over every chest at once when several were filled", async () => {
     const { sb, state } = fakeDb({ players: { [ME]: {} } });
     // A reward big enough to fill more than one bar in a single go.
-    await awardMatch(sb, ME, facts({ score: 10 }), DAY);
+    await awardMatch(sb, ME, facts(), DAY, "hard");
     const { sb: sb2, state: s2 } = fakeDb({
       players: { [ME]: { nachos: NACHOS_PER_CHEST * 4 - 1, nacho_chests: 1 } },
     });
-    await awardMatch(sb2, ME, facts({ score: 10 }), DAY);
+    await awardMatch(sb2, ME, facts(), DAY, "hard");
     expect(s2.chests.length).toBe(3);
     expect(state.chests.length).toBeLessThanOrEqual(1);
   });
@@ -322,8 +451,9 @@ describe("trophies from the computer", () => {
     const got = await awardMatch(sb, ME, facts({ score: 10 }), DAY, "easy");
     expect(got.trophies).toBe(0);
     expect(state.players[ME]!.trophies).toBe(0);
-    // ...and the rest of the loop still ran.
-    expect(got.nachos).toBe(3);
+    // ...and the easy bot pays no nachos either, which is the other half of
+    // "it does not move anything": it is the setting you learn on.
+    expect(got.nachos).toBe(0);
   });
 
   it("pays more for the hard bot than the ordinary one", async () => {
@@ -427,7 +557,8 @@ describe("trophies from the computer", () => {
     const after = await awardMatch(sb, ME, facts(), DAY, "hard");
     expect(after.trophies).toBe(0);
     expect(after.cappedOut).toBe(true);
-    // And the rest of the loop is untouched by the ceiling.
+    // And the rest of the loop is untouched by the ceiling — a hard-bot win
+    // is three nachos whether or not the trophies were trimmed.
     expect(after.nachos).toBe(3);
   });
 

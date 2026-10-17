@@ -346,7 +346,20 @@ export class Match {
       both.forEach(([id, placements], i) => {
         if (!id) return;
         const side = this.coop ? "A" : i === 0 ? "A" : "B";
-        void awardMeta(id, factsFor(result, side, placements));
+        /*
+         * Who they were up against, so the payout can tell a friend from a
+         * stranger. Or's one rule that pays for losing — *"a loss to a
+         * friend, one nacho; at this stage I want to encourage games against
+         * friends"* — needs this and nothing else.
+         *
+         * In co-op the other seat is a team-mate, not an opponent, and the
+         * two of them are fighting Amanda. Passing a team-mate's id here
+         * would pay the friend rate for a match neither of them played
+         * against the other, so co-op hands over nothing and everybody is a
+         * stranger.
+         */
+        const against = this.coop ? null : i === 0 ? this.b.playerId : this.a.playerId;
+        void awardMeta(id, factsFor(result, side, placements), against);
       });
     }
   }

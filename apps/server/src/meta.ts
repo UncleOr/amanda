@@ -27,7 +27,7 @@ import {
   isCollectable,
   israelDay,
   nachoChestKind,
-  nachosForScore,
+  nachosFor,
   progressFrom,
   soloTrophiesFor,
   trophiesFor,
@@ -158,9 +158,34 @@ export async function awardMatch(
   now: Date = new Date(),
   /** Set for a match against the computer; left out for one against a person. */
   botLevel?: BotLevel,
+  /**
+   * The other player's id, for a match against a person.
+   *
+   * Only used to tell a friend from a stranger, which changes exactly one
+   * number: a LOSS to a friend pays a nacho and a loss to a stranger pays
+   * nothing. Left out, everybody is a stranger — which is the safe way round,
+   * since the worst it can do is fail to pay a nacho.
+   */
+  opponentId?: string | null,
 ): Promise<MetaAward> {
   try {
-    const nachos = nachosForScore(facts.score);
+    const opponent = await whoThatWas(sb, playerId, botLevel, opponentId);
+    /*
+     * ═══ NACHOS ARE PAID FOR WHO YOU PLAYED, NOT HOW WELL ═══
+     *
+     * Or, settling it: *"a match against the easy bot gives no nachos. A win
+     * against the medium bot — 2. A win against the hard bot or a friend —
+     * 3. A loss to a friend — one nacho; at this stage I want to encourage
+     * games against friends."*
+     *
+     * This line used to read `nachosForScore(facts.score)`, and that is the
+     * bug this fixes: `nachosFor` was written to his rule, documented at
+     * length, exported — and never called. The old rule was still live, so
+     * the easy bot was still paying three nachos for a good board and the
+     * cheapest way to fill the bar was the opponent who could not fight
+     * back. Written and wired are not the same thing.
+     */
+    const nachos = nachosFor(opponent, facts.won);
     const { chests, total } = await addNachos(sb, playerId, nachos);
     const moved = await advanceChallenges(sb, playerId, facts, now);
     /*
@@ -181,9 +206,6 @@ export async function awardMatch(
      * `trophiesFor` is the only answer now, and this is the only caller.
      * recordMatch no longer touches trophies at all.
      */
-    const opponent: Opponent = botLevel
-      ? { kind: "bot", level: botLevel }
-      : { kind: "stranger" };
     const won = await moveTrophies(sb, playerId, facts, opponent, now);
     /*
      * Write the match down. Every finished match comes through here —
@@ -216,6 +238,44 @@ export async function awardMatch(
     // A match that finished matters more than a counter that did not move.
     console.error("[meta] could not award the match", err);
     return NONE;
+  }
+}
+
+/**
+ * Who that match was against: a bot at a named level, a friend, or a stranger.
+ *
+ * The friend question costs one small query, and only for a match against a
+ * person — a bot is known from its argument. It is worth the query because
+ * "a loss to a friend is worth a nacho" is the one rule in the whole economy
+ * that pays for losing, and Or put it there deliberately: *"at this stage I
+ * want to encourage games against friends."* A rule that cannot tell a friend
+ * from a stranger is a rule that never fires.
+ *
+ * Any failure answers "stranger". That is the safe direction — the worst it
+ * costs is a single nacho that should have been paid, against a crash in the
+ * payout path of a match that has already finished.
+ */
+async function whoThatWas(
+  sb: SupabaseClient,
+  playerId: string,
+  botLevel?: BotLevel,
+  opponentId?: string | null,
+): Promise<Opponent> {
+  if (botLevel) return { kind: "bot", level: botLevel };
+  if (!opponentId) return { kind: "stranger" };
+  try {
+    const { data } = await sb
+      .from("friends")
+      .select("player_id")
+      .eq("status", "accepted")
+      .or(
+        `and(player_id.eq.${playerId},friend_id.eq.${opponentId}),` +
+          `and(player_id.eq.${opponentId},friend_id.eq.${playerId})`,
+      )
+      .limit(1);
+    return data?.length ? { kind: "friend" } : { kind: "stranger" };
+  } catch {
+    return { kind: "stranger" };
   }
 }
 
@@ -281,9 +341,14 @@ async function moveTrophies(
  * than a row that did not save, so it hands this off and carries on, exactly
  * as it does with recordMatch.
  */
-export function awardMeta(playerId: string, facts: MatchFacts): Promise<MetaAward> {
+export function awardMeta(
+  playerId: string,
+  facts: MatchFacts,
+  /** The other player, so a loss to a friend can pay what Or asked it to. */
+  opponentId?: string | null,
+): Promise<MetaAward> {
   const sb = db();
-  return sb ? awardMatch(sb, playerId, facts) : Promise.resolve(NONE);
+  return sb ? awardMatch(sb, playerId, facts, new Date(), undefined, opponentId) : Promise.resolve(NONE);
 }
 
 /**
