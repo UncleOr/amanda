@@ -57,14 +57,18 @@ export const DECK_RULES = {
    *   the cheapest legal sixteen of those costs 47
    *
    * At 40 nobody who installed the game today can save a deck at all. Not a
-   * weaker deck — no deck. 47 is the floor, so 47 is what ships: it is the
-   * tightest budget that is still a game for somebody who has never opened a
-   * chest, and it is eight tighter than the 55 he is right about.
+   * weaker deck — no deck. 47 is the floor.
+   *
+   * It ships at 50. Or: *"47 is odd. Make it 48 or 50 and we'll adjust
+   * later. I was just building a really strong deck — we need to think
+   * about how to solve that properly."* Which is the right instinct: the
+   * budget is a blunt tool for a problem that is really about the PRICES,
+   * and three of air above the floor is room to move without a deploy.
    *
    * Nothing here is read directly. `deckBudget()` reads TUNED at call time
    * so the panel moves the next deck rather than the next deploy.
    */
-  budget: 47,
+  budget: 50,
   /**
    * How many times one card may appear.
    *

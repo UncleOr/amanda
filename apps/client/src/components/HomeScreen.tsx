@@ -299,11 +299,19 @@ export function HomeScreen({
               <button className="btn-fight btn-online" onClick={() => m.startOnline()}>
                 {t("saedd95d", "מישהו אקראי")}
               </button>
-              {/* The event, not the everyday opponent. It takes two people on
-                  purpose: one board cannot beat her. */}
-              <button className="btn-fight btn-amanda" onClick={() => m.startAmanda()}>
-                {t("s96c910e", "נגד אמנדה — שניים נגדה")}
-              </button>
+              {/*
+                ═══ THE OTHER DOOR INTO AMANDA MODE, ALSO SHUT ═══
+
+                Or: *"Amanda mode looks awful. Put it behind 'soon' so users
+                have no access to it — I don't want it to let down the first
+                users."*
+
+                Putting it behind "soon" in the modes list was half the job;
+                this button is the other half, and it is the one a player
+                actually finds. See the long note in MoreModes.tsx: the mode
+                works, the screen around it has not caught up with eight
+                lanes, and turning it back on is deleting these four lines.
+              */}
               <button className="btn-link" onClick={() => setFriendOpen(false)}>
                 {t("s9cadb42", "← חזרה")}
               </button>

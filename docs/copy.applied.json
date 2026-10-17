@@ -78,5 +78,265 @@
   "file": "data/series/01-dragons.json",
   "text": "שליטת נתיבים / חסימת הסתערות עם נזק מתמשך.",
   "date": "2026-10-12"
+ },
+ {
+  "file": "data/series/14-plants.json",
+  "text": "הדרדר",
+  "date": "2026-10-17"
+ },
+ {
+  "file": "data/series/14-plants.json",
+  "text": "מי שנוגע בו נדקר ומאבד חיים",
+  "date": "2026-10-17"
+ },
+ {
+  "file": "data/series/14-plants.json",
+  "text": "העץ העתיק",
+  "date": "2026-10-17"
+ },
+ {
+  "file": "data/series/14-plants.json",
+  "text": "הילינג בלום",
+  "date": "2026-10-17"
+ },
+ {
+  "file": "data/series/14-plants.json",
+  "text": "וונוס טראפ",
+  "date": "2026-10-17"
+ },
+ {
+  "file": "data/series/14-plants.json",
+  "text": "יורה רעל שפוגע לאורך זמן",
+  "date": "2026-10-17"
+ },
+ {
+  "file": "data/series/14-plants.json",
+  "text": "שריגים מטפסים",
+  "date": "2026-10-17"
+ },
+ {
+  "file": "data/series/14-plants.json",
+  "text": "עותק נוסף של הקלף צומח בכל שטח שמתפנה בסמוך אליו",
+  "date": "2026-10-17"
+ },
+ {
+  "file": "data/series/14-plants.json",
+  "text": "פטרייה רעילה",
+  "date": "2026-10-17"
+ },
+ {
+  "file": "data/series/14-plants.json",
+  "text": "לאחר המוות מפזרת זרעים שממשיכים להילחם",
+  "date": "2026-10-17"
+ },
+ {
+  "file": "data/series/14-plants.json",
+  "text": "קוצני ועמיד",
+  "date": "2026-10-17"
+ },
+ {
+  "file": "data/series/14-plants.json",
+  "text": "יורה גרעינים. סופגת שמש משטחים פנויים סמוכים ומתרפאת.",
+  "date": "2026-10-17"
+ },
+ {
+  "file": "data/series/14-plants.json",
+  "text": "אמא - עץ",
+  "date": "2026-10-17"
+ },
+ {
+  "file": "data/series/14-plants.json",
+  "text": "גדול ויציב, מרפא את כל הצמחים בלוח שלך",
+  "date": "2026-10-17"
+ },
+ {
+  "file": "data/series/17-slimes.json",
+  "text": "הסליים",
+  "date": "2026-10-17"
+ },
+ {
+  "file": "data/series/17-slimes.json",
+  "text": "מי שעובר דרכו מאט",
+  "date": "2026-10-17"
+ },
+ {
+  "file": "data/series/17-slimes.json",
+  "text": "בולעת כל קלף אויב עם פחות חיים שעובר דרכה, ומוסיפה את החיים שלו לשלה.",
+  "date": "2026-10-17"
+ },
+ {
+  "file": "data/series/17-slimes.json",
+  "text": "חמוצי",
+  "date": "2026-10-17"
+ },
+ {
+  "file": "data/series/17-slimes.json",
+  "text": "ממיסה במכה הראשונה  את שריון האויב, חזק ככל שיהיה",
+  "date": "2026-10-17"
+ },
+ {
+  "file": "data/series/17-slimes.json",
+  "text": "בלוב",
+  "date": "2026-10-17"
+ },
+ {
+  "file": "data/series/17-slimes.json",
+  "text": "מדביק את היריב שמולו ומונע ממנו לזוז עד סוף הקרב.",
+  "date": "2026-10-17"
+ },
+ {
+  "file": "data/series/17-slimes.json",
+  "text": "מי שעובר דרכו מאט ומאבד כח תקיפה",
+  "date": "2026-10-17"
+ },
+ {
+  "file": "data/series/17-slimes.json",
+  "text": "משדר פולסים חשמליים שמעניקים מהירות תקיפה למפלצות הסמוכות שלך",
+  "date": "2026-10-17"
+ },
+ {
+  "file": "data/series/17-slimes.json",
+  "text": "כל 6 שניות מושך את כל קלפי היריב המסתערים משבצת אחת פנימה למרכז ומשבש נתיבים.",
+  "date": "2026-10-17"
+ },
+ {
+  "file": "data/series/18-legends.json",
+  "text": "המפלצת הכי חזקה באלבום. יורה רחוק וחזק ומרפאה את כל מי שסביבה. אף אחד עדיין לא ניצח אותה. אולי תהיו הראשונים.",
+  "date": "2026-10-17"
+ },
+ {
+  "file": "apps/client/src/data/voice.ts",
+  "text": "זהו, הולכים?",
+  "date": "2026-10-17"
+ },
+ {
+  "file": "apps/client/src/data/voice.ts",
+  "text": "דווקא עכשיו?",
+  "date": "2026-10-17"
+ },
+ {
+  "file": "apps/client/src/data/voice.ts",
+  "text": "הולכים? רק התחלנו",
+  "date": "2026-10-17"
+ },
+ {
+  "file": "apps/client/src/data/voice.ts",
+  "text": "הלוח נמחק ואתם חוזרים לתפריט. לתפריט שלי",
+  "date": "2026-10-17"
+ },
+ {
+  "file": "apps/client/src/data/voice.ts",
+  "text": "כל מה שבנית נמחק. חבל, כבר היה לי תיאבון",
+  "date": "2026-10-17"
+ },
+ {
+  "file": "apps/client/src/data/voice.ts",
+  "text": "הלוח נמחק. הלכתי לישון רעבה.",
+  "date": "2026-10-17"
+ },
+ {
+  "file": "apps/client/src/data/voice.ts",
+  "text": "כן, זזתי הביתה",
+  "date": "2026-10-17"
+ },
+ {
+  "file": "apps/client/src/data/voice.ts",
+  "text": "כן, יש לי חיים",
+  "date": "2026-10-17"
+ },
+ {
+  "file": "apps/client/src/data/voice.ts",
+  "text": "כן, שחררי אותי",
+  "date": "2026-10-17"
+ },
+ {
+  "file": "apps/client/src/data/voice.ts",
+  "text": "כן, יאללה ביי",
+  "date": "2026-10-17"
+ },
+ {
+  "file": "apps/client/src/data/voice.ts",
+  "text": "נראה לי שאשאר",
+  "date": "2026-10-17"
+ },
+ {
+  "file": "apps/client/src/data/voice.ts",
+  "text": "לא, בואי נשחק",
+  "date": "2026-10-17"
+ },
+ {
+  "file": "apps/client/src/data/voice.ts",
+  "text": "בעצם לא, התבלבלתי",
+  "date": "2026-10-17"
+ },
+ {
+  "file": "apps/client/src/data/voice.ts",
+  "text": "ניצחת. אבל רק הפעם.",
+  "date": "2026-10-17"
+ },
+ {
+  "file": "apps/client/src/data/voice.ts",
+  "text": "ניצחת. אבל רק כי נתתי לך.",
+  "date": "2026-10-17"
+ },
+ {
+  "file": "apps/client/src/data/voice.ts",
+  "text": "ניצחת. לא להתרגל.",
+  "date": "2026-10-17"
+ },
+ {
+  "file": "apps/client/src/data/voice.ts",
+  "text": "הפסדת. קדימה לצלחת שלי",
+  "date": "2026-10-17"
+ },
+ {
+  "file": "apps/client/src/data/voice.ts",
+  "text": "נחמד ששיחקת, יותר נחמד שהפסדת",
+  "date": "2026-10-17"
+ },
+ {
+  "file": "apps/client/src/data/voice.ts",
+  "text": "זהו, הפסדת. שיהיה לי בתיאבון.",
+  "date": "2026-10-17"
+ },
+ {
+  "file": "apps/client/src/data/voice.ts",
+  "text": "הפסדת. לא נעים, לא נורא.",
+  "date": "2026-10-17"
+ },
+ {
+  "file": "apps/client/src/data/voice.ts",
+  "text": "הפסדת. כל כך קרוב, כל כך רחוק.",
+  "date": "2026-10-17"
+ },
+ {
+  "file": "apps/client/src/data/voice.ts",
+  "text": "היריב שלך ברח. אני לא מאשימה אותו",
+  "date": "2026-10-17"
+ },
+ {
+  "file": "apps/client/src/data/voice.ts",
+  "text": "נשימה ארוכה - ונתחיל",
+  "date": "2026-10-17"
+ },
+ {
+  "file": "apps/client/src/data/voice.ts",
+  "text": "זהו, אין שינויים. עכשיו - לקרב.",
+  "date": "2026-10-17"
+ },
+ {
+  "file": "apps/client/src/game/verdict.ts",
+  "text": "המלך {נפל} - הקרב הסתיים",
+  "date": "2026-10-17"
+ },
+ {
+  "file": "apps/client/src/game/verdict.ts",
+  "text": "הזמן נגמר, הקרב הסתיים",
+  "date": "2026-10-17"
+ },
+ {
+  "file": "apps/client/src/game/verdict.ts",
+  "text": "הזמן נגמר, הקרב הסתיים. שניכם בתיקו מוחלט. הטלתי מטבע כדי לקבוע מי המנצח",
+  "date": "2026-10-17"
  }
 ]

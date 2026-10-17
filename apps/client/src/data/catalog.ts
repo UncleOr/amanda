@@ -176,13 +176,33 @@ export const ACTIVE_ACTIONS = [
    * and it was spending one of four action slots to say it.
    */
   "time_freeze", // buy yourself seconds
-  "steel_wall", // block the next action card played against you
-  "triple_draw", // hold three cards at once instead of one
   "swap_places", // swap two of your placed cards (targeted ×2)
   "radioactive_eraser", // delete an enemy card (targeted on THEIR board)
   "ground_floor", // stack a second card onto your own slots
   "dark_corners", // the same, applied to the four corners at once
-  "frozen_hands", // freeze the opponent's hands for five seconds
+  /*
+   * ═══ THREE MORE THAT ARE GONE, AND ONE THAT NEVER SHIPPED ═══
+   *
+   * Or, going through the copy document: *"I can't see how this card
+   * happens. Let's drop it"* — against `triple_draw` and `steel_wall` — and
+   * against `frozen_hands`, *"we already have one of these, we won't use
+   * it."*
+   *
+   * He is right about the third and it is the clearest: `time_freeze` above
+   * is the same card. Two cards that stop the opponent for a few seconds is
+   * one card and a duplicate, and the duplicate was taking a slot out of
+   * four.
+   *
+   * The other two are a designer looking at his own game and not being able
+   * to picture the moment. "Hold three cards instead of one" and "block the
+   * next action card" are both effects that happen somewhere the player is
+   * not looking — nothing on the screen changes when they land.
+   *
+   * `amanda_summon` went with them from data/action-cards.json; it was
+   * never in this list, so it was never dealt. All four are out of the DATA
+   * too, which is what takes them out of the copy document — he should not
+   * be asked to write Hebrew for a card that does not exist.
+   */
 ] as const;
 export const PASSIVE_ACTIONS = ["fill_lava", "fill_colossus", "fill_flame", "fill_cube"] as const;
 export const SUPPORTED_ACTIONS: string[] = [...ACTIVE_ACTIONS, ...PASSIVE_ACTIONS];

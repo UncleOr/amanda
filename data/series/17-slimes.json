@@ -2,7 +2,7 @@
   "id": "slimes",
   "seriesNumber": 17,
   "name": {
-    "he": "הריריים",
+    "he": "הדביקים",
     "en": "The Slimes"
   },
   "specialty": {
@@ -33,8 +33,8 @@
       "seriesId": "slimes",
       "numberInSeries": 1,
       "name": {
-        "he": "סליים בסיסי",
-        "en": "Basic Slime"
+        "he": "הסליים",
+        "en": "Slime"
       },
       "elements": [
         "earth"
@@ -57,8 +57,8 @@
         }
       ],
       "role": {
-        "he": "בולם זעזועים: המבנה הג'לטיני סופג הדף, לא ניתן לדחוף אותו אחורה.",
-        "en": "Shock absorber: its gelatinous body soaks knockback — it cannot be pushed back."
+        "he": "מי שעובר דרכו מאט",
+        "en": "Enemies passing through are Slowed"
       },
       "art": {
         "placeholderColor": "#8a6d3b",
@@ -95,15 +95,11 @@
             "stunSeconds": 3
           },
           "description": {
-            "he": "בולעת את הקלף המסתער של היריב ומשהה אותו 3 שניות.",
-            "en": "Swallows the enemy's advancing card, stunning it for 3 seconds."
+            "he": "בולעת כל קלף אויב עם פחות חיים שעובר דרכה, ומוסיפה את החיים שלו לשלה.",
+            "en": "Swallows any enemy card with less Health passing through it and gains its Health."
           }
         }
       ],
-      "role": {
-        "he": "עיכול / בקרת קצב: שוברת ליריב את טיימר ההתקפות.",
-        "en": "Digestion / crowd control: breaks the enemy's attack timer."
-      },
       "art": {
         "placeholderColor": "#2f7fe2",
         "sprite": "cards/slimes_02_gelatinous_cube.webp"
@@ -115,7 +111,7 @@
       "seriesId": "slimes",
       "numberInSeries": 3,
       "name": {
-        "he": "רפש חומצי",
+        "he": "חמוצי",
         "en": "Acid Ooze"
       },
       "elements": [
@@ -138,8 +134,8 @@
           "trigger": "onHit",
           "params": {},
           "description": {
-            "he": "כל מכה ממיסה שריון של היריב, גם אם היה אמור לספוג יותר.",
-            "en": "Every hit melts the enemy's armor, even if it would have blocked more."
+            "he": "ממיסה במכה הראשונה  את שריון האויב, חזק ככל שיהיה",
+            "en": "First hit: Melts all enemy Armor, regardless of its strength"
           }
         }
       ],
@@ -158,7 +154,7 @@
       "seriesId": "slimes",
       "numberInSeries": 4,
       "name": {
-        "he": "בלוב מתפצל",
+        "he": "בלוב",
         "en": "Splitting Blob"
       },
       "elements": [
@@ -189,10 +185,6 @@
           }
         }
       ],
-      "role": {
-        "he": "נחיל במוות.",
-        "en": "Swarm on death."
-      },
       "art": {
         "placeholderColor": "#2f7fe2",
         "sprite": "cards/slimes_04_splitting_blob.webp"
@@ -226,8 +218,8 @@
           "trigger": "onReveal",
           "params": {},
           "description": {
-            "he": "כשנחשף מתחת לקלף שמת, מדביק את היריב שמולו ומונע ממנו לזוז עד סוף הקרב.",
-            "en": "When revealed under a dead card, glues the enemy in front so it cannot move for the rest of the battle."
+            "he": "מדביק את היריב שמולו ומונע ממנו לזוז עד סוף הקרב.",
+            "en": "Glues the enemy in front so it cannot move for the rest of the battle."
           }
         }
       ],
@@ -247,7 +239,7 @@
       "numberInSeries": 6,
       "name": {
         "he": "סליים רדיואקטיבי",
-        "en": "Toxic Sludge"
+        "en": "Radioactive Slime"
       },
       "elements": [
         "dark"
@@ -270,8 +262,8 @@
             "dotPerStack": 50
           },
           "description": {
-            "he": "יורה בועות רעל; הרעל מצטבר וכל פגיעה מגדילה את הנזק לשנייה.",
-            "en": "Fires poison bubbles; poison stacks and each hit raises the damage per second."
+            "he": "מי שעובר דרכו מאט ומאבד כח תקיפה",
+            "en": "Enemies passing through are Slowed and lose Attack Power"
           }
         }
       ],
@@ -314,8 +306,8 @@
             "pct": 25
           },
           "description": {
-            "he": "משדר פולסים חשמליים שמעניקים +25% מהירות תקיפה למפלצות ברדיוס.",
-            "en": "Emits electric pulses granting +25% attack speed to monsters in range."
+            "he": "משדר פולסים חשמליים שמעניקים מהירות תקיפה למפלצות הסמוכות שלך",
+            "en": "Emits electric pulses, granting Attack Speed to your adjacent monsters"
           }
         }
       ],
@@ -421,7 +413,7 @@
       "numberInSeries": 10,
       "name": {
         "he": "זליג הענק",
-        "en": "Zelig the Giant Ooze"
+        "en": "Zelig the Giant"
       },
       "elements": [
         "water",
@@ -447,14 +439,10 @@
           },
           "description": {
             "he": "כל 6 שניות מושך את כל קלפי היריב המסתערים משבצת אחת פנימה למרכז ומשבש נתיבים.",
-            "en": "Every 6 seconds pulls all advancing enemy cards one slot inward, disrupting lanes."
+            "en": "Every 3 seconds pulls all advancing enemy cards one slot inward, disrupting lanes."
           }
         }
       ],
-      "role": {
-        "he": "ענק אמצע למשבצת ה-2×2: שואב עולמי איטי אך קטלני.",
-        "en": "Mid-boss for the 2×2 King slot: a slow but lethal world-sucker."
-      },
       "art": {
         "placeholderColor": "#2f7fe2",
         "sprite": "cards/slimes_10_zelig_giant_ooze.webp"

@@ -1,6 +1,6 @@
 # הטקסטים של אמנדה
 
-כל טקסט שהשחקן רואה — 1094 במספר, 1094 מהם כבר באנגלית.
+כל טקסט שהשחקן רואה — 1149 במספר, 1146 מהם כבר באנגלית.
 
 ## איך עורכים
 
@@ -149,54 +149,52 @@
 | d180cb32 | התפשטות על הלוח, צמיחה ותוספת חיים | | Spreading across the board, growth and added health |
 | d1c33c0c | פוטוסינתזה | | Photosynthesis |
 | d1c379cd | שלושה צמודים מאותה משפחה מקבלים +20% עוצמה ו+20% חיים. | | Three touching cards of the same family get +20% power and +20% health. |
-| d7f9ed67 | נבט קוצני | | Thorn Sprout |
-| d16ff73d | קוצים שדוקרים את מי שנוגע. | | Thorns that prick whoever touches it. |
-| d301ef3d | עץ עתיק | | Ancient Tree |
+| dd730075 | הדרדר | | Thorn Sprout |
+| de22538b | מי שנוגע בו נדקר ומאבד חיים | | Thorns that prick whoever touches it. |
+| d1bc139b | העץ העתיק | | Ancient Tree |
 | da1c7536 | חומה חיה שמתחדשת ללא הרף. | | A living wall that constantly regenerates. |
-| d8acc97c | פרח מרפא | | Healing Bloom |
+| de453d57 | הילינג בלום | | Healing Bloom |
 | d6b0cd91 | מרפא את כל בעלי הברית סביבו. | | Heals all nearby allies. |
-| d6ee9e8e | צמח טורף | | Venus Trap |
-| d05289dd | נושך ומזריק רעל מצטבר. | | Bites and injects stacking poison. |
-| d4d415b0 | גפן מתפשטת | | Creeping Vine |
-| df0991a1 | מתפשטת: במוות צומחות ממנה שתי גפנים. | | Spreads: on death two new vines grow. |
-| df2db041 | פטריית רעל | | Toxic Mushroom |
+| d3e9dc06 | וונוס טראפ | | Venus Trap |
+| d4a5f02b | יורה רעל שפוגע לאורך זמן | | Bites and injects stacking poison. |
+| dddd5ae6 | שריגים מטפסים | | Creeping Vine |
+| dea053a7 | עותק נוסף של הקלף צומח בכל שטח שמתפנה בסמוך אליו | | Spawns a copy of itself in any adjacent tile that becomes empty. |
+| d63b8ef2 | פטרייה רעילה | | Toxic Mushroom |
 | db0816c9 | יורה נבגי רעל מרחוק. | | Fires poison spores from afar. |
 | d1845f96 | שן הארי | | Dandelion |
-| d8deff30 | במוות מפזרת זרעים שממשיכים להילחם. | | On death scatters seeds that fight on. |
+| db45272e | לאחר המוות מפזרת זרעים שממשיכים להילחם | | On death scatters seeds that fight on. |
 | d137f274 | קקטוס | | Cactus |
-| d1fa91ef | קוצני ועמיד — דוקר ומתחדש. | | Spiky and hardy — pricks and regenerates. |
+| db267dde | קוצני ועמיד | | Spiky and hardy |
 | d57a0224 | חמנייה | | Sunflower |
-| dac9c5a2 | אוגרת אור ומרפאת את הסובבים. | | Stores sunlight and heals those around it. |
-| d9da1c5d | עץ-האם הענק | | Great Mother Tree |
-| de3ae8ea | ענק אמצע למשבצת ה-2×2: מתחדש בעצמו ומרפא את כל הצמחים. | | Mid-boss for the 2×2 King slot: self-regenerates and heals all plants. |
+| db9c640c | יורה גרעינים. סופגת שמש משטחים פנויים סמוכים ומתרפאת. | | Shoots seeds. Absorbs sunlight from empty adjacent spaces to Heal |
+| db57d5b0 | אמא - עץ | | Great Mother Tree |
+| d60e56ed | גדול ויציב, מרפא את כל הצמחים בלוח שלך | | Massive and sturdy. Heals all allied plants. |
 
-## סדרה — הריריים
+## סדרה — הדביקים
 
 | מזהה | טקסט נוכחי | טקסט חדש | אנגלית |
 | --- | --- | --- | --- |
-| d9349aef | הריריים | | The Slimes |
+| dc1662ed | הדביקים | | The Slimes |
 | d477a268 | משאירים שובל ריר שמאט את היריב | | Leaving a slime trail that slows the enemy |
 | df041649 | דביקות | | Stickiness |
 | d45c17b6 | שלושה צמודים מאותה משפחה מקבלים +20% עוצמה ו+20% חיים. | | Three touching cards of the same family get +20% power and +20% health. |
-| d24312e8 | סליים בסיסי | | Basic Slime |
-| d5a5e71a | בולם זעזועים: המבנה הג'לטיני סופג הדף, לא ניתן לדחוף אותו אחורה. | | Shock absorber: its gelatinous body soaks knockback — it cannot be pushed back. |
+| dd6d1363 | הסליים | | Slime |
+| dc8d5f0a | מי שעובר דרכו מאט | | Enemies passing through are Slowed |
 | d9dab6c4 | קוביית ג'לי | | Gelatinous Cube |
-| dc3a07f6 | בולעת את הקלף המסתער של היריב ומשהה אותו 3 שניות. | | Swallows the enemy's advancing card, stunning it for 3 seconds. |
-| d804a3f3 | עיכול / בקרת קצב: שוברת ליריב את טיימר ההתקפות. | | Digestion / crowd control: breaks the enemy's attack timer. |
-| dc0ee275 | רפש חומצי | | Acid Ooze |
-| d6768ae4 | כל מכה ממיסה שריון של היריב, גם אם היה אמור לספוג יותר. | | Every hit melts the enemy's armor, even if it would have blocked more. |
+| d9e3edc7 | בולעת כל קלף אויב עם פחות חיים שעובר דרכה, ומוסיפה את החיים שלו לשלה. | | Swallows any enemy card with less Health passing through it and gains its Health. |
+| d16b90ad | חמוצי | | Acid Ooze |
+| d4bb1b7a | ממיסה במכה הראשונה  את שריון האויב, חזק ככל שיהיה | | First hit: Melts all enemy Armor, regardless of its strength |
 | d0855e04 | ממיס שריון. | | Armor melter. |
-| d596f0a9 | בלוב מתפצל | | Splitting Blob |
+| df582627 | בלוב | | Splitting Blob |
 | d26b185e | במוות נחתך לשני בלובים קטנים שקופצים לנתיבים הסמוכים וממשיכים להילחם. | | On death splits into two small blobs that leap to adjacent lanes and keep fighting. |
-| d3669850 | נחיל במוות. | | Swarm on death. |
 | d414ebd5 | שטיח-דבק | | Sticky Rug |
-| d2ae4498 | כשנחשף מתחת לקלף שמת, מדביק את היריב שמולו ומונע ממנו לזוז עד סוף הקרב. | | When revealed under a dead card, glues the enemy in front so it cannot move for the rest of the battle. |
+| df4c8192 | מדביק את היריב שמולו ומונע ממנו לזוז עד סוף הקרב. | | Glues the enemy in front so it cannot move for the rest of the battle. |
 | d0b30ec8 | מלכודת קומת-קרקע. | | Ground-floor trap. |
-| daaa981c | סליים רדיואקטיבי | | Toxic Sludge |
-| db9094e8 | יורה בועות רעל; הרעל מצטבר וכל פגיעה מגדילה את הנזק לשנייה. | | Fires poison bubbles; poison stacks and each hit raises the damage per second. |
+| daaa981c | סליים רדיואקטיבי | | Radioactive Slime |
+| da746365 | מי שעובר דרכו מאט ומאבד כח תקיפה | | Enemies passing through are Slowed and lose Attack Power |
 | d1818001 | נזק מתמשך מרחוק. | | Ranged damage over time. |
 | d9892ad9 | מוח-צף | | Floating Brain |
-| de776251 | משדר פולסים חשמליים שמעניקים +25% מהירות תקיפה למפלצות ברדיוס. | | Emits electric pulses granting +25% attack speed to monsters in range. |
+| d920d13a | משדר פולסים חשמליים שמעניקים מהירות תקיפה למפלצות הסמוכות שלך | | Emits electric pulses, granting Attack Speed to your adjacent monsters |
 | d81d470f | באף אזורי. | | Area buffer. |
 | df2a4637 | מטמיע הצורות | | Assimilator |
 | d4b8587c | בפגיעה הראשונה מעתיק את האלמנט של היריב ומשתלב בסינרגיות. | | On its first hit copies the enemy's element, letting it slot into synergies. |
@@ -204,9 +202,8 @@
 | d5ff14e8 | פודינג-מגן | | Pudding Shield |
 | d9ffeb46 | סופג חצי מהנזק שמופנה לקלפים הצמודים אליו מימין ומשמאל. | | Absorbs half the damage aimed at the cards directly to its left and right. |
 | d59cfdc3 | הגנה היקפית / שומר ראש. | | Perimeter guard / bodyguard. |
-| de5bfdae | זליג הענק | | Zelig the Giant Ooze |
-| db20969f | כל 6 שניות מושך את כל קלפי היריב המסתערים משבצת אחת פנימה למרכז ומשבש נתיבים. | | Every 6 seconds pulls all advancing enemy cards one slot inward, disrupting lanes. |
-| dd02f859 | ענק אמצע למשבצת ה-2×2: שואב עולמי איטי אך קטלני. | | Mid-boss for the 2×2 King slot: a slow but lethal world-sucker. |
+| de5bfdae | זליג הענק | | Zelig the Giant |
+| db20969f | כל 6 שניות מושך את כל קלפי היריב המסתערים משבצת אחת פנימה למרכז ומשבש נתיבים. | | Every 3 seconds pulls all advancing enemy cards one slot inward, disrupting lanes. |
 
 ## סדרה — האגדיים
 
@@ -217,48 +214,40 @@
 | df6551b7 | תוהו | | Chaos |
 | d3dcebe0 | אין. הם לא באים בשלושה. | | None. They do not come in threes. |
 | da3285cd | אמנדה | | Amanda |
-| da6a1290 | מלכת הצד שלה. לא זזה, יורה רחוק, מחזירה נזק ומרפאה את מי שסביבה. היא לא אמורה להיות הוגנת — בשביל זה אתם שניים. | | Queen of her side. Never moves, shoots far, reflects damage and heals what stands near her. She is not meant to be fair — that is why there are two of you. |
+| d48433be | המפלצת הכי חזקה באלבום. יורה רחוק וחזק ומרפאה את כל מי שסביבה. אף אחד עדיין לא ניצח אותה. אולי תהיו הראשונים. | | The strongest monster in the album. Shoots far and hard, and heals everyone around her. No one has beaten her yet. Maybe you’ll be the firs |
 
 ## קלפי פעולה
 
 | מזהה | טקסט נוכחי | טקסט חדש | אנגלית |
 | --- | --- | --- | --- |
-| d049f291 | שליפה משולשת | | Triple Draw |
-| d0d3125a | שולף 3 קלפים במכה אחת ליד. מעולה לחיסכון בזמן הבנייה. | | Draws 3 cards to hand at once. Great for saving build time. |
 | d8af9ed0 | בוסט אנרגיה | | Energy Boost |
 | d924260a | מעניק +50 עוצמה לכל הקלפים שמונחים כרגע על הלוח שלך. | | Grants +50 power to all cards currently on your board. |
-| d8db5211 | מחק רדיואקטיבי | | Radioactive Eraser |
-| d08dfbce | מוחק קלף אחד שהיריב הניח (אם הופעל על המלך - מוריד לו נזק כבד במקום למחוק). | | Erases one enemy card (if used on the King, deals heavy damage instead of erasing). |
-| d3929761 | הקפאת זמן | | Time Freeze |
-| db59b2b4 | מקפיא את המסך של היריב לחלוטין ל-3 שניות. | | Completely freezes the opponent's screen for 3 seconds. |
-| d36bffd3 | החלפת מקומות | | Swap Places |
+| d191f69c | משמיד הקלפים | | Radioactive Eraser |
+| d281179a | מוחק קלף אחד של היריב (אי אפשר להפעיל על המלך). | | Erases one enemy card (if used on the King, deals heavy damage instead of erasing). |
+| dcf7b540 | הפריזר | | Time Freeze |
+| dca2eedf | היריב לא יכול להדביק קלפים באלבום למשך 5 שניות | | Completely freezes the opponent's screen for 3 seconds. |
+| d0014d6d | הסוויצ׳ר | | Swap Places |
 | d52f8ecc | מחליף מיקומים בין שני קלפים שכבר הנחת על הלוח שלך. | | Swaps the positions of two cards you have already placed on your board. |
 | d6c5480b | רנטגן | | X-Ray |
 | d0c06a9b | חושף את כל הלוח של היריב (כולל שורת ההפתעה האחורית) למשך 5 שניות. | | Reveals the entire enemy board (including the back Surprise Row) for 5 seconds. |
 | d8dd9d7a | קומת קרקע | | Ground Floor (Stacking) |
-| da8138d9 | מאפשר לבחור 4 משבצות בלוח ולהניח בהן קלף על גבי קלף. כשהעליון מת בקרב, התחתון נחשף. | | Lets you pick 4 slots and stack a card on top of another. When the top dies in battle, the bottom is revealed. |
+| d393c007 | מאפשר להדביק קלף אחד על גבי קלף קיים. כשהעליון מת בקרב, התחתון נחשף. | | Lets you pick 4 slots and stack a card on top of another. When the top dies in battle, the bottom is revealed. |
 | d45d0447 | פינות אפלות | | Dark Corners |
-| dd8f73aa | מאפשר אוטומטית הנחת קלף כפול (Stack) בכל 4 הפינות החיצוניות של הלוח שלך. | | Automatically enables stacking a double card on all 4 outer corners of your board. |
+| d25f1f60 | מכפיל את החיים של כל הקלפים שמודבקים בפינות | | Automatically enables stacking a double card on all 4 outer corners of your board. |
 | d2af4555 | סופת חול | | Sandstorm |
 | dc311f15 | מחליפה בין שני שומרי המלך של היריב, ובין שני הקלפים שבקצוות — השורה הקדמית נשארת, הסדר שלה לא. | | Swaps the enemy's two King guards with each other, and its two outer front cards with each other. |
-| d28ffb0e | חומת פלדה | | Steel Wall |
-| deebcf6a | מניח מגן פסיבי שחוסם לחלוטין את קלף המערכת הבא שהיריב ינסה להפעיל עליך. | | Places a passive shield that fully blocks the next Action Card the enemy tries to use on you. |
 | d2221bdb | תדלוק מלא | | Full Refuel |
 | daee0956 | משדרג מיידית קלף שהנחת על הלוח לגרסה החזקה יותר שלו (רמה 2) למשך המשחקון. | | Instantly upgrades a placed card to its stronger version (level 2) for the match. |
-| dad4d9ca | זימון אמנדה | | Amanda's Awakening |
-| d96dd866 | עוצר את המשחק התחרותי, מאחד את הלוחות ומכניס את שני השחקנים לקרב Co-Op משותף מול אמנדה. | | Halts the competitive match, merges the boards and drops both players into a co-op battle against Amanda. |
-| d0ecb3e1 | פינוי קלף | | Recall Card |
-| d3b1792e | בלחיצה: בחר קלף שהנחת על הלוח והורד אותו (המשבצת מתפנה). מנטרל את ההדבקה. | | On use: pick a card you placed and remove it (its slot frees up). Undoes the glue. |
+| d45ad227 | פינוי בינוי | | Recall Card |
+| d934ff11 | מאפשר לך להסיר קלף שכבר הדבקת ולפנות משבצת | | On use: pick a card you placed and remove it (its slot frees up). Undoes the glue. |
 | d5bb37c6 | מילוי לאבה | | Lava Fill |
-| dc7c436b | פסיבי: בסוף הבנייה ממלא עד 3 משבצות ריקות ב'לאבה' (במקום מפלצת פירורים) במיקומים אקראיים. | | Passive: at the end of building, fills up to 3 empty slots with Lava (instead of Crumb Demons) at random positions. |
+| d71c0f77 | בסוף הבנייה ממלא עד 3 משבצות ריקות ב'לאבה' במיקומים אקראיים. | | Passive: at the end of building, fills up to 3 empty slots with Lava (instead of Crumb Demons) at random positions. |
 | dc3fedf6 | מילוי גולם אבן | | Colossus Fill |
 | d20f47e3 | פסיבי: בסוף הבנייה ממלא עד 3 משבצות ריקות ב'גולם אבן' במיקומים אקראיים. | | Passive: at the end of building, fills up to 3 empty slots with Stone Colossus at random positions. |
 | db4905a9 | מילוי דרקון אש | | Flame Fill |
 | d598d611 | פסיבי: בסוף הבנייה ממלא עד 3 משבצות ריקות ב'פליים דראגון' במיקומים אקראיים. | | Passive: at the end of building, fills up to 3 empty slots with Flame Dragon at random positions. |
 | db55bdb5 | מילוי קוביית ג'לי | | Cube Fill |
 | d3c3107c | פסיבי: בסוף הבנייה ממלא עד 3 משבצות ריקות ב'קוביית ג'לי' במיקומים אקראיים. | | Passive: at the end of building, fills up to 3 empty slots with Gelatinous Cube at random positions. |
-| dcc09db5 | ידיים קפואות | | Frozen Hands |
-| d865b720 | היריב קופא לחמש שניות. לשלוף ולזרוק הוא עוד יכול — להדביק קלפים באלבום כבר לא. אי אפשר לשחק את זה כשנותרו פחות מעשר שניות בנייה. | | Freezes the opponent for five seconds: they can still draw, discard and play action cards, but they cannot place a card on the board. Unplayable with under ten seconds of building left. |
 
 ## הקול של אמנדה — שורות מתחלפות (כמה גרסאות לכל רגע)
 
@@ -266,46 +255,44 @@
 | --- | --- | --- | --- |
 | s09c9dbd | ילדה | | kid |
 | sd2076b4 | ילד | | kid |
-| sf076071 | כבר הולך? | | Leaving already? |
+| sa0c2f52 | זהו, הולכים? | | Leaving already? |
 | s2631ad1 | מה, זהו? | | What, that's it? |
 | sb4c1729 | ברצינות? | | Seriously? |
-| s3bfb17f | עכשיו דווקא? | | Now of all times? |
-| s4515ae6 | אבל רק התחלנו | | But we only just started |
-| sb749f7c | הלוח שבנית נמחק. אשמור לך מקום בתפריט שלי, ילד. | | The board you built is gone. I'll keep you a place on my menu, kid. |
-| sf823ea4 | הלוח שבנית נמחק. אשמור לך מקום בתפריט שלי, ילדה. | | The board you built is gone. I'll keep you a place on my menu, kid. |
-| s41bc2a0 | כל מה שבנית הולך לפח. אני אשרוד איכשהו. | | Everything you built goes in the trash. I'll survive somehow. |
-| s841d0a1 | הלוח נמחק והקרב לא יקרה. אף אחד לא ידע שהיית כאן. | | The board is gone and the battle won't happen. Nobody will know you were here. |
+| s98bfa4a | דווקא עכשיו? | | Now of all times? |
+| sd058c50 | הולכים? רק התחלנו | | But we only just started |
+| s6dbd722 | הלוח נמחק ואתם חוזרים לתפריט. לתפריט שלי | | The board you built is gone. I'll keep you a place on my menu, kid. |
+| sb024f5a | כל מה שבנית נמחק. חבל, כבר היה לי תיאבון | | Everything you built goes in the trash. I'll survive somehow. |
+| sdc548ed | הלוח נמחק. הלכתי לישון רעבה. | | The board is gone and the battle won't happen. Nobody will know you were here. |
 | s4f08f6b | אני מוחקת את הלוח. אל תדאג, אני זוכרת אותך. | | I'm wiping the board. Don't worry, I remember you. |
 | s10d5f41 | זה נמחק והולך. כולם חוזרים. | | Wiped and gone. They all come back. |
-| s627f20a | כן, אני בורח | | Yes, I'm out of here |
-| sd44f6f7 | כן, מספיק לי | | Yes, I've had enough |
-| s0211124 | כן, שחרר אותי | | Yes, let me go |
-| s3630815 | כן, ביי | | Yes, bye |
-| sb86d2ab | לא, אני נשאר | | No, I'm staying |
-| sdc2715c | לא, בוא נשחק | | No, let's play |
+| s0d9df94 | כן, זזתי הביתה | | Yes, I'm out of here |
+| sec9f3ef | כן, יש לי חיים | | Yes, I've had enough |
+| sb74d641 | כן, שחררי אותי | | Yes, let me go |
+| s2a07130 | כן, יאללה ביי | | Yes, bye |
+| sfdc5788 | נראה לי שאשאר | | No, I'm staying |
 | s54722a8 | לא, בואי נשחק | | No, let's play |
-| s420c05d | התבלבלתי | | My mistake |
+| s1ddeb1f | בעצם לא, התבלבלתי | | My mistake |
 | s07e484c | עוד לא סיימתי | | I'm not done yet |
-| s5bd3e69 | ניצחת! הפעם. | | You won! This time. |
-| s322e6c0 | ניצחת. נתתי לך. | | You won. I let you. |
+| s029189a | ניצחת. אבל רק הפעם. | | You won! This time. |
+| s178f33f | ניצחת. אבל רק כי נתתי לך. | | You won. I let you. |
 | s072fa2f | יפה, ילד. | | Nice, kid. |
 | s47dce22 | יפה, ילדה. | | Nice, kid. |
-| sad1cc07 | ניצחת. אל תתרגל. | | You won. Don't get used to it. |
+| sb470edf | ניצחת. לא להתרגל. | | You won. Don't get used to it. |
 | sd1f0cd1 | טוב. באמת טוב. | | Good. Genuinely good. |
-| s6b08edc | הפסדת. טעים. | | You lost. Delicious. |
-| s609bca4 | הפסדת. היה נחמד. | | You lost. That was nice. |
-| s621af20 | זהו. תודה על הארוחה. | | That's that. Thanks for dinner. |
-| sbc1c615 | הפסדת, וידעת שזה יקרה. | | You lost, and you knew you would. |
-| sbdbc574 | אוי. כמעט. | | Oh. So close. |
+| sbaf0592 | הפסדת. קדימה לצלחת שלי | | You lost. Delicious. |
+| sdc2f0f9 | נחמד ששיחקת, יותר נחמד שהפסדת | | You lost. That was nice. |
+| scae423d | זהו, הפסדת. שיהיה לי בתיאבון. | | That's that. Thanks for dinner. |
+| saf64df3 | הפסדת. לא נעים, לא נורא. | | You lost, and you knew you would. |
+| s82fb0b7 | הפסדת. כל כך קרוב, כל כך רחוק. | | Oh. So close. |
 | s4e10573 | היריב ברח. ניצחון טכני! | | Your opponent ran. You win on a technicality. |
-| s3a0ee19 | הוא ברח. אני לא מאשימה אותו. | | They ran. I don't blame them. |
+| sbb68dcd | היריב שלך ברח. אני לא מאשימה אותו | | They ran. I don't blame them. |
 | sdb10f2b | נשארת לבד. זה נחשב ניצחון. | | You're on your own. That counts as a win. |
 | s0176373 | היריב נעלם. אכלתי אותו בדרך. | | Your opponent vanished. I ate them on the way. |
 | s1661c13 | התכונן לקרב, ילד | | Get ready to fight, kid |
 | s0f9d55a | התכונני לקרב, ילדה | | Get ready to fight, kid |
 | s34b7fb9 | תתארגן, ילד | | Get it together, kid |
 | s5361c59 | תתארגני, ילדה | | Get it together, kid |
-| s353737f | מתחילים. תנשום. | | Here we go. Breathe. |
+| sacf574c | נשימה ארוכה - ונתחיל | | Here we go. Breathe. |
 | s5656766 | קדימה, ילד | | Come on, kid |
 | s9175f67 | קדימה, ילדה | | Come on, kid |
 | s36e79b6 | קדימה לקרב! | | Into battle! |
@@ -314,7 +301,7 @@
 | sa21c01f | הקרב מתחיל, ילד | | The battle begins, kid |
 | sd988a9d | הקרב מתחיל, ילדה | | The battle begins, kid |
 | s647d2f6 | ועכשיו נראה מה בנית | | Now let's see what you built |
-| s361ec57 | מאוחר מדי לשנות | | Too late to change it |
+| s05b265d | זהו, אין שינויים. עכשיו - לקרב. | | Too late to change it |
 | s32acee8 | בוא נראה אותך | | Let's see what you've got |
 | s6f30a3c | בואי נראה אותך | | Let's see what you've got |
 | s69104e2 | מחפשת לך מישהו מתוק | | Finding you someone sweet |
@@ -353,7 +340,7 @@
 | s1396b7a | סובב את המכשיר | | Turn your device |
 | sf038582 | אני משוחקת לרוחב, ילד. ככה אני רואה את שניכם. | | I am played sideways, kid. That is how I see you both. |
 | sbd466e9 | מחכה לחבר שלך… | | Waiting for your friend… |
-| sc752be6 | חפיסה זהה | | Same deck |
+| sc18c32d | דק זהה | | Same deck |
 | se2c2032 | הפרופיל שלי | | My profile |
 | sda25897 | התחברות | | Sign in |
 | s1703f49 | הודעות | | Messages |
@@ -399,7 +386,7 @@
 | s25edd89 | קח לפעולה | | Take it to the bar |
 | s8006c77 | הרץ קרב | | Run a battle |
 | sb0d338c | אין קלף | | No card |
-| s2f616ac | קלפים שנשארו בחפיסה | | Cards left in the deck |
+| sba4d2ee | קלפים שנשארו בדק | | Cards left in the deck |
 | s6c4fc10 | קלפים בפח | | Cards in the trash |
 | s7aacede | הבר מלא | | The bar is full |
 | s9f032e5 | קח לפעולה | | Take it to the bar |
@@ -423,6 +410,8 @@
 | s80f3ec6 | עכשיו לך תאסוף קלפים. אני רעבה. | | Now go and collect cards. I'm hungry. |
 | s8e26ffe | יאללה | | Let's go |
 | s0e0ecca | סגירה | | Close |
+| sb3ce2e0 | סגירה | |  |
+| scb3bea3 | הדקים שלי | | My decks |
 | s7347353 | {0} מזמין אותך למשחק | | {0} is inviting you to a match |
 | seaa865f | חבר | | Friend |
 | sa2adcdb | קדימה | | Go |
@@ -589,8 +578,8 @@
 
 | מזהה | טקסט נוכחי | טקסט חדש | אנגלית |
 | --- | --- | --- | --- |
-| s379a6ae | 🧑 אתה | | 🧑 You |
-| s2742a4b | 🤖 היריב | | 🤖 Opponent |
+| sb1bd099 | אתה | | You |
+| s8854c7a | היריב | | Opponent |
 | s25910a5 | ⏱ נגמר הזמן! | | ⏱ Time's up! |
 | sb672b2e | נתקע אחרי {0} שניות בלי ציור | | Stuck after {0} seconds with nothing drawn |
 | sbaf8bec | לא הצלחתי להראות לך את הקרב. | | I could not show you the battle. |
@@ -744,18 +733,18 @@
 | מזהה | טקסט נוכחי | טקסט חדש | אנגלית |
 | --- | --- | --- | --- |
 | sdf8896f | ← חזרה | | ← Back |
-| s9ed23d9 | אתה משחק מהחפיסה המלאה | | You are playing from the full deck |
+| sfb0ff51 | אתה משחק מהדק המלא | | You are playing from the full deck |
 | s5c7bb8f | הקרבות שלך | | Your battles |
 | sf9d8dd4 | ניצחונות | | Wins |
 | s0ab9316 | {0} מתוך {1} | | {0} out of {1} |
-| s80eabb4 | הפסדים | | Losses |
 | s2fd7491 | שיא גביעים | | Best trophies |
-| s59e6cc5 | תיבות | | Chests |
-| sd969559 | עותקים | | Copies |
 | s3cfae6d | הקרבות האחרונים, החדש ביותר ראשון | | Your most recent battles, newest first |
 | s176d067 | עותקים — כמה פעמים אפשר להניח אותו | | Copies — how many times you can place it |
 | s4308b06 | רמה {0} | | Level {0} |
-| sdcf87da | שדרוג לרמה {0} — עולה {1} עותקים | | Upgrade to level {0} — costs {1} copies |
+| s3e3750f | מקסימום | | Max |
+| s6c954dd | {0} מתוך {1} קלפים לשדרוג | | {0} of {1} cards to upgrade |
+| s15650ab | שדרוג לרמה {0} | | Upgrade to level {0} |
+| sac15acb | שדרוג | | Upgrade |
 
 ## components/ArenaTrack.tsx
 
@@ -768,6 +757,13 @@
 | s474cafb | הדרך | | The road |
 | s2411278 | אתה כאן | | You are here |
 
+## components/ArenaUp.tsx
+
+| מזהה | טקסט נוכחי | טקסט חדש | אנגלית |
+| --- | --- | --- | --- |
+| se7b9be7 | עלית ארנה | | Arena up! |
+| s6a89081 | קדימה! | | Let's go! |
+
 ## components/BattleScreen.tsx
 
 | מזהה | טקסט נוכחי | טקסט חדש | אנגלית |
@@ -776,6 +772,15 @@
 | s3e7a5b3 | המשך לתוצאה | | On to the result |
 | s0e0b682 | רגע… | | One moment… |
 | s84d910b | עצור וחזור ללוח | | Stop and go back to the board |
+
+## components/BirthdayCard.tsx
+
+| מזהה | טקסט נוכחי | טקסט חדש | אנגלית |
+| --- | --- | --- | --- |
+| sfe72726 | יום הולדת שמח | | Happy birthday |
+| sb4b4284 | בן {0} היום! | | {0} today! |
+| s5dc59d0 | היום זה היום שלך! | | Today is your day! |
+| sf6a63bb | תודה! | | Thanks! |
 
 ## components/CardPicker.tsx
 
@@ -829,6 +834,43 @@
 | sb1a59ea | תיבות שמחכות לך | | Chests waiting for you |
 | s97a626f | פתח | | Open |
 
+## components/DeckBuilder.tsx
+
+| מזהה | טקסט נוכחי | טקסט חדש | אנגלית |
+| --- | --- | --- | --- |
+| sa92d994 | מחיר | | Price |
+| s57bf777 | עוצמה | | Power |
+| s1950df9 | חיים | | Health |
+| s39768fa | סדרה | | Family |
+| sa1cd05d | א-ב | | A–Z |
+| s7d2f2c0 | תנועה | | Movement |
+| s91ecd04 | זזים | | Moving |
+| s3fc66d9 | סטטיים | | Static |
+| s1d926cf | עפים | | Flying |
+| sfeaf273 | קרב | | Combat |
+| s2e7ed39 | יורים מרחוק | | Ranged |
+| s2845407 | רודפים את המלך | | Hunts the King |
+| sb15ae7e | יכולת | | Ability |
+| scae68e4 | חיים אחרי המוות | | Life after death |
+| s234a399 | מרפאים | | Healers |
+| s2c85215 | מחזירים נזק | | Returns damage |
+| s7966a9d | משוריינים | | Armoured |
+| sf621727 | משפחה | | Family |
+| s0ce23c9 | שם לדק | | Name this deck |
+| sd87ddf0 | חזרה | | Back |
+| sd7b2e93 | גב הקלפים | | Card back |
+| s1cf2150 | הדק שלי | | My deck |
+| s7ec416f | מלא לי | | Fill it for me |
+| s1776336 | הורד מהדק | | Take it out |
+| sa0f9456 | סינון | | Filter |
+| se3355ce | לנקות | | Clear |
+| s3451fcc | מיון | | Sort |
+| s9db8c07 | האלבום שלי | | My album |
+| scba3d8d | שמור | | Save |
+| se0c2a5c | מחק | | Delete |
+| sad4a141 | לערוך | | Edit |
+| s4a9e250 | דק {0} | | Deck {0} |
+
 ## components/ErrorBoundary.tsx
 
 | מזהה | טקסט נוכחי | טקסט חדש | אנגלית |
@@ -843,6 +885,7 @@
 | --- | --- | --- | --- |
 | s99cd003 | בלי שם | | No name |
 | s92f2116 | סגירה | | Close |
+| s6fa5878 | להוסיף חבר | | Add a friend |
 | s2e78dd8 | חברים | | Friends |
 | sf41dbdb | רגע… | | One moment… |
 | s451672b | עוד אין כאן אף אחד. | | Nobody here yet. |
@@ -850,16 +893,29 @@
 | s3d6a918 | מחכה שיאשר | | Waiting for them to accept |
 | s7171c91 | מחובר | | Online |
 | s940973e | לא מחובר | | Offline |
-| s820fa28 | כן | | Yes |
-| s018b28b | להזמין למשחק | | Invite to a game |
+| s6bdffb3 | להוסיף חבר | | Add a friend |
+| s310399d | הקוד שלי | | My code |
+| sec12a0d | קוד של חבר | | Friend's code |
+| s2a0da49 | הוספה | | Add |
+| s1620146 | רגע… | | One moment… |
+| sbec9016 | רק מי ששיחקת מולו. | | Only people you have played against. |
+| sc5ab4b1 | חזרה | | Back |
+| scf8308e | רוצה להיות חבר שלך | | Wants to be your friend |
+| se2994f6 | מחכה שיאשר | | Waiting for them to accept |
+| s5855269 | מחובר | | Online |
+| sc89c440 | לא מחובר | | Offline |
+| s93ea90a | יהלומים | | Diamonds |
+| s48d6a95 | ארנה | | Arena |
+| s456c1ca | קלפים | | Cards |
+| s7e4bcf7 | כן, חברים | | Yes, friends |
 | s7d7e4b6 | אפשר להזמין ממסך הבית | | You can invite from the home screen |
 | s9e7bf93 | שחק | | Play |
-| s4997be8 | להסיר | | Remove |
-| s71eb681 | לבטל | | Cancel |
-| s6fa5878 | להוסיף חבר | | Add a friend |
-| s1620146 | רגע… | | One moment… |
-| s18ecd7a | עוד לא שיחקת מול אף אחד. | | You have not played against anybody yet. |
-| sbec9016 | רק מי ששיחקת מולו. | | Only people you have played against. |
+| sc40cb8d | בטוח? | | Sure? |
+| seb9ab82 | כן, להפסיק | | Yes, end it |
+| s4075081 | כן, לבטל | | Yes, cancel |
+| sb44edc2 | לא | | No |
+| s97fbe28 | להפסיק חברות | | End friendship |
+| sd770e7d | לבטל את הבקשה | | Cancel the request |
 
 ## components/HomeScreen.tsx
 
@@ -881,7 +937,6 @@
 | s665bc9f | לפתוח חדר | | Open a room |
 | s3ebc7cd | יש לי קוד | | I have a code |
 | saedd95d | מישהו אקראי | | Somebody random |
-| s96c910e | נגד אמנדה — שניים נגדה | | Against Amanda — the two of you against her |
 | s9cadb42 | ← חזרה | | ← Back |
 | scf8cabd | קוד החדר | | Room code |
 | sd1f36fa | הצטרף | | Join |
@@ -893,9 +948,11 @@
 | sf8d116e | זה הקוד שלך. אתה לא יכול לאכול את עצמך. | | That is your own code. You cannot eat yourself. |
 | s1f6e5ea | החדר מלא. שניים מספיקים לי. | | The room is full. Two is enough for me. |
 | sefa91e2 | ההתקדמות שלי | | My progress |
+| s7c9dce4 | הדק שלי | | My deck |
 | sac17bac | האלבום שלי | | My album |
 | s3cd2566 | מה יש לך | | What you have |
 | s5d488a4 | האוסף שלי | | My collection |
+| s3fc668a | דק | | Deck |
 | sb1c5413 | האלבום | | The album |
 | s2706aa0 | חנות נוחות | | Corner Shop |
 | s26c5785 | חדש בחנות | | New in the shop |
@@ -922,6 +979,14 @@
 | --- | --- | --- | --- |
 | s7bf4370 | דלג | | Skip |
 
+## components/LevelUp.tsx
+
+| מזהה | טקסט נוכחי | טקסט חדש | אנגלית |
+| --- | --- | --- | --- |
+| sc54710e | שדרוג! | | Upgraded! |
+| s63923f0 | חזק ב-{0}% | | {0}% stronger |
+| sfe8cfe5 | מגניב! | | Cool! |
+
 ## components/MatePeek.tsx
 
 | מזהה | טקסט נוכחי | טקסט חדש | אנגלית |
@@ -935,7 +1000,7 @@
 | --- | --- | --- | --- |
 | s4fc5b19 | אמנדה — הצצה | | Amanda — a peek |
 | s7767343 | מולה לבד. אי אפשר לנצח. | | Against her, on your own. You cannot win. |
-| s5c8a703 | חפיסה זהה | | Same deck |
+| s7c9fba9 | דק זהה | | Same deck |
 | secbb695 | אותם קלפים לשני הצדדים. | | The same cards for both sides. |
 | se14e946 | 2 נגד 2 | | 2 against 2 |
 | sac17390 | שניים בונים לוח אחד. | | Two of you build one board. |
@@ -1048,7 +1113,7 @@
 | sab50205 | קרב חוזר | | Rematch |
 | s2d822f4 | ← חזרה ללוח | | ← Back to the board |
 | se3da978 | משחק חדש | | New game |
-| s11133bf | תפריט | | Menu |
+| s28e9a18 | חזרה | | Back |
 | seb359d8 | דיווח על היריב | | Report your opponent |
 | s18fbbed | מספיק, הבנתי | | Enough, I get it |
 | se664893 | שאסביר לך מה קרה? | | Shall I explain what happened? |
@@ -1324,15 +1389,22 @@
 | sedc6c2a | אין חיבור לשרת | | No connection to the server |
 | s54a1abe | לא הצליח | | It did not work |
 | sac33701 | אין חיבור לשרת | | No connection to the server |
-| s2cb3864 | אין חשבון | | No account |
 | s2afe5ef | לא הצליח | | It did not work |
-| s58e9ecf | לא הצליח | | It did not work |
 | s835acce | אין חיבור לשרת | | No connection to the server |
-| s2d85691 | אין חשבון | | No account |
+| s2cb3864 | אין חשבון | | No account |
+| s58e9ecf | לא הצליח | | It did not work |
 | s5da8d9e | לא הצליח | | It did not work |
 | s115ddae | אין חיבור לשרת | | No connection to the server |
+| s2d85691 | אין חשבון | | No account |
+| s7a9bffc | לא הצליח | | That didn't work |
+| se7da992 | אין חיבור לשרת | |  |
 | sf5f2796 | צריך להתחיל לשחק קודם | | You have to start playing first |
 | s79d47ae | כבר מחובר | | Already signed in |
+| sd0c6462 | לא הצלחתי לשמור. נסה שוב. | | That did not save. Try again. |
+| sb7305bc | אין חיבור לשרת | |  |
+| s2a6031b | אין חיבור לשרת | | No connection to the server |
+| s2c36448 | אפשר לשמור {0} דקים. תמחק אחד קודם. | | You can keep {0} decks. Delete one first. |
+| sb682ef4 | כבר יש לך דק בשם הזה. | | You already have a deck with that name. |
 
 ## game/coach.ts
 
@@ -1380,6 +1452,11 @@
 | s73fed82 | כבר ביקשת. מחכים שיאשרו. | | You already asked. Waiting for them to say yes. |
 | sa1cbf5f | יש לך יותר מדי בקשות שמחכות לתשובה. | | You have too many requests still waiting for an answer. |
 | s28541c5 | אין בקשה כזאת. | | There's no such request. |
+| sc6d8f34 | אין קוד כזה. | | No such code. |
+| s1ea1328 | אין מספיק עותקים. | | Not enough copies. |
+| s4cfc2af | חסרים {0} עותקים. | | {0} more copies needed. |
+| sd0abc03 | זאת הרמה הכי גבוהה. | | That's the highest level. |
+| sce3da7e | הקלף הזה עוד לא שלך. | | That card isn't yours yet. |
 | s0c9162c | צריך חשבון כדי לדווח על שחקן. אפשר להתחבר באזור האישי. | | Reporting a player needs an account. You can sign in from your profile. |
 | scc4eb78 | ספר לנו מה קרה. | | Tell us what happened. |
 | s3a38c0a | על מי מדווחים? | | Who is this about? |
@@ -1410,8 +1487,6 @@
 | --- | --- | --- | --- |
 | s656f60c | של היריב | | Opponent's |
 | s42347b7 | שלך | | Yours |
-| s313e3b4 | המלך {0} נפל — זה מסיים את הקרב מיד. | | King {0} fell — that ends the battle immediately. |
-| sa74dbef | נגמר הזמן ושני המלכים שרדו — הוכרע לפי חיי המלך: {0} שלך מול {1} של היריב. | | Time ran out and both kings survived — decided on king health: {0} yours against {1} theirs. |
-| sd1c6f72 | נגמר הזמן והמלכים שרדו עם אותו אחוז חיים — הוכרע לפי סך החיים על הלוח. | | Time ran out and both Kings survived on the same percentage of health — decided by total health on the board. |
-| s3d96736 | נגמר הזמן והחיים היו שווים — הוכרע לפי מספר הקלפים ששרדו. | | Time ran out and the health was equal — decided by how many cards survived. |
-| s9726494 | נגמר הזמן והכול יצא שווה לחלוטין — הוכרע בהטלת מטבע. | | Time ran out and everything came out exactly equal — decided by a coin toss. |
+| s38e8e92 | המלך {0} נפל — הקרב הסתיים | | The {0} King fell — the battle is over |
+| sbc89487 | הזמן נגמר, הקרב הסתיים | | Time ran out and both kings survived — decided on king health: {0} yours against {1} theirs. |
+| s156d757 | הזמן נגמר, הקרב הסתיים. שניכם בתיקו מוחלט. הטלתי מטבע כדי לקבוע מי המנצח | | Time ran out and everything came out exactly equal — decided by a coin toss. |

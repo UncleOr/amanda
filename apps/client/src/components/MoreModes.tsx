@@ -35,11 +35,28 @@ export function MoreModes({
 }) {
   const modes: Mode[] = [
     {
+      /*
+       * ═══ BEHIND "SOON", ON PURPOSE, FOR NOW ═══
+       *
+       * Or, the day before the testers arrive: *"Amanda mode looks awful. I
+       * suggest you put it behind 'soon' as well for now, so users have no
+       * access to it, and we'll work on it later. I don't want it to let
+       * down the first users."*
+       *
+       * It is eight lanes against four and the screen has not caught up:
+       * his screenshot has the teammate's half overlapping the board, a
+       * card's name spilling as "The", and the enemy's twelve slots drawn
+       * in a column that does not line up with anything.
+       *
+       * The mode itself still works and every line of it is still here —
+       * dropping `soon` and giving it back `start: onAmandaSolo` is the
+       * whole of switching it on again. This is a curtain, not a deletion.
+       */
       id: "amanda",
       icon: "king",
       title: t("s4fc5b19", "אמנדה — הצצה"),
       blurb: t("s7767343", "מולה לבד. אי אפשר לנצח."),
-      start: onAmandaSolo,
+      soon: true,
     },
     {
       id: "mirror",

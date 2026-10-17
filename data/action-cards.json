@@ -1,25 +1,5 @@
 [
   {
-    "id": "triple_draw",
-    "name": {
-      "he": "שליפה משולשת",
-      "en": "Triple Draw"
-    },
-    "rarity": "common",
-    "copiesInPack": 15,
-    "description": {
-      "he": "שולף 3 קלפים במכה אחת ליד. מעולה לחיסכון בזמן הבנייה.",
-      "en": "Draws 3 cards to hand at once. Great for saving build time."
-    },
-    "effect": "draw",
-    "params": {
-      "count": 3
-    },
-    "usableIn": [
-      "build"
-    ]
-  },
-  {
     "id": "energy_boost",
     "name": {
       "he": "בוסט אנרגיה",
@@ -43,13 +23,13 @@
   {
     "id": "radioactive_eraser",
     "name": {
-      "he": "מחק רדיואקטיבי",
+      "he": "משמיד הקלפים",
       "en": "Radioactive Eraser"
     },
     "rarity": "rare",
     "copiesInPack": 8,
     "description": {
-      "he": "מוחק קלף אחד שהיריב הניח (אם הופעל על המלך - מוריד לו נזק כבד במקום למחוק).",
+      "he": "מוחק קלף אחד של היריב (אי אפשר להפעיל על המלך).",
       "en": "Erases one enemy card (if used on the King, deals heavy damage instead of erasing)."
     },
     "effect": "eraseEnemyCard",
@@ -63,13 +43,13 @@
   {
     "id": "time_freeze",
     "name": {
-      "he": "הקפאת זמן",
+      "he": "הפריזר",
       "en": "Time Freeze"
     },
     "rarity": "rare",
     "copiesInPack": 8,
     "description": {
-      "he": "מקפיא את המסך של היריב לחלוטין ל-3 שניות.",
+      "he": "היריב לא יכול להדביק קלפים באלבום למשך 5 שניות",
       "en": "Completely freezes the opponent's screen for 3 seconds."
     },
     "effect": "freezeEnemy",
@@ -84,7 +64,7 @@
   {
     "id": "swap_places",
     "name": {
-      "he": "החלפת מקומות",
+      "he": "הסוויצ׳ר",
       "en": "Swap Places"
     },
     "rarity": "rare",
@@ -130,7 +110,7 @@
     "rarity": "epic",
     "copiesInPack": 5,
     "description": {
-      "he": "מאפשר לבחור 4 משבצות בלוח ולהניח בהן קלף על גבי קלף. כשהעליון מת בקרב, התחתון נחשף.",
+      "he": "מאפשר להדביק קלף אחד על גבי קלף קיים. כשהעליון מת בקרב, התחתון נחשף.",
       "en": "Lets you pick 4 slots and stack a card on top of another. When the top dies in battle, the bottom is revealed."
     },
     "effect": "enableStacking",
@@ -150,7 +130,7 @@
     "rarity": "epic",
     "copiesInPack": 5,
     "description": {
-      "he": "מאפשר אוטומטית הנחת קלף כפול (Stack) בכל 4 הפינות החיצוניות של הלוח שלך.",
+      "he": "מכפיל את החיים של כל הקלפים שמודבקים בפינות",
       "en": "Automatically enables stacking a double card on all 4 outer corners of your board."
     },
     "effect": "autoStackCorners",
@@ -178,25 +158,6 @@
     ]
   },
   {
-    "id": "steel_wall",
-    "name": {
-      "he": "חומת פלדה",
-      "en": "Steel Wall"
-    },
-    "rarity": "epic",
-    "copiesInPack": 5,
-    "description": {
-      "he": "מניח מגן פסיבי שחוסם לחלוטין את קלף המערכת הבא שהיריב ינסה להפעיל עליך.",
-      "en": "Places a passive shield that fully blocks the next Action Card the enemy tries to use on you."
-    },
-    "effect": "blockNextActionCard",
-    "params": {},
-    "usableIn": [
-      "build",
-      "panic"
-    ]
-  },
-  {
     "id": "full_refuel",
     "name": {
       "he": "תדלוק מלא",
@@ -218,34 +179,15 @@
     ]
   },
   {
-    "id": "amanda_summon",
-    "name": {
-      "he": "זימון אמנדה",
-      "en": "Amanda's Awakening"
-    },
-    "rarity": "legendary",
-    "copiesInPack": 1,
-    "description": {
-      "he": "עוצר את המשחק התחרותי, מאחד את הלוחות ומכניס את שני השחקנים לקרב Co-Op משותף מול אמנדה.",
-      "en": "Halts the competitive match, merges the boards and drops both players into a co-op battle against Amanda."
-    },
-    "effect": "summonAmanda",
-    "params": {},
-    "usableIn": [
-      "build",
-      "panic"
-    ]
-  },
-  {
     "id": "recall_card",
     "name": {
-      "he": "פינוי קלף",
+      "he": "פינוי בינוי",
       "en": "Recall Card"
     },
     "rarity": "rare",
     "copiesInPack": 6,
     "description": {
-      "he": "בלחיצה: בחר קלף שהנחת על הלוח והורד אותו (המשבצת מתפנה). מנטרל את ההדבקה.",
+      "he": "מאפשר לך להסיר קלף שכבר הדבקת ולפנות משבצת",
       "en": "On use: pick a card you placed and remove it (its slot frees up). Undoes the glue."
     },
     "effect": "removeCard",
@@ -264,7 +206,7 @@
     "rarity": "epic",
     "copiesInPack": 5,
     "description": {
-      "he": "פסיבי: בסוף הבנייה ממלא עד 3 משבצות ריקות ב'לאבה' (במקום מפלצת פירורים) במיקומים אקראיים.",
+      "he": "בסוף הבנייה ממלא עד 3 משבצות ריקות ב'לאבה' במיקומים אקראיים.",
       "en": "Passive: at the end of building, fills up to 3 empty slots with Lava (instead of Crumb Demons) at random positions."
     },
     "effect": "fillEmpty",
@@ -334,28 +276,6 @@
     "params": {
       "cardId": "slimes_02_gelatinous_cube",
       "count": 3
-    },
-    "usableIn": [
-      "build"
-    ]
-  },
-  {
-    "id": "frozen_hands",
-    "name": {
-      "he": "ידיים קפואות",
-      "en": "Frozen Hands"
-    },
-    "rarity": "epic",
-    "copiesInPack": 5,
-    "description": {
-      "he": "היריב קופא לחמש שניות. לשלוף ולזרוק הוא עוד יכול — להדביק קלפים באלבום כבר לא. אי אפשר לשחק את זה כשנותרו פחות מעשר שניות בנייה.",
-      "en": "Freezes the opponent for five seconds: they can still draw, discard and play action cards, but they cannot place a card on the board. Unplayable with under ten seconds of building left."
-    },
-    "effect": "freezeOpponentPlacing",
-    "params": {
-      "seconds": 5,
-      "minBuildSecondsLeft": 10,
-      "aiCardsLost": 2
     },
     "usableIn": [
       "build"

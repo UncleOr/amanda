@@ -88,7 +88,7 @@ export const TUNED = {
    * save a deck at all. The dial below goes down to 16 so he can try 40 the
    * moment the testers have a chest or two in them — see decks.ts.
    */
-  deckBudget: 47,
+  deckBudget: 50,
 };
 
 /**

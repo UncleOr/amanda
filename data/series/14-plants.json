@@ -33,7 +33,7 @@
       "seriesId": "plants",
       "numberInSeries": 1,
       "name": {
-        "he": "נבט קוצני",
+        "he": "הדרדר",
         "en": "Thorn Sprout"
       },
       "elements": [
@@ -59,7 +59,7 @@
         }
       ],
       "role": {
-        "he": "קוצים שדוקרים את מי שנוגע.",
+        "he": "מי שנוגע בו נדקר ומאבד חיים",
         "en": "Thorns that prick whoever touches it."
       },
       "art": {
@@ -73,7 +73,7 @@
       "seriesId": "plants",
       "numberInSeries": 2,
       "name": {
-        "he": "עץ עתיק",
+        "he": "העץ העתיק",
         "en": "Ancient Tree"
       },
       "elements": [
@@ -113,7 +113,7 @@
       "seriesId": "plants",
       "numberInSeries": 3,
       "name": {
-        "he": "פרח מרפא",
+        "he": "הילינג בלום",
         "en": "Healing Bloom"
       },
       "elements": [
@@ -153,7 +153,7 @@
       "seriesId": "plants",
       "numberInSeries": 4,
       "name": {
-        "he": "צמח טורף",
+        "he": "וונוס טראפ",
         "en": "Venus Trap"
       },
       "elements": [
@@ -179,7 +179,7 @@
         }
       ],
       "role": {
-        "he": "נושך ומזריק רעל מצטבר.",
+        "he": "יורה רעל שפוגע לאורך זמן",
         "en": "Bites and injects stacking poison."
       },
       "art": {
@@ -193,7 +193,7 @@
       "seriesId": "plants",
       "numberInSeries": 5,
       "name": {
-        "he": "גפן מתפשטת",
+        "he": "שריגים מטפסים",
         "en": "Creeping Vine"
       },
       "elements": [
@@ -221,8 +221,8 @@
         }
       ],
       "role": {
-        "he": "מתפשטת: במוות צומחות ממנה שתי גפנים.",
-        "en": "Spreads: on death two new vines grow."
+        "he": "עותק נוסף של הקלף צומח בכל שטח שמתפנה בסמוך אליו",
+        "en": "Spawns a copy of itself in any adjacent tile that becomes empty."
       },
       "art": {
         "placeholderColor": "#6fbf3b",
@@ -235,7 +235,7 @@
       "seriesId": "plants",
       "numberInSeries": 6,
       "name": {
-        "he": "פטריית רעל",
+        "he": "פטרייה רעילה",
         "en": "Toxic Mushroom"
       },
       "elements": [
@@ -303,7 +303,7 @@
         }
       ],
       "role": {
-        "he": "במוות מפזרת זרעים שממשיכים להילחם.",
+        "he": "לאחר המוות מפזרת זרעים שממשיכים להילחם",
         "en": "On death scatters seeds that fight on."
       },
       "art": {
@@ -350,8 +350,8 @@
         }
       ],
       "role": {
-        "he": "קוצני ועמיד — דוקר ומתחדש.",
-        "en": "Spiky and hardy — pricks and regenerates."
+        "he": "קוצני ועמיד",
+        "en": "Spiky and hardy"
       },
       "art": {
         "placeholderColor": "#6fbf3b",
@@ -390,8 +390,8 @@
         }
       ],
       "role": {
-        "he": "אוגרת אור ומרפאת את הסובבים.",
-        "en": "Stores sunlight and heals those around it."
+        "he": "יורה גרעינים. סופגת שמש משטחים פנויים סמוכים ומתרפאת.",
+        "en": "Shoots seeds. Absorbs sunlight from empty adjacent spaces to Heal"
       },
       "art": {
         "placeholderColor": "#f5f0d0",
@@ -404,7 +404,7 @@
       "seriesId": "plants",
       "numberInSeries": 10,
       "name": {
-        "he": "עץ-האם הענק",
+        "he": "אמא - עץ",
         "en": "Great Mother Tree"
       },
       "elements": [
@@ -437,8 +437,8 @@
         }
       ],
       "role": {
-        "he": "ענק אמצע למשבצת ה-2×2: מתחדש בעצמו ומרפא את כל הצמחים.",
-        "en": "Mid-boss for the 2×2 King slot: self-regenerates and heals all plants."
+        "he": "גדול ויציב, מרפא את כל הצמחים בלוח שלך",
+        "en": "Massive and sturdy. Heals all allied plants."
       },
       "art": {
         "placeholderColor": "#8a6d3b",
