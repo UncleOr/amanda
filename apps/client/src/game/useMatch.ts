@@ -1080,6 +1080,38 @@ export function useMatch(): MatchApi {
 
   const accountRef = useRef(account);
   accountRef.current = account;
+  /**
+   * A real match has been played and the account on screen is older than it.
+   *
+   * Cleared by whichever reload gets there first — the one chained off the
+   * solo report, or the one that runs on arriving home. See finishBattle.
+   */
+  const playedRef = useRef(false);
+
+  /**
+   * Read the account again, because something changed it on the server.
+   *
+   * ═══ THE FLAG IS CLEARED ON ASKING, NOT ON ANSWERING ═══
+   *
+   * It was cleared inside the `.then`, after the null check, and that put
+   * two requests on the wire for one match — measured, 40 seconds apart: the
+   * reload at the result screen, then the one on arriving home, because a
+   * guest's `loadAccount` answers null and the early return skipped past the
+   * line that says "already asked".
+   *
+   * Nothing was wrong on the screen; there is no account to be stale. But
+   * "the account on screen is older than the match" stops being true the
+   * moment somebody goes and looks, whatever they find — so that is where it
+   * is written down.
+   */
+  const refreshAccount = useCallback(() => {
+    playedRef.current = false;
+    void loadAccount().then((a) => {
+      if (!a) return;
+      accountRef.current = a;
+      setAccount(a);
+    });
+  }, []);
 
   /*
    * The account is fetched in the background and the game does not wait for
@@ -2239,18 +2271,64 @@ export function useMatch(): MatchApi {
      * that simulated it.
      */
     const boards = soloBoardsRef.current;
-    if (
-      !boards ||
-      onlineRef.current ||
-      playgroundRef.current ||
-      lessonRef.current ||
-      soloAmandaRef.current
-    )
-      return;
+    /*
+     * Practice, in all three of its shapes. Pulled out of the guard below
+     * because it is now asked twice and the two questions are different: this
+     * one is "did anything about the account change", and the guard under it
+     * is "is this a match THIS client has to report".
+     */
+    const practice = playgroundRef.current || lessonRef.current || soloAmandaRef.current;
+    // A real match changes the account on the server, whichever side of the
+    // wire recorded it. See the effect below for the online half.
+    if (!practice) playedRef.current = true;
+    if (!boards || onlineRef.current || practice) return;
     void reportSolo({ seed: BATTLE_SEED, ...boards, level: botLevelRef.current }).then((won) => {
       if (won.nachos || won.chests.length || won.moved.length) setAward(won);
+      /*
+       * ═══ THE NACHOS WERE PAID AND THE BAR NEVER MOVED ═══
+       *
+       * Or: *"I won a match and it showed 2 nachos, but I don't see them
+       * filling the chest."*
+       *
+       * Both halves were working. The server adds them and writes the new
+       * total (`addNachos` in meta.ts); the payout screen prints `+2` from
+       * what it sent back. What nothing did was tell THIS hook, and the
+       * home screen's bar is `m.account.nachos` — a copy loaded once when
+       * the game started and, until now, never read again.
+       *
+       * So the pips were drawing the count from before the match, correctly,
+       * for as long as the app stayed open. On a phone that is days.
+       *
+       * Reloaded here rather than patched from `won.total`, because the
+       * match moved three things — nachos, trophies, and sometimes a chest
+       * into the shelf — and a local edit would have to know about all three
+       * and stay right as a fourth is added. The round trip happens behind
+       * the result screen, where nobody is waiting for it.
+       */
+      refreshAccount();
     });
   }, [result]);
+
+  /*
+   * ═══ AND THE SAME THING, FOR A MATCH THIS HOOK IS NOT TOLD ABOUT ═══
+   *
+   * An ONLINE match returns above without reporting anything, because the
+   * server that simulated it has already recorded it — `awardMeta` in
+   * match.ts, fired and not awaited, so there is no moment the client could
+   * chain off even if it were listening.
+   *
+   * The account is just as stale afterwards, and the player cannot see a
+   * payout screen for it either. The second half of that is a real gap and
+   * it is not this fix; what IS fixed is that the numbers on the home screen
+   * are true by the time they are looked at.
+   *
+   * On arriving home, and only when a match was actually played — not on
+   * every trip back to the menu, which is most of what this phase does.
+   */
+  useEffect(() => {
+    if (phase !== "intro" || !playedRef.current) return;
+    refreshAccount();
+  }, [phase, refreshAccount]);
 
   const reset = useCallback(() => {
     clearMatch();
@@ -2445,7 +2523,9 @@ export function useMatch(): MatchApi {
     mods: { boardPowerAdd, boostedCells, kingWound },
     online,
     account,
-    reloadAccount: () => void loadAccount().then((a) => a && setAccount(a)),
+    // The same read the match uses — one way to go and look at the account,
+    // so a shop purchase and a finished match cannot drift apart.
+    reloadAccount: refreshAccount,
     builtDeck,
     /*
      * Changing which deck is active changes the deck you are about to be

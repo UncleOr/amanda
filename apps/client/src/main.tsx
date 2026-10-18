@@ -12,6 +12,7 @@ import { loadCopy } from "./game/copy";
 import { loadCardOverrides } from "./game/cardOverrides";
 import { loadLiveContent } from "./game/liveContent";
 import { watchForSignInReturn } from "./game/nativeAuth";
+import { watchForLeaving } from "./game/away";
 import { track } from "./game/track";
 import { applyLang } from "./game/lang";
 import { watchViewport } from "./game/viewport";
@@ -40,6 +41,16 @@ applyLang();
  * the first one that reads a number instead of trusting a unit.
  */
 watchViewport();
+
+/*
+ * And the soundtrack stops when the game is put down.
+ *
+ * Or: *"the music doesn't stop when I minimise the game."* A phone leaves a
+ * page's audio running on purpose — that is how a music app works — and a
+ * game is the one thing nobody minimises in order to keep listening to.
+ * See game/away.ts.
+ */
+watchForLeaving();
 
 void loadCopy();
 /*

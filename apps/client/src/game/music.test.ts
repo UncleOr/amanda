@@ -106,3 +106,129 @@ describe("the soundtrack", () => {
     expect(FakeAudio.made).toHaveLength(1);
   });
 });
+
+/**
+ * ═══ THE GAME BEING PUT DOWN ═══
+ *
+ * Or: *"the music doesn't stop when I minimise the game."*
+ *
+ * A phone leaves a page's audio running when it goes to the background, on
+ * purpose — that is how a music app works — and a game is the one thing
+ * nobody minimises in order to carry on listening to.
+ *
+ * The behaviour has three edges and all three are a bug if they are wrong:
+ * it must actually stop; it must come back where it left off rather than at
+ * the top of the song; and it must not start playing for somebody who never
+ * had it on. The second one is the reason `suspend` exists at all instead of
+ * a call to `stop()`, which drops the element and so restarts the track.
+ *
+ * game/away.ts is what calls these, from `visibilitychange` and from
+ * Capacitor's `appStateChange`. That wiring needs a DOM and this file does
+ * not have one; what is testable here is the part that decides.
+ */
+describe("the app going away", () => {
+  it("pauses what is playing", async () => {
+    const m = await freshMusic(0.0);
+    m.play("menu");
+    const el = FakeAudio.made[0]!;
+    expect(el.paused).toBe(false);
+
+    m.suspend();
+    expect(el.paused).toBe(true);
+  });
+
+  it("comes back on the same element, not a new one", async () => {
+    const m = await freshMusic(0.0);
+    m.play("menu");
+    const el = FakeAudio.made[0]!;
+
+    m.suspend();
+    m.resume();
+
+    expect(el.paused).toBe(false);
+    // The whole point: a new Audio would be the song from the beginning,
+    // every time the phone is picked up.
+    expect(FakeAudio.made).toHaveLength(1);
+  });
+
+  /*
+   * The music is off by default and most sessions never turn it on. Leaving
+   * and coming back must not be the thing that starts it.
+   */
+  it("starts nothing for somebody who had no music", async () => {
+    store.set("amanda.music", "off");
+    const m = await freshMusic(0.0);
+    m.play("menu");
+    expect(FakeAudio.made).toHaveLength(0);
+
+    m.suspend();
+    m.resume();
+    expect(FakeAudio.made).toHaveLength(0);
+    store.set("amanda.music", "on");
+  });
+
+  /*
+   * `resume` only restarts what `suspend` paused. A player who turned the
+   * music off while the app was in the background comes back to silence,
+   * which is what they asked for.
+   */
+  it("does not undo the music being switched off while away", async () => {
+    const m = await freshMusic(0.0);
+    m.play("menu");
+    const el = FakeAudio.made[0]!;
+
+    m.suspend();
+    m.toggleEnabled(); // off
+    m.resume();
+
+    expect(el.paused).toBe(true);
+  });
+
+  /*
+   * ═══ AND IT ONLY RESTARTS WHAT IT STOPPED ITSELF ═══
+   *
+   * This is the `held` flag, and it is the one edge the other cases cannot
+   * reach — they all end with no element at all, which `resume` refuses on
+   * anyway. Here there IS an element and it is paused, and the question is
+   * who paused it.
+   *
+   * A browser pauses audio for reasons of its own: an incoming call, another
+   * app taking the audio focus, autoplay refused before the first gesture.
+   * Coming back to the front must not override any of those — the last one
+   * especially, since starting a track the browser declined to start is the
+   * thing the whole module is careful about.
+   */
+  it("leaves alone a track the browser paused, not us", async () => {
+    const m = await freshMusic(0.0);
+    m.play("menu");
+    const el = FakeAudio.made[0]!;
+
+    el.pause(); // not us
+    m.resume();
+
+    expect(el.paused).toBe(true);
+  });
+
+  /*
+   * Android and the WebView can both report the same departure, and
+   * `away.ts` listens to both on purpose — so these arrive in pairs and
+   * sometimes out of order.
+   */
+  it("survives being told twice, either way round", async () => {
+    const m = await freshMusic(0.0);
+    m.play("menu");
+    const el = FakeAudio.made[0]!;
+
+    m.suspend();
+    m.suspend();
+    m.resume();
+    m.resume();
+    expect(el.paused).toBe(false);
+    expect(FakeAudio.made).toHaveLength(1);
+
+    // And a resume that was never preceded by a suspend does nothing.
+    m.stop();
+    m.resume();
+    expect(FakeAudio.made).toHaveLength(1);
+  });
+});

@@ -79,6 +79,8 @@ class Music {
   private el: Ramping | null = null;
   private current: MusicName | null = null;
   private muted = false;
+  /** WE paused it because the app went away, so WE may start it again. */
+  private held = false;
   private enabled = loadEnabled();
   private baseVolume = 0.35;
   /** Which of the two is playing. Chosen once per session, then alternates. */
@@ -164,6 +166,50 @@ class Music {
   setMuted(muted: boolean): void {
     this.muted = muted;
     if (this.el) ramp(this.el, muted ? 0 : this.baseVolume, 250);
+  }
+
+  /**
+   * ═══ THE APP WENT AWAY AND THE MUSIC DID NOT ═══
+   *
+   * Or: *"the music doesn't stop when I minimise the game."*
+   *
+   * A phone does not stop a page's audio when it goes to the background, and
+   * it should not — that is how every podcast and music app works. A GAME is
+   * the other case: nobody presses home in order to keep listening to it, and
+   * a soundtrack still playing over whatever they opened next is the app
+   * refusing to be put down.
+   *
+   * Paused rather than stopped, and this is the whole reason these are two
+   * methods and not a call to `stop()`. `stop()` drops the element, so the
+   * next `play()` builds a new one and the song starts from the beginning.
+   * Coming back from the task switcher to the top of the track — every time,
+   * because that is what a phone does all day — would make two songs feel
+   * like two openings.
+   *
+   * The ramp is deliberately left running. It is setting the volume of an
+   * element that is paused, which changes nothing anyone can hear, and it
+   * lands on its target before the music is audible again. Cancelling it
+   * would leave the volume stranded wherever the fade had reached.
+   */
+  suspend(): void {
+    const el = this.el;
+    if (!el || el.paused) return;
+    this.held = true;
+    el.pause();
+  }
+
+  /**
+   * Back to the front. Only if WE paused it — a player who switched the
+   * music off while the app was away, or who never had it on, must not have
+   * it start up on their behalf.
+   */
+  resume(): void {
+    if (!this.held) return;
+    this.held = false;
+    if (!this.enabled || !this.el) return;
+    void this.el.play().catch(() => {
+      /* Refused on resume is the same as refused on start: stay quiet. */
+    });
   }
 }
 
