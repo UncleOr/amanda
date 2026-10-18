@@ -886,6 +886,16 @@ export interface MatchApi {
    */
   lesson: number;
   startLesson: (n: number) => void;
+  /**
+   * Put the card a tutorial step is about back into the player's hand.
+   *
+   * Or: *"at any moment the tutorial has to allow exactly one action, and
+   * make sure it was really carried out."* This is the second half — the
+   * tutorial stops ASSUMING the hand matches what it is talking about and
+   * makes it so. Does nothing outside a lesson, and nothing when the hand
+   * is already right, which is almost always.
+   */
+  expectCard: (cardId: string | null) => void;
   /** The sandbox: no clock, both boards yours, every card available. */
   playground: boolean;
   /** Which board the picker is writing into. */
@@ -2178,6 +2188,42 @@ export function useMatch(): MatchApi {
    * the player wins by playing them, and lessons.test.ts plays each one three
    * hundred times with the cards dropped in random places to keep it true.
    */
+  /**
+   * ═══ THE TUTORIAL AND THE GAME HOLD THE SAME CARD ═══
+   *
+   * Or: *"there is no synchronisation between the tutorial and what the
+   * player actually does. It is enough for the player to draw another card
+   * from the deck — the tutorial does not know about it and everything is
+   * out of step from there on."*
+   *
+   * The drift is silent, which is why it survived three rewrites. A step
+   * waits for a card on a named square; it goes one square over; the gate is
+   * never met; the hand empties; the next card is dealt — and the step waits
+   * for a card that has left the game. Nothing fails; Amanda just talks
+   * about something the player is not holding.
+   *
+   * So each step says what it needs and this puts it there. Whatever was
+   * wrongly in hand goes back on top of the deck rather than being
+   * destroyed, because a tutorial that eats a card is a worse bug than the
+   * one it is fixing.
+   *
+   * A card already ON THE BOARD is left alone: the step is simply behind,
+   * and dealing a second copy of a monster that is standing there would be
+   * visible, strange, and ours.
+   */
+  const expectCard = useCallback((cardId: string | null) => {
+    if (!cardId) return;
+    setGs((s) => {
+      if (s.hand === cardId) return s;
+      if (s.king === cardId) return s;
+      if (Object.values(s.placements).includes(cardId)) return s;
+      const fromDeck = s.deck.filter((id) => id !== cardId);
+      const fromBin = s.discard.filter((id) => id !== cardId);
+      const held = s.hand && s.hand !== cardId ? [s.hand, ...fromDeck] : fromDeck;
+      return { ...s, hand: cardId, deck: held, discard: fromBin };
+    });
+  }, []);
+
   const startLesson = useCallback(
     (n: number) => {
       const spec = STAGE_LESSONS[n - 1];
@@ -2571,6 +2617,7 @@ export function useMatch(): MatchApi {
     // The same read the match uses — one way to go and look at the account,
     // so a shop purchase and a finished match cannot drift apart.
     reloadAccount: refreshAccount,
+    expectCard,
     builtDeck,
     /*
      * Changing which deck is active changes the deck you are about to be

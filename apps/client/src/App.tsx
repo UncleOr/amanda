@@ -5,7 +5,7 @@ import { Tutorial, type Step } from "./components/Tutorial";
 import { gateMet, nextCue } from "./game/coach";
 import { newDeckName } from "./data/deckNames";
 import { STAGE_LESSONS } from "./game/lessons";
-import { STAGES, lessonSquares } from "./game/lessonScript";
+import { SCRIPTS, STAGES, handFor, lessonSquares } from "./game/lessonScript";
 import { Profile } from "./components/Profile";
 import { Onboarding } from "./components/Onboarding";
 import { ChestReveal } from "./components/ChestReveal";
@@ -555,7 +555,7 @@ function Game() {
    * instruction to move the MATCH on when it is done (lessonScript.ts), which
    * is how a lesson with no clock ever reaches the panic phase.
    */
-  const [cue, setCue] = useState<(Step & { advance?: "panic" | "prebattle" }) | null>(null);
+  const [cue, setCue] = useState<(Step & { advance?: "panic" | "prebattle"; id?: string }) | null>(null);
   /**
    * The cells on your board that a series bonus is lighting up right now.
    *
@@ -775,6 +775,41 @@ function Game() {
     revealedOpponent,
     lesson,
   ]);
+
+  /*
+   * ═══ THE HAND IS KEPT ON THE STEP, NOT PUT THERE ONCE ═══
+   *
+   * Or: *"there is no synchronisation between the tutorial and what the
+   * player actually does. It is enough for the player to draw another card
+   * from the deck — the tutorial does not know about it and everything is
+   * out of step from there on. At any moment the tutorial has to allow
+   * exactly one action, and make sure it was really carried out."*
+   *
+   * The first half is already true and was measured rather than assumed: on
+   * a pointing step the four dimming panels swallow everything except the
+   * lit thing, so a finger aimed at the bin lands on a wall.
+   *
+   * This is the second half. If the hand drifts anyway — from a frame
+   * before anything was lit, from a reload, from something nobody has
+   * thought of — it is put back, rather than discovered three steps later
+   * when Amanda is naming a card that has left the game.
+   *
+   * Keyed on `m.hand`, because the hand is the thing that can go wrong.
+   * `handFor` derives the card from the script itself rather than from a
+   * list beside it (lessonScript.ts), answers null for every step that is
+   * not about a card in hand — the bin lesson among them, where the hand is
+   * SUPPOSED to change — and `expectCard` does nothing when it is already
+   * right, which is almost every step of almost every run.
+   */
+  useEffect(() => {
+    if (!teaching || !cue?.id || lesson === 0) return;
+    const script = SCRIPTS[lesson];
+    const deck = STAGE_LESSONS[lesson - 1]?.deck;
+    if (!script || !deck) return;
+    const at = script.findIndex((step) => step.id === cue.id);
+    if (at > -1) m.expectCard(handFor(script, at, deck));
+  }, [teaching, cue, lesson, m.hand, m]);
+
   // Shown next to the build id: a screenshot of a layout problem is only
   // useful if it says what size screen the layout was solving for.
   const [viewport, setViewport] = useState(() => `${window.innerWidth}×${window.innerHeight}`);

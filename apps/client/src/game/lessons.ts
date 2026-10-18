@@ -225,6 +225,9 @@ export const STAGE_LESSONS: Lesson[] = [
       "giants_04_rock_troll",
       "dragons_01_flame_dragon",
       "dragons_03_thunderwing",
+      // The one that gets thrown away and fetched back. Or called it
+      // *"a card, erm... not great"* when he wrote this lesson the first time.
+      "slimes_02_gelatinous_cube",
     ],
     opponent: [
       { cardId: "crumb_demon", x: 1, y: 1, king: true },

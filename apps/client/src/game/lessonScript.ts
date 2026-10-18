@@ -251,6 +251,8 @@ export const LESSON_2: ScriptStep[] = [
 /** Behind the King: where something that walks in, or shoots, belongs. */
 const BACK_LEFT = "0-1";
 const BACK_RIGHT = "0-2";
+/** Where the card fetched back out of the bin goes: out of everyone way. */
+const BACK_CORNER = "0-0";
 /** The two front corners, left empty on purpose in stage two. */
 const CRUMB_CORNERS = ["3-0", "3-3"];
 
@@ -323,6 +325,31 @@ export const STAGE_2: ScriptStep[] = [
     id: "t2-sniper",
     target: `[data-drop="${BACK_RIGHT}"]`,
     awaits: { kind: "cell", cells: [BACK_RIGHT] },
+  },
+  /*
+   * ═══ THE BIN, AND THE ONE WAY BACK OUT OF IT ═══
+   *
+   * Or: *"add throw-away and take-from-bin to stage two."* They were in the
+   * old lesson one, which is where he saw them, and stage one is three
+   * cards now — a child meeting the board for the first time does not need
+   * to be taught regret.
+   *
+   * Three steps, because it is three ideas: a card can be thrown away, one
+   * card can be fetched back, and then it still has to go somewhere. The
+   * recovered card gets the back corner — Or's own line for this in the
+   * old lesson was *"we'll put it up here at the back"*.
+   *
+   * This is the eighth square of a board he specified as seven. The seven
+   * were the attack lesson; the bin arrived afterwards and has to be put
+   * down somewhere. Both crumb corners survive, so the square you did not
+   * use still fills with a monster, which was the point of them.
+   */
+  { id: "t2-bin", target: ".hand__discard", awaits: { kind: "discard", atLeast: 1 } },
+  { id: "t2-unbin", target: ".hand__bin", press: "target" },
+  {
+    id: "t2-cube",
+    target: `[data-drop="${BACK_CORNER}"]`,
+    awaits: { kind: "cell", cells: [BACK_CORNER] },
   },
   /*
    * Pointed at, never placed on. This is the one step whose square is drawn
@@ -456,4 +483,63 @@ export function squaresBy(steps: readonly ScriptStep[], i: number): ReadonlySet<
     if (step.awaits?.kind === "king" || step.target?.includes("slot--king")) out.add("king");
   }
   return out;
+}
+
+/**
+ * **Which card must be in the player's hand when this step begins.**
+ *
+ * Or, diagnosing the tutorial better than I had: *"there is no
+ * synchronisation between the tutorial and what the player actually does.
+ * It is enough for the player to draw another card from the deck — the
+ * tutorial does not know about it and everything is out of step from there
+ * on. At any moment the tutorial has to allow exactly one action, and make
+ * sure it was really carried out."*
+ *
+ * He is right, and the drift is worse than a cosmetic one. A step waits for
+ * a card to land on a named square; the player drops it one square over,
+ * the gate is never met, the hand empties, the next card is dealt — and the
+ * step is now waiting for a card that is no longer in the game. Nothing
+ * fails. Amanda simply talks about a card the player is not holding, for
+ * ever.
+ *
+ * ═══ DERIVED, NOT DECLARED ═══
+ *
+ * A `card:` field on every step is the obvious shape and it is the one that
+ * rots: twenty-six lines beside a deck, and the first reorder makes them
+ * lie. The deck is already dealt in the order the script talks about it, so
+ * the answer is a count — the Nth step that asks for a card to be PUT
+ * somewhere wants the Nth card.
+ *
+ * Only steps that place something consume a card. Binning and fetching back
+ * out of the bin happen TO the card the next placing step is about, so they
+ * do not advance the count; that is what makes the old bin lesson work at
+ * all, and getting it wrong would have the tutorial undo the bin it just
+ * asked for.
+ *
+ * Returns null for a step that is not about a card in hand. The caller
+ * leaves the hand alone then — a narrative step must not reach into the
+ * game.
+ */
+function consumes(step: ScriptStep): boolean {
+  const a = step.awaits;
+  if (a?.kind === "cell" || a?.kind === "king") return true;
+  /*
+   * Taking an action card moves it from the hand to the bar, which spends a
+   * card. USING one, later, acts on something already in the bar and the
+   * hand is somewhere else entirely — counting that would shift every step
+   * after it onto the wrong card.
+   */
+  return a?.kind === "action" && a.where === "bar";
+}
+
+export function handFor(
+  steps: readonly ScriptStep[],
+  i: number,
+  deck: readonly string[],
+): string | null {
+  const step = steps[i];
+  if (!step || !consumes(step)) return null;
+  let used = 0;
+  for (let n = 0; n < i; n++) if (consumes(steps[n]!)) used++;
+  return deck[used] ?? null;
 }

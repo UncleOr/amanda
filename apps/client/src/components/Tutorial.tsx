@@ -248,7 +248,33 @@ export function Tutorial({ steps, onDone, onQuit }: Props) {
    * tall it came out. Nothing measures it now, so there is nothing to render
    * early and nothing to flash.
    */
-  if (pointing && !spot) return <div className="tut" role="dialog" aria-live="polite" />;
+  if (pointing && !spot)
+    return (
+      /*
+       * ═══ WAITING IS NOT PERMISSION ═══
+       *
+       * Or: *"at any moment the tutorial has to allow exactly one action."*
+       *
+       * Measured, that is already true while a step is POINTING: the four
+       * panels that make the dimming real swallow everything except the lit
+       * thing, so a finger aimed at the bin lands on a wall. But this
+       * branch — a pointing step whose target has not appeared yet, or has
+       * no size yet — rendered an empty transparent layer, and for those
+       * frames the whole game was live again with nobody saying anything.
+       *
+       * That is the window his desync comes through: the player does
+       * something the step is not expecting, in the gap before it can point
+       * at anything. Swallowing the taps costs a few hundred milliseconds of
+       * nothing happening, which is what a tutorial that is thinking should
+       * look like.
+       */
+      <div
+        className="tut tut--waiting"
+        role="dialog"
+        aria-live="polite"
+        onClick={(e) => e.stopPropagation()}
+      />
+    );
 
   return (
     <div

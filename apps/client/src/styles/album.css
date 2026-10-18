@@ -921,3 +921,16 @@ html[dir="ltr"] .intro__wash {
   background: var(--sur-2);
   font-size: var(--t-2);
 }
+
+/*
+ * A pointing step that has not found its target yet.
+ *
+ * `.tut` is `pointer-events: none` so the board underneath can be touched,
+ * which is the whole point of a pointing step. While it is still LOOKING
+ * for that board, nothing should be touchable at all — otherwise the few
+ * frames before the ring appears are a window where the player can do
+ * something the tutorial will never know about. See Tutorial.tsx.
+ */
+.tut--waiting {
+  pointer-events: auto;
+}
