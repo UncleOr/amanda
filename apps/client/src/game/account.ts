@@ -16,6 +16,7 @@ import { createClient, type SupabaseClient } from "@supabase/supabase-js";
 import type { ShopKind } from "@amanda/shared";
 import { line as t, lineF as tf } from "./copy";
 import { serverError } from "./serverError";
+import { nativeRedirectTo } from "./nativeAuth";
 import { step } from "./achievements";
 
 /**
@@ -179,6 +180,20 @@ export function takeAuthError(): string | null {
  * the one that can actually be allow-listed and checked.
  */
 function comeBackTo(): string {
+  /*
+   * Inside the Android app, a custom scheme instead.
+   *
+   * Or: *"again after signing in it comes back to the same screen, not
+   * signed in."* The app sends the player out to the real browser — Google
+   * refuses OAuth in a WebView — and an https redirect comes back to the
+   * BROWSER, which is where the session then lives. A scheme Android can only
+   * hand to this app is the way back in. See nativeAuth.ts for why the
+   * App Link on its own was not enough.
+   *
+   * Null on the web, where this address is the one allow-listed in Supabase.
+   */
+  const native = nativeRedirectTo();
+  if (native) return native;
   const url = new URL(import.meta.env.BASE_URL, window.location.origin);
   return url.toString();
 }

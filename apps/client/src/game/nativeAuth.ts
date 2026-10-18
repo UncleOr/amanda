@@ -135,3 +135,32 @@ export function watchForSignInReturn(): void {
       // launched normally. Nothing to finish.
     });
 }
+
+/**
+ * Where Google should send the player back to.
+ *
+ * ═══ THE HTTPS LINK WAS NOT ENOUGH ═══
+ *
+ * The first attempt redirected to the site and relied on an Android App Link
+ * to hand that address to the app instead of the browser. The domain is set
+ * up for it — assetlinks.json carries this package and Play's app-signing
+ * fingerprint, which is the right one, checked — and Or still came back to a
+ * signed-out game.
+ *
+ * Chrome hands a verified link to an app when somebody TAPS it. It is much
+ * less willing to do so in the middle of a chain of server redirects, and an
+ * OAuth callback is nothing but: Google redirects to Supabase, Supabase
+ * redirects to the site, and from the browser's point of view it is finishing
+ * a navigation it started itself.
+ *
+ * A custom scheme removes the judgement call. Nothing else on the phone
+ * claims `com.asulins.amanda://`, there is nothing to verify, and Android
+ * hands it over however the navigation came about.
+ *
+ * On the web this returns null and the caller keeps the address it already
+ * used, which is the one thing here that must not change: that address is
+ * allow-listed in Supabase and written down in docs/SUPABASE-SETUP.md.
+ */
+export function nativeRedirectTo(): string | null {
+  return bridge() ? "com.asulins.amanda://auth" : null;
+}

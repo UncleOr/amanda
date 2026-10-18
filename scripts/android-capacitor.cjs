@@ -293,6 +293,33 @@ const cfg = ${JSON.stringify(
        * patch script that does not parse. Carried across by JSON.stringify,
        * which escapes it correctly by construction.
        */
+      /*
+       * A second way home, and the one that cannot be refused.
+       *
+       * The https App Link is the tidy answer and it may well not fire:
+       * Chrome hands a verified link to an app when somebody TAPS it, and is
+       * markedly less willing part-way through a chain of server redirects --
+       * which is exactly what an OAuth callback is. Google redirects to
+       * Supabase, Supabase redirects to us, and the browser is only finishing
+       * a navigation it already started.
+       *
+       * A custom scheme has no such doubt. Nothing else on the phone claims
+       * com.asulins.amanda://, there is nothing to verify, and Android hands
+       * it over however the navigation came about.
+       *
+       * Both are declared: the https filter still earns its place for the
+       * ordinary case of somebody tapping a link to the game.
+       */
+      schemeFilter: [
+        "",
+        "",
+        '            <intent-filter>',
+        '                <action android:name="android.intent.action.VIEW" />',
+        '                <category android:name="android.intent.category.DEFAULT" />',
+        '                <category android:name="android.intent.category.BROWSABLE" />',
+        '                <data android:scheme="' + cfg.packageId + '" />',
+        "            </intent-filter>",
+      ].join("\n"),
       deepLinkFilter: [
         "",
         "",
@@ -501,7 +528,10 @@ edit("src/main/AndroidManifest.xml", (s) =>
 // thing being matched is a literal tag and a regex here would be one more
 // layer of escaping for nothing.
 edit("src/main/AndroidManifest.xml", (s) =>
-  s.replace("</intent-filter>", "</intent-filter>" + cfg.deepLinkFilter),
+  s.replace(
+    "</intent-filter>",
+    "</intent-filter>" + cfg.deepLinkFilter + cfg.schemeFilter,
+  ),
 );
 
 edit("src/main/AndroidManifest.xml", (s) =>
@@ -598,10 +628,14 @@ fs.writeFileSync(
   [
     '<?xml version="1.0" encoding="utf-8"?>',
     '<resources>',
-    '    <style name="AppTheme.NoActionBar" parent="Theme.AppCompat.DayNight.NoActionBar">',
-    '        <item name="android:background">@null</item>',
-    '        <!-- Keep the app below the status bar: see the note in',
-    '             scripts/android-capacitor.cjs. -->',
+    '    <!-- NoActionBarLaunch, because that is the theme the manifest gives',
+    '         MainActivity. The first version of this wrote AppTheme.NoActionBar,',
+    '         which nothing uses, so every item in it was ignored. -->',
+    '    <style name="AppTheme.NoActionBarLaunch" parent="Theme.SplashScreen">',
+    '        <item name="android:background">@drawable/splash</item>',
+    '        <item name="android:windowFullscreen">true</item>',
+    '        <item name="android:windowLayoutInDisplayCutoutMode">shortEdges</item>',
+    '        <!-- Keep the app below the status bar if it is ever shown anyway. -->',
     '        <item name="android:windowOptOutEdgeToEdgeEnforcement">true</item>',
     '    </style>',
     '</resources>',

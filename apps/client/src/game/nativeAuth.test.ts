@@ -22,7 +22,7 @@
  * that can be tested without a phone.
  */
 import { describe, expect, it } from "vitest";
-import { isSignInReturn } from "./nativeAuth";
+import { isSignInReturn, nativeRedirectTo } from "./nativeAuth";
 
 const SITE = "https://playamanda.com/play/";
 
@@ -97,5 +97,51 @@ describe("an ordinary link, which must be left alone", () => {
   it("is not fooled by a parameter that merely contains the word", () => {
     expect(isSignInReturn(`${SITE}?promocode=abc`)).toBe(false);
     expect(isSignInReturn(`${SITE}?qr_code=abc`)).toBe(false);
+  });
+});
+
+/**
+ * ═══ AND THE SCHEME COMES HOME TOO ═══
+ *
+ * The redirect inside the app is `com.asulins.amanda://auth`, so the same
+ * check has to recognise it arriving. It carries the code in exactly the
+ * same places an https return does — this is still an OAuth callback, only
+ * the scheme has changed — and `new URL()` parses a custom scheme fine.
+ */
+describe("the custom scheme the app comes back on", () => {
+  const APP = "com.asulins.amanda://auth";
+
+  it("is recognised with a code", () => {
+    expect(isSignInReturn(`${APP}?code=abc123`)).toBe(true);
+  });
+
+  it("is recognised with a refusal", () => {
+    expect(isSignInReturn(`${APP}?error=access_denied`)).toBe(true);
+  });
+
+  it("is recognised with a token in the fragment", () => {
+    expect(isSignInReturn(`${APP}#access_token=xyz`)).toBe(true);
+  });
+
+  /*
+   * The app being opened by its own scheme for some other reason is not a
+   * sign-in, and must not reload the game out from under whoever is playing.
+   */
+  it("is left alone when it carries nothing", () => {
+    expect(isSignInReturn(APP)).toBe(false);
+    expect(isSignInReturn("com.asulins.amanda://auth?from=somewhere")).toBe(false);
+  });
+});
+
+describe("which address the sign-in asks to come back to", () => {
+  /*
+   * On the web there is no Capacitor, so this answers null and the caller
+   * keeps the https address it has always used — the one allow-listed in
+   * Supabase and written down in docs/SUPABASE-SETUP.md. Changing that by
+   * accident would break sign-in for every browser player at once, which is
+   * the whole reason this returns null rather than a URL.
+   */
+  it("leaves the website's address alone", () => {
+    expect(nativeRedirectTo()).toBeNull();
   });
 });

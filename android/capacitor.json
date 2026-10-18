@@ -16,14 +16,20 @@
     "versionCode 3 because 2 is the TWA already uploaded.",
     "",
     "4 is the first build with the Amanda launcher icon on it — 3 went to Play",
-    "wearing Capacitor's. It also carries the edge-to-edge opt-out, so the game",
-    "stops being drawn underneath the status bar."
+    "wearing Capacitor's.",
+    "",
+    "5 fixes two things 4 got wrong. The full-screen flags were written onto",
+    "AppTheme.NoActionBar, and the manifest gives MainActivity",
+    "AppTheme.NoActionBarLaunch — so they were set on a style nothing uses and",
+    "the status bar stayed across the top of the game. And the way back from a",
+    "Google sign-in is a custom scheme now, because Chrome would not hand the",
+    "https link to the app mid-redirect."
   ],
 
   "packageId": "com.asulins.amanda",
   "appName": "אמנדה",
-  "versionName": "1.1.1",
-  "versionCode": 4,
+  "versionName": "1.1.2",
+  "versionCode": 5,
 
   "_url": [
     "The WebView loads the live site, which is what the TWA does today.",
