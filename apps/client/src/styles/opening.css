@@ -204,5 +204,38 @@
 @media (prefers-reduced-motion: reduce) {
   .opening__mark { animation: none; }
 }
-/* The film sits above the mark and hides it as soon as it has a frame. */
-.opening__film { z-index: 1; }
+/*
+ * ═══ THE FILM IS NOT DRAWN UNTIL IT HAS A FRAME ═══
+ *
+ * It sits above the mark and hides it as soon as there is a picture. The
+ * question is what it paints BEFORE there is one, and the answer is not the
+ * same on every platform:
+ *
+ *   desktop Chrome   nothing — so the mark shows and every local check
+ *                    looks correct, which is why this took three goes
+ *   Android WebView  a flat plate with a spinner turning in the middle
+ *
+ * That plate is Or's *"grey circle"*, and it is painted OVER the mark
+ * because the film is the later element. Making the mark win instead would
+ * mean the film could not cover it later; relying on the video being
+ * transparent is a guess about somebody else's renderer.
+ *
+ * So the film is held at zero until it says it has decoded a frame — see
+ * OpeningFilm.tsx, which listens for `loadeddata`, `playing` and
+ * `timeupdate` and adds `--on`. Until then there is provably nothing worth
+ * drawing, and the mark is what is on the screen.
+ *
+ * The fade is short on purpose: long enough not to be a cut, short enough
+ * that nobody waits for it in front of a three-second ident.
+ */
+.opening__film {
+  z-index: 1;
+  opacity: 0;
+  transition: opacity 160ms linear;
+}
+.opening__film--on {
+  opacity: 1;
+}
+@media (prefers-reduced-motion: reduce) {
+  .opening__film { transition: none; }
+}

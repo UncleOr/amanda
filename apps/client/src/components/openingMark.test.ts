@@ -40,13 +40,16 @@ import { fileURLToPath } from "node:url";
 
 const here = (p: string) => fileURLToPath(new URL(p, import.meta.url));
 
-/** What Ident.tsx and Intro.tsx point at. Built by scripts/make-loading-mark.mjs. */
+/** What OpeningFilm.tsx points at. Built by scripts/make-loading-mark.mjs. */
 const MARK = here("../../public/brand/mark.webp");
 
 /** The film it covers, and therefore the budget it has to beat. */
 const IDENT = here("../../public/brand/ident.mp4");
 
-/** Every file that renders the mark. */
+/** The one component that owns the mark. */
+const FILM = here("./OpeningFilm.tsx");
+
+/** The two screens that mount it. */
 const OPENINGS = ["./Ident.tsx", "./Intro.tsx"].map(here);
 
 /** The chunks of a RIFF/WebP container, in order. */
@@ -96,10 +99,10 @@ describe("the mark is lighter than the film it covers", () => {
 });
 
 /**
- * The one line in each opening that chooses the picture.
+ * The one line that chooses the picture.
  *
- * Taken out of the source rather than searching the whole file, because both
- * files now EXPLAIN the mistake in a comment — and a test that reads a
+ * Taken out of the source rather than searching the whole file, because the
+ * file now EXPLAINS the mistake in a comment — and a test that reads a
  * comment is a test that fails the moment somebody writes down what they
  * learned. It is the assignment that has to be right.
  */
@@ -114,18 +117,88 @@ function markPath(file: string): string {
   return after.slice(0, after.indexOf("`"));
 }
 
-describe("both openings show it", () => {
+describe("one component owns the mark", () => {
   /*
    * The regression was not in the image, it was in the line that chose the
-   * image — and it was copied into two files, so it was wrong in both.
+   * image — and that line had been copied into two files, so it was wrong in
+   * both and had to be fixed in both. There is one now.
    */
-  it.each(OPENINGS)("%s points at brand/mark.webp", (file) => {
-    expect(markPath(file)).toBe("brand/mark.webp");
-    expect(readFileSync(file, "utf8")).toContain('className="opening__mark"');
+  it("points at brand/mark.webp", () => {
+    expect(markPath(FILM)).toBe("brand/mark.webp");
+    expect(readFileSync(FILM, "utf8")).toContain('className="opening__mark"');
   });
 
-  it.each(OPENINGS)("%s does not reach for the launcher icon", (file) => {
+  it("does not reach for the launcher icon", () => {
     // The exact mistake, by name: a square plate, and 575KB of it.
-    expect(markPath(file)).not.toContain("icon-512");
+    expect(markPath(FILM)).not.toContain("icon-512");
+  });
+
+  /*
+   * And the openings do not grow their own again. A second `const MARK` is
+   * how the first one spread; a second `<video class="opening__film">` is
+   * how the hold-until-a-frame rule would be escaped.
+   */
+  it.each(OPENINGS)("%s renders the film through OpeningFilm", (file) => {
+    const src = readFileSync(file, "utf8");
+    expect(src).toContain("<OpeningFilm");
+    expect(src).not.toContain("const MARK = ");
+    expect(src).not.toContain('className="opening__film"');
+  });
+});
+
+/**
+ * ═══ AND THE FILM MUST NOT PAINT OVER IT ═══
+ *
+ * The mark being right is half of it. The other half is that the WebView's
+ * own loading plate — Or's *"grey circle"* — is drawn by the `<video>`
+ * element, on top of the mark, before there is any picture to show. The rule
+ * is that the film is invisible until it reports a frame.
+ *
+ * This reads the source, which is weaker than driving a real video element,
+ * and it is what is available: the client has no DOM test environment, and
+ * the behaviour being guarded only differs from the local one on Android.
+ * What it can genuinely catch is the two halves being separated — a CSS rule
+ * dropped while the class is still applied, or the class applied from fewer
+ * events than it takes to be sure.
+ */
+describe("the film is held back until it has a frame", () => {
+  const CSS = here("../styles/opening.css");
+
+  /**
+   * Every declaration written for a selector, from all of its rules.
+   *
+   * `.opening__film` is written twice on purpose — once for the geometry,
+   * with the long account of why it is `position: absolute`, and once at the
+   * bottom for what it is allowed to paint. Taking the first block would
+   * read the wrong one, and taking the last would break the moment somebody
+   * adds a third. So all of them, which is also what the browser does.
+   */
+  const declarations = (css: string, selector: string): string => {
+    const found: string[] = [];
+    for (let at = css.indexOf(selector + " {"); at > -1; at = css.indexOf(selector + " {", at + 1)) {
+      found.push(css.slice(at, css.indexOf("}", at)));
+    }
+    expect(found.length, `no rule for ${selector}`).toBeGreaterThan(0);
+    return found.join("\n");
+  };
+
+  it("starts the film at zero and restores it with --on", () => {
+    const css = readFileSync(CSS, "utf8");
+    expect(declarations(css, ".opening__film")).toContain("opacity: 0");
+    expect(declarations(css, ".opening__film--on")).toContain("opacity: 1");
+  });
+
+  /*
+   * Three, because exactly one of them has to arrive and which one depends
+   * on the platform. Losing them quietly would leave a film that plays
+   * invisibly, which is worse than the bug being fixed.
+   */
+  it.each(["onLoadedData", "onPlaying", "onTimeUpdate"])("listens for %s", (event) => {
+    expect(readFileSync(FILM, "utf8")).toContain(`${event}={frame}`);
+  });
+
+  it("applies --on only once a frame has arrived", () => {
+    const src = readFileSync(FILM, "utf8");
+    expect(src).toContain('hasFrame ? " opening__film--on" : ""');
   });
 });
