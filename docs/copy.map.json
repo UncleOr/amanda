@@ -8225,23 +8225,23 @@
   }
  },
  {
-  "id": "sb99e77d",
-  "section": "components/HomeScreen.tsx",
-  "text": "לשחק עם בוט",
-  "where": {
-   "kind": "source",
-   "file": "apps/client/src/components/HomeScreen.tsx",
-   "line": 251
-  }
- },
- {
   "id": "s066beed",
   "section": "components/HomeScreen.tsx",
   "text": "כמה הבוט מתאמץ",
   "where": {
    "kind": "source",
    "file": "apps/client/src/components/HomeScreen.tsx",
-   "line": 262
+   "line": 281
+  }
+ },
+ {
+  "id": "sb99e77d",
+  "section": "components/HomeScreen.tsx",
+  "text": "לשחק עם בוט",
+  "where": {
+   "kind": "source",
+   "file": "apps/client/src/components/HomeScreen.tsx",
+   "line": 300
   }
  },
  {
@@ -8251,7 +8251,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/components/HomeScreen.tsx",
-   "line": 284
+   "line": 306
   }
  },
  {
@@ -8261,7 +8261,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/components/HomeScreen.tsx",
-   "line": 287
+   "line": 309
   }
  },
  {
@@ -8271,7 +8271,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/components/HomeScreen.tsx",
-   "line": 294
+   "line": 316
   }
  },
  {
@@ -8281,7 +8281,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/components/HomeScreen.tsx",
-   "line": 297
+   "line": 319
   }
  },
  {
@@ -8291,7 +8291,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/components/HomeScreen.tsx",
-   "line": 300
+   "line": 322
   }
  },
  {
@@ -8301,7 +8301,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/components/HomeScreen.tsx",
-   "line": 316
+   "line": 338
   }
  },
  {
@@ -8311,7 +8311,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/components/HomeScreen.tsx",
-   "line": 332
+   "line": 354
   }
  },
  {
@@ -8321,7 +8321,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/components/HomeScreen.tsx",
-   "line": 338
+   "line": 360
   }
  },
  {
@@ -8331,7 +8331,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/components/HomeScreen.tsx",
-   "line": 349
+   "line": 371
   }
  },
  {
@@ -8341,7 +8341,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/components/HomeScreen.tsx",
-   "line": 354
+   "line": 376
   }
  },
  {
@@ -8351,7 +8351,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/components/HomeScreen.tsx",
-   "line": 356
+   "line": 378
   }
  },
  {
@@ -8361,7 +8361,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/components/HomeScreen.tsx",
-   "line": 367
+   "line": 389
   }
  },
  {
@@ -8371,7 +8371,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/components/HomeScreen.tsx",
-   "line": 379
+   "line": 401
   }
  },
  {
@@ -8381,7 +8381,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/components/HomeScreen.tsx",
-   "line": 381
+   "line": 403
   }
  },
  {
@@ -8391,7 +8391,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/components/HomeScreen.tsx",
-   "line": 382
+   "line": 404
   }
  },
  {
@@ -8401,7 +8401,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/components/HomeScreen.tsx",
-   "line": 396
+   "line": 418
   }
  },
  {
@@ -8411,7 +8411,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/components/HomeScreen.tsx",
-   "line": 431
+   "line": 453
   }
  },
  {
@@ -8421,7 +8421,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/components/HomeScreen.tsx",
-   "line": 434
+   "line": 456
   }
  },
  {
@@ -8431,7 +8431,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/components/HomeScreen.tsx",
-   "line": 491
+   "line": 513
   }
  },
  {
@@ -8441,7 +8441,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/components/HomeScreen.tsx",
-   "line": 536
+   "line": 558
   }
  },
  {
@@ -8451,7 +8451,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/components/HomeScreen.tsx",
-   "line": 573
+   "line": 595
   }
  },
  {
@@ -8461,7 +8461,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/components/HomeScreen.tsx",
-   "line": 577
+   "line": 599
   }
  },
  {
@@ -8471,7 +8471,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/components/HomeScreen.tsx",
-   "line": 583
+   "line": 605
   }
  },
  {
@@ -8481,7 +8481,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/components/HomeScreen.tsx",
-   "line": 597
+   "line": 619
   }
  },
  {
@@ -8491,7 +8491,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/components/HomeScreen.tsx",
-   "line": 618
+   "line": 640
   }
  },
  {
@@ -8501,7 +8501,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/components/HomeScreen.tsx",
-   "line": 621
+   "line": 643
   }
  },
  {
@@ -8511,7 +8511,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/components/HomeScreen.tsx",
-   "line": 629
+   "line": 651
   }
  },
  {

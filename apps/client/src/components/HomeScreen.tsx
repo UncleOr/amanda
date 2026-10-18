@@ -248,13 +248,32 @@ export function HomeScreen({
             <div className="pick">
               <button className="pick__card" onClick={m.startMatch}>
                 <img src={`${BASE}brand/versus_robot.webp`} alt="" />
-                <span>{t("sb99e77d", "לשחק עם בוט")}</span>
                 {/*
                   How hard it tries. Three settings, each one MEASURED over
                   700 battles rather than guessed: the easy bot wins 17% of
                   them, the ordinary one 51%, the hard one around 58%.
                   Remembered, so a child who found the easy one does not have
                   to find it again.
+
+                  ═══ ABOVE THE LABEL, AND THAT IS WHAT ALIGNS THE TWO CARDS ═══
+
+                  Or: *"look at the words 'play with a bot' and 'play with a
+                  friend' — they should be on the same line. For that to
+                  happen, the easy-normal-hard bar needs to be ABOVE the words
+                  'play with a bot', not below."*
+
+                  He has diagnosed it exactly. The two labels are pinned to
+                  the bottom of their cards with `margin-top: auto`, which was
+                  the last attempt at lining them up and works only while the
+                  label is the last thing in the card. On this one it was not:
+                  the difficulty bar came after it and pushed it up by its own
+                  height. Measured at 832x384 — the bot's label sat at y 133.9
+                  and the friend's at 152.3, which is 18.4px apart, and the bar
+                  is 15.6 tall plus a 4px gap. Exactly it.
+
+                  Moving the bar above the label makes the label the last
+                  child of BOTH cards, so one rule now pins both to the same
+                  line. Nothing in the CSS had to change.
                 */}
                 <span
                   className="pick__levels"
@@ -276,6 +295,9 @@ export function HomeScreen({
                     </span>
                   ))}
                 </span>
+                {/* Last, so `margin-top: auto` pins it to the card's bottom
+                    edge — the same line the friends card's label lands on. */}
+                <span>{t("sb99e77d", "לשחק עם בוט")}</span>
               </button>
               <button
                 className="pick__card"
@@ -284,6 +306,44 @@ export function HomeScreen({
                 title={m.onlineAvailable ? "" : t("s0443085", "לא בגרסה הזאת")}
               >
                 <img src={`${BASE}brand/versus_player.webp`} alt="" />
+                {/*
+                  ═══ A COPY OF THE DIFFICULTY BAR, WITH THE LIGHTS OFF ═══
+
+                  There is nothing to choose on this card, and that is the
+                  problem: the other card carries three difficulty pills and
+                  this one carries nothing, so the two labels sat on
+                  different lines. Or asked for them to line up and worked
+                  out the half of it that is a reordering; this is the other
+                  half.
+
+                  Measured at 832x384: with the bar moved above the label the
+                  gap closed from 18.4px to 4, and nothing fixed the last 4 —
+                  not `margin-top: auto` (already at its limit), not
+                  `align-content`, not `justify-content`. The bot card's
+                  three items come to 102px inside 101px of content box, so
+                  its label is jammed against the bottom and a little past
+                  it, while the friends card's label stops politely at the
+                  edge. Four pixels, and no amount of alignment can close a
+                  gap caused by one card overflowing and the other not.
+
+                  So the two cards are given the same SHAPE instead. This is
+                  the real bar, rendered and then hidden — not a spacer of a
+                  fixed height, because the bar's height is not fixed: it
+                  changes with three media queries that move its font between
+                  10 and 11px and its padding between 2 and 3. A number
+                  copied out of one of them would be right on one screen and
+                  wrong on the other two. A hidden copy of the thing itself
+                  is the same height as the thing itself, on every screen,
+                  for ever.
+
+                  `visibility: hidden` rather than `display: none`, because
+                  the whole point is that it still takes up its space.
+                */}
+                <span className="pick__levels pick__levels--ghost" aria-hidden="true">
+                  {BOT_LEVELS.map((lvl) => (
+                    <span key={lvl.id}>{say(lvl)}</span>
+                  ))}
+                </span>
                 <span>{t("sa6f7e6a", "לשחק עם חברים")}</span>
                 {!signedIn && <Lock />}
               </button>

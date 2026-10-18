@@ -927,10 +927,10 @@
 | sfd7535c | אמנדה | | Amanda |
 | s86247d1 | משחק קלפים מפלצתי | | Monster card game |
 | s0cadb17 | לשחק | | Play |
-| sb99e77d | לשחק עם בוט | | Play against a bot |
 | s066beed | כמה הבוט מתאמץ | | How hard the bot tries |
+| sb99e77d | לשחק עם בוט | | You vs. Bot |
 | s0443085 | לא בגרסה הזאת | | Not in this version |
-| sa6f7e6a | לשחק עם חברים | | Play with friends |
+| sa6f7e6a | לשחק עם חברים | | You vs. Friends |
 | s665bc9f | לפתוח חדר | | Open a room |
 | s3ebc7cd | יש לי קוד | | I have a code |
 | saedd95d | מישהו אקראי | | Somebody random |

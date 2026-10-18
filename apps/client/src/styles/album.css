@@ -134,27 +134,52 @@
 .album__level {
   position: absolute;
   /*
-   * Bottom-LEFT, where Or drew the red circles.
+   * ═══ ABOVE THE NAME, IN THE MIDDLE — AND MEASURED THIS TIME ═══
    *
-   * It was top-right, which on these cards is where the element icons and
-   * the rarity gem already live — three small round things in one corner,
-   * and the one that is about YOUR copy of the card was the one that got
-   * lost. The bottom-left corner is empty on every card in the set.
+   * Or: *"the green circle with the card's level — you can't see it, it is
+   * still hidden under the card's name. I think it should be right above the
+   * name, in the middle."*
+   *
+   * He was right, and the numbers say by how much. At 832x384 the album card
+   * is 74.4x99.2; the name plate runs from y 216.4 to the card's bottom edge,
+   * and the badge sat at 213.0-229.0. So 12.6 of its 16 pixels — 79% — were
+   * inside the plate. The plate carries `z-index: 2` and the badge carried
+   * none, so the plate drew straight over it: not clipped, not faded,
+   * painted on top. From the outside that is a badge that simply is not
+   * there.
+   *
+   * It had already been moved once, out of the top-right corner where the
+   * element icons and the rarity gem live. That move swapped one crowded
+   * corner for one occupied edge, because "the bottom-left is empty" was
+   * true of the ART and not of the plate drawn over it.
+   *
+   * So: centred, and clear of the plate. 15px of plate plus the card's 2px
+   * border is 17, and 20 leaves a 3px gap that reads as deliberate.
+   *
+   * `z-index` as well, and not instead. If a longer name or a bigger font
+   * ever grows the plate, the badge should end up slightly over the name —
+   * which is visible and fixable — rather than silently underneath it again.
    *
    * Album only. Nothing in a match draws this class: a level belongs to the
    * collection screen, and on a board the number that matters is the one on
    * the card's own stats.
    */
-  inset-block-end: 4px;
-  inset-inline-start: 4px;
+  inset-block-end: 20px;
+  inset-inline: 0;
+  margin-inline: auto;
+  width: fit-content;
+  z-index: 3;
   display: grid;
   place-items: center;
   min-width: 16px;
   height: 16px;
-  padding: 0 3px;
+  padding: 0 5px;
   border-radius: 999px;
   border: 1px solid rgba(255, 255, 255, 0.35);
-  background: rgba(8, 12, 22, 0.88);
+  /* Opaque, not 0.88. It now sits over the card ART rather than over a dark
+     plate, and a pale monster behind a translucent pill is a pill you have
+     to work to read. */
+  background: #080c16;
   color: var(--text);
   font-size: var(--t-1);
   font-weight: 900;
@@ -162,7 +187,8 @@
 }
 .album__level.is-up {
   border-color: rgba(60, 190, 120, 0.9);
-  background: rgba(60, 190, 120, 0.92);
+  /* Opaque for the same reason as the base: it is over artwork now. */
+  background: #3cbe78;
   color: #052;
 }
 

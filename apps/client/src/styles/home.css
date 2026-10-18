@@ -294,6 +294,32 @@
 .track-gate.is-locked { cursor: pointer; }
 .track-gate.is-locked .track { opacity: 0.55; filter: grayscale(0.5); pointer-events: none; }
 .track-gate.is-locked > .lock { position: absolute; top: 8px; inset-inline-end: 10px; }
+/*
+ * ═══ THE PADLOCK IS A BADGE, SO IT NEVER TAKES A ROW ═══
+ *
+ * `.lock` is `inline-grid` and was left in the flow here, which on a column
+ * card makes it a row of its own. There was already a rule saying
+ * `position: absolute` for it — inside a phone-sized media query, added when
+ * Or asked *"what is that thing happening under the text of 'play with
+ * friends'?"*. Correct, and scoped to one screen size.
+ *
+ * On a desktop that rule does not match, so the padlock went back to being a
+ * flex item 19px tall at the bottom of the friends card — and that is
+ * exactly the 19px that stopped the two labels lining up there. The bot
+ * card's label took 19px of free space through `margin-top: auto`; the
+ * friends card had no free space to take, because the padlock was standing
+ * in it. Measured at 1536x695: labels 19.0px apart, padlock 19px tall,
+ * `position: static`.
+ *
+ * So it is absolute everywhere, which is what a badge always wanted to be.
+ * The media query above it now only has to say WHERE.
+ */
+.pick__card .lock {
+  position: absolute;
+  top: var(--sp-1);
+  inset-inline-end: var(--sp-1);
+  margin: 0;
+}
 
 .modal--why { max-width: 400px; }
 .modal--why h2 { margin: 0 0 6px; font-size: 20px; }
@@ -398,6 +424,17 @@
   white-space: nowrap;
 }
 .pick__card > .pick__levels > span:hover { color: var(--text); }
+/*
+ * The friends card's copy of the bar, holding its space and showing nothing.
+ *
+ * It exists so the two cards have the same shape and therefore the same
+ * label line — see the long note in HomeScreen.tsx. `visibility: hidden`
+ * keeps the box; `display: none` would defeat the entire purpose.
+ */
+.pick__levels--ghost {
+  visibility: hidden;
+  pointer-events: none;
+}
 .pick__card > .pick__levels > span.is-on {
   background: var(--accent);
   color: #241a05;
