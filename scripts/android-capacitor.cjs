@@ -517,6 +517,50 @@ edit("src/main/res/values/styles.xml", (s) =>
     ),
 );
 
+/*
+ * ═══ AND PROVE IT LANDED ON THE RIGHT ONE ═══
+ *
+ * The full-screen flags were written into AppTheme.NoActionBar while the
+ * manifest gives MainActivity AppTheme.NoActionBarLaunch, so they sat in a
+ * style nothing uses and did nothing. It shipped, and the only thing that
+ * found it was Or photographing the status bar lying across his own name.
+ *
+ * edit cannot catch this: the patch DID change the file, just the wrong
+ * part of it. So this reads the theme name back out of the manifest and
+ * checks that the style of that name is one of the ones carrying the flag.
+ * Plain string searching rather than a regex, because this file is generated
+ * from a template literal and a regex here is one more layer of escaping.
+ */
+{
+  const man = fs.readFileSync(path.join(APP, 'src/main/AndroidManifest.xml'), 'utf8');
+  const at = man.indexOf('.MainActivity');
+  if (at < 0) throw new Error('no MainActivity in the manifest');
+  const key = 'android:theme="@style/';
+  // The activity's own theme is the first one declared after its name.
+  const from = man.indexOf(key, at);
+  if (from < 0) throw new Error('MainActivity has no theme');
+  const start = from + key.length;
+  const theme = man.slice(start, man.indexOf('"', start));
+
+  const files = ['src/main/res/values/styles.xml', 'src/main/res/values-v35/styles.xml'];
+  const lit = 'android:windowFullscreen';
+  const ok = files.some((rel) => {
+    const xml = fs.readFileSync(path.join(APP, rel), 'utf8');
+    const decl = xml.indexOf('<style name="' + theme + '"');
+    if (decl < 0) return false;
+    const end = xml.indexOf('</style>', decl);
+    return xml.slice(decl, end).includes(lit);
+  });
+  if (!ok) {
+    throw new Error(
+      'MainActivity uses @style/' + theme + ', and no styles file gives that ' +
+        'style ' + lit + '. The flag would be ignored and the status bar would ' +
+        'sit on the game. See the note above this check.',
+    );
+  }
+  console.log('   full screen confirmed on @style/' + theme);
+}
+
 edit("src/main/java/com/asulins/amanda/MainActivity.java", (s) =>
   s.replace("public class MainActivity extends BridgeActivity {}", cfg.mainActivity),
 );
