@@ -75,8 +75,6 @@ interface Props {
   steps: Step[];
   /** This line has been read — show the next one when there is one. */
   onDone: () => void;
-  /** Stop teaching altogether. */
-  onQuit?: () => void;
 }
 
 export interface Spot {
@@ -115,7 +113,7 @@ export interface Spot {
  * The spotlight stays. Where to press is still worth saying; it just no
  * longer has to be said in a place the words then have to dodge.
  */
-export function Tutorial({ steps, onDone, onQuit }: Props) {
+export function Tutorial({ steps, onDone }: Props) {
   const [i, setI] = useState(0);
   const [spot, setSpot] = useState<Spot | null>(null);
   const step = steps[i];
@@ -512,9 +510,25 @@ export function Tutorial({ steps, onDone, onQuit }: Props) {
               {step.cta ?? t("sbecf213", "המשך ←")}
             </button>
           )}
-          <button className="btn-link tut__skip" onClick={onQuit ?? onDone}>
-            {t("s7955b5e", "אני יודע לשחק")}
-          </button>
+          {/*
+            ═══ THERE IS NO "I KNOW HOW TO PLAY" ═══
+
+            Or: *"the 'I know how to play' is confusing. People press it
+            instead of pressing in the middle. Get rid of it. Whoever wants
+            to — will press exit at the top."*
+
+            It sat in Amanda's band, beside her words and under the one
+            button that moves the lesson on, and it ENDED the tutorial. Two
+            controls a few pixels apart, one of which is the way forward and
+            the other the way out, is a choice nobody asked to be given —
+            and the whole point of this band is that there is one thing to
+            press.
+
+            Nothing is lost. The exit button at the top is alive during a
+            lesson on purpose, it asks before it does anything, and it does
+            NOT mark the tutorial finished — so stopping and coming back
+            picks up where it stopped, which this never did.
+          */}
         </div>
       </div>
     </div>

@@ -154,3 +154,38 @@ describe("what sits above what", () => {
     expect(zOf(OPENING, ".opening")).toBeGreaterThan(zOf(MODALS, ".modal-overlay"));
   });
 });
+
+/**
+ * ═══ ONE CONTROL IN THE BAND, NOT TWO ═══
+ *
+ * Or: *"the 'I know how to play' is confusing. People press it instead of
+ * pressing in the middle. Get rid of it. Whoever wants to — will press exit
+ * at the top."*
+ *
+ * It sat beside Amanda's words, under the button that moves the lesson on,
+ * and it ENDED the tutorial. Two controls a few pixels apart, one the way
+ * forward and one the way out, is a choice nobody asked to be given — and
+ * the whole point of this band is that there is one thing to press.
+ *
+ * The exit button at the top is the way out: alive during a lesson on
+ * purpose, it asks first, and it does not mark the tutorial finished, so
+ * stopping and coming back resumes. The link never did that.
+ *
+ * Pinned because it is the kind of thing that comes back as a kindness.
+ */
+describe("the band's controls", () => {
+  it("has no way to quit inside it", () => {
+    expect(TUT).not.toContain("tut__skip");
+    expect(TUT, "the quit callback existed only for that button").not.toContain("onQuit");
+  });
+
+  /*
+   * And exactly one button in the markup: the next one, which is already
+   * conditional on the step having nothing else to do.
+   */
+  it("renders one button, and only when there is nothing on the board to do", () => {
+    const buttons = [...TUT.matchAll(/<button/g)];
+    expect(buttons).toHaveLength(1);
+    expect(TUT).toContain('{!step.awaits && step.press !== "target" && (');
+  });
+});

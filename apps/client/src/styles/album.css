@@ -767,7 +767,6 @@
   background: rgba(255, 255, 255, 0.22);
 }
 .tut__dots i.is-now { background: var(--accent); }
-.tut__skip { font-size: 12px; opacity: 0.65; }
 
 @media (max-height: 460px) {
   .tut__bubble { width: min(380px, calc(100vw - 24px)); padding: 10px 12px; }

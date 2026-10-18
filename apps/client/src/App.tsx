@@ -2051,13 +2051,6 @@ function Game() {
             { target: null, text: line("l1-room") },
           ]}
           onDone={() => setMetAmanda(true)}
-          onQuit={() => {
-            setMetAmanda(true);
-            setTeaching(false);
-            setCue(null);
-            clearTutorialMark();
-            void markTutorialDone();
-          }}
         />
       )}
 
@@ -2105,12 +2098,6 @@ function Game() {
             if (cue.advance === "panic") m.toPanic();
             else if (cue.advance) m.toBattle();
             setCue(null);
-          }}
-          onQuit={() => {
-            setTeaching(false);
-            setCue(null);
-            clearTutorialMark();
-            void markTutorialDone();
           }}
         />
       )}
