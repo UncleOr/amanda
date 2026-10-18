@@ -29,13 +29,20 @@
  *
  * So the rule, which is exactly Or's:
  *
- *     a step WAITING for a board action (`awaits`) → no button; do the thing
- *     every other step                            → a real "next" button
+ *     waiting for an outcome (`awaits`)     → no button; do the thing
+ *     the highlight IS the control (`press`) → no button; press the highlight
+ *     anything else                          → a real "next" button
  *
- * Tutorial.tsx renders the button on `!step.awaits`, so the two halves below
- * are the two halves of that condition. They are checked against the SCRIPTS
- * rather than against the component, because the scripts are where a new step
- * gets added and where one can quietly land in between.
+ * The middle one earned its place the hard way. The first version of this had
+ * only two kinds and put a "next" button on everything without a gate — which
+ * includes `l1-go` and `l2-go`, the steps that light up the FIGHT BUTTON.
+ * Pressing "next" there dismissed the tutorial and left the player on a build
+ * screen with the match unstarted and nobody talking: the exact complaint,
+ * recreated by its own fix. The last test in this file is that one.
+ *
+ * Checked against the SCRIPTS rather than the component, because the scripts
+ * are where a new step gets added and where one can quietly land between the
+ * kinds.
  */
 import { describe, expect, it } from "vitest";
 import { LESSON_1, LESSON_2, SCRIPTS, type ScriptStep } from "./lessonScript";
@@ -49,17 +56,22 @@ const BOTH: Array<[string, ScriptStep[]]> = [
   ["lesson 2", LESSON_2],
 ];
 
+type Way = "do it on the board" | "press the highlight" | "press next";
+
 /** The step's one instruction, as the player experiences it. */
-function wayForward(step: ScriptStep): "do it on the board" | "press next" {
-  return step.awaits ? "do it on the board" : "press next";
+function wayForward(step: ScriptStep): Way {
+  if (step.awaits) return "do it on the board";
+  if (step.press === "target") return "press the highlight";
+  return "press next";
 }
+
+const WAYS: Way[] = ["do it on the board", "press the highlight", "press next"];
 
 describe("every step is guided", () => {
   for (const [name, steps] of BOTH) {
     it(`${name}: every step has one way forward, and it is one of the two`, () => {
       for (const step of steps) {
-        const way = wayForward(step);
-        expect(["do it on the board", "press next"]).toContain(way);
+        expect(WAYS, `${step.id} has no way forward`).toContain(wayForward(step));
       }
       // And the lesson is not all of one kind: a lesson that is only reading
       // is a manual, and one that is only doing never explains anything.
@@ -76,14 +88,23 @@ describe("every step is guided", () => {
      * the two things Or could not find.
      */
     it(`${name}: no step explains something and then leaves you with nothing`, () => {
-      const stranded = steps.filter((s) => !s.awaits && !s.advance).map((s) => s.id);
-      // These are precisely the steps that must render a next button.
-      for (const id of stranded) {
-        const step = steps.find((s) => s.id === id)!;
-        expect(step.awaits, `${id} must have no gate to need a button`).toBeUndefined();
+      const explaining = steps.filter((s) => wayForward(s) === "press next");
+      // There are a lot of them, which is why this mattered at all.
+      expect(explaining.length).toBeGreaterThan(0);
+      for (const step of explaining) {
+        expect(step.awaits, `${step.id} would get a button AND a gate`).toBeUndefined();
+        expect(step.press, `${step.id} would get a button AND a highlight to press`).toBeUndefined();
       }
-      // There are a lot of them, which is why this mattered.
-      expect(stranded.length).toBeGreaterThan(0);
+    });
+
+    /*
+     * A step that says "press this" has to have a this.
+     */
+    it(`${name}: a press-the-highlight step actually highlights something`, () => {
+      for (const step of steps.filter((s) => s.press === "target")) {
+        expect(step.target, `${step.id} says press the highlight and has none`).toBeTruthy();
+        expect(step.awaits, `${step.id} cannot both wait and be pressed`).toBeUndefined();
+      }
     });
 
     it(`${name}: a step that waits for the board names what it is waiting for`, () => {
@@ -147,6 +168,29 @@ describe("a step never waits for a card the lesson does not deal", () => {
           true,
         );
       }
+    });
+  }
+});
+
+/**
+ * ═══ THE STEP THAT STARTS THE MATCH ═══
+ *
+ * Both lessons end by lighting up the fight button, and pressing it is what
+ * starts the battle. That step must never carry a continue button: dismissing
+ * it instead of pressing the button leaves the player on a finished board
+ * with no match, no tutorial and nothing to do — which is the failure the
+ * whole "one thing to press" rule exists to prevent, and which the first
+ * version of that rule caused.
+ */
+describe("the last step of a lesson presses the fight button", () => {
+  for (const [name, steps] of BOTH) {
+    it(`${name}: ends on the fight button, pressed and not dismissed`, () => {
+      const last = steps[steps.length - 1]!;
+      expect(last.target).toBe(".hand .btn-fight");
+      expect(last.press).toBe("target");
+      expect(wayForward(last)).toBe("press the highlight");
+      // And nothing else may try to step the match at the same time.
+      expect(last.advance).toBeUndefined();
     });
   }
 });

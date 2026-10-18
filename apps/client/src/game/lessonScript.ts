@@ -42,6 +42,27 @@ export interface ScriptStep {
   /** What has to happen before she moves on. Absent = a continue button. */
   awaits?: Awaits;
   /**
+   * The highlighted thing IS the action: press it, and that is the step.
+   *
+   * ═══ WHY THIS HAD TO BECOME EXPLICIT ═══
+   *
+   * Or: *"every single step has to be guided, with ONE thing to press.
+   * Either 'next', or doing something real on the board."* Which gives two
+   * kinds of step, and `awaits` already told them apart — so a "next" button
+   * went on everything without a gate.
+   *
+   * That is wrong for a handful of steps where the thing being pointed at is
+   * itself the control, and catastrophically wrong for two of them: `l1-go`
+   * and `l2-go` light up the FIGHT BUTTON. A "next" button there dismisses
+   * the tutorial and leaves the player standing on a build screen with the
+   * match unstarted and nobody talking — which is precisely the "left
+   * hanging" he was complaining about, reintroduced by the fix for it.
+   *
+   * So there are three kinds, and the third one says so out loud rather than
+   * being inferred from the absence of something.
+   */
+  press?: "target";
+  /**
    * Move the MATCH on once this step is done.
    *
    * The panic phase is a thing the lesson has to explain, so the lesson has
@@ -104,12 +125,12 @@ export const LESSON_1: ScriptStep[] = [
     target: ".take-action",
     awaits: { kind: "action", id: "energy_boost", where: "bar" },
   },
-  { id: "l1-bar-open", target: ".actions__handle" },
-  { id: "l1-bar-close", target: ".actions__handle" },
+  { id: "l1-bar-open", target: ".actions__handle", press: "target" },
+  { id: "l1-bar-close", target: ".actions__handle", press: "target" },
 
   // ── binning, and changing your mind ──
   { id: "l1-bin", target: ".hand__discard", awaits: { kind: "discard", atLeast: 1 } },
-  { id: "l1-unbin", target: ".hand__bin" },
+  { id: "l1-unbin", target: ".hand__bin", press: "target" },
   { id: "l1-cube", target: '[data-drop="1-0"]', awaits: { kind: "cell", cells: ["1-0"] } },
 
   // ── the crown, and the two squares that keep it ──
@@ -123,7 +144,12 @@ export const LESSON_1: ScriptStep[] = [
   { id: "l1-guards", target: ".side--me .slot--guard" },
 
   { id: "l1-crumbs", target: ".side--me .board" },
-  { id: "l1-go", target: ".hand .btn-fight" },
+  /*
+   * The last step of the match, and the one that starts it. The fight button
+   * is the only thing lit and pressing it is the step — a "next" button here
+   * would end the tutorial on a board that never fought.
+   */
+  { id: "l1-go", target: ".hand .btn-fight", press: "target" },
 ];
 
 /**
@@ -187,11 +213,10 @@ export const LESSON_2: ScriptStep[] = [
   { id: "l2-panic-fog", target: ".side--enemy" },
   { id: "l2-sandstorm", target: ".hand", awaits: { kind: "action", id: "sandstorm", where: "used" } },
   /*
-   * No `advance` here: a step with a target and no gate is dismissed by
-   * TAPPING the target, and the target is the fight button — which starts
+   * No `advance` here: the target is the fight button, and pressing it starts
    * the battle itself. Advancing as well would step the match twice.
    */
-  { id: "l2-go", target: ".hand .btn-fight" },
+  { id: "l2-go", target: ".hand .btn-fight", press: "target" },
 ];
 
 export const SCRIPTS: Record<number, ScriptStep[]> = { 1: LESSON_1, 2: LESSON_2 };

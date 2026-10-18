@@ -1071,8 +1071,30 @@ function Game() {
               title={t("s460b8e8", "חזרה לתפריט")}
               onClick={() => {
                 sfx.play("click");
-                // Leaving mid-match throws the board away, so ask first.
-                if (IN_MATCH.includes(m.phase)) setConfirmExit(true);
+                /*
+                 * Leaving mid-match throws the board away, so ask first.
+                 *
+                 * ═══ AND A LESSON IS "MID" RIGHT UP TO ITS LAST SCREEN ═══
+                 *
+                 * Or: *"when I finished the first tutorial I didn't go
+                 * straight to the second. I went back to the menu and it
+                 * offered me the tutorial again. Weird flow."*
+                 *
+                 * `result` is deliberately not in IN_MATCH — a finished
+                 * ordinary match has nothing left to throw away, so its exit
+                 * should not nag. But a finished LESSON has its own ending
+                 * still to come: the effect that raises "now something a bit
+                 * trickier" runs a render after the phase changes, and in
+                 * that gap the ordinary result screen is suppressed (because
+                 * we are teaching) and this is the only live control on the
+                 * screen. One tap there and the lesson is over, the mark is
+                 * still set, and the menu offers to resume the tutorial he
+                 * thought he had just finished. Which is exactly what he
+                 * described.
+                 *
+                 * So while a lesson is running, leaving always asks.
+                 */
+                if (IN_MATCH.includes(m.phase) || (teaching && m.lesson > 0)) setConfirmExit(true);
                 else m.reset();
               }}
             >

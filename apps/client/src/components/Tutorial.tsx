@@ -60,6 +60,14 @@ export interface Step {
    * it — a gate frozen at the moment a step appeared is the bug it replaced.
    */
   awaits?: Awaits;
+  /**
+   * The highlighted thing IS the action — press it, and that is the step.
+   *
+   * No continue button on these: `l1-go` and `l2-go` light up the fight
+   * button, and a "next" beside it would end the tutorial on a board that
+   * never fought. See lessonScript.ts.
+   */
+  press?: "target";
   cta?: string;
 }
 
@@ -440,7 +448,7 @@ export function Tutorial({ steps, onDone, onQuit }: Props) {
             tutorialFlow.test.ts holds both halves, so a step added later
             cannot land in between and strand somebody.
           */}
-          {!step.awaits && (
+          {!step.awaits && step.press !== "target" && (
             <button className="btn-fight tut__next" onClick={next}>
               {step.cta ?? t("sbecf213", "המשך ←")}
             </button>
