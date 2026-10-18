@@ -2079,6 +2079,7 @@ function Game() {
                 ? undefined
                 : gateMet(cue.awaits, {
                     phase: m.phase,
+                    timeLeft: m.timeLeft,
                     hand: m.hand,
                     hasKing: m.hasKing,
                     placements: m.placements,

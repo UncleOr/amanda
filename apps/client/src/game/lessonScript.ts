@@ -462,27 +462,51 @@ export const STAGE_3: ScriptStep[] = [
    */
   { id: "t3-xray-use", target: BAR, awaits: { kind: "action", id: "xray", where: "used" } },
   /*
-   * The second action card, and the one that is about WHEN rather than what:
-   * a boost is worth whatever is already on the board, so it is the last
-   * thing you play. That lesson only works here, with six cards down.
+   * Or: *"after I activate it, the opponent board should light up — and
+   * there should already be cards there!"*
+   *
+   * The second half was a real bug and is fixed in useMatch: a lesson has
+   * no clock, and the opponent used to be revealed one card per tick of a
+   * clock that never ran. This is the first half — the x-ray lifts the fog
+   * and the very next thing she does is point at what it uncovered.
    */
+  /*
+   * ═══ THE END OF THE TUTORIAL, AS OR WROTE IT ═══
+   *
+   *   play an action card   -> the opponent's board is uncovered
+   *   take another one      -> and be told to SAVE it for later
+   *   place the sniper      -> which is the last card in the hand
+   *   play the boost        -> now, with everything down
+   *   SEE the power go up   -> which is why you saved it
+   *   "and now... panic"    -> and the phase arrives
+   *   almost the whole board visible, last cards
+   *   LET THE CLOCK RUN OUT
+   *   "time is up. no more changes. now it is the boards' turn to fight."
+   *   and he presses — "even though in a real game it goes by itself"
+   *
+   * The clock really runs here: the ticker is unfrozen for a lesson's panic
+   * phase precisely so a step can wait for it (useMatch), and reaching zero
+   * does nothing on its own, so the fight button stays the way on.
+   */
+  { id: "t3-revealed", target: ".side--enemy" },
   {
     id: "t3-boost",
     target: ".take-action",
     awaits: { kind: "action", id: "energy_boost", where: "bar" },
   },
   {
-    id: "t3-boost-use",
-    target: BAR,
-    awaits: { kind: "action", id: "energy_boost", where: "used" },
-    advance: "panic",
+    id: "t3-thunderwing",
+    target: `[data-drop="${BACK_RIGHT}"]`,
+    awaits: { kind: "cell", cells: [BACK_RIGHT] },
   },
-  /*
-   * Or: *"and in stage three show the panic phase, where the opponent board
-   * is revealed."* It is the last thing the game does before a battle and
-   * the only phase a player can be surprised by.
-   */
+  { id: "t3-boost-use", target: BAR, awaits: { kind: "action", id: "energy_boost", where: "used" } },
+  // Pointed at the board, because the thing to notice is ON the board: every
+  // number on it has just gone up.
+  { id: "t3-boost-shown", target: ".side--me .board" },
+  { id: "t3-panic-call", target: ".side--me .board", advance: "panic" },
   { id: "t3-panic", target: ".side--enemy" },
+  // The one step in the tutorial that waits for time rather than for a tap.
+  { id: "t3-timeup", target: ".hand .btn-fight", awaits: { kind: "clock" } },
   { id: "t3-go", target: ".hand .btn-fight", press: "target" },
 ];
 

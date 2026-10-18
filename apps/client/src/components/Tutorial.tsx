@@ -133,8 +133,69 @@ export function Tutorial({ steps, onDone, onQuit }: Props) {
     const selector = step.target;
     let raf = 0;
     const measure = () => {
-      const el = document.querySelector(selector);
-      const b = el?.getBoundingClientRect();
+      /*
+       * ═══ ALL OF THEM, NOT THE FIRST OF THEM ═══
+       *
+       * Or, on the step that explains the series bonus: *"here you need to
+       * light all three cards together so it is clear."*
+       *
+       * This used `querySelector`, which answers with the first match and
+       * nothing else. The step points at `.slot--synergy` — the engine's
+       * own mark on every card in a lit group — so Amanda said "see the
+       * glow around THEM" and ringed one card.
+       *
+       * The same silence anywhere a step names more than one square: the two
+       * crumb corners in stage two, the whole back row in the old lesson
+       * two. Each of them has been ringing one square and describing
+       * several since they were written.
+       *
+       * The ring is the union of everything the selector finds. For a
+       * single match that is the match, which is every other step.
+       */
+      /*
+       * ═══ A DIALOG IS THE ONLY THING ON THE SCREEN ═══
+       *
+       * Or, with a photograph of the ring drawn across an open card panel:
+       * *"this is not good either."*
+       *
+       * Tapping an action card opens its detail panel, where the full-size
+       * "play it now" button lives — so on that step a modal appears over
+       * everything, and the ring went on pointing at the drawer underneath
+       * it. Two things claiming to be the thing to press.
+       *
+       * While a dialog is up it IS the step: no ring, no walls, nothing of
+       * ours in the way. The band keeps talking, behind it, which is where
+       * it belongs.
+       */
+      if (document.querySelector(".modal-overlay")) {
+        setSpot((was) => (was === null ? was : null));
+        return;
+      }
+      const all = [...document.querySelectorAll(selector)].filter((e) => {
+        const r = e.getBoundingClientRect();
+        return r.width > 0 && r.height > 0;
+      });
+      const el = all[0];
+      const b = all.length
+        ? all.reduce(
+            (acc, e) => {
+              const r = e.getBoundingClientRect();
+              return {
+                top: Math.min(acc.top, r.top),
+                left: Math.min(acc.left, r.left),
+                right: Math.max(acc.right, r.right),
+                bottom: Math.max(acc.bottom, r.bottom),
+              };
+            },
+            {
+              top: Infinity,
+              left: Infinity,
+              right: -Infinity,
+              bottom: -Infinity,
+            },
+          )
+        : undefined;
+      const box = b && { top: b.top, left: b.left, width: b.right - b.left, height: b.bottom - b.top };
       /*
        * ═══ A TARGET WITH NO SIZE IS NOT A TARGET ═══
        *
@@ -154,16 +215,20 @@ export function Tutorial({ steps, onDone, onQuit }: Props) {
        * moves on, which are the two behaviours that already exist for a
        * target that is not there.
        */
-      if (!el || !b || b.width <= 0 || b.height <= 0) {
+      if (!el || !box || box.width <= 0 || box.height <= 0) {
         setSpot((was) => (was === null ? was : null));
         return;
       }
       // Only publish a change. Setting a fresh object every frame re-rendered
       // the whole overlay sixty times a second for no reason.
       setSpot((was) =>
-        was && was.top === b.top && was.left === b.left && was.width === b.width && was.height === b.height
+        was &&
+        was.top === box.top &&
+        was.left === box.left &&
+        was.width === box.width &&
+        was.height === box.height
           ? was
-          : { top: b.top, left: b.left, width: b.width, height: b.height },
+          : box,
       );
 
     };

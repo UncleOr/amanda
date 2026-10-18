@@ -109,3 +109,48 @@ describe("and nothing floats any more", () => {
     expect(bubble.slice(0, 400)).not.toContain("style=");
   });
 });
+
+/**
+ * ═══ A MODAL OPENED DURING A LESSON HAS TO BE REACHABLE ═══
+ *
+ * Or, with a photograph of the exit dialog greyed out behind the teaching
+ * layer: *"if you press exit at the top it is supposed to cover the tutorial
+ * and let me press."*
+ *
+ * The exit BUTTON is deliberately left alive while teaching (topbar.css), so
+ * the player could ask to leave — and then could not answer the question,
+ * because the modal layer sat below the teaching one. The only way out of
+ * the tutorial was the one thing the tutorial would not let them reach.
+ *
+ * Three numbers in three files, and nothing fails when they drift: the
+ * dialog simply appears, greyed, and does not respond to a finger. So they
+ * are read rather than remembered.
+ */
+describe("what sits above what", () => {
+  const TOPBAR = readFileSync(here("../styles/topbar.css"), "utf8");
+  const MODALS = readFileSync(here("../styles/modals.css"), "utf8");
+  const OPENING = readFileSync(here("../styles/opening.css"), "utf8");
+
+  const zOf = (css: string, selector: string): number => {
+    const at = css.indexOf(selector + " {");
+    expect(at, `no rule for ${selector}`).toBeGreaterThan(-1);
+    const body = css.slice(at, css.indexOf("}", at));
+    const m = /z-index:\s*(\d+)/.exec(body);
+    expect(m, `${selector} has no z-index`).not.toBeNull();
+    return Number(m![1]);
+  };
+
+  it("puts a modal above the teaching layer and above the bar", () => {
+    const modal = zOf(MODALS, ".modal-overlay");
+    expect(modal).toBeGreaterThan(zOf(CSS, ".tut"));
+    expect(modal).toBeGreaterThan(zOf(TOPBAR, ".topbar"));
+  });
+
+  /*
+   * And the opening film still covers everything, including a dialog. It is
+   * the one thing in the game that is allowed to.
+   */
+  it("leaves the opening film on top of all of it", () => {
+    expect(zOf(OPENING, ".opening")).toBeGreaterThan(zOf(MODALS, ".modal-overlay"));
+  });
+});

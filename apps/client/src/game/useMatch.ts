@@ -2507,7 +2507,25 @@ export function useMatch(): MatchApi {
      * way out of build and panic is the fight button, which `toBattle` now
      * walks one step at a time during a lesson.
      */
-    if (lesson > 0 && (phase === "build" || phase === "panic")) return;
+    /*
+     * ═══ EXCEPT THE PANIC CLOCK, WHICH IS A THING SHE TEACHES ═══
+     *
+     * Or, writing out the end of stage three: *"and then... the panic
+     * phase. Until now you only saw my front row, now you see almost the
+     * whole board, time to put your last cards down. LET THE TIME RUN OUT.
+     * And then tell him: time is up, no more changes to the board, now it
+     * is the boards' turn to fight."*
+     *
+     * The clock running out IS the lesson there, so it has to actually run.
+     * Build stays frozen — that is the phase where she talks longest and a
+     * clock underneath would end it mid-sentence.
+     *
+     * Nothing happens when it reaches zero in a lesson; see the advance
+     * effect below. The way on is still the fight button, which is the
+     * other half of what he asked for: *"let him press start battle, even
+     * though in a real game it goes by itself."*
+     */
+    if (lesson > 0 && phase === "build") return;
     if (!["countdown", "build", "panic", "prebattle"].includes(phase)) return;
     const id = setInterval(() => setTimeLeft((t) => Math.max(0, t - 0.1)), 100);
     return () => clearInterval(id);
@@ -2537,6 +2555,9 @@ export function useMatch(): MatchApi {
       setPhase("panic");
       setTimeLeft(PHASES.panic.seconds);
     } else if (phase === "panic") {
+      // In a lesson the clock reaching zero is something to SAY, not
+      // something to do: she tells him the time is up and he presses.
+      if (lesson > 0) return;
       enterPrebattle();
     } else if (phase === "prebattle") {
       startBattle();
@@ -2593,7 +2614,24 @@ export function useMatch(): MatchApi {
     let visible = plan.length;
     // Amanda does not "build" — she is already standing there. Revealing her
     // board card by card over ninety seconds would be a lie about what she is.
-    if (phase === "build" && !soloAmandaRef.current) {
+    /*
+     * ═══ A LESSON HAS NO CLOCK, SO NOTHING WAS EVER REVEALED ═══
+     *
+     * Or: *"after I activate it, the opponent board should light up — and
+     * there should already be cards there!"*
+     *
+     * There were none. This reveals the opponent one card at a time as the
+     * build clock runs down, and a lesson has no clock: `timeLeft` never
+     * moves, so `frac` is 0, `visible` is 0, and the enemy side is an empty
+     * grid for the whole lesson. Which makes the x-ray — a card whose
+     * entire job is to show you that board — reveal nothing at all.
+     *
+     * A scripted opponent is not building anyway. The board in lessons.ts
+     * is written down in full before the lesson starts, same as Amanda's:
+     * it is already standing there, and the fog is what hides it until the
+     * x-ray lifts it.
+     */
+    if (phase === "build" && !soloAmandaRef.current && lesson === 0) {
       const frac = 1 - timeLeft / PHASES.build.seconds;
       visible = Math.max(0, Math.min(plan.length, Math.ceil(frac * plan.length)));
     } else if (phase === "intro" || phase === "countdown") {

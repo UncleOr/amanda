@@ -16,7 +16,26 @@
   align-items: center;
   justify-content: center;
   padding: 20px;
-  z-index: 50;
+  /*
+   * ═══ ABOVE THE TUTORIAL, BECAUSE A MODAL IS MODAL ═══
+   *
+   * Or, with a photograph of the exit dialog greyed out behind the teaching
+   * layer: *"if you press exit at the top it is supposed to cover the
+   * tutorial and let me press."*
+   *
+   * It was 50. The teaching layer is 60 and the top bar is 61 — which is
+   * exactly why the exit BUTTON worked and the question it asked did not.
+   * The player is asked "are you sure?" and cannot answer, so the only way
+   * out of the tutorial was the one thing the tutorial would not let them
+   * reach.
+   *
+   * Every modal, not only that one: the card detail panel is opened BY the
+   * tutorial on some steps and was buried the same way.
+   *
+   * 70 clears the teaching layer and the bar, and stays under the opening
+   * film at 200 — the one thing in the game allowed to cover a dialog.
+   */
+  z-index: 70;
   animation: fade 0.15s ease-out;
 }
 @keyframes fade { from { opacity: 0; } to { opacity: 1; } }

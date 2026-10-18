@@ -266,6 +266,9 @@ export const STAGE_LESSONS: Lesson[] = [
       "plants_08_cactus", // "oho, another plant!" — and that is the trio
       "xray",
       "energy_boost",
+      // Last out of the hand, and placed between taking the boost and
+      // playing it — Or wanted the sniper shown, and this is where it fits.
+      "dragons_03_thunderwing",
     ],
     opponent: [
       { cardId: "crumb_demon", x: 1, y: 1, king: true },

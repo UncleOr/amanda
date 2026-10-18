@@ -93,7 +93,15 @@ export type Awaits =
   /** This action card has reached the bar, or been played. */
   | { kind: "action"; id: string; where: "bar" | "used" }
   /** The match has reached this phase. */
-  | { kind: "phase"; phase: string };
+  | { kind: "phase"; phase: string }
+  /**
+   * The clock has run out.
+   *
+   * Only reachable in the panic phase of a lesson, where the clock is
+   * allowed to run precisely so that a step can wait for it — Or: *"let the
+   * time run out, and then tell him: time is up."*
+   */
+  | { kind: "clock" };
 
 /**
  * Has this step been carried out?
@@ -132,6 +140,9 @@ export function gateMet(awaits: Awaits, view: GateView): boolean {
     }
     case "phase":
       return view.phase === awaits.phase;
+    case "clock":
+      // Zero exactly: the ticker clamps at 0 and stays there.
+      return view.timeLeft <= 0;
     default:
       break;
   }
@@ -167,6 +178,8 @@ export function gateMet(awaits: Awaits, view: GateView): boolean {
 /** What answering a gate needs to look at. */
 export interface GateView {
   phase: string;
+  /** Seconds left on the phase clock, for the `clock` gate. */
+  timeLeft: number;
   hand: string | null;
   hasKing: boolean;
   placements: Record<string, string>;

@@ -38,6 +38,8 @@ describe.each([1, 2, 3])("stage %i", (stage) => {
     steps.forEach((step, i) => {
       if (!step.awaits) return;
       if (step.awaits.kind === "discard") return; // acts on whatever is held
+      // Waiting for the clock is not waiting for a card.
+      if (step.awaits.kind === "clock" || step.awaits.kind === "phase") return;
       // Using an action card acts on the bar, not on the hand.
       if (step.awaits.kind === "action" && step.awaits.where !== "bar") return;
       const want = handFor(steps, i, deck);
