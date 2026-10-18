@@ -61,6 +61,30 @@
   "keystore": "android/android.keystore",
   "keyAlias": "amanda",
 
+  "_orientation": [
+    "What the TWA did and the WebView stopped doing.",
+    "",
+    "Or: *\"before version two everything already worked. Now it suddenly goes",
+    "to the browser to sign in, and when the phone is not landscape it tells me",
+    "to rotate it instead of just showing the game landscape.\"* Both are the",
+    "same kind of regression: things a TWA got for free that a WebView has to",
+    "be told.",
+    "",
+    "android/twa-manifest.json says orientation: landscape, and bubblewrap",
+    "turned that into a locked activity. The game could not BE in portrait, so",
+    "the rotate-hint screen was unreachable. Capacitor generates no",
+    "screenOrientation at all, so the activity follows the phone, the game is",
+    "drawn in portrait, and the hint is what the player sees.",
+    "",
+    "A web manifest does not help here: the WebView is a native activity and",
+    "nothing reads manifest.webmanifest.",
+    "",
+    "sensorLandscape rather than the TWA's plain landscape: both ways up work,",
+    "so a child holding the phone the other way round is not shown an upside",
+    "down game. Neither one can ever reach portrait."
+  ],
+  "orientation": "sensorLandscape",
+
   "backgroundColor": "#0B0E17",
   "statusBarColor": "#000000",
 

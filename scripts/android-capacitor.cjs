@@ -63,7 +63,36 @@ if (!fs.existsSync(keystore)) {
 
 /* ── the project ─────────────────────────────────────────────────────── */
 
-fs.rmSync(OUT, { recursive: true, force: true });
+/*
+ * ═══ A GRADLE DAEMON OUTLIVES THE BUILD, AND IT HOLDS THIS DIRECTORY ═══
+ *
+ * This used to be a bare rmSync, and the next build after a successful one
+ * died with "EPERM, Permission denied" on this path, which says nothing about
+ * why. The why is that Gradle leaves a daemon running for the next build, and
+ * that daemon is still holding files inside the directory this is trying to
+ * delete. Windows will not remove an open file; a unix machine would have
+ * let it go and never shown anybody this.
+ *
+ * Retries first, because a daemon that has just been told to exit takes a
+ * moment to do it, and that is usually the whole story. If it is still there
+ * afterwards, say what to do rather than printing a stack trace at somebody
+ * who did not write this.
+ */
+try {
+  fs.rmSync(OUT, { recursive: true, force: true, maxRetries: 8, retryDelay: 400 });
+} catch (err) {
+  console.error("");
+  console.error("  Could not clear " + OUT);
+  console.error("  " + (err && err.message ? err.message : String(err)));
+  console.error("");
+  console.error("  Almost always a Gradle daemon from the last build still holding it.");
+  console.error("  Stop it and run this again:");
+  console.error("");
+  console.error("    cd /d " + OUT + "\android");
+  console.error("    gradlew.bat --stop");
+  console.error("");
+  process.exit(1);
+}
 fs.mkdirSync(OUT, { recursive: true });
 
 const write = (rel, body) => {
@@ -201,6 +230,17 @@ const cfg = ${JSON.stringify(
       appName: cfg.appName,
       playGamesAppId: cfg.playGamesAppId,
       keyAlias: cfg.keyAlias,
+      /*
+       * The whole attribute, newline and all, built out here.
+       *
+       * Same reason as deepLinkFilter below: the patch script is generated
+       * from a template literal, so a 
+ written inside it becomes a real
+       * newline in the middle of a string and the result does not parse. That
+       * mistake has now been made four times in this file. JSON.stringify
+       * does the escaping correctly and does not get bored.
+       */
+      orientationAttr: '\n            android:screenOrientation="' + cfg.orientation + '"',
       /*
        * The intent-filter that makes a verified https link open the app.
        *
@@ -349,6 +389,33 @@ edit("src/main/res/values/strings.xml", (s) =>
  * free: Capacitor fires a JS event and navigates nowhere. See the web side in
  * apps/client/src/game/nativeAuth.ts.
  */
+/*
+ * ═══ THE GAME IS LANDSCAPE, AND THE WEBVIEW HAD TO BE TOLD ═══
+ *
+ * Or: *"when the phone is not landscape it gives a message to rotate the
+ * phone instead of just showing the game landscape. Before version two
+ * everything already worked."*
+ *
+ * It did. android/twa-manifest.json says orientation: landscape, and
+ * bubblewrap turned that into a locked activity -- so the game could not BE
+ * in portrait and the rotate-hint screen was unreachable. Capacitor generates
+ * no screenOrientation, the activity follows the phone, and the hint is what
+ * the player gets.
+ *
+ * manifest.webmanifest says landscape too and is no help at all: this is a
+ * native activity and nothing reads a web manifest.
+ *
+ * Anchored on launchMode, which Capacitor writes exactly once and which this
+ * app needs anyway -- singleTask is what lets the sign-in deep link wake the
+ * running app instead of starting a second copy of it.
+ */
+edit("src/main/AndroidManifest.xml", (s) =>
+  s.replace(
+    'android:launchMode="singleTask"',
+    'android:launchMode="singleTask"' + cfg.orientationAttr,
+  ),
+);
+
 // The first </intent-filter> in the manifest closes the LAUNCHER one, which
 // is the activity a link should open. A plain string replace, because the
 // thing being matched is a literal tag and a regex here would be one more
