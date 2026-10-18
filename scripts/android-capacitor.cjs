@@ -310,6 +310,34 @@ const cfg = ${JSON.stringify(
        * Both are declared: the https filter still earns its place for the
        * ordinary case of somebody tapping a link to the game.
        */
+      /*
+       * Landscape is how the game is played, not a thing the device has to
+       * have.
+       *
+       * Play warned that a release "no longer supports 13 devices". Nothing
+       * was narrowed on purpose: minSdk is 24, the same as the TWA's. The
+       * cause is that Android IMPLIES a required
+       * android.hardware.screen.landscape feature from a fixed
+       * screenOrientation, and Play filters on it.
+       *
+       * The implication is too blunt. The game needs to be DISPLAYED in
+       * landscape, which any screen that can be the wide way round manages
+       * -- including a window on a Chromebook or on Play Games on PC, both
+       * of which are in this app's track. It does not need a device whose
+       * hardware advertises a landscape sensor.
+       *
+       * Declaring it explicitly as not required overrides the implied one.
+       * The activity is still locked to landscape, so nothing about how it
+       * looks changes; it only stops excluding machines that would have run
+       * it perfectly well.
+       */
+      landscapeFeature: [
+        "",
+        "    <!-- The game is DRAWN landscape; it does not need landscape hardware.",
+        "         Overrides the requirement Android implies from",
+        "         android:screenOrientation. See android-capacitor.cjs. -->",
+        '    <uses-feature android:name="android.hardware.screen.landscape" android:required="false" />',
+      ].join("\n"),
       schemeFilter: [
         "",
         "",
@@ -585,6 +613,11 @@ edit("src/main/java/com/asulins/amanda/MainActivity.java", (s) =>
  * app needs anyway -- singleTask is what lets the sign-in deep link wake the
  * running app instead of starting a second copy of it.
  */
+// Before <application>, which is where uses-feature belongs.
+edit("src/main/AndroidManifest.xml", (s) =>
+  s.replace("    <application", cfg.landscapeFeature + "\n\n    <application"),
+);
+
 edit("src/main/AndroidManifest.xml", (s) =>
   s.replace(
     'android:launchMode="singleTask"',
