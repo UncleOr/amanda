@@ -485,11 +485,36 @@ edit("src/main/res/values/strings.xml", (s) =>
  * permission dialog, every notification shade, and every return from the
  * browser after signing in to Google.
  */
+/*
+ * ═══ ON THE THEME THE ACTIVITY ACTUALLY USES ═══
+ *
+ * This first went onto AppTheme.NoActionBar alone, by matching the only line
+ * in styles.xml that looked like the right place. The manifest says
+ *
+ *     android:theme="@style/AppTheme.NoActionBarLaunch"
+ *
+ * so AppTheme.NoActionBar is a style nothing on screen has ever used, and
+ * every item written into it did nothing at all. Or sent a photograph of the
+ * game with the status bar still across the top of his player name, which is
+ * what a full-screen flag on an unused theme looks like from outside.
+ *
+ * Nothing in the build could have caught it: a theme item in the wrong style
+ * compiles, ships, and is simply never read.
+ *
+ * Both styles now. The launch theme is the one that matters; the other is
+ * kept in step so that if Capacitor ever adds a postSplashScreenTheme the
+ * answer does not quietly move again.
+ */
 edit("src/main/res/values/styles.xml", (s) =>
-  s.replace(
-    '<item name="android:background">@null</item>',
-    '<item name="android:background">@null</item>' + cfg.fullscreenItems,
-  ),
+  s
+    .replace(
+      '<item name="android:background">@null</item>',
+      '<item name="android:background">@null</item>' + cfg.fullscreenItems,
+    )
+    .replace(
+      '<item name="android:background">@drawable/splash</item>',
+      '<item name="android:background">@drawable/splash</item>' + cfg.fullscreenItems,
+    ),
 );
 
 edit("src/main/java/com/asulins/amanda/MainActivity.java", (s) =>
