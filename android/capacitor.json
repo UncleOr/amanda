@@ -18,10 +18,12 @@
     "4 is the first build with the Amanda launcher icon on it ג€” 3 went to Play",
     "wearing Capacitor's.",
     "",
-    "5 was built, checked and never uploaded, so it is still 5: there is",
-    "nothing in Play to supersede and no reason to burn a number on a build",
-    "nobody has. It also carries the landscape uses-feature, so the release",
-    "stops excluding devices that can draw landscape perfectly well.",
+    "6, because Play refused 5: \"Version code 5 has already been used.\" A",
+    "version code is spent the moment a bundle carrying it is uploaded, even",
+    "if that release was never rolled out and is nowhere to be seen in the",
+    "console. It is reserved for ever, and the only answer is the next number.",
+    "",
+    "So: never re-use a number after an upload attempt, successful or not.",
     "",
     "5 fixes two things 4 got wrong. The full-screen flags were written onto",
     "AppTheme.NoActionBar, and the manifest gives MainActivity",
@@ -33,8 +35,8 @@
 
   "packageId": "com.asulins.amanda",
   "appName": "׳׳׳ ׳“׳”",
-  "versionName": "1.1.2",
-  "versionCode": 5,
+  "versionName": "1.1.3",
+  "versionCode": 6,
 
   "_url": [
     "The WebView loads the live site, which is what the TWA does today.",
