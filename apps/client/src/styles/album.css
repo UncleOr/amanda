@@ -646,25 +646,31 @@
   pointer-events: none;
 }
 /*
- * A pointing bubble is placed in JS, because where it can go depends on where
- * the hole is and how tall the bubble turned out — neither of which CSS can
- * ask about. A narrative line has nothing to avoid and simply sits in the
- * middle.
+ * ═══ THE BAND, AND THE HEIGHT THE GAME GIVES UP FOR IT ═══
+ *
+ * Or, after three goes at the tutorial: *"maybe it is worth rethinking the
+ * whole approach. Not hiding an existing board, but building a new board
+ * where only what you can click appears."*
+ *
+ * The bubble used to be placed by JavaScript, because where it could go
+ * depended on where the hole was and how tall the words came out — and on a
+ * 832x384 landscape phone the honest answer was often "nowhere". See the
+ * note where place() used to be in Tutorial.tsx.
+ *
+ * Now it is a band at the foot of the screen and the app gives up exactly
+ * its height while a lesson is running. They are never in the same pixels,
+ * so no calculation can put them there. The board is smaller for it, which
+ * is fine: a lesson board is three squares, or seven.
+ *
+ * --coach-h in vh rather than px because the thing that decides whether this
+ * is bearable is screen HEIGHT, and 384 is the number to survive: 22vh of it
+ * is 84, which holds two lines and a button.
  */
-.tut__bubble--mid {
-  inset-inline: 0;
-  margin-inline: auto;
-  top: 50%;
-  transform: translateY(-50%);
+:root {
+  --coach-h: clamp(76px, 22vh, 104px);
 }
-/* Measured before it is placed: on screen so fonts and wrapping are real,
-   invisible so nobody sees it land in the wrong spot first. */
-.tut__bubble--measuring {
-  top: 0;
-  inset-inline-start: 0;
-  opacity: 0;
-  pointer-events: none;
-  animation: none;
+.app--teaching {
+  padding-block-end: var(--coach-h);
 }
 @keyframes tut-pulse {
   from { box-shadow: 0 0 0 3px rgba(255,176,32,0.65), 0 0 20px 4px rgba(255,176,32,0.25), 0 0 0 9999px rgba(4,7,14,0.78); }
@@ -676,12 +682,12 @@
   /*
    * It can never lose a line off an edge.
    *
-   * Or: *"part of the tutorial is hidden."* The placement in Tutorial.tsx now
-   * keeps it below the top bar, but a long line on a 384px-tall phone can
-   * still be taller than the room there is. This is the backstop: the bubble
-   * gives way and scrolls instead of being cut. A sentence you can reach by
-   * dragging is worse than one that fits and far better than one that is not
-   * there.
+   * Or: *"part of the tutorial is hidden."* The band has a fixed height now,
+   * so a long line on a 384px-tall phone is longer than the room there is by
+   * design rather than by accident. This is what happens then: it scrolls
+   * inside the band instead of being cut, and the band never grows into the
+   * board. A sentence you can reach by dragging is worse than one that fits
+   * and far better than one that is not there.
    */
   max-height: calc(100dvh - 24px);
   overflow-y: auto;
@@ -694,6 +700,58 @@
   box-shadow: 0 18px 50px rgba(0, 0, 0, 0.65);
   animation: tut-in 220ms ease-out;
 }
+/*
+ * ═══ AFTER .tut__bubble, AND THAT IS NOT AN ACCIDENT ═══
+ *
+ * The band carries both classes, and these declarations have to beat the
+ * floating bubble's width, radius and borders.
+ *
+ * Written as .tut__coach alone they lost, and twice: first to .tut__bubble
+ * further down the file, and then — after being moved below it — to the
+ * media query at the end that narrows .tut__bubble to 380px on a short
+ * screen. Both are one class, so source order was the whole fight, and the
+ * band came out 380 wide in the middle of a 832px screen.
+ *
+ * Two classes is 0,2,0 and beats any single-class rule anywhere in the file,
+ * in any media query, however it is reordered later. The specificity is the
+ * point; the position is not.
+ */
+.tut__bubble.tut__coach {
+  position: fixed;
+  inset-inline: 0;
+  inset-block-end: 0;
+  width: auto;
+  height: var(--coach-h);
+  max-height: var(--coach-h);
+  display: flex;
+  align-items: center;
+  gap: var(--sp-3);
+  padding: var(--sp-2) var(--sp-3);
+  padding-block-end: max(var(--sp-2), env(safe-area-inset-bottom));
+  border-radius: 0;
+  border-inline: none;
+  border-block-end: none;
+  /* Above the dimming panels and above the spotlight's 9999px shadow, so the
+     words are never read through a dark sheet. */
+  z-index: 2;
+  overflow: hidden;
+}
+/* Side by side in the band: the line takes the room, the button keeps its
+   size. Stacked, they would not fit in 84px. */
+.tut__bubble.tut__coach .tut__text {
+  flex: 1;
+  margin: 0;
+  overflow-y: auto;
+  max-height: 100%;
+}
+.tut__bubble.tut__coach .tut__row {
+  flex: none;
+  flex-direction: column;
+  align-items: stretch;
+  gap: var(--sp-1);
+}
+.tut__bubble.tut__coach .tut__dots { margin: 0; justify-content: center; }
+
 @keyframes tut-in { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; } }
 .tut__text {
   margin: 0 0 12px;

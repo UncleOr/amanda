@@ -86,114 +86,42 @@ export interface Spot {
   height: number;
 }
 
-/** Breathing room between the ring and the bubble. */
-const GAP = 14;
-/** Keep the bubble off the very edge of the screen. */
-const EDGE = 10;
-
 /**
- * The highest the bubble may go, which is NOT the top of the screen.
+ * ═══ THERE IS NO PLACEMENT ANY MORE ═══
  *
- * ═══ "PART OF THE TUTORIAL IS HIDDEN" ═══
+ * What used to live here was `place()`: seventy lines that tried to find
+ * somewhere for the bubble which was not the thing the bubble was pointing
+ * at. Below, above, beside-and-narrower, and then a last branch whose own
+ * comment admitted the game was lost —
  *
- * Or sent a photograph of it: the bubble's first line cut in half, with the
- * app's top bar and the phone's status bar across it.
+ *     Overlapping a board that fills the screen is unavoidable and fine.
  *
- * `.tut` is `position: fixed; inset: 0`, so it is measured against the
- * VIEWPORT — while everything else in the app sits inside a wrapper padded by
- * `env(safe-area-inset-*)`. On a desktop browser those insets are zero and
- * the two agree. In the Android WebView they do not: the status bar is real,
- * the top bar sits below it, and a bubble at `top: 10` is underneath both.
+ * It is not fine, and Or photographed it three times. But the function was
+ * not wrong; the question was. A bubble floating over a screen that was laid
+ * out for somebody who already knows the game has to find a gap, and on a
+ * 832x384 landscape phone there often is no gap. Every fix I shipped was a
+ * fix to one branch of a function that sometimes has no right answer.
  *
- * Reproduced at 832x384 on the step that lights up both albums: the board
- * fills the screen, so no band above or below it is tall enough, and the
- * last-resort branch put the bubble at `top: EDGE` — over the bar, and over
- * the very thing it was pointing at.
+ * Or: *"maybe it is worth rethinking the whole approach. Not hiding an
+ * existing board, but building a new board where only what you can click
+ * appears."*
  *
- * Measuring the bar is better than a constant: it is the same answer whether
- * there is a safe-area inset, whether the bar is on this screen at all, and
- * whatever the bar's height turns out to be next month.
+ * So the bubble has a reserved band of its own at the foot of the screen,
+ * and `.app--teaching` gives up exactly that much height while a lesson is
+ * running (album.css). They cannot overlap because they are not in the same
+ * space — which is a property of the layout rather than an outcome of a
+ * calculation, and so it cannot be wrong on a screen size nobody tried.
+ *
+ * The spotlight stays. Where to press is still worth saying; it just no
+ * longer has to be said in a place the words then have to dodge.
  */
-function topLimit(): number {
-  const bar = document.querySelector(".topbar");
-  if (!bar) return EDGE;
-  const b = bar.getBoundingClientRect();
-  // A bar that is scrolled away or not rendered should not reserve anything.
-  return b.height > 0 && b.bottom > 0 ? Math.max(EDGE, b.bottom + GAP) : EDGE;
-}
-
-/** Narrower than this and the words stop being readable. */
-const MIN_W = 190;
-
-/**
- * Where to put the bubble so it never covers the thing it is pointing at.
- *
- * Tried in order: below, above, then beside — and BESIDE IS ALLOWED TO MAKE
- * IT NARROWER. That last part is the whole fix. The board on a landscape
- * phone is 211x275 inside 844x390: no band above or below is tall enough for
- * a 91px bubble, but there are 368 spare pixels to its left. A bubble that
- * insists on its full 380 cannot use them, so it gives up and lands on top of
- * the thing it is describing — which is exactly what Or saw.
- */
-export function place(
-  spot: Spot,
-  bw: number,
-  bh: number,
-): { top: number; left: number; width?: number } {
-  const W = window.innerWidth;
-  const H = window.innerHeight;
-  const TOP = topLimit();
-  const centred = Math.max(EDGE, Math.min((W - bw) / 2, W - bw - EDGE));
-  const below = spot.top + spot.height + GAP;
-  const above = spot.top - GAP - bh;
-
-  if (below + bh <= H - EDGE) return { top: below, left: centred };
-  if (above >= TOP) return { top: above, left: centred };
-
-  /*
-   * Beside. The height is a guess — narrowing makes the text wrap further and
-   * the bubble grow — so it is re-measured on the next frame and placed again
-   * from the real numbers. Vertically centred on the hole, clamped on screen.
-   */
-  const sideTop = Math.max(TOP, Math.min(spot.top + spot.height / 2 - bh / 2, H - bh - EDGE));
-  const roomStart = spot.left - GAP - EDGE;
-  const roomEnd = W - (spot.left + spot.width) - GAP - EDGE;
-  const widest = Math.max(roomStart, roomEnd);
-  if (widest >= MIN_W) {
-    const width = Math.min(bw, widest);
-    return roomEnd >= roomStart
-      ? { top: sideTop, left: spot.left + spot.width + GAP, width }
-      : { top: sideTop, left: Math.max(EDGE, spot.left - GAP - width), width };
-  }
-
-  /*
-   * Nothing clears it: the target is most of the screen, which happens on the
-   * step that lights up both albums at once.
-   *
-   * Take the taller band and sit at its outer edge — and clamp into the space
-   * that is actually visible, between the top bar and the bottom of the
-   * screen. Overlapping a board that fills the screen is unavoidable and
-   * fine; being underneath the status bar is what Or photographed. If the
-   * bubble is taller than that space it scrolls (see .tut__bubble in
-   * album.css) rather than losing its first line off the top.
-   */
-  const roomBelow = H - (spot.top + spot.height);
-  const lowest = Math.max(TOP, H - bh - EDGE);
-  return roomBelow >= spot.top
-    ? { top: lowest, left: centred }
-    : { top: TOP, left: centred };
-}
-
 export function Tutorial({ steps, onDone, onQuit }: Props) {
   const [i, setI] = useState(0);
   const [spot, setSpot] = useState<Spot | null>(null);
-  const [box, setBox] = useState<{ top: number; left: number; width?: number } | null>(null);
-  const bubbleRef = useRef<HTMLDivElement>(null);
   const step = steps[i];
 
   const next = useCallback(() => {
     setSpot(null);
-    setBox(null);
     if (i + 1 >= steps.length) onDone();
     else setI(i + 1);
   }, [i, steps.length, onDone]);
@@ -219,36 +147,6 @@ export function Tutorial({ steps, onDone, onQuit }: Props) {
           : { top: b.top, left: b.left, width: b.width, height: b.height },
       );
 
-      /*
-       * ═══ AND THE BUBBLE, IN THE SAME LOOP ═══
-       *
-       * Placing it in an effect of its own measured it ONCE — and the number
-       * it measured was the height the bubble had before `place` narrowed it
-       * to fit beside the hole, after which the text wrapped onto more lines
-       * and it grew back down over the thing it was pointing at.
-       *
-       * Measured on the action-card drawer at 844x390: placed at y=277 from
-       * a 48px bubble that ended up 73, covering 29% of a 698x34 target —
-       * and the 29% in the middle, which is where a thumb goes. Which is Or's
-       * oldest complaint about this overlay in its last hiding place: *"on
-       * some screens the little panel hides the thing I need to do."*
-       *
-       * A ResizeObserver was the obvious fix and it did not work; this loop
-       * is already running every frame to follow the target, it already has
-       * the live rect, and it already publishes only real changes. One
-       * instrument instead of two, and the height it uses cannot be stale by
-       * more than a frame.
-       */
-      const bub = bubbleRef.current;
-      if (bub) {
-        const r = bub.getBoundingClientRect();
-        if (r.height > 0) {
-          const at = place({ top: b.top, left: b.left, width: b.width, height: b.height }, r.width, r.height);
-          setBox((was) =>
-            was && was.top === at.top && was.left === at.left && was.width === at.width ? was : at,
-          );
-        }
-      }
     };
     const loop = () => {
       measure();
@@ -322,17 +220,16 @@ export function Tutorial({ steps, onDone, onQuit }: Props) {
    * supposed to click isn't always circled".
    */
   const pointing = step.target !== null;
-  if (pointing && (!spot || !box)) {
-    return (
-      <div className="tut" role="dialog" aria-live="polite">
-        {/* Measured off-screen so the placement above has real numbers to work
-            with on the very first frame rather than a guess. */}
-        <div className="tut__bubble tut__bubble--measuring" ref={bubbleRef} aria-hidden="true">
-          <p className="tut__text">{step.text}</p>
-        </div>
-      </div>
-    );
-  }
+  /*
+   * A pointing step does not speak until it can point: the ring and the
+   * words arrive together or not at all, which is the whole of Or's *"the
+   * thing I'm supposed to click isn't always circled"*.
+   *
+   * It used to render an invisible copy of the bubble first, to measure how
+   * tall it came out. Nothing measures it now, so there is nothing to render
+   * early and nothing to flash.
+   */
+  if (pointing && !spot) return <div className="tut" role="dialog" aria-live="polite" />;
 
   return (
     <div
@@ -393,15 +290,15 @@ export function Tutorial({ steps, onDone, onQuit }: Props) {
           />
         </>
       )}
-      <div
-        className={`tut__bubble${pointing ? " tut__bubble--at" : " tut__bubble--mid"}`}
-        ref={bubbleRef}
-        style={
-          pointing && box
-            ? { top: box.top, left: box.left, ...(box.width ? { width: box.width } : {}) }
-            : undefined
-        }
-      >
+      {/*
+        ═══ AMANDA'S OWN BAND, AT THE FOOT OF THE SCREEN ═══
+
+        Always here, always this tall, whatever the step is pointing at.
+        `.app--teaching` gives up exactly this much height while a lesson is
+        running, so the band and the game are never in the same pixels and
+        the bubble cannot cover the thing it is describing. See album.css.
+      */}
+      <div className="tut__bubble tut__coach">
         <p className="tut__text">{step.text}</p>
         <div className="tut__row">
           {steps.length > 1 && (
