@@ -79,6 +79,21 @@ const INSTALLED =
  * language when it is CALLED, and a module-level constant would be evaluated
  * once at import — in whichever language the game happened to boot in.
  */
+/**
+ * What each stage is about, in its own words.
+ *
+ * Deferred like every other label so they follow a language change, and
+ * kept here rather than in lessonScript.ts because these are what the MENU
+ * calls them — a player choosing where to go back to, not a script.
+ *
+ * DRAFTS. Or writes the words a player reads.
+ */
+const STAGE_NAMES: Array<() => string> = [
+  () => t("sd47ec51", "הלוח והמטרה"),
+  () => t("s3045ecd", "איך תוקפים"),
+  () => t("s2d735d3", "לשחק באמת"),
+];
+
 const DOCS: Array<{ page: AboutPage; label: () => string }> = [
   { page: "about", label: () => t("sc8369bd", "עלינו") },
   { page: "privacy", label: () => t("saf78986", "פרטיות") },
@@ -103,7 +118,8 @@ export function Settings({
   newsUnread: boolean;
   onNewsRead: () => void;
   /** Start the tutorial again, from the top. */
-  onTutorial: () => void;
+  /** Start the tutorial at this stage, 1-3. */
+  onTutorial: (stage: number) => void;
   onClose: () => void;
 }) {
   const [muted, setMuted] = useState(sfx.muted);
@@ -209,15 +225,36 @@ export function Settings({
             First in the list, because of everything in here it is the only
             one that is about the game itself.
           */}
-          <button
-            className="set__link"
-            onClick={() => {
-              onClose();
-              onTutorial();
-            }}
-          >
-            {t("s15c7730", "איך משחקים")}
-          </button>
+          {/*
+            ═══ THREE WAYS IN, NOT ONE ═══
+
+            Or: *"let us do the tutorial in three stages. You can always get
+            back to any of the three through the settings menu."*
+
+            One button that restarts from the top is the thing a player
+            already refused once. Somebody who wants to be reminded how a
+            series works does not want to be told again what a king is — and
+            until now the only way to reach stage three was to sit through
+            the other two.
+
+            Named rather than numbered: "how you play 2" says nothing, and
+            the three names are what the stages are about.
+          */}
+          <div className="set__stages">
+            <span className="set__stageslabel">{t("s15103f0", "איך משחקים")}</span>
+            {STAGE_NAMES.map((name, i) => (
+              <button
+                key={i}
+                className="set__link set__stage"
+                onClick={() => {
+                  onClose();
+                  onTutorial(i + 1);
+                }}
+              >
+                <b>{i + 1}</b> {name()}
+              </button>
+            ))}
+          </div>
           {DOCS.map((d) => (
             <button
               key={d.page}

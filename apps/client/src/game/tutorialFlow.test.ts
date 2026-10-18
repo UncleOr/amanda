@@ -45,15 +45,32 @@
  * kinds.
  */
 import { describe, expect, it } from "vitest";
-import { LESSON_1, LESSON_2, SCRIPTS, type ScriptStep } from "./lessonScript";
-import { LESSONS } from "./lessons";
+import { readFileSync } from "node:fs";
+import { fileURLToPath } from "node:url";
+import { nextCue } from "./coach";
+import { LESSON_1, LESSON_2, SCRIPTS, STAGES, type ScriptStep } from "./lessonScript";
+import { LESSONS, STAGE_LESSONS } from "./lessons";
 import { TUTORIAL_LINES } from "../data/tutorialLines";
 
 const HAS_LINE = new Set(TUTORIAL_LINES.map((l) => l.id));
 
+/**
+ * Every script in the repository, live or not.
+ *
+ * The three STAGES are what a player walks today. LESSON_1 and LESSON_2 are
+ * the two long matches they replaced; they are still in the file and are
+ * still checked here, because a script nobody runs is exactly the one that
+ * quietly rots until somebody points the menu back at it.
+ *
+ * Built from SCRIPTS rather than from named imports, so a fourth stage is
+ * covered by every rule below the moment it exists.
+ */
 const BOTH: Array<[string, ScriptStep[]]> = [
-  ["lesson 1", LESSON_1],
-  ["lesson 2", LESSON_2],
+  ...Object.entries(SCRIPTS).map(
+    ([n, steps]) => ["stage " + n, steps] as [string, ScriptStep[]],
+  ),
+  ["the old lesson 1", LESSON_1],
+  ["the old lesson 2", LESSON_2],
 ];
 
 type Way = "do it on the board" | "press the highlight" | "press next";
@@ -140,9 +157,14 @@ describe("every step is guided", () => {
     });
   }
 
-  it("has a script for each lesson, and no more", () => {
-    expect(Object.keys(SCRIPTS).map(Number).sort()).toEqual([1, 2]);
-    expect(LESSONS.length).toBe(2);
+  /*
+   * Three scripts and three decks, and the same three. A stage with a script
+   * and no deck deals nothing; a deck with no script says nothing. Either
+   * way the match opens and never moves, with a child looking at it.
+   */
+  it("has a script and a deck for each stage, and no more", () => {
+    expect(Object.keys(SCRIPTS).map(Number).sort()).toEqual([1, 2, 3]);
+    expect(STAGE_LESSONS.length).toBe(STAGES);
   });
 });
 
@@ -157,11 +179,31 @@ describe("every step is guided", () => {
  * Without this, a card renamed in the data makes a step wait for ever, and
  * the symptom a child sees is the tutorial freezing on a sentence.
  */
+/**
+ * Each script beside the deck it is spoken over.
+ *
+ * Paired by name rather than by position, because the list above is five
+ * scripts long now and the old version looked its deck up with
+ * `LESSONS[name === "lesson 1" ? 0 : 1]` — which silently gave every stage
+ * the same deck the moment there were more than two.
+ */
+const WITH_DECKS: Array<[string, ScriptStep[], readonly string[]]> = [
+  ...Object.entries(SCRIPTS).map(
+    ([n, steps]) =>
+      ["stage " + n, steps, STAGE_LESSONS[Number(n) - 1]!.deck] as [
+        string,
+        ScriptStep[],
+        readonly string[],
+      ],
+  ),
+  ["the old lesson 1", LESSON_1, LESSONS[0]!.deck],
+  ["the old lesson 2", LESSON_2, LESSONS[1]!.deck],
+];
+
 describe("a step never waits for a card the lesson does not deal", () => {
-  for (const [name, steps] of BOTH) {
+  for (const [name, steps, cards] of WITH_DECKS) {
     it(`${name}: every action it waits for is in the deck`, () => {
-      const lesson = LESSONS[name === "lesson 1" ? 0 : 1]!;
-      const deck = new Set(lesson.deck);
+      const deck = new Set(cards);
       for (const step of steps) {
         if (step.awaits?.kind !== "action") continue;
         expect(deck.has(step.awaits.id), `${step.id} waits for ${step.awaits.id}, not dealt`).toBe(
@@ -193,4 +235,104 @@ describe("the last step of a lesson presses the fight button", () => {
       expect(last.advance).toBeUndefined();
     });
   }
+});
+
+/**
+ * ═══ A STEP CANNOT POINT AT A SQUARE IT HAS ALREADY FILLED ═══
+ *
+ * Found by walking stage one in a browser: Amanda placed the king, both
+ * guards, and then stopped talking. The screen sat on a finished board with
+ * nothing to press and no way on.
+ *
+ * `data-drop` is the attribute that says "you may drop a card here", so
+ * BoardGrid only writes it on an EMPTY cell. A step that points at
+ * `[data-drop="3-1"]` after an earlier step waited for a card to land on
+ * 3-1 is pointing at an attribute that no longer exists — and a step whose
+ * target never appears is skipped, silently, taking the rest of the lesson
+ * with it.
+ *
+ * It is invisible in the script: both steps name the same square and look
+ * identical. It is a one-line rule once stated, which is why it is here and
+ * not in a comment.
+ *
+ * The answer when a step genuinely is ABOUT a filled square is a class that
+ * survives being filled — `.slot--guard`, `.slot--king`, `.slot--synergy`.
+ */
+describe("a step never points at a square an earlier step filled", () => {
+  const DROP = /\[data-drop="([^"]+)"\]/g;
+
+  for (const [name, steps] of BOTH) {
+    it(`${name}: every data-drop it points at is still empty then`, () => {
+      const filled = new Set<string>();
+      for (const step of steps) {
+        for (const m of step.target?.matchAll(DROP) ?? []) {
+          const cell = m[1]!;
+          expect(
+            filled.has(cell),
+            `${step.id} points at [data-drop="${cell}"], which an earlier step already filled — ` +
+              `use a class that survives being filled, like .slot--guard`,
+          ).toBe(false);
+        }
+        if (step.awaits?.kind === "cell") for (const c of step.awaits.cells) filled.add(c);
+      }
+    });
+  }
+});
+
+/**
+ * ═══ EVERY FIELD OF A STEP HAS TO SURVIVE THE JOURNEY ═══
+ *
+ * A written step is copied twice on its way to the screen: `scriptedCue`
+ * turns a ScriptStep into a Cue, and App turns a Cue into a Tutorial step.
+ * Both used to list the fields by hand, and both forgot the same one.
+ *
+ * `press: "target"` means "the highlighted thing IS the action — do not put
+ * a continue button beside it". It is set on the three steps that light the
+ * FIGHT BUTTON, where a continue button dismisses the tutorial on a board
+ * that never fought. It was written down, tested, and quietly dropped at
+ * both copies, so for weeks it did nothing at all.
+ *
+ * Found by walking stage one in a browser and reading "press start battle"
+ * with a "continue" button underneath it.
+ *
+ * Both copies are spreads now. This is the rule that says so, because the
+ * next person to add a field will be tempted to list them again.
+ */
+describe("a step reaches the screen whole", () => {
+  it("carries press through scriptedCue", () => {
+    const steps = SCRIPTS[1]!;
+    const last = steps[steps.length - 1]!;
+    expect(last.press, "the last step of a stage presses its own target").toBe("target");
+
+    const said = new Set(steps.slice(0, -1).map((s) => s.id));
+    const cue = nextCue(
+      {
+        phase: "build",
+        matchNo: 1,
+        hand: null,
+        handIsAction: false,
+        placements: {},
+        king: null,
+        discardCount: 0,
+        actionBarCount: 0,
+        opponent: { placements: {}, king: null },
+      },
+      said,
+    );
+    expect(cue?.id).toBe(last.id);
+    expect(cue?.press, "press was dropped between the script and the cue").toBe("target");
+  });
+
+  /*
+   * And the layer above, read from the source: App builds the Tutorial step
+   * from the cue, and a hand-written field list there loses it just as
+   * easily. There is no DOM in this suite, so this reads the spread.
+   */
+  it("hands the whole cue to the tutorial", () => {
+    const app = readFileSync(fileURLToPath(new URL("../App.tsx", import.meta.url)), "utf8");
+    const at = app.indexOf("setCue({");
+    expect(at, "setCue not found").toBeGreaterThan(-1);
+    const call = app.slice(at, app.indexOf("}", at) + 1);
+    expect(call, "setCue builds a cue field by field; spread it instead").toContain("...next");
+  });
 });

@@ -54,7 +54,8 @@ import {
   type OwnedCard,
 } from "./account";
 import { reportSolo, type Award } from "./meta";
-import { LESSONS } from "./lessons";
+import { STAGE_LESSONS } from "./lessons";
+import { lessonSquares } from "./lessonScript";
 import { Net, ONLINE_AVAILABLE, type Intent } from "./net";
 import { line as t } from "./copy";
 
@@ -639,7 +640,21 @@ export function rotateFrontLanes(plan: Placement[]): number {
   return moved;
 }
 
-function fillGs(s: GameState, bar: string[]): GameState {
+/**
+ * ═══ A LESSON'S BOARD IS THE BOARD THAT FIGHTS ═══
+ *
+ * `only` is the set of squares a lesson has drawn (lessonScript.squaresBy).
+ * Without it the buzzer fills every empty perimeter cell with a crumb, so a
+ * child who built on the three squares of lesson one would press "fight" and
+ * watch thirteen monsters appear — nine of them on squares that were never
+ * on the screen.
+ *
+ * Or: *"stage one — meeting the board. A board of three squares."* Three
+ * squares has to mean three squares all the way through, or the lesson says
+ * one thing and the battle shows another. Null everywhere outside a lesson,
+ * which is the whole game.
+ */
+function fillGs(s: GameState, bar: string[], only?: ReadonlySet<string> | null): GameState {
   // Every monster a held Fill card can place, in order.
   const fillQueue: string[] = [];
   for (const actId of bar) {
@@ -677,9 +692,13 @@ function fillGs(s: GameState, bar: string[]): GameState {
    *
    * The King slot is a slot. It fills like the rest.
    */
-  if (!king) king = "crumb_demon";
+  if (!king && (!only || only.has("king"))) king = "crumb_demon";
 
-  const empties = shuffle(perimeterCells().filter((c) => !placements[cellKey(c.x, c.y)]));
+  const empties = shuffle(
+    perimeterCells().filter(
+      (c) => !placements[cellKey(c.x, c.y)] && (!only || only.has(cellKey(c.x, c.y))),
+    ),
+  );
   let idx = 0;
   for (; idx < empties.length && fillQueue.length > 0; idx++)
     placements[cellKey(empties[idx]!.x, empties[idx]!.y)] = fillQueue.shift()!;
@@ -1087,6 +1106,14 @@ export function useMatch(): MatchApi {
    * solo report, or the one that runs on arriving home. See finishBattle.
    */
   const playedRef = useRef(false);
+  /**
+   * The squares a running lesson has drawn, or null outside one.
+   *
+   * Read by every fillGs call, so the board that fights is the board the
+   * child built. Cleared by clearMatch, which every other way into a match
+   * goes through.
+   */
+  const lessonCellsRef = useRef<ReadonlySet<string> | null>(null);
 
   /**
    * Read the account again, because something changed it on the server.
@@ -1726,7 +1753,7 @@ export function useMatch(): MatchApi {
       if (now)
         netRef.current?.lock(
           buildPlayerBoard(
-            fillGs(gsRef.current, barRef.current),
+            fillGs(gsRef.current, barRef.current, lessonCellsRef.current),
             modsRef.current,
             stackedRef.current,
             accountRef.current?.album,
@@ -1741,7 +1768,7 @@ export function useMatch(): MatchApi {
 
   const enterPrebattle = useCallback(() => {
     setTargeting(null);
-    const filled = fillGs(gsRef.current, barRef.current);
+    const filled = fillGs(gsRef.current, barRef.current, lessonCellsRef.current);
     setGs(filled);
     sfx.play("crumbs");
     setPhase("prebattle");
@@ -1907,6 +1934,13 @@ export function useMatch(): MatchApi {
   const clearMatch = useCallback(() => {
     netRef.current?.close();
     netRef.current = null;
+    /*
+     * A lesson's small board belongs to that lesson. Every way into a match
+     * comes through here, and startLesson sets it again straight afterwards —
+     * so forgetting this would mean a real match quietly fought on three
+     * squares, which is the kind of bug that only shows up two screens later.
+     */
+    lessonCellsRef.current = null;
     clearRound();
     setOnline(false);
     setOppLeft(false);
@@ -2146,11 +2180,22 @@ export function useMatch(): MatchApi {
    */
   const startLesson = useCallback(
     (n: number) => {
-      const spec = LESSONS[n - 1];
+      const spec = STAGE_LESSONS[n - 1];
       if (!spec) return;
       sfx.unlock();
       sfx.play("click");
       clearMatch();
+      /*
+       * The squares this stage ever draws, kept for the buzzer.
+       *
+       * Or: *"stage one — a board of three squares."* Without this, pressing
+       * "fight" fills every empty perimeter cell with a crumb and thirteen
+       * monsters appear on squares that were never on the screen. See fillGs.
+       *
+       * AFTER clearMatch, which nulls it. Written above that line first, and
+       * the symptom would have been the small board quietly coming back full.
+       */
+      lessonCellsRef.current = lessonSquares(n);
       setLesson(n);
       setGs({ deck: [...spec.deck], hand: null, discard: [], placements: {}, king: null });
       // A copy: the engine writes positions onto placements during a battle,
@@ -2227,7 +2272,7 @@ export function useMatch(): MatchApi {
    * what you see here is what those cards would really do to each other.
    */
   const startBenchBattle = useCallback(() => {
-    const mine = fillGs(gsRef.current, barRef.current);
+    const mine = fillGs(gsRef.current, barRef.current, lessonCellsRef.current);
     benchRef.current = { mine: gsRef.current, foe: foeRef.current };
     setGs(mine);
     setTargeting(null);
@@ -2438,7 +2483,7 @@ export function useMatch(): MatchApi {
     if (!online || !ready) return;
     netRef.current?.lock(
       buildPlayerBoard(
-        fillGs(gs, barRef.current),
+        fillGs(gs, barRef.current, lessonCellsRef.current),
         modsRef.current,
         stackedRef.current,
         accountRef.current?.album,

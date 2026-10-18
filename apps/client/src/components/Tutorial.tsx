@@ -134,11 +134,30 @@ export function Tutorial({ steps, onDone, onQuit }: Props) {
     let raf = 0;
     const measure = () => {
       const el = document.querySelector(selector);
-      if (!el) {
+      const b = el?.getBoundingClientRect();
+      /*
+       * ═══ A TARGET WITH NO SIZE IS NOT A TARGET ═══
+       *
+       * It used to ask only whether the element EXISTED. An element can
+       * exist and be nowhere: inside a collapsed drawer, inside a panel
+       * that has not opened, inside anything with `height: 0`. The ring is
+       * then drawn at 0x0 in the top-left corner, over nothing, and the
+       * step waits for a press that has nowhere to land.
+       *
+       * Measured in stage three: the x-ray card sits in the action drawer,
+       * the drawer was shut, and `.action-chip__main` reported
+       * `{top: 0, height: 0, width: 0}` while being perfectly present. The
+       * tutorial stopped there with nothing on the screen to do.
+       *
+       * Treating it as absent is right in both directions — a patient step
+       * waits for the drawer to open, and an impatient one gives up and
+       * moves on, which are the two behaviours that already exist for a
+       * target that is not there.
+       */
+      if (!el || !b || b.width <= 0 || b.height <= 0) {
         setSpot((was) => (was === null ? was : null));
         return;
       }
-      const b = el.getBoundingClientRect();
       // Only publish a change. Setting a fresh object every frame re-rendered
       // the whole overlay sixty times a second for no reason.
       setSpot((was) =>

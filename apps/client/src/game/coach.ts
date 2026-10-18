@@ -34,6 +34,21 @@ export interface Cue {
    */
   advance?: "panic" | "prebattle";
   /**
+   * The highlighted thing IS the action: press it, and that is the step.
+   *
+   * ═══ THIS WAS WRITTEN DOWN AND NEVER CARRIED ═══
+   *
+   * `ScriptStep.press` has existed since the day the fight button needed to
+   * stop growing a "next" beside it — a next there dismisses the tutorial on
+   * a board that never fought. It was set on l1-go and l2-go, and it never
+   * arrived: scriptedCue built this object field by field and did not copy
+   * it, so every scripted step reached Tutorial.tsx without it.
+   *
+   * Found by walking stage one in a browser and seeing "press start battle"
+   * with a "continue" button underneath.
+   */
+  press?: "target";
+  /**
    * What the player has to actually DO before this step will move on.
    *
    * Without this every step was "read it, press continue" — which is a
@@ -419,7 +434,13 @@ function scriptedCue(view: CoachView, said: Set<string>): Cue | null {
     ...(step.target ? { target: step.target } : {}),
     ...(step.awaits ? { awaits: step.awaits } : {}),
     ...(step.advance ? { advance: step.advance } : {}),
+    ...(step.press ? { press: step.press } : {}),
   };
+}
+
+/** Does this lesson have a written script at all? */
+function isScripted(view: CoachView): boolean {
+  return Boolean(view.matchNo && SCRIPTS[view.matchNo]);
 }
 
 export function nextCue(view: CoachView, said: Set<string>): Cue | null {
@@ -443,6 +464,20 @@ export function nextCue(view: CoachView, said: Set<string>): Cue | null {
    */
   const scripted = scriptedCue(view, said);
   if (scripted) return scripted;
+  /*
+   * ═══ AND WHEN A SCRIPT RUNS OUT, SHE STOPS ═══
+   *
+   * The rules below describe the game in general and were lesson one, back
+   * when lesson one was reactive. All three stages are written now, and a
+   * stage that has said its last line is OVER — the next thing is the
+   * battle, and then its ending.
+   *
+   * Without this the rules took over the moment a script finished, so stage
+   * one — whose last line is "press start battle" — followed it with the
+   * series-bonus rule, about three plants nobody was holding. Walked in a
+   * browser; it is the line after the last line.
+   */
+  if (isScripted(view)) return null;
 
   const inHand = card(view.hand);
   const down = Object.keys(view.placements).length;

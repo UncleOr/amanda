@@ -4,7 +4,8 @@ import { Album } from "./components/Album";
 import { Tutorial, type Step } from "./components/Tutorial";
 import { gateMet, nextCue } from "./game/coach";
 import { newDeckName } from "./data/deckNames";
-import { LESSONS } from "./game/lessons";
+import { STAGE_LESSONS } from "./game/lessons";
+import { STAGES, lessonSquares } from "./game/lessonScript";
 import { Profile } from "./components/Profile";
 import { Onboarding } from "./components/Onboarding";
 import { ChestReveal } from "./components/ChestReveal";
@@ -456,36 +457,83 @@ function Game() {
    * own doing, and the lesson counter is wound back so finishing lesson one
    * leads into two as it does the first time.
    */
-  const replayTutorial = useCallback(() => {
-    taughtRef.current = true;
-    lessonSeenRef.current = 0;
-    setLessonDone(false);
-    setMetAmanda(false);
-    /*
-     * She has to be allowed to say it all again.
+  const replayTutorial = useCallback(
+    /**
+     * @param stage Which of the three to start at. Or: *"you can always get
+     * back to any of the three stages through the settings menu."*
      *
-     * `said` is only cleared when a lesson ENDS, so pressing "how you play" a
-     * second time in one session started a walkthrough that silently skipped
-     * every line it had already given — the opening, the King, the guard —
-     * and fell through to the generic "put it there" for every card. Which is
-     * exactly what it looks like from outside: a tutorial that never
-     * introduces itself.
+     * The menu offers all three by name, so this takes a number rather than
+     * always starting at one. Somebody who wants reminding how a series
+     * works does not want to be told again what a king is.
      */
-    /*
-     * Asking for it again is a restart, not a resume — the button says "how
-     * to play", and somebody who presses it wants the thing from the top.
-     */
-    clearTutorialMark();
-    saidRef.current = new Set();
-    setTeaching(true);
-    m.startLesson(1);
-  }, [m]);
+    (stage = 1) => {
+      taughtRef.current = true;
+      lessonSeenRef.current = 0;
+      setLessonDone(false);
+      /*
+       * The greeting belongs to the first stage only. Jumping straight to
+       * stage three and being introduced to Amanda again is the two lines
+       * nobody wants twice — which is the same reason a resumed tutorial
+       * skips them.
+       */
+      setMetAmanda(stage > 1);
+      /*
+       * She has to be allowed to say it all again.
+       *
+       * `said` is only cleared when a lesson ENDS, so pressing this a second
+       * time in one session started a walkthrough that silently skipped
+       * every line it had already given — the opening, the King, the guard —
+       * and fell through to the generic "put it there" for every card. Which
+       * is exactly what it looks like from outside: a tutorial that never
+       * introduces itself.
+       */
+      /*
+       * Asking for a stage is a restart OF THAT STAGE, not a resume: the
+       * player picked where to go, so there is nothing left to come back to.
+       */
+      clearTutorialMark();
+      saidRef.current = new Set();
+      // Same reason as the next-stage button: a line from last time would
+      // outlive the lesson it belonged to.
+      setCue(null);
+      setTeaching(true);
+      m.startLesson(stage);
+    },
+    [m],
+  );
 
   /*
    * Finishing a lesson moves to the next one, and finishing the last one ends
    * the teaching for good. Before this the tutorial simply stopped talking and
    * left the player in a match, which is not an ending.
    */
+  /**
+   * ═══ WHAT A LESSON'S TWO BOARDS ARE ALLOWED TO DRAW ═══
+   *
+   * Null for every real match, so this is one ternary and no behaviour at
+   * all outside the tutorial.
+   *
+   * Mine comes from the SCRIPT — the squares the steps name — so adding a
+   * step that points at a new square draws it, and nobody has to remember a
+   * second list. His comes from the cards he is actually holding, which is
+   * the same idea read from the other end.
+   */
+  const teachingBoard = useMemo(
+    () => (teaching && m.lesson > 0 ? lessonSquares(m.lesson) : null),
+    [teaching, m.lesson],
+  );
+  const teachingFoeBoard = useMemo(() => {
+    if (!teaching || m.lesson === 0) return null;
+    const spec = STAGE_LESSONS[m.lesson - 1];
+    if (!spec) return null;
+    const out = new Set<string>();
+    for (const p of spec.opponent) out.add(p.king ? "king" : `${p.x}-${p.y}`);
+    // His crown is always drawn: "bring down the king" is the first thing
+    // stage one says, and it has to have something to point at.
+    out.add("king");
+    return out as ReadonlySet<string>;
+  }, [teaching, m.lesson]);
+
   const [lessonDone, setLessonDone] = useState(false);
   const lessonSeenRef = useRef(0);
   useEffect(() => {
@@ -688,17 +736,31 @@ function Game() {
     saidRef.current.add(next.id);
     // Which match she is in, written down as soon as she says anything in it.
     markTutorialAt({ lesson });
-    setCue({
-      ...(next.patient ? { patient: true } : {}),
-      ...(next.advance ? { advance: next.advance } : {}),
-      target: next.target ?? ".side--me .board",
-      text: next.text,
-      // `awaits` is turned into a live boolean BELOW, on every render — not
-      // captured here. A gate frozen at the moment the step appeared would
-      // answer "has a King been placed?" with whatever was true back then,
-      // forever, which is a bug this file has had once already.
-      awaits: next.awaits,
-    });
+    /*
+     * ═══ COPIED WHOLE, BECAUSE COPYING IT FIELD BY FIELD LOST ONE ═══
+     *
+     * This listed the fields by hand — patient, advance, target, text,
+     * awaits — and `press` was not among them. So `press: "target"`, which
+     * says "the highlighted thing IS the action, do not put a continue
+     * button beside it", never reached the component. It was set on the step
+     * that lights the FIGHT BUTTON, where a continue button ends the
+     * tutorial on a board that never fought, and it had been written down
+     * and believed for a while.
+     *
+     * The same field was being dropped a layer down in scriptedCue, by the
+     * same mistake, for the same reason: a cue was assembled by hand in two
+     * places and both lists had to be remembered. Neither was.
+     *
+     * One spread. A field added to Cue now arrives here without anybody
+     * having to notice.
+     *
+     * `target` keeps its default — a step with nothing to point at still
+     * frames the board rather than pointing at nothing. And `awaits` is
+     * turned into a live boolean BELOW, on every render: a gate frozen at
+     * the moment the step appeared would answer "has a King been placed?"
+     * with whatever was true back then, for ever.
+     */
+    setCue({ ...next, target: next.target ?? ".side--me .board" });
   }, [
     teaching,
     metAmanda,
@@ -1264,6 +1326,17 @@ function Game() {
                 placements={m.placements}
                 king={m.king}
                 side="left"
+                /*
+                 * ═══ A LESSON BOARD IS THE SIZE OF THE LESSON ═══
+                 *
+                 * Or: *"not hiding an existing board, but building a new
+                 * board where only what you can click appears"* — and then,
+                 * stage by stage: *"a board of three squares"*, *"seven
+                 * squares"*.
+                 *
+                 * Null in every other match, which is the whole game.
+                 */
+                only={teachingBoard}
                 // In the lab the board you are not editing is still a picture.
                 interactive={interactive && (!m.playground || m.editSide === "me")}
                 editing={m.playground && m.editSide === "me"}
@@ -1367,6 +1440,13 @@ function Game() {
               <BoardGrid
                 placements={m.opponent.placements}
                 king={m.opponent.king}
+                /*
+                 * The same rule for his side, from the squares his own cards
+                 * sit on. A three-square board facing a full enemy one would
+                 * teach that the game is lopsided before it taught anything
+                 * about the game.
+                 */
+                only={teachingFoeBoard}
                 // She faces two players, so her side is eight lanes deep and
                 // her King sits across lanes 3 and 4 — the middle of the
                 // eight, not the middle of four.
@@ -1799,35 +1879,71 @@ function Game() {
       )}
 
       {/*
-        The end of a lesson. Two of them, and then she lets you go — which is
-        the ending the tutorial did not have: it used to run out of lines and
-        leave you standing in a match.
+        ═══ THE END OF A STAGE IS A CHOICE, NOT A DOOR ═══
+
+        Or: *"at the end of each stage, offer a big button to carry on to the
+        next stage, or a small button to start playing already."*
+
+        Both halves matter. The big one is the invitation; the small one is
+        the way out for a child who has had enough, and it has to BE small —
+        a seven-year-old presses the biggest thing on the screen, so making
+        them the same size would be the tutorial quietly ending itself.
+
+        Leaving early is not a failure and is not punished: the mark is kept,
+        so the settings menu still offers the stage they stopped at.
       */}
       {lessonDone && (
         <Overlay>
           <div className="modal modal--confirm lesson-end">
             <Icon name="win" size={72} />
-            {m.lesson < LESSONS.length ? (
+            {m.lesson < STAGES ? (
               <>
-                <h2>{t("s19395af", "יפה. עכשיו משהו קצת יותר מתוחכם.")}</h2>
-                <p>{t("s9b86633", "במשחק הבא יש ליריב לוח אמיתי — ולך יש בדיוק מה שמנצח אותו.")}</p>
+                <h2>{t("s22c9ded", "יפה. מוכן לשלב הבא?")}</h2>
                 <div className="result__buttons">
                   <button
                     className="btn-fight"
                     onClick={() => {
                       setLessonDone(false);
                       saidRef.current = new Set();
+                      /*
+                       * The standing line goes with the stage that said it.
+                       *
+                       * The cue effect bails on `if (cue) return`, so a line
+                       * left over from the previous stage survives into the
+                       * next one and blocks its opening line for ever.
+                       * Measured: stage two opened on "press start battle",
+                       * which is the last thing stage ONE says.
+                       */
+                      setCue(null);
                       m.startLesson(m.lesson + 1);
                     }}
                   >
-                    {t("se31bdcc", "קדימה")}
+                    {t("sff1ea12", "לשלב הבא")}
                   </button>
                 </div>
+                <button
+                  className="btn-link lesson-end__skip"
+                  onClick={() => {
+                    setLessonDone(false);
+                    setTeaching(false);
+                    setCue(null);
+                    // The mark stays: settings still offers where they got to.
+                    m.reset();
+                  }}
+                >
+                  {t("sd9b2943", "כבר לשחק")}
+                </button>
               </>
             ) : (
               <>
-                <h2>{t("sb604bef", "זהו, אתה יודע לשחק.")}</h2>
-                <p>{t("s80f3ec6", "עכשיו לך תאסוף קלפים. אני רעבה.")}</p>
+                <h2>{t("s84705d0", "זהו, אתה יודע לשחק.")}</h2>
+                {/*
+                  Or: *"at the end of tutorial 3 it returns you to the menu
+                  and shows you the playground, and suggests going there to
+                  learn what each card does."* The suggestion is here; the
+                  menu is where `reset` lands.
+                */}
+                <p>{t("s543ac41", "רוצה להכיר כל קלף? יש מגרש משחקים בתפריט.")}</p>
                 <div className="result__buttons">
                   <button
                     className="btn-fight"
@@ -1836,11 +1952,11 @@ function Game() {
                       setTeaching(false);
                       setCue(null);
                       clearTutorialMark();
-            void markTutorialDone();
+                      void markTutorialDone();
                       m.reset();
                     }}
                   >
-                    {t("s8e26ffe", "יאללה")}
+                    {t("sb38670a", "יאללה, לשחק")}
                   </button>
                 </div>
               </>

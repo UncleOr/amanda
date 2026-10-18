@@ -1,6 +1,6 @@
 import { describe, expect, it } from "vitest";
 import { nextCue, type CoachView } from "./coach";
-import { LESSON_2 } from "./lessonScript";
+import { SCRIPTS } from "./lessonScript";
 import { CATALOG } from "../data/catalog";
 
 /**
@@ -275,7 +275,7 @@ describe("the second lesson — countering what the opponent played", () => {
   const panic = (over: Partial<CoachView>): CoachView => ({
     ...base,
     phase: "panic",
-    matchNo: 2,
+    matchNo: UNSCRIPTED,
     king: flyer,
     ...over,
   });
@@ -283,9 +283,23 @@ describe("the second lesson — countering what the opponent played", () => {
   /*
    * ═══ THE WRITTEN LESSON COMES FIRST NOW ═══
    *
-   * Or wrote the second match out step by step and approved it, so lesson 2
-   * is a SCRIPT rather than a set of rules (game/lessonScript.ts), and
-   * nextCue walks it before it considers anything below.
+   * ═══ THESE RULES ARE DORMANT, AND ON PURPOSE ═══
+   *
+   * Every stage of the tutorial is written out now, and a lesson that has a
+   * script never falls through to the rules below — a stage that has said
+   * its last line is over, and the old behaviour was stage one following
+   * "press start battle" with the series-bonus rule about three plants
+   * nobody was holding.
+   *
+   * So the counters do not run during any tutorial that exists today. They
+   * are kept because they are the only thing in the game that can talk about
+   * a board it did not choose — a coach for real matches is the obvious next
+   * use — and because deleting six hundred lines on the day they go quiet is
+   * how a thing is lost rather than retired.
+   *
+   * These tests hand over a match number with NO script, which is the state
+   * the rules were written for. They were pointed at lesson 2, which was
+   * reactive once and is written now.
    *
    * These tests are about the counter RULES, so they hand over a lesson
    * whose script has already been spoken — which is the state the real match
@@ -293,15 +307,30 @@ describe("the second lesson — countering what the opponent played", () => {
    * one of them got "l2-back", the script's opening line, and the thing
    * under test never ran at all.
    */
-  const scriptSaid = (...also: string[]) =>
-    new Set([...LESSON_2.map((step) => step.id), ...also]);
+  /** A match with no script of its own: the rules are all there is. */
+  const UNSCRIPTED = 9;
+  const scriptSaid = (...also: string[]) => new Set(also);
 
-  it("walks the script before any rule, in the second lesson", () => {
+  it("walks the script before any rule, in a lesson that has one", () => {
     const cue = nextCue(
-      panic({ hand: poisoner, opponent: { placements: { "3-1": wall }, king: null } }),
+      panic({ matchNo: 2, hand: poisoner, opponent: { placements: { "3-1": wall }, king: null } }),
       new Set(),
     );
-    expect(cue?.id).toBe(LESSON_2[0]!.id);
+    expect(cue?.id).toBe(SCRIPTS[2]![0]!.id);
+  });
+
+  /*
+   * And the other half, which is the behaviour this file documents: once a
+   * written stage has said everything, she stops rather than reaching for a
+   * rule about a board nobody built.
+   */
+  it("says nothing more once a written stage has finished", () => {
+    const steps = SCRIPTS[2]!;
+    const cue = nextCue(
+      panic({ matchNo: 2, hand: poisoner, opponent: { placements: { "3-1": wall }, king: null } }),
+      new Set(steps.map((s) => s.id)),
+    );
+    expect(cue).toBeNull();
   });
 
   it("says nothing about counters during the first match", () => {

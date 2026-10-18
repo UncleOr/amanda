@@ -171,3 +171,95 @@ export const LESSONS: Lesson[] = [
     ],
   },
 ];
+
+/*
+ * ═══ AND THE THREE STAGES ═══
+ *
+ * Or: *"let us do the tutorial in three stages."* The two long matches above
+ * are left in place and are no longer reachable; these are what STAGES points
+ * at now.
+ *
+ * Each deck is dealt in the order its script talks about it, so every line
+ * has the card it names already in hand. And each one is SHORT: three cards,
+ * five, four. A lesson board is three squares or seven, and a hand with more
+ * cards than squares is a child holding something they have nowhere to put.
+ *
+ * The opponent is small for the same reason. A three-square lesson facing a
+ * full enemy board would teach that the game is lopsided before it taught
+ * anything else — so both sides are the size of the lesson.
+ */
+export const STAGE_LESSONS: Lesson[] = [
+  /*
+   * ── one: a king and two guards ──
+   *
+   * The whole of it is where the crown goes and why the two squares in front
+   * of it matter. Titan King for the crown, and two giants who can stand in
+   * front of one: the Colossus absorbs and the Troll heals itself.
+   */
+  {
+    title: { he: t("s4d3f100", "שלב ראשון — הלוח והמטרה") },
+    deck: ["giants_10_titan_king", "giants_01_stone_colossus", "giants_04_rock_troll"],
+    opponent: [
+      { cardId: "crumb_demon", x: 1, y: 1, king: true },
+      { cardId: "crumb_demon", x: 3, y: 1 },
+      { cardId: "crumb_demon", x: 3, y: 2 },
+    ],
+  },
+
+  /*
+   * ── two: the two ways to reach the other side ──
+   *
+   * Flame Dragon walks in — moveSpeed 1.5, and its own role text says
+   * *"advances into enemy territory"*. Thunderwing is the catalogue's only
+   * `range: "sniper"`: it never moves and shoots the last enemy card in its
+   * lane. Those are the two ideas, and they are the two cards.
+   *
+   * The opponent gets ant soldiers in front so the dragon has something to
+   * walk through and the sniper something to pick off behind them.
+   */
+  {
+    title: { he: t("sfd50f02", "שלב שני — איך תוקפים") },
+    deck: [
+      "giants_10_titan_king",
+      "giants_01_stone_colossus",
+      "giants_04_rock_troll",
+      "dragons_01_flame_dragon",
+      "dragons_03_thunderwing",
+    ],
+    opponent: [
+      { cardId: "crumb_demon", x: 1, y: 1, king: true },
+      { cardId: "insects_01_ant_soldier", x: 3, y: 1 },
+      { cardId: "insects_01_ant_soldier", x: 3, y: 2 },
+      { cardId: "crumb_demon", x: 3, y: 0 },
+      { cardId: "crumb_demon", x: 3, y: 3 },
+      { cardId: "crumb_demon", x: 0, y: 1 },
+      { cardId: "crumb_demon", x: 0, y: 2 },
+    ],
+  },
+
+  /*
+   * ── three: abilities, a series, and an action card ──
+   *
+   * Three plants, which is two things at once: the Ancient Tree heals itself
+   * and the Cactus hurts whoever hits it — two abilities a child can watch
+   * happen — and all three share a series, so the third one beside them
+   * lights the bonus. Then RÖNTGEN, because an action card is the last
+   * mechanic there is.
+   */
+  {
+    title: { he: t("s889ccf0", "שלב שלישי — לשחק באמת") },
+    deck: [
+      "giants_10_titan_king",
+      "plants_02_ancient_tree",
+      "plants_08_cactus",
+      "plants_09_sunflower",
+      "xray",
+    ],
+    opponent: [
+      { cardId: "crumb_demon", x: 1, y: 1, king: true },
+      { cardId: "insects_01_ant_soldier", x: 3, y: 1 },
+      { cardId: "insects_01_ant_soldier", x: 3, y: 2 },
+      { cardId: "crumb_demon", x: 3, y: 0 },
+    ],
+  },
+];

@@ -405,6 +405,171 @@ export const TUTORIAL_LINES: readonly TutorialLine[] = [
     vars: [],
     when: t("s88efec6", "מסך התוצאה של המשחק השני"),
   },
+
+  /*
+   * ═══ THE TUTORIAL IN THREE STAGES ═══
+   *
+   * Or, after a tester got lost in the old one: *"let us do the tutorial in
+   * three stages. You can always get back to any of the three through the
+   * settings menu."*
+   *
+   *   1  meeting the board — what is mine, what is yours, and the GOAL:
+   *      bring down the king. A king and two guards. Three squares.
+   *   2  attacking — a dragon at the back that walks in, and a sniper that
+   *      does not move at all, plus two squares left empty so the crumb
+   *      monsters can be met. Seven squares.
+   *   3  strategy — two cards with abilities of their own, a series that
+   *      works together, and one action card.
+   *
+   * The l1-/l2- lines above are the two long matches and are left alone
+   * until he has walked these.
+   *
+   * DRAFTS, like everything else here. He is the copywriter.
+   */
+  {
+    id: "t1-boards",
+    he: t("s48f32cf", "זה הלוח שלך, וזה שלי. כל אחד מדביק קלפים, ואז הם נלחמים לבד."),
+    vars: [],
+    when: t("s1f48200", "השלב הראשון נפתח"),
+  },
+  {
+    id: "t1-goal",
+    he: t("sf6aa5f3", "המטרה פשוטה: להפיל את המלך שלי. זה כל המשחק."),
+    vars: [],
+    when: t("sb195916", "מצביעה על המלך של היריב"),
+  },
+  {
+    id: "t1-king",
+    he: t("s45d35b9", "נתחיל מהמלך שלך. הוא חזק פי שלושה — ואם הוא נופל, נגמר. שים אותו בכתר."),
+    vars: [],
+    when: t("s145b6f6", "מבקשת להניח מלך"),
+  },
+  {
+    id: "t1-guard-1",
+    he: t("s7613642", "עכשיו שומר. גולם אבן סופג המון. שים אותו בריבוע שלפני המלך."),
+    vars: [],
+    when: t("s1cacba3", "השומר הראשון"),
+  },
+  {
+    id: "t1-guard-2",
+    he: t("s731677a", "ועוד אחד לידו. טרול סלע מרפא את עצמו."),
+    vars: [],
+    when: t("sd9c70d7", "השומר השני"),
+  },
+  {
+    id: "t1-guards",
+    he: t("s1d80306", "שני השומרים חוסמים את מי שבא על המלך, וגם יורים על מפלצות הפירורים שלי."),
+    vars: [],
+    when: t("s8a2b4ec", "אחרי שני השומרים"),
+  },
+  {
+    id: "t1-go",
+    he: t("se8108d3", "זהו. לחץ 'התחל קרב' ונראה."),
+    vars: [],
+    when: t("s62770a8", "כפתור הקרב, סוף שלב ראשון"),
+  },
+  {
+    id: "t2-back",
+    he: t("sa49f3ac", "את המלך והשומרים אתה כבר יודע. עכשיו נלמד לתקוף."),
+    vars: [],
+    when: t("s8604d73", "השלב השני נפתח"),
+  },
+  {
+    id: "t2-king",
+    he: t("s3119051", "קודם המלך, כמו קודם."),
+    vars: [],
+    when: t("s678842e", "מלך בשלב שני"),
+  },
+  {
+    id: "t2-guard-1",
+    he: t("s9fdd7dc", "ושומר לפניו."),
+    vars: [],
+    when: t("s8c6294d", "שומר ראשון בשלב שני"),
+  },
+  {
+    id: "t2-guard-2",
+    he: t("sb472998", "ועוד אחד."),
+    vars: [],
+    when: t("s1e9a54b", "שומר שני בשלב שני"),
+  },
+  {
+    id: "t2-dragon",
+    he: t("se91ae1c", "פליים דראגון לא נשאר במקום — הוא צועד לתוך השטח שלי. שים אותו מאחור."),
+    vars: [],
+    when: t("sfdab258", "הדרקון"),
+  },
+  {
+    id: "t2-sniper",
+    he: t("s69f9b3c", "טורץ' הוא צלף. הוא לא זז בכלל, הוא יורה מרחוק על הקלף האחרון בשורה שלו. גם הוא מאחור."),
+    vars: [],
+    when: t("s679b01d", "הצלף"),
+  },
+  {
+    id: "t2-crumbs",
+    he: t("sb7288fa", "שני הריבועים האלה נשארו ריקים. כשהקרב מתחיל הם מתמלאים במפלצות פירורים — חלשות, אבל הן שלך."),
+    vars: [],
+    when: t("s5b0ba65", "מפלצות הפירורים"),
+  },
+  {
+    id: "t2-go",
+    he: t("s8960103", "קדימה, תלחץ."),
+    vars: [],
+    when: t("sa672d5e", "כפתור הקרב, סוף שלב שני"),
+  },
+  {
+    id: "t3-back",
+    he: t("s204bf16", "עכשיו החלק המעניין: איך גורמים לקלפים לעבוד יחד."),
+    vars: [],
+    when: t("sb546dcf", "השלב השלישי נפתח"),
+  },
+  {
+    id: "t3-king",
+    he: t("s6f799c9", "מלך קודם, אתה כבר יודע."),
+    vars: [],
+    when: t("scb00d69", "מלך בשלב שלישי"),
+  },
+  {
+    id: "t3-tree",
+    he: t("s48aadae", "לעץ העתיק יש יכולת מיוחדת: הוא מרפא את עצמו כל הזמן. שים אותו לפני המלך."),
+    vars: [],
+    when: t("s3fc48a2", "היכולת הראשונה"),
+  },
+  {
+    id: "t3-cactus",
+    he: t("s87ef3e3", "לקקטוס יש יכולת אחרת: כל מי שתוקף אותו חוטף בחזרה. שים אותו לידו."),
+    vars: [],
+    when: t("s846cff7", "היכולת השנייה"),
+  },
+  {
+    id: "t3-sunflower",
+    he: t("sa11021a", "שניהם מאותה סדרה. שלושה מאותה סדרה שנוגעים זה בזה מקבלים בונוס — אז הנה שלישי."),
+    vars: [],
+    when: t("sd58578f", "משלימה את הסדרה"),
+  },
+  {
+    id: "t3-synergy",
+    he: t("s5b520a1", "רואה את הזוהר סביבם? זאת הסדרה עובדת. פלוס עשרים אחוז עוצמה וחיים, לשלושתם."),
+    vars: [],
+    when: t("sdcaf626", "הסינרגיה נדלקת"),
+  },
+  {
+    id: "t3-xray",
+    he: t("sfa14a97", "ועוד דבר אחד: קלפי פעולה. רנטגן חושף את כל הלוח שלי. קח אותו."),
+    vars: [],
+    when: t("sa1a422a", "לוקחת את קלף הפעולה"),
+  },
+  {
+    id: "t3-xray-use",
+    he: t("s8fa9c1c", "עכשיו תפעיל אותו ותראה מה מחכה לך."),
+    vars: [],
+    when: t("s7b899d3", "מפעילה את קלף הפעולה"),
+  },
+  {
+    id: "t3-go",
+    he: t("s0c9e943", "זהו, אתה יודע לשחק. תלחץ."),
+    vars: [],
+    when: t("sa19ff29", "כפתור הקרב, סוף שלב שלישי"),
+  },
 ] as const;
 
 const SHIPPED = new Map(TUTORIAL_LINES.map((l) => [l.id, l.he]));

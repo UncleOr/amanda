@@ -181,7 +181,13 @@ export const LESSON_2: ScriptStep[] = [
     target: `[data-drop="${GUARD_POSTS[1]}"]`,
     awaits: { kind: "cell", cells: [GUARD_POSTS[1]] },
   },
-  { id: "l2-family", target: cells(GUARD_POSTS) },
+  /*
+   * The same trap as t1-guards, and it was shipped: this pointed at
+   * `cells(GUARD_POSTS)` after two steps had just filled both of them, so
+   * the selector matched nothing and the lesson went quiet. `.slot--guard`
+   * is on those squares whether or not something is standing there.
+   */
+  { id: "l2-family", target: ".side--me .slot--guard" },
   {
     id: "l2-sunflower",
     target: cells(TRIO_COMPLETIONS),
@@ -219,7 +225,197 @@ export const LESSON_2: ScriptStep[] = [
   { id: "l2-go", target: ".hand .btn-fight", press: "target" },
 ];
 
-export const SCRIPTS: Record<number, ScriptStep[]> = { 1: LESSON_1, 2: LESSON_2 };
+
+/**
+ * ═══ THE TUTORIAL IN THREE STAGES ═══
+ *
+ * Or, after a tester got lost in the old one: *"let us do the tutorial in
+ * three stages. You can always get back to any of the three through the
+ * settings menu. In every step it is clear what to press — an arrow and
+ * 'next', or something on the board, as appropriate."*
+ *
+ * These are short on purpose. The two lessons above are fifteen and
+ * nineteen steps of one long match each; a child who loses the thread at
+ * step nine has to start the whole thing again. Seven, eight and nine, with
+ * an ending in between, is three places to stop.
+ *
+ * ═══ AND THE BOARD IS THE SIZE OF THE LESSON ═══
+ *
+ * `squaresBy` reads these scripts and draws exactly the squares they name,
+ * so the counts below are his: *"a board of three squares"*, then *"seven
+ * squares — a king, two guards, two attackers and two more squares that
+ * fill with crumb monsters"*. The squares are not written down anywhere
+ * else; they are what the steps point at.
+ */
+
+/** Behind the King: where something that walks in, or shoots, belongs. */
+const BACK_LEFT = "0-1";
+const BACK_RIGHT = "0-2";
+/** The two front corners, left empty on purpose in stage two. */
+const CRUMB_CORNERS = ["3-0", "3-3"];
+
+/**
+ * ── one: this is a board, and that is the goal ──
+ *
+ * Three squares and nothing else. The only two things it teaches are where
+ * the crown goes and why the two squares in front of it matter — which is
+ * also, as Or put it, *"what the aim is: to bring down the king."*
+ */
+export const STAGE_1: ScriptStep[] = [
+  { id: "t1-boards", target: ".boards" },
+  { id: "t1-goal", target: ".side--enemy .slot--king" },
+  { id: "t1-king", target: ".side--me .slot--king", awaits: { kind: "king" } },
+  {
+    id: "t1-guard-1",
+    target: `[data-drop="${GUARD_POSTS[0]}"]`,
+    awaits: { kind: "cell", cells: [GUARD_POSTS[0]] },
+  },
+  {
+    id: "t1-guard-2",
+    target: `[data-drop="${GUARD_POSTS[1]}"]`,
+    awaits: { kind: "cell", cells: [GUARD_POSTS[1]] },
+  },
+  /*
+   * ═══ POINT AT THE SLOT, NOT AT THE DROP TARGET ═══
+   *
+   * This said `cells(GUARD_POSTS)` and the tutorial died on it. A cell only
+   * carries `data-drop` while it is EMPTY — it is the attribute that says
+   * "you may drop here" — so by the time Amanda wants to talk about the two
+   * guards she just had you place, the selector matches nothing at all.
+   *
+   * `.slot--guard` is on those two squares whether or not anything is
+   * standing on them, which is what a step ABOUT them needs.
+   */
+  { id: "t1-guards", target: ".side--me .slot--guard" },
+  { id: "t1-go", target: ".hand .btn-fight", press: "target" },
+];
+
+/**
+ * ── two: the two ways a card reaches the other side ──
+ *
+ * One that walks — Flame Dragon, moveSpeed 1.5, *"advances into enemy
+ * territory"* in its own role text — and one that never moves at all:
+ * Thunderwing is the catalogue's only `range: "sniper"`, and it shoots the
+ * last enemy card in its lane as long as it has a clear line.
+ *
+ * The two corners are left empty on purpose, because that is the lesson:
+ * what happens to a square you did not use.
+ */
+export const STAGE_2: ScriptStep[] = [
+  { id: "t2-back", target: ".side--me .board" },
+  { id: "t2-king", target: ".side--me .slot--king", awaits: { kind: "king" } },
+  {
+    id: "t2-guard-1",
+    target: `[data-drop="${GUARD_POSTS[0]}"]`,
+    awaits: { kind: "cell", cells: [GUARD_POSTS[0]] },
+  },
+  {
+    id: "t2-guard-2",
+    target: `[data-drop="${GUARD_POSTS[1]}"]`,
+    awaits: { kind: "cell", cells: [GUARD_POSTS[1]] },
+  },
+  {
+    id: "t2-dragon",
+    target: `[data-drop="${BACK_LEFT}"]`,
+    awaits: { kind: "cell", cells: [BACK_LEFT] },
+  },
+  {
+    id: "t2-sniper",
+    target: `[data-drop="${BACK_RIGHT}"]`,
+    awaits: { kind: "cell", cells: [BACK_RIGHT] },
+  },
+  /*
+   * Pointed at, never placed on. This is the one step whose square is drawn
+   * BECAUSE she mentions it and for no other reason — which is exactly what
+   * squaresBy is for, and why the crumb corners are not listed anywhere.
+   */
+  { id: "t2-crumbs", target: cells(CRUMB_CORNERS) },
+  { id: "t2-go", target: ".hand .btn-fight", press: "target" },
+];
+
+/**
+ * ── three: cards that do something, together ──
+ *
+ * Two abilities a child can watch happen — the Ancient Tree heals itself,
+ * the Cactus hurts whoever hits it — and then the thing those two were
+ * really for: they are both plants, so a third plant beside them lights the
+ * series bonus. And one action card, which is the last mechanic there is.
+ *
+ * `3-0` completes the trio because the engine's rule is shared EDGES, not
+ * corners (synergy.ts), and 3-0 touches 3-1.
+ */
+const TRIO_THIRD = "3-0";
+
+export const STAGE_3: ScriptStep[] = [
+  { id: "t3-back", target: ".side--me .board" },
+  { id: "t3-king", target: ".side--me .slot--king", awaits: { kind: "king" } },
+  {
+    id: "t3-tree",
+    target: `[data-drop="${GUARD_POSTS[0]}"]`,
+    awaits: { kind: "cell", cells: [GUARD_POSTS[0]] },
+  },
+  {
+    id: "t3-cactus",
+    target: `[data-drop="${GUARD_POSTS[1]}"]`,
+    awaits: { kind: "cell", cells: [GUARD_POSTS[1]] },
+  },
+  {
+    id: "t3-sunflower",
+    target: `[data-drop="${TRIO_THIRD}"]`,
+    awaits: { kind: "cell", cells: [TRIO_THIRD] },
+  },
+  // The glow is the engine's own answer to the rule. If the three are not
+  // really touching there is nothing here to point at, which is the correct
+  // failure rather than a line that lies.
+  { id: "t3-synergy", target: ".side--me .slot--synergy" },
+  { id: "t3-xray", target: ".take-action", awaits: { kind: "action", id: "xray", where: "bar" } },
+  /*
+   * ═══ POINT AT THE DRAWER, WHICH IS ALWAYS THERE ═══
+   *
+   * Three goes at this, and the two wrong ones are worth writing down.
+   *
+   * Pointing at the CARD inside (`.action-chip__main`) looked exact and was
+   * a dead end: taking an action card leaves the drawer SHUT, so the button
+   * exists in the document at 0x0 and the step waited for a press with
+   * nowhere to land. Walked at 832x384: no ring, no words, a build screen
+   * and nothing to do — which is the complaint this whole rewrite is about.
+   *
+   * Opening it in a step of its own was worse, because a handle that opens
+   * also CLOSES: run it when the drawer happens to be open and the lesson
+   * shuts the thing it is about to point into.
+   *
+   * The drawer itself is visible either way — shut it is the handle, open it
+   * is the handle and the cards — and every press inside it moves the player
+   * forward. The gate is the card being USED, so opening the drawer does not
+   * satisfy it by accident.
+   */
+  { id: "t3-xray-use", target: BAR, awaits: { kind: "action", id: "xray", where: "used" } },
+  { id: "t3-go", target: ".hand .btn-fight", press: "target" },
+];
+
+/**
+ * The three stages, by number.
+ *
+ * LESSON_1 and LESSON_2 are kept above and are no longer reachable: they are
+ * two long matches, and Or has asked for three short ones. Nothing is deleted
+ * until he has walked these.
+ */
+export const SCRIPTS: Record<number, ScriptStep[]> = { 1: STAGE_1, 2: STAGE_2, 3: STAGE_3 };
+
+/** How many stages there are. One number, read by the menu and by the ending. */
+export const STAGES = Object.keys(SCRIPTS).length;
+
+/**
+ * Every square a stage ever draws.
+ *
+ * The GROWING set is what the build screen shows step by step; this is the
+ * whole of it, which is what the buzzer needs — a lesson board must not fill
+ * with crumb monsters on squares the lesson never showed. See fillGs.
+ */
+export function lessonSquares(n: number): ReadonlySet<string> | null {
+  const steps = SCRIPTS[n];
+  return steps ? squaresBy(steps, steps.length - 1) : null;
+}
 
 /**
  * **Which squares exist by the time a lesson has reached step `i`.**
