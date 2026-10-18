@@ -7,10 +7,35 @@
  * one wins, so re-ordering these imports would silently change the
  * page. styles.css is now the index that keeps that order.
  */
-/* ---- action bar on a phone: bigger targets, scrollable, never clipped ---- */
+/* ---- action bar on a phone: bigger targets, never clipped ---- */
 @media (max-height: 560px) and (orientation: landscape) {
+  /*
+   * ═══ IT NEVER SCROLLED, IT ONLY OVERFLOWED ═══
+   *
+   * Or, with a photograph of the x-ray card hanging off the side of the
+   * drawer: *"the Röntgen does not sit properly. Nor does the card after
+   * it."*
+   *
+   * This said `flex-wrap: nowrap` under a heading promising a scrollable
+   * bar — and there is no `overflow-x` anywhere, so nothing ever scrolled.
+   * What nowrap did instead was drag the HANDLE onto the same line as the
+   * cards. The handle is `flex: 1 0 100%`, a row of its own by design, and
+   * 100% of the drawer plus a card is always wider than the drawer.
+   *
+   * Measured at 832x384 with one card in the bar:
+   *
+   *     drawer   292 → 832   (540 wide, content 568)
+   *     handle   320 → 860   28px past the right edge
+   *     card     264 → 316   28px before the left edge
+   *
+   * Twenty-eight pixels of overflow, split evenly because the row is
+   * centred — which is why the card sits half outside on one side while the
+   * handle runs off the other.
+   *
+   * Wrapping is the answer and scrolling was never needed: the bar holds
+   * three cards at most, which is about 150px of a 540px drawer.
+   */
   .actions--open {
-    flex-wrap: nowrap;
     scrollbar-width: none;
   }
   .actions::-webkit-scrollbar { display: none; }

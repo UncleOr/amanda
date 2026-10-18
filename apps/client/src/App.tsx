@@ -1971,14 +1971,19 @@ function Game() {
               </>
             ) : (
               <>
-                <h2>{t("sb604bef", "זהו, אתה יודע לשחק.")}</h2>
                 {/*
-                  Or: *"at the end of tutorial 3 it returns you to the menu
-                  and shows you the playground, and suggests going there to
-                  learn what each card does."* The suggestion is here; the
-                  menu is where `reset` lands.
+                  His words, as he sent them: *"and at the end, copy that is a
+                  bit more inviting."* The old ending told the player what
+                  they now were; this one tells them what they may now do,
+                  and offers both doors instead of one.
                 */}
-                <p>{t("s543ac41", "רוצה להכיר כל קלף? יש מגרש משחקים בתפריט.")}</p>
+                <h2>{t("s6ae56df", "זהו, הכנתי אותך לקרב.")}</h2>
+                <p>
+                  {t(
+                    "s75e24cb",
+                    "מוזמן להתחיל לשחק ולהתאמן, או להיכנס למגרש המשחקים ולגלות את כל הקלפים והיכולות שלהם בלי לחץ.",
+                  )}
+                </p>
                 <div className="result__buttons">
                   <button
                     className="btn-fight"
@@ -1988,12 +1993,30 @@ function Game() {
                       setCue(null);
                       clearTutorialMark();
                       void markTutorialDone();
-                      m.reset();
+                      /*
+                       * A real match, not the menu. "יאללה משחק אמיתי" is a
+                       * promise, and landing on the home screen instead
+                       * would be the game making it and not keeping it.
+                       */
+                      m.startMatch();
                     }}
                   >
-                    {t("sb38670a", "יאללה, לשחק")}
+                    {t("s57066be", "יאללה משחק אמיתי")}
                   </button>
                 </div>
+                <button
+                  className="btn-link lesson-end__skip"
+                  onClick={() => {
+                    setLessonDone(false);
+                    setTeaching(false);
+                    setCue(null);
+                    clearTutorialMark();
+                    void markTutorialDone();
+                    m.reset();
+                  }}
+                >
+                  {t("s93b5f77", "חזרה לתפריט")}
+                </button>
               </>
             )}
           </div>
@@ -2072,7 +2095,14 @@ function Game() {
              * step means "this is the moment the build time would have run
              * out", which is how the panic phase arrives at all.
              */
-            if (cue.advance) m.toBattle();
+            /*
+             * A step can ask the match to move on, because a lesson has no
+             * clock. "panic" is the last phase and has its own door now;
+             * routing it through toBattle was what made the fight button
+             * need pressing twice.
+             */
+            if (cue.advance === "panic") m.toPanic();
+            else if (cue.advance) m.toBattle();
             setCue(null);
           }}
           onQuit={() => {

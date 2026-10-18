@@ -372,6 +372,8 @@ export const STAGE_2: ScriptStep[] = [
  * corners (synergy.ts), and 3-0 touches 3-1.
  */
 const TRIO_THIRD = "3-0";
+/** The last square of the front column, where something expendable goes. */
+const FOURTH_POST = "3-3";
 
 export const STAGE_3: ScriptStep[] = [
   { id: "t3-back", target: ".side--me .board" },
@@ -395,6 +397,29 @@ export const STAGE_3: ScriptStep[] = [
   // really touching there is nothing here to point at, which is the correct
   // failure rather than a line that lies.
   { id: "t3-synergy", target: ".side--me .slot--synergy" },
+  /*
+   * ═══ TWO MORE ABILITIES, BECAUSE THE STAGE WAS TOO SHORT ═══
+   *
+   * Or: *"stage three is too short. Let me fill it with two more cards with
+   * abilities and another action card."*
+   *
+   * Chosen so that no two teach the same shape of thing. The Tree heals
+   * itself and the Cactus hurts whoever hits it — both defensive, both
+   * about staying alive. These two are the other half of the idea: Venus
+   * Trap's poison keeps hurting long after the hit lands, and the Dandelion
+   * is WORTH more dead than alive, which is the first card in the tutorial
+   * that is not trying to survive.
+   */
+  {
+    id: "t3-venus",
+    target: `[data-drop="${BACK_LEFT}"]`,
+    awaits: { kind: "cell", cells: [BACK_LEFT] },
+  },
+  {
+    id: "t3-dandelion",
+    target: `[data-drop="${FOURTH_POST}"]`,
+    awaits: { kind: "cell", cells: [FOURTH_POST] },
+  },
   { id: "t3-xray", target: ".take-action", awaits: { kind: "action", id: "xray", where: "bar" } },
   /*
    * ═══ POINT AT THE DRAWER, WHICH IS ALWAYS THERE ═══
@@ -416,7 +441,36 @@ export const STAGE_3: ScriptStep[] = [
    * forward. The gate is the card being USED, so opening the drawer does not
    * satisfy it by accident.
    */
-  { id: "t3-xray-use", target: BAR, awaits: { kind: "action", id: "xray", where: "used" } },
+  /*
+   * Using the x-ray is also the moment the clock would have run out, so the
+   * lesson makes it run out — there is no clock in a lesson, which is what
+   * `advance` exists for.
+   */
+  {
+    id: "t3-xray-use",
+    target: BAR,
+    awaits: { kind: "action", id: "xray", where: "used" },
+  },
+  /*
+   * The second action card, and the one that is about WHEN rather than
+   * what: a boost is worth whatever is already on the board, so it is the
+   * last thing you play rather than the first. That is the whole lesson and
+   * it only works here, after six cards are down.
+   */
+  { id: "t3-boost", target: ".take-action", awaits: { kind: "action", id: "energy_boost", where: "bar" } },
+  {
+    id: "t3-boost-use",
+    target: BAR,
+    awaits: { kind: "action", id: "energy_boost", where: "used" },
+    advance: "panic",
+  },
+  /*
+   * Or: *"and in stage three show the panic phase, where the opponent board
+   * is revealed."* It is the last thing the game does before a battle and
+   * the only phase a player can be surprised by, so it is the right note to
+   * end the teaching on.
+   */
+  { id: "t3-panic", target: ".side--enemy" },
   { id: "t3-go", target: ".hand .btn-fight", press: "target" },
 ];
 

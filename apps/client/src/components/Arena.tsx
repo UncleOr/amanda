@@ -62,6 +62,39 @@ const SKIP_AFTER_MS = 3500;
 /** Seconds left at which the clock starts warning. */
 const WARN_AT = 5;
 /**
+ * ═══ HEBREW IN A CANVAS DOES NOT LAY ITSELF OUT ═══
+ *
+ * Or: *"it said THE KING IS DEAD and the exclamation mark was at the
+ * beginning. Do not forget RTL in Hebrew."*
+ *
+ * He is right and it is not a Pixi bug. A canvas lays text out with the
+ * Unicode bidi algorithm, and that algorithm needs to be told which
+ * direction the PARAGRAPH runs. The default is left-to-right, and under
+ * left-to-right rules a trailing "!" is a neutral character at the end of
+ * the line — which in a line that reads right-to-left puts it on the left,
+ * and the left is where a Hebrew sentence STARTS.
+ *
+ * The DOM never shows this because the whole app is `dir="rtl"`. A canvas
+ * inherits none of that.
+ *
+ * U+2067 opens a right-to-left isolate and U+2069 closes it: inside, the
+ * paragraph runs the way the words do, and the mark and the punctuation land
+ * on the ends they belong to. An isolate rather than an embedding, so a
+ * string with a Latin word or a number in it cannot leak its direction out
+ * into whatever is drawn beside it.
+ *
+ * Everything drawn into the arena goes through here, because the next
+ * Hebrew string somebody adds to a canvas will have the same problem and no
+ * reason to suspect it.
+ */
+const RTL_ISOLATE = "\u2067";
+const POP_ISOLATE = "\u2069";
+
+function rtl(text: string): string {
+  return RTL_ISOLATE + text + POP_ISOLATE;
+}
+
+/**
  * **Why the battle stopped, in big letters, before it stops.**
  *
  * Or: *"a match ends if you brought the king down or if the time ran out.
@@ -316,7 +349,8 @@ export function Arena({
       // print the file name. The series colour already runs along the top of
       // this plate and the card art sits right above it, so the name is enough.
       const label = new Text({
-        text: name,
+        // A card name is Hebrew, and a canvas does not know that. See rtl().
+        text: rtl(name),
         style: {
           fontFamily: "Segoe UI, sans-serif",
           fontSize,
@@ -670,7 +704,9 @@ export function Arena({
         ) => {
           const row = new Container();
           const label = new Text({
-            text: who?.nickname ?? fallback,
+            // A nickname is whatever the player typed, in whichever
+            // direction they typed it. See rtl().
+            text: rtl(who?.nickname ?? fallback),
             style: {
               fontFamily: "Segoe UI, sans-serif",
               fontSize: 15,
@@ -765,7 +801,7 @@ export function Arena({
         const endedBy: EndedBy =
           result.endedBy ?? (result.winReason === "kingDown" ? "king" : "time");
         const annTitle = new Text({
-          text: (END_MARKS[endedBy] ?? "") + " " + (END_WORDS[endedBy] ?? END_WORDS.time)(),
+          text: rtl((END_MARKS[endedBy] ?? "") + " " + (END_WORDS[endedBy] ?? END_WORDS.time)()),
           style: {
             fontFamily: "Segoe UI, sans-serif",
             fontSize: Math.round(Math.min(56, W / 11)),
@@ -775,7 +811,7 @@ export function Arena({
         });
         annTitle.anchor.set(0.5);
         const annBody = new Text({
-          text: verdict ?? "",
+          text: verdict ? rtl(verdict) : "",
           style: {
             fontFamily: "Segoe UI, sans-serif",
             fontSize: 13,

@@ -924,6 +924,14 @@ export interface MatchApi {
   placeAt: (x: number, y: number) => void;
   placeKing: () => void;
   toBattle: () => void;
+  /**
+   * Bring on the last phase, because a lesson has no clock to do it.
+   *
+   * Only a step that is ABOUT the panic phase asks for this — see
+   * `advance: "panic"` in lessonScript.ts. Outside a lesson the clock runs
+   * the phases and nothing calls it.
+   */
+  toPanic: () => void;
   /** Online: "I am ready" — a toggle that does NOT stop you building. */
   ready: boolean;
   oppReady: boolean;
@@ -1810,14 +1818,28 @@ export function useMatch(): MatchApi {
    * Outside a lesson it is not reachable and nothing changes: the clock runs
    * the phases, and the button means "I am ready, skip the rest".
    */
-  const lessonStep = useCallback(() => {
-    if (phaseRef.current === "build") {
-      setPhase("panic");
-      setTimeLeft(PHASES.panic.seconds);
-      return;
-    }
-    enterPrebattle();
-  }, [enterPrebattle]);
+  /**
+   * ═══ THE BUTTON MEANS THE BUTTON ═══
+   *
+   * Or: *"in all the tutorials you have to press 'start battle' twice and it
+   * is strange. Once is enough."*
+   *
+   * This used to step a lesson through the phases: build -> panic on the
+   * first press, the battle on the second. It was how the old lesson two
+   * reached the panic phase at all, since a lesson has no clock to run the
+   * phases for it — and it meant Amanda said "press start battle", the
+   * player pressed, and the button was still there.
+   *
+   * Reaching panic is a thing a STEP asks for now (`advance: "panic"`, and
+   * toPanic below), which is where that intention belongs: stage three
+   * teaches the panic phase, stages one and two do not, and neither should
+   * pay a press for it.
+   */
+  const toPanic = useCallback(() => {
+    if (phaseRef.current !== "build") return;
+    setPhase("panic");
+    setTimeLeft(PHASES.panic.seconds);
+  }, []);
 
   const startBattle = useCallback(() => {
     const aiFull: BoardInput = soloAmandaRef.current
@@ -2704,7 +2726,8 @@ export function useMatch(): MatchApi {
     placeKing,
     // The playground skips the lock-and-count-down ceremony: you press fight,
     // it fights, and you can stop it again a second later.
-    toBattle: playground ? startBenchBattle : lesson > 0 ? lessonStep : enterPrebattle,
+    toBattle: playground ? startBenchBattle : enterPrebattle,
+    toPanic,
     ready,
     oppReady,
     toggleReady,

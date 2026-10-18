@@ -256,7 +256,12 @@ export const STAGE_LESSONS: Lesson[] = [
       "plants_02_ancient_tree",
       "plants_08_cactus",
       "plants_09_sunflower",
+      // Two more abilities, and neither is about staying alive: poison that
+      // keeps hurting, and a card worth more dead than alive.
+      "plants_04_venus_trap",
+      "plants_07_dandelion",
       "xray",
+      "energy_boost",
     ],
     opponent: [
       { cardId: "crumb_demon", x: 1, y: 1, king: true },
