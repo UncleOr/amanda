@@ -1,4 +1,4 @@
-﻿{
+{
   "_comment": [
     "The Android wrapper, after Play Games made the TWA impossible.",
     "",
@@ -18,6 +18,11 @@
     "4 is the first build with the Amanda launcher icon on it ג€” 3 went to Play",
     "wearing Capacitor's.",
     "",
+    "5 was built, checked and never uploaded, so it is still 5: there is",
+    "nothing in Play to supersede and no reason to burn a number on a build",
+    "nobody has. It also carries the landscape uses-feature, so the release",
+    "stops excluding devices that can draw landscape perfectly well.",
+    "",
     "5 fixes two things 4 got wrong. The full-screen flags were written onto",
     "AppTheme.NoActionBar, and the manifest gives MainActivity",
     "AppTheme.NoActionBarLaunch ג€” so they were set on a style nothing uses and",
@@ -28,8 +33,8 @@
 
   "packageId": "com.asulins.amanda",
   "appName": "׳׳׳ ׳“׳”",
-  "versionName": "1.1.3",
-  "versionCode": 6,
+  "versionName": "1.1.2",
+  "versionCode": 5,
 
   "_url": [
     "The WebView loads the live site, which is what the TWA does today.",

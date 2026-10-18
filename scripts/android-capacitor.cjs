@@ -33,7 +33,16 @@ const REPO = path.resolve(__dirname, "..");
 const CONFIG = path.join(REPO, "android", "capacitor.json");
 const OUT = process.argv[2] || "C:\\Users\\Public\\amanda-android-cap";
 
-const cfg = JSON.parse(fs.readFileSync(CONFIG, "utf8"));
+/*
+ * The BOM strip is not decoration.
+ *
+ * A version bump written with PowerShell's `Set-Content -Encoding utf8` puts
+ * a byte-order mark at the front of the file, JSON.parse refuses it, and the
+ * build dies with `Unexpected token '', "{ "_com"... is not valid JSON` --
+ * a message that names neither the file nor the cause. Any Windows editor
+ * can do the same thing to this file on any day.
+ */
+const cfg = JSON.parse(fs.readFileSync(CONFIG, "utf8").replace(/^﻿/, ""));
 
 /* ── the refusals, before anything is written ────────────────────────── */
 
