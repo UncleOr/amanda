@@ -60,6 +60,17 @@ assets/raw/
 # remembering what the version code was.
 !android/capacitor.json
 
+# And the launcher icon, for the same reason again.
+#
+# Or: *"the app's logo is not the Amanda logo!! Fix it so we can send it to
+# the testers."* It was Capacitor's default, because nothing had ever replaced
+# it. scripts/make-android-icons.mjs builds the whole set from the icon the
+# website already uses — but it needs sharp, and the Android build runs with
+# nothing beyond the Capacitor CLI. So the PNGs are committed and the build
+# just copies them. Re-run the script when the icon changes.
+!android/icons/
+!android/icons/**
+
 # Generated store assets. scripts/make-trailer.sh rebuilds the video from the
 # screenshots and the score in under a minute, so a 7MB binary does not need
 # to live in a public repository; store/raw/ is wherever you dropped the phone

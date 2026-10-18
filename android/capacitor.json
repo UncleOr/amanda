@@ -13,13 +13,17 @@
     "testing, not a new listing — the testers, the clock and the rating all hang",
     "off that one string.",
     "",
-    "versionCode 3 because 2 is the TWA already uploaded."
+    "versionCode 3 because 2 is the TWA already uploaded.",
+    "",
+    "4 is the first build with the Amanda launcher icon on it — 3 went to Play",
+    "wearing Capacitor's. It also carries the edge-to-edge opt-out, so the game",
+    "stops being drawn underneath the status bar."
   ],
 
   "packageId": "com.asulins.amanda",
   "appName": "אמנדה",
-  "versionName": "1.1.0",
-  "versionCode": 3,
+  "versionName": "1.1.1",
+  "versionCode": 4,
 
   "_url": [
     "The WebView loads the live site, which is what the TWA does today.",
