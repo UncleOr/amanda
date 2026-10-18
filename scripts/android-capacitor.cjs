@@ -340,6 +340,8 @@ const cfg = ${JSON.stringify(
        * looks changes; it only stops excluding machines that would have run
        * it perfectly well.
        */
+      // Two newlines, built here so the patch never has to escape one.
+      blankLine: "\n\n",
       landscapeFeature: [
         "",
         "    <!-- The game is DRAWN landscape; it does not need landscape hardware.",
@@ -623,8 +625,13 @@ edit("src/main/java/com/asulins/amanda/MainActivity.java", (s) =>
  * running app instead of starting a second copy of it.
  */
 // Before <application>, which is where uses-feature belongs.
+//
+// APP_TAG carries the blank line before it. Writing that as an escape on the
+// line below would be a newline inside this template literal, which is the
+// mistake this file has now made five times.
+const APP_TAG = cfg.blankLine + '    <application';
 edit("src/main/AndroidManifest.xml", (s) =>
-  s.replace("    <application", cfg.landscapeFeature + "\n\n    <application"),
+  s.replace("    <application", cfg.landscapeFeature + APP_TAG),
 );
 
 edit("src/main/AndroidManifest.xml", (s) =>
