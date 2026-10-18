@@ -26,7 +26,7 @@ import { describe, expect, it } from "vitest";
 import { runBattle, type BoardInput, type Placement } from "@amanda/engine";
 import { CATALOG, SYNERGIES, ACTIONS } from "../data/catalog";
 import { STAGE_LESSONS } from "./lessons";
-import { SCRIPTS, STAGES, lessonSquares } from "./lessonScript";
+import { SCRIPTS, STAGES, handFor, lessonSquares } from "./lessonScript";
 
 function shuffled<T>(items: T[], rnd: () => number): T[] {
   const a = [...items];
@@ -126,5 +126,69 @@ describe("the set of stages", () => {
     expect(STAGES).toBe(3);
     expect(STAGE_LESSONS).toHaveLength(STAGES);
     for (let n = 1; n <= STAGES; n++) expect(SCRIPTS[n], `no script for stage ${n}`).toBeDefined();
+  });
+});
+
+/**
+ * ═══ THE TRIO HAS TO ACTUALLY LIGHT UP ═══
+ *
+ * Or's order for stage three puts a GIANT between the plants: a plant in the
+ * corner, the king, a plant on one guard post, a giant on the other, and
+ * then *"oho, another plant! that makes us a trio"*.
+ *
+ * That only works because the engine floods over same-series NEIGHBOURS
+ * rather than requiring three in a row — 2-0 touches 3-0, and 3-0 touches
+ * 3-1, so the three plants are one connected group with the giant beside
+ * them rather than between them.
+ *
+ * If that reading is wrong, the step before the last one points at a glow
+ * that never appears and a child is told about a bonus they cannot see. It
+ * is one call to the engine's own rule, so there is no reason to believe it
+ * instead of asking.
+ */
+import { SERIES_BY_ID } from "../data/catalog";
+import { synergyMembers } from "@amanda/engine";
+
+describe("the trio stage three builds", () => {
+  /*
+   * Built FROM THE SCRIPT, not written out beside it. The first version of
+   * this test hard-coded the six placements, so moving a square in the
+   * script left the test passing on a board the lesson no longer asks for —
+   * caught by moving the third plant somewhere it touches nothing and
+   * watching nothing fail.
+   */
+  function boardFromScript(stage: number) {
+    const steps = SCRIPTS[stage]!;
+    const deck = STAGE_LESSONS[stage - 1]!.deck;
+    const out: Array<{ cardId: string; x: number; y: number; king?: boolean }> = [];
+    steps.forEach((step, i) => {
+      const cardId = handFor(steps, i, deck);
+      if (!cardId || !CATALOG.has(cardId)) return;
+      if (step.awaits?.kind === "king") {
+        out.push({ cardId, x: 1, y: 1, king: true });
+        return;
+      }
+      if (step.awaits?.kind !== "cell") return;
+      const [x, y] = step.awaits.cells[0]!.split("-").map(Number) as [number, number];
+      out.push({ cardId, x, y });
+    });
+    return out;
+  }
+
+  it("is one connected group, with the giant beside it and not between", () => {
+    const board = boardFromScript(3);
+    const seriesOf = (id: string) => CATALOG.get(id)?.seriesId;
+
+    // Every monster the stage deals is placed, and nothing else is.
+    const monsters = STAGE_LESSONS[2]!.deck.filter((id) => CATALOG.has(id));
+    expect(board.map((p) => p.cardId).sort()).toEqual([...monsters].sort());
+
+    const plants = SERIES_BY_ID.get("plants");
+    expect(plants, "the plants series").toBeDefined();
+    const lit = synergyMembers(board, seriesOf, "plants", plants!.synergy.threshold);
+
+    const names = [...lit].map((i) => board[i]!.cardId).sort();
+    const everyPlant = monsters.filter((id) => seriesOf(id) === "plants").sort();
+    expect(names, "the three plants the stage places do not light up").toEqual(everyPlant);
   });
 });

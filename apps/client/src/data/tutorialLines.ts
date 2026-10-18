@@ -541,46 +541,60 @@ export const TUTORIAL_LINES: readonly TutorialLine[] = [
     when: t("sb546dcf", "השלב השלישי נפתח"),
   },
   {
-    id: "t3-king",
-    he: t("s6f799c9", "מלך קודם, אתה כבר יודע."),
-    vars: [],
-    when: t("scb00d69", "מלך בשלב שלישי"),
-  },
-  {
-    id: "t3-tree",
-    he: t("s48aadae", "לעץ העתיק יש יכולת מיוחדת: הוא מרפא את עצמו כל הזמן. שים אותו לפני המלך."),
-    vars: [],
-    when: t("s3fc48a2", "היכולת הראשונה"),
-  },
-  {
-    id: "t3-cactus",
-    he: t("s87ef3e3", "לקקטוס יש יכולת אחרת: כל מי שתוקף אותו חוטף בחזרה. שים אותו לידו."),
-    vars: [],
-    when: t("s846cff7", "היכולת השנייה"),
-  },
-  {
-    id: "t3-sunflower",
-    he: t("sa11021a", "שניהם מאותה סדרה. שלושה מאותה סדרה שנוגעים זה בזה מקבלים בונוס — אז הנה שלישי."),
-    vars: [],
-    when: t("sd58578f", "משלימה את הסדרה"),
-  },
-  {
     id: "t3-synergy",
     he: t("s5b520a1", "רואה את הזוהר סביבם? זאת הסדרה עובדת. פלוס עשרים אחוז עוצמה וחיים, לשלושתם."),
     vars: [],
     when: t("sdcaf626", "הסינרגיה נדלקת"),
   },
+  /*
+   * ═══ STAGE THREE DOES NOT OPEN ON THE KING ═══
+   *
+   * Or: *"in stage three let us not start from the king. It is not always
+   * 'king first'. It should be more mixed up — 'what have we got? a dragon?
+   * put it at the back, a better king will come along'."*
+   *
+   * The first two stages teach the shape of a turn, and the shape starts
+   * with the crown. By the third, that has been said twice and is no longer
+   * the lesson — the lesson is that you play the hand you were dealt, and a
+   * hand arrives in no particular order. So the king turns up in the middle,
+   * announced, and the two lines around it do the work: one promises him,
+   * one is pleased to see him.
+   */
   {
-    id: "t3-venus",
-    he: t("s776346a", "וונוס טראפ יורה רעל שממשיך לכאוב הרבה אחרי הפגיעה. הוא לא זז, אז שים אותו מאחור."),
+    id: "t3-dragon",
+    he: t("sef79251", "מה יצא לנו? דרקון. נשים אותו מאחור — בהמשך יגיע מלך טוב יותר."),
     vars: [],
-    when: t("s53d2090", "וונוס טראפ, הרעל"),
+    when: t("secf5187", "הקלף הראשון בשלב שלוש, לפני המלך"),
   },
   {
-    id: "t3-dandelion",
-    he: t("s9732f8c", "שן הארי נראית חלשה — אבל כשהיא מתה היא מפזרת זרעים שממשיכים להילחם במקומה. דווקא בחזית."),
+    id: "t3-sunflower",
+    he: t("sc18e8de", "חמנייה. יורה גרעינים ומתרפאת לבד. שים אותה בפינה."),
     vars: [],
-    when: t("s161a7c5", "שן הארי, הזרעים"),
+    when: t("s7cda2ee", "הצמח הראשון"),
+  },
+  {
+    id: "t3-king",
+    he: t("s6ef4842", "הופה — מלך! אמרתי לך שיגיע. לכתר איתו."),
+    vars: [],
+    when: t("s3a61d7f", "המלך מגיע באמצע"),
+  },
+  {
+    id: "t3-tree",
+    he: t("s1a2faf5", "העץ העתיק מרפא את עצמו בלי הפסקה. שומר מצוין — לפני המלך."),
+    vars: [],
+    when: t("s35dabc9", "הצמח השומר"),
+  },
+  {
+    id: "t3-troll",
+    he: t("s73ccdeb", "ועוד שומר, הפעם ענק. טרול סלע, לריבוע השני."),
+    vars: [],
+    when: t("se9f4c3a", "הענק השומר"),
+  },
+  {
+    id: "t3-cactus",
+    he: t("sb8d8fbb", "הופה, עוד צמח! הקקטוס מחזיר נזק לכל מי שנוגע בו. ושלושה צמחים צמודים — זאת שלישייה."),
+    vars: [],
+    when: t("s3b88bcc", "הצמח השלישי, שסוגר שלישייה"),
   },
   {
     id: "t3-xray",

@@ -250,6 +250,18 @@ export const LESSON_2: ScriptStep[] = [
 
 /** Behind the King: where something that walks in, or shoots, belongs. */
 const BACK_LEFT = "0-1";
+/**
+ * The three squares stage three builds its trio on.
+ *
+ * NOT three in a row. The engine floods over same-series neighbours
+ * (synergy.ts), so three plants count as a trio when they form one
+ * connected group — 2-0 touches 3-0 and 3-0 touches 3-1. That is what lets
+ * a giant hold the second guard post in the middle of them without
+ * breaking the bonus, which is the shape Or asked for: plant, king, guard
+ * plant, guard giant, and then "oho, another plant!".
+ */
+const TRIO_THIRD = "3-0";
+const TRIO_CLOSER = "2-0";
 const BACK_RIGHT = "0-2";
 /** Where the card fetched back out of the bin goes: out of everyone way. */
 const BACK_CORNER = "0-0";
@@ -363,20 +375,40 @@ export const STAGE_2: ScriptStep[] = [
 /**
  * ── three: cards that do something, together ──
  *
- * Two abilities a child can watch happen — the Ancient Tree heals itself,
- * the Cactus hurts whoever hits it — and then the thing those two were
- * really for: they are both plants, so a third plant beside them lights the
- * series bonus. And one action card, which is the last mechanic there is.
+ * ═══ AND THE KING IS NOT FIRST ═══
  *
- * `3-0` completes the trio because the engine's rule is shared EDGES, not
- * corners (synergy.ts), and 3-0 touches 3-1.
+ * Or: *"in stage three let us not start from the king. It is not always
+ * 'king first'. It should be more mixed up — 'what have we got? a dragon?
+ * put it at the back, a better king will come along'. Then one plant. Then
+ * — oho, a king. Then a guard plant. Then a guard giant. Then — oho, another
+ * plant! that makes us a trio."*
+ *
+ * The first two stages teach the shape of a turn and that shape opens on the
+ * crown. By the third it has been said twice and is no longer the lesson.
+ * The lesson here is that a hand arrives in no particular order and you play
+ * what you were dealt — so the king turns up in the middle, promised by the
+ * line before it and welcomed by its own.
+ *
+ * ═══ THE TRIO IS CONNECTED, NOT MUTUAL ═══
+ *
+ * The three plants are 3-0, 3-1 and 2-0, which is not three squares in a
+ * row. The engine floods over same-series NEIGHBOURS (synergy.ts), so three
+ * plants count when they form one connected group: 2-0 touches 3-0, and 3-0
+ * touches 3-1. That is what lets the giant hold the second guard post in the
+ * middle of them without breaking the bonus.
  */
-const TRIO_THIRD = "3-0";
-/** The last square of the front column, where something expendable goes. */
-const FOURTH_POST = "3-3";
-
 export const STAGE_3: ScriptStep[] = [
   { id: "t3-back", target: ".side--me .board" },
+  {
+    id: "t3-dragon",
+    target: `[data-drop="${BACK_LEFT}"]`,
+    awaits: { kind: "cell", cells: [BACK_LEFT] },
+  },
+  {
+    id: "t3-sunflower",
+    target: `[data-drop="${TRIO_THIRD}"]`,
+    awaits: { kind: "cell", cells: [TRIO_THIRD] },
+  },
   { id: "t3-king", target: ".side--me .slot--king", awaits: { kind: "king" } },
   {
     id: "t3-tree",
@@ -384,80 +416,41 @@ export const STAGE_3: ScriptStep[] = [
     awaits: { kind: "cell", cells: [GUARD_POSTS[0]] },
   },
   {
-    id: "t3-cactus",
+    id: "t3-troll",
     target: `[data-drop="${GUARD_POSTS[1]}"]`,
     awaits: { kind: "cell", cells: [GUARD_POSTS[1]] },
   },
   {
-    id: "t3-sunflower",
-    target: `[data-drop="${TRIO_THIRD}"]`,
-    awaits: { kind: "cell", cells: [TRIO_THIRD] },
+    id: "t3-cactus",
+    target: `[data-drop="${TRIO_CLOSER}"]`,
+    awaits: { kind: "cell", cells: [TRIO_CLOSER] },
   },
   // The glow is the engine's own answer to the rule. If the three are not
-  // really touching there is nothing here to point at, which is the correct
+  // really connected there is nothing here to point at, which is the correct
   // failure rather than a line that lies.
   { id: "t3-synergy", target: ".side--me .slot--synergy" },
-  /*
-   * ═══ TWO MORE ABILITIES, BECAUSE THE STAGE WAS TOO SHORT ═══
-   *
-   * Or: *"stage three is too short. Let me fill it with two more cards with
-   * abilities and another action card."*
-   *
-   * Chosen so that no two teach the same shape of thing. The Tree heals
-   * itself and the Cactus hurts whoever hits it — both defensive, both
-   * about staying alive. These two are the other half of the idea: Venus
-   * Trap's poison keeps hurting long after the hit lands, and the Dandelion
-   * is WORTH more dead than alive, which is the first card in the tutorial
-   * that is not trying to survive.
-   */
-  {
-    id: "t3-venus",
-    target: `[data-drop="${BACK_LEFT}"]`,
-    awaits: { kind: "cell", cells: [BACK_LEFT] },
-  },
-  {
-    id: "t3-dandelion",
-    target: `[data-drop="${FOURTH_POST}"]`,
-    awaits: { kind: "cell", cells: [FOURTH_POST] },
-  },
   { id: "t3-xray", target: ".take-action", awaits: { kind: "action", id: "xray", where: "bar" } },
   /*
    * ═══ POINT AT THE DRAWER, WHICH IS ALWAYS THERE ═══
    *
-   * Three goes at this, and the two wrong ones are worth writing down.
-   *
-   * Pointing at the CARD inside (`.action-chip__main`) looked exact and was
-   * a dead end: taking an action card leaves the drawer SHUT, so the button
-   * exists in the document at 0x0 and the step waited for a press with
-   * nowhere to land. Walked at 832x384: no ring, no words, a build screen
-   * and nothing to do — which is the complaint this whole rewrite is about.
-   *
-   * Opening it in a step of its own was worse, because a handle that opens
-   * also CLOSES: run it when the drawer happens to be open and the lesson
-   * shuts the thing it is about to point into.
-   *
-   * The drawer itself is visible either way — shut it is the handle, open it
-   * is the handle and the cards — and every press inside it moves the player
-   * forward. The gate is the card being USED, so opening the drawer does not
-   * satisfy it by accident.
+   * Pointing at the CARD inside was a dead end: taking an action card leaves
+   * the drawer SHUT, so the button exists at 0x0 and the step waited for a
+   * press with nowhere to land. Opening it in a step of its own was worse,
+   * because a handle that opens also CLOSES. The drawer is visible either
+   * way, and the gate is the card being USED, so opening it does not satisfy
+   * the step by accident.
    */
+  { id: "t3-xray-use", target: BAR, awaits: { kind: "action", id: "xray", where: "used" } },
   /*
-   * Using the x-ray is also the moment the clock would have run out, so the
-   * lesson makes it run out — there is no clock in a lesson, which is what
-   * `advance` exists for.
+   * The second action card, and the one that is about WHEN rather than what:
+   * a boost is worth whatever is already on the board, so it is the last
+   * thing you play. That lesson only works here, with six cards down.
    */
   {
-    id: "t3-xray-use",
-    target: BAR,
-    awaits: { kind: "action", id: "xray", where: "used" },
+    id: "t3-boost",
+    target: ".take-action",
+    awaits: { kind: "action", id: "energy_boost", where: "bar" },
   },
-  /*
-   * The second action card, and the one that is about WHEN rather than
-   * what: a boost is worth whatever is already on the board, so it is the
-   * last thing you play rather than the first. That is the whole lesson and
-   * it only works here, after six cards are down.
-   */
-  { id: "t3-boost", target: ".take-action", awaits: { kind: "action", id: "energy_boost", where: "bar" } },
   {
     id: "t3-boost-use",
     target: BAR,
@@ -467,8 +460,7 @@ export const STAGE_3: ScriptStep[] = [
   /*
    * Or: *"and in stage three show the panic phase, where the opponent board
    * is revealed."* It is the last thing the game does before a battle and
-   * the only phase a player can be surprised by, so it is the right note to
-   * end the teaching on.
+   * the only phase a player can be surprised by.
    */
   { id: "t3-panic", target: ".side--enemy" },
   { id: "t3-go", target: ".hand .btn-fight", press: "target" },

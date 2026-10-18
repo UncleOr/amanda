@@ -251,15 +251,19 @@ export const STAGE_LESSONS: Lesson[] = [
    */
   {
     title: { he: t("s889ccf0", "שלב שלישי — לשחק באמת") },
+    /*
+     * Dealt in the order Or wrote the stage: a dragon, a plant, and only
+     * THEN the king — *"it is not always king first"*. The deck is the only
+     * thing that decides what is in hand when a step speaks, so this list is
+     * his sentence in the order he said it.
+     */
     deck: [
-      "giants_10_titan_king",
-      "plants_02_ancient_tree",
-      "plants_08_cactus",
-      "plants_09_sunflower",
-      // Two more abilities, and neither is about staying alive: poison that
-      // keeps hurting, and a card worth more dead than alive.
-      "plants_04_venus_trap",
-      "plants_07_dandelion",
+      "dragons_01_flame_dragon", // "what have we got? a dragon. put it at the back"
+      "plants_09_sunflower", // one plant
+      "giants_10_titan_king", // "oho — a king! I said one would come"
+      "plants_02_ancient_tree", // a guard that heals itself
+      "giants_04_rock_troll", // and a guard that is a giant
+      "plants_08_cactus", // "oho, another plant!" — and that is the trio
       "xray",
       "energy_boost",
     ],
