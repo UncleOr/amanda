@@ -71,7 +71,7 @@ interface Props {
   onQuit?: () => void;
 }
 
-interface Spot {
+export interface Spot {
   top: number;
   left: number;
   width: number;
@@ -82,6 +82,37 @@ interface Spot {
 const GAP = 14;
 /** Keep the bubble off the very edge of the screen. */
 const EDGE = 10;
+
+/**
+ * The highest the bubble may go, which is NOT the top of the screen.
+ *
+ * ═══ "PART OF THE TUTORIAL IS HIDDEN" ═══
+ *
+ * Or sent a photograph of it: the bubble's first line cut in half, with the
+ * app's top bar and the phone's status bar across it.
+ *
+ * `.tut` is `position: fixed; inset: 0`, so it is measured against the
+ * VIEWPORT — while everything else in the app sits inside a wrapper padded by
+ * `env(safe-area-inset-*)`. On a desktop browser those insets are zero and
+ * the two agree. In the Android WebView they do not: the status bar is real,
+ * the top bar sits below it, and a bubble at `top: 10` is underneath both.
+ *
+ * Reproduced at 832x384 on the step that lights up both albums: the board
+ * fills the screen, so no band above or below it is tall enough, and the
+ * last-resort branch put the bubble at `top: EDGE` — over the bar, and over
+ * the very thing it was pointing at.
+ *
+ * Measuring the bar is better than a constant: it is the same answer whether
+ * there is a safe-area inset, whether the bar is on this screen at all, and
+ * whatever the bar's height turns out to be next month.
+ */
+function topLimit(): number {
+  const bar = document.querySelector(".topbar");
+  if (!bar) return EDGE;
+  const b = bar.getBoundingClientRect();
+  // A bar that is scrolled away or not rendered should not reserve anything.
+  return b.height > 0 && b.bottom > 0 ? Math.max(EDGE, b.bottom + GAP) : EDGE;
+}
 
 /** Narrower than this and the words stop being readable. */
 const MIN_W = 190;
@@ -96,26 +127,27 @@ const MIN_W = 190;
  * insists on its full 380 cannot use them, so it gives up and lands on top of
  * the thing it is describing — which is exactly what Or saw.
  */
-function place(
+export function place(
   spot: Spot,
   bw: number,
   bh: number,
 ): { top: number; left: number; width?: number } {
   const W = window.innerWidth;
   const H = window.innerHeight;
+  const TOP = topLimit();
   const centred = Math.max(EDGE, Math.min((W - bw) / 2, W - bw - EDGE));
   const below = spot.top + spot.height + GAP;
   const above = spot.top - GAP - bh;
 
   if (below + bh <= H - EDGE) return { top: below, left: centred };
-  if (above >= EDGE) return { top: above, left: centred };
+  if (above >= TOP) return { top: above, left: centred };
 
   /*
    * Beside. The height is a guess — narrowing makes the text wrap further and
    * the bubble grow — so it is re-measured on the next frame and placed again
    * from the real numbers. Vertically centred on the hole, clamped on screen.
    */
-  const sideTop = Math.max(EDGE, Math.min(spot.top + spot.height / 2 - bh / 2, H - bh - EDGE));
+  const sideTop = Math.max(TOP, Math.min(spot.top + spot.height / 2 - bh / 2, H - bh - EDGE));
   const roomStart = spot.left - GAP - EDGE;
   const roomEnd = W - (spot.left + spot.width) - GAP - EDGE;
   const widest = Math.max(roomStart, roomEnd);
@@ -126,11 +158,22 @@ function place(
       : { top: sideTop, left: Math.max(EDGE, spot.left - GAP - width), width };
   }
 
-  // Nothing clears it. Take the taller band and sit at its outer edge.
+  /*
+   * Nothing clears it: the target is most of the screen, which happens on the
+   * step that lights up both albums at once.
+   *
+   * Take the taller band and sit at its outer edge — and clamp into the space
+   * that is actually visible, between the top bar and the bottom of the
+   * screen. Overlapping a board that fills the screen is unavoidable and
+   * fine; being underneath the status bar is what Or photographed. If the
+   * bubble is taller than that space it scrolls (see .tut__bubble in
+   * album.css) rather than losing its first line off the top.
+   */
   const roomBelow = H - (spot.top + spot.height);
+  const lowest = Math.max(TOP, H - bh - EDGE);
   return roomBelow >= spot.top
-    ? { top: Math.max(EDGE, H - bh - EDGE), left: centred }
-    : { top: EDGE, left: centred };
+    ? { top: lowest, left: centred }
+    : { top: TOP, left: centred };
 }
 
 export function Tutorial({ steps, onDone, onQuit }: Props) {
@@ -288,8 +331,12 @@ export function Tutorial({ steps, onDone, onQuit }: Props) {
       className={`tut${pointing ? "" : " tut--talking"}`}
       role="dialog"
       aria-live="polite"
-      /* A line with nothing to point at is dismissed by tapping anywhere —
-         the overlay itself is the button, so there does not have to be one. */
+      /*
+       * Tapping anywhere still works on a line with nothing to point at. It
+       * is no longer the ONLY way out of one — there is a real button now —
+       * but a child who taps the screen because the screen is what you tap
+       * should not be ignored.
+       */
       onClick={pointing ? undefined : next}
     >
       {spot && (
@@ -357,21 +404,47 @@ export function Tutorial({ steps, onDone, onQuit }: Props) {
             </span>
           )}
           {/*
-            ═══ NO "GOT IT" ═══
+            ═══ ONE THING TO PRESS, ON EVERY SINGLE STEP ═══
 
-            Or: *"there shouldn't be a 'got it' button at all. You could have
-            a button to leave the tutorial, but the taps should just be Amanda
-            telling you which card to put down next."*
+            Or: *"there are a lot of places in the tutorial where you're just
+            left hanging and it isn't clear what to do, and cards keep
+            arriving. Every single step of the tutorial has to be guided, with
+            ONE thing to press. Either 'next', or doing something real on the
+            board."* And, on a step explaining what the King is worth: *"here
+            — you told me what to do but I have no 'next' button (in the first
+            bubbles either), so that's a problem."*
 
-            He is right, and the button was me hedging. Being told to do
-            something, doing it, and then confirming that you were told is the
-            shape of a form. A pointing step is answered by doing the thing; a
-            line where she is only talking is answered by tapping anywhere,
-            which is what the whole overlay is for.
+            ═══ WHY THERE WASN'T ONE ═══
 
-            The way OUT stays, because that one is a real choice.
+            There used to be a "got it" button on every step, and Or asked for
+            it to go: *"there shouldn't be a 'got it' button at all... the taps
+            should just be Amanda telling you which card to put down next."*
+            Removing it was right for the steps he was describing — the ones
+            that ask you to place a card, where doing it IS the answer and
+            confirming afterwards is the shape of a form.
+
+            It was wrong for every other step, and that is most of them. A
+            step that just EXPLAINS something — the King is worth triple, the
+            fog is why you cannot see their board, these two squares are the
+            guard posts — has nothing to do and no button, and advanced only
+            if you happened to tap the thing being talked about. Nothing said
+            so. Fifteen of the thirty-one steps across the two lessons are
+            like that.
+
+            So the rule is now exactly the one Or stated, and it is the thing
+            `awaits` already distinguishes:
+
+              a step WAITING for a board action  → no button. Do the thing.
+              every other step                   → a real "next" button.
+
+            tutorialFlow.test.ts holds both halves, so a step added later
+            cannot land in between and strand somebody.
           */}
-          {!pointing && <span className="tut__go">{t("sbecf213", "המשך ←")}</span>}
+          {!step.awaits && (
+            <button className="btn-fight tut__next" onClick={next}>
+              {step.cta ?? t("sbecf213", "המשך ←")}
+            </button>
+          )}
           <button className="btn-link tut__skip" onClick={onQuit ?? onDone}>
             {t("s7955b5e", "אני יודע לשחק")}
           </button>

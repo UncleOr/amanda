@@ -307,6 +307,10 @@
 }
 .intro__art {
   position: absolute;
+  /* Background artwork: decorative, and never in the way of a tap. See the
+     note on `.intro__idle` in chests.css — the two layers together were what
+     made the top strip of the home screen dead. */
+  pointer-events: none;
   /*
    * ═══ SHE IS DRAWN 1376x768, AND THAT IS THE WHOLE STORY ═══
    *
@@ -601,8 +605,24 @@
  * clicks for exactly that reason.
  */
 .tut--talking { pointer-events: auto; cursor: pointer; }
-/* "tap to go on", without a button to press. */
-.tut__go { color: var(--muted); font-size: var(--t-2); }
+/*
+ * ═══ THE ONE THING TO PRESS ═══
+ *
+ * This was `.tut__go`, a grey span reading "המשך ←" — a HINT that tapping
+ * anywhere would move on, and only on the steps with nothing to point at.
+ * Or, after walking the tutorial: *"you told me what to do but I have no
+ * 'next' button (in the first bubbles either), so that's a problem."*
+ *
+ * A hint in muted 12px, on some steps, that the whole screen is secretly a
+ * button, is not an instruction. It is now a real button on every step that
+ * is not waiting for the player to do something on the board — styled as the
+ * primary action, because on those steps it is the only action.
+ *
+ * It sits above the dimming panels: those are `position: fixed` with
+ * `pointer-events: auto` so the dim is true, and the bubble is painted after
+ * them, so the button is what a tap on it finds.
+ */
+.tut__next { position: relative; z-index: 1; }
 /*
  * The four panels that make the dimming true. See Tutorial.tsx.
  *
@@ -653,6 +673,19 @@
 .tut__bubble {
   position: fixed;
   width: min(440px, calc(100vw - 32px));
+  /*
+   * It can never lose a line off an edge.
+   *
+   * Or: *"part of the tutorial is hidden."* The placement in Tutorial.tsx now
+   * keeps it below the top bar, but a long line on a 384px-tall phone can
+   * still be taller than the room there is. This is the backstop: the bubble
+   * gives way and scrolls instead of being cut. A sentence you can reach by
+   * dragging is worse than one that fits and far better than one that is not
+   * there.
+   */
+  max-height: calc(100dvh - 24px);
+  overflow-y: auto;
+  overscroll-behavior: contain;
   pointer-events: auto;
   background: rgba(12, 17, 29, 0.97);
   border: 1px solid var(--accent);

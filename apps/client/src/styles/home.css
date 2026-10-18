@@ -276,10 +276,20 @@
   height: 19px;
   margin-inline-start: 6px;
   border-radius: 50%;
-  background: rgba(0, 0, 0, 0.45);
+  /*
+   * Darker and ringed, so it reads as a closed thing rather than a smudge.
+   *
+   * At 0.45 on artwork the circle barely existed and all anybody saw was the
+   * glyph inside it — which, until now, was the violet fog EYE. Or's "purple
+   * eyes". The glyph is a padlock now (SignedInOnly.tsx) and the plate it
+   * sits on is solid enough to be a plate.
+   */
+  background: rgba(4, 7, 14, 0.92);
+  box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.22);
   color: var(--accent);
   vertical-align: middle;
 }
+.lock > svg { display: block; }
 .track-gate {
   display: block;
   position: relative;

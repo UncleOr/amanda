@@ -48,11 +48,44 @@ export const WHAT_AN_ACCOUNT_GIVES = [
  * It is a `<span>` and not a `<button>` on purpose: the thing underneath is
  * already the button, and nesting one inside another is both invalid and a
  * second thing for a screen reader to announce.
+ *
+ * ═══ IT WAS AN EYE, AND THAT IS WHY NOBODY COULD READ IT ═══
+ *
+ * Or, twice. First: *"and what is that thing happening under the text of
+ * 'play with friends'?"* Then, with three of them circled in green: *"I don't
+ * know what all these purple eyes are, but we've talked about them already,
+ * haven't we? If they have no purpose, get rid of them."*
+ *
+ * They have a purpose — they mark the things a guest cannot have yet — but he
+ * was describing the picture exactly. This drew `<Icon name="hidden" />`, and
+ * `hidden` in this game's icon set is defined, in so many words, as *"an eye
+ * with a thick bar across it, dull grey and violet"*. It is the fog icon: the
+ * right picture for a card you cannot see, and nothing at all to do with
+ * needing an account. At 12px the bar across it disappears and what is left
+ * is a small purple eye.
+ *
+ * So: an actual padlock. Drawn inline rather than added to the icon set
+ * because the set is generated art and this is a 12px piece of furniture —
+ * two rounded rectangles and an arc, in `currentColor`, which inherits the
+ * accent the badge already uses.
+ *
+ * If he still does not want them once they look like locks, deleting the four
+ * `<Lock />` call sites is the whole job: every one of them sits on a control
+ * that is ALREADY gated on tap, so the sign-in card still appears either way.
  */
 export function Lock() {
   return (
     <span className="lock" title={LOCKED_REASON} aria-hidden="true">
-      <Icon name="hidden" size={12} />
+      <svg viewBox="0 0 24 24" width="12" height="12" fill="none" stroke="currentColor">
+        {/* the shackle */}
+        <path
+          d="M8 10V7a4 4 0 0 1 8 0v3"
+          strokeWidth="2.4"
+          strokeLinecap="round"
+        />
+        {/* the body, filled so it reads as solid at this size */}
+        <rect x="4.5" y="10" width="15" height="10.5" rx="2.4" fill="currentColor" stroke="none" />
+      </svg>
     </span>
   );
 }

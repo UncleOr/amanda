@@ -250,6 +250,21 @@
   width: auto;
   height: 100%;
   display: block;
+  /*
+   * It is a picture. It must never take a tap.
+   *
+   * Or: *"the top part isn't clickable, probably covered by another layer."*
+   * Probed with `elementFromPoint` across the top of the home screen at
+   * 832x384: every point from y=0 to about y=24 answered `.intro__idle` —
+   * this video — or `.intro__art` behind it. Both stretch the full height of
+   * the screen and both sit above the row holding the mute button, the
+   * player badge and the purse.
+   *
+   * The buttons were still reachable at their own centres, which is why this
+   * survived: it only shows up as the top few pixels of each one going dead,
+   * and as a strip across the top that looks pressable and is not.
+   */
+  pointer-events: none;
 }
 .intro--hero:has(.intro__idle) .intro__art { animation: none; }
 @media (prefers-reduced-motion: reduce) {
