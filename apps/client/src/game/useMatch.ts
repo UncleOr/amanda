@@ -1709,6 +1709,24 @@ export function useMatch(): MatchApi {
         freezeOpponent(id);
       }
       else if (a?.effect === "revealBoard") {
+        /*
+         * ═══ ONLINE THE SERVER HAS TO BE ASKED ═══
+         *
+         * Or: *"I cannot see the opponent with the x-ray. Against a
+         * friend."*
+         *
+         * Against the computer this flag is the whole card: the enemy
+         * board is in memory and the flag stops hiding it. Online this
+         * client is not holding that board — it is holding what the server
+         * already fogged — so the flag lifted a fog applied somewhere
+         * else, and nothing happened. The card could never have worked
+         * against a person.
+         *
+         * The flag still goes up, for the King and for anything else that
+         * reads it, and the request goes out for the part only the server
+         * can answer.
+         */
+        if (onlineRef.current) netRef.current?.hex(id);
         setXrayActive(true);
         window.setTimeout(() => setXrayActive(false), XRAY_MS);
       } else if (a?.effect === "shuffleEnemyFrontRow") shuffleEnemyFront();

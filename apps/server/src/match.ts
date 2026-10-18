@@ -22,6 +22,25 @@ const COUNTDOWN = 3;
 /** The lane offset of the second player's half of the shared co-op side. */
 const LANE_B = 4;
 const PANIC_LOCK_WINDOW = 8; // seconds after Panic to gather both locked boards
+/*
+ * The x-ray, named here because the server has to recognise it.
+ *
+ * It is the one action a server has to understand rather than pass along:
+ * every other card is applied by the client holding the board it lands on,
+ * and this one is a request to SEE a board only the server has.
+ *
+ * The number matches data/action-cards.json. A shared constant would be
+ * better and the server does not read that file today; the client sends the
+ * id, so a rename breaks visibly rather than silently.
+ */
+const XRAY_ID = "xray";
+/*
+ * Six, not the five the card promises: XRAY_MS on the client is 6000, and
+ * if this were shorter the fog would come back while the client still
+ * believed it was looking — the board would close a second early for no
+ * reason anyone could see. It must never be the shorter of the two.
+ */
+const XRAY_SECONDS = 6;
 
 interface PlayerConn {
   ws: WebSocket;
@@ -179,7 +198,45 @@ export class Match {
       this.send(p, { t: "mate", view: this.other(p).view, lane: p === this.a ? LANE_B : 0 });
       return;
     }
-    this.send(p, { t: "opp", view: fog(this.other(p).view, this.phase) });
+    /*
+     * `p` is who is LOOKING, so `p` is who may be peeking. Unfogged means
+     * the board as the other player has actually built it, back row and
+     * all, which is what the card promises in words: "reveals the entire
+     * enemy board (including the back Surprise Row) for 5 seconds".
+     */
+    const view = this.peeking[p.side] ? this.other(p).view : fog(this.other(p).view, this.phase);
+    this.send(p, { t: "opp", view });
+  }
+
+  /**
+   * ═══ THE X-RAY, WHICH ONLY THIS SIDE CAN GRANT ═══
+   *
+   * Or: *"none of the action cards that touch the enemy work. I cannot
+   * erase, freeze the clock, or see the opponent with the x-ray. Against a
+   * friend."*
+   *
+   * The x-ray was the one that could never have worked. Against the
+   * computer it is a client-side flag: the whole enemy board is in memory
+   * and the flag stops hiding it. Online the client is NOT holding that
+   * board — it is holding what this server already fogged — so there was
+   * nothing for a flag to uncover. It lifted a fog that had been applied
+   * somewhere else.
+   *
+   * Only the server can answer it, because only the server has the board.
+   * While a player is peeking, their copy of the opponent is sent unfogged;
+   * when it lapses, the ordinary fog comes back.
+   *
+   * Set per player, not per match: both of them may hold one.
+   */
+  private peeking = { A: false, B: false };
+
+  private grantPeek(p: PlayerConn, seconds: number): void {
+    this.peeking[p.side] = true;
+    this.showOthers(p);
+    this.after(seconds, () => {
+      this.peeking[p.side] = false;
+      this.showOthers(p);
+    });
   }
 
   private setPhase(phase: string, seconds: number): void {
@@ -220,7 +277,16 @@ export class Match {
     } else if (msg.t === "hex" && typeof msg.id === "string") {
       // Only the build phases can be interfered with; once boards are locked
       // there is nothing left to disturb.
-      if (this.phase === "build" || this.phase === "panic")
+      if (this.phase === "build" || this.phase === "panic") {
+        /*
+         * The x-ray is the one card the TARGET cannot carry out, because it
+         * does nothing to them: it asks to see. Everything else is forwarded
+         * and applied by whoever is holding the board it lands on.
+         */
+        if (msg.id === XRAY_ID) {
+          this.grantPeek(p, XRAY_SECONDS);
+          return;
+        }
         this.send(this.other(p), {
           t: "hexed",
           id: msg.id,
@@ -228,6 +294,7 @@ export class Match {
           // client's business, and it is the one holding that board.
           ...(typeof msg.cell === "string" ? { cell: msg.cell } : {}),
         });
+      }
     } else if (msg.t === "lock" && msg.board) {
       // Ready, with the board as it stands. A player who is ready may keep
       // building and send this again; the last one received is the one used.
