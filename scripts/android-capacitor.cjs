@@ -240,6 +240,49 @@ const cfg = ${JSON.stringify(
        * mistake has now been made four times in this file. JSON.stringify
        * does the escaping correctly and does not get bored.
        */
+      /*
+       * The theme items and the activity body, both built out here for the
+       * same reason as everything else in this object: the patch script is a
+       * template literal, and a newline written inside it is a real newline
+       * in the middle of a string literal. JSON.stringify escapes them.
+       */
+      fullscreenItems: [
+        "",
+        "        <!-- Full screen, as the TWA was. See android-capacitor.cjs. -->",
+        '        <item name="android:windowFullscreen">true</item>',
+        '        <item name="android:windowLayoutInDisplayCutoutMode">shortEdges</item>',
+      ].join("\n"),
+      mainActivity: [
+        "public class MainActivity extends BridgeActivity {",
+        "    @Override",
+        "    public void onCreate(android.os.Bundle savedInstanceState) {",
+        "        super.onCreate(savedInstanceState);",
+        "        hideSystemBars();",
+        "    }",
+        "",
+        "    /**",
+        "     * Android puts the bars back whenever focus returns -- a permission",
+        "     * dialog, the notification shade, coming back from the browser after",
+        "     * signing in. Without this the game is full screen exactly once.",
+        "     */",
+        "    @Override",
+        "    public void onWindowFocusChanged(boolean hasFocus) {",
+        "        super.onWindowFocusChanged(hasFocus);",
+        "        if (hasFocus) hideSystemBars();",
+        "    }",
+        "",
+        "    private void hideSystemBars() {",
+        "        androidx.core.view.WindowCompat.setDecorFitsSystemWindows(getWindow(), false);",
+        "        androidx.core.view.WindowInsetsControllerCompat bars =",
+        "            androidx.core.view.WindowCompat.getInsetsController(",
+        "                getWindow(), getWindow().getDecorView());",
+        "        bars.hide(androidx.core.view.WindowInsetsCompat.Type.systemBars());",
+        "        bars.setSystemBarsBehavior(",
+        "            androidx.core.view.WindowInsetsControllerCompat",
+        "                .BEHAVIOR_SHOW_TRANSIENT_BARS_BY_SWIPE);",
+        "    }",
+        "}",
+      ].join("\n"),
       orientationAttr: '\n            android:screenOrientation="' + cfg.orientation + '"',
       /*
        * The intent-filter that makes a verified https link open the app.
@@ -390,6 +433,43 @@ edit("src/main/res/values/strings.xml", (s) =>
  * apps/client/src/game/nativeAuth.ts.
  */
 /*
+ * ═══ FULL SCREEN, WHICH IS WHAT VERSION TWO LOOKED LIKE ═══
+ *
+ * Or: *"yes, put it back to full screen like version 2."*
+ *
+ * The third thing the TWA got for free. android/twa-manifest.json says
+ * display: fullscreen, and Chrome honours that by hiding both system bars
+ * -- so the game had the whole panel and nothing was ever drawn underneath
+ * anything. A Capacitor activity shows both bars unless told otherwise.
+ *
+ * On a landscape phone that is 384px tall, a status bar is not a detail: it
+ * is five percent of the height of a screen every layout in this game was
+ * measured against.
+ *
+ * Two halves, and both are needed. The THEME hides the status bar from the
+ * first frame, before any Java runs, so there is no bar during the splash
+ * that then disappears. The CONTROLLER hides the navigation bar too and says
+ * what a swipe does -- transient bars, exactly as Chrome's fullscreen
+ * behaves, so a player can always get to the back gesture and the bars go
+ * away again on their own.
+ *
+ * onWindowFocusChanged as well as onCreate, because Android brings the
+ * bars back whenever the window loses and regains focus -- which is every
+ * permission dialog, every notification shade, and every return from the
+ * browser after signing in to Google.
+ */
+edit("src/main/res/values/styles.xml", (s) =>
+  s.replace(
+    '<item name="android:background">@null</item>',
+    '<item name="android:background">@null</item>' + cfg.fullscreenItems,
+  ),
+);
+
+edit("src/main/java/com/asulins/amanda/MainActivity.java", (s) =>
+  s.replace("public class MainActivity extends BridgeActivity {}", cfg.mainActivity),
+);
+
+/*
  * ═══ THE GAME IS LANDSCAPE, AND THE WEBVIEW HAD TO BE TOLD ═══
  *
  * Or: *"when the phone is not landscape it gives a message to rotate the
@@ -470,6 +550,20 @@ edit(
  * opt-out, so when the target moves to 36 this stops working and the real
  * answer — passing the insets into the WebView, so the CSS already in place
  * does its job — becomes the thing to do.
+ *
+ * ═══ AND IT IS THE SECOND LINE OF DEFENCE, NOT THE FIRST ═══
+ *
+ * The app hides both system bars outright now (see the full-screen patch
+ * above), which is what version two did and what Or asked for back. With no
+ * bars there is nothing to be drawn underneath, so this attribute decides
+ * nothing on a working device.
+ *
+ * It stays because the two work at different levels and fail differently.
+ * Hiding the bars is done by WindowInsetsController, at runtime, from Java;
+ * this is a theme attribute read before any of our code runs. If the hiding
+ * ever stops working — a launcher that forces bars, an Android release that
+ * changes the rules again — this is what still keeps the game out from under
+ * the status bar, which is the thing Or actually reported.
  *
  * (No backticks anywhere in this comment on purpose: it is generated from
  * inside a template literal, and one would end it. That is exactly how the
