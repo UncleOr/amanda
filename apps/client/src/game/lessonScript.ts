@@ -220,3 +220,44 @@ export const LESSON_2: ScriptStep[] = [
 ];
 
 export const SCRIPTS: Record<number, ScriptStep[]> = { 1: LESSON_1, 2: LESSON_2 };
+
+/**
+ * **Which squares exist by the time a lesson has reached step `i`.**
+ *
+ * Or, after the third time the tutorial came back wrong: *"maybe it is worth
+ * rethinking the whole approach. Not hiding an existing board, but building a
+ * new board where only what you can click appears."*
+ *
+ * ═══ DERIVED FROM THE SCRIPT, NEVER WRITTEN DOWN ═══
+ *
+ * The obvious shape is a `shows: [...]` on every step. It is also the shape
+ * that goes wrong: two lists saying nearly the same thing drift the first
+ * time a step is reordered, and the symptom is Amanda pointing at a square
+ * that is not drawn — the exact failure this is replacing.
+ *
+ * So there is one list. A step already names its square twice over — as the
+ * thing to spotlight (`target`) and as the thing to wait for (`awaits`) — and
+ * this reads both. A square exists from the moment Amanda first mentions it
+ * and never goes away again, so the board grows as the lesson goes and a
+ * child is never looking at a square nobody has talked about.
+ *
+ * `null` is the honest answer for a step that points at something which is
+ * not a square — the enemy side, the action drawer, the fight button. There
+ * is nothing to add and nothing to take away, so the board stays as it was.
+ */
+const DROP = /\[data-drop="([^"]+)"\]/g;
+
+export function squaresBy(steps: readonly ScriptStep[], i: number): ReadonlySet<string> {
+  const out = new Set<string>();
+  for (const step of steps.slice(0, i + 1)) {
+    // Named as the thing to point at.
+    if (step.target) for (const m of step.target.matchAll(DROP)) if (m[1]) out.add(m[1]);
+    // And as the thing to wait for, which is the same square said twice on
+    // most steps and the only mention on none — read both, cost nothing.
+    if (step.awaits?.kind === "cell") for (const key of step.awaits.cells) out.add(key);
+    // The crown has its own selector rather than a data-drop, because it is a
+    // 2x2 and not a cell. It is still a square the lesson introduces.
+    if (step.awaits?.kind === "king" || step.target?.includes("slot--king")) out.add("king");
+  }
+  return out;
+}

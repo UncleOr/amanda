@@ -66,6 +66,28 @@ interface Props {
   lanes?: number;
   /** Top lane of the 2×2 King. Lane 1 on a four-lane board, 3 on Amanda's. */
   kingLane?: number;
+  /**
+   * Draw only these squares. Everything else is not dimmed — it is not there.
+   *
+   * ═══ A LESSON IS NOT A GAME WITH THE LIGHTS DOWN ═══
+   *
+   * Or, after the third time the tutorial came back wrong: *"maybe it is
+   * worth rethinking the whole approach. Not hiding an existing board, but
+   * building a new board where only what you can click appears."*
+   *
+   * He is right, and the reason is in the picture he sent: twenty slots, all
+   * dimmed, one ringed. Dimming does not simplify a screen, it darkens one —
+   * a seven-year-old still sees twenty squares and has to find the lit one.
+   * An empty slot is also a drop target, so the dark ones were never only
+   * decoration either.
+   *
+   * Here the lesson's board starts as one square and grows as Amanda
+   * introduces them, so the board teaches itself as the words go. Null — the
+   * default, and every screen outside the tutorial — draws all of them.
+   *
+   * "king" is in the set when the crown is part of the lesson yet.
+   */
+  only?: ReadonlySet<string> | null;
 }
 
 const KING_KEY = "king";
@@ -105,6 +127,7 @@ export function BoardGrid({
   kingLane = 1,
   stackSlots = 0,
   stackCorners = false,
+  only = null,
 }: Props) {
   const buffFor = (key: string, cardId: string) => {
     if (!mods) return undefined;
@@ -127,7 +150,15 @@ export function BoardGrid({
 
   const cells: Array<{ x: number; y: number }> = [];
   for (let x = 0; x < BOARD_SIZE; x++)
-    for (let y = 0; y < lanes; y++) if (!kingHere(x, y)) cells.push({ x, y });
+    for (let y = 0; y < lanes; y++)
+      if (!kingHere(x, y) && (!only || only.has(cellKey(x, y)))) cells.push({ x, y });
+
+  /*
+   * The crown is a square like any other as far as `only` is concerned — it
+   * appears when the lesson reaches it, which is the step that asks for it.
+   * Outside a lesson `only` is null and it is always there.
+   */
+  const showKing = !only || only.has(KING_KEY);
 
   const size = compact ? "small" : "medium";
   // Depth (x) runs horizontally so the two boards face each other; lanes (y)
@@ -147,6 +178,7 @@ export function BoardGrid({
       dir="ltr"
       style={lanes === BOARD_SIZE ? undefined : { "--lanes": lanes } as CSSProperties}
     >
+      {showKing && (
       <div
         className={
           `slot slot--king${king ? " slot--filled" : ""}` +
@@ -190,6 +222,7 @@ export function BoardGrid({
           </span>
         )}
       </div>
+      )}
 
       {cells.map(({ x, y }) => {
         const key = cellKey(x, y);
