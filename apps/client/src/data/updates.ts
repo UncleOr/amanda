@@ -62,6 +62,33 @@ export const UPDATES: readonly Update[] = [
       t("sc9e804b", "בתיבות יש יותר קלפים שכבר יש לכם, כדי שיהיה אפשר לשדרג אותם."),
     ],
   },
+  /*
+   * ═══ DRAFT WORDS, AS THIS FILE SAYS AT THE TOP ═══
+   *
+   * Five things a player can SEE, chosen from a fortnight of work by that
+   * test and no other. What is deliberately NOT here: the launcher icon, the
+   * app's name, full screen, landscape, the opening's loading mark. Those
+   * are all real and all fixed, and none of them is something a seven-year-
+   * old opens the game to find out about — they are what the Play release
+   * notes are for, and this screen is not that.
+   *
+   * The eighteen Play Games achievements are not here either, on purpose:
+   * they exist as DRAFTS in the console and nothing is live until somebody
+   * presses "Review and publish". A note promising them would be a lie until
+   * that happens.
+   */
+  {
+    id: "2026-10-18-backs",
+    when: t("sd3f570e", "אוקטובר 2026"),
+    title: t("s4adde6c", "גב לקלפים, גביעים ברורים, וטוטריאל שמוביל"),
+    lines: [
+      t("s1e3d3ef", "אפשר לקנות גב לקלפים בחנות — ורואים אותו לפני הקרב."),
+      t("s5197177", "גביעים לפי מי ששיחקתם מולו, ורואים גם כמה ירדו אחרי הפסד."),
+      t("sda301f8", "נאצ'וס גם כשמפסידים לבן אדם. מול הבוט הקליל אין נאצ'וס בכלל."),
+      t("s89ed441", "הטוטריאל מוביל צעד-צעד — בכל שלב יש דבר אחד ללחוץ."),
+      t("s2107a3e", "התחברות עם גוגל שומרת את האלבום שלכם בכל טלפון."),
+    ],
+  },
 ];
 
 /** The newest note, or null when there are none. */
