@@ -166,7 +166,23 @@ export const LESSON_2: ScriptStep[] = [
   { id: "l2-fog", target: ".side--enemy" },
 
   // ── the x-ray: the fog, and the one card that lifts it ──
-  { id: "l2-xray-take", target: ".hand", awaits: { kind: "action", id: "xray", where: "bar" } },
+  /*
+   * ═══ POINT AT THE CONTROL, NOT AT THE COLUMN ═══
+   *
+   * These three said `.hand`, which is the whole left column — the card,
+   * the counters, "throw away", "take from bin" and "start battle". A step
+   * that waits for something while lighting all of that is a step where a
+   * tap on "start battle" is inside the lit area.
+   *
+   * The same mistake as the opening of stage three, where pointing at the
+   * board made the crown pressable and a dragon got crowned. The control
+   * that DOES the thing is what gets lit.
+   */
+  {
+    id: "l2-xray-take",
+    target: ".take-action",
+    awaits: { kind: "action", id: "xray", where: "bar" },
+  },
   { id: "l2-xray-use", target: BAR, awaits: { kind: "action", id: "xray", where: "used" } },
   { id: "l2-xray-seen", target: ".side--enemy" },
 
@@ -204,7 +220,11 @@ export const LESSON_2: ScriptStep[] = [
   { id: "l2-king", target: ".side--me .slot--king", awaits: { kind: "king" } },
 
   // ── timing: the boost is worth whatever is already down ──
-  { id: "l2-boost-wait", target: ".hand", awaits: { kind: "action", id: "energy_boost", where: "bar" } },
+  {
+    id: "l2-boost-wait",
+    target: ".take-action",
+    awaits: { kind: "action", id: "energy_boost", where: "bar" },
+  },
   {
     id: "l2-boost-use",
     target: BAR,
@@ -217,7 +237,7 @@ export const LESSON_2: ScriptStep[] = [
   // ── panic ──
   { id: "l2-panic-king", target: ".side--enemy .slot--king" },
   { id: "l2-panic-fog", target: ".side--enemy" },
-  { id: "l2-sandstorm", target: ".hand", awaits: { kind: "action", id: "sandstorm", where: "used" } },
+  { id: "l2-sandstorm", target: BAR, awaits: { kind: "action", id: "sandstorm", where: "used" } },
   /*
    * No `advance` here: the target is the fight button, and pressing it starts
    * the battle itself. Advancing as well would step the match twice.

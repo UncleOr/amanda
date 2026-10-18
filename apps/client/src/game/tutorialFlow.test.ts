@@ -336,3 +336,61 @@ describe("a step reaches the screen whole", () => {
     expect(call, "setCue builds a cue field by field; spread it instead").toContain("...next");
   });
 });
+
+/**
+ * ═══ A STEP THAT ONLY TALKS CANNOT BE PLAYED THROUGH ═══
+ *
+ * Or: *"at the opening it said 'let's make the cards work together', I
+ * pressed in the middle where it was marked, and I put the dragon on the
+ * king. Not good."*
+ *
+ * The opening step of stage three points at `.side--me .board` — the whole
+ * board — because that is what it is TALKING about. The dimming read the
+ * same selector as "what you may press", so the whole board answered taps,
+ * the middle of the board is the crown, and a tap there crowned a dragon.
+ * Nothing recovers: the king arrives three steps later with nowhere to go.
+ *
+ * `target` says what to look at. Whether the game may be touched is a
+ * different question with an answer already written on every step:
+ *
+ *   awaits        do the thing      -> the board answers
+ *   press target  press the lit     -> the board answers
+ *   neither       read and continue -> the board is shut
+ *
+ * This pins the two halves: the component asks that question, and no step
+ * that only talks points at something a tap could ruin.
+ */
+describe("a step that only talks", () => {
+  const TUTORIAL = readFileSync(
+    fileURLToPath(new URL("../components/Tutorial.tsx", import.meta.url)),
+    "utf8",
+  );
+
+  it("is what the overlay decides on, not the selector", () => {
+    expect(TUTORIAL).toMatch(/const wantsAPress =\s*Boolean\(step\.awaits\) \|\| step\.press === "target"/);
+    // And the hole is cut only when it is true.
+    expect(TUTORIAL).toContain("{wantsAPress ? (");
+  });
+
+  /*
+   * The other half, and the one that would have caught this from the
+   * script alone: a step with nothing to do must not be pointing at a
+   * container full of things to do. Ringing the whole board is fine —
+   * ringing it while the board is live is not, and the rule above is what
+   * makes it fine.
+   */
+  const RISKY = [".side--me .board", ".boards", ".side--me", ".hand"];
+
+  for (const [name, steps] of BOTH) {
+    it(`${name}: every step pointing at a whole area is read-only`, () => {
+      for (const step of steps) {
+        if (!step.target || !RISKY.includes(step.target)) continue;
+        const live = Boolean(step.awaits) || step.press === "target";
+        expect(
+          live,
+          `${step.id} points at ${step.target} AND expects a press — a tap anywhere in there counts`,
+        ).toBe(false);
+      }
+    });
+  }
+});

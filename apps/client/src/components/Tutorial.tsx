@@ -239,6 +239,16 @@ export function Tutorial({ steps, onDone, onQuit }: Props) {
    * supposed to click isn't always circled".
    */
   const pointing = step.target !== null;
+  /**
+   * Does this step want the player to touch the GAME, or only to read?
+   *
+   * The whole of "one action at a time" turns on this. A step that waits
+   * for something (`awaits`) or whose highlight IS the control
+   * (`press: "target"`) needs the board underneath to answer a tap.
+   * Every other step has exactly one control — the next button in Amanda's
+   * band — and the board behind it must not answer anything.
+   */
+  const wantsAPress = Boolean(step.awaits) || step.press === "target";
   /*
    * A pointing step does not speak until it can point: the ring and the
    * words arrive together or not at all, which is the whole of Or's *"the
@@ -316,18 +326,60 @@ export function Tutorial({ steps, onDone, onQuit }: Props) {
             a child aiming at the corner of a card should not find a dead
             pixel where the radius was.
           */}
+          {/*
+            ═══ AND THE HOLE IS ONLY OPEN WHEN THE STEP WANTS A PRESS ═══
+
+            Or: *"at the opening it said 'let's make the cards work
+            together', I pressed in the middle where it was marked, and I
+            put the dragon on the king. Not good."*
+
+            He is right and it is the same conflation twice over: `target`
+            says WHAT TO LOOK AT, and the dimming was reading it as WHAT YOU
+            MAY PRESS. On that step the target is `.side--me .board` — the
+            whole board — so the whole board was live, the middle of it is
+            the crown, and a tap there crowned a dragon.
+
+            Nothing recovers from that. The king card arrives three steps
+            later with nowhere to go, and the lesson is wrong for the rest of
+            its length.
+
+            A step has exactly one action, which is Or's own rule for this
+            tutorial, and which action it is has been written down all along:
+
+              awaits         do the thing on the board  -> the hole is open
+              press target   press the lit thing        -> the hole is open
+              neither        read it and press "next"   -> the board is SHUT
+
+            So a narrative step still RINGS whatever it is talking about —
+            pointing at the board is the right thing to do while describing
+            it — and the ring is a picture rather than a door.
+          */}
           <div className="tut__wall" onClick={(e) => e.stopPropagation()}>
-            <i style={{ top: 0, left: 0, right: 0, height: Math.max(0, spot.top) }} />
-            <i style={{ top: spot.top + spot.height, left: 0, right: 0, bottom: 0 }} />
-            <i style={{ top: spot.top, left: 0, width: Math.max(0, spot.left), height: spot.height }} />
-            <i
-              style={{
-                top: spot.top,
-                left: spot.left + spot.width,
-                right: 0,
-                height: spot.height,
-              }}
-            />
+            {wantsAPress ? (
+              <>
+                <i style={{ top: 0, left: 0, right: 0, height: Math.max(0, spot.top) }} />
+                <i style={{ top: spot.top + spot.height, left: 0, right: 0, bottom: 0 }} />
+                <i
+                  style={{
+                    top: spot.top,
+                    left: 0,
+                    width: Math.max(0, spot.left),
+                    height: spot.height,
+                  }}
+                />
+                <i
+                  style={{
+                    top: spot.top,
+                    left: spot.left + spot.width,
+                    right: 0,
+                    height: spot.height,
+                  }}
+                />
+              </>
+            ) : (
+              // Nothing to press out there: one sheet over the lot.
+              <i style={{ inset: 0 }} />
+            )}
           </div>
           <div
             className="tut__spot"
