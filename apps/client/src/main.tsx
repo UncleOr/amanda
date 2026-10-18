@@ -11,6 +11,7 @@ import "./lab.css";
 import { loadCopy } from "./game/copy";
 import { loadCardOverrides } from "./game/cardOverrides";
 import { loadLiveContent } from "./game/liveContent";
+import { watchForSignInReturn } from "./game/nativeAuth";
 import { track } from "./game/track";
 import { applyLang } from "./game/lang";
 import { watchViewport } from "./game/viewport";
@@ -100,6 +101,17 @@ for (const [name, file] of SURFACES) {
  */
 const film = document.createElement("div");
 document.body.appendChild(film);
+/*
+ * Before anything renders.
+ *
+ * In the Android app a Google sign-in finishes in the real browser, and the
+ * way back in is an App Link that hands the redirect to us. That can land
+ * while the app is still starting, so the listener goes on first — one
+ * attached after React has mounted is one that can miss the thing it exists
+ * for. Does nothing at all on the web. See game/nativeAuth.ts.
+ */
+watchForSignInReturn();
+
 createRoot(film).render(<Intro />);
 
 createRoot(document.getElementById("root")!).render(

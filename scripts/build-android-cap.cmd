@@ -50,7 +50,9 @@ REM         Release -> Setup -> App integrity -> App signing
 REM       Play Games checks the signature; the wrong one fails sign-in
 REM       silently and the achievements simply never arrive.
 REM
-REM    3. set KEYPASS=...   (the upload key's password, not in git)
+REM    3. The upload key's password goes in android\keystore-password.txt,
+REM       one line, beside the keystore. Gitignored, and read automatically.
+REM       (set KEYPASS=... still overrides it for one window.)
 REM ============================================================
 
 setlocal
@@ -79,10 +81,29 @@ if not exist "%JAVA_HOME%\bin\javac.exe" (
   exit /b 1
 )
 
+REM The upload key's password.
+REM
+REM Or ran this and got "KEYPASS is not set", which is a step that should
+REM never have been his to remember: the password is already on this machine,
+REM in android\keystore-password.txt, sitting beside the keystore it opens.
+REM Both are gitignored on purpose and this repository is public.
+REM
+REM So the file is the default and `set KEYPASS=` is the override, rather than
+REM the other way round. Nothing echoes it.
+if "%KEYPASS%"=="" (
+  if exist "%~dp0..\android\keystore-password.txt" (
+    for /f "usebackq delims=" %%P in ("%~dp0..\android\keystore-password.txt") do set "KEYPASS=%%P"
+  )
+)
+
 if "%KEYPASS%"=="" (
   echo.
-  echo   KEYPASS is not set. It is the upload key's password.
-  echo     set KEYPASS=...
+  echo   No upload key password.
+  echo.
+  echo   Put it in  android\keystore-password.txt  -- one line, nothing else,
+  echo   beside the keystore it opens. Both are gitignored.
+  echo.
+  echo   Or set it for this window only:   set KEYPASS=...
   echo.
   exit /b 1
 )
@@ -113,14 +134,35 @@ echo.
 echo  == 5/5  building the bundle ==
 set "AMANDA_KEYSTORE=%~dp0..\android\android.keystore"
 set "AMANDA_KEYPASS=%KEYPASS%"
-pushd android
-call gradlew.bat bundleRelease --console=plain
+REM `call gradlew.bat` was "not recognized" here even with the file sitting in
+REM the directory pushd had just moved into. Named explicitly instead -- a
+REM relative call that depends on cmd's search order is not worth debugging
+REM when `.\` costs one character, and the failure it produces is a message
+REM about a missing command rather than a missing directory.
+pushd "%WORK%\android"
+if not exist "gradlew.bat" (
+  echo.
+  echo   No gradlew.bat in %WORK%\android
+  echo   `npx cap add android` did not finish. Delete %WORK% and run again.
+  echo.
+  popd & goto :fail
+)
+call ".\gradlew.bat" bundleRelease --console=plain
 if errorlevel 1 (popd & goto :fail)
 popd
+
+REM Copied out of the disposable workdir and back beside the repo, because
+REM "where is the file" should not be a path nobody can remember. The workdir
+REM is wiped and regenerated on every run; this copy is not.
+copy /y "%WORK%\android\app\build\outputs\bundle\release\app-release.aab" "%~dp0..\android\app-release-bundle.aab" >nul
 
 echo.
 echo  Done.
 echo    %WORK%\android\app\build\outputs\bundle\release\app-release.aab
+echo.
+echo.
+echo  Copied here as well, which is the easy one to find:
+echo    android\app-release-bundle.aab
 echo.
 echo  Upload that to Play Console as a new release on the closed testing
 echo  track. Same package id and same key, so it is an UPDATE: the testers,

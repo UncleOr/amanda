@@ -83,7 +83,16 @@ write(
       dependencies: {
         "@capacitor/core": "^8.0.0",
         "@capacitor/android": "^8.0.0",
-        ...cfg.plugins,
+        /*
+         * The underscore keys are notes, the same way `_comment` and `_url`
+         * are everywhere else in capacitor.json — this file documents itself
+         * in the only place JSON allows. They must not reach package.json,
+         * where a dependency whose version is an ARRAY fails npm install with
+         * a message about nothing in particular.
+         */
+        ...Object.fromEntries(
+          Object.entries(cfg.plugins).filter(([name]) => !name.startsWith("_")),
+        ),
       },
     },
     null,
@@ -192,6 +201,25 @@ const cfg = ${JSON.stringify(
       appName: cfg.appName,
       playGamesAppId: cfg.playGamesAppId,
       keyAlias: cfg.keyAlias,
+      /*
+       * The intent-filter that makes a verified https link open the app.
+       *
+       * Assembled here rather than inside the patch template because that
+       * template is a template literal: a backslash or a newline written in
+       * there has to survive being generated, and getting it wrong produces a
+       * patch script that does not parse. Carried across by JSON.stringify,
+       * which escapes it correctly by construction.
+       */
+      deepLinkFilter: [
+        "",
+        "",
+        '            <intent-filter android:autoVerify="true">',
+        '                <action android:name="android.intent.action.VIEW" />',
+        '                <category android:name="android.intent.category.DEFAULT" />',
+        '                <category android:name="android.intent.category.BROWSABLE" />',
+        `                <data android:scheme="https" android:host="${new URL(cfg.serverUrl).host}" android:pathPrefix="${new URL(cfg.serverUrl).pathname}" />`,
+        "            </intent-filter>",
+      ].join("\n"),
     },
     null,
     2,
@@ -284,6 +312,49 @@ edit("src/main/res/values/strings.xml", (s) =>
     /<\\/resources>/,
     '    <string name="game_services_project_id">' + cfg.playGamesAppId + "</string>\\n</resources>",
   ),
+);
+
+/*
+ * ═══ COMING BACK FROM GOOGLE HAS TO COME BACK HERE ═══
+ *
+ * Or: *"when I tried to sign in to my Google account it moved to the browser,
+ * and the game carried on signed in IN THE BROWSER. In the app it stayed
+ * signed out."*
+ *
+ * Every step of that is working as designed, which is why it is confusing.
+ * Google refuses OAuth inside an embedded WebView, so Capacitor hands
+ * accounts.google.com to the real browser. The user signs in there. Google
+ * redirects to the site -- and the browser is the thing holding that page, so
+ * the browser is the thing that exchanges the code and ends up with the
+ * session. The app is never told.
+ *
+ * This brings it home. The domain already proves it owns this package:
+ * /.well-known/assetlinks.json has been live since the TWA, carrying this
+ * package name and this signing fingerprint. So Android will hand a verified
+ * https link straight to the app instead of the browser -- it only has to be
+ * told which links.
+ *
+ * autoVerify asks Android to check assetlinks at install time. If that ever
+ * fails the link opens in the browser again, which is today's behaviour: this
+ * cannot be worse than not having it.
+ *
+ * The XML is built HERE, outside the template literal, and carried across in
+ * the JSON blob. Writing it inline cost four rounds of escaping -- every
+ * backslash in a regex and every 
+ in a string has to survive being
+ * generated, and three separate attempts produced a patch script that did not
+ * parse. JSON.stringify already knows how to do that.
+ *
+ * The app also has to DO something when it arrives, which it does not get for
+ * free: Capacitor fires a JS event and navigates nowhere. See the web side in
+ * apps/client/src/game/nativeAuth.ts.
+ */
+// The first </intent-filter> in the manifest closes the LAUNCHER one, which
+// is the activity a link should open. A plain string replace, because the
+// thing being matched is a literal tag and a regex here would be one more
+// layer of escaping for nothing.
+edit("src/main/AndroidManifest.xml", (s) =>
+  s.replace("</intent-filter>", "</intent-filter>" + cfg.deepLinkFilter),
 );
 
 edit("src/main/AndroidManifest.xml", (s) =>

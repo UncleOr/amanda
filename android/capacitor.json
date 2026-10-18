@@ -70,6 +70,16 @@
     "peered to @capacitor/core ^8."
   ],
   "plugins": {
-    "@modbender/capacitor-play-games": "^0.5.0"
+    "@modbender/capacitor-play-games": "^0.5.0",
+    "_app": [
+      "@capacitor/app is what raises appUrlOpen, and without it the App Link",
+      "that brings a Google sign-in back into the app does nothing: Android",
+      "hands the link over, Capacitor has nobody to tell, and the app simply",
+      "comes to the front still showing the page it was on.",
+      "",
+      "See game/nativeAuth.ts for the listener and android-capacitor.cjs for",
+      "the intent-filter."
+    ],
+    "@capacitor/app": "^8.0.0"
   }
 }
