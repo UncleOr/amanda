@@ -3,6 +3,7 @@ import { Icon } from "./components/Icon";
 import { Album } from "./components/Album";
 import { Tutorial, type Step } from "./components/Tutorial";
 import { gateMet, nextCue } from "./game/coach";
+import { newDeckName } from "./data/deckNames";
 import { LESSONS } from "./game/lessons";
 import { Profile } from "./components/Profile";
 import { Onboarding } from "./components/Onboarding";
@@ -2059,7 +2060,15 @@ function Game() {
                     })
                   }
                   onEdit={(d) => setEditing(d)}
-                  onNew={() => setEditing({ id: "", name: "", cards: [], back: DEFAULT_BACK })}
+                  /*
+                   * Born with a name. Or: *"also give every deck a random
+                   * name when you open it: Cool Deck, Crazy Deck and so
+                   * on."* An empty one could not be saved and the save
+                   * button said nothing about why. See data/deckNames.ts.
+                   */
+                  onNew={() =>
+                    setEditing({ id: "", name: newDeckName(), cards: [], back: DEFAULT_BACK })
+                  }
                 />
               </>
             )}

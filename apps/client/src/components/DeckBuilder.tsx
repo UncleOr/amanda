@@ -739,6 +739,24 @@ export function DeckBuilder({
 
       <footer className="builder__foot">
         {error && <p className="warn">{error}</p>}
+        {/*
+          ═══ A DISABLED BUTTON THAT SAYS WHY ═══
+
+          Or: *"when you make a new deck and don't give it a name, it won't
+          let you save. Give some indication."*
+
+          Three things can stop a save and two of them are already on the
+          screen: the card count and the budget are both printed above, and
+          both turn red when they are wrong. The name was the only one with
+          no tell at all — the orange button simply did not respond, which
+          to a child is a broken game rather than a missing field.
+
+          So only the name gets a line, and only while it is the thing
+          missing. Three words, because the screen above it already says
+          everything else. New decks are born named now (data/deckNames.ts),
+          so this is for somebody who deliberately cleared it.
+        */}
+        {!name.trim() && <p className="warn">{t("s6bed06a", "צריך שם לדק")}</p>}
         <button
           className="btn-fight"
           disabled={!canSave}
