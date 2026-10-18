@@ -62,6 +62,52 @@ if (missing.length) {
   process.exit(1);
 }
 
+/*
+ * ═══ THE NAME UNDER THE ICON HAS TO STILL BE HEBREW ═══
+ *
+ * Or sent a photograph of his home screen: the Amanda icon, correct and
+ * sharp, and underneath it a row of geresh marks. The app had installed
+ * calling itself nonsense.
+ *
+ * It was this file, and it was me. I bumped the version with PowerShell:
+ *
+ *     $j = Get-Content android\capacitor.json -Raw      <- reads as cp1255
+ *     Set-Content ... -Value $j -Encoding utf8          <- writes as UTF-8
+ *
+ * Get-Content without -Encoding uses the system ANSI codepage, which on a
+ * Hebrew Windows is cp1255. So every UTF-8 byte of אמנדה was read as a
+ * separate cp1255 character and written back out as UTF-8 — d7 90 became
+ * d7 b3 c2 90 — and the mangled name travelled all the way into
+ * capacitor.config.json, into strings.xml, into the bundle and onto a phone.
+ *
+ * Nothing on the way could notice: mojibake is perfectly valid UTF-8, it
+ * compiles, it installs, and only a human looking at a home screen can tell.
+ *
+ * So the build checks. C1 control characters (U+0080-U+009F) are the
+ * signature: they are not printable, no language uses them, and they are
+ * exactly what the low byte of a Hebrew letter turns into when it survives
+ * this round trip.
+ */
+{
+  const bad = [...cfg.appName].filter((ch) => {
+    const n = ch.codePointAt(0);
+    return n >= 0x80 && n <= 0x9f;
+  });
+  if (bad.length) {
+    console.error("");
+    console.error("  appName in android/capacitor.json is mangled: " + cfg.appName);
+    console.error("");
+    console.error("  It holds control characters, which means the file has been read in");
+    console.error("  the wrong encoding and written back - almost always PowerShell's");
+    console.error("  Get-Content, which uses the system ANSI codepage.");
+    console.error("");
+    console.error("  Restore it from git and edit it with node or python:");
+    console.error("    git checkout android/capacitor.json");
+    console.error("");
+    process.exit(1);
+  }
+}
+
 const keystore = path.join(REPO, cfg.keystore.replace(/\//g, path.sep));
 if (!fs.existsSync(keystore)) {
   console.error(`\n  No keystore at ${keystore}`);

@@ -21,8 +21,8 @@
  * file. It is a pure function over a string, which is the one part of this
  * that can be tested without a phone.
  */
-import { describe, expect, it } from "vitest";
-import { isSignInReturn, nativeRedirectTo } from "./nativeAuth";
+import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
+import { asLoadableUrl, isSignInReturn, nativeRedirectTo } from "./nativeAuth";
 
 const SITE = "https://playamanda.com/play/";
 
@@ -143,5 +143,69 @@ describe("which address the sign-in asks to come back to", () => {
    */
   it("leaves the website's address alone", () => {
     expect(nativeRedirectTo()).toBeNull();
+  });
+});
+
+/**
+ * ═══ THE ADDRESS THE WEBVIEW IS ACTUALLY SENT TO ═══
+ *
+ * The bug a video of Or's phone exposed. Android handed the app
+ * `com.asulins.amanda://auth?code=...` exactly as intended — the scheme did
+ * its job — and the code then told the WebView to NAVIGATE to it. A WebView
+ * has no idea what that scheme is, so the navigation was refused, the old
+ * page stayed put, and the sign-in looked like it had done nothing at all.
+ *
+ * The code has to reach a page that can exchange it, which is the site. The
+ * scheme is swapped for the site; the query and the fragment come across
+ * untouched, because they are what the exchange reads.
+ */
+describe("turning the arriving link into one the WebView can load", () => {
+  /*
+   * `asLoadableUrl` builds the replacement from the page's own origin, so the
+   * test has to say what that is. Stubbed rather than run in a DOM: the thing
+   * under test is string arithmetic, and the origin it lands on is part of
+   * what is being checked.
+   */
+  beforeEach(() => {
+    vi.stubGlobal("window", { location: { origin: "https://playamanda.com" } });
+  });
+  afterEach(() => {
+    vi.unstubAllGlobals();
+  });
+
+  it("swaps the custom scheme for the site, keeping the code", () => {
+    const out = new URL(asLoadableUrl("com.asulins.amanda://auth?code=abc123"));
+    expect(out.protocol).toBe("https:");
+    expect(out.host).toBe("playamanda.com");
+    expect(out.searchParams.get("code")).toBe("abc123");
+  });
+
+  it("keeps an error, which still has to be handled", () => {
+    const out = new URL(asLoadableUrl("com.asulins.amanda://auth?error=access_denied"));
+    expect(out.searchParams.get("error")).toBe("access_denied");
+  });
+
+  it("keeps a fragment, where implicit-flow answers arrive", () => {
+    const out = new URL(asLoadableUrl("com.asulins.amanda://auth#access_token=xyz"));
+    expect(out.hash).toBe("#access_token=xyz");
+  });
+
+  /*
+   * It must never produce the scheme again, whatever came in. That is the
+   * entire failure being fixed: a WebView cannot go there.
+   */
+  it("never hands back something the WebView cannot load", () => {
+    for (const url of [
+      "com.asulins.amanda://auth?code=a",
+      "com.asulins.amanda://auth",
+      "com.asulins.amanda://anything#error=x",
+    ]) {
+      expect(asLoadableUrl(url).startsWith("com.asulins.amanda:"), url).toBe(false);
+    }
+  });
+
+  it("leaves an https link exactly as it is", () => {
+    const https = "https://playamanda.com/play/?code=abc";
+    expect(asLoadableUrl(https)).toBe(https);
   });
 });

@@ -95,6 +95,37 @@ export function isSignInReturn(url: string): boolean {
 }
 
 /**
+ * The address to actually load, given the one the app was opened with.
+ *
+ * ═══ A WEBVIEW CANNOT NAVIGATE TO A CUSTOM SCHEME ═══
+ *
+ * This is the bug the video showed. The app DID come home — Android handed
+ * `com.asulins.amanda://auth?code=...` straight to it, which is the whole
+ * point of the scheme and it worked. Then this file told the WebView to go
+ * to that address, and a WebView has no idea what `com.asulins.amanda:` is.
+ * The navigation is refused, the old page stays exactly where it was, and
+ * from the outside the sign-in simply did nothing: Or came back from Google
+ * to the same screen with the same "continue with Google" button on it.
+ *
+ * The code is in the query of that URL, and it is an ordinary authorisation
+ * code. What it needs is to arrive at a page that can exchange it — which is
+ * the site, where the PKCE verifier is already sitting in storage and where
+ * loadAccount() has handled a `?code=` return since long before any of this.
+ *
+ * So the scheme is swapped for the site and the query and fragment are
+ * carried across untouched. An https link that arrives through the App Link
+ * is already such an address and is returned unchanged.
+ */
+export function asLoadableUrl(url: string): string {
+  const u = new URL(url);
+  if (u.protocol === "http:" || u.protocol === "https:") return url;
+  const site = new URL(import.meta.env.BASE_URL, window.location.origin);
+  site.search = u.search;
+  site.hash = u.hash;
+  return site.toString();
+}
+
+/**
  * Listen for the app being opened by a link, and finish a sign-in if that is
  * what it was. Safe to call anywhere; does nothing off a device.
  */
@@ -110,7 +141,7 @@ export function watchForSignInReturn(): void {
      * pressed "sign in" on, and putting it in the history means the back
      * button walks into a half-finished sign-in.
      */
-    window.location.replace(url);
+    window.location.replace(asLoadableUrl(url));
   });
 
   /*
@@ -127,8 +158,9 @@ export function watchForSignInReturn(): void {
       const url = launch?.url;
       if (!url || !isSignInReturn(url)) return;
       // Already there — the WebView was started on it — so nothing to do.
-      if (url === window.location.href) return;
-      window.location.replace(url);
+      const go = asLoadableUrl(url);
+      if (go === window.location.href) return;
+      window.location.replace(go);
     })
     .catch(() => {
       // An app that cannot say how it was launched is an app that was
