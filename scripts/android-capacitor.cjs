@@ -706,14 +706,61 @@ edit("src/main/AndroidManifest.xml", (s) =>
   ),
 );
 
-// ── what it is called under the icon ──
-edit(
-  "src/main/res/values/strings.xml",
-  (s) => s.replace(/(<string name="app_name">)[^<]*(<\\/string>)/, "$1" + cfg.appName + "$2"),
-  // Capacitor writes it from capacitor.config.json, so by the time this runs
-  // it is usually already the Hebrew name.
-  (s) => s.includes('<string name="app_name">' + cfg.appName + "</string>"),
-);
+/*
+ * ── what it is called under the icon ──
+ *
+ * ═══ TWO STRINGS, AND THE ONE THAT SHOWS IS NOT app_name ═══
+ *
+ * Capacitor generates both, from the same appName:
+ *
+ *     <application android:label="@string/app_name">
+ *     <activity    android:label="@string/title_activity_main">
+ *
+ * Android labels a launcher entry from the ACTIVITY when the activity
+ * declares one, and MainActivity does. So title_activity_main is the name
+ * under the icon and in Recents, and app_name is the fallback almost
+ * nothing reads.
+ *
+ * Only app_name was checked here. That was luck, not design: both come from
+ * the same place, so both were right — but the string nobody was watching
+ * was the only one that mattered, and the name on this app has already cost
+ * a release once (see the mojibake warning in android/capacitor.json). The
+ * next Capacitor upgrade that renames or drops one of these would ship an
+ * app called "Amanda" in English, or whatever its template says, and the
+ * build would be perfectly happy.
+ *
+ * Both now, from one list.
+ */
+for (const key of ["app_name", "title_activity_main"]) {
+  /*
+   * Built with indexOf rather than a regular expression on purpose. The
+   * pattern needs a literal "</string>", and a slash inside a regex in this
+   * file has already been written three different ways; the name on this app
+   * has cost one release and is not worth a fourth. There is nothing here a
+   * regex does better.
+   */
+  const open = '<string name="' + key + '">';
+  const want = open + cfg.appName + "</string>";
+  edit(
+    "src/main/res/values/strings.xml",
+    (s) => {
+      const at = s.indexOf(open);
+      if (at < 0) return s;
+      const end = s.indexOf("</string>", at);
+      if (end < 0) return s;
+      return s.slice(0, at) + want + s.slice(end + "</string>".length);
+    },
+    // Capacitor writes them from capacitor.config.json, so by the time this
+    // runs they are usually already the Hebrew name. That is the patch being
+    // unnecessary, not the patch failing — and edit() throws on the latter,
+    // which is what catches a string Capacitor has stopped generating.
+    //
+    // (No backticks in this file. Everything below the CFG block is inside a
+    // template literal that gets written out as the patch script, and one
+    // backtick in a comment ends it. That is now six times.)
+    (s) => s.includes(want),
+  );
+}
 
 /*
  * ═══ THE STATUS BAR WAS SITTING ON THE GAME ═══
