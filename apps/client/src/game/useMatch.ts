@@ -521,13 +521,31 @@ export function woundedKingMult(cardId: string, wound: number): number | null {
 }
 
 /**
- * Is the one take-back still there to be spent? See takeDiscard for the rule.
+ * Can the last thrown card still be fetched back?
+ *
+ * ═══ THE LAST ONE, AND ONLY IT — BUT EVERY TIME ═══
+ *
+ * Or: *"you can take back the last card that was thrown, and only it. But
+ * not just once."* And the example, which is the whole rule: *"I threw an
+ * obsidian egg. I threw Thunderwing — I can pull Thunderwing back. I cannot
+ * also pull the egg. I carried on. I threw a healing bloom — I can pull the
+ * healing bloom back."*
+ *
+ * This used to be ONE take-back for the whole match, which came from his
+ * earlier complaint about the opposite failure: *"if I already pulled a
+ * card I should not be pulling the ones after it out of the recycling."*
+ * That is still true and still prevented — you can never dig DOWN the pile.
+ * What is gone is the match-long budget, which punished the second change
+ * of mind as though it were the same mistake as rummaging.
+ *
+ * So the flag is not "spent this match" any more; it is "this throw has
+ * already been undone", and a new throw clears it.
  *
  * Pure and exported so the rule can be tested as the rule, rather than as a
  * sentence in a test file that happens to agree with the code.
  */
-export function canTakeFromBin(binUsed: boolean, binSize: number): boolean {
-  return !binUsed && binSize > 0;
+export function canTakeFromBin(alreadyTookItBack: boolean, binSize: number): boolean {
+  return !alreadyTookItBack && binSize > 0;
 }
 
 /**
@@ -763,7 +781,7 @@ export interface MatchApi {
   deckLeft: number;
   /** Cards in the discard pile. */
   discardCount: number;
-  /** Is the one take-back still available? See takeDiscard. */
+  /** Can the LAST thrown card still be fetched back? See takeDiscard. */
   canTakeDiscard: boolean;
   /** Cards already drawn ahead, waiting behind the one in your hand. */
   extraHand: string[];
@@ -976,7 +994,7 @@ export function useMatch(): MatchApi {
   const [rival, setRival] = useState<PlayerCard | null>(null);
   const [actionBar, setActionBar] = useState<string[]>([]);
   const [usedActions, setUsedActions] = useState<Record<string, boolean>>({});
-  /** The one take-back has been spent this match. See takeDiscard. */
+  /** This throw has already been undone. Cleared by the next throw. */
   const [binUsed, setBinUsed] = useState(false);
   const binUsedRef = useRef(false);
   /** Flat health an enemy eraser took off YOUR King. See receiveHex. */
@@ -1393,17 +1411,36 @@ export function useMatch(): MatchApi {
   }, []);
 
   const discardHand = useCallback(() => {
-    let ok = false;
-    setGs((s) => {
-      if (s.hand === null) return s;
-      ok = true;
-      return refill({ ...s, discard: [...s.discard, s.hand], hand: null });
-    });
-    if (ok) sfx.play("discard");
+    /*
+     * ═══ ASKED OF THE REF, NOT OF THE UPDATER ═══
+     *
+     * This set a local `ok` inside the `setGs` updater and read it on the
+     * next line. React runs that updater during RENDER, not during the
+     * call, so the next line read `false` — the throw happened and
+     * everything hanging off it did not.
+     *
+     * It cost nothing while the only thing hanging off it was a sound
+     * effect nobody missed. Then Or's rule arrived — *"you can take back
+     * the last card that was thrown... but not just once"* — and clearing
+     * the flag went in beside the sound, where it also never ran. Measured
+     * in the browser: throw, fetch, throw again, and the button stayed
+     * grey.
+     *
+     * `gsRef` is assigned on every render and is the same answer the rest
+     * of this file asks for the current board.
+     */
+    if (gsRef.current.hand === null) return;
+    setGs((s) => (s.hand === null ? s : refill({ ...s, discard: [...s.discard, s.hand], hand: null })));
+    // A new throw is a new chance to change your mind about it: the flag
+    // means "this throw has already been undone", not "spent for the
+    // match". See canTakeFromBin.
+    binUsedRef.current = false;
+    setBinUsed(false);
+    sfx.play("discard");
   }, [refill]);
 
   /**
-   * Take the top card out of the bin — ONCE a match.
+   * Take the last thrown card back out of the bin.
    *
    * ═══ THE BIN IS A CHANGE OF HEART, NOT A SECOND DECK ═══
    *
@@ -1413,17 +1450,27 @@ export function useMatch(): MatchApi {
    * taking, down through everything you had thrown all match, which turned
    * a 20-card deck into a 20-card deck you could search.
    *
-   * Or, after playing it: *"I need to be able to pull only ONE card back and
-   * no more. If I already pulled a card I should not be pulling the ones
-   * after it out of the recycling."*
+   * Or, then: *"I need to be able to pull only ONE card back and no more.
+   * If I already pulled a card I should not be pulling the ones after it
+   * out of the recycling."* That became one take-back for the whole match,
+   * which fixed the rummaging by also forbidding the second honest change
+   * of mind.
    *
-   * So it is one, for the whole match. That is what makes throwing a
-   * decision: you get a single undo, you choose when to spend it, and after
-   * that the bin is a bin.
+   * Or, now: *"you can take back the last card that was thrown, and only
+   * it. But not just once."*
    *
-   * The spent flag lives beside the board state rather than inside it
-   * because it describes the PLAYER's match, not the pile — clearRound
-   * resets it with everything else that is about one round.
+   * Both rules at once, and they do not conflict: the LAST throw can always
+   * be undone, and the ones beneath it never can. The flag means "this
+   * throw has already been undone" and a new throw clears it (discardHand).
+   *
+   * Burying the card you were holding still matters, and it is what makes
+   * the second half true: after an undo the pile's top is the card you just
+   * gave up, so a second undo would hand it straight back — which is why
+   * the flag is what stops it rather than the pile's shape.
+   *
+   * It lives beside the board state rather than inside it because it
+   * describes the PLAYER's turn, not the pile — clearRound resets it with
+   * everything else that is about one round.
    */
   const takeDiscard = useCallback(() => {
     if (!canTakeFromBin(binUsedRef.current, gsRef.current.discard.length)) return;
