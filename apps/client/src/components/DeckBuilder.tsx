@@ -409,12 +409,24 @@ export function DeckBuilder({
     const owned = account?.album;
     const seen = new Set<string>();
     for (const c of collectable()) if (owned?.has(c.id)) seen.add(c.seriesId);
-    const families = SERIES.filter((series) => seen.has(series.id));
+    /*
+     * ═══ ONE THING, ONE NAME ═══
+     *
+     * Tzod, testing: *"it is not clear what the difference is between a
+     * family and a series."* Or: *"let's unify to series."*
+     *
+     * There was no difference. This filter and the sort two screens up both
+     * read `seriesId`, and they were called different things — so a player
+     * reasonably assumed there were two ideas to learn, and went looking for
+     * the second one. The synergy blurb on every card said "family" as well.
+     * All of it says סדרה now.
+     */
+    const series = SERIES.filter((s) => seen.has(s.id));
     return [
       {
-        id: "family",
-        label: () => t("sf621727", "משפחה"),
-        choices: families.map((series) => ({
+        id: "series",
+        label: () => t("s20dd468", "סדרה"),
+        choices: series.map((series) => ({
           id: series.id,
           label: () => say(series.name),
           test: (c: Card) => c.seriesId === series.id,

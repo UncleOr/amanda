@@ -194,7 +194,7 @@ const MEDIAN_WORTH = (() => {
 /**
  * The series bonus, described accurately.
  *
- * The rule is THREE OF THE SAME FAMILY TOUCHING EACH OTHER — sharing an edge,
+ * The rule is THREE OF THE SAME SERIES TOUCHING EACH OTHER — sharing an edge,
  * not a corner — and each family has its own bonus rather than all of them
  * doubling power. It used to be three anywhere on the board; Or changed it on
  * 2026-10-06 so that where you put a card matters. Teaching the wrong rule

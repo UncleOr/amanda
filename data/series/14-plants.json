@@ -16,8 +16,8 @@
       "en": "Photosynthesis"
     },
     "description": {
-      "he": "שלושה צמודים מאותה משפחה מקבלים +20% עוצמה ו+20% חיים.",
-      "en": "Three touching cards of the same family get +20% power and +20% health."
+      "he": "שלושה צמודים מאותה סדרה מקבלים +20% עוצמה ו+20% חיים.",
+      "en": "Three touching cards of the same series get +20% power and +20% health."
     },
     "ability": {
       "type": "statAura",

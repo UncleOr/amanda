@@ -36,8 +36,8 @@ export const RARITY_META: Record<Rarity, { he: string; en: string; color: string
 };
 
 /**
- * One colour per series. The series bonus needs 3+ cards of the same family on
- * the board, so the family has to be readable at a glance — this colour drives
+ * One colour per series. The series bonus needs 3+ cards of the same series on
+ * the board, so the series has to be readable at a glance — this colour drives
  * the card frame and name plate, making same-series cards group visually.
  */
 export const SERIES_META: Record<string, { he: string; en: string; color: string }> = {

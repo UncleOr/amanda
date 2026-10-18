@@ -900,7 +900,6 @@
   "sd49b897": "Ancient Tree in hand",
   "s75ccaa2": "Cactus: it pricks whatever touches it. Second guard post, right against the tree.",
   "s62b4ae3": "Cactus in hand, after the tree is down",
-  "s562a021": "What have we here? Two cards from the same family. See the colour of the frame? Let's give them a third.",
   "s16619e1": "two plants touching on the board",
   "se1b06e1": "Sunflower. A plant. Stick it against one of them — not corner to corner, properly touching.",
   "s3bb1a6a": "Sunflower in hand",
@@ -981,7 +980,7 @@
   "sa92d994": "Price",
   "s57bf777": "Power",
   "s1950df9": "Health",
-  "s39768fa": "Family",
+  "s39768fa": "Series",
   "s3451fcc": "Sort",
   "sa0f9456": "Filter",
   "s4c85e6b": "All",
@@ -1021,7 +1020,6 @@
   "scae68e4": "Life after death",
   "s234a399": "Healers",
   "s7966a9d": "Armoured",
-  "sf621727": "Family",
   "se3355ce": "Clear",
   "sd87ddf0": "Back",
   "s9db8c07": "My album",
@@ -1084,5 +1082,7 @@
   "sb7305bc": "No connection to the server",
   "s7d1c936": "Continue with Google",
   "sfcd8d79": "Later",
-  "s9909b11": "One more thing. Sign in now and I'll keep your album safe. Otherwise it all disappears and I eat it."
+  "s9909b11": "One more thing. Sign in now and I'll keep your album safe. Otherwise it all disappears and I eat it.",
+  "s20dd468": "Series",
+  "s669ccf5": "What have we here? Two cards from the same series. See the colour of the frame? Let's give them a third."
 }
