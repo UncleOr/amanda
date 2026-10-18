@@ -61,6 +61,12 @@
  */
 .opening__film {
   /*
+   * The poster is a square icon and the film is 16:9, so the same
+   * `object-fit: contain` below frames both without cropping either, on the
+   * game's own background. See POSTER in Ident.tsx.
+   */
+  background: var(--bg, #0b0e17);
+  /*
    * ═══ ABSOLUTE, AND THIS IS THE WHOLE BUG ═══
    *
    * Or, three times, eventually with arrows drawn on the screenshots: *"how

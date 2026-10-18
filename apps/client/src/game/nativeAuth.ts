@@ -129,19 +129,86 @@ export function asLoadableUrl(url: string): string {
  * Listen for the app being opened by a link, and finish a sign-in if that is
  * what it was. Safe to call anywhere; does nothing off a device.
  */
+/**
+ * ═══ A BREADCRUMB, BECAUSE I HAVE NOW GUESSED THIS TWICE ═══
+ *
+ * The sign-in has failed three times for three different reasons, and each
+ * time the only evidence was Or filming his phone. The first video is what
+ * told me the app DID come home — which moved the problem from "the scheme
+ * does not work" to "the navigation after it fails". That was worth more
+ * than any amount of reasoning from here.
+ *
+ * This writes down what the app actually saw, so the next photograph is data
+ * instead of another guess. Four things, in order of what they rule out:
+ *
+ *   native   is this even the app, or a browser?
+ *   plugin   did @capacitor/app register, so a link can be delivered at all?
+ *   url      did a link arrive, and what was in it — code, token, error?
+ *   went     where were we sent as a result?
+ *
+ * localStorage because it has to survive the navigation it is recording.
+ * Capped and stripped: the code in a callback is a live credential for a few
+ * seconds, so the VALUES are dropped and only the names kept. "code" is the
+ * thing worth knowing; its contents are not.
+ */
+const CRUMB = "amanda.signin.trace";
+
+function trace(step: string, detail = ""): void {
+  try {
+    const now = new Date().toISOString().slice(11, 19);
+    const was = window.localStorage.getItem(CRUMB) ?? "";
+    const line = `${now} ${step}${detail ? " " + detail : ""}`;
+    window.localStorage.setItem(CRUMB, (was + "\n" + line).trim().slice(-400));
+  } catch {
+    // A browser with storage switched off is one we cannot leave notes in.
+  }
+}
+
+/** What arrived, with nothing secret in it. */
+function shape(url: string): string {
+  try {
+    const u = new URL(url);
+    const q = [...u.searchParams.keys()];
+    const h = [...new URLSearchParams(u.hash.replace(/^#/, "")).keys()];
+    return `${u.protocol}//${u.host || "(no host)"} ?${q.join(",") || "-"} #${h.join(",") || "-"}`;
+  } catch {
+    return "(unparseable)";
+  }
+}
+
+/** What the app recorded about the last sign-in attempt. For the UI to show. */
+export function signInTrace(): string {
+  try {
+    return window.localStorage.getItem(CRUMB) ?? "";
+  } catch {
+    return "";
+  }
+}
+
 export function watchForSignInReturn(): void {
   const cap = bridge();
   const app = cap?.Plugins?.App;
-  if (!app?.addListener) return;
+  if (!cap) return;
+  if (!app?.addListener) {
+    // The app is running natively and cannot be handed a link. Worth knowing:
+    // it means @capacitor/app did not register, and no amount of correct
+    // redirecting will ever come back.
+    trace("native-but-no-App-plugin");
+    return;
+  }
+  trace("listening");
 
   app.addListener("appUrlOpen", ({ url }) => {
+    trace("appUrlOpen", shape(url ?? ""));
     if (!url || !isSignInReturn(url)) return;
     /*
      * `replace` and not `assign`: the page being left is the one the player
      * pressed "sign in" on, and putting it in the history means the back
      * button walks into a half-finished sign-in.
      */
-    window.location.replace(asLoadableUrl(url));
+    const go = asLoadableUrl(url);
+    trace("going-to", shape(go));
+    window.location.replace(go);
   });
 
   /*
@@ -156,7 +223,8 @@ export function watchForSignInReturn(): void {
     .getLaunchUrl?.()
     .then((launch) => {
       const url = launch?.url;
-      if (!url || !isSignInReturn(url)) return;
+      trace("appUrlOpen", shape(url ?? ""));
+    if (!url || !isSignInReturn(url)) return;
       // Already there — the WebView was started on it — so nothing to do.
       const go = asLoadableUrl(url);
       if (go === window.location.href) return;

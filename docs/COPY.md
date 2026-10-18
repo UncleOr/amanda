@@ -1,6 +1,6 @@
 # הטקסטים של אמנדה
 
-כל טקסט שהשחקן רואה — 1147 במספר, 1147 מהם כבר באנגלית.
+כל טקסט שהשחקן רואה — 1150 במספר, 1150 מהם כבר באנגלית.
 
 ## איך עורכים
 
@@ -315,6 +315,7 @@
 | s0d5203b | בחר לך פרצוף. זה מה שאני אזכור. | | Pick a face. That's what I'll remember. |
 | s9836b0a | ואיך קוראים לך? תן שם שאפשר לצעוק. | | And what's your name? Give me one worth shouting. |
 | s82a43b6 | ומתי נולדת? זה רק בשבילי. אני אוהבת לדעת כמה זמן חיכיתי. | | And when were you born? That's just for me. I like knowing how long I waited. |
+| s9909b11 | ועוד דבר אחד. תתחבר עכשיו, ואני אשמור לך את האלבום. אחרת הכול נעלם ואני אוכל אותו. | | One more thing. Sign in now and I'll keep your album safe. Otherwise it all disappears and I eat it. |
 | s42071fe | משהו בפנים. תפתח כבר. | | Something's inside. Open it already. |
 | sb72299f | זכית. אל תתרגש מדי. | | You won something. Don't get too excited. |
 | se3b46b6 | קח, הרווחת. | | Here. You earned it. |
@@ -1022,6 +1023,8 @@
 | s7628ae6 | שחקן | | Player |
 | sbe708cc | יאללה | | Let's go |
 | s8d5377a | אחר כך | | Later |
+| s7d1c936 | המשך עם גוגל | | Continue with Google |
+| sfcd8d79 | אחר כך | | Later |
 | sd66df01 | בן | | Boy |
 | s51bc16c | בת | | Girl |
 | s4e5fa5b | למה להגדיר? | | Why set this? |

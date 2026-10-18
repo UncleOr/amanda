@@ -217,6 +217,23 @@ export const ONBOARDING = {
   face: t("s0d5203b", "בחר לך פרצוף. זה מה שאני אזכור."),
   name: t("s9836b0a", "ואיך קוראים לך? תן שם שאפשר לצעוק."),
   age: t("s82a43b6", "ומתי נולדת? זה רק בשבילי. אני אוהבת לדעת כמה זמן חיכיתי."),
+  /*
+   * Asked at the start, because the thing it protects is the album and the
+   * album starts filling from the first match.
+   *
+   * Or: *"I think we should offer him to sign in with Google right at the
+   * start, with a small 'later' button."*
+   *
+   * In her voice rather than the interface's: the screen before it and the
+   * screen after it are both her being nosy, and a form field in the middle
+   * of that reads as the game stopping to do admin. The reason is the true
+   * one — a guest account is thrown away when the browser is cleared — said
+   * the way she would say it.
+   *
+   * Or writes the copy. This is a placeholder with the right job; expect him
+   * to replace the words.
+   */
+  account: t("s9909b11", "ועוד דבר אחד. תתחבר עכשיו, ואני אשמור לך את האלבום. אחרת הכול נעלם ואני אוכל אותו."),
 } as const;
 
 /** What she says while you are staring at a closed chest. */

@@ -24,6 +24,7 @@
  * than starting a new one — which is why nothing says "register".
  */
 import { useEffect, useState } from "react";
+import { signInTrace } from "../game/nativeAuth";
 import {
   MIN_AGE,
   ageFrom,
@@ -92,6 +93,8 @@ export function Profile({ account, onClose, onChanged }: Props) {
   const [birthDate, setBirthDate] = useState(account?.birthDate ?? "");
   const [avatar, setAvatar] = useState(account?.avatar ?? AVATAR_IDS[0]);
   const [facesOpen, setFacesOpen] = useState(false);
+  /* Read once per render; it is a note in localStorage, not state. */
+  const trace = signInTrace();
   const [gender, setGenderChoice] = useState<V.Gender>(account?.gender ?? null);
   /** The line thrown across the versus screen. NO_PHRASE means say nothing. */
   const [phrase, setPhrase] = useState(account?.catchphrase ?? NO_PHRASE);
@@ -472,6 +475,27 @@ export function Profile({ account, onClose, onChanged }: Props) {
               >
                 {t("s2248739", "המשך עם גוגל")}
               </button>
+              {/*
+                ═══ WHAT THE APP SAW, FOR THE NEXT PHOTOGRAPH ═══
+
+                The Google sign-in has failed three times in the Android app
+                for three unrelated reasons, and every one was found by Or
+                filming his phone rather than by anything reasoning from
+                here. The first video proved the app DID come back — which
+                turned "the deep link does not work" into "the navigation
+                after it fails", two completely different bugs.
+
+                So the app writes down what it was handed, and this puts it
+                on the screen he is already filming. No values, only the
+                names of what arrived: a callback code is a live credential
+                for a few seconds and does not belong on a screen or in a
+                photograph.
+
+                Only in the app, and only when there is something to say —
+                on the web the trace is empty and this renders nothing. It
+                comes out when the sign-in is working.
+              */}
+              {trace && <pre className="profile__trace">{trace}</pre>}
               <div className="profile__or">{t("s074bcb0", "או")}</div>
               <input
                 className="profile__input"

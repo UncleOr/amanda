@@ -554,3 +554,21 @@
   opacity: 0.55;
   letter-spacing: 0.02em;
 }
+
+/*
+ * The sign-in trace. Deliberately plain and small: it is a diagnostic that
+ * should stop appearing, not a part of the screen. See Profile.tsx.
+ */
+.profile__trace {
+  margin: 6px 0 0;
+  padding: 6px 8px;
+  border-radius: 8px;
+  background: rgba(0, 0, 0, 0.45);
+  color: var(--muted);
+  font-size: 10px;
+  line-height: 1.4;
+  white-space: pre-wrap;
+  word-break: break-all;
+  direction: ltr;
+  text-align: left;
+}

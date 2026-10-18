@@ -30,6 +30,24 @@ import { useEffect, useRef, useState } from "react";
 import { markIdentPlayed } from "../game/intro";
 
 const SRC = `${import.meta.env.BASE_URL}brand/ident.mp4`;
+/**
+ * What fills the frame until the film has something to show.
+ *
+ * Or: *"just before the Asulins ident there's an ugly video loading symbol.
+ * Let's replace it with something of Amanda."*
+ *
+ * A <video> with no poster is drawn by the WebView however the WebView
+ * likes, and on Android that is a grey plate with a spinner on it — the
+ * system's idea of a video, in the middle of the two seconds this screen
+ * exists to make feel deliberate.
+ *
+ * A poster is the whole fix: the browser paints it from the first frame and
+ * swaps it for the film without a gap. It is the game's own icon, which is
+ * Amanda on the same near-black the rest of the opening is already on, and
+ * which every player has already downloaded — it is the app's launcher icon
+ * and the PWA icon, so it is in cache before this screen exists.
+ */
+const POSTER = `${import.meta.env.BASE_URL}icon-512.png`;
 
 /**
  * If it has not started by now, go.
@@ -88,6 +106,7 @@ export function Ident({ onDone }: { onDone: () => void }) {
         ref={video}
         className="opening__film"
         src={SRC}
+        poster={POSTER}
         playsInline
         autoPlay
         preload="auto"

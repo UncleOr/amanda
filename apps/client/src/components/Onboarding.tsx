@@ -11,6 +11,7 @@ import { useState } from "react";
 import { MIN_AGE, ageFrom, saveProfile } from "../game/account";
 import { AVATAR_IDS } from "./Profile";
 import * as V from "../data/voice";
+import { linkGoogle } from "../game/account";
 import { line as t, lineF as tf } from "../game/copy";
 
 const BASE = import.meta.env.BASE_URL;
@@ -21,7 +22,7 @@ interface Props {
   onDone: () => void;
 }
 
-type Stage = "hello" | "who" | "face" | "name" | "age";
+type Stage = "hello" | "account" | "who" | "face" | "name" | "age";
 
 export function Onboarding({ initialNickname, onDone }: Props) {
   const [stage, setStage] = useState<Stage>("hello");
@@ -59,11 +60,45 @@ export function Onboarding({ initialNickname, onDone }: Props) {
 
         {stage === "hello" && (
           <div className="ob__row">
-            <button className="btn-fight" onClick={() => setStage("who")}>
+            <button className="btn-fight" onClick={() => setStage("account")}>
               {t("sbe708cc", "יאללה")}
             </button>
             <button className="btn-link" onClick={onDone}>
               {t("s8d5377a", "אחר כך")}
+            </button>
+          </div>
+        )}
+
+        {/*
+          ═══ THE ACCOUNT, ASKED FIRST ═══
+
+          Or: *"I think we should offer him to sign in with Google right at
+          the start, with a small 'later' button."*
+
+          Second card rather than first, and the difference matters: the
+          first thing a child meets is Amanda introducing herself, which is
+          one tap, and only then does anything ask them for something. A
+          sign-in button before she has said a word is a login screen.
+
+          "Later" is a text link, not a button, because the two are not
+          equal choices — but it is always there and it always works. Nobody
+          is held at this card.
+
+          Signing in LEAVES: the browser opens, and coming back re-enters
+          the app from the top. So this is deliberately before the nickname,
+          the face and the birthday — there is nothing half-filled to lose
+          at this point, which there would be if it were asked at the end.
+        */}
+        {stage === "account" && (
+          <div className="ob__row">
+            <button
+              className="btn-fight btn-online"
+              onClick={() => void linkGoogle().then((err) => err && setStage("who"))}
+            >
+              {t("s7d1c936", "המשך עם גוגל")}
+            </button>
+            <button className="btn-link" onClick={() => setStage("who")}>
+              {t("sfcd8d79", "אחר כך")}
             </button>
           </div>
         )}

@@ -3356,13 +3356,23 @@
   }
  },
  {
+  "id": "s9909b11",
+  "section": "הקול של אמנדה — שורות מתחלפות (כמה גרסאות לכל רגע)",
+  "text": "ועוד דבר אחד. תתחבר עכשיו, ואני אשמור לך את האלבום. אחרת הכול נעלם ואני אוכל אותו.",
+  "where": {
+   "kind": "source",
+   "file": "apps/client/src/data/voice.ts",
+   "line": 236
+  }
+ },
+ {
   "id": "s42071fe",
   "section": "הקול של אמנדה — שורות מתחלפות (כמה גרסאות לכל רגע)",
   "text": "משהו בפנים. תפתח כבר.",
   "where": {
    "kind": "source",
    "file": "apps/client/src/data/voice.ts",
-   "line": 224
+   "line": 241
   }
  },
  {
@@ -3372,7 +3382,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/data/voice.ts",
-   "line": 225
+   "line": 242
   }
  },
  {
@@ -3382,7 +3392,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/data/voice.ts",
-   "line": 226
+   "line": 243
   }
  },
  {
@@ -3392,7 +3402,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/data/voice.ts",
-   "line": 227
+   "line": 244
   }
  },
  {
@@ -3402,7 +3412,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/data/voice.ts",
-   "line": 227
+   "line": 244
   }
  },
  {
@@ -3412,7 +3422,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/data/voice.ts",
-   "line": 228
+   "line": 245
   }
  },
  {
@@ -3582,7 +3592,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/App.tsx",
-   "line": 1079
+   "line": 1101
   }
  },
  {
@@ -3592,7 +3602,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/App.tsx",
-   "line": 1102
+   "line": 1124
   }
  },
  {
@@ -3602,7 +3612,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/App.tsx",
-   "line": 1114
+   "line": 1136
   }
  },
  {
@@ -3612,7 +3622,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/App.tsx",
-   "line": 1153
+   "line": 1175
   }
  },
  {
@@ -3622,7 +3632,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/App.tsx",
-   "line": 1153
+   "line": 1175
   }
  },
  {
@@ -3632,7 +3642,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/App.tsx",
-   "line": 1153
+   "line": 1175
   }
  },
  {
@@ -3642,7 +3652,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/App.tsx",
-   "line": 1157
+   "line": 1179
   }
  },
  {
@@ -3652,7 +3662,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/App.tsx",
-   "line": 1169
+   "line": 1191
   }
  },
  {
@@ -3662,7 +3672,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/App.tsx",
-   "line": 1169
+   "line": 1191
   }
  },
  {
@@ -3672,7 +3682,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/App.tsx",
-   "line": 1175
+   "line": 1197
   }
  },
  {
@@ -3682,7 +3692,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/App.tsx",
-   "line": 1182
+   "line": 1204
   }
  },
  {
@@ -3692,7 +3702,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/App.tsx",
-   "line": 1186
+   "line": 1208
   }
  },
  {
@@ -3702,7 +3712,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/App.tsx",
-   "line": 1186
+   "line": 1208
   }
  },
  {
@@ -3712,7 +3722,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/App.tsx",
-   "line": 1213
+   "line": 1235
   }
  },
  {
@@ -3722,7 +3732,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/App.tsx",
-   "line": 1220
+   "line": 1242
   }
  },
  {
@@ -3732,7 +3742,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/App.tsx",
-   "line": 1220
+   "line": 1242
   }
  },
  {
@@ -3742,7 +3752,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/App.tsx",
-   "line": 1227
+   "line": 1249
   }
  },
  {
@@ -3752,7 +3762,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/App.tsx",
-   "line": 1229
+   "line": 1251
   }
  },
  {
@@ -3762,7 +3772,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/App.tsx",
-   "line": 1237
+   "line": 1259
   }
  },
  {
@@ -3772,7 +3782,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/App.tsx",
-   "line": 1281
+   "line": 1303
   }
  },
  {
@@ -3782,7 +3792,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/App.tsx",
-   "line": 1302
+   "line": 1324
   }
  },
  {
@@ -3792,7 +3802,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/App.tsx",
-   "line": 1321
+   "line": 1343
   }
  },
  {
@@ -3802,7 +3812,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/App.tsx",
-   "line": 1331
+   "line": 1353
   }
  },
  {
@@ -3812,7 +3822,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/App.tsx",
-   "line": 1339
+   "line": 1361
   }
  },
  {
@@ -3822,7 +3832,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/App.tsx",
-   "line": 1390
+   "line": 1412
   }
  },
  {
@@ -3832,7 +3842,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/App.tsx",
-   "line": 1392
+   "line": 1414
   }
  },
  {
@@ -3842,7 +3852,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/App.tsx",
-   "line": 1393
+   "line": 1415
   }
  },
  {
@@ -3852,7 +3862,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/App.tsx",
-   "line": 1398
+   "line": 1420
   }
  },
  {
@@ -3862,7 +3872,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/App.tsx",
-   "line": 1401
+   "line": 1423
   }
  },
  {
@@ -3872,7 +3882,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/App.tsx",
-   "line": 1413
+   "line": 1435
   }
  },
  {
@@ -3882,7 +3892,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/App.tsx",
-   "line": 1430
+   "line": 1452
   }
  },
  {
@@ -3892,7 +3902,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/App.tsx",
-   "line": 1434
+   "line": 1456
   }
  },
  {
@@ -3902,7 +3912,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/App.tsx",
-   "line": 1436
+   "line": 1458
   }
  },
  {
@@ -3912,7 +3922,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/App.tsx",
-   "line": 1438
+   "line": 1460
   }
  },
  {
@@ -3922,7 +3932,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/App.tsx",
-   "line": 1439
+   "line": 1461
   }
  },
  {
@@ -3932,7 +3942,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/App.tsx",
-   "line": 1443
+   "line": 1465
   }
  },
  {
@@ -3942,7 +3952,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/App.tsx",
-   "line": 1475
+   "line": 1497
   }
  },
  {
@@ -3952,7 +3962,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/App.tsx",
-   "line": 1484
+   "line": 1506
   }
  },
  {
@@ -3962,7 +3972,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/App.tsx",
-   "line": 1487
+   "line": 1509
   }
  },
  {
@@ -3972,7 +3982,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/App.tsx",
-   "line": 1493
+   "line": 1515
   }
  },
  {
@@ -3982,7 +3992,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/App.tsx",
-   "line": 1509
+   "line": 1531
   }
  },
  {
@@ -3992,7 +4002,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/App.tsx",
-   "line": 1537
+   "line": 1559
   }
  },
  {
@@ -4002,7 +4012,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/App.tsx",
-   "line": 1541
+   "line": 1563
   }
  },
  {
@@ -4012,7 +4022,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/App.tsx",
-   "line": 1549
+   "line": 1571
   }
  },
  {
@@ -4022,7 +4032,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/App.tsx",
-   "line": 1552
+   "line": 1574
   }
  },
  {
@@ -4032,7 +4042,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/App.tsx",
-   "line": 1562
+   "line": 1584
   }
  },
  {
@@ -4042,7 +4052,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/App.tsx",
-   "line": 1567
+   "line": 1589
   }
  },
  {
@@ -4052,7 +4062,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/App.tsx",
-   "line": 1573
+   "line": 1595
   }
  },
  {
@@ -4062,7 +4072,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/App.tsx",
-   "line": 1578
+   "line": 1600
   }
  },
  {
@@ -4072,7 +4082,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/App.tsx",
-   "line": 1588
+   "line": 1610
   }
  },
  {
@@ -4082,7 +4092,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/App.tsx",
-   "line": 1590
+   "line": 1612
   }
  },
  {
@@ -4092,7 +4102,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/App.tsx",
-   "line": 1591
+   "line": 1613
   }
  },
  {
@@ -4102,7 +4112,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/App.tsx",
-   "line": 1596
+   "line": 1618
   }
  },
  {
@@ -4112,7 +4122,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/App.tsx",
-   "line": 1598
+   "line": 1620
   }
  },
  {
@@ -4122,7 +4132,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/App.tsx",
-   "line": 1599
+   "line": 1621
   }
  },
  {
@@ -4132,7 +4142,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/App.tsx",
-   "line": 1615
+   "line": 1637
   }
  },
  {
@@ -4142,7 +4152,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/App.tsx",
-   "line": 1619
+   "line": 1641
   }
  },
  {
@@ -4152,7 +4162,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/App.tsx",
-   "line": 1623
+   "line": 1645
   }
  },
  {
@@ -4162,7 +4172,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/App.tsx",
-   "line": 1789
+   "line": 1811
   }
  },
  {
@@ -4172,7 +4182,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/App.tsx",
-   "line": 1790
+   "line": 1812
   }
  },
  {
@@ -4182,7 +4192,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/App.tsx",
-   "line": 1800
+   "line": 1822
   }
  },
  {
@@ -4192,7 +4202,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/App.tsx",
-   "line": 1806
+   "line": 1828
   }
  },
  {
@@ -4202,7 +4212,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/App.tsx",
-   "line": 1807
+   "line": 1829
   }
  },
  {
@@ -4212,7 +4222,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/App.tsx",
-   "line": 1820
+   "line": 1842
   }
  },
  {
@@ -4222,7 +4232,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/App.tsx",
-   "line": 1951
+   "line": 1973
   }
  },
  {
@@ -4232,7 +4242,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/App.tsx",
-   "line": 2026
+   "line": 2048
   }
  },
  {
@@ -4242,7 +4252,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/App.tsx",
-   "line": 2029
+   "line": 2051
   }
  },
  {
@@ -4252,7 +4262,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/App.tsx",
-   "line": 2141
+   "line": 2163
   }
  },
  {
@@ -4262,7 +4272,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/App.tsx",
-   "line": 2141
+   "line": 2163
   }
  },
  {
@@ -4272,7 +4282,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/App.tsx",
-   "line": 2144
+   "line": 2166
   }
  },
  {
@@ -4282,7 +4292,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/App.tsx",
-   "line": 2147
+   "line": 2169
   }
  },
  {
@@ -8261,7 +8271,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/components/HomeScreen.tsx",
-   "line": 309
+   "line": 347
   }
  },
  {
@@ -8271,7 +8281,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/components/HomeScreen.tsx",
-   "line": 316
+   "line": 354
   }
  },
  {
@@ -8281,7 +8291,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/components/HomeScreen.tsx",
-   "line": 319
+   "line": 357
   }
  },
  {
@@ -8291,7 +8301,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/components/HomeScreen.tsx",
-   "line": 322
+   "line": 360
   }
  },
  {
@@ -8301,7 +8311,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/components/HomeScreen.tsx",
-   "line": 338
+   "line": 376
   }
  },
  {
@@ -8311,7 +8321,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/components/HomeScreen.tsx",
-   "line": 354
+   "line": 392
   }
  },
  {
@@ -8321,7 +8331,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/components/HomeScreen.tsx",
-   "line": 360
+   "line": 398
   }
  },
  {
@@ -8331,7 +8341,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/components/HomeScreen.tsx",
-   "line": 371
+   "line": 409
   }
  },
  {
@@ -8341,7 +8351,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/components/HomeScreen.tsx",
-   "line": 376
+   "line": 414
   }
  },
  {
@@ -8351,7 +8361,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/components/HomeScreen.tsx",
-   "line": 378
+   "line": 416
   }
  },
  {
@@ -8361,7 +8371,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/components/HomeScreen.tsx",
-   "line": 389
+   "line": 427
   }
  },
  {
@@ -8371,7 +8381,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/components/HomeScreen.tsx",
-   "line": 401
+   "line": 439
   }
  },
  {
@@ -8381,7 +8391,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/components/HomeScreen.tsx",
-   "line": 403
+   "line": 441
   }
  },
  {
@@ -8391,7 +8401,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/components/HomeScreen.tsx",
-   "line": 404
+   "line": 442
   }
  },
  {
@@ -8401,7 +8411,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/components/HomeScreen.tsx",
-   "line": 418
+   "line": 456
   }
  },
  {
@@ -8411,7 +8421,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/components/HomeScreen.tsx",
-   "line": 453
+   "line": 491
   }
  },
  {
@@ -8421,7 +8431,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/components/HomeScreen.tsx",
-   "line": 456
+   "line": 494
   }
  },
  {
@@ -8431,7 +8441,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/components/HomeScreen.tsx",
-   "line": 513
+   "line": 551
   }
  },
  {
@@ -8441,7 +8451,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/components/HomeScreen.tsx",
-   "line": 558
+   "line": 596
   }
  },
  {
@@ -8451,7 +8461,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/components/HomeScreen.tsx",
-   "line": 595
+   "line": 633
   }
  },
  {
@@ -8461,7 +8471,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/components/HomeScreen.tsx",
-   "line": 599
+   "line": 637
   }
  },
  {
@@ -8471,7 +8481,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/components/HomeScreen.tsx",
-   "line": 605
+   "line": 643
   }
  },
  {
@@ -8481,7 +8491,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/components/HomeScreen.tsx",
-   "line": 619
+   "line": 657
   }
  },
  {
@@ -8491,7 +8501,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/components/HomeScreen.tsx",
-   "line": 640
+   "line": 678
   }
  },
  {
@@ -8501,7 +8511,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/components/HomeScreen.tsx",
-   "line": 643
+   "line": 681
   }
  },
  {
@@ -8511,7 +8521,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/components/HomeScreen.tsx",
-   "line": 651
+   "line": 689
   }
  },
  {
@@ -8801,7 +8811,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/components/Onboarding.tsx",
-   "line": 41
+   "line": 42
   }
  },
  {
@@ -8811,7 +8821,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/components/Onboarding.tsx",
-   "line": 63
+   "line": 64
   }
  },
  {
@@ -8821,7 +8831,27 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/components/Onboarding.tsx",
-   "line": 66
+   "line": 67
+  }
+ },
+ {
+  "id": "s7d1c936",
+  "section": "components/Onboarding.tsx",
+  "text": "המשך עם גוגל",
+  "where": {
+   "kind": "source",
+   "file": "apps/client/src/components/Onboarding.tsx",
+   "line": 98
+  }
+ },
+ {
+  "id": "sfcd8d79",
+  "section": "components/Onboarding.tsx",
+  "text": "אחר כך",
+  "where": {
+   "kind": "source",
+   "file": "apps/client/src/components/Onboarding.tsx",
+   "line": 101
   }
  },
  {
@@ -8831,7 +8861,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/components/Onboarding.tsx",
-   "line": 91
+   "line": 126
   }
  },
  {
@@ -8841,7 +8871,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/components/Onboarding.tsx",
-   "line": 101
+   "line": 136
   }
  },
  {
@@ -8851,7 +8881,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/components/Onboarding.tsx",
-   "line": 104
+   "line": 139
   }
  },
  {
@@ -8861,7 +8891,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/components/Onboarding.tsx",
-   "line": 125
+   "line": 160
   }
  },
  {
@@ -8871,7 +8901,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/components/Onboarding.tsx",
-   "line": 138
+   "line": 173
   }
  },
  {
@@ -8881,7 +8911,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/components/Onboarding.tsx",
-   "line": 144
+   "line": 179
   }
  },
  {
@@ -8891,7 +8921,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/components/Onboarding.tsx",
-   "line": 160
+   "line": 195
   }
  },
  {
@@ -8901,7 +8931,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/components/Onboarding.tsx",
-   "line": 165
+   "line": 200
   }
  },
  {
@@ -8911,7 +8941,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/components/Onboarding.tsx",
-   "line": 168
+   "line": 203
   }
  },
  {
@@ -8971,7 +9001,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/components/Profile.tsx",
-   "line": 149
+   "line": 152
   }
  },
  {
@@ -8981,7 +9011,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/components/Profile.tsx",
-   "line": 157
+   "line": 160
   }
  },
  {
@@ -8991,7 +9021,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/components/Profile.tsx",
-   "line": 193
+   "line": 196
   }
  },
  {
@@ -9001,7 +9031,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/components/Profile.tsx",
-   "line": 212
+   "line": 215
   }
  },
  {
@@ -9011,7 +9041,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/components/Profile.tsx",
-   "line": 255
+   "line": 258
   }
  },
  {
@@ -9021,7 +9051,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/components/Profile.tsx",
-   "line": 257
+   "line": 260
   }
  },
  {
@@ -9031,7 +9061,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/components/Profile.tsx",
-   "line": 265
+   "line": 268
   }
  },
  {
@@ -9041,7 +9071,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/components/Profile.tsx",
-   "line": 270
+   "line": 273
   }
  },
  {
@@ -9051,7 +9081,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/components/Profile.tsx",
-   "line": 279
+   "line": 282
   }
  },
  {
@@ -9061,7 +9091,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/components/Profile.tsx",
-   "line": 282
+   "line": 285
   }
  },
  {
@@ -9071,7 +9101,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/components/Profile.tsx",
-   "line": 318
+   "line": 321
   }
  },
  {
@@ -9081,7 +9111,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/components/Profile.tsx",
-   "line": 328
+   "line": 331
   }
  },
  {
@@ -9091,7 +9121,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/components/Profile.tsx",
-   "line": 345
+   "line": 348
   }
  },
  {
@@ -9101,7 +9131,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/components/Profile.tsx",
-   "line": 362
+   "line": 365
   }
  },
  {
@@ -9111,7 +9141,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/components/Profile.tsx",
-   "line": 363
+   "line": 366
   }
  },
  {
@@ -9121,7 +9151,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/components/Profile.tsx",
-   "line": 364
+   "line": 367
   }
  },
  {
@@ -9131,7 +9161,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/components/Profile.tsx",
-   "line": 378
+   "line": 381
   }
  },
  {
@@ -9141,7 +9171,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/components/Profile.tsx",
-   "line": 409
+   "line": 412
   }
  },
  {
@@ -9151,7 +9181,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/components/Profile.tsx",
-   "line": 416
+   "line": 419
   }
  },
  {
@@ -9161,7 +9191,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/components/Profile.tsx",
-   "line": 431
+   "line": 434
   }
  },
  {
@@ -9171,7 +9201,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/components/Profile.tsx",
-   "line": 438
+   "line": 441
   }
  },
  {
@@ -9181,7 +9211,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/components/Profile.tsx",
-   "line": 447
+   "line": 450
   }
  },
  {
@@ -9191,7 +9221,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/components/Profile.tsx",
-   "line": 473
+   "line": 476
   }
  },
  {
@@ -9201,7 +9231,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/components/Profile.tsx",
-   "line": 475
+   "line": 499
   }
  },
  {
@@ -9211,7 +9241,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/components/Profile.tsx",
-   "line": 479
+   "line": 503
   }
  },
  {
@@ -9221,7 +9251,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/components/Profile.tsx",
-   "line": 486
+   "line": 510
   }
  },
  {
@@ -9231,7 +9261,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/components/Profile.tsx",
-   "line": 493
+   "line": 517
   }
  },
  {
@@ -9241,7 +9271,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/components/Profile.tsx",
-   "line": 495
+   "line": 519
   }
  },
  {
@@ -10202,7 +10232,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/components/SignedInOnly.tsx",
-   "line": 68
+   "line": 101
   }
  },
  {
@@ -10212,7 +10242,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/components/SignedInOnly.tsx",
-   "line": 71
+   "line": 104
   }
  },
  {
@@ -10222,7 +10252,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/components/SignedInOnly.tsx",
-   "line": 73
+   "line": 106
   }
  },
  {
@@ -10232,7 +10262,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/components/SignedInOnly.tsx",
-   "line": 84
+   "line": 117
   }
  },
  {
@@ -10242,7 +10272,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/components/SignedInOnly.tsx",
-   "line": 87
+   "line": 120
   }
  },
  {
@@ -10252,7 +10282,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/components/Tutorial.tsx",
-   "line": 374
+   "line": 453
   }
  },
  {
@@ -10262,7 +10292,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/components/Tutorial.tsx",
-   "line": 376
+   "line": 457
   }
  },
  {
@@ -11602,7 +11632,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/game/account.ts",
-   "line": 276
+   "line": 291
   }
  },
  {
@@ -11612,7 +11642,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/game/account.ts",
-   "line": 297
+   "line": 312
   }
  },
  {
@@ -11622,7 +11652,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/game/account.ts",
-   "line": 401
+   "line": 416
   }
  },
  {
@@ -11632,7 +11662,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/game/account.ts",
-   "line": 405
+   "line": 420
   }
  },
  {
@@ -11642,7 +11672,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/game/account.ts",
-   "line": 414
+   "line": 429
   }
  },
  {
@@ -11652,7 +11682,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/game/account.ts",
-   "line": 757
+   "line": 772
   }
  },
  {
@@ -11662,7 +11692,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/game/account.ts",
-   "line": 759
+   "line": 774
   }
  },
  {
@@ -11672,7 +11702,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/game/account.ts",
-   "line": 763
+   "line": 778
   }
  },
  {
@@ -11682,7 +11712,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/game/account.ts",
-   "line": 782
+   "line": 797
   }
  },
  {
@@ -11692,7 +11722,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/game/account.ts",
-   "line": 785
+   "line": 800
   }
  },
  {
@@ -11702,7 +11732,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/game/account.ts",
-   "line": 848
+   "line": 863
   }
  },
  {
@@ -11712,7 +11742,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/game/account.ts",
-   "line": 852
+   "line": 867
   }
  },
  {
@@ -11722,7 +11752,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/game/account.ts",
-   "line": 859
+   "line": 874
   }
  },
  {
@@ -11732,7 +11762,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/game/account.ts",
-   "line": 933
+   "line": 948
   }
  },
  {
@@ -11742,7 +11772,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/game/account.ts",
-   "line": 935
+   "line": 950
   }
  },
  {
@@ -11752,7 +11782,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/game/account.ts",
-   "line": 953
+   "line": 968
   }
  },
  {
@@ -11762,7 +11792,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/game/account.ts",
-   "line": 955
+   "line": 970
   }
  },
  {
@@ -11772,7 +11802,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/game/account.ts",
-   "line": 1021
+   "line": 1036
   }
  },
  {
@@ -11782,7 +11812,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/game/account.ts",
-   "line": 1023
+   "line": 1038
   }
  },
  {
@@ -11792,7 +11822,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/game/account.ts",
-   "line": 1088
+   "line": 1103
   }
  },
  {
@@ -11802,7 +11832,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/game/account.ts",
-   "line": 1092
+   "line": 1107
   }
  },
  {
@@ -11812,7 +11842,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/game/account.ts",
-   "line": 1099
+   "line": 1114
   }
  },
  {
@@ -11822,7 +11852,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/game/account.ts",
-   "line": 1101
+   "line": 1116
   }
  },
  {
@@ -11832,7 +11862,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/game/account.ts",
-   "line": 1107
+   "line": 1122
   }
  },
  {
@@ -11842,7 +11872,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/game/account.ts",
-   "line": 1111
+   "line": 1126
   }
  },
  {
@@ -11852,7 +11882,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/game/account.ts",
-   "line": 1118
+   "line": 1133
   }
  },
  {
@@ -11862,7 +11892,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/game/account.ts",
-   "line": 1165
+   "line": 1180
   }
  },
  {
@@ -11872,7 +11902,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/game/account.ts",
-   "line": 1169
+   "line": 1184
   }
  },
  {
@@ -11882,7 +11912,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/game/account.ts",
-   "line": 1170
+   "line": 1185
   }
  },
  {
@@ -11892,7 +11922,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/game/account.ts",
-   "line": 1305
+   "line": 1320
   }
  },
  {
@@ -11902,7 +11932,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/game/account.ts",
-   "line": 1309
+   "line": 1324
   }
  },
  {
@@ -11912,7 +11942,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/game/account.ts",
-   "line": 1313
+   "line": 1328
   }
  },
  {
@@ -11922,7 +11952,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/game/account.ts",
-   "line": 1321
+   "line": 1336
   }
  },
  {
@@ -11932,7 +11962,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/game/account.ts",
-   "line": 1322
+   "line": 1337
   }
  },
  {
