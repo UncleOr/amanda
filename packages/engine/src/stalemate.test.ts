@@ -49,6 +49,9 @@ const CATALOG = new Map(
     // Rooted but armed, with a real King to chew on.
     card("turret", 10_000, 400, 0),
     card("meat", 5_000_000, 0, 0),
+    // Walks and hits: the only one here that can finish a battle the way a
+    // real one ends, by reaching a crown and bringing it down.
+    card("runner", 2_000, 900, 2),
   ].map((c) => [c.id, c]),
 );
 
@@ -123,5 +126,65 @@ describe("the build phase", () => {
    */
   it("is the shortened one", () => {
     expect(PHASES.build.seconds).toBe(45);
+  });
+});
+
+/**
+ * ═══ AND IT SAYS SO ═══
+ *
+ * Or: *"a match ends if you brought the king down or if the time ran out.
+ * And if you reach a dead end where no card can move, the clock is cut
+ * short. I want some indication of that — 'time up', 'the king is dead' or
+ * 'dead end' — in big letters in the middle of the screen."*
+ *
+ * He could not have one. `winReason` answers how the WINNER was decided, and
+ * a dead end is resolved through the identical tiebreak chain as a clock
+ * running out — so both came back as "kingHp" and the two endings were one
+ * answer from outside.
+ *
+ * `endedBy` is the other question, and these are the three ways out of the
+ * loop. The third one is the reason this file exists at all.
+ */
+describe("what stopped the battle", () => {
+  it("says the king, when a crown falls", () => {
+    /*
+     * Something that walks, against a bare crown. It closes, it hits, and
+     * the match ends the moment the crown falls — the ordinary ending, and
+     * the one the other two have to be distinguishable from.
+     */
+    const res = run(
+      {
+        owner: "A",
+        placements: [
+          { cardId: "statue", x: 1, y: 3, king: true },
+          { cardId: "runner", x: 3, y: 3 },
+        ],
+      } as BoardInput,
+      statues("B", 1),
+    );
+    expect(res.endedBy).toBe("king");
+    expect(res.winReason).toBe("kingDown");
+  });
+
+  /*
+   * The position this whole file is about: two rooted, harmless statues.
+   * Nothing can walk, nothing can hurt anything, and the clock has more
+   * than a minute left on it.
+   */
+  it("says a dead end, when nothing can reach anything", () => {
+    const res = run(statues("A", 1), statues("B", 1));
+    expect(res.endedBy).toBe("deadEnd");
+    expect(res.ticks).toBeLessThan(SIMULATION.totalBattleTicks);
+  });
+
+  /*
+   * And the reason this is a field of its own rather than another entry in
+   * WinReason: a dead end and a timeout are settled by the SAME tiebreak,
+   * so winReason answers both identically and can never tell them apart.
+   */
+  it("is not the question winReason answers", () => {
+    const res = run(statues("A", 1), statues("B", 1));
+    expect(res.endedBy).toBe("deadEnd");
+    expect(["kingHp", "totalHp", "aliveCount", "coinFlip"]).toContain(res.winReason);
   });
 });

@@ -241,7 +241,7 @@ export function Settings({
             the three names are what the stages are about.
           */}
           <div className="set__stages">
-            <span className="set__stageslabel">{t("s15103f0", "איך משחקים")}</span>
+            <span className="set__stageslabel">{t("s15c7730", "איך משחקים")}</span>
             {STAGE_NAMES.map((name, i) => (
               <button
                 key={i}

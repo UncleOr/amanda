@@ -30,6 +30,7 @@ import type {
   Owner,
   Unit,
   WinReason,
+  EndedBy,
 } from "./types.js";
 
 const TPS = SIMULATION.ticksPerSecond;
@@ -641,6 +642,31 @@ export function runBattle(setup: BattleSetup): BattleResult {
     // photograph; resolve it the way the clock would have.
     if (still >= stalemateTicks) break;
   }
+
+  /*
+   * ═══ WHAT STOPPED THE BATTLE, AS OPPOSED TO WHO WON IT ═══
+   *
+   * Or: *"a match ends if you brought the king down or if the time ran out.
+   * And if you reach a dead end where no card can move, the clock is cut
+   * short. I want some indication of that — 'time up', 'the king is dead' or
+   * 'dead end' — in big letters in the middle of the screen."*
+   *
+   * He could not have one, because the result did not know. `winReason` says
+   * how the WINNER was decided — kingDown, or which link of the tiebreak
+   * chain settled it — and a dead end resolves through exactly the same
+   * tiebreak as a timeout, so from outside the two were one answer.
+   *
+   * Three ways out of the loop above and this is which one was taken. Read
+   * BEFORE resolveTimeout, because that sets a winner and would make a dead
+   * end look like a clock running out all over again.
+   */
+  const endedBy: EndedBy =
+    state.ended || state.winner !== null
+      ? "king"
+      : still >= stalemateTicks
+        ? "deadEnd"
+        : "time";
+
   if (state.winner === null && !state.ended) resolveTimeout();
 
   state.events.push({ tick: state.tick, type: "win", winner: state.winner });
@@ -648,6 +674,7 @@ export function runBattle(setup: BattleSetup): BattleResult {
   return {
     winner: state.winner,
     ticks: state.tick,
+    endedBy,
     winReason: state.winReason,
     tiebreak: state.tiebreak,
     events: state.events,

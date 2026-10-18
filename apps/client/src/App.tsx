@@ -1936,7 +1936,7 @@ function Game() {
               </>
             ) : (
               <>
-                <h2>{t("s84705d0", "זהו, אתה יודע לשחק.")}</h2>
+                <h2>{t("sb604bef", "זהו, אתה יודע לשחק.")}</h2>
                 {/*
                   Or: *"at the end of tutorial 3 it returns you to the menu
                   and shows you the playground, and suggests going there to
@@ -2288,7 +2288,7 @@ function Game() {
             <h2>{tf("s7347353", "{0} מזמין אותך למשחק", m.invitation.nickname ?? t("seaa865f", "חבר"))}</h2>
             <div className="result__buttons">
               <button className="btn-fight" onClick={m.acceptInvitation}>
-                <Icon name="play" size={16} /> {t("sa2adcdb", "קדימה")}
+                <Icon name="play" size={16} /> {t("se31bdcc", "קדימה")}
               </button>
               <button className="btn-fight btn-ghost" onClick={m.declineInvitation}>
                 {t("sfe483c6", "אולי אחר כך")}

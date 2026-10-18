@@ -282,7 +282,6 @@
   "s0e2bdac": "The King's guard. This is where you stop whoever comes to eat him.",
   "sb1bd099": "You",
   "s8854c7a": "Opponent",
-  "s25910a5": "⏱ Time's up!",
   "sb672b2e": "Stuck after {0} seconds with nothing drawn",
   "sbaf8bec": "I could not show you the battle.",
   "se051373": "It has already been decided — I am taking you to the result.",
@@ -1094,5 +1093,8 @@
   "sf6a4bd7": "Thunder Deck",
   "s4cb7401": "Slimy Deck",
   "s8494a17": "Shiny Deck",
-  "se602c97": "Dusty Deck"
+  "se602c97": "Dusty Deck",
+  "s687e265": "The king is dead!",
+  "sb67b6fd": "Time is up!",
+  "s683d48d": "Dead end!"
 }

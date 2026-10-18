@@ -2,7 +2,7 @@ import { useEffect, useRef, useState } from "react";
 import { spriteFor } from "../game/skins";
 import { Application, Assets, Container, Graphics, Sprite, Text, Texture } from "pixi.js";
 import { ARENA, SIMULATION, type PlayerCard } from "@amanda/shared";
-import type { BattleResult, FrameUnit, Owner } from "@amanda/engine";
+import type { BattleResult, EndedBy, FrameUnit, Owner } from "@amanda/engine";
 import { cardColor, CATALOG } from "../data/catalog";
 import { seriesColor } from "../data/cardMeta";
 import { sfx } from "../game/sfx";
@@ -60,6 +60,42 @@ const STARTUP_GRACE_MS = 15000;
 const SKIP_AFTER_MS = 3500;
 /** Seconds left at which the clock starts warning. */
 const WARN_AT = 5;
+/**
+ * **Why the battle stopped, in big letters, before it stops.**
+ *
+ * Or: *"a match ends if you brought the king down or if the time ran out.
+ * And if you reach a dead end where no card can move, the clock is cut
+ * short. I want some indication of that — 'time up', 'the king is dead' or
+ * 'dead end' — in big letters in the middle of the screen, like the ones at
+ * the start of a battle."*
+ *
+ * ═══ THERE WERE TWO ENDINGS AND ONE OF THEM WAS A LIE ═══
+ *
+ * This said "⏱ נגמר הזמן!" whenever `winReason !== "kingDown"` — so a battle
+ * that stopped because nothing could move any more announced that the clock
+ * had run out, with a minute still on it. And a king going down, which is
+ * the ending the whole game is about, was announced not at all: the board
+ * simply collapsed.
+ *
+ * `result.endedBy` is the engine's answer to the actual question (types.ts).
+ * Three endings, three things to say, each one true.
+ */
+const END_WORDS: Record<EndedBy, () => string> = {
+  king: () => t("s687e265", "המלך מת!"),
+  time: () => t("sb67b6fd", "נגמר הזמן!"),
+  deadEnd: () => t("s683d48d", "דד אנד!"),
+};
+
+/**
+ * The mark beside the words. A glyph rather than an icon because this is
+ * drawn into a canvas, where the game's own icon set does not reach.
+ */
+const END_MARKS: Record<EndedBy, string> = {
+  king: "♛",
+  time: "⏱",
+  deadEnd: "✖",
+};
+
 /** How long "time's up" and the verdict stay on screen before the result. */
 const VERDICT_MS = 2600;
 
@@ -697,13 +733,22 @@ export function Arena({
         const announce = new Container();
         announce.alpha = 0;
         const annBg = new Graphics();
+        /*
+         * Big, because he asked for big: *"in big letters in the middle of
+         * the screen, like the ones at the start of a battle."* The
+         * countdown there is 120px for a single digit; a Hebrew phrase at
+         * that size would not fit the arena, so it is sized from the board
+         * instead and capped — 56px on his 832px phone, and it shrinks with
+         * the canvas rather than running off it.
+         */
+        const endedBy: EndedBy = result.endedBy;
         const annTitle = new Text({
-          text: t("s25910a5", "⏱ נגמר הזמן!"),
+          text: END_MARKS[endedBy] + " " + END_WORDS[endedBy](),
           style: {
             fontFamily: "Segoe UI, sans-serif",
-            fontSize: 26,
+            fontSize: Math.round(Math.min(56, W / 11)),
             fill: 0xffd36b,
-            fontWeight: "800",
+            fontWeight: "900",
           },
         });
         annTitle.anchor.set(0.5);
@@ -720,9 +765,9 @@ export function Arena({
           },
         });
         annBody.anchor.set(0.5);
-        annTitle.y = -18;
-        annBody.y = 16;
-        const annH = 90;
+        annTitle.y = -Math.round(annTitle.height * 0.22);
+        annBody.y = Math.round(annTitle.height * 0.5) + 14;
+        const annH = Math.round(annTitle.height + 56);
         annBg
           .roundRect(-W / 2 + 28, -annH / 2, W - 56, annH, 14)
           .fill({ color: 0x080c16, alpha: 0.92 })
@@ -998,17 +1043,24 @@ export function Arena({
         });
 
         const playbackMs = frames.length * msPerFrame;
-        // A fight that went the distance gets the clock-out announcement before
-        // the board collapses; one that ended on a King going down does not.
-        const ranOutOfTime = result.winReason !== "kingDown";
-        const holdMs = ranOutOfTime ? VERDICT_MS : 0;
-        if (ranOutOfTime)
-          timers.push(
-            window.setTimeout(() => {
-              timeUp = true;
-              sfx.play("timeUp");
-            }, playbackMs),
-          );
+        /*
+         * ═══ EVERY ENDING SAYS WHY, INCLUDING THE GOOD ONE ═══
+         *
+         * This used to hold only when `winReason !== "kingDown"`, so the
+         * ending the whole game is ABOUT — a crown coming down — was the one
+         * with nothing on the screen: the board just collapsed. Or asked for
+         * all three, *"before you get to the end"*, and he is right that the
+         * king is the one most worth saying out loud.
+         */
+        const holdMs = VERDICT_MS;
+        timers.push(
+          window.setTimeout(() => {
+            timeUp = true;
+            // The clock sting belongs to the clock. A crown falling has the
+            // battle's own noise behind it already.
+            if (endedBy !== "king") sfx.play("timeUp");
+          }, playbackMs),
+        );
         timers.push(window.setTimeout(() => triggerFinale(lastUnits), playbackMs + holdMs));
         timers.push(
           window.setTimeout(() => {

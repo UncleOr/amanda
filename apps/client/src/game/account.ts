@@ -1212,7 +1212,7 @@ export async function signInWithGoogleInstead(): Promise<string | null> {
 
 export async function linkGoogle(): Promise<string | null> {
   const sb = db();
-  if (!sb) return t("se7da992", "אין חיבור לשרת");
+  if (!sb) return t("sb7305bc", "אין חיבור לשרת");
   try {
     const { data: session } = await sb.auth.getSession();
     const user = session.session?.user;
@@ -1352,7 +1352,7 @@ const DECK_SAVE_FAILED = () => t("sd0c6462", "לא הצלחתי לשמור. נס
 
 export async function saveDeck(deck: Deck): Promise<Deck | string> {
   const sb = db();
-  if (!sb) return t("sb7305bc", "אין חיבור לשרת");
+  if (!sb) return t("s2a6031b", "אין חיבור לשרת");
   try {
     const { data: auth } = await sb.auth.getSession();
     const id = auth.session?.user.id;

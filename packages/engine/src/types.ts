@@ -151,6 +151,27 @@ export interface BattleFrame {
  */
 export type WinReason = "kingDown" | "kingHp" | "totalHp" | "aliveCount" | "coinFlip";
 
+/**
+ * **What stopped the battle**, which is not the same question as who won it.
+ *
+ * Or: *"a match ends if you brought the king down or if the time ran out.
+ * And if you reach a dead end where no card can move, the clock is cut
+ * short. I want some indication of that — in big letters in the middle of
+ * the screen."*
+ *
+ * `WinReason` cannot answer him. It says how the WINNER was decided, and a
+ * dead end is resolved through the very same tiebreak chain as a clock
+ * running out — so "kingHp" is the honest answer to both and tells a player
+ * nothing about why the fighting stopped.
+ *
+ *   king      somebody's crown fell. The battle ended the moment it did.
+ *   time      the full ninety seconds were fought.
+ *   deadEnd   nothing moved, fired to effect or lost health for three
+ *             seconds — see SIMULATION.stalemateSeconds. The clock would
+ *             have spent the rest of the battle showing a photograph.
+ */
+export type EndedBy = "king" | "time" | "deadEnd";
+
 /** The numbers that settled a timeout, for showing the player the margin. */
 export interface Tiebreak {
   reason: WinReason;
@@ -161,6 +182,8 @@ export interface Tiebreak {
 export interface BattleResult {
   winner: Owner | null;
   ticks: number;
+  /** What stopped the battle — the king, the clock, or a dead end. */
+  endedBy: EndedBy;
   /** How the match was decided. */
   winReason: WinReason;
   /** Present only when the clock ran out and a tiebreak settled it. */
