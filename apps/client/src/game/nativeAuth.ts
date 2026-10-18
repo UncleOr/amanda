@@ -127,12 +127,36 @@ async function finishSignIn(url: string): Promise<void> {
   const u = new URL(url);
   const hash = new URLSearchParams(u.hash.replace(/^#/, ""));
   const err = u.searchParams.get("error_description") ?? hash.get("error_description");
-  if (err) {
-    trace("refused", err.slice(0, 60));
+  const code0 = u.searchParams.get("error_code") ?? hash.get("error_code") ?? "";
+
+  const account = await import("./account");
+
+  /*
+   * ═══ "ALREADY LINKED" IS NOT A FAILURE, IT IS A DIFFERENT ANSWER ═══
+   *
+   * Google said yes. Supabase refused the LINK, because this Google account
+   * already belongs to an Amanda account made earlier — on another device, or
+   * in the browser before the app existed.
+   *
+   * linkGoogle has always known what to do with that: stop linking and sign
+   * them INTO that account, so they get their real album back. But it knew it
+   * for the error returned by the CALL, and in the app there is no such
+   * error — the exchange happens in the browser and the refusal arrives here,
+   * on a deep link, long after that function returned. So it silently did
+   * nothing, which is what Or filmed twice.
+   *
+   * Signing in means going out to the browser again. That is a real cost and
+   * it is the correct one: the alternative is a player staring at a button
+   * that cannot work for them and will never say why.
+   */
+  if (err || code0) {
+    const already = `${code0} ${err ?? ""}`.toLowerCase().includes("already");
+    trace(already ? "already-linked" : "refused", (err ?? code0).slice(0, 48));
+    if (already) await account.signInWithGoogleInstead();
     return;
   }
 
-  const { db } = await import("./account");
+  const { db } = account;
   const sb = db();
   if (!sb) {
     trace("no-client");

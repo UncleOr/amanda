@@ -1175,6 +1175,41 @@ export async function isAdmin(): Promise<boolean> {
   }
 }
 
+/**
+ * Sign IN with Google, having failed to link it.
+ *
+ * ═══ THE SAME ANSWER, NEEDED FROM TWO PLACES ═══
+ *
+ * "This Google account is attached to an account you made before" is not a
+ * refusal to work around — linking cannot ever succeed, and the right move is
+ * to sign them into that account. They get their real album back; whatever
+ * the guest collected since was never saved anywhere, which is the thing
+ * signing in is for.
+ *
+ * `linkGoogle` has handled it since it was written, for the error that comes
+ * back from the CALL. In the Android app it does not come back from the call:
+ * the whole exchange happens in the browser, and the refusal arrives minutes
+ * later as `?error_code=identity_already_exists` on a deep link. By then the
+ * function that knew what to do has long returned.
+ *
+ * Or saw that as a sign-in that silently did nothing, twice, and the trace on
+ * his profile screen is what finally said it out loud:
+ *
+ *     appUrlOpen  com.asulins.amanda://auth  ?error,error_code,error_description
+ *     refused     identity is already linked to another user
+ *
+ * So the recovery is its own function and nativeAuth.ts calls it too.
+ */
+export async function signInWithGoogleInstead(): Promise<string | null> {
+  const sb = db();
+  if (!sb) return t("se7da992", "אין חיבור לשרת");
+  const { error } = await sb.auth.signInWithOAuth({
+    provider: "google",
+    options: { redirectTo: comeBackTo() },
+  });
+  return error ? error.message : null;
+}
+
 export async function linkGoogle(): Promise<string | null> {
   const sb = db();
   if (!sb) return t("se7da992", "אין חיבור לשרת");
@@ -1199,11 +1234,7 @@ export async function linkGoogle(): Promise<string | null> {
      * which is the thing signing in is for.
      */
     if (error.message.toLowerCase().includes("already")) {
-      const { error: signInError } = await sb.auth.signInWithOAuth({
-        provider: "google",
-        options: { redirectTo: comeBackTo() },
-      });
-      return signInError ? signInError.message : null;
+      return await signInWithGoogleInstead();
     }
     return error.message;
   } catch (err) {
