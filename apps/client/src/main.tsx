@@ -13,6 +13,7 @@ import { loadCardOverrides } from "./game/cardOverrides";
 import { loadLiveContent } from "./game/liveContent";
 import { watchForSignInReturn } from "./game/nativeAuth";
 import { watchForLeaving } from "./game/away";
+import { isStale } from "./game/staleBuild";
 import { track } from "./game/track";
 import { applyLang } from "./game/lang";
 import { watchViewport } from "./game/viewport";
@@ -207,7 +208,17 @@ if (import.meta.env.PROD && "serviceWorker" in navigator) {
    * minute, for a thing that is almost never true, costs nothing.
    */
   window.setInterval(() => {
-    if (pending) reloadWhenSafe();
+    /*
+     * Two reasons to reload, one mechanism.
+     *
+     * `pending` is a new version waiting in the worker. `isStale()` is a
+     * page that has already tried to fetch something a deploy deleted —
+     * which is the same illness caught a different way, and the one Or hit:
+     * the arena asked for a chunk that was gone and could not draw the
+     * battle. Both wait for the home screen, because both cost a match if
+     * they fire during one.
+     */
+    if (pending || isStale()) reloadWhenSafe();
   }, 60 * 1000);
 
   const ask = () => {

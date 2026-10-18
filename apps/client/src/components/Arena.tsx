@@ -1,5 +1,6 @@
 import { useEffect, useRef, useState } from "react";
 import { spriteFor } from "../game/skins";
+import { looksLikeAMovedBuild, markStale } from "../game/staleBuild";
 import { Application, Assets, Container, Graphics, Sprite, Text, Texture } from "pixi.js";
 import { ARENA, SIMULATION, type PlayerCard } from "@amanda/shared";
 import type { BattleResult, EndedBy, FrameUnit, Owner } from "@amanda/engine";
@@ -741,9 +742,30 @@ export function Arena({
          * instead and capped — 56px on his 832px phone, and it shrinks with
          * the canvas rather than running off it.
          */
-        const endedBy: EndedBy = result.endedBy;
+        /*
+         * ═══ AND A MISSING ANSWER MUST NOT TAKE THE BATTLE DOWN ═══
+         *
+         * Or: *"at the end of stage one it said I could not show you the
+         * battle."* That message is the arena catching a throw, and the
+         * throw was mine from this morning: `END_WORDS[endedBy]()` on a
+         * result whose `endedBy` is undefined is a call on undefined, and
+         * it happens before a single frame is drawn.
+         *
+         * A result can arrive without it. The field is a day old: a server
+         * that has not redeployed sends an online result without it, and a
+         * service worker that has handed out a fresh Arena chunk beside a
+         * cached engine chunk produces exactly the same thing locally.
+         *
+         * `winReason` has been on every result since long before today and
+         * answers most of the question — kingDown is a crown falling and
+         * everything else is the clock. A dead end then reads as "time up",
+         * which is what the game said for years and is wrong in a way
+         * nobody can see. Losing the whole battle screen is not.
+         */
+        const endedBy: EndedBy =
+          result.endedBy ?? (result.winReason === "kingDown" ? "king" : "time");
         const annTitle = new Text({
-          text: END_MARKS[endedBy] + " " + END_WORDS[endedBy](),
+          text: (END_MARKS[endedBy] ?? "") + " " + (END_WORDS[endedBy] ?? END_WORDS.time)(),
           style: {
             fontFamily: "Segoe UI, sans-serif",
             fontSize: Math.round(Math.min(56, W / 11)),
@@ -1077,6 +1099,15 @@ export function Arena({
         // reason, or the next report is as untraceable as the last one.
         const reason = err instanceof Error ? err.message : String(err);
         console.error("[arena] could not start:", err);
+        /*
+         * A chunk that cannot be fetched is not a graphics problem, it is a
+         * page holding file names a deploy has deleted. The battle is
+         * already decided and the skip below takes the player to the result
+         * with everything they earned — but the PAGE is broken for every
+         * lazy screen, so it is flagged for repair at the next safe moment.
+         * See game/staleBuild.ts.
+         */
+        if (looksLikeAMovedBuild(err)) markStale();
         if (!disposed) {
           setWhy(reason.slice(0, 120));
           setFailed(true);

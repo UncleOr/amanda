@@ -68,6 +68,42 @@ export default defineConfig(({ command }) => ({
     // Allow importing the shared card JSON that lives at the repo root /data.
     fs: { allow: [repoRoot] },
   },
+  build: {
+    rollupOptions: {
+      output: {
+        /*
+         * ═══ PIXI IS ONE FILE, AND THAT IS A BUG FIX ═══
+         *
+         * Or, at the end of a tutorial stage: *"it said it could not show me
+         * the battle."* The reason was printed underneath it —
+         *
+         *     Failed to fetch dynamically imported module:
+         *     .../assets/WebGLRenderer-CF5Wwt7Y.js
+         *
+         * Pixi does not load its renderer until `Application.init()` runs,
+         * which is the moment the battle starts. The Arena chunk itself is
+         * prefetched the second the build phase opens (App.tsx), so the one
+         * piece that arrives late is the one piece nobody pulled early.
+         *
+         * Every deploy gives these files new hashed names and the old ones
+         * stop existing. A page that has been open across a deploy — which
+         * is every page, while this game is worked on daily — then asks for
+         * a file that is gone, mid-match, and the arena cannot draw.
+         *
+         * Merging pixi into one chunk means the renderer rides along with
+         * everything else pixi needs, and the prefetch pulls all of it while
+         * the page is still young. A deploy cannot break a file the browser
+         * already has.
+         */
+        manualChunks(id: string) {
+          if (id.includes("node_modules/pixi.js") || id.includes("node_modules/@pixi")) {
+            return "pixi";
+          }
+          return undefined;
+        },
+      },
+    },
+  },
   // The workspace packages ship as TypeScript source; let Vite transform them
   // through its normal pipeline instead of pre-bundling.
   optimizeDeps: {
