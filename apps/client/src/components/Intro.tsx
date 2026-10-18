@@ -57,6 +57,8 @@ import { line as t } from "../game/copy";
  * finished work and the decision is a preference, not a fault.
  */
 const SRC = `${import.meta.env.BASE_URL}brand/intro-en.mp4`;
+/** The loading mark both openings show. See opening.css. */
+const MARK = `${import.meta.env.BASE_URL}icon-512.png`;
 
 /**
  * If the video has not started within this long, leave.
@@ -122,6 +124,9 @@ export function Intro() {
 
   return (
     <div className="opening" onClick={() => setMode(null)}>
+      {/* Amanda, small and in the middle, while the film has nothing to
+          show yet. See .opening__mark in opening.css. */}
+      <img className="opening__mark" src={MARK} alt="" />
       <video
         ref={video}
         className="opening__film"
