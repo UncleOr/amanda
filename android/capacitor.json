@@ -28,11 +28,15 @@
 
   "packageId": "com.asulins.amanda",
   "appName": "אמנדה",
-  "versionName": "1.1.3",
-  "versionCode": 6,
+  "versionName": "1.1.4",
+  "versionCode": 7,
 
   "_versionRules": [
-    "6, because Play refused 5: \"Version code 5 has already been used.\" A",
+    "7 carries the real Hebrew name again. 6 installed on Or's phone calling",
+    "itself a row of geresh marks, because this file had been edited with",
+    "PowerShell and the name came back mojibake - see the warning below.",
+    "",
+    "6, because Play refused 5: \"Version code 5 has already been used.\" ",
     "version code is spent the moment a bundle carrying it is uploaded, even",
     "if that release was never rolled out and nothing about it is visible in",
     "the console. It is reserved for ever. After an upload attempt, successful",
