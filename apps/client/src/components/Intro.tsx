@@ -57,8 +57,16 @@ import { line as t } from "../game/copy";
  * finished work and the decision is a preference, not a fault.
  */
 const SRC = `${import.meta.env.BASE_URL}brand/intro-en.mp4`;
-/** The loading mark both openings show. See opening.css. */
-const MARK = `${import.meta.env.BASE_URL}icon-512.png`;
+/**
+ * The loading mark both openings show. See .opening__mark in opening.css.
+ *
+ * `brand/mark.webp`, and NOT `icon-512.png`, which is what it was and what
+ * Or photographed: a launcher icon is an opaque square by definition, so it
+ * drew as a dark navy tile on a near-black screen. 13.9KB against that
+ * file's 575KB, too — a mark heavier than the film it covers arrives after
+ * it. Built by scripts/make-loading-mark.mjs.
+ */
+const MARK = `${import.meta.env.BASE_URL}brand/mark.webp`;
 
 /**
  * If the video has not started within this long, leave.

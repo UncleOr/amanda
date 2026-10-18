@@ -17,29 +17,6 @@
   position: fixed;
   inset: 0;
   /*
-   * ═══ SOMETHING OF AMANDA WHILE THE FILM LOADS ═══
-   *
-   * Or: *"just before the Asulins ident there's an ugly video loading
-   * symbol. Let's replace it with something of Amanda."* And then, seeing it
-   * fill the screen: *"make the Amanda loading logo small, in the middle.
-   * And have it show while the opening is loading too."*
-   *
-   * A <video> with nothing to paint yet is drawn however the WebView likes,
-   * and on Android that is a grey plate with a spinner — the system's idea
-   * of a video, in the middle of two seconds that exist to feel deliberate.
-   *
-   * Not the video's `poster`: that is laid out by `object-fit: contain`, so
-   * a square icon becomes as tall as the screen. And not a background on the
-   * film either, because the film is 16:9 inside a 2.17:1 phone and anything
-   * behind it stays visible in the letterbox bars for the whole run.
-   *
-   * It goes on the OVERLAY, small and centred, and the film is transparent
-   * until it has a frame. So the mark is what you see while nothing has
-   * loaded, the film covers it the moment it starts, and the bars either
-   * side stay empty. One rule, and both openings use this class — the ident
-   * and the intro — which is the second half of what he asked for.
-   */
-  /*
    * ═══ 100dvh, AND IT IS WHY THE MARK SAT LOW ═══
    *
    * Or: *"notice that Asulins is not centred."* Measured off his photograph:
@@ -173,6 +150,28 @@
  * A <video> with nothing to paint yet is drawn however the WebView likes,
  * and on Android that is a grey plate with a spinner — the system's idea of
  * a video, in the middle of two seconds that exist to feel deliberate.
+
+ * ═══ AND THEN THE MARK WAS THE GREY SQUARE ═══
+ *
+ * Or, after that shipped: *"the entry works, you can still see a grey
+ * square."* The spinner was gone and something square had taken its place,
+ * which is exactly what the change did.
+ *
+ * The mark pointed at `icon-512.png`, and measured it is this:
+ *
+ *     512x512   alpha=false   100.0% of pixels fully opaque
+ *     corners rgb(5,16,42)    the screen behind rgb(7,10,18)
+ *
+ * A LAUNCHER icon is a square by definition — Android masks it to whatever
+ * shape each phone likes, so the art is drawn onto a filled plate. At 61px
+ * on a near-black screen that plate is a dark navy tile, and the breathing
+ * opacity below draws the eye straight to its edges.
+ *
+ * It is `brand/mark.webp` now: the round badge, 52% transparent, 13.9KB
+ * against 575KB — which matters on its own, since a mark heavier than the
+ * 69KB film it covers arrives after the thing it was waiting for.
+ * scripts/make-loading-mark.mjs builds it and refuses a source with no
+ * alpha, so this cannot come back by somebody picking a handy file again.
  *
  * Not the video's `poster`, which is laid out by `object-fit: contain` and
  * so turns a square icon into something as tall as the screen. And not a
