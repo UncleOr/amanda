@@ -41,6 +41,7 @@ import { CATALOG, SERIES, collectable } from "../data/catalog";
 import { CardBack, CardView } from "./CardView";
 import { ElementsTable } from "./ElementsTable";
 import { CardDetailModal } from "./CardDetailModal";
+import { Overlay } from "./Overlay";
 import { Icon } from "./Icon";
 import { say } from "../game/lang";
 import { line as t, lineF as tf } from "../game/copy";
@@ -322,6 +323,24 @@ export function DeckBuilder({
    */
   const backs = useMemo(() => myBacks(items, back), [items, back]);
   /*
+   * ═══ WHAT WOULD BE LOST BY LEAVING ═══
+   *
+   * Or: *"if you leave the deck builder without saving, it should ask
+   * whether I'm sure I want to leave without saving."*
+   *
+   * Sixteen cards at a budget is ten minutes of deciding, and the way out is
+   * a back arrow in the corner next to nothing. Compared by CONTENT and not
+   * by order — the deck is a set of sixteen, and dragging the same card to a
+   * different square is not an edit anybody would be sad to lose.
+   */
+  const dirty =
+    name !== deck.name ||
+    back !== deck.back ||
+    cards.length !== deck.cards.length ||
+    [...cards].sort().some((id, i) => id !== [...deck.cards].sort()[i]);
+  const [leaving, setLeaving] = useState(false);
+  const leave = () => (dirty ? setLeaving(true) : onCancel());
+  /*
    * ═══ SORTING AND FILTERING ═══
    *
    * Or: *"we also need filtering and sorting. Sort by power / health /
@@ -500,7 +519,7 @@ export function DeckBuilder({
   return (
     <div className="builder">
       <header className="builder__top">
-        <button className="btn-link builder__back" onClick={onCancel}>
+        <button className="btn-link builder__back" onClick={leave}>
           <Icon name="back" size={15} /> {t("sd87ddf0", "חזרה")}
         </button>
         <input
@@ -716,6 +735,29 @@ export function DeckBuilder({
       </div>
 
       {chart && <ElementsTable onClose={() => setChart(false)} />}
+
+      {/*
+        The same shape as every other "are you sure" in the game: the
+        dangerous answer is the red one and it is not the default.
+
+        DRAFT COPY — Or's to write.
+      */}
+      {leaving && (
+        <Overlay onClick={() => setLeaving(false)}>
+          <div className="modal modal--confirm" onClick={(e) => e.stopPropagation()}>
+            <h2>{t("sfcb4f98", "לצאת בלי לשמור?")}</h2>
+            <p className="modal__role">{t("s6cc7a95", "השינויים בדק יימחקו.")}</p>
+            <div className="modal__actions">
+              <button className="btn-fight btn-danger" onClick={onCancel}>
+                {t("s04e6601", "לצאת")}
+              </button>
+              <button className="btn-fight btn-ghost" onClick={() => setLeaving(false)}>
+                {t("s7ff6276", "חזרה לדק")}
+              </button>
+            </div>
+          </div>
+        </Overlay>
+      )}
 
       <section className="builder__album" aria-label={t("s9db8c07", "האלבום שלי")}>
         {album.map((card) => {

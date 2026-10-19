@@ -1171,6 +1171,34 @@ export function useMatch(): MatchApi {
    */
   const playedRef = useRef(false);
   /**
+   * ═══ ONE MATCH IS PAID ONCE ═══
+   *
+   * Or: *"I have some strange bug on my account — every match I get TWO
+   * chests, and they have the same things in them, but they don't really
+   * add up."*
+   *
+   * Two chests and a nacho count that moved once is the signature of the
+   * same match being reported twice, in parallel. `addNachos` on the server
+   * reads the count, works out what is owed and writes it back — so two
+   * reports that arrive together both read the old count, both decide a
+   * chest is owed, both mint one, and both write the same new total. Two
+   * chests; the nachos added once. Exactly what he is looking at.
+   *
+   * Anything that mounts the battle screen a second time does it: a remount
+   * gives Arena a fresh "have I finished" ref, and the second playback ends
+   * like the first.
+   *
+   * So the report is guarded HERE rather than hunting the second caller,
+   * because paying a match twice should be impossible by construction and
+   * not by nobody happening to call it twice. Cleared when a match is
+   * cleared — see clearMatch — which is the only way into another one.
+   *
+   * The server half of this is a read-modify-write that two requests can
+   * interleave, and it is still open: it wants an atomic increment rather
+   * than a read and a write. Written down in the reply, not fixed here.
+   */
+  const reportedRef = useRef(false);
+  /**
    * The squares a running lesson has drawn, or null outside one.
    *
    * Read by every fillGs call, so the board that fights is the board the
@@ -2085,6 +2113,8 @@ export function useMatch(): MatchApi {
      * squares, which is the kind of bug that only shows up two screens later.
      */
     lessonCellsRef.current = null;
+    // A new match has not been paid for yet. See reportedRef.
+    reportedRef.current = false;
     clearRound();
     setOnline(false);
     setOppLeft(false);
@@ -2529,6 +2559,8 @@ export function useMatch(): MatchApi {
     // wire recorded it. See the effect below for the online half.
     if (!practice) playedRef.current = true;
     if (!boards || onlineRef.current || practice) return;
+    if (reportedRef.current) return;
+    reportedRef.current = true;
     void reportSolo({ seed: BATTLE_SEED, ...boards, level: botLevelRef.current }).then((won) => {
       if (won.nachos || won.chests.length || won.moved.length) setAward(won);
       /*
