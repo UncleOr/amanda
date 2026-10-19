@@ -27,14 +27,13 @@
  */
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import {
-  CARD_BACKS,
   DECK_RULES,
   autoDeck,
   deckBudget,
   canAdd,
   cardCost,
   deckCost,
-  ownsBack,
+  myBacks,
   type Card,
   type Deck,
 } from "@amanda/shared";
@@ -318,6 +317,11 @@ export function DeckBuilder({
   const [back, setBack] = useState(deck.back);
   const [picking, setPicking] = useState(false);
   /*
+   * The backs this player actually has — plus whatever this deck is already
+   * wearing, so the picker can never disagree with the deck. See myBacks.
+   */
+  const backs = useMemo(() => myBacks(items, back), [items, back]);
+  /*
    * ═══ SORTING AND FILTERING ═══
    *
    * Or: *"we also need filtering and sorting. Sort by power / health /
@@ -507,39 +511,50 @@ export function DeckBuilder({
           placeholder={nameLabel}
           aria-label={nameLabel}
         />
-        <button
-          className="builder__backpick"
-          onClick={() => setPicking((v) => !v)}
-          aria-label={t("sd7b2e93", "גב הקלפים")}
-        >
-          <CardBack size="small" back={back} />
-        </button>
+        {/*
+          And no way in when there is nothing to choose. A player with one
+          back opening a list of one is a control that cannot be used, which
+          this screen has learned twice before is not information.
+        */}
+        {backs.length > 1 && (
+          <button
+            className="builder__backpick"
+            onClick={() => setPicking((v) => !v)}
+            aria-label={t("sd7b2e93", "גב הקלפים")}
+          >
+            <CardBack size="small" back={back} />
+          </button>
+        )}
       </header>
 
       {picking && (
         <div className="builder__backs">
-          {CARD_BACKS.map((b) => {
-            const mine = ownsBack(b, items);
-            return (
-              <button
-                key={b.id}
-                className={`builder__backopt${b.id === back ? " is-on" : ""}${
-                  mine ? "" : " is-locked"
-                }`}
-                disabled={!mine}
-                onClick={() => {
-                  setBack(b.id);
-                  setPicking(false);
-                }}
-              >
-                <CardBack size="small" back={b.id} />
-                <span>{say(b)}</span>
-                {/* A locked back is drawn rather than hidden: eleven is a list
-                    you can look at, and wanting one is the point. */}
-                {!mine && <Icon name="hidden" size={12} />}
-              </button>
-            );
-          })}
+          {/*
+            ═══ WHAT YOU HAVE, AND NOTHING ELSE ═══
+
+            It used to list all eleven with the unowned ones greyed and
+            padlocked. Or: *"I don't need to see everything that could be or
+            WILL BE in the shop. Don't forget that one day at Hanukkah we'll
+            suddenly bring out a Hanukkah back. Only what I have."*
+
+            The second half is the one I had missed: this list is also the
+            roadmap. A back added for a date would show up in every player's
+            picker the moment it deployed — named, greyed, and weeks early.
+            The shop sells; this chooses. See myBacks in cardBacks.ts.
+          */}
+          {backs.map((b) => (
+            <button
+              key={b.id}
+              className={`builder__backopt${b.id === back ? " is-on" : ""}`}
+              onClick={() => {
+                setBack(b.id);
+                setPicking(false);
+              }}
+            >
+              <CardBack size="small" back={b.id} />
+              <span>{say(b)}</span>
+            </button>
+          ))}
         </div>
       )}
 

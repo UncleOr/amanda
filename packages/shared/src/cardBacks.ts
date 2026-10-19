@@ -63,16 +63,38 @@ export function cardBack(id: string | null | undefined): CardBack {
   return BY_ID.get(id ?? "") ?? BY_ID.get(DEFAULT_BACK)!;
 }
 
-/**
- * The backs this player may put on a deck.
- *
- * Unlike the catchphrase picker this one is NOT hidden-unless-owned: eleven
- * is a list you can look at, and a back you cannot have yet is a reason to
- * visit the shop rather than a wall of padlocks. The caller draws the locked
- * ones differently; this just says which are yours.
- */
+/** Is this one of the backs this player may put on a deck? */
 export function ownsBack(back: CardBack, items: ReadonlySet<string> | readonly string[]): boolean {
   if (back.free) return true;
   if (!back.item) return true;
   return Array.isArray(items) ? items.includes(back.item) : (items as ReadonlySet<string>).has(back.item);
+}
+
+/**
+ * ═══ THE PICKER SHOWS WHAT YOU HAVE, AND NOTHING ELSE ═══
+ *
+ * It used to show all eleven, the unowned ones greyed with a padlock, on the
+ * grounds that wanting one is the point.
+ *
+ * Or: *"in the deck builder, in the card-back picker, I don't need to see
+ * everything that could be or will be in the shop. Don't forget that one day
+ * at Hanukkah we'll suddenly bring out a Hanukkah back or something. Only
+ * what I have."*
+ *
+ * Which is the half of it I had not thought about at all. This list is also
+ * the ROADMAP: anything added here for a date — a holiday back, a birthday
+ * back, the thing being saved for a launch — appears in every player's
+ * picker the moment it is deployed, greyed out and named, weeks before it is
+ * meant to exist. The shop is where a thing is sold; this is where a thing
+ * you own is chosen, and those are different screens.
+ *
+ * `wearing` is kept whatever happens: a deck is allowed to be wearing a back
+ * the player no longer owns, and the picker must still show what it is
+ * wearing rather than silently disagreeing with the deck.
+ */
+export function myBacks(
+  items: ReadonlySet<string> | readonly string[],
+  wearing?: string | null,
+): CardBack[] {
+  return CARD_BACKS.filter((b) => ownsBack(b, items) || (!!wearing && b.id === wearing));
 }
