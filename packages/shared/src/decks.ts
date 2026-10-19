@@ -38,6 +38,55 @@ import type { Card } from "./schemas/card.js";
 import { DEFAULT_BACK } from "./cardBacks.js";
 import { TUNED } from "./tunables.js";
 
+/**
+ * ═══ THE ALBUM A NEW PLAYER STARTS WITH ═══
+ *
+ * The same list as grant_starter_album in db/migrations — the database is
+ * still the thing that hands them over, and this is here so that the cost of
+ * a beginner's only possible deck can be MEASURED instead of assumed.
+ * starterAlbum.test.ts checks the two lists are the same list.
+ *
+ * ═══ WHY IT GREW ═══
+ *
+ * Or, looking at a deck he had just built: *"you're really overdoing it. The
+ * decks are now really strong and it ruins it. Look at this deck — lots of
+ * strong cards. It cost me 46 and I have change left for another 3-card and
+ * another 1-card, which fills 18 for 50. And I could have done it for less."*
+ *
+ * He is right and the budget could not fix it, which is the measurement
+ * worth writing down. An 18-card deck can cost anywhere from 18 (the cheapest
+ * cards, three of each) to 90 (the dearest). A new player had SIX cards and
+ * the rules allow three of each — exactly eighteen entries — so their only
+ * possible deck cost 57, and a budget has to be at least 57 or they cannot
+ * play at all. Fifty-seven out of ninety buys most of the collection's best
+ * cards, so the budget was generous to Or because it had to be legal for a
+ * beginner. There was no number that did both jobs.
+ *
+ * Two cheap cards change that. Measured, cheapest legal eighteen:
+ *
+ *   six cards (as it was)   57
+ *   seven                   45
+ *   EIGHT                   36
+ *   nine                    27
+ *
+ * At eight the floor is 36, which leaves the budget free to sit at the
+ * midpoint of what a deck can cost — and a beginner gets something they
+ * never had before: a CHOICE. With six cards there was exactly one legal
+ * deck and "fill it for me" was the only move on the screen.
+ */
+export const STARTER_ALBUM = [
+  // Chuppy is the friend you are handed, the way Ash has Pikachu.
+  "furries_01_chuppy",
+  "dragons_01_flame_dragon",
+  "giants_01_stone_colossus",
+  "insects_01_ant_soldier",
+  "plants_01_thorn_sprout",
+  "slimes_01_basic_slime",
+  // And two at a price of one, which is what makes the budget a budget.
+  "dragons_02_obsidian_egg",
+  "insects_04_toxic_moth",
+] as const;
+
 export const DECK_RULES = {
   /**
    * ═══ EIGHTEEN CHOSEN, FIFTEEN DEALT ═══
@@ -93,24 +142,24 @@ export const DECK_RULES = {
    * so the panel moves the next deck rather than the next deploy.
    */
   /*
-   * ═══ SIXTY, AND OR ASKED FOR FIFTY ═══
+   * ═══ FORTY-FIVE, WHICH IS THE MIDDLE ═══
    *
-   * He said *"leave the budget at 50"*, and fifty cannot hold eighteen
-   * cards. Measured rather than argued: the starter six cost 4, 5, 4, 2, 1
-   * and 3, the rules allow three of each, and that is exactly eighteen
-   * entries costing 57 altogether. There is no cheaper legal eighteen,
-   * because there is no other card to reach for.
+   * An eighteen-card deck costs between 18 and 90 — three of the cheapest
+   * card at one end, three of the dearest at the other. Forty-five is the
+   * midpoint, and a midpoint is the only principled place for a budget: it
+   * is the number at which half of what you could build is out of reach.
    *
-   * So fifty-seven is the floor, the same way forty-seven was the floor for
-   * sixteen — and sixty is three above it, which is the same three of air
-   * the old fifty had. Anything less than 57 means a new player cannot save
-   * a deck, and "fill it for me" hands them something illegal.
+   * It became available the moment the starter album grew to eight (see
+   * STARTER_ALBUM). At six the cheapest legal deck a beginner could build
+   * cost 57, so no budget below 57 was legal and every budget above it was
+   * generous — Or: *"it cost me 46 and I have change left."* At eight the
+   * floor is 36, and 45 leaves a beginner nine points of room where they
+   * used to have none.
    *
    * Nothing reads this directly: deckBudget() asks TUNED at call time, so
-   * Or can put it back to fifty-seven, or anywhere above it, from the admin
-   * panel without a deploy.
+   * Or can move it from the admin panel without a deploy.
    */
-  budget: 60,
+  budget: 45,
   /**
    * How many times one card may appear.
    *

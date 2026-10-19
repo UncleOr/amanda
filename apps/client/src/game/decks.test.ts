@@ -8,6 +8,7 @@ import {
   deckCost,
   deckFaults,
   deckIsLegal,
+  STARTER_ALBUM,
 } from "@amanda/shared";
 import { CATALOG, collectable } from "../data/catalog";
 
@@ -23,15 +24,15 @@ import { CATALOG, collectable } from "../data/catalog";
 const of = (id: string) => CATALOG.get(id);
 const all = () => collectable().map((c) => c.id);
 
-/** What the database hands a brand-new player (db/migrations, grant_starter_album). */
-const STARTER = [
-  "furries_01_chuppy",
-  "dragons_01_flame_dragon",
-  "giants_01_stone_colossus",
-  "insects_01_ant_soldier",
-  "plants_01_thorn_sprout",
-  "slimes_01_basic_slime",
-];
+/*
+ * What the database hands a brand-new player.
+ *
+ * Read from shared rather than written out again: it was a second copy of
+ * the list in grant_starter_album, and the day the album grew by two cards
+ * this file would have gone on measuring the old one. starterAlbum.test.ts
+ * checks that list against the migration itself.
+ */
+const STARTER = [...STARTER_ALBUM];
 
 const deck = (cards: string[], name = "שלי") => ({ name, cards });
 

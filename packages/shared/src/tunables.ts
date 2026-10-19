@@ -88,7 +88,7 @@ export const TUNED = {
    * save a deck at all. The dial below goes down to 16 so he can try 40 the
    * moment the testers have a chest or two in them — see decks.ts.
    */
-  deckBudget: 60,
+  deckBudget: 45,
   /*
    * ═══ MORE TROPHIES FOR A BETTER GAME ═══
    *
@@ -266,16 +266,14 @@ export const TUNABLES: Tunable[] = [
   {
     id: "decks.budget",
     he: "תקציב דק",
-    note: "כמה 18 הקלפים יכולים לעלות ביחד. מתחת ל-57 שחקן חדש לא יכול לבנות דק בכלל — האלבום ההתחלתי הוא שישה קלפים, מותר שלושה מכל אחד, וזה בדיוק 18 קלפים שעולים 57.",
+    note: "כמה 18 הקלפים יכולים לעלות ביחד. דק עולה בין 18 (הזולים ביותר) ל-90 (היקרים ביותר), ו-45 זה האמצע. מתחת ל-36 שחקן חדש לא יכול לבנות דק בכלל — זה המחיר של הדק הזול ביותר מהאלבום ההתחלתי.",
     /*
-     * The floor, not a taste. Six starter cards at 4+5+4+2+1+3, three of
-     * each, is exactly eighteen entries for 57 — there is no cheaper legal
-     * deck because there is no other card to reach for. The dial used to
-     * go down to 16 so Or could try 40; with eighteen cards that setting
-     * would hand a new player a deck they cannot save, so the dial no
-     * longer goes there.
+     * The floor, not a taste: 36 is what the cheapest legal eighteen costs
+     * out of the starter album, so anything below it hands a new player a
+     * deck they cannot save. It was 57 until the album grew to eight cards,
+     * which is the whole reason the budget could come down to the middle.
      */
-    min: 57,
+    min: 36,
     max: 80,
     step: 1,
     get: () => TUNED.deckBudget,
