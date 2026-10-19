@@ -206,7 +206,9 @@ export function Tutorial({ steps, onDone }: Props) {
        * Measured in stage three: the x-ray card sits in the action drawer,
        * the drawer was shut, and `.action-chip__main` reported
        * `{top: 0, height: 0, width: 0}` while being perfectly present. The
-       * tutorial stopped there with nothing on the screen to do.
+       * tutorial stopped there with nothing on the screen to do. (That
+       * button has since gone — the card in the drawer IS the button now —
+       * but the rule it taught is the point and it outlived it.)
        *
        * Treating it as absent is right in both directions — a patient step
        * waits for the drawer to open, and an impatient one gives up and

@@ -585,8 +585,7 @@
   .actions__title,
   .actions__empty { font-size: var(--t-2); }
   .action-chip__card { width: 40px; height: 52px; }
-  .action-chip__main,
-  .action-chip__info { font-size: var(--t-1); padding: 1px 5px; }
+
 
   /* the hand: a fixed-width column against your own half of the board */
   .hand {

@@ -42,10 +42,10 @@
   .actions__title,
   .actions__empty { flex-shrink: 0; }
   .action-chip { flex-shrink: 0; }
-  /* The whole mini-card is the tap target — it opens the card, where a
-     full-size "הפעל" button lives. The inline row would be 9px here. */
+  /* The whole mini-card is the tap target, and now it PLAYS the card
+     rather than opening it — this width is where the buttons under it were
+     hidden, so this was the screen that paid for the middle step. */
   .action-chip__card { width: 46px; height: 60px; }
-  .action-chip__row { display: none; }
 
   .targeting-bar {
     top: 4px;

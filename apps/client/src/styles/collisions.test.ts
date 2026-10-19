@@ -75,9 +75,6 @@ const DELIBERATE = [
 const SHARED_BETWEEN_GAME_SHEETS: string[] = [
   "action-chip (actions.css, report.css, rooms.css)",
   "action-chip__card (actions.css, report.css, rooms.css)",
-  "action-chip__info (actions.css, report.css)",
-  "action-chip__main (actions.css, report.css)",
-  "action-chip__row (actions.css, rooms.css)",
   "actions (cards.css, report.css)",
   "actions--open (report.css, rooms.css)",
   "actions__empty (cards.css, report.css, rooms.css)",

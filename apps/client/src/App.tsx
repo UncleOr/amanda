@@ -304,6 +304,36 @@ function Game() {
   const [copied, setCopied] = useState(false);
   // On a phone the action cards are a drawer, so the board keeps its height.
   const [actionsOpen, setActionsOpen] = useState(false);
+  /**
+   * Play an action card, and shut the drawer behind it.
+   *
+   * Or: *"after you use a card the bar closes. In the tutorial too — from
+   * the moment you use an action card in stage three the bar is open, the
+   * whole board is small, and you cannot tell what is going on."*
+   *
+   * The open drawer takes 104px off the bottom of the boards so that it
+   * covers nothing it would stop you tapping (`.build--drawer .boards` in
+   * report.css). That is the right trade while you are choosing a card and
+   * the wrong one for the rest of the match, because the card you just
+   * played did something ON THE BOARD and the board is what you need to be
+   * looking at.
+   */
+  const playAction = (id: string) => {
+    m.activateAction(id);
+    setActionsOpen(false);
+  };
+  /*
+   * And a new round starts with it shut.
+   *
+   * `actionsOpen` is a screen's worth of state that outlives the match it
+   * belongs to: open the drawer in one game, and the next one begins with
+   * 104px already taken off the boards for a drawer nobody opened. Caught
+   * walking stage three of the tutorial, which opened with the board small
+   * because the playground before it had left the drawer up.
+   */
+  useEffect(() => {
+    if (m.phase === "countdown") setActionsOpen(false);
+  }, [m.phase]);
   /*
    * Which full-screen panel is open — one value, not nine booleans.
    * See useOverlay.ts for why that matters.
@@ -1551,41 +1581,60 @@ function Game() {
                 {actionsOpen ? "▾" : "▴"} {t("se6dcc04", "קלפי פעולה")}
                 <b className="actions__handle-count">{m.actionBar.length}/3</b>
               </button>
-              {m.actionBar.map((a) => (
-                <div key={a.id} className="action-chip">
-                  <div className="action-chip__card">
-                    <ActionCardView
-                      actionId={a.id}
-                      size="small"
-                      used={a.used}
-                      onClick={() => setActionDetail(a.id)}
-                    />
+              {/*
+                ═══ THE CARD IS THE BUTTON ═══
+
+                Or: *"you can see what an action card does BEFORE you take
+                it. Once it is in the bar, pressing it PLAYS it. Without the
+                middle step of looking at what it does and pressing 'use'.
+                We are in a game against the clock."*
+
+                Tapping the little card used to open the full card, which
+                held the button that actually played it. On a phone that was
+                not one path among several — it was the ONLY one: the inline
+                row of buttons is `display: none` at this width (rooms.css),
+                so every action card in the game cost a tap, a read and a
+                second tap, with the clock running the whole time.
+
+                The reading happens in the hand, before you decide to keep
+                it. In the bar there is nothing left to decide.
+
+                And nothing else is on the chip. The ℹ corner that opens the
+                full card went too: measured at 52x68 — the size of a card in
+                the drawer on a landscape phone — it came out 18px wide with
+                16 of them OUTSIDE the card, a second target hanging off the
+                edge of the one you are aiming at.
+              */}
+              {m.actionBar.map((a) => {
+                // "Frozen hands" goes dead near the buzzer; see canPlayAction.
+                const late = !a.passive && !a.used && !m.canPlayAction(a.id);
+                const live = !a.passive && !a.used && !late;
+                return (
+                  <div
+                    key={a.id}
+                    className={`action-chip${live ? " action-chip--live" : ""}`}
+                    title={late ? t("s3cec9ca", "מאוחר. תכננת גרוע.") : undefined}
+                  >
+                    <div className="action-chip__card">
+                      <ActionCardView
+                        actionId={a.id}
+                        size="small"
+                        used={a.used}
+                        onClick={live ? () => playAction(a.id) : undefined}
+                      />
+                    </div>
+                    {!live && (
+                      <span className="action-chip__state">
+                        {a.passive
+                          ? t("sb9a31bf", "פעיל ∞")
+                          : a.used
+                            ? t("s34ec88c", "נוצל")
+                            : t("sa549a85", "מאוחר מדי")}
+                      </span>
+                    )}
                   </div>
-                  <div className="action-chip__row">
-                    <button
-                      className="action-chip__main"
-                      disabled={a.passive || a.used || !m.canPlayAction(a.id)}
-                      title={!m.canPlayAction(a.id) ? t("s3cec9ca", "מאוחר. תכננת גרוע.") : undefined}
-                      onClick={() => m.activateAction(a.id)}
-                    >
-                      {a.passive
-                        ? t("sb9a31bf", "פעיל ∞")
-                        : a.used
-                          ? t("s34ec88c", "נוצל")
-                          : !m.canPlayAction(a.id)
-                            ? t("sa549a85", "מאוחר מדי")
-                            : t("sf916188", "הפעל")}
-                    </button>
-                    <button
-                      className="action-chip__info"
-                      title={t("sdc8c744", "הסבר")}
-                      onClick={() => setActionDetail(a.id)}
-                    >
-                      ℹ
-                    </button>
-                  </div>
-                </div>
-              ))}
+                );
+              })}
             </div>
           )}
 
@@ -2388,7 +2437,7 @@ function Game() {
                 playable
                   ? () => {
                       setActionDetail(null);
-                      m.activateAction(actionDetail);
+                      playAction(actionDetail);
                     }
                   : undefined
               }
