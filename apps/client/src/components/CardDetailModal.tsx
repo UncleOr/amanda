@@ -2,7 +2,7 @@ import type { CSSProperties } from "react";
 import { Icon, type IconName } from "./Icon";
 import { CATALOG, SERIES_BY_ID } from "../data/catalog";
 import { ABILITY_LABEL, ELEMENT_META, RANGE_META, RARITY_META } from "../data/cardMeta";
-import { LEVELS, levelCost, levelMultiplier } from "@amanda/shared";
+import { LEVELS, RANGE_REACH, levelCost, levelDiamonds, levelMultiplier } from "@amanda/shared";
 import { Overlay } from "./Overlay";
 import { spriteFor } from "../game/skins";
 import { say } from "../game/lang";
@@ -75,6 +75,21 @@ export function CardDetailModal({
                 </span>
               ))}
               {series && <span className="badge">{say(series.name)}</span>}
+              {/*
+                ═══ THE ONE SYMBOL THAT HAD NOWHERE ELSE TO GO ═══
+
+                Taking the icon row off the album tile was Or's call — *"whoever
+                wants to go into the symbols will open the card"* — which only
+                holds if the card itself says them. Element, rarity and series
+                are badges here, range and speed are numbers. Flying was on
+                that row and nowhere else, so a flyer stopped being a flyer
+                the moment the row went.
+              */}
+              {card.flying && (
+                <span className="badge">
+                  <Icon name="fly" size={13} /> {t("s39d10ba", "מעופף")}
+                </span>
+              )}
               {card.midBoss && (
                 <span className="badge badge--king">
                   <Icon name="king" size={13} /> {t("s461e043", "ענק אמצע")}
@@ -94,12 +109,31 @@ export function CardDetailModal({
             <span className="modal__level-bar" aria-hidden="true">
               <i style={{ width: `${(level / LEVELS.max) * 100}%` }} />
             </span>
-            <span className="modal__level-note">
-              {tf("s50f1f7b", "{0} עותקים", owned.copies)}
-              {level < LEVELS.max
-                ? " " + tf("sad22ee6", "· הרמה הבאה עולה {0}", levelCost(card.rarity, level))
-                : " " + t("s512576d", "· הגעת למקסימום")}
-            </span>
+            {/*
+              ═══ TWO NUMBERS AND TWO PICTURES ═══
+
+              Or: *"'1 copies the next level costs 7' is very clumsy — write
+              1/7 [card] to the next level + [diamond] [how many diamonds]."*
+
+              It was clumsy because it was two sentences doing one job, and
+              the 7 in it was a COST reading as a total. His version is the
+              same three facts as a progress fraction, which is the shape
+              every other progress in this game already uses.
+            */}
+            {level < LEVELS.max ? (
+              <span className="modal__level-note">
+                <b>
+                  {owned.copies}/{levelCost(card.rarity, level)}
+                </b>
+                <Icon name="deck" size={15} />
+                {t("s9558b07", "לרמה הבאה")}
+                <span className="modal__level-cost">
+                  <Icon name="gem" size={13} /> {levelDiamonds(level)}
+                </span>
+              </span>
+            ) : (
+              <span className="modal__level-note">{t("s512576d", "· הגעת למקסימום")}</span>
+            )}
           </div>
         )}
 
@@ -112,40 +146,73 @@ export function CardDetailModal({
             label={t("sefc23b0", "תנועה")}
             value={card.stats.moveSpeed > 0 ? tf("s9546375", "{0}/ש׳", card.stats.moveSpeed) : t("s60fd570", "סטטי")}
           />
+          {/*
+            ═══ A RANGE IS A NUMBER OF SQUARES ═══
+
+            Or: *"range — maybe we should put a number there? No metres, a
+            number of cards."*
+
+            It said קרוב / רחוק / צלף, which is three words for a thing the
+            engine measures exactly: RANGE_REACH in columns, and melee is
+            contact. So the number here is the engine's own, not a
+            description of it — 0, 3 and 6, where the two front rows touch at
+            columns 3 and 4 and the Kings stand about four apart. A sniper
+            really can reach the far King and a ranged card really cannot,
+            and now the card says which.
+          */}
           <Stat
             icon={RANGE_META[card.stats.range].icon}
             label={t("sa3be69c", "טווח")}
-            value={say(RANGE_META[card.stats.range])}
+            value={RANGE_REACH[card.stats.range]}
           />
         </div>
 
-        {card.abilities.length > 0 && (
+        {/*
+          And WHO it hits, in what order — Or asked for this in the same
+          breath as the number, and it is the half the number cannot say.
+          Every line here is the engine's rule in pickTarget (simulate.ts):
+          a king-hunter works through the guards in the way first, a sniper
+          picks the FARTHEST enemy in its lane rather than the nearest, and
+          everything else fights what is in front of it.
+
+          DRAFT COPY — Or's words, Or's to finish.
+        */}
+        <p className="modal__aim">
+          {card.targeting === "king"
+            ? t("sd4de546", "תוקף את השומרים שבדרך, ואז את המלך.")
+            : card.stats.range === "sniper"
+              ? t("sa8cdca7", "יורה באויב הרחוק ביותר בקו שלו.")
+              : t("s7815a19", "תוקף את מי שמולו בקו שלו.")}
+        </p>
+
+        {/*
+          ═══ ONE SECTION, NOT TWO ═══
+
+          Or: *"every card says 'abilities' and 'role' — unnecessary, merge
+          them."* They were two headings over the same question: what does
+          this card DO. The role is the sentence and the abilities are the
+          list, so the sentence leads and the list follows.
+
+          And the series synergy is gone from here entirely — his other note:
+          *"no need to write the series synergy on every card, all the
+          synergies are the same."* It is a rule of the BOARD, not a property
+          of this monster, and repeating it on all 53 cards made it look like
+          something to compare them by.
+        */}
+        {(card.role || card.abilities.length > 0) && (
           <div className="modal__section">
             <h3>{t("s8fa9cc4", "יכולות")}</h3>
-            <ul className="ability-list">
-              {card.abilities.map((ab, i) => (
-                <li key={i}>
-                  <b>{say(ABILITY_LABEL[ab.type]) || ab.type}</b>
-                  {ab.description && <span> — {say(ab.description)}</span>}
-                </li>
-              ))}
-            </ul>
-          </div>
-        )}
-
-        {card.role && (
-          <div className="modal__section">
-            <h3>{t("s8efe7ee", "תפקיד")}</h3>
-            <p className="modal__role">{say(card.role)}</p>
-          </div>
-        )}
-
-        {series && (
-          <div className="modal__section modal__synergy">
-            <h3>
-              {tf("s4261335", "סינרגיית סדרה: {0}", say(series.synergy.name))} (×{series.synergy.threshold})
-            </h3>
-            <p>{say(series.synergy.description)}</p>
+            {card.role && <p className="modal__role">{say(card.role)}</p>}
+            {card.abilities.length > 0 && (
+              <ul className="ability-list">
+                {card.abilities.map((ab, i) => (
+                  <li key={i}>
+                    <b>{say(ABILITY_LABEL[ab.type]) || ab.type}</b>
+                    {ab.description && <span> — {say(ab.description)}</span>}
+                  </li>
+                ))}
+              </ul>
+            )}
           </div>
         )}
       </div>

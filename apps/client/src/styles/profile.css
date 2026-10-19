@@ -74,48 +74,52 @@
  * the shop instead, and showing only one of them hides the decision.
  */
 .album__up {
-  position: absolute;
   /*
-   * Above the card's own name strip, not across it.
+   * ═══ OUT FROM ON TOP OF THE CARD ═══
    *
-   * In Or's screenshot the green button sat over the bottom of the card and
-   * covered the name on half of them — "Stone…", "Steel…", "Wall…" with the
-   * word hidden behind the price. A control that hides what it is for is
-   * worse than one that is slightly higher up.
+   * It was absolutely positioned over the artwork — 22px up from the bottom
+   * so it would stop covering the name, which is what a button does when
+   * there is nowhere for it to go. Or: *"the upgrade button appears on the
+   * card in a way that is hard to see — put it outside the card."*
+   *
+   * A row of its own under the card: one line, the word and the price,
+   * nothing underneath it to hide.
    */
-  inset-block-end: 22px;
-  /*
-   * Right-hand end only, not stretched across. Full width covered the
-   * copies badge in the opposite corner, and "how many can I place" does
-   * not stop being worth knowing at the moment an upgrade becomes possible.
-   */
-  inset-inline-end: 4px;
-  z-index: 2;
   display: flex;
-  flex-direction: column;
   align-items: center;
-  gap: 0;
-  padding: 2px 6px;
+  justify-content: center;
+  gap: 5px;
+  width: 100%;
+  /* 19px was a pill, not a target. Still small — it is one of fifty-one on a
+     390px screen — but it is pressable with a thumb. */
+  padding: 4px 6px;
   border: none;
   border-radius: 8px;
   background: rgba(60, 190, 120, 0.95);
   color: #042;
   font: inherit;
   font-weight: 900;
-  line-height: 1.1;
+  line-height: 1.3;
   cursor: pointer;
-  box-shadow: 0 2px 10px rgba(60, 190, 120, 0.45);
+  box-shadow: 0 2px 10px rgba(60, 190, 120, 0.3);
 }
-.album__up b { font-size: var(--t-1); }
-.album__up span { display: inline-flex; align-items: center; gap: 2px; font-size: var(--t-1); }
-/* Ready, but the purse is not. The one case where it stays and goes quiet:
-   "you have the cards, you need the diamonds" is a thing worth knowing. */
+.album__up b { font-size: var(--t-2); }
+.album__up span { display: inline-flex; align-items: center; gap: 2px; font-size: var(--t-2); }
+/*
+ * Ready, and the purse is not.
+ *
+ * Or: *"if you do not have enough diamonds the number appears in red and the
+ * button looks unpressable."* Both halves matter: the dead button says you
+ * cannot do this now, and the red number says WHY — which is the difference
+ * between a broken screen and an errand.
+ */
 .album__up.is-poor {
-  background: rgba(120, 140, 160, 0.45);
-  color: rgba(255, 255, 255, 0.72);
+  background: rgba(120, 140, 160, 0.3);
+  color: rgba(255, 255, 255, 0.6);
   box-shadow: none;
   cursor: default;
 }
+.album__up span.is-poor { color: #ff6a5e; font-weight: 900; }
 .album__none--warn { color: var(--accent); }
 
 /* ════════ the home screen, as a choice rather than a form ════════ */

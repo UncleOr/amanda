@@ -99,14 +99,25 @@
  * it. The album grid gave its cells a width and no height, which collapsed
  * every card to a 3:1 sliver. The cell carries the card's shape instead.
  */
+/*
+ * A card, and the line that belongs to it.
+ *
+ * The cell used to BE the card — position:relative with the card's shape, and
+ * everything else pinned on top of the artwork. Or: *"the upgrade button
+ * appears on the card in a way that is hard to see — put it outside the
+ * card."* So the shape moves down to .album__card and the cell becomes the
+ * two of them stacked.
+ */
 .album__cell {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  min-width: 0;
+}
+.album__card {
   position: relative;
   aspect-ratio: 3 / 4;
 }
-/* A gap should read as a card you have not got, not as a hole where one
-   failed to load. At 0.4 on an already-dark back, eight of the ten cells in
-   a series were a loading skeleton. */
-.album__cell--missing { opacity: 0.58; filter: grayscale(0.7); }
 /* Moved up out of the level badge's corner — see .album__level. */
 .album__copies {
   position: absolute;
@@ -203,12 +214,13 @@
  * fact, one for a glance across a grid of fifty and one for the card you
  * are actually looking at.
  */
+/* Under the card now, beside the button it turns into. */
 .album__toup {
-  position: absolute;
-  inset-block-end: 4px;
-  inset-inline-end: 4px;
+  position: relative;
+  display: block;
   overflow: hidden;
-  padding: 0 6px;
+  text-align: center;
+  padding: 1px 6px;
   border-radius: 999px;
   border: 1px solid rgba(255, 255, 255, 0.22);
   background: rgba(8, 12, 22, 0.88);
@@ -225,14 +237,12 @@
   width: var(--fill, 0%);
   background: rgba(60, 190, 120, 0.45);
 }
-.album__toup { position: absolute; z-index: 1; }
 
 /* Level 10. Nothing to count towards, so nothing that looks like a button. */
 .album__topped {
-  position: absolute;
-  inset-block-end: 4px;
-  inset-inline-end: 4px;
-  padding: 0 6px;
+  display: block;
+  text-align: center;
+  padding: 1px 6px;
   border-radius: 999px;
   background: rgba(8, 12, 22, 0.88);
   border: 1px solid var(--accent);

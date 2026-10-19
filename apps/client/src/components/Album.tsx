@@ -15,7 +15,7 @@
  * match, and hiding them would hide the whole game.
  */
 import { CATALOG, SERIES, collectable } from "../data/catalog";
-import { CardView, CardBack } from "./CardView";
+import { CardView } from "./CardView";
 import { Icon } from "./Icon";
 import { useEffect, useState } from "react";
 import { LEVELS, levelCost, levelDiamonds, type Card } from "@amanda/shared";
@@ -246,12 +246,28 @@ export function Album({ account, onClose, onCardInfo, onChanged }: Props) {
                   return (
                     <div
                       key={card.id}
-                      className={`album__cell${mine ? "" : " album__cell--missing"}`}
-                      onClick={() => mine && onCardInfo?.(card.id)}
+                      className="album__cell"
                     >
+                      {/*
+                        ═══ THE CARD, AND THEN THE BUTTON UNDER IT ═══
+
+                        Or: *"the upgrade button appears on the card in a way
+                        that is hard to see — put it outside the card."*
+
+                        It was absolutely positioned over the artwork, 22px up
+                        from the bottom so it would stop covering the name,
+                        which is where a button goes when there is nowhere for
+                        it to go. The cell is two things now: the card, and a
+                        line beneath it that belongs to the card without
+                        sitting on it.
+                      */}
+                      <div
+                        className="album__card"
+                        onClick={() => mine && onCardInfo?.(card.id)}
+                      >
                       {mine ? (
                         <>
-                          <CardView cardId={card.id} size="small" />
+                          <CardView cardId={card.id} size="small" plain />
                           {/* How many times it can go on a board — a
                               different fact from how close an upgrade is,
                               and the one the deck builder cares about. */}
@@ -274,16 +290,22 @@ export function Album({ account, onClose, onCardInfo, onChanged }: Props) {
                           >
                             {mine.level}
                           </span>
-                          <Upgrade
-                            card={card}
-                            mine={mine}
-                            diamonds={account?.diamonds ?? 0}
-                            busy={busy === card.id}
-                            onBuy={() => void buyLevel(card.id)}
-                          />
                         </>
                       ) : (
-                        <CardBack size="small" />
+                        /* What it IS, in grey, instead of a face-down back —
+                           an album with gaps is the point, and a gap that
+                           names the card is a reason to play another match. */
+                        <CardView cardId={card.id} size="small" ghost />
+                      )}
+                      </div>
+                      {mine && (
+                        <Upgrade
+                          card={card}
+                          mine={mine}
+                          diamonds={account?.diamonds ?? 0}
+                          busy={busy === card.id}
+                          onBuy={() => void buyLevel(card.id)}
+                        />
                       )}
                     </div>
                   );
@@ -367,9 +389,15 @@ function Upgrade({
   }
 
   /*
-   * Ready: the button, carrying both prices. Copies are what you have been
-   * collecting; diamonds are what you could have spent in the shop instead.
-   * Showing only one of them would hide the decision.
+   * Ready: the button, under the card, carrying the price.
+   *
+   * Or: *"it should say 'to upgrade' and a diamond icon with the number of
+   * diamonds it costs beside it. If you do not have enough diamonds the
+   * number appears in red and the button looks unpressable."*
+   *
+   * So the price is always shown and the purse is what changes: a number
+   * that has gone red is a reason to go to the shop, where a button that has
+   * simply vanished is a mystery.
    */
   return (
     <button
@@ -381,9 +409,9 @@ function Upgrade({
         onBuy();
       }}
     >
-      <b>{t("sac15acb", "שדרוג")}</b>
-      <span>
-        <Icon name="gem" size={10} /> {price}
+      <b>{t("s4f9261a", "לשדרוג")}</b>
+      <span className={canPay ? "" : "is-poor"}>
+        <Icon name="gem" size={11} /> {price}
       </span>
     </button>
   );

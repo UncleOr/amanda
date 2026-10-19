@@ -1,6 +1,12 @@
 import { useCallback, useEffect, useState } from "react";
 import { periodEndsOn, type Period } from "@amanda/shared";
-import { challengesSoFar, claimChallenge, loadChallenges, type Standing } from "../game/meta";
+import {
+  challengesSoFar,
+  claimChallenge,
+  loadChallenges,
+  watchChallenges,
+  type Standing,
+} from "../game/meta";
 import { flyReward } from "../game/reward";
 import { Icon } from "./Icon";
 import { Lock } from "./SignedInOnly";
@@ -256,6 +262,20 @@ export function ChallengeButton({
     void loadChallenges().then((live) => setReady(count(live)));
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [reloadKey]);
+  /*
+   * ═══ AND THE MOMENT A PRIZE IS TAKEN ═══
+   *
+   * Or: *"when you take a challenge the green dot is still there, and it
+   * takes a while to go away."*
+   *
+   * The dot is counted from the remembered answer, and that used to change
+   * only when the server was asked again. Taking a prize happens in the
+   * panel, which closes — and this button, still mounted underneath, went on
+   * counting a challenge that had just been claimed until a fetch came back.
+   *
+   * meta.ts knows the moment the server says yes. This listens.
+   */
+  useEffect(() => watchChallenges((live) => setReady(count(live))), []); // eslint-disable-line react-hooks/exhaustive-deps
 
   return (
     <button className="quests__open" onClick={onOpen}>

@@ -64,6 +64,43 @@ export function challengesSoFar(): Standing[] {
   return lastChallenges;
 }
 
+/*
+ * ═══ AND WHEN IT CHANGES, WHOEVER IS SHOWING IT HEARS ═══
+ *
+ * Or: *"when you take a challenge the green dot is still there, and it takes
+ * a while to go away."*
+ *
+ * It did, and the wait was a round trip. The dot on the home screen counts
+ * the remembered answer, and the remembered answer only ever changed when
+ * the SERVER was asked again — so taking a prize left the button counting a
+ * challenge that had just been claimed, until the next fetch came back. On
+ * the screen that is a prize taken, a prize flying up to the bar, a panel
+ * closing, and a dot still sitting there saying there is something to take.
+ *
+ * The claim is known here the moment the server says yes. So it is written
+ * down here, and anybody showing it is told.
+ */
+type Listener = (live: Standing[]) => void;
+const challengeWatchers = new Set<Listener>();
+
+/** Hear about every change to the remembered challenges. Returns the way off. */
+export function watchChallenges(fn: Listener): () => void {
+  challengeWatchers.add(fn);
+  return () => {
+    challengeWatchers.delete(fn);
+  };
+}
+
+/** The same list with one challenge marked taken. Pure, so it can be tested. */
+export function markClaimed(live: Standing[], challengeId: string): Standing[] {
+  return live.map((c) => (c.id === challengeId ? { ...c, claimed: true } : c));
+}
+
+function remember(live: Standing[]): void {
+  lastChallenges = live;
+  for (const fn of challengeWatchers) fn(live);
+}
+
 /** A gold chest and some diamonds, because it is your birthday. */
 export interface BirthdayGift {
   diamonds: number;
@@ -152,7 +189,7 @@ export async function loadChallenges(): Promise<Standing[]> {
     // Only a real answer is remembered. An empty one means the server could
     // not be reached, and replacing a good list with nothing would make the
     // panel go blank on a dropped connection.
-    if (body.challenges?.length) lastChallenges = body.challenges;
+    if (body.challenges?.length) remember(body.challenges);
     return body.challenges ?? [];
   } catch {
     // A home screen without today's challenges is a home screen. Nothing here
@@ -211,7 +248,15 @@ export async function claimChallenge(challengeId: string): Promise<string | null
       body: JSON.stringify({ challengeId }),
     });
     const body = (await res.json().catch(() => ({}))) as { error?: string };
-    if (res.ok) return null;
+    if (res.ok) {
+      /*
+       * Claimed, now, without asking anybody. The server has just said so,
+       * and the next fetch will say the same thing a second later — see
+       * watchChallenges for what that second cost.
+       */
+      remember(markClaimed(lastChallenges, challengeId));
+      return null;
+    }
     return (
       {
         expired: t("sc65088a", "האתגר הזה כבר לא פעיל."),

@@ -574,7 +574,7 @@ export const TUTORIAL_LINES: readonly TutorialLine[] = [
   },
   {
     id: "t3-king",
-    he: t("s6ef4842", "הופה — מלך! אמרתי לך שיגיע. לכתר איתו."),
+    he: t("s384e967", "הופה — מלך! אמרתי לך שיגיע. נשים אותו במיקום של המלך."),
     vars: [],
     when: t("s3a61d7f", "המלך מגיע באמצע"),
   },

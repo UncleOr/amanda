@@ -666,7 +666,27 @@
   border-radius: 999px;
   background: linear-gradient(90deg, rgba(60, 190, 120, 0.7), rgb(90, 230, 150));
 }
-.modal__level-note { font-size: 12px; color: var(--muted); }
+/*
+ * "1/7 [card] to the next level · [gem] 12" — Or's own shorthand, in one
+ * row. It was two sentences, and the second one ended in a number that read
+ * as a total when it was a price.
+ */
+.modal__level-note {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  font-size: var(--t-2);
+  color: var(--muted);
+}
+.modal__level-note b { font-size: var(--t-3); color: var(--text); }
+.modal__level-cost {
+  display: inline-flex;
+  align-items: center;
+  gap: 3px;
+  margin-inline-start: auto;
+  color: var(--text);
+  font-weight: 700;
+}
 
 /*
  * Three of a family, touching. Lit on the board WHILE you arrange it, because

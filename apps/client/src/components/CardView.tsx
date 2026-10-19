@@ -41,6 +41,25 @@ interface Props {
   king?: boolean;
   /** Action-card stat modifiers to reflect in the displayed numbers. */
   buff?: StatBuff;
+  /**
+   * No icon row across the top.
+   *
+   * Or, about the album: *"the symbols at the top of the card don't look
+   * good. We can take them off — whoever wants to go into the symbols will
+   * open the card."* Four 12px glyphs on a 74px tile are texture, not
+   * information, and the card's own screen has room to say the same things
+   * in words.
+   */
+  plain?: boolean;
+  /**
+   * A card you have not got: the picture, grey, with its name.
+   *
+   * Or: *"for the places where there is no card yet, put a grey thumbnail of
+   * the card + its name, so they see what to aim for."* It was a face-down
+   * back, which says "something is missing" and not WHAT — and the whole
+   * reason to look at an album with gaps in it is to want one of them.
+   */
+  ghost?: boolean;
 }
 
 /**
@@ -86,6 +105,8 @@ export function CardView({
   king = false,
   buff,
   skin,
+  plain = false,
+  ghost = false,
 }: Props) {
   const card = CATALOG.get(cardId);
   if (!card) return null;
@@ -111,12 +132,12 @@ export function CardView({
 
   return (
     <div
-      className={`card card--${size}${art ? " card--art" : ""}`}
+      className={`card card--${size}${art ? " card--art" : ""}${ghost ? " card--ghost" : ""}`}
       style={style}
       onClick={onClick}
     >
       {/* top-left: element + traits · top-right: king flag + info */}
-      <div className="card__top">
+      {!plain && !ghost && <div className="card__top">
         <span className="card__traits">
           <span className="card__element" title={say(el)}>
             <Icon name={el.icon} size={13} />
@@ -157,7 +178,7 @@ export function CardView({
             </button>
           )}
         </span>
-      </div>
+      </div>}
 
       {/*
         ═══ THE EDGES CARRY THE NUMBERS ═══
@@ -178,16 +199,20 @@ export function CardView({
         right is power, and they do not swap in English: the meaning is the
         side, so the side is physical and not logical.
       */}
-      <span
-        className="card__bar card__bar--hp"
-        style={{ "--fill": fill(hp, MAX_HP) } as CSSProperties}
-        aria-hidden="true"
-      />
-      <span
-        className="card__bar card__bar--pw"
-        style={{ "--fill": fill(power, MAX_POWER) } as CSSProperties}
-        aria-hidden="true"
-      />
+      {!ghost && (
+        <>
+          <span
+            className="card__bar card__bar--hp"
+            style={{ "--fill": fill(hp, MAX_HP) } as CSSProperties}
+            aria-hidden="true"
+          />
+          <span
+            className="card__bar card__bar--pw"
+            style={{ "--fill": fill(power, MAX_POWER) } as CSSProperties}
+            aria-hidden="true"
+          />
+        </>
+      )}
 
       {/* bottom plate: name + stats — identical coordinates on every card */}
       <div className="card__plate">

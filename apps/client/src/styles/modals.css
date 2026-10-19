@@ -124,13 +124,17 @@
 .ability-list { margin: 0; padding-inline-start: 18px; display: flex; flex-direction: column; gap: 4px; }
 .ability-list li { font-size: 13px; line-height: 1.4; }
 .modal__role { margin: 0; color: var(--muted); font-size: 13px; line-height: 1.5; }
-.modal__synergy {
-  background: var(--panel-2);
-  border-radius: 10px;
-  padding: 10px 12px;
+/*
+ * Who it attacks, and in what order. One line, directly under the numbers it
+ * explains — the range above it is a count of squares and this is what the
+ * count is FOR.
+ */
+.modal__aim {
+  margin: 8px 0 0;
+  font-size: var(--t-2);
+  color: var(--text);
+  line-height: 1.4;
 }
-.modal__synergy h3 { font-size: 13px; color: var(--accent); }
-.modal__synergy p { margin: 0; font-size: 13px; color: var(--muted); }
 
 /* ---- portrait / small screens ---- */
 @media (max-width: 760px) {

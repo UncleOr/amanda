@@ -208,6 +208,23 @@
  * overlapping soft radial blobs that creep at different speeds, so no two
  * covered cells ever look alike.
  */
+/*
+ * ═══ A CARD YOU HAVE NOT GOT ═══
+ *
+ * Or: *"for the places where there is no card yet, put a grey thumbnail of
+ * the card + its name, so they see what to aim for."*
+ *
+ * Grey and dim, but the picture and the name are both legible — the whole
+ * point is wanting it. The name plate keeps its own colour so the word stays
+ * readable at 74px; greying the text as well turned it back into a hole.
+ */
+.card--ghost {
+  filter: grayscale(1) brightness(0.5) contrast(0.9);
+  border-color: rgba(255, 255, 255, 0.14);
+  cursor: default;
+}
+.card--ghost .card__name { color: rgba(255, 255, 255, 0.85); }
+
 .card--back {
   position: relative;
   background: linear-gradient(160deg, #141d33, #0d1424);
