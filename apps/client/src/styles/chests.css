@@ -46,11 +46,27 @@
    * at `100dvh - 40px` — which on a 390-tall phone is 350, so the thing you
    * are meant to hit arrived with a scrollbar down the side of it.
    */
-  width: min(240px, 58vw, 42vh);
+  /*
+   * ═══ AND A RING OF FORGIVENESS AROUND IT ═══
+   *
+   * Or: *"when you tap NEXT to the chest and not really on it, it should
+   * respond and open too."*
+   *
+   * The button was exactly the picture, and the picture is a chest with air
+   * around it — so the taps that missed were the ones aimed at the lid's
+   * shadow, which is where a seven-year-old's finger lands when the thing is
+   * wobbling. The box grows, the padding holds the art at the size it was,
+   * and the extra 14% on every side is hit area that looks like nothing.
+   *
+   * background-origin: content-box is what keeps the art inside the
+   * padding instead of stretching back over it.
+   */
+  width: min(300px, 72vw, 52vh);
   aspect-ratio: 1;
   margin: 0 auto;
   border: none;
-  padding: 0;
+  padding: 14%;
+  background-origin: content-box;
   background-color: transparent;
   background-size: contain;
   background-position: center;

@@ -82,6 +82,26 @@
 * {
   box-sizing: border-box;
 }
+/*
+ * ═══ THE SQUARE OR SAW ═══
+ *
+ * Or, about the chest: *"and preferably you shouldn't see the chest's square
+ * outline."*
+ *
+ * The chest art is transparent — measured, 60% of its pixels are clear and
+ * all four corners are alpha 0 — so the square was never painted by us.
+ * Android's WebView draws its own translucent rectangle over whatever you
+ * touch, and the chest is a 240px button with nothing but a see-through
+ * picture in it, so the rectangle IS the square: it appears, exactly
+ * chest-shaped-and-not, for as long as a finger is down.
+ *
+ * It is wrong everywhere in this game and not only on the chest — a card, a
+ * board slot and a deck tile all have their own shape and none of them is a
+ * rectangle. The game draws its own pressed states.
+ */
+* {
+  -webkit-tap-highlight-color: transparent;
+}
 html,
 body,
 #root {

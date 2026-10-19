@@ -245,3 +245,15 @@
 }
 /* Nothing, which is a fact about that element and not an empty cell. */
 .elements__none { color: var(--text); opacity: 0.5; font-size: var(--t-2); }
+/*
+ * The rule the two columns are counting, in a sentence. It lives under the
+ * table because a multiplier in a column heading is a number with nothing
+ * round it — see ElementsTable.
+ */
+.elements__rule {
+  margin: 12px 0 0;
+  font-size: var(--t-2);
+  line-height: 1.45;
+  color: var(--text);
+}
+.elements__rule--weak { margin-top: 4px; opacity: 0.72; }

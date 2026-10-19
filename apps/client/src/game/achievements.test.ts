@@ -8,6 +8,7 @@ import {
   type Snapshot,
   type MatchOutcome,
 } from "./achievements";
+import { ARENAS } from "@amanda/shared";
 
 /*
  * The eighteen Or approved, and whether they are earned.
@@ -101,7 +102,13 @@ describe("the ladder", () => {
     // Somebody who arrives at the fuel stop has passed the other three, and
     // a list that only awarded the current rung would leave them permanently
     // missing achievements they plainly earned.
-    expect(earned(base({ trophies: 1600 }))).toEqual([
+    //
+    // The number is READ from the ladder rather than written here. It used
+    // to say 1600, which was the top rung until Or asked for the climb to be
+    // longer — and then this failed for a reason that had nothing to do with
+    // what it is testing.
+    const top = ARENAS[ARENAS.length - 1]!.from;
+    expect(earned(base({ trophies: top }))).toEqual([
       "arena_court",
       "arena_station",
       "arena_alley",

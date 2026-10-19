@@ -253,6 +253,24 @@ interface Skill {
    * winnable.
    */
   draw: number;
+  /**
+   * ═══ WHAT LEVEL ITS CARDS ARE AT ═══
+   *
+   * Or, after a fortnight of beating the hard bot: *"we're doing loads of
+   * games against the hard bot. We're just in the playground, with 40 cards
+   * some of which we upgraded to level 2, and we're taking it apart."*
+   *
+   * Every bot fielded level-1 cards, because nothing had ever given them a
+   * level. A player who has been collecting for two weeks has not: ten per
+   * cent a level is small on one card and it is on every card, in every
+   * battle, and it was the whole difference between the measurement and
+   * what Or was seeing on the sofa.
+   *
+   * It is also the honest kind of hard — the same way a human opponent gets
+   * stronger. Nothing here changes what a card IS; it is the multiplier the
+   * player's own cards already get (levelMultiplier in shared).
+   */
+  level: number;
 }
 
 /**
@@ -281,7 +299,7 @@ export const BOT_CARDS: Record<BotLevel, PlayerCard> = {
   normal: {
     nickname: t("s69fcaa6", "הבוט"),
     avatar: "versus_robot",
-    trophies: 300,
+    trophies: 900,
     catchphrase: "phrase.fight",
     gender: null,
     back: "slime",
@@ -289,7 +307,7 @@ export const BOT_CARDS: Record<BotLevel, PlayerCard> = {
   hard: {
     nickname: t("s38e97db", "בוט קשה"),
     avatar: "versus_robot",
-    trophies: 700,
+    trophies: 2600,
     catchphrase: "phrase.onlyamanda",
     gender: null,
     back: "scales",
@@ -340,17 +358,17 @@ const SKILL: Record<BotLevel, Skill> = {
    * should be. Which is what a beginner's board looks like, and makes it a
    * fair thing to learn against.
    */
-  easy: { window: 6, fromWorst: true, sloppiness: 0.45, gaps: 3, draw: DECK.size },
-  normal: { window: 4, fromWorst: false, sloppiness: 0, gaps: 0, draw: DECK.size },
+  easy: { window: 6, fromWorst: true, sloppiness: 0.55, gaps: 4, draw: DECK.size, level: 1 },
+  normal: { window: 2, fromWorst: false, sloppiness: 0, gaps: 0, draw: 32, level: 3 },
   /** Every choice the planner knows how to make, made correctly. */
-  hard: { window: 1, fromWorst: false, sloppiness: 0, gaps: 0, draw: 40 },
+  hard: { window: 1, fromWorst: false, sloppiness: 0, gaps: 0, draw: 0, level: 6 },
 };
 
 function generateAiPlan(deck?: string[], level: BotLevel = "normal"): Placement[] {
   const skill = SKILL[level] ?? SKILL.normal;
   const ids = deck
     ? deck.filter((id) => CATALOG.has(id))
-    : shuffle(cardPool()).slice(0, skill.draw);
+    : shuffle(cardPool()).slice(0, skill.draw || undefined);
   const pool = ids.map((id) => CATALOG.get(id)!).filter(Boolean);
   if (pool.length === 0) return [];
 
@@ -381,7 +399,17 @@ function generateAiPlan(deck?: string[], level: BotLevel = "normal"): Placement[
   // Behind the line, only shooters and movers can ever do anything.
   const useful = pool.filter((c) => c.stats.range !== "melee" || c.stats.moveSpeed > 0);
 
-  const placements: Placement[] = [{ cardId: kingCard.id, x: 1, y: 1, king: true }];
+  /*
+   * The level, as the multiplier the engine already understands. A mirror
+   * match is excluded on purpose: "חפיסה זהה" promises the same cards on
+   * both sides, and the same cards at different levels are not the same
+   * cards.
+   */
+  const mult = deck ? 1 : levelMultiplier(skill.level);
+  const buff = mult > 1 ? { hpMult: mult, powerMult: mult } : undefined;
+  const at = (p: Placement): Placement => (buff ? { ...p, buff } : p);
+
+  const placements: Placement[] = [at({ cardId: kingCard.id, x: 1, y: 1, king: true })];
   // Which cells to leave empty, chosen at random rather than always the same
   // ones — a board with the same three holes every game is a board you learn
   // the shape of instead of learning the game.
@@ -406,7 +434,7 @@ function generateAiPlan(deck?: string[], level: BotLevel = "normal"): Placement[
           : useful.length
             ? useful
             : hitters;
-    placements.push({ cardId: take(ranked).id, x: cell.x, y: cell.y });
+    placements.push(at({ cardId: take(ranked).id, x: cell.x, y: cell.y }));
   }
   // Front row first keeps the battle readable when the boards are revealed.
   placements.sort((a, b) => (b.x ?? 0) - (a.x ?? 0));

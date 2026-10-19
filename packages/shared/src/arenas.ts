@@ -33,6 +33,25 @@ export interface Arena {
  *
  * The gaps widen as you climb, which is the usual shape and the right one: the
  * first promotion should arrive in an evening, the last should be an ambition.
+ *
+ * ═══ AND THE TOP TWO WERE NOT AN AMBITION ═══
+ *
+ * Or, a fortnight in: *"we've been playing all of two weeks and we're
+ * already at the train station. The distance to Fright Alley needs to be
+ * bigger, and to the Fuel Stop really big."*
+ *
+ * The first three are right — he reached the station in two weeks and the
+ * station is the third rung, which is what "the first promotion arrives in
+ * an evening" should feel like by the end of a fortnight. It is the top of
+ * the ladder that was short: Fright Alley was 450 trophies past the station
+ * and the Fuel Stop another 700, so the whole climb was over inside a month
+ * and then there was nothing above it.
+ *
+ * Measured against the payouts in trophies.ts rather than guessed: a win
+ * over a person is +30 and a loss −20, so an evening of even matches is
+ * about +50. The old gaps were nine and fourteen such evenings. The new ones
+ * are nineteen and forty-four, and the top of the ladder is a season rather
+ * than a fortnight.
  */
 export const ARENAS: Arena[] = [
   {
@@ -56,13 +75,13 @@ export const ARENAS: Arena[] = [
   {
     id: "alley",
     name: { he: "סמטת האימה", en: "Fright Alley" },
-    from: 900,
+    from: 1400,
     tease: { he: "אל תסתכל מה יש בפח.", en: "Don't look in the bin." },
   },
   {
     id: "fuel",
     name: { he: "תחנת הדלק", en: "The Fuel Stop" },
-    from: 1600,
+    from: 3600,
     tease: { he: "הסוף. אל תדליק כאן גפרור.", en: "The end of the road. Don't strike a match." },
   },
 ];

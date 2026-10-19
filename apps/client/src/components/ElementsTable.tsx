@@ -25,7 +25,7 @@ import { ELEMENT_COMBAT, type Element } from "@amanda/shared";
 import { ELEMENT_META } from "../data/cardMeta";
 import { Icon } from "./Icon";
 import { Overlay } from "./Overlay";
-import { line as t } from "../game/copy";
+import { line as t, lineF as tf } from "../game/copy";
 import { say } from "../game/lang";
 
 /** The order they are listed in, which is the order the game declares them. */
@@ -81,14 +81,20 @@ export function ElementsTable({ onClose }: { onClose: () => void }) {
         <h2 className="elements__title">{t("s76b7982", "טבלת היסודות")}</h2>
         <div className="elements__grid">
           <span className="elements__head" />
-          {/* The multiplier beside the word it means, which is the one shape
-              a number this small is allowed to take. */}
-          <span className="elements__head">
-            {t("s814ec0e", "מנצח את")} <b>×{ELEMENT_COMBAT.strongMultiplier}</b>
-          </span>
-          <span className="elements__head">
-            {t("s960cb19", "מנוצח על ידי")} <b>×{ELEMENT_COMBAT.weakMultiplier}</b>
-          </span>
+          {/*
+            One word each, and the numbers moved out from under them.
+
+            Or: *"in the elements table don't write 'beats x1.5' and so on.
+            Write 'beats' and 'loses to'. And then underneath write: when a
+            card attacks a card it beats, its power grows x1.5."*
+
+            He is right that a multiplier in a column heading is a riddle: it
+            is a number with no sentence round it, sitting over ten rows that
+            are not numbers. The sentence is below the table now, where there
+            is room for it to be a sentence.
+          */}
+          <span className="elements__head">{t("sff81352", "מביס")}</span>
+          <span className="elements__head">{t("s255633e", "מפסיד ל")}</span>
           {elementChart().map(({ el, beats, beatenBy }) => (
             <Fragment key={el}>
               <span className="elements__who" style={{ color: ELEMENT_META[el].color }}>
@@ -103,6 +109,26 @@ export function ElementsTable({ onClose }: { onClose: () => void }) {
             </Fragment>
           ))}
         </div>
+        {/*
+          ═══ WHAT THE TWO COLUMNS ARE WORTH ═══
+
+          Or's words, with one change I could not avoid making: his second
+          line says "when it attacks a card it BEATS its power shrinks",
+          which is the first line again with the wrong number on it. The
+          column it belongs to is the other one, so this says "loses to". He
+          should read it back — it is his sentence and that was plainly a
+          slip, but it is a slip about the one rule the table exists to
+          explain.
+
+          The numbers are read from ELEMENT_COMBAT, so the sentences cannot
+          outlive a change to the rule.
+        */}
+        <p className="elements__rule">
+          {tf("sc07efac", "כשקלף תוקף קלף שהוא מביס — הכוח שלו גדל ×{0}", ELEMENT_COMBAT.strongMultiplier)}
+        </p>
+        <p className="elements__rule elements__rule--weak">
+          {tf("sacd07c7", "כשהוא תוקף קלף שהוא מפסיד לו — הכוח שלו קטן ×{0}", ELEMENT_COMBAT.weakMultiplier)}
+        </p>
       </div>
     </Overlay>
   );

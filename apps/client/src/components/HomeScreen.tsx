@@ -60,9 +60,9 @@ const MOTES = [
 
 /** The three settings of the bot dial, and what each one means in a sentence. */
 const BOT_LEVELS: ReadonlyArray<{ id: "easy" | "normal" | "hard"; he: string; note: string }> = [
-  { id: "easy", he: t("s5eb66c7", "קליל"), note: t("s9251769", "לוח דליל, קלפים חלשים. מנצח ב-17% מהקרבות.") },
-  { id: "normal", he: t("s0c9f683", "רגיל"), note: t("s901d39c", "בונה כמו שהוא יודע. חצי-חצי.") },
-  { id: "hard", he: t("sc93cdac", "קשה"), note: t("s62d48e5", "בוחר מתוך אוסף גדול בהרבה. מנצח בערך ב-58%.") },
+  { id: "easy", he: t("s5eb66c7", "קליל"), note: t("safec7e3", "לוח דליל, קלפים חלשים. בשביל ללמוד.") },
+  { id: "normal", he: t("s0c9f683", "רגיל"), note: t("s8f75ac6", "בונה כמו שהוא יודע, עם קלפים ברמה 3.") },
+  { id: "hard", he: t("sc93cdac", "קשה"), note: t("s2827bc7", "כל האוסף, וקלפים ברמה 6. מנצח 3 מתוך 4.") },
 ];
 
 /**
@@ -250,8 +250,14 @@ export function HomeScreen({
                 <img src={`${BASE}brand/versus_robot.webp`} alt="" />
                 {/*
                   How hard it tries. Three settings, each one MEASURED over
-                  700 battles rather than guessed: the easy bot wins 17% of
-                  them, the ordinary one 51%, the hard one around 58%.
+                  900 battles rather than guessed — and measured twice, since
+                  Or asked for the hard bot to be hard FOR HIM:
+
+                                  a beginner    Or and Hod
+                    קליל              11%            0%
+                    רגיל              71%           54%
+                    קשה               82%           75%
+
                   Remembered, so a child who found the easy one does not have
                   to find it again.
 

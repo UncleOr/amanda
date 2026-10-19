@@ -66,12 +66,33 @@
  * docs/TASKS.md has been calling "בוט קליל" all along.
  */
 import { buildReport, runBattle, type Placement } from "@amanda/engine";
+import { levelMultiplier } from "@amanda/shared";
 import { CATALOG, SERIES } from "../src/data/catalog";
 import { __testing } from "../src/game/useMatch";
 
 const RUNS = Number(process.argv[2] ?? 300);
 /** Which setting of the difficulty dial to measure. */
 const LEVEL = (process.argv[3] ?? "normal") as "easy" | "normal" | "hard";
+/**
+ * ═══ WHICH PLAYER IT IS BEING MEASURED AGAINST ═══
+ *
+ * Or: *"we're doing loads of games against the hard bot. We're just in the
+ * playground, with 40 cards some of which we upgraded to level 2, and we are
+ * taking it apart. The hard bot needs to be harder for a player who is not a
+ * complete beginner."*
+ *
+ * Every number in this file was measured against `humanish` — a board built
+ * the way a child builds one, out of the whole catalogue at random. That is
+ * the right opponent for the easy bot and the wrong one for the hard bot,
+ * and it is why the hard bot measured 56% and loses to Or.
+ *
+ * So there are two opponents now, and the targets are per opponent:
+ *
+ *   beginner   the first week. The easy bot is for this player.
+ *   good       Or and Hod: a chosen pool, roles in the right squares, and
+ *              cards that have been upgraded. The hard bot is for this one.
+ */
+const FOE = (process.argv[4] ?? "beginner") as "beginner" | "good";
 
 const synergies = [...SERIES.values()].map((s) => ({
   seriesId: s.id,
@@ -105,6 +126,54 @@ function humanish(): Placement[] {
   return out;
 }
 
+/**
+ * A board built by somebody who knows what the squares are for.
+ *
+ * The difference from `humanish` is not better luck, it is three things a
+ * player learns in a fortnight and never unlearns:
+ *
+ *   a POOL — they are not drawing from the whole catalogue any more, they
+ *     are playing the forty cards they chose;
+ *   ROLES — the toughest things in the front row, the shooters at the back,
+ *     and the King behind both;
+ *   LEVELS — Or's cards are upgraded, and the bot's are not. Ten percent a
+ *     level is small per card and it is on every card, every battle.
+ */
+function goodish(): Placement[] {
+  const worth = (c: { stats: { hp: number; power: number } }) => c.stats.hp + c.stats.power * 4;
+  const dps = (c: { stats: { power: number; attackSpeed: number } }) =>
+    c.stats.attackSpeed > 0 ? c.stats.power / c.stats.attackSpeed : 0;
+  const pool = [...CATALOG.values()]
+    .filter((c) => c.launch && c.id !== "crumb_demon")
+    .sort((a, b) => worth(b) - worth(a))
+    .slice(0, 40);
+
+  const mult = levelMultiplier(PLAYER_LEVEL);
+  const buff = { hpMult: mult, powerMult: mult };
+  const used = new Set<string>();
+  const take = (ranked: typeof pool) => {
+    const c = ranked.find((x) => !used.has(x.id)) ?? ranked[0]!;
+    used.add(c.id);
+    return c;
+  };
+  const byHp = [...pool].sort((a, b) => b.stats.hp - a.stats.hp);
+  const byDps = [...pool].sort((a, b) => dps(b) - dps(a));
+
+  const out: Placement[] = [{ cardId: take(byHp).id, x: 1, y: 1, king: true, buff }];
+  for (let y = 0; y < 4; y++) out.push({ cardId: take(byHp).id, x: 3, y, buff });
+  for (let y = 0; y < 4; y++) out.push({ cardId: take(byDps).id, x: 0, y, buff });
+  const rest = [...pool].sort((a, b) => worth(b) - worth(a));
+  for (let x = 1; x <= 2; x++)
+    for (let y = 0; y < 4; y++) {
+      if (x >= 1 && x <= 2 && y >= 1 && y <= 2) continue; // the King's 2x2
+      out.push({ cardId: take(rest).id, x, y, buff });
+    }
+  return out;
+}
+
+/** What level a good player's cards are at. Or's are at 2. */
+const PLAYER_LEVEL = 2;
+
 const counts = { bot: new Map<string, number>(), human: new Map<string, number>() };
 const bump = (who: "bot" | "human", code: string) =>
   counts[who].set(code, (counts[who].get(code) ?? 0) + 1);
@@ -118,7 +187,7 @@ for (let i = 0; i < RUNS; i++) {
     seed: 1 + Math.floor(Math.random() * 2_000_000_000),
     catalog: CATALOG,
     synergies,
-    a: { owner: "A", placements: humanish() },
+    a: { owner: "A", placements: FOE === "good" ? goodish() : humanish() },
     b: { owner: "B", placements: __testing.generateAiPlan(undefined, LEVEL) },
     recordFrames: false,
   });

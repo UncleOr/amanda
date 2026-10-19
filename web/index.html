@@ -93,6 +93,33 @@
         box-shadow: 0 10px 30px rgba(255, 176, 32, 0.28);
       }
       .play:hover { filter: brightness(1.06); }
+      /* Side by side where there is room, stacked where there is not. */
+      .cta {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 12px;
+        justify-content: center;
+      }
+      /*
+       * The second way in, and it reads as second: same height and the same
+       * shape, no fill and no glow. An alpha behind a tester list is not the
+       * thing to shout at somebody who has just arrived.
+       */
+      .get {
+        display: inline-flex;
+        align-items: center;
+        gap: 10px;
+        padding: 16px 28px;
+        border-radius: 14px;
+        border: 1px solid var(--line);
+        background: transparent;
+        color: var(--text);
+        font: inherit;
+        font-size: var(--t-3);
+        font-weight: 700;
+        text-decoration: none;
+      }
+      .get:hover { border-color: var(--accent); color: var(--accent); }
       .soon {
         margin: 26px 0 0;
         font-size: var(--t-2);
@@ -127,7 +154,7 @@
         .art { grid-row: 1 / span 5; max-height: none; }
         /* A grid item stretches; an inline-flex button in a column becomes a
            bar the width of the column. It wants to be button-shaped. */
-        .play { justify-self: start; }
+        .cta { justify-content: start; }
         h1 { margin: 0; }
         .tag { margin: 6px 0 16px; }
         .soon { margin: 14px 0 0; }
@@ -147,9 +174,38 @@
       <div class="art" role="img" aria-label="אמנדה, הדרקון והאריה"></div>
       <h1>אמנדה</h1>
       <p class="tag">בונים לוח של מפלצות, ואז הן נלחמות לבד.</p>
-      <a class="play" href="/play/">לשחק עכשיו</a>
-      <!-- TODO(Or): store badges and the theme song go here once the app ships. -->
-      <p class="soon">בקרוב גם בגוגל פליי</p>
+      <!--
+        ═══ TWO WAYS IN, AND ONLY ONE OF THEM IS THE HERO ═══
+
+        Or: *"update playamanda.com so there is a link to download the game
+        in an alpha version."*
+
+        Playing in the browser is still the thing this page is for — it costs
+        nothing, works on anything, and is one tap. The download is the
+        second button because an alpha on Android is a bigger ask: it is a
+        closed test, so it only opens for somebody whose address is on the
+        list in Play Console.
+
+        They are wrapped in one box on purpose: the landscape layout below
+        stands the picture beside the words and X
+        span 5, counting the children. One box keeps that count at five.
+
+        THE LINK: play.google.com/apps/testing/<package> is the opt-in URL
+        Play Console hands out for a testing track. Or should check it
+        against the one in the console — it is the one thing on this page
+        that cannot be verified from here.
+      -->
+      <div class="cta">
+        <a class="play" href="/play/">לשחק עכשיו</a>
+        <a
+          class="get"
+          href="https://play.google.com/apps/testing/com.asulins.amanda"
+          target="_blank"
+          rel="noopener"
+          >להוריד לאנדרואיד</a
+        >
+      </div>
+      <p class="soon">גרסת אלפא בגוגל פליי, למי שרשום לבדיקות.</p>
       <footer><a href="/play/?legal=privacy">פרטיות</a></footer>
     </main>
   </body>
