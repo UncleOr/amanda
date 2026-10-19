@@ -79,27 +79,42 @@ describe("the budget", () => {
   });
 
   /*
-   * The budget is a trade, not a wall, and this is the size of the trade.
+   * ═══ THE BUDGET IS A TRADE, NOT A WALL ═══
    *
-   * It used to assert NINE of the top price plus seven cheap ones, which fit
-   * in 55 and is the deck Or called "too easy". At 47 that costs 52 and does
-   * not fit — which is the whole point of moving it — so the test moves to
-   * the number that is now true: SIX at the top price and ten cheap ones is
-   * 40, and still leaves change.
+   * This used to assert an arithmetic: nine cards at the top price plus
+   * seven cheap ones, which fits in 55 and not in 47. Then the deck went
+   * from sixteen cards to eighteen and the budget from 50 to 60, and it
+   * failed for a reason that had nothing to do with what it is for.
+   *
+   * What it is FOR is that the budget bites and does not strangle: you can
+   * have some of your best cards and not all of them. So it works out where
+   * the line actually falls today and checks that the line is somewhere
+   * sensible, which stays true the next time Or moves either number.
    */
-  it("allows six of your best and ten cheap ones, but not nine", () => {
+  it("lets you have some of your best cards, and not a deck of them", () => {
     const sorted = collectable().slice().sort((a, b) => cardCost(b) - cardCost(a));
-    const best = sorted.filter((c) => cardCost(c) === 5).slice(0, 2).map((c) => c.id);
-    const cheap = sorted.filter((c) => cardCost(c) === 1).map((c) => c.id);
-    // two cards at 5, three times over = six at the top price
-    const six = [...best, ...best, ...best];
-    expect(six).toHaveLength(6);
-    expect(deckCost([...six, ...cheap.slice(0, 10)], of)).toBeLessThanOrEqual(deckBudget());
+    const top = cardCost(sorted[0]!);
+    const dear = sorted.filter((c) => cardCost(c) === top).map((c) => c.id);
+    const cheapest = cardCost(sorted[sorted.length - 1]!);
+    const cheap = sorted.filter((c) => cardCost(c) === cheapest).map((c) => c.id);
 
-    // And nine of them no longer fits, which is the change Or asked for.
-    const three = sorted.filter((c) => cardCost(c) === 5).slice(0, 3).map((c) => c.id);
-    const nine = [...three, ...three, ...three];
-    expect(deckCost([...nine, ...cheap.slice(0, 7)], of)).toBeGreaterThan(deckBudget());
+    /** A legal-shaped deck with k of the dearest cards and cheap ones after. */
+    const mix = (k: number) => {
+      const out: string[] = [];
+      for (let n = 0; n < DECK_RULES.maxCopies && out.length < k; n++)
+        for (const id of dear) if (out.length < k) out.push(id);
+      for (let n = 0; n < DECK_RULES.maxCopies && out.length < DECK_RULES.size; n++)
+        for (const id of cheap) if (out.length < DECK_RULES.size) out.push(id);
+      return out;
+    };
+
+    let most = 0;
+    for (let k = 0; k <= DECK_RULES.size; k++) {
+      const d = mix(k);
+      if (d.length === DECK_RULES.size && deckCost(d, of) <= deckBudget()) most = k;
+    }
+    expect(most, "some of the good ones have to fit, or the budget is a wall").toBeGreaterThan(2);
+    expect(most, "and not all of them, or it is not a budget").toBeLessThan(DECK_RULES.size);
   });
 
   it("will not let you add a card you cannot afford", () => {

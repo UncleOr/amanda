@@ -1,6 +1,6 @@
 import { useCallback, useEffect, useRef, useState } from "react";
 import {
-  DECK,
+  DECK_RULES,
   KING,
   LEVELS,
   PHASES,
@@ -157,8 +157,25 @@ function matchDeck(
   // the gaps become Crumb Demons, and that is the reason to collect.
   const chosen = seed === undefined && built?.length ? built : null;
   const pool = seed === undefined ? monsterPool(album) : cardPool();
-  // A built deck is dealt whole and shuffled; anything else is drawn.
-  const monsters = chosen ? shuffle([...chosen], rnd) : shuffle(pool, rnd).slice(0, DECK.size);
+  /*
+   * ═══ NOT ALL OF IT ARRIVES ═══
+   *
+   * Or: *"there needs to be some number of cards that are in your deck and
+   * don't actually reach the match — so that if you put in only Mother Tree
+   * and she's your one card with a lot of health, there's a chance she
+   * doesn't arrive at all and you're stuck with some cactus as King."*
+   *
+   * A built deck used to be dealt WHOLE: sixteen chosen, sixteen shuffled,
+   * every one of them turning up if the clock allowed. Which made one great
+   * card worth more than a plan, because you could always count on seeing
+   * it.
+   *
+   * Eighteen chosen and fifteen dealt. The shuffle decides which three stay
+   * home, so a deck is a promise about what you MIGHT see and not about what
+   * you will — and the answer to "what if my one tank never comes" is a
+   * second tank.
+   */
+  const monsters = shuffle(chosen ? [...chosen] : pool, rnd).slice(0, DECK_RULES.dealt);
   // Fill cards are the dramatic ones — at most one per deck, and not every
   // deck. The rest of the action slots go to the active cards.
   const fills =
@@ -358,7 +375,7 @@ const SKILL: Record<BotLevel, Skill> = {
    * should be. Which is what a beginner's board looks like, and makes it a
    * fair thing to learn against.
    */
-  easy: { window: 6, fromWorst: true, sloppiness: 0.55, gaps: 4, draw: DECK.size, level: 1 },
+  easy: { window: 6, fromWorst: true, sloppiness: 0.55, gaps: 4, draw: DECK_RULES.dealt, level: 1 },
   normal: { window: 2, fromWorst: false, sloppiness: 0, gaps: 0, draw: 32, level: 3 },
   /** Every choice the planner knows how to make, made correctly. */
   hard: { window: 1, fromWorst: false, sloppiness: 0, gaps: 0, draw: 0, level: 6 },

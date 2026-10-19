@@ -1,6 +1,6 @@
 import { describe, expect, it } from "vitest";
 import { ACTION_DECK_COUNT, ACTIONS, PASSIVE_ACTIONS } from "../data/catalog";
-import { DECK } from "@amanda/shared";
+import { DECK_RULES } from "@amanda/shared";
 import { __testing } from "./useMatch";
 
 /**
@@ -24,11 +24,18 @@ describe("the action cards in a match deck", () => {
     expect(without).toBeLessThan(decks.length * 0.7);
   });
 
-  it("still deals the full count of action cards, and the monsters too", () => {
+  /*
+   * Or set the shape of a match deck: *"only 15 (+5 action cards) reach the
+   * match deck. That means 3 cards you put in the deck don't arrive, and
+   * you have 2 action cards to bin and 2 monsters to bin."* Read from the
+   * constants, because the next tuning pass moves them and this test is
+   * about the deal being WHOLE, not about fifteen.
+   */
+  it("deals the action cards and the monsters it is meant to", () => {
     for (const deck of decks) {
       const actions = deck.filter((id) => ACTIONS.has(id));
       expect(actions).toHaveLength(ACTION_DECK_COUNT);
-      expect(deck).toHaveLength(DECK.size + ACTION_DECK_COUNT);
+      expect(deck).toHaveLength(DECK_RULES.dealt + ACTION_DECK_COUNT);
       // no duplicate action cards in one deck
       expect(new Set(actions).size).toBe(actions.length);
     }

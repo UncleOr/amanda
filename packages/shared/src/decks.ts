@@ -39,8 +39,32 @@ import { DEFAULT_BACK } from "./cardBacks.js";
 import { TUNED } from "./tunables.js";
 
 export const DECK_RULES = {
-  /** Monster cards in a built deck. */
-  size: 16,
+  /**
+   * ═══ EIGHTEEN CHOSEN, FIFTEEN DEALT ═══
+   *
+   * Or: *"18 cards in a deck (leave the budget at 50). Only 15 (+5 action
+   * cards) reach the match deck. That means 3 cards you put in the deck
+   * don't arrive. That means you have 2 action cards to bin and 2 monsters
+   * to bin — unless you put a fill card in, and then you can bin more."*
+   *
+   * The arithmetic is his and it checks out: the board is sixteen cells
+   * minus the King's 2x2, so thirteen monsters go down including the crown.
+   * Fifteen dealt leaves two to bin; five action cards against three bar
+   * slots leaves two more.
+   *
+   * What the split BUYS is the thing he was asking about before it: *"there
+   * needs to be some number of cards that are in your deck and don't
+   * actually reach the match — so that if you put in only Mother Tree and
+   * she's your one card with a lot of health, there's a chance she doesn't
+   * arrive at all and you're stuck with some cactus as King."* A deck that
+   * is dealt whole is a promise that every card in it turns up, and a
+   * promise like that makes one great card worth more than a plan.
+   */
+  size: 18,
+  /**
+   * How many of them are dealt into one match. The other three stay home.
+   */
+  dealt: 15,
   /** What those sixteen may cost between them. */
   /*
    * ═══ THE BUDGET, AND THE FLOOR UNDER IT ═══
@@ -68,7 +92,25 @@ export const DECK_RULES = {
    * Nothing here is read directly. `deckBudget()` reads TUNED at call time
    * so the panel moves the next deck rather than the next deploy.
    */
-  budget: 50,
+  /*
+   * ═══ SIXTY, AND OR ASKED FOR FIFTY ═══
+   *
+   * He said *"leave the budget at 50"*, and fifty cannot hold eighteen
+   * cards. Measured rather than argued: the starter six cost 4, 5, 4, 2, 1
+   * and 3, the rules allow three of each, and that is exactly eighteen
+   * entries costing 57 altogether. There is no cheaper legal eighteen,
+   * because there is no other card to reach for.
+   *
+   * So fifty-seven is the floor, the same way forty-seven was the floor for
+   * sixteen — and sixty is three above it, which is the same three of air
+   * the old fifty had. Anything less than 57 means a new player cannot save
+   * a deck, and "fill it for me" hands them something illegal.
+   *
+   * Nothing reads this directly: deckBudget() asks TUNED at call time, so
+   * Or can put it back to fifty-seven, or anywhere above it, from the admin
+   * panel without a deploy.
+   */
+  budget: 60,
   /**
    * How many times one card may appear.
    *

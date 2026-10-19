@@ -1,7 +1,7 @@
 import { describe, expect, it } from "vitest";
 import { __testing } from "./useMatch";
 import { CATALOG } from "../data/catalog";
-import { DECK } from "@amanda/shared";
+import { DECK_RULES } from "@amanda/shared";
 
 const { matchDeck, generateAiPlan } = __testing;
 
@@ -41,9 +41,10 @@ describe("mirror mode", () => {
     for (const id of monsters) expect(only).toContain(id);
   });
 
-  it("deals a full deck", () => {
+  /* Fifteen of the eighteen, the same fifteen on both sides. */
+  it("deals a whole match's worth", () => {
     const deck = matchDeck(null, 999);
-    expect(deck.filter((id) => CATALOG.has(id)).length).toBe(DECK.size);
+    expect(deck.filter((id) => CATALOG.has(id)).length).toBe(DECK_RULES.dealt);
   });
 
   it("the computer builds out of the deck it was handed, and nothing else", () => {

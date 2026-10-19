@@ -235,7 +235,13 @@ export function isCornerKey(key: string): boolean {
 }
 
 /** How many action cards get shuffled into a match deck (GDD: 4). */
-export const ACTION_DECK_COUNT = 4;
+/*
+ * Five, against three slots in the bar — so two of them are there to be
+ * thrown away. Or, setting the shape of a match deck: *"only 15 (+5 action
+ * cards) reach the match deck... that means you have 2 action cards to bin
+ * and 2 monsters to bin."*
+ */
+export const ACTION_DECK_COUNT = 5;
 /**
  * How often a match deck contains a Fill card at all.
  *
