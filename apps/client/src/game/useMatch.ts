@@ -1652,6 +1652,30 @@ export function useMatch(): MatchApi {
    * takes a heavy wound instead — carried into the battle as a health cut.
    */
   const eraseEnemyAt = useCallback((key: string, kingDamage: number) => {
+    /*
+     * ═══ THE HALF OF THIS THAT ONLINE EVER REACHED ═══
+     *
+     * Or: *"none of the action cards that touch the enemy work. I cannot
+     * erase..."*
+     *
+     * Everything below this line edits `aiPlanRef` — the computer's plan —
+     * and against a person there is no plan: it is null, the function
+     * returned on the next line, and the screen of the player who spent the
+     * card did not change by one pixel. The card DID land; the other client
+     * carried it out and the board came back without it a moment later. But
+     * a card that appears to do nothing when you play it is a card that does
+     * not work, and he is right.
+     *
+     * So the picture goes first, for both kinds of opponent, and the plan is
+     * edited afterwards if there is one.
+     */
+    if (key !== KING_KEY)
+      setNetOpp((v) => {
+        if (!v.placements[key]) return v;
+        const placements = { ...v.placements };
+        delete placements[key];
+        return { ...v, placements };
+      });
     const plan = aiPlanRef.current;
     if (!plan) return;
     if (key === KING_KEY) {
@@ -1667,11 +1691,6 @@ export function useMatch(): MatchApi {
     const [x, y] = key.split("-").map(Number) as [number, number];
     const at = plan.findIndex((p) => !p.king && p.x === x && p.y === y);
     if (at >= 0) plan.splice(at, 1);
-    setNetOpp((v) => {
-      const placements = { ...v.placements };
-      delete placements[key];
-      return { ...v, placements };
-    });
   }, []);
 
   const activateAction = useCallback(
@@ -2129,6 +2148,28 @@ export function useMatch(): MatchApi {
            */
           clearRound();
         }
+        /*
+         * ═══ A FOUGHT MATCH DOES NOT GO BACK TO BUILDING ═══
+         *
+         * Or: *"the clock got stuck and the battle never started"* — and
+         * for both of them.
+         *
+         * The server was still running the clock it had started when the
+         * match began, even after both players pressed ready and the battle
+         * was computed early. Half a minute into watching that battle, a
+         * "panic" arrived and this handler obeyed it: the fight vanished and
+         * the board came back. Then "locking" arrived and put them into the
+         * pre-battle countdown — which online is only ever ended by a result
+         * message, and that had already been sent and will not come twice.
+         *
+         * The server no longer talks after the result (see computeResult in
+         * match.ts). This is the other half of the same lock, because the
+         * one thing a client must never do with a message from the past is
+         * act on it: once a round has been fought, the only phase worth
+         * hearing is a new countdown, which is a new round.
+         */
+        if (p !== "countdown" && (phaseRef.current === "battle" || phaseRef.current === "result"))
+          return;
         if (p === "locking") {
           enterPrebattle();
         } else {

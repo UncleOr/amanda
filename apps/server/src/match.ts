@@ -56,18 +56,54 @@ interface PlayerConn {
 
 const emptyView = (): BoardView => ({ placements: {}, king: null });
 
+/**
+ * ═══ THE LINE THAT COULD STOP A MATCH DEAD ═══
+ *
+ * Or: *"when I played the x-ray the clock got stuck and the battle never
+ * started"* — and, asked whose screen: *"stuck for both of us."*
+ *
+ * Both, with the sockets still open, is a short list of possible causes, and
+ * only one of them survived being looked at: a THROW inside the timers that
+ * drive the phases. The chain used to be nested — each phase scheduled the
+ * next one from inside its own callback — so an exception anywhere in a
+ * phase change meant the next phase was never scheduled at all. The match
+ * stops where it stood. Nobody is disconnected, so nobody is told anything;
+ * the process catches the exception and stays up (see uncaughtException in
+ * index.ts) precisely so that one bad match does not kill the others, which
+ * also means nothing at all is visibly wrong.
+ *
+ * And `Object.entries(undefined)` throws. A view with no placements field —
+ * and JSON.stringify DROPS an undefined field, so a client that had one for
+ * a moment sends exactly that — got stored, and then killed the match at the
+ * next phase change, several seconds later, with nothing to connect the two.
+ *
+ * Three locks on this door now, because the cost of it being open is the
+ * whole match: views are checked on the way in, this is total, and the
+ * timeline no longer depends on any of its own steps finishing.
+ */
+function cells(view: BoardView): Array<[string, string]> {
+  const p = view?.placements;
+  return p && typeof p === "object" ? Object.entries(p) : [];
+}
+
+/** Does this look like a board a player could have built? */
+function isBoardView(v: unknown): v is BoardView {
+  if (!v || typeof v !== "object") return false;
+  const { placements, king } = v as BoardView;
+  if (!placements || typeof placements !== "object" || Array.isArray(placements)) return false;
+  return king === null || king === undefined || typeof king === "string";
+}
+
 /** Fog-of-war filter: how much of a board the opponent may see in a phase. */
 function fog(view: BoardView, phase: string): BoardView {
   if (phase === "build") {
     const placements: Record<string, string> = {};
-    for (const [k, v] of Object.entries(view.placements))
-      if (Number(k.split("-")[0]) === 3) placements[k] = v;
+    for (const [k, v] of cells(view)) if (Number(k.split("-")[0]) === 3) placements[k] = v;
     return { placements, king: null };
   }
   if (phase === "panic" || phase === "locking") {
     const placements: Record<string, string> = {};
-    for (const [k, v] of Object.entries(view.placements))
-      if (Number(k.split("-")[0]) >= 1) placements[k] = v;
+    for (const [k, v] of cells(view)) if (Number(k.split("-")[0]) >= 1) placements[k] = v;
     return { placements, king: view.king };
   }
   return view;
@@ -247,19 +283,32 @@ export class Match {
     this.showOthers(this.b);
   }
 
+  /**
+   * The whole match, scheduled at once.
+   *
+   * It used to be a chain: build was scheduled from inside the countdown's
+   * callback, panic from inside build's, and the result from inside panic's.
+   * That reads well and has one terrible property — every step depends on the
+   * one before it RUNNING TO THE END. A single exception, anywhere in a phase
+   * change, and the next phase is never scheduled: the match stops, both
+   * players sit in front of a clock that does not move, and nothing is
+   * disconnected so nothing is said. See `cells` above for the line that did
+   * it.
+   *
+   * Four timers against one wall clock instead. Each knows when it fires
+   * without asking any of the others, so a step that fails costs that step
+   * and nothing after it: the battle still starts.
+   */
   private runTimeline(): void {
+    const build = COUNTDOWN;
+    const panic = build + PHASES.build.seconds;
+    const locking = panic + PHASES.panic.seconds;
     this.setPhase("countdown", COUNTDOWN);
-    this.after(COUNTDOWN, () => {
-      this.setPhase("build", PHASES.build.seconds);
-      this.after(PHASES.build.seconds, () => {
-        this.setPhase("panic", PHASES.panic.seconds);
-        this.after(PHASES.panic.seconds, () => {
-          this.setPhase("locking", 0);
-          // Give clients a short window to submit their final boards.
-          this.after(PANIC_LOCK_WINDOW, () => this.computeResult());
-        });
-      });
-    });
+    this.after(build, () => this.setPhase("build", PHASES.build.seconds));
+    this.after(panic, () => this.setPhase("panic", PHASES.panic.seconds));
+    this.after(locking, () => this.setPhase("locking", 0));
+    // And a short window after locking for the clients to send final boards.
+    this.after(locking + PANIC_LOCK_WINDOW, () => this.computeResult());
   }
 
   /** Handle a message from one of the two clients. */
@@ -272,6 +321,9 @@ export class Match {
       return;
     }
     if (msg.t === "board" && msg.view) {
+      // Checked before it is kept: a stored view is read again at every phase
+      // change, so a bad one is not a bad frame, it is a bad match.
+      if (!isBoardView(msg.view)) return;
       p.view = msg.view;
       this.showOthers(this.other(p));
     } else if (msg.t === "hex" && typeof msg.id === "string") {
@@ -347,6 +399,29 @@ export class Match {
   private computeResult(): void {
     if (this.resultSent || this.over) return;
     this.resultSent = true;
+    /*
+     * ═══ AND THE TIMELINE IS OVER ═══
+     *
+     * Or: *"when I played the x-ray the clock got stuck and the battle never
+     * started"* — *"stuck for both of us."*
+     *
+     * Here is how a match ends and then carries on. Both players press ready,
+     * both boards arrive, and the battle is computed and sent on the spot —
+     * that is the whole point of the button. But the clock that was still
+     * running underneath was never told, so thirty seconds later, with the
+     * two of them watching the fight they had already started, the build
+     * timer fired and sent "phase: panic". The client obeys a phase message:
+     * the battle vanishes and they are back on a board. Then "phase:
+     * locking" arrives, which puts them into the pre-battle countdown — and
+     * online nothing comes out of that on its own, because the server's job
+     * ended long ago. A clock that does not move and a battle that never
+     * starts. Both of them, every time they were both ready early.
+     *
+     * The result is the end of the match. Nothing scheduled before it has
+     * anything left to say.
+     */
+    for (const t of this.timers) clearTimeout(t);
+    this.timers = [];
     const fallback = (side: Side): NetBoard => ({ owner: side, placements: [] });
     // Amanda mode: the two players become ONE side, and she is the other.
     const boardA = this.coop
