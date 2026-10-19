@@ -33,6 +33,60 @@
         }
       })();
     </script>
+    <script>
+      /*
+       * ═══ THE GAME NEVER SHOWS A WHITE SCREEN WITH NOTHING ON IT ═══
+       *
+       * Or sent a photograph of Tzod's phone, taken trying to open the game:
+       * the WebView's own "Webpage not available". Inside a WebView that is
+       * the end of the road — no address bar, no reload, no back — and the
+       * only way out is to kill the app.
+       *
+       * sw.js answers that for the page itself. This answers it for the
+       * PAGE THAT LOADS AND THEN CANNOT START: the HTML arrives, the bundle
+       * does not, and what the player gets is white. It has happened here
+       * twice already with the same error in the console — "Failed to fetch
+       * dynamically imported module" — once because a deploy had deleted the
+       * chunk the running app went looking for.
+       *
+       * It listens rather than counts seconds, so a slow phone on a slow
+       * connection is never interrupted: nothing happens until a script has
+       * actually FAILED, and then only if the game has not started.
+       *
+       * Inline, and it styles itself, because at the moment it is needed
+       * there may be no stylesheet and no bundle either.
+       *
+       * DRAFT COPY — Or writes the words. These live here and in sw.js, the
+       * only two Hebrew strings in the game that are not in the copy
+       * document: both have to work with nothing loaded.
+       */
+      (function () {
+        var shown = false;
+        function stuck() {
+          var root = document.getElementById("root");
+          if (shown || (root && root.childElementCount)) return;
+          shown = true;
+          document.body.innerHTML =
+            '<div style="position:fixed;inset:0;background:#0B0E17;color:#fff;display:flex;' +
+            'flex-direction:column;align-items:center;justify-content:center;gap:22px;' +
+            'font-family:system-ui,-apple-system,Segoe UI,Arial,sans-serif;text-align:center;padding:16px">' +
+            '<p style="margin:0;font-size:clamp(16px,4.6vh,21px)">אמנדה צריכה אינטרנט כדי להיפתח.</p>' +
+            '<button style="font:inherit;font-size:clamp(16px,4.6vh,21px);font-weight:700;color:#0B0E17;' +
+            'background:#ffb020;border:0;border-radius:12px;padding:12px 28px" ' +
+            'onclick="location.reload()">נסה שוב</button></div>';
+        }
+        window.addEventListener(
+          "error",
+          function (e) {
+            var el = e.target;
+            if (!el || el === window || el.tagName !== "SCRIPT") return;
+            // A moment, in case another copy of it is still on its way.
+            setTimeout(stuck, 1500);
+          },
+          true
+        );
+      })();
+    </script>
     <title>אמנדה | משחק קלפים מפלצתי</title>
     <meta name="description" content="אוספים קלפים. נלחמים במפלצות. אמנדה אוכלת את כולם." />
 

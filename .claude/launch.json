@@ -23,6 +23,19 @@
         "dev"
       ],
       "port": 2567
+    },
+    {
+      "name": "client-preview",
+      "runtimeExecutable": "pnpm",
+      "runtimeArgs": [
+        "--filter",
+        "@amanda/client",
+        "preview",
+        "--",
+        "--port",
+        "4173"
+      ],
+      "port": 4173
     }
   ]
 }
