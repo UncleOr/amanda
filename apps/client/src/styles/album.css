@@ -943,3 +943,24 @@ html[dir="ltr"] .intro__wash {
 .tut--waiting {
   pointer-events: auto;
 }
+
+/*
+ * The way into the elements chart, in the bar with the counts.
+ *
+ * It is the only BUTTON among them — everything else up there is a number —
+ * so it is outlined rather than filled: a door, not an offer.
+ */
+.album__chart {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  padding: 3px 10px;
+  border-radius: 999px;
+  border: 1px solid var(--line-lit);
+  background: transparent;
+  color: var(--text);
+  font: inherit;
+  font-size: var(--t-2);
+  font-weight: 700;
+  cursor: pointer;
+}

@@ -27,6 +27,7 @@ import {
   type Stats,
 } from "../game/account";
 import { LevelUp } from "./LevelUp";
+import { ElementsTable } from "./ElementsTable";
 import { line as t, lineF as tf } from "../game/copy";
 import { say } from "../game/lang";
 
@@ -68,6 +69,19 @@ export function Album({ account, onClose, onCardInfo, onChanged }: Props) {
    * nothing at all — which is also why nobody noticed the button.
    */
   const [levelled, setLevelled] = useState<{ cardId: string; level: number } | null>(null);
+  /*
+   * ═══ THE RULE THAT WAS WRITTEN DOWN NOWHERE ═══
+   *
+   * Or, after being told what the elements do: *"let's put an 'elements
+   * table' button in the album (and in the deck builder) that opens a popup
+   * with an X and a table showing, for each element, which it beats and
+   * which beats it."*
+   *
+   * He asked because he had assumed they were decoration. They multiply
+   * every hit by 1.5 or 0.75, and the album is where a player looks at the
+   * elements — so it is where the chart belongs. See ElementsTable.
+   */
+  const [chart, setChart] = useState(false);
 
   async function buyLevel(cardId: string) {
     setBusy(cardId);
@@ -118,6 +132,9 @@ export function Album({ account, onClose, onCardInfo, onChanged }: Props) {
               </span>
             </>
           )}
+          <button className="album__chart" onClick={() => setChart(true)}>
+            <Icon name="fire" size={15} /> {t("s063eb7a", "טבלת היסודות")}
+          </button>
           <button className="btn-fight btn-ghost album__back" onClick={onClose}>
             {t("sdf8896f", "← חזרה")}
           </button>
@@ -320,6 +337,8 @@ export function Album({ account, onClose, onCardInfo, onChanged }: Props) {
         Confetti, fireworks and a happy sound — see LevelUp.tsx. It sits
         outside the scrolling list because it takes the whole screen.
       */}
+      {chart && <ElementsTable onClose={() => setChart(false)} />}
+
       {levelled && (
         <LevelUp
           cardId={levelled.cardId}

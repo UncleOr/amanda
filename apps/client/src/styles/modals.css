@@ -183,3 +183,65 @@
   cursor: default;
 }
 .about__search b { color: var(--text); }
+
+/*
+ * ═══ THE ELEMENTS CHART ═══
+ *
+ * Or: *"a table that shows, for each element, which it beats and which beats
+ * it (name + picture)."*
+ *
+ * Three columns and ten rows on a screen 384px tall, so the rows are the
+ * smallest thing that still holds an icon and a word, and the table scrolls
+ * inside the panel rather than the panel growing past the screen.
+ */
+.elements { width: min(520px, 100%); }
+.elements__title {
+  margin: 0;
+  padding: 14px 0 10px;
+  font-size: var(--t-5);
+  text-align: center;
+}
+.elements__grid {
+  display: grid;
+  grid-template-columns: auto 1fr 1fr;
+  gap: 6px 8px;
+  align-items: center;
+}
+.elements__head {
+  font-size: var(--t-2);
+  /* The scale carries the hierarchy here, not the colour: these are two
+     words over a column of ten rows, and a grey heading on a dark panel is
+     the thing this game had too much of. */
+  color: var(--text);
+  opacity: 0.75;
+  font-weight: 700;
+  padding-bottom: 2px;
+  border-bottom: 1px solid var(--line);
+}
+.elements__head b { color: var(--text); }
+/* The element itself, in its own colour — the same colour the card wears. */
+.elements__who {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  font-size: var(--t-3);
+  font-weight: 800;
+  white-space: nowrap;
+}
+.elements__list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px;
+}
+.elements__pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 3px;
+  padding: 2px 7px;
+  border: 1px solid var(--line);
+  border-radius: 999px;
+  font-size: var(--t-2);
+  white-space: nowrap;
+}
+/* Nothing, which is a fact about that element and not an empty cell. */
+.elements__none { color: var(--text); opacity: 0.5; font-size: var(--t-2); }

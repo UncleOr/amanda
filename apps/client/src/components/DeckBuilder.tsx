@@ -40,6 +40,7 @@ import {
 } from "@amanda/shared";
 import { CATALOG, SERIES, collectable } from "../data/catalog";
 import { CardBack, CardView } from "./CardView";
+import { ElementsTable } from "./ElementsTable";
 import { CardDetailModal } from "./CardDetailModal";
 import { Icon } from "./Icon";
 import { say } from "../game/lang";
@@ -338,6 +339,13 @@ export function DeckBuilder({
   const [picks, setPicks] = useState<ReadonlySet<string>>(new Set());
   /** Which of the two menus is open, if either. */
   const [menu, setMenu] = useState<"sort" | "filter" | null>(null);
+  /*
+   * The elements chart, in the one other place a player is choosing cards.
+   * Or asked for it here and in the album in the same breath, and he is
+   * right that this is the half that matters: the album is where you look at
+   * what you have, and this is where you decide what to take into a fight.
+   */
+  const [chart, setChart] = useState(false);
   /** The card whose full details are open. See useHold. */
   const [detail, setDetail] = useState<string | null>(null);
   const hold = useHold();
@@ -684,7 +692,15 @@ export function DeckBuilder({
 
         {/* How much of the album you are looking at, when it is not all. */}
         {picks.size > 0 && <span className="builder__shown">{album.length}</span>}
+
+        {/* Beside the two questions about THIS list, the one question about
+            the cards in it. See ElementsTable. */}
+        <button className="sift sift--chart" onClick={() => setChart(true)}>
+          <Icon name="fire" size={14} /> {t("s6502618", "טבלת היסודות")}
+        </button>
       </div>
+
+      {chart && <ElementsTable onClose={() => setChart(false)} />}
 
       <section className="builder__album" aria-label={t("s9db8c07", "האלבום שלי")}>
         {album.map((card) => {
