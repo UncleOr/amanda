@@ -549,6 +549,28 @@
   color: var(--muted);
   font-size: 12px;
 }
+/*
+ * ═══ A ROW YOU HAVE BEEN TO IS A ROW YOU CAN PRESS ═══
+ *
+ * Or: *"after you open the arena — tapping any arena should tell the story
+ * of the arena."* So a reached row gets a pointer and the story replaces
+ * the one-line tease underneath the name. The row grows to hold it, which
+ * is the whole reason the list scrolls.
+ */
+.arenas__row.is-open { cursor: pointer; }
+.arenas__row.is-telling {
+  background: var(--sur-lit);
+  border-radius: 12px;
+}
+.arenas__row.is-telling .arenas__who small {
+  color: var(--text);
+  font-size: var(--t-2);
+  line-height: 1.5;
+  /* The tease is one line and is clipped; a story is not. */
+  white-space: normal;
+  display: block;
+  overflow: visible;
+}
 .arenas__at {
   flex: none;
   display: inline-flex;

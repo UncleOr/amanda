@@ -66,7 +66,7 @@
  * docs/TASKS.md has been calling "בוט קליל" all along.
  */
 import { buildReport, runBattle, type Placement } from "@amanda/engine";
-import { levelMultiplier } from "@amanda/shared";
+import { DECK_RULES, cardCost, deckBudget, levelMultiplier, type Card } from "@amanda/shared";
 import { CATALOG, SERIES } from "../src/data/catalog";
 import { __testing } from "../src/game/useMatch";
 
@@ -143,30 +143,85 @@ function goodish(): Placement[] {
   const worth = (c: { stats: { hp: number; power: number } }) => c.stats.hp + c.stats.power * 4;
   const dps = (c: { stats: { power: number; attackSpeed: number } }) =>
     c.stats.attackSpeed > 0 ? c.stats.power / c.stats.attackSpeed : 0;
-  const pool = [...CATALOG.values()]
+
+  /*
+   * ═══ A DECK HE COULD ACTUALLY BUILD, AND THE FIFTEEN HE IS ACTUALLY DEALT
+   *
+   * Or: *"the bot has got really hard now. I can't win at all."*
+   *
+   * The model was the bug. It put thirteen of the forty best cards in the
+   * game on the board, every one of them different, with no budget and no
+   * shuffle — a board nobody can build. Then the deck rules changed under
+   * it: eighteen chosen inside a budget of 45, FIFTEEN of them dealt, and
+   * thirteen cells to put them in. So the player this file was measuring
+   * got quietly stronger than any player can be, on the same day the real
+   * one got weaker, and all three bots were tuned against the difference.
+   *
+   * This builds a deck the way a good player does — the strongest cards
+   * that fit the budget, three of a card at most — then deals and places it
+   * exactly as the game does.
+   */
+  const affordable: Card[] = [];
+  let spent = 0;
+  const copies = new Map<string, number>();
+  const ranked = [...CATALOG.values()]
     .filter((c) => c.launch && c.id !== "crumb_demon")
-    .sort((a, b) => worth(b) - worth(a))
-    .slice(0, 40);
+    .sort((a, b) => worth(b) - worth(a));
+  for (const c of ranked) {
+    while (
+      affordable.length < DECK_RULES.size &&
+      (copies.get(c.id) ?? 0) < DECK_RULES.maxCopies &&
+      spent + cardCost(c) <= deckBudget()
+    ) {
+      affordable.push(c);
+      spent += cardCost(c);
+      copies.set(c.id, (copies.get(c.id) ?? 0) + 1);
+    }
+  }
+  // Whatever is left of the eighteen goes to the cheapest things that fit.
+  for (const c of [...ranked].sort((a, b) => cardCost(a) - cardCost(b))) {
+    while (
+      affordable.length < DECK_RULES.size &&
+      (copies.get(c.id) ?? 0) < DECK_RULES.maxCopies &&
+      spent + cardCost(c) <= deckBudget()
+    ) {
+      affordable.push(c);
+      spent += cardCost(c);
+      copies.set(c.id, (copies.get(c.id) ?? 0) + 1);
+    }
+  }
+
+  // Dealt: fifteen of the eighteen, shuffled, the way matchDeck does it.
+  const dealt = affordable
+    .map((c) => ({ c, r: Math.random() }))
+    .sort((a, b) => a.r - b.r)
+    .slice(0, DECK_RULES.dealt)
+    .map((x) => x.c);
 
   const mult = levelMultiplier(PLAYER_LEVEL);
   const buff = { hpMult: mult, powerMult: mult };
-  const used = new Set<string>();
-  const take = (ranked: typeof pool) => {
-    const c = ranked.find((x) => !used.has(x.id)) ?? ranked[0]!;
-    used.add(c.id);
-    return c;
+  const left = [...dealt];
+  const take = (rank: (a: Card, b: Card) => number) => {
+    left.sort(rank);
+    return left.shift()!;
   };
-  const byHp = [...pool].sort((a, b) => b.stats.hp - a.stats.hp);
-  const byDps = [...pool].sort((a, b) => dps(b) - dps(a));
+  const byHp = (a: Card, b: Card) => b.stats.hp - a.stats.hp;
+  const byDps = (a: Card, b: Card) => dps(b) - dps(a);
 
+  // The crown behind the wall, the toughest things in front, shooters at the
+  // back — the three things a player learns in a fortnight.
   const out: Placement[] = [{ cardId: take(byHp).id, x: 1, y: 1, king: true, buff }];
-  for (let y = 0; y < 4; y++) out.push({ cardId: take(byHp).id, x: 3, y, buff });
-  for (let y = 0; y < 4; y++) out.push({ cardId: take(byDps).id, x: 0, y, buff });
-  const rest = [...pool].sort((a, b) => worth(b) - worth(a));
+  for (let y = 0; y < 4 && left.length; y++) out.push({ cardId: take(byHp).id, x: 3, y, buff });
+  for (let y = 0; y < 4 && left.length; y++) out.push({ cardId: take(byDps).id, x: 0, y, buff });
   for (let x = 1; x <= 2; x++)
     for (let y = 0; y < 4; y++) {
-      if (x >= 1 && x <= 2 && y >= 1 && y <= 2) continue; // the King's 2x2
-      out.push({ cardId: take(rest).id, x, y, buff });
+      if (x >= 1 && x <= 2 && y >= 1 && y <= 2) continue;
+      // Run out of cards and the cell fills with a Crumb Demon, as in a match.
+      out.push(
+        left.length
+          ? { cardId: take(byHp).id, x, y, buff }
+          : { cardId: "crumb_demon", x, y },
+      );
     }
   return out;
 }

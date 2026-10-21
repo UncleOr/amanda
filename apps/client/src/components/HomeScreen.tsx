@@ -61,7 +61,7 @@ const MOTES = [
 /** The three settings of the bot dial, and what each one means in a sentence. */
 const BOT_LEVELS: ReadonlyArray<{ id: "easy" | "normal" | "hard"; he: string; note: string }> = [
   { id: "easy", he: t("s5eb66c7", "קליל"), note: t("safec7e3", "לוח דליל, קלפים חלשים. בשביל ללמוד.") },
-  { id: "normal", he: t("s0c9f683", "רגיל"), note: t("s8f75ac6", "בונה כמו שהוא יודע, עם קלפים ברמה 3.") },
+  { id: "normal", he: t("s0c9f683", "רגיל"), note: t("s685a0b6", "בונה כמו שהוא יודע, עם קלפים ברמה 2.") },
   { id: "hard", he: t("sc93cdac", "קשה"), note: t("s2827bc7", "כל האוסף, וקלפים ברמה 6. מנצח 3 מתוך 4.") },
 ];
 
@@ -476,7 +476,10 @@ export function HomeScreen({
             not about the album.
           */}
           <div className="home__ladder">
-            <ArenaTrack trophies={m.account?.trophies ?? 0} />
+            <ArenaTrack
+              trophies={m.account?.trophies ?? 0}
+              best={m.account?.bestTrophies ?? m.account?.trophies ?? 0}
+            />
             {/*
               ═══ STRAIGHT FROM THE HOME SCREEN, AND ABOVE THE ALBUM ═══
 

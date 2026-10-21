@@ -21,8 +21,23 @@ import { lang, say } from "../game/lang";
  */
 const BASE = import.meta.env.BASE_URL;
 
-export function ArenaTrack({ trophies }: { trophies: number }) {
+export function ArenaTrack({
+  trophies,
+  /**
+   * The high-water mark, not where they are now.
+   *
+   * Or: *"the story of each arena can only be seen after you have reached
+   * it once."* Once. Dropping back down a rung does not take the story
+   * away any more than it takes the cards away — you were there.
+   */
+  best = trophies,
+}: {
+  trophies: number;
+  best?: number;
+}) {
   const [open, setOpen] = useState(false);
+  /** Which arena's story is showing. One at a time: this is a phone. */
+  const [telling, setTelling] = useState<string | null>(null);
   const here = arenaFor(trophies);
   const progress = arenaProgress(trophies);
   const next = ARENAS[ARENAS.indexOf(here) + 1];
@@ -72,14 +87,26 @@ export function ArenaTrack({ trophies }: { trophies: number }) {
             <h2 className="arenas__title">{t("s474cafb", "הדרך")}</h2>
             <ol className="arenas__list">
               {ARENAS.map((a) => {
-                const reached = trophies >= a.from;
+                const reached = best >= a.from;
                 const current = a.id === here.id;
+                const told = telling === a.id;
                 return (
                   <li
                     key={a.id}
                     className={`arenas__row${reached ? " is-open" : " is-locked"}${
                       current ? " is-here" : ""
-                    }`}
+                    }${told ? " is-telling" : ""}`}
+                    /*
+                     * ═══ THE ROW IS THE BUTTON ═══
+                     *
+                     * Or: *"after you open the arena — tapping any arena
+                     * should tell the story of the arena."*
+                     *
+                     * A locked one does not answer. Its story is where you
+                     * have not been yet, and reading it off the list would
+                     * be the same as having been.
+                     */
+                    onClick={reached ? () => setTelling(told ? null : a.id) : undefined}
                   >
                     <span
                       className="arenas__art"
@@ -88,7 +115,7 @@ export function ArenaTrack({ trophies }: { trophies: number }) {
                     />
                     <span className="arenas__who">
                       <b>{say(a.name)}</b>
-                      <small>{say(a.tease)}</small>
+                      <small>{told ? say(a.story) : say(a.tease)}</small>
                     </span>
                     <span className="arenas__at">
                       {current ? (

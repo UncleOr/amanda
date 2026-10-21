@@ -375,8 +375,8 @@ const SKILL: Record<BotLevel, Skill> = {
    * should be. Which is what a beginner's board looks like, and makes it a
    * fair thing to learn against.
    */
-  easy: { window: 6, fromWorst: true, sloppiness: 0.55, gaps: 4, draw: DECK_RULES.dealt, level: 1 },
-  normal: { window: 2, fromWorst: false, sloppiness: 0, gaps: 0, draw: 32, level: 3 },
+  easy: { window: 8, fromWorst: true, sloppiness: 0.55, gaps: 4, draw: DECK_RULES.dealt, level: 1 },
+  normal: { window: 3, fromWorst: false, sloppiness: 0.1, gaps: 0, draw: 24, level: 2 },
   /** Every choice the planner knows how to make, made correctly. */
   hard: { window: 1, fromWorst: false, sloppiness: 0, gaps: 0, draw: 0, level: 6 },
 };
