@@ -707,3 +707,94 @@
 @media (max-width: 900px) {
   .gifts { grid-template-columns: 1fr; }
 }
+
+/*
+ * ═══ THE TILE IS A DOOR NOW ═══
+ *
+ * Or: *"you should be able to go into every item and see its details and its
+ * full picture."* So a tile is a button, the price on it is a label rather
+ * than the control, and the pressing happens inside.
+ */
+.good {
+  font: inherit;
+  cursor: pointer;
+  transition: transform 0.12s ease-out, border-color 0.12s ease-out;
+}
+.good:hover { border-color: var(--line-lit); transform: translateY(-2px); }
+.good:active { transform: translateY(0); }
+/* A price that is read, not pressed: the shape stays, the lift goes. */
+.good > span.good__buy { cursor: inherit; }
+.good > span.good__buy.is-poor { opacity: 0.5; }
+
+/*
+ * ═══ ONE ITEM, AT THE SIZE IT WAS DRAWN ═══
+ *
+ * The shelf shows a 66px circle because a shelf holds twelve of them. This
+ * screen holds one, so the picture is the hero and everything else on it is
+ * furniture — see ShopDetail.
+ */
+.modal--deet { width: min(420px, 100%); text-align: center; }
+.deet__art {
+  width: min(240px, 60vw, 34vh);
+  aspect-ratio: 1;
+  margin: 8px auto 14px;
+  display: grid;
+  place-items: center;
+  border-radius: 18px;
+  overflow: hidden;
+  background: rgba(0, 0, 0, 0.3);
+  border: 1px solid var(--line);
+}
+.deet__art img { width: 100%; height: 100%; object-fit: cover; }
+.deet__name { margin: 0 0 6px; font-size: var(--t-5); }
+.deet__blurb { margin: 0 0 14px; font-size: var(--t-3); line-height: 1.5; color: var(--text); }
+/*
+ * Everything in the pack. Or: *"when you open a monster pack you see all its
+ * emoji."* The shelf draws the first one because a tile fits one; this is
+ * the screen where "what am I buying" is the whole question.
+ */
+.deet__pack {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 10px;
+  margin: 0 0 16px;
+}
+.deet__pack figure { margin: 0; width: 64px; }
+.deet__pack img { width: 52px; height: 52px; object-fit: contain; }
+.deet__pack figcaption { font-size: var(--t-1); color: var(--text); opacity: 0.7; line-height: 1.2; }
+/*
+ * The thing you came in to press, and it says so.
+ *
+ * Or asked for *"buttons that drive action, with animation"*. It breathes
+ * rather than flashes: a slow pulse on the glow, which reads as alive at a
+ * glance and does not fight the picture above it.
+ */
+.deet__buy {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 14px 40px;
+  border-radius: 14px;
+  border: 1px solid #ffd36b;
+  background: linear-gradient(180deg, #ffe9a8, #f0c24a);
+  color: #241a05;
+  font: inherit;
+  font-size: var(--t-4);
+  font-weight: 900;
+  cursor: pointer;
+  animation: deet-breathe 2.2s ease-in-out infinite;
+}
+@keyframes deet-breathe {
+  0%, 100% { box-shadow: 0 6px 18px rgba(255, 176, 32, 0.25); }
+  50% { box-shadow: 0 6px 30px rgba(255, 176, 32, 0.6); }
+}
+@media (prefers-reduced-motion: reduce) {
+  .deet__buy { animation: none; }
+}
+/* The same 0.82em the shelf tag uses, so a struck-out price is one size
+   in this game and not two. */
+.deet__buy s { opacity: 0.55; font-size: 0.82em; }
+.deet__buy:disabled, .deet__buy.is-poor { animation: none; opacity: 0.5; cursor: not-allowed; }
+.deet__mine { display: inline-flex; align-items: center; gap: 6px; color: #4ade80; font-size: var(--t-4); font-weight: 800; }
+.deet__poor { margin: 10px 0 0; font-size: var(--t-2); color: var(--accent); }

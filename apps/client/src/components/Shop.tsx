@@ -6,6 +6,7 @@ import { CardBack } from "./CardView";
 import { priceNow } from "../game/account";
 import { buyItem, loadShop, type ShopItem } from "../game/account";
 import { Overlay } from "./Overlay";
+import { ShopDetail } from "./ShopDetail";
 import { line as t } from "../game/copy";
 import { say } from "../game/lang";
 
@@ -62,7 +63,7 @@ const BASE = import.meta.env.BASE_URL;
  * was free to be one short, and was.
  */
 const SHELF_LABELS: Record<ShopKind, string> = {
-  avatar: t("s509b97d", "פרצופים"),
+  avatar: t("sfcbfca9", "אוואטרים"),
   skin: t("sa52276e", "מראה לקלפים"),
   // Next to "מראה לקלפים" because it is the same shopping decision: what
   // your cards look like, front and back.
@@ -131,6 +132,13 @@ export function Shop({
   const [owned, setOwned] = useState<string[]>([]);
   const [busy, setBusy] = useState<string | null>(null);
   const [note, setNote] = useState<string | null>(null);
+  /*
+   * Which item is open. Or: *"you should be able to go into every item and
+   * see its details and its full picture."* A shelf tile is 66px across; it
+   * can carry a picture and a price, and everything else it was carrying was
+   * carried badly. See ShopDetail.
+   */
+  const [looking, setLooking] = useState<string | null>(null);
 
   const refresh = useCallback(async () => {
     const { items: list, owned: mine } = await loadShop();
@@ -202,7 +210,12 @@ export function Shop({
                       const { pay, was } = priceNow(item);
                       const tooDear = pay > diamonds;
                       return (
-                        <div className={`good${mine ? " is-mine" : ""}`} key={item.id}>
+                        <button
+                          type="button"
+                          className={`good${mine ? " is-mine" : ""}`}
+                          key={item.id}
+                          onClick={() => setLooking(item.id)}
+                        >
                           {/* The picture is not lazy-loaded: the shop is a
                               thing you deliberately open, every tile is on
                               screen at once, and they are 66 pixels across.
@@ -232,17 +245,23 @@ export function Shop({
                           {/* The name of a phrase is the phrase, already
                               shown above it. Saying it twice is clutter. */}
                           {!phrase && <b className="good__name">{say(item.name)}</b>}
-                          {item.blurb?.he && <small className="good__blurb">{item.blurb.he}</small>}
+                          {/*
+                            The blurb is gone from the shelf and lives in the
+                            detail now. Or: *"all the explanation that is
+                            under every avatar"* — a sentence under a 66px
+                            tile is a grey smear, and it was the third thing
+                            competing with a picture that is what is being
+                            sold.
+                          */}
                           {mine ? (
                             <span className="good__mine">
                               <Icon name="ready" size={13} /> {t("s1a96dcd", "שלך")}
                             </span>
                           ) : (
-                            <button
-                              className="good__buy"
-                              disabled={busy === item.id || tooDear}
-                              onClick={() => void take(item)}
-                              title={tooDear ? t("s585947b", "אין מספיק יהלומים") : undefined}
+                            <span
+                              className={`good__buy${tooDear ? " is-poor" : ""}${
+                                was !== null ? " is-sale" : ""
+                              }`}
                             >
                               {/* The old price, struck through, is the whole
                                   mechanism of a sale: a lower number nobody
@@ -256,9 +275,9 @@ export function Shop({
                                   <Icon name="gem" size={12} /> {pay}
                                 </>
                               )}
-                            </button>
+                            </span>
                           )}
-                        </div>
+                        </button>
                       );
                     })}
                   </div>
@@ -271,6 +290,22 @@ export function Shop({
 
         {note && <p className="friends__note">{note}</p>}
       </div>
+
+      {looking &&
+        (() => {
+          const item = items?.find((i) => i.id === looking);
+          if (!item) return null;
+          return (
+            <ShopDetail
+              item={item}
+              mine={owned.includes(item.id)}
+              diamonds={diamonds}
+              busy={busy === item.id}
+              onBuy={() => void take(item).then(() => setLooking(null))}
+              onClose={() => setLooking(null)}
+            />
+          );
+        })()}
     </Overlay>
   );
 }
