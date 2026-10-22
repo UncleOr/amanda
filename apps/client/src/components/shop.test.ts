@@ -71,9 +71,9 @@ describe("the item's own page", () => {
   });
 
   it("is the only place a purchase can be made", () => {
-    const buys = [...SHOP.matchAll(/void take\(item\)/g)];
+    const buys = [...SHOP.matchAll(/void take\(item/g)];
     expect(buys, "one call, from the detail").toHaveLength(1);
-    expect(SHOP).toContain("onBuy={() => void take(item).then(() => setLooking(null))}");
+    expect(SHOP).toContain("onBuy={(count) => void take(item, count).then(() => setLooking(null))}");
   });
 });
 
@@ -168,5 +168,36 @@ describe("the offers strip", () => {
     // and another on the shelf would be the shop arguing with itself.
     expect([...SHOP.matchAll(/<Good\b/g)]).toHaveLength(2);
     expect([...SHOP.matchAll(/function Good\(/g)]).toHaveLength(1);
+  });
+});
+
+/**
+ * ═══ A PACK OF COPIES ═══
+ *
+ * Or: *"say I am 6 Flame Dragons short of an upgrade — I will buy a pack of
+ * 10 Flame Dragons, then upgrade, and I will also have +2 towards the next
+ * upgrade."*
+ */
+describe("how many copies", () => {
+  it("is asked only for a card", () => {
+    expect(DEET).toContain('item.kind === "card" ? CARD_PACKS : null');
+  });
+
+  it("is a choice, and the button is still the only till", () => {
+    // Three buy buttons would be three heroes on one panel.
+    expect(DEET).toContain("deet__pack-pick");
+    expect([...DEET.matchAll(/onBuy\(/g)]).toHaveLength(1);
+  });
+
+  it("prices the pack with the same function the server charges with", () => {
+    expect(DEET).toContain("packPrice(pay, many)");
+    expect(DEET, "and strikes through the old total, not the old unit").toContain(
+      "packPrice(was, many)",
+    );
+  });
+
+  it("carries the number all the way to the till", () => {
+    expect(SHOP).toContain("onBuy={(count) => void take(item, count)");
+    expect(SHOP).toContain("buyItem(item.id, count)");
   });
 });

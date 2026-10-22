@@ -1,6 +1,6 @@
 import { describe, expect, it } from "vitest";
 import type { SupabaseClient } from "@supabase/supabase-js";
-import { israelDay } from "@amanda/shared";
+import { israelDay, packPrice } from "@amanda/shared";
 import { audienceOf, boughtToday, buy, priceNow, runGrant, shopWindow, type ShopItem } from "./shop.js";
 import { offersFor } from "./offers.js";
 import { cardsForSale } from "./cardShelf.js";
@@ -635,5 +635,70 @@ describe("buying one of today's cards", () => {
     const shelf = await cardsForSale(sb, ME, NOW);
     expect(await buy(sb, ME, shelf[0]!.id, NOW)).toMatch(/^shop\.poor:/);
     expect(state.players[ME]!.diamonds).toBe(10);
+  });
+});
+
+/**
+ * ═══ A PACK OF COPIES ═══
+ *
+ * Or: *"say I am 6 Flame Dragons short of an upgrade — I will buy a pack of
+ * 10 Flame Dragons, then upgrade, and I will also have +2 towards the next
+ * upgrade."*
+ */
+describe("buying a pack of a card", () => {
+  const album = [{ player_id: ME, card_id: "dragons_01_flame_dragon", copies: 2 }];
+
+  it("adds that many copies and charges the pack price", async () => {
+    const { sb, state } = fakeDb({ players: { [ME]: { diamonds: 9000 } }, cards: [...album] });
+    const shelf = await cardsForSale(sb, ME, NOW);
+    const flame = shelf.find(
+      (i) => (i.grants as { cardId: string }).cardId === "dragons_01_flame_dragon",
+    )!;
+    const unit = await shown(sb, flame.id, shelf);
+
+    expect(await buy(sb, ME, flame.id, NOW, 10)).toBeNull();
+    expect(state.cards[0]!.copies, "two, and ten more").toBe(12);
+    expect(state.players[ME]!.diamonds).toBe(9000 - packPrice(unit, 10));
+  });
+
+  it("is cheaper than pressing buy ten times", async () => {
+    const { sb } = fakeDb({ players: { [ME]: { diamonds: 9000 } }, cards: [...album] });
+    const shelf = await cardsForSale(sb, ME, NOW);
+    const flame = shelf[0]!;
+    const unit = await shown(sb, flame.id, shelf);
+    expect(packPrice(unit, 10)).toBeLessThan(unit * 10);
+  });
+
+  it("refuses to sell a pack of anything that is not a card", async () => {
+    // Ten avatars is one avatar.
+    const { sb, state } = fakeDb({
+      players: { [ME]: { diamonds: 900 } },
+      items: { "avatar.yeti": { kind: "avatar", grants: { avatar: "av_yeti" }, price_diamonds: 100 } },
+    });
+    const pay = await shown(sb, "avatar.yeti");
+    expect(await buy(sb, ME, "avatar.yeti", NOW, 10)).toBeNull();
+    expect(state.players[ME]!.diamonds, "charged for one").toBe(900 - pay);
+    expect(state.owned).toHaveLength(1);
+  });
+
+  it("treats a count that is not a pack as one copy", async () => {
+    const { sb, state } = fakeDb({ players: { [ME]: { diamonds: 9000 } }, cards: [...album] });
+    const shelf = await cardsForSale(sb, ME, NOW);
+    const flame = shelf.find(
+      (i) => (i.grants as { cardId: string }).cardId === "dragons_01_flame_dragon",
+    )!;
+    const unit = await shown(sb, flame.id, shelf);
+    // 7 is not on the shelf, and 10000 is a request rather than a pack.
+    expect(await buy(sb, ME, flame.id, NOW, 7)).toBeNull();
+    expect(state.cards[0]!.copies).toBe(3);
+    expect(await buy(sb, ME, flame.id, NOW, 10000)).toBeNull();
+    expect(state.cards[0]!.copies).toBe(4);
+    expect(state.players[ME]!.diamonds).toBe(9000 - unit * 2);
+  });
+
+  it("still refuses a pack of a card that is not on today's shelf", async () => {
+    const { sb, state } = fakeDb({ players: { [ME]: { diamonds: 9000 } }, cards: [...album] });
+    expect(await buy(sb, ME, "card.today.insects_10_insect_empress", NOW, 10)).toBe("shop.gone");
+    expect(state.players[ME]!.diamonds).toBe(9000);
   });
 });

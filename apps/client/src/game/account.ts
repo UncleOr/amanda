@@ -1046,11 +1046,17 @@ export async function loadShop(): Promise<{
   }
 }
 
-/** Buy one thing. Returns a message for the player, or null. */
-export async function buyItem(itemId: string): Promise<string | null> {
+/**
+ * Buy one thing — or, for a card, a pack of copies.
+ *
+ * Or: *"say I am 6 Flame Dragons short of an upgrade — I will buy a pack of
+ * 10."* The server decides what a pack costs and what may come in one; this
+ * only carries the number.
+ */
+export async function buyItem(itemId: string, count = 1): Promise<string | null> {
   const r = await friendsCall<{ ok?: boolean; error?: string }>(
     "/api/shop/buy",
-    { itemId },
+    { itemId, count },
     { error: t("sac33701", "אין חיבור לשרת") },
   );
   return r.ok ? null : (serverError(r.error) ?? t("s2afe5ef", "לא הצליח"));

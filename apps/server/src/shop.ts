@@ -23,6 +23,8 @@ import type { SupabaseClient } from "@supabase/supabase-js";
 import {
   ARENAS,
   givesSomething,
+  isCardPack,
+  packPrice,
   israelDay,
   type GrantFilters,
   type GrantGives,
@@ -254,6 +256,14 @@ export async function buy(
    * else leaves it alone.
    */
   at: Date = new Date(),
+  /**
+   * How many copies, for a card. One of CARD_PACKS; anything else is one.
+   *
+   * Or: *"say I am 6 Flame Dragons short of an upgrade — I will buy a pack
+   * of 10."* Only a card can come in a pack: an avatar bought ten times is
+   * one avatar.
+   */
+  count = 1,
 ): Promise<string | null> {
   const now = at.toISOString();
   /*
@@ -331,7 +341,13 @@ export async function buy(
   const priced =
     offersFor([...(await shopWindow(sb, now)), ...cards], at).find((i) => i.id === itemId) ??
     (item as ShopItem);
-  const price = priceNow(priced, now).pay;
+  /*
+   * A pack, if one was asked for and this is a thing that comes in packs.
+   * `packPrice` is in shared so the chips on the item's page and the till
+   * are the same arithmetic rather than two copies of it.
+   */
+  const pack = item.kind === "card" && isCardPack(count) ? count : 1;
+  const price = packPrice(priceNow(priced, now).pay, pack);
   const { data: me } = await sb.from("players").select("diamonds").eq("id", playerId).maybeSingle();
   const have = me?.diamonds ?? 0;
   // The one refusal a code alone cannot carry: it has to say how many.
@@ -358,7 +374,13 @@ export async function buy(
   if (!repeatable)
     await sb.from("player_items").insert({ player_id: playerId, item_id: itemId, source: "bought" });
 
-  const gives = shopGives(item.kind as string, (item.grants ?? {}) as Record<string, unknown>);
+  const one = shopGives(item.kind as string, (item.grants ?? {}) as Record<string, unknown>);
+  // A pack is the same grant, as many times over. The copies are what an
+  // upgrade spends, and leftovers count towards the next one.
+  const gives: GrantGives =
+    pack > 1 && one.cards?.length
+      ? { ...one, cards: one.cards.map((c) => ({ ...c, copies: c.copies * pack })) }
+      : one;
   if (item.kind === "chest" && gives.chest) {
     /*
      * ═══ A BOUGHT CHEST ARRIVES SHUT ═══
@@ -396,7 +418,12 @@ export async function buy(
    * number that was charged at the moment it was charged. The list price is
    * still in the shop row if it is ever wanted.
    */
-  track(sb, playerId, "buy", { item: itemId, kind: item.kind ?? null, paid: price });
+  track(sb, playerId, "buy", {
+    item: itemId,
+    kind: item.kind ?? null,
+    paid: price,
+    ...(pack > 1 ? { pack } : {}),
+  });
   return null;
 }
 

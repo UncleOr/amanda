@@ -489,7 +489,10 @@ async function handleShop(req: IncomingMessage, res: ServerResponse, path: strin
   const body = (await readBody(req)) as Record<string, unknown>;
   const itemId = typeof body.itemId === "string" ? body.itemId : "";
   if (!itemId) return send(res, 400, { error: "which item" });
-  const error = await buy(sb, playerId, itemId);
+  // How many copies, for a card. `buy` decides what is allowed; anything
+  // that is not one of the packs is one.
+  const count = Number(body.count);
+  const error = await buy(sb, playerId, itemId, new Date(), count);
   send(res, error ? 400 : 200, error ? { error } : { ok: true });
 }
 

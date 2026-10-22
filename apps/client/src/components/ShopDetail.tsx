@@ -18,7 +18,8 @@
  * of its emoji, not the first one. Or: *"when you open a monster pack you
  * see all its emoji."*
  */
-import { CARD_BACKS, CATCHPHRASES, EMOJI } from "@amanda/shared";
+import { useState } from "react";
+import { CARD_BACKS, CARD_PACKS, CATCHPHRASES, EMOJI, packPrice } from "@amanda/shared";
 import { CardBack, CardView } from "./CardView";
 import { Icon } from "./Icon";
 import { Overlay } from "./Overlay";
@@ -70,7 +71,8 @@ export function ShopDetail({
   taken: boolean;
   diamonds: number;
   busy: boolean;
-  onBuy: () => void;
+  /** Buy `count` of it. One, unless this is a card and a pack was picked. */
+  onBuy: (count: number) => void;
   onClose: () => void;
 }) {
   const phrase = CATCHPHRASES.find((p) => p.item === item.id);
@@ -79,7 +81,21 @@ export function ShopDetail({
   const pack = EMOJI.some((e) => e.pack === item.id) ? item.id : null;
   const art = shopItemArt(item);
   const { pay, was } = priceNow(item);
-  const tooDear = pay > diamonds;
+  /*
+   * ═══ HOW MANY COPIES ═══
+   *
+   * Or: *"say I am 6 Flame Dragons short of an upgrade — I will buy a pack
+   * of 10 Flame Dragons, then upgrade, and I will also have +2 towards the
+   * next upgrade."*
+   *
+   * Only a card comes in packs; an avatar bought ten times is one avatar.
+   * The chips are a choice and the BUTTON is still the only thing that
+   * buys, so the screen keeps one thing to press.
+   */
+  const packs = item.kind === "card" ? CARD_PACKS : null;
+  const [many, setMany] = useState(1);
+  const total = packPrice(pay, many);
+  const tooDear = total > diamonds;
 
   return (
     <Overlay onClick={onClose}>
@@ -140,6 +156,21 @@ export function ShopDetail({
 
         {pack && <PackContents pack={pack} />}
 
+        {packs && !mine && (
+          <div className="deet__packs">
+            {packs.map((n) => (
+              <button
+                key={n}
+                type="button"
+                className={`deet__pack-pick${n === many ? " is-on" : ""}`}
+                onClick={() => setMany(n)}
+              >
+                ×{n}
+              </button>
+            ))}
+          </div>
+        )}
+
         {mine ? (
           <span className="deet__mine">
             <Icon name="ready" size={16} /> {t("saafa01a", "כבר שלך")}
@@ -152,14 +183,14 @@ export function ShopDetail({
           <button
             className={`deet__buy${tooDear ? " is-poor" : ""}`}
             disabled={busy || tooDear}
-            onClick={onBuy}
+            onClick={() => onBuy(many)}
           >
-            {was !== null && <s>{was}</s>}
-            {pay === 0 ? (
+            {was !== null && <s>{packPrice(was, many)}</s>}
+            {total === 0 ? (
               t("s6508fa9", "קח בחינם")
             ) : (
               <>
-                <Icon name="gem" size={16} /> {pay}
+                <Icon name="gem" size={16} /> {total}
               </>
             )}
           </button>

@@ -822,6 +822,37 @@
 .deet__pack img { width: 52px; height: 52px; object-fit: contain; }
 .deet__pack figcaption { font-size: var(--t-1); color: var(--text); opacity: 0.7; line-height: 1.2; }
 /*
+ * ═══ HOW MANY COPIES ═══
+ *
+ * Or: *"I will buy a pack of 10 Flame Dragons."* Three chips, and the one
+ * that is chosen is the only gold thing up here — the button below is the
+ * hero of this panel and these must not compete with it. They are a choice,
+ * not a till.
+ */
+.deet__packs {
+  display: flex;
+  justify-content: center;
+  gap: var(--sp-2);
+  margin: 0 0 12px;
+}
+.deet__pack-pick {
+  padding: 6px 16px;
+  border-radius: 999px;
+  border: 1px solid var(--line);
+  background: var(--sur-1);
+  color: var(--text);
+  font: inherit;
+  font-size: var(--t-3);
+  font-weight: 800;
+  cursor: pointer;
+}
+.deet__pack-pick.is-on {
+  border-color: var(--line-lit);
+  background: var(--sur-lit);
+  color: var(--accent);
+}
+
+/*
  * The thing you came in to press, and it says so.
  *
  * Or asked for *"buttons that drive action, with animation"*. It breathes

@@ -26,6 +26,8 @@ export * from "./collectable.js";
 
 // What a card costs in a deck — the budget the deck builder spends
 export * from "./cardCost.js";
+// Copies come in packs: 1, 5 or 10 of one card. See the file.
+export * from "./cardPacks.js";
 
 // The faces, and a name and a face for whoever never chose one
 export * from "./avatars.js";

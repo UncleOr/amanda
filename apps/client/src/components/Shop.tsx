@@ -279,10 +279,10 @@ export function Shop({
     void refresh();
   }, [refresh]);
 
-  async function take(item: ShopItem) {
+  async function take(item: ShopItem, count = 1) {
     setBusy(item.id);
     setNote(null);
-    const err = await buyItem(item.id);
+    const err = await buyItem(item.id, count);
     setBusy(null);
     if (err) return setNote(err);
     await refresh();
@@ -382,7 +382,7 @@ export function Shop({
               taken={today.includes(item.id)}
               diamonds={diamonds}
               busy={busy === item.id}
-              onBuy={() => void take(item).then(() => setLooking(null))}
+              onBuy={(count) => void take(item, count).then(() => setLooking(null))}
               onClose={() => setLooking(null)}
             />
           );
