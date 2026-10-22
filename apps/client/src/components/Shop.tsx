@@ -130,6 +130,8 @@ export function Shop({
 }) {
   const [items, setItems] = useState<ShopItem[] | null>(null);
   const [owned, setOwned] = useState<string[]>([]);
+  /** One of each kind of chest a day: what has already been taken today. */
+  const [today, setToday] = useState<string[]>([]);
   const [busy, setBusy] = useState<string | null>(null);
   const [note, setNote] = useState<string | null>(null);
   /*
@@ -141,9 +143,10 @@ export function Shop({
   const [looking, setLooking] = useState<string | null>(null);
 
   const refresh = useCallback(async () => {
-    const { items: list, owned: mine } = await loadShop();
+    const { items: list, owned: mine, today: taken } = await loadShop();
     setItems(list);
     setOwned(mine);
+    setToday(taken);
   }, []);
 
   useEffect(() => {
@@ -190,6 +193,12 @@ export function Shop({
                   <h3 className="aisle__label">{he}</h3>
                   <div className="aisle__row">
                     {row.map((item) => {
+                      /*
+                       * A chest is never "yours" — it is opened and gone —
+                       * so what the shelf says about one is whether you have
+                       * had today's. See REPEATABLE in apps/server/src/shop.ts.
+                       */
+                      const taken = today.includes(item.id);
                       const mine = owned.includes(item.id);
                       const art = shopItemArt(item);
                       // A phrase tile draws the line itself; see below.
@@ -212,7 +221,7 @@ export function Shop({
                       return (
                         <button
                           type="button"
-                          className={`good${mine ? " is-mine" : ""}`}
+                          className={`good${mine || taken ? " is-mine" : ""}`}
                           key={item.id}
                           onClick={() => setLooking(item.id)}
                         >
@@ -253,9 +262,10 @@ export function Shop({
                             competing with a picture that is what is being
                             sold.
                           */}
-                          {mine ? (
+                          {mine || taken ? (
                             <span className="good__mine">
-                              <Icon name="ready" size={13} /> {t("s1a96dcd", "שלך")}
+                              <Icon name={taken ? "chest" : "ready"} size={13} />{" "}
+                              {taken ? t("s52f7e9a", "מחר") : t("s1a96dcd", "שלך")}
                             </span>
                           ) : (
                             <span
@@ -299,6 +309,7 @@ export function Shop({
             <ShopDetail
               item={item}
               mine={owned.includes(item.id)}
+              taken={today.includes(item.id)}
               diamonds={diamonds}
               busy={busy === item.id}
               onBuy={() => void take(item).then(() => setLooking(null))}

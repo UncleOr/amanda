@@ -553,24 +553,11 @@
  * ═══ A ROW YOU HAVE BEEN TO IS A ROW YOU CAN PRESS ═══
  *
  * Or: *"after you open the arena — tapping any arena should tell the story
- * of the arena."* So a reached row gets a pointer and the story replaces
- * the one-line tease underneath the name. The row grows to hold it, which
- * is the whole reason the list scrolls.
+ * of the arena."* The story used to be told in the row itself, which grew
+ * to hold it; it opens its own sheet now (ArenaStory, and .modal--story
+ * below) because *"a popup should really open… make it bigger."*
  */
 .arenas__row.is-open { cursor: pointer; }
-.arenas__row.is-telling {
-  background: var(--sur-lit);
-  border-radius: 12px;
-}
-.arenas__row.is-telling .arenas__who small {
-  color: var(--text);
-  font-size: var(--t-2);
-  line-height: 1.5;
-  /* The tease is one line and is clipped; a story is not. */
-  white-space: normal;
-  display: block;
-  overflow: visible;
-}
 .arenas__at {
   flex: none;
   display: inline-flex;
@@ -588,6 +575,127 @@
   border: 1px solid var(--accent);
   color: var(--accent);
   font-size: 11px;
+}
+
+/* ════════ one arena, at the size it was painted ════════ */
+/*
+ * Or: *"when you press an arena a popup should really open: a big picture of
+ * the arena, a picture of the new cards you can get in this arena, add a
+ * caption at the bottom… make it bigger, in short."*
+ *
+ * So the picture is the hero and takes the top of the sheet whole. Everything
+ * under it is one column, in the order the eye wants it: where you are, what
+ * lives here, and what that is worth.
+ */
+.modal--story {
+  /* `.modal` is `width: min(440px, 100%)`; a max-width cannot widen it. */
+  width: min(660px, 100%);
+  padding: 0;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+}
+.story__art {
+  position: relative;
+  flex: none;
+  height: 190px;
+  background-size: cover;
+  background-position: center;
+  display: flex;
+  align-items: flex-end;
+}
+/* The name sits ON the place, which is the one caption a picture earns. */
+.story__art::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(180deg, transparent 35%, rgba(11, 14, 23, 0.92));
+}
+.story__art h2 {
+  position: relative;
+  z-index: 1;
+  margin: 0;
+  padding: var(--sp-3) var(--sp-4);
+  font-size: var(--t-5);
+}
+.story__text {
+  flex: 1;
+  min-height: 0;
+  padding: var(--sp-3) var(--sp-4) var(--sp-4);
+  display: flex;
+  flex-direction: column;
+  gap: var(--sp-3);
+  /*
+   * ═══ THE CAPTION IS THE LAST THING AND IT IS ALWAYS THERE ═══
+   *
+   * Or: *"add a caption at the bottom — cards from the Slime series get +20%
+   * power in the Court!"*
+   *
+   * Measured on the phone before this: the sheet was 346px tall inside a
+   * 384px screen and the caption's top edge was at y=395 — eleven pixels
+   * past the bottom of the world, reachable only by scrolling a column
+   * nothing said was scrollable.
+   *
+   * So the column does not scroll. The FAMILY does, inside what is left
+   * over, and the two things that must be read — the story and the rule —
+   * are pinned either side of it.
+   */
+  overflow: hidden;
+}
+.story__tale {
+  margin: 0;
+  font-size: var(--t-3);
+  line-height: 1.55;
+}
+/* The family that lives here. The art and the name; nothing else fits ten. */
+.ground__cards {
+  flex: 1 1 auto;
+  min-height: 0;
+  overflow-y: auto;
+  align-content: flex-start;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: var(--sp-2);
+  margin: 0;
+}
+.ground__card {
+  margin: 0;
+  width: 58px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--sp-1);
+}
+.ground__card img {
+  width: 100%;
+  aspect-ratio: 3 / 4;
+  object-fit: cover;
+  border-radius: 9px;
+  border: 1px solid var(--line);
+  background: var(--sur-1);
+}
+.ground__card figcaption {
+  /* A caption under a picture, which is what --t-2 is for. Not --t-1: that
+     is a number beside something that explains it, never a word on its own. */
+  font-size: var(--t-2);
+  text-align: center;
+  line-height: 1.2;
+}
+/*
+ * The rule of the place. The one gold thing on the sheet, because it is the
+ * one thing here that changes a match.
+ */
+.story__rule {
+  margin: 0;
+  padding: var(--sp-2) var(--sp-3);
+  border-radius: 12px;
+  background: var(--sur-lit);
+  border: 1px solid var(--line-lit);
+  color: var(--accent);
+  font-size: var(--t-3);
+  font-weight: 800;
+  text-align: center;
 }
 
 /* The end of a tutorial match. A moment, not a dialog. */
@@ -1028,6 +1136,35 @@
   .arenas__who b { font-size: 13px; }
   .arenas__who small { font-size: 10px; line-height: 1.3; }
   .arenas__badge { font-size: 10px; padding: 2px 7px; }
+  /*
+   * The arena's own sheet, on a phone held sideways. 384px of height has to
+   * hold a picture, a story, ten cards and the rule — so the picture gives
+   * up most of what it has (it is still four times the thumbnail it
+   * replaced) and the cards shrink to the smallest size their name survives.
+   */
+  /*
+   * ═══ SIDEWAYS, THE PICTURE GETS THE WHOLE WIDTH ═══
+   *
+   * The paintings are 1152x576 — twice as wide as they are tall. Standing
+   * one of them up in a tall column beside the text, which is the obvious
+   * way to use a landscape screen, showed FORTY PER CENT of it: a vertical
+   * slice of a painting whose whole subject is what is to the left and the
+   * right of you. Measured, not guessed — 281px of a 622px-wide scaled
+   * image.
+   *
+   * So the picture keeps the full width of the sheet and gives up height
+   * instead. A horizontal band of a landscape painting is still the scene;
+   * a vertical slice of one is a wall.
+   *
+   * Everything under it then has 200px to live in, which is exactly enough
+   * for the story, one row of the family, and the rule — in that order,
+   * none of them scrolling.
+   */
+  .modal--story { width: 94vw; max-height: 94vh; }
+  .story__art { height: 142px; }
+  .story__text { padding: var(--sp-2) var(--sp-3) var(--sp-3); gap: var(--sp-2); }
+  .story__tale { line-height: 1.4; }
+  .ground__card { width: 52px; }
 }
 
 

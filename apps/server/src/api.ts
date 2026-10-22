@@ -26,7 +26,7 @@ import {
   removeFriend,
 } from "./friends.js";
 import { isOnline } from "./presence.js";
-import { buy, ownedItems, shopWindow } from "./shop.js";
+import { boughtToday, buy, ownedItems, shopWindow } from "./shop.js";
 import { inbox, markRead } from "./notify.js";
 import { handleAdmin, handleCopy } from "./admin.js";
 import { awardMatch, claim, factsFor, standings } from "./meta.js";
@@ -450,13 +450,18 @@ async function handleFriends(req: IncomingMessage, res: ServerResponse, path: st
  */
 async function handleShop(req: IncomingMessage, res: ServerResponse, path: string): Promise<void> {
   const sb = db();
-  if (!sb) return send(res, 200, { items: [], owned: [] });
+  if (!sb) return send(res, 200, { items: [], owned: [], today: [] });
 
   if (path === "/api/shop") {
     const items = await shopWindow(sb);
     const playerId = await playerFrom(req);
-    const owned = playerId ? await ownedItems(sb, playerId) : [];
-    return send(res, 200, { items, owned });
+    // What is mine, and what I have already taken today — the second is the
+    // chest shelf: one of each kind a day, so a chest can be on the shelf
+    // and not for sale until tomorrow. See boughtToday in shop.ts.
+    const [owned, today] = playerId
+      ? await Promise.all([ownedItems(sb, playerId), boughtToday(sb, playerId)])
+      : [[], []];
+    return send(res, 200, { items, owned, today });
   }
 
   const playerId = await playerFrom(req);

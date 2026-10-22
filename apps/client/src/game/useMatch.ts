@@ -2,6 +2,8 @@ import { useCallback, useEffect, useRef, useState } from "react";
 import {
   DECK_RULES,
   KING,
+  arenaFor,
+  groundFor,
   LEVELS,
   PHASES,
   COOP_LANES,
@@ -1154,6 +1156,18 @@ export function useMatch(): MatchApi {
   /** The two boards of the match just fought, for reporting it. See startBattle. */
   const soloBoardsRef = useRef<{ mine: Placement[]; theirs: Placement[] } | null>(null);
   /**
+   * Which arena this bot match is being fought in — the ground, and so which
+   * family fights 20% harder in it (arenas.ts).
+   *
+   * Kept from the moment the battle starts and sent with the report, because
+   * the server REPLAYS the match: a replay on different ground is a different
+   * battle, and the one thing solo.ts relies on is that both runs of the same
+   * inputs give the same answer. It is read from trophies once, here, rather
+   * than worked out again on the server from a row that may have moved in
+   * between.
+   */
+  const soloArenaRef = useRef<string>(arenaFor(0).id);
+  /**
    * The playground: no clock, both boards yours, every card in the game on tap.
    * It is a workbench, not a match — nothing here is saved, rated or rewarded.
    */
@@ -2043,6 +2057,8 @@ export function useMatch(): MatchApi {
      * handed to the engine, after the filling and before anything else.
      */
     soloBoardsRef.current = { mine: mine.placements, theirs: aiFull.placements };
+    // Where this is being fought, and so which family fights harder in it.
+    soloArenaRef.current = arenaFor(accountRef.current?.trophies ?? 0).id;
 
     const r = runBattle({
       seed: BATTLE_SEED,
@@ -2051,6 +2067,7 @@ export function useMatch(): MatchApi {
       a: mine,
       b: aiFull,
       recordFrames: true,
+      ground: groundFor(accountRef.current?.trophies ?? 0),
       ...(soloAmandaRef.current ? { lanes: COOP_LANES } : {}),
     });
     setResult(r);
@@ -2284,6 +2301,15 @@ export function useMatch(): MatchApi {
           a: r.boardA as BoardInput,
           b: r.boardB as BoardInput,
           recordFrames: true,
+          /*
+           * The ground comes down the wire with the boards, for the same
+           * reason `lanes` does: the server has already fought this battle
+           * and paid for it, and a replay on different ground would not
+           * merely look wrong — it would disagree about who won. Which arena
+           * two players meet in is the server's to decide (match.ts), not
+           * each client's own rung.
+           */
+          ...(r.ground ? { ground: r.ground } : {}),
           // Amanda mode is eight lanes. Replaying it in four would not merely
           // look wrong, it would disagree with the server about who won.
           ...(r.lanes ? { lanes: r.lanes } : {}),
@@ -2578,7 +2604,12 @@ export function useMatch(): MatchApi {
     if (!boards || onlineRef.current || practice) return;
     if (reportedRef.current) return;
     reportedRef.current = true;
-    void reportSolo({ seed: BATTLE_SEED, ...boards, level: botLevelRef.current }).then((won) => {
+    void reportSolo({
+      seed: BATTLE_SEED,
+      ...boards,
+      level: botLevelRef.current,
+      arenaId: soloArenaRef.current,
+    }).then((won) => {
       if (won.nachos || won.chests.length || won.moved.length) setAward(won);
       /*
        * ═══ THE NACHOS WERE PAID AND THE BAR NEVER MOVED ═══

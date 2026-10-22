@@ -189,8 +189,11 @@ export function ShopTab({ call, say }: { call: Call; say: (s: string) => void })
         <label className="fld">
           <span>איזו תיבה</span>
           <select
-            value={(draft.grants.kind as string) ?? ""}
-            onChange={(e) => setDraft({ ...draft, grants: { kind: e.target.value } })}
+            /* `chest`, which is what GrantGives calls it and what the till
+               reads. It used to write `kind` here, which looked right beside
+               the chest's own column and handed over nothing. */
+            value={(draft.grants.chest as string) ?? ""}
+            onChange={(e) => setDraft({ ...draft, grants: { chest: e.target.value } })}
           >
             <option value="">— בחר —</option>
             <option value="wood">עץ</option>

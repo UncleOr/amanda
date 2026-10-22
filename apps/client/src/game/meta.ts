@@ -217,6 +217,13 @@ export async function reportSolo(opts: {
    * soloTrophies.ts).
    */
   level: BotLevel;
+  /**
+   * Which arena it was fought in — the ground, and so which family fought
+   * 20% harder in it. The server replays the battle with it for the same
+   * reason it is given the boards: a replay on different ground is a
+   * different battle. See solo.ts.
+   */
+  arenaId: string;
 }): Promise<Award> {
   const base = serverHttp();
   if (!base) return NOTHING;

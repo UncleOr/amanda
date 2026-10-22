@@ -55,6 +55,7 @@ function PackContents({ pack }: { pack: string }) {
 export function ShopDetail({
   item,
   mine,
+  taken,
   diamonds,
   busy,
   onBuy,
@@ -62,6 +63,11 @@ export function ShopDetail({
 }: {
   item: ShopItem;
   mine: boolean;
+  /**
+   * Today's one is already taken. Only a chest can be this: it is not a
+   * thing you own, it is one a day — see REPEATABLE in apps/server/src/shop.ts.
+   */
+  taken: boolean;
   diamonds: number;
   busy: boolean;
   onBuy: () => void;
@@ -97,9 +103,29 @@ export function ShopDetail({
           )}
         </div>
 
-        {/* A catchphrase's name IS the phrase, drawn above. Saying it twice
-            is the clutter Or asked to take off the shelf. */}
-        {!phrase && <h2 className="deet__name">{say(item.name)}</h2>}
+        {/*
+          ═══ THE PLAQUE SHOWS IT, AND THIS SAYS IT ═══
+
+          Or: *"add the text of the full sentence to the catchphrases,
+          because in the picture you only see part of it."*
+
+          Both halves are true and they are not the same thing. The plaque
+          IS the goods — the shape, the colour, the way the line arrives —
+          and it holds itself to one row by shrinking the type, down to 62%
+          and no further (see Plaque.tsx), below which a long line is simply
+          cut. So the picture is the right picture and it is not always the
+          whole sentence.
+
+          Underneath it, in ordinary readable text, is what you are
+          actually buying. Not the item's `name` — for a catchphrase that is
+          the phrase again — but the phrase itself, wrapped as many lines as
+          it needs.
+        */}
+        {phrase ? (
+          <p className="deet__phrase">{say(phrase)}</p>
+        ) : (
+          <h2 className="deet__name">{say(item.name)}</h2>
+        )}
         {item.blurb?.he && <p className="deet__blurb">{say(item.blurb)}</p>}
 
         {pack && <PackContents pack={pack} />}
@@ -107,6 +133,10 @@ export function ShopDetail({
         {mine ? (
           <span className="deet__mine">
             <Icon name="ready" size={16} /> {t("saafa01a", "כבר שלך")}
+          </span>
+        ) : taken ? (
+          <span className="deet__mine">
+            <Icon name="chest" size={16} /> {t("s3df89df", "לקחת היום. תחזור מחר")}
           </span>
         ) : (
           <button
@@ -124,7 +154,9 @@ export function ShopDetail({
             )}
           </button>
         )}
-        {tooDear && !mine && <p className="deet__poor">{t("s02d239a", "אין מספיק יהלומים")}</p>}
+        {tooDear && !mine && !taken && (
+          <p className="deet__poor">{t("s02d239a", "אין מספיק יהלומים")}</p>
+        )}
       </div>
     </Overlay>
   );

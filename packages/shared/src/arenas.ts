@@ -40,7 +40,45 @@ export interface Arena {
    * string in this game and is his to replace.
    */
   story: { he: string; en: string };
+  /**
+   * ═══ THE FAMILY THAT LIVES HERE ═══
+   *
+   * Or: *"add a caption at the bottom — cards from the Slime series get +20%
+   * power in the Court! (and of course implement it too)."*
+   *
+   * So an arena is no longer only a backdrop and a trophy range: it is
+   * GROUND, and the family that lives on it fights 20% harder there. That is
+   * the first thing in the game that makes WHERE you are change how a match
+   * goes, and it gives the ladder a second reason to be climbed — you meet
+   * a new family at every rung, and on its own ground it is dangerous.
+   *
+   * The pairing is thematic and nothing is derived from it, so any one of
+   * them is a one-line change if Or wants it elsewhere:
+   *
+   *   the playroom   a sprout on the windowsill — the gentlest family
+   *   the court      HIS: *"the Slimes. Yum."* is in his own story text
+   *   the station    steel, concrete, things that are too big
+   *   the alley      the crickets in his story ARE this family
+   *   the fuel stop  *"don't strike a match"*, which is his joke
+   *
+   * The Furries are nobody's ground on purpose: there is one of them, and
+   * Chuppy is the friend you are handed rather than a family you collect.
+   */
+  family: string;
 }
+
+/**
+ * How much harder the local family fights, as a fraction of its power.
+ *
+ * Or's number: *"+20% power"*. Power only, and not health — a bonus that
+ * raises both is the series synergy (see setup.ts), and two bonuses that do
+ * the same thing are two things nobody can tell apart on the board.
+ *
+ * It applies to BOTH sides. The ground is the ground; a slime is harder to
+ * kill in the Court whoever brought it, which is also what stops this being
+ * a reward for having climbed rather than a property of the place.
+ */
+export const ARENA_POWER_BONUS = 0.2;
 
 /**
  * The ladder, lowest first.
@@ -70,6 +108,7 @@ export interface Arena {
 export const ARENAS: Arena[] = [
   {
     id: "playroom",
+    family: "plants",
     name: { he: "חדר המשחקים", en: "The Playroom" },
     from: 0,
     tease: { he: "כאן כולם מתחילים. על השטיח.", en: "Everyone starts here. On the rug." },
@@ -80,6 +119,7 @@ export const ARENAS: Arena[] = [
   },
   {
     id: "court",
+    family: "slimes",
     name: { he: "המגרש", en: "The Court" },
     from: 150,
     tease: { he: "בחוץ, על האספלט, מול כולם.", en: "Outside, on the asphalt, in front of everyone." },
@@ -90,6 +130,7 @@ export const ARENAS: Arena[] = [
   },
   {
     id: "station",
+    family: "giants",
     name: { he: "תחנת הרכבת", en: "The Station" },
     from: 450,
     tease: { he: "אף אחד לא עוצר פה. חוץ ממך.", en: "Nobody stops here. Except you." },
@@ -100,6 +141,7 @@ export const ARENAS: Arena[] = [
   },
   {
     id: "alley",
+    family: "insects",
     name: { he: "סמטת האימה", en: "Fright Alley" },
     from: 1400,
     tease: { he: "אל תסתכל מה יש בפח.", en: "Don't look in the bin." },
@@ -110,6 +152,7 @@ export const ARENAS: Arena[] = [
   },
   {
     id: "fuel",
+    family: "dragons",
     name: { he: "תחנת הדלק", en: "The Fuel Stop" },
     from: 3600,
     tease: { he: "הסוף. אל תדליק כאן גפרור.", en: "The end of the road. Don't strike a match." },
@@ -132,7 +175,24 @@ export const ARENAS: Arena[] = [
  * חדר המשחקים → לחדר המשחקים.
  */
 export function toArena(name: string): string {
-  return name.startsWith("ה") ? `ל${name.slice(1)}` : `ל${name}`;
+  return prefixed(name, "ל");
+}
+
+/**
+ * "in <arena>", with the same collapse: המגרש becomes במגרש, not בהמגרש.
+ *
+ * The ground caption needs it — Or's line is *"cards from the Slime series
+ * get +20% power IN THE COURT"* — and it is the identical piece of grammar
+ * as toArena, which is why they are now one function with two prefixes
+ * rather than two functions with one rule written twice.
+ */
+export function atArena(name: string): string {
+  return prefixed(name, "ב");
+}
+
+/** ל, ב and ה: the article is swallowed by the preposition. */
+function prefixed(name: string, letter: string): string {
+  return name.startsWith("ה") ? `${letter}${name.slice(1)}` : `${letter}${name}`;
 }
 
 /** Which arena a player with this many trophies is fighting in. */
@@ -140,6 +200,20 @@ export function arenaFor(trophies: number): Arena {
   let found = ARENAS[0]!;
   for (const a of ARENAS) if (trophies >= a.from) found = a;
   return found;
+}
+
+/**
+ * The family that fights 20% harder where this many trophies puts you.
+ *
+ * The one function every battle asks, so that "which ground is this" has a
+ * single answer: the server asks it for an online match and for a replayed
+ * bot match, and the browser asks it for the bot match it is running. Two
+ * places working it out from trophies by hand is two places that can
+ * disagree about a boundary, and a battle whose two replays disagree is a
+ * player who is told they won and paid for a loss.
+ */
+export function groundFor(trophies: number): string {
+  return arenaFor(trophies).family;
 }
 
 /** How far into the current arena they are, 0–1, for a progress bar. */

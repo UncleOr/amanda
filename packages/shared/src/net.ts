@@ -181,6 +181,14 @@ export type ServerMessage =
       winner: Side | null;
       lanes?: number;
       coop?: boolean;
+      /**
+       * Whose ground this was: the seriesId of the family that fought 20%
+       * harder in it (arenas.ts). Sent for exactly the reason `lanes` is —
+       * the client replays this battle itself, and a replay on different
+       * ground would not only look wrong, it would disagree with the server
+       * about who won.
+       */
+      ground?: string;
     }
   /**
    * Who the other player is — name, face, trophies, catchphrase.

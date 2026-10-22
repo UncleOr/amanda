@@ -3,6 +3,7 @@ import {
   PHASES,
   TAUNT_LIMITS,
   encode,
+  groundFor,
   emojiFromSayId,
   ownedEmoji,
   tauntById,
@@ -15,7 +16,7 @@ import { runBattle, type BattleResult, type Placement } from "@amanda/engine";
 import { CATALOG, SYNERGIES } from "./content.js";
 import { recordMatch } from "./progress.js";
 import { awardMeta, factsFor } from "./meta.js";
-import { cardOf, itemsOf } from "./profiles.js";
+import { cardOf, itemsOf, profileOf } from "./profiles.js";
 import { COOP_LANES, amandaBoard, amandaView, joinBoards } from "./amanda.js";
 
 const COUNTDOWN = 3;
@@ -131,6 +132,21 @@ export class Match {
    * battle the same board, which is the only version of that worth having.
    */
   private readonly amanda: NetBoard | null;
+  /**
+   * ═══ WHOSE GROUND THE TWO OF THEM ARE MEETING ON ═══
+   *
+   * The family that fights 20% harder in this match (arenas.ts), decided
+   * ONCE here rather than per player, because there is one battle and it
+   * happens in one place.
+   *
+   * The LOWER of the two rungs. The matchmaker pairs on trophies, so the two
+   * are nearly always in the same arena anyway; when they are not, the pair
+   * meets on ground they have both reached rather than on ground one of them
+   * has never seen. Read at the start of the match, so a trophy change while
+   * they are building cannot move the floor out from under a board already
+   * laid out on it.
+   */
+  private readonly ground: string;
   /** Who has asked to play again, once this match is over. */
   private rematch = new WeakSet<PlayerConn["ws"]>();
   /** Called when BOTH have asked — the lobby starts the next round. */
@@ -147,6 +163,7 @@ export class Match {
     this.onRematch = onRematch;
     this.coop = coop;
     this.amanda = coop ? amandaBoard() : null;
+    this.ground = groundFor(Math.min(profileOf(wsA).trophies ?? 0, profileOf(wsB).trophies ?? 0));
     this.a = { ws: wsA, side: "A", view: emptyView(), board: null, playerId: idA, lastSaid: 0, saidCount: 0 };
     this.b = { ws: wsB, side: "B", view: emptyView(), board: null, playerId: idB, lastSaid: 0, saidCount: 0 };
     // In Amanda mode both are side A; `lane` tells each which half is theirs.
@@ -437,6 +454,7 @@ export class Match {
         seed: this.seed,
         catalog: CATALOG,
         synergies: SYNERGIES,
+        ground: this.ground,
         a: boardA,
         b: boardB,
         ...(this.coop ? { lanes: COOP_LANES } : {}),
@@ -451,6 +469,7 @@ export class Match {
       boardA,
       boardB,
       winner,
+      ground: this.ground,
       ...(this.coop ? { lanes: COOP_LANES, coop: true } : {}),
     });
     // Trophies and the winner's chest. Deliberately not awaited: the players

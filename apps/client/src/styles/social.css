@@ -747,6 +747,20 @@
 }
 .deet__art img { width: 100%; height: 100%; object-fit: cover; }
 .deet__name { margin: 0 0 6px; font-size: var(--t-5); }
+/*
+ * The catchphrase, written out.
+ *
+ * Or: *"add the text of the full sentence to the catchphrases, because in
+ * the picture you only see part of it."* The plaque above holds the line to
+ * one row by shrinking the type, and stops at 62% — so a long one is cut.
+ * This is the same sentence with nothing done to it.
+ */
+.deet__phrase {
+  margin: 0 0 10px;
+  font-size: var(--t-4);
+  font-weight: 800;
+  line-height: 1.4;
+}
 .deet__blurb { margin: 0 0 14px; font-size: var(--t-3); line-height: 1.5; color: var(--text); }
 /*
  * Everything in the pack. Or: *"when you open a monster pack you see all its

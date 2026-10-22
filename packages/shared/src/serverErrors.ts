@@ -84,6 +84,8 @@ export const SERVER_ERRORS = [
   "shop.notYet",
   "shop.ended",
   "shop.owned",
+  /** A chest you have already bought today. One of each kind a day. */
+  "shop.tomorrow",
   /** Not enough diamonds. Carries `short`: how many are missing. */
   "shop.poor",
 

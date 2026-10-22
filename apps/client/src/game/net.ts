@@ -65,6 +65,8 @@ export interface NetHandlers {
     winner: Side | null;
     lanes?: number;
     coop?: boolean;
+    /** The family that fought 20% harder in it — see the arena's ground. */
+    ground?: string;
   }) => void;
   onOppLeft?: () => void;
   /** The server will not start a match: this account is suspended until then. */

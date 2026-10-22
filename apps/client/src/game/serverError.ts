@@ -90,6 +90,8 @@ function words(code: ServerError, value: number | null): string {
       return t("s750dee1", "זה כבר נגמר.");
     case "shop.owned":
       return t("s50f7dfe", "זה כבר שלך.");
+    case "shop.tomorrow":
+      return t("se274fb0", "לקחת אחת היום. תחזור מחר.");
     case "shop.poor":
       return value === null
         ? t("sc59543d", "אין מספיק יהלומים.")

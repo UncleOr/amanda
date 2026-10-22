@@ -20,7 +20,13 @@
  * player_items row would simply not spend anything.
  */
 import type { SupabaseClient } from "@supabase/supabase-js";
-import { ARENAS, givesSomething, type GrantFilters, type GrantGives } from "@amanda/shared";
+import {
+  ARENAS,
+  givesSomething,
+  israelDay,
+  type GrantFilters,
+  type GrantGives,
+} from "@amanda/shared";
 import { grantChest, rollChest } from "./progress.js";
 import { refreshAlbumPowerSoon } from "./albumPower.js";
 import { track } from "./events.js";
@@ -153,6 +159,73 @@ export async function deliver(
   if (gives.cards?.length || gives.chest) refreshAlbumPowerSoon(sb, playerId);
 }
 
+/**
+ * ═══ THE THINGS YOU CAN BUY MORE THAN ONCE ═══
+ *
+ * Everything else in this shop is a possession: `player_items` holds one row
+ * per item and the till refuses anything already in it, which is right for an
+ * avatar and nonsense for these two.
+ *
+ * A CHEST is not a thing you own, it is a thing that happens to you — and Or
+ * capped it himself: *"up to one chest of each kind every day."*
+ *
+ * A CARD you already have is the whole point of buying it: copies are the
+ * upgrade currency, so the second one is worth exactly as much as the first.
+ * Or: *"we'll also add the option to buy cards you already have, so you can
+ * upgrade."*
+ *
+ * Neither writes a `player_items` row, because that row IS the refusal.
+ */
+const REPEATABLE = new Set(["chest", "card"]);
+
+/**
+ * ═══ WHAT A SHOP ROW ACTUALLY HANDS OVER ═══
+ *
+ * `grants` is deliberately open — "a new kind of thing to sell should be a
+ * row, not a migration" — and the price of that is that two places write it
+ * in two shapes. The admin panel (AdminShop.tsx) writes what the PICTURE
+ * needs, because that is what it is choosing: `{cardId}` for a card and
+ * `{kind}` for a chest. `deliver` reads what a GIFT gives: `{cards: [...]}`
+ * and `{chest}`.
+ *
+ * Nothing noticed while neither was sellable. The moment a chest and a card
+ * became buyable, a row made in the panel would have taken the diamonds and
+ * handed over nothing at all — silently, because an empty GrantGives is a
+ * perfectly valid gift of nothing.
+ *
+ * So the till translates. The panel writes the canonical shape now as well,
+ * but rows already in the table do not rewrite themselves and an old build
+ * of the panel is a thing that exists.
+ */
+export function shopGives(kind: string, grants: Record<string, unknown>): GrantGives {
+  const g = { ...grants } as GrantGives & { kind?: unknown; cardId?: unknown; copies?: unknown };
+  if (!g.chest && typeof g.kind === "string") g.chest = g.kind;
+  /*
+   * Only for a CARD. A skin carries a cardId too — it is a different look
+   * for a card you already have — and handing one over would be giving away
+   * the card itself every time somebody bought its coat.
+   */
+  if (!g.cards && kind === "card" && typeof g.cardId === "string")
+    g.cards = [{ cardId: g.cardId, copies: Math.max(1, Number(g.copies) || 1) }];
+  return g;
+}
+
+/**
+ * Which of today's one-a-day items this player has already taken.
+ *
+ * Asked by the shelf as well as the till, so that "come back tomorrow" is
+ * drawn from the same answer that would refuse the purchase — a shop that
+ * offers something it will not sell is worse than one that sells nothing.
+ */
+export async function boughtToday(sb: SupabaseClient, playerId: string): Promise<string[]> {
+  const { data } = await sb
+    .from("chests")
+    .select("bought_item")
+    .eq("player_id", playerId)
+    .eq("bought_day", israelDay(new Date()));
+  return (data ?? []).map((r) => r.bought_item as string).filter(Boolean);
+}
+
 /** Buy one thing. Returns a message for the player, or null. */
 export async function buy(
   sb: SupabaseClient,
@@ -172,13 +245,34 @@ export async function buy(
   if (item.available_from && item.available_from > now) return "shop.notYet";
   if (item.available_until && item.available_until < now) return "shop.ended";
 
-  const { data: already } = await sb
-    .from("player_items")
-    .select("item_id")
-    .eq("player_id", playerId)
-    .eq("item_id", itemId)
-    .maybeSingle();
-  if (already) return "shop.owned";
+  const repeatable = REPEATABLE.has(item.kind as string);
+  if (!repeatable) {
+    const { data: already } = await sb
+      .from("player_items")
+      .select("item_id")
+      .eq("player_id", playerId)
+      .eq("item_id", itemId)
+      .maybeSingle();
+    if (already) return "shop.owned";
+  }
+
+  /*
+   * One of each kind a day. Checked before the money and again by nothing
+   * afterwards: two taps a second apart can both get past this, and the
+   * balance guard below is what stops the second one paying — it reads a
+   * balance that has already changed and returns "retry".
+   */
+  const day = israelDay(new Date());
+  if (item.kind === "chest") {
+    const { data: todays } = await sb
+      .from("chests")
+      .select("id")
+      .eq("player_id", playerId)
+      .eq("bought_item", itemId)
+      .eq("bought_day", day)
+      .maybeSingle();
+    if (todays) return "shop.tomorrow";
+  }
 
   // The same function the shelf used to draw the price, so the number on the
   // tile and the number taken out of the purse cannot drift apart.
@@ -206,9 +300,39 @@ export async function buy(
     if (!paid?.length) return "retry";
   }
 
-  await sb.from("player_items").insert({ player_id: playerId, item_id: itemId, source: "bought" });
-  // Some items ARE the thing (a card, a chest) rather than a thing you wear.
-  await deliver(sb, playerId, (item.grants ?? {}) as GrantGives, "bought");
+  if (!repeatable)
+    await sb.from("player_items").insert({ player_id: playerId, item_id: itemId, source: "bought" });
+
+  const gives = shopGives(item.kind as string, (item.grants ?? {}) as Record<string, unknown>);
+  if (item.kind === "chest" && gives.chest) {
+    /*
+     * ═══ A BOUGHT CHEST ARRIVES SHUT ═══
+     *
+     * `deliver` would roll it and hand over the contents, which is right for
+     * a gift — the inbox has already said what it is — and wrong for this.
+     * The chest is what was bought; opening it on the home screen, with the
+     * lid and the cards coming out one at a time, is the thing the money was
+     * for. So it is sealed here the same way a chest won in a match is
+     * (progress.ts), with its contents rolled now and read when it opens.
+     *
+     * `bought_item` and `bought_day` are what make it one a day. They are
+     * written in the same row as the chest, so there is no second table to
+     * fall out of step with.
+     */
+    await sb.from("chests").insert({
+      player_id: playerId,
+      kind: gives.chest,
+      opened_at: null,
+      contents: rollChest(gives.chest),
+      bought_item: itemId,
+      bought_day: day,
+    });
+    // Everything else it may also hand over — an item, diamonds, a card.
+    await deliver(sb, playerId, { ...gives, chest: undefined }, "bought");
+  } else {
+    // Some items ARE the thing (a card) rather than a thing you wear.
+    await deliver(sb, playerId, gives, "bought");
+  }
   /*
    * What was bought, and what was actually paid.
    *

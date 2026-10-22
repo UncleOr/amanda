@@ -1,4 +1,4 @@
-import { ARENA, BOARD, KING, type Card } from "@amanda/shared";
+import { ARENA, ARENA_POWER_BONUS, BOARD, KING, type Card } from "@amanda/shared";
 import { createRng } from "./rng.js";
 import { synergyMembers } from "./synergy.js";
 import type { BattleState, Owner, SynergyDef, Unit } from "./types.js";
@@ -41,6 +41,23 @@ export interface BattleSetup {
   synergies?: SynergyDef[];
   /** Capture a per-tick snapshot for animated client replay. */
   recordFrames?: boolean;
+  /**
+   * ═══ WHOSE GROUND THIS IS ═══
+   *
+   * The seriesId of the family that lives in the arena being fought in. Its
+   * cards hit ARENA_POWER_BONUS harder here, on both sides of the board.
+   *
+   * A series id and not an arena id, because the engine has never heard of
+   * arenas and should not start now: it knows cards, and "this family is
+   * stronger in this battle" is a thing it can be told. Who decides which
+   * family — trophies, the server, the two players' rungs — is a question
+   * for the callers (groundFor in arenas.ts).
+   *
+   * Left out, nothing changes. Every battle that is not fought in an arena
+   * — the tutorial, the playground bench, the FX workbench — simply does
+   * not pass it.
+   */
+  ground?: string;
   /**
    * How many lanes the arena has. Four for an ordinary 1v1 — but Amanda mode
    * stacks both players' boards on one side, which is eight. Nothing else in
@@ -212,6 +229,20 @@ export function buildBattle(setup: BattleSetup): BattleState {
           unit.maxHp = Math.round(unit.maxHp * (1 + pct / 100));
           unit.hp = unit.maxHp;
         }
+      }
+      /*
+       * ═══ AND THE GROUND ITSELF ═══
+       *
+       * Applied after the synergy bonus and on top of it: a family on its
+       * own ground AND in a touching group of its own kind is the best
+       * place that family will ever be, which is exactly the board a
+       * player should be rewarded for having built where they built it.
+       *
+       * Power only. See ARENA_POWER_BONUS for why not health.
+       */
+      if (setup.ground && unit.seriesId === setup.ground) {
+        unit.flags.ground = true;
+        unit.power = Math.round(unit.power * (1 + ARENA_POWER_BONUS));
       }
       if (unit.isKing && board.kingAccountLevelHp) {
         unit.maxHp += board.kingAccountLevelHp;

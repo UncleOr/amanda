@@ -30,7 +30,7 @@
  * climbed by grinding it.
  */
 import { runBattle, type BattleResult, type Placement } from "@amanda/engine";
-import { BOARD, payableLevel, type BotLevel } from "@amanda/shared";
+import { ARENAS, BOARD, payableLevel, type BotLevel } from "@amanda/shared";
 import { CATALOG, SYNERGIES } from "./content.js";
 
 /** The most placements one side can send: a 4x4 board, both halves in co-op. */
@@ -108,12 +108,31 @@ export function soloResult(raw: unknown): SoloOutcome | { error: string } {
   const claimed: BotLevel =
     body.level === "hard" || body.level === "normal" ? body.level : "easy";
   const level = payableLevel(claimed, realCards(theirs));
+  /*
+   * ═══ WHERE IT WAS FOUGHT, AS THE BROWSER SAYS ═══
+   *
+   * The ground decides which family fights 20% harder (arenas.ts), so it is
+   * an INPUT to the battle, and this file exists because the same inputs
+   * must give the same answer on both sides. Working it out here from the
+   * player's row instead would read a number that may have moved since the
+   * match started — and then the browser's replay and this one would be two
+   * different battles, with the screen saying one thing and the payout
+   * saying another.
+   *
+   * Taking it from the request costs nothing that was not already given
+   * away: this whole file is handed both BOARDS by the browser (see the
+   * header), the bonus applies to both of them equally, and what bounds the
+   * payout is the difficulty cap in soloTrophies.ts, which is unaffected.
+   * An id that is not an arena is simply not ground.
+   */
+  const arena = ARENAS.find((a) => a.id === body.arenaId);
 
   try {
     const result = runBattle({
       seed,
       catalog: CATALOG,
       synergies: SYNERGIES,
+      ...(arena ? { ground: arena.family } : {}),
       a: { owner: "A", placements: mine },
       b: { owner: "B", placements: theirs },
       recordFrames: false,

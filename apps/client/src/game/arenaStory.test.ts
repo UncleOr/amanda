@@ -14,10 +14,8 @@ import { readFileSync } from "node:fs";
 import { fileURLToPath } from "node:url";
 import { ARENAS } from "@amanda/shared";
 
-const TRACK = readFileSync(
-  fileURLToPath(new URL("../components/ArenaTrack.tsx", import.meta.url)),
-  "utf8",
-);
+const read = (f: string) => readFileSync(fileURLToPath(new URL(f, import.meta.url)), "utf8");
+const TRACK = read("../components/ArenaTrack.tsx");
 
 describe("every rung has a story", () => {
   it("is written for all of them, in both languages", () => {
@@ -57,8 +55,56 @@ describe("when it can be read", () => {
     expect(TRACK).toContain("onClick={reached ? () => setTelling(");
   });
 
-  it("shows the story in place of the tease, and only one at a time", () => {
-    expect(TRACK).toContain("{told ? say(a.story) : say(a.tease)}");
+  /*
+   * ═══ IT IS A SHEET NOW, NOT A ROW THAT GROWS ═══
+   *
+   * Or: *"when you press an arena a popup should REALLY open: a big picture
+   * of the arena… make it bigger, in short."* The story used to replace the
+   * one-line tease inside the row, in grey, at 10px on a phone.
+   */
+  it("opens the arena's own sheet, one at a time", () => {
+    expect(TRACK).toContain("<ArenaStory arena={tale}");
     expect(TRACK).toContain("useState<string | null>(null)");
+    expect(TRACK, "the story is not told in the row any more").not.toContain("say(a.story)");
+  });
+
+  it("will not open a rung you have only tapped the id of", () => {
+    // `telling` is state and state can hold anything; the guard is here.
+    expect(TRACK).toContain("a.id === telling && best >= a.from");
+  });
+});
+
+/**
+ * ═══ AND THE ARENA IS GROUND NOW ═══
+ *
+ * Or: *"a picture of the new cards you can get in this arena, add a caption
+ * at the bottom — cards from the Slime series get +20% power in the Court!
+ * (and of course implement it too)."*
+ *
+ * Two of those three are pinned in the engine (ground.test.ts). This is the
+ * third: the sentence on the screen has to be the same 20% the battle uses,
+ * or the game is lying to a seven-year-old about a number he can count.
+ */
+describe("the sheet", () => {
+  const STORY = read("../components/ArenaStory.tsx");
+
+  it("draws the arena at the size it was painted", () => {
+    expect(STORY).toContain("story__art");
+    expect(STORY).toContain(`arena/${"${arena.id}"}.webp`);
+  });
+
+  it("shows the family that lives there", () => {
+    expect(STORY).toContain("ground__cards");
+    expect(STORY).toContain("c.seriesId === seriesId");
+  });
+
+  it("takes the percentage from the engine's own number", () => {
+    expect(STORY).toContain("ARENA_POWER_BONUS");
+    // Quoting Or in a comment is fine; printing it on the screen is not.
+    expect(STORY, "a hand-typed 20 is a promise nothing keeps").not.toContain("+20% עוצמה");
+  });
+
+  it("says it in Or's words", () => {
+    expect(STORY).toContain("קלפים מסדרת {0} מקבלים {1} +{2}% עוצמה!");
   });
 });

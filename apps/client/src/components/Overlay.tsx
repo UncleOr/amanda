@@ -35,6 +35,36 @@ import type { MouseEventHandler, ReactNode } from "react";
  * the end of the body, where there is no ancestor left to capture it. The
  * component keeps rendering it exactly where it makes sense to READ it.
  */
+/*
+ * ═══ A SHEET SWALLOWS ITS OWN BACKDROP CLICK ═══
+ *
+ * Or: *"watch out for an annoying bug — if I opened an item in the
+ * shop and then clicked outside the item, it takes me back to the main
+ * menu instead of back to the shop."*
+ *
+ * Two sheets were closing on one click, and the portal above is
+ * exactly why it was not obvious. In the DOM these are SIBLINGS at the
+ * end of the body, so a click on the item's backdrop is nowhere near
+ * the shop's. In the REACT tree it is still written inside the shop —
+ * and React bubbles a portal's events up the tree it was WRITTEN in,
+ * not the one it was rendered into. So the shop's own backdrop handler
+ * ran too, and the shop closed behind the item.
+ *
+ * Stopping it here rather than in the shop, because nothing about it
+ * is the shop's: it is true of every modal opened from inside another
+ * one — the card in the album, the elements table in the deck builder,
+ * the story in the arena ladder. One line in the component they all
+ * share, instead of the same line remembered four times.
+ */
+export function sheetClick(
+  onClick?: MouseEventHandler<HTMLDivElement>,
+): MouseEventHandler<HTMLDivElement> {
+  return (e) => {
+    e.stopPropagation();
+    onClick?.(e);
+  };
+}
+
 export function Overlay({
   children,
   onClick,
@@ -45,7 +75,10 @@ export function Overlay({
   className?: string;
 }) {
   return createPortal(
-    <div className={`modal-overlay ${className}`.trim()} onClick={onClick}>
+    <div
+      className={`modal-overlay ${className}`.trim()}
+      onClick={sheetClick(onClick)}
+    >
       {children}
     </div>,
     document.body,

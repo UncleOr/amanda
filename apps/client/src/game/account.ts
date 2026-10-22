@@ -1006,9 +1006,19 @@ export function priceNow(item: ShopItem): { pay: number; was: number | null } {
   return { pay: sale, was: full };
 }
 
-/** What is on the shelves, and what is already yours. */
-export async function loadShop(): Promise<{ items: ShopItem[]; owned: string[] }> {
-  const empty = { items: [], owned: [] };
+/**
+ * What is on the shelves, what is already yours, and what you have had today.
+ *
+ * The third one is the chest shelf. A chest is not a possession — Or:
+ * *"up to one chest of each kind every day"* — so "yours" cannot answer it
+ * and the server counts today's instead (boughtToday in shop.ts).
+ */
+export async function loadShop(): Promise<{
+  items: ShopItem[];
+  owned: string[];
+  today: string[];
+}> {
+  const empty = { items: [], owned: [], today: [] };
   if (!SERVER_HTTP) return empty;
   try {
     const sb = db();
@@ -1021,8 +1031,8 @@ export async function loadShop(): Promise<{ items: ShopItem[]; owned: string[] }
       },
       body: "{}",
     });
-    const body = (await res.json()) as { items?: ShopItem[]; owned?: string[] };
-    return { items: body.items ?? [], owned: body.owned ?? [] };
+    const body = (await res.json()) as { items?: ShopItem[]; owned?: string[]; today?: string[] };
+    return { items: body.items ?? [], owned: body.owned ?? [], today: body.today ?? [] };
   } catch {
     return empty;
   }

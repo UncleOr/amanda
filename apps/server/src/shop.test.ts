@@ -1,6 +1,7 @@
 import { describe, expect, it } from "vitest";
 import type { SupabaseClient } from "@supabase/supabase-js";
-import { audienceOf, buy, priceNow, runGrant } from "./shop.js";
+import { israelDay } from "@amanda/shared";
+import { audienceOf, boughtToday, buy, priceNow, runGrant } from "./shop.js";
 
 /**
  * The two things in this file that cannot be allowed to be wrong.
@@ -34,6 +35,8 @@ function fakeDb(seed: {
   receipts?: Array<{ grant_id: string; player_id: string }>;
   grants?: Record<string, Record<string, unknown>>;
   cards?: Array<{ player_id: string; card_id: string; copies: number }>;
+  /** Sealed chests: won in a match (no bought_day) or bought today. */
+  chests?: Array<Record<string, unknown>>;
 }) {
   const players = { ...(seed.players ?? {}) };
   const items = seed.items ?? {};
@@ -41,6 +44,7 @@ function fakeDb(seed: {
   const receipts = [...(seed.receipts ?? [])];
   const grants = seed.grants ?? {};
   const cards = [...(seed.cards ?? [])];
+  const chests = [...(seed.chests ?? [])];
 
   function table(name: string) {
     const filters: Record<string, unknown> = {};
@@ -75,6 +79,7 @@ function fakeDb(seed: {
       if (name === "grants")
         return Object.entries(grants).map(([id, g]) => ({ id, active: true, ...g }));
       if (name === "player_cards") return cards as Record<string, unknown>[];
+      if (name === "chests") return chests;
       return [];
     };
     const matching = () =>
@@ -135,6 +140,7 @@ function fakeDb(seed: {
         receipts.push(row as { grant_id: string; player_id: string });
       }
       if (name === "player_items") owned.push(row as { player_id: string; item_id: string });
+      if (name === "chests") chests.push(row);
       return Promise.resolve({ error: null });
     };
     api.upsert = (rows: unknown) => {
@@ -160,7 +166,7 @@ function fakeDb(seed: {
 
   return {
     sb: { from: table } as unknown as SupabaseClient,
-    state: { players, owned, receipts, cards, grants },
+    state: { players, owned, receipts, cards, grants, chests },
   };
 }
 
@@ -358,5 +364,190 @@ describe("what an item costs right now", () => {
     expect(
       priceNow({ price_diamonds: 120, sale_price_diamonds: 0, sale_until: SOON }, NOW),
     ).toEqual({ pay: 0, was: 120 });
+  });
+});
+
+/**
+ * ═══ THE FIRST THINGS IN THIS SHOP YOU CAN BUY TWICE ═══
+ *
+ * Or: *"we'll add the option to buy chests too — up to one chest of each kind
+ * every day. We'll also add the option to buy cards you already have, so you
+ * can upgrade."*
+ *
+ * Everything the shop sold until now was a possession, and `player_items`
+ * holding one row per item was the whole refusal. Neither of these is a
+ * possession: a chest is opened and gone, and a second copy of a card is the
+ * reason to buy one.
+ */
+describe("a chest on the shelf", () => {
+  const chest = { kind: "chest", grants: { chest: "wood" }, price_diamonds: 80 };
+  const today = israelDay(new Date());
+
+  it("arrives shut, with its contents already rolled", async () => {
+    const { sb, state } = fakeDb({
+      players: { [ME]: { diamonds: 100 } },
+      items: { "chest.wood": chest },
+    });
+    expect(await buy(sb, ME, "chest.wood")).toBeNull();
+    expect(state.players[ME]!.diamonds).toBe(20);
+    expect(state.chests).toHaveLength(1);
+    const got = state.chests[0]!;
+    expect(got.kind).toBe("wood");
+    // Shut: opening it on the home screen is what was paid for.
+    expect(got.opened_at).toBeNull();
+    expect((got.contents as { cards: string[] }).cards.length).toBeGreaterThan(0);
+  });
+
+  it("is not written into the things you own", async () => {
+    // A `player_items` row IS the "already yours" refusal, so writing one
+    // would make tomorrow's chest unbuyable for ever.
+    const { sb, state } = fakeDb({
+      players: { [ME]: { diamonds: 100 } },
+      items: { "chest.wood": chest },
+    });
+    await buy(sb, ME, "chest.wood");
+    expect(state.owned).toHaveLength(0);
+  });
+
+  it("refuses the second one today, and charges nothing for it", async () => {
+    const { sb, state } = fakeDb({
+      players: { [ME]: { diamonds: 500 } },
+      items: { "chest.wood": chest },
+      chests: [
+        { player_id: ME, kind: "wood", bought_item: "chest.wood", bought_day: today },
+      ],
+    });
+    expect(await buy(sb, ME, "chest.wood")).toBe("shop.tomorrow");
+    expect(state.players[ME]!.diamonds).toBe(500);
+    expect(state.chests).toHaveLength(1);
+  });
+
+  it("sells a different kind on the same day", async () => {
+    // "One of each kind", not one chest.
+    const { sb, state } = fakeDb({
+      players: { [ME]: { diamonds: 500 } },
+      items: {
+        "chest.wood": chest,
+        "chest.gold": { kind: "chest", grants: { chest: "gold" }, price_diamonds: 500 },
+      },
+      chests: [
+        { player_id: ME, kind: "wood", bought_item: "chest.wood", bought_day: today },
+      ],
+    });
+    expect(await buy(sb, ME, "chest.gold")).toBeNull();
+    expect(state.chests).toHaveLength(2);
+  });
+
+  it("does not count yesterday's, or one won in a match", async () => {
+    const { sb } = fakeDb({
+      players: { [ME]: { diamonds: 500 } },
+      items: { "chest.wood": chest },
+      chests: [
+        // Yesterday's purchase.
+        { player_id: ME, kind: "wood", bought_item: "chest.wood", bought_day: "2020-01-01" },
+        // One won in a match: no purchase on it at all.
+        { player_id: ME, kind: "wood", bought_item: null, bought_day: null },
+      ],
+    });
+    expect(await buy(sb, ME, "chest.wood")).toBeNull();
+  });
+
+  it("tells the shelf what has already been taken today", async () => {
+    const { sb } = fakeDb({
+      players: { [ME]: { diamonds: 500 } },
+      items: { "chest.wood": chest },
+      chests: [
+        { player_id: ME, kind: "wood", bought_item: "chest.wood", bought_day: today },
+        { player_id: ME, kind: "gold", bought_item: "chest.gold", bought_day: "2020-01-01" },
+      ],
+    });
+    // The shelf and the till read the same day, so a chest cannot be offered
+    // and then refused.
+    expect(await boughtToday(sb, ME)).toEqual(["chest.wood"]);
+  });
+});
+
+describe("a card you already have", () => {
+  const card = {
+    kind: "card",
+    grants: { cards: [{ cardId: "dragons_01_flame_dragon", copies: 1 }] },
+    price_diamonds: 60,
+  };
+
+  it("can be bought again, because copies are the upgrade", async () => {
+    const { sb, state } = fakeDb({
+      players: { [ME]: { diamonds: 200 } },
+      items: { "card.flame": card },
+      cards: [{ player_id: ME, card_id: "dragons_01_flame_dragon", copies: 2 }],
+    });
+    expect(await buy(sb, ME, "card.flame")).toBeNull();
+    expect(state.cards[0]!.copies).toBe(3);
+    // And again, with no daily cap: only chests have one.
+    expect(await buy(sb, ME, "card.flame")).toBeNull();
+    expect(state.cards[0]!.copies).toBe(4);
+    expect(state.players[ME]!.diamonds).toBe(80);
+  });
+});
+
+describe("everything else is still bought once", () => {
+  it("refuses an avatar you own", async () => {
+    const { sb } = fakeDb({
+      players: { [ME]: { diamonds: 500 } },
+      items: { "avatar.yeti": { kind: "avatar", grants: {}, price_diamonds: 100 } },
+      owned: [{ player_id: ME, item_id: "avatar.yeti" }],
+    });
+    expect(await buy(sb, ME, "avatar.yeti")).toBe("shop.owned");
+  });
+});
+
+/**
+ * The panel writes one shape and the till reads another, and nothing noticed
+ * while neither a chest nor a card could be bought. See shopGives.
+ */
+describe("a row made in the admin panel", () => {
+  it("hands over the chest it chose, written the panel's way", async () => {
+    const { sb, state } = fakeDb({
+      players: { [ME]: { diamonds: 300 } },
+      // What AdminShop used to write: {kind}, not {chest}.
+      items: { "chest.old": { kind: "chest", grants: { kind: "silver" }, price_diamonds: 200 } },
+    });
+    expect(await buy(sb, ME, "chest.old")).toBeNull();
+    expect(state.chests).toHaveLength(1);
+    expect(state.chests[0]!.kind).toBe("silver");
+  });
+
+  it("hands over the card it chose", async () => {
+    const { sb, state } = fakeDb({
+      players: { [ME]: { diamonds: 300 } },
+      // The panel picks a card by id, because that is what the picture needs.
+      items: {
+        "card.one": {
+          kind: "card",
+          grants: { cardId: "dragons_01_flame_dragon" },
+          price_diamonds: 60,
+        },
+      },
+    });
+    expect(await buy(sb, ME, "card.one")).toBeNull();
+    expect(state.cards).toEqual([
+      { player_id: ME, card_id: "dragons_01_flame_dragon", copies: 1 },
+    ]);
+  });
+
+  it("does not give away the card when a SKIN for it is bought", async () => {
+    // A skin carries a cardId too: it is a coat for a card you have.
+    const { sb, state } = fakeDb({
+      players: { [ME]: { diamonds: 300 } },
+      items: {
+        "skin.one": {
+          kind: "skin",
+          grants: { cardId: "dragons_01_flame_dragon", skin: "gold" },
+          price_diamonds: 60,
+        },
+      },
+    });
+    expect(await buy(sb, ME, "skin.one")).toBeNull();
+    expect(state.cards).toHaveLength(0);
+    expect(state.owned.some((o) => o.item_id === "skin.one")).toBe(true);
   });
 });

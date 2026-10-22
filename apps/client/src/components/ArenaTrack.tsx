@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { ARENAS, arenaFor, arenaProgress, toArena } from "@amanda/shared";
+import { ArenaStory } from "./ArenaStory";
 import { Icon } from "./Icon";
 import { Overlay } from "./Overlay";
 import { line as t, lineF as tf } from "../game/copy";
@@ -36,11 +37,19 @@ export function ArenaTrack({
   best?: number;
 }) {
   const [open, setOpen] = useState(false);
-  /** Which arena's story is showing. One at a time: this is a phone. */
+  /**
+   * Which arena has been opened. One at a time: this is a phone.
+   *
+   * It used to grow the row it was written in and tell the story there, in
+   * grey, under the name. Or: *"when you press an arena a popup should
+   * REALLY open: a big picture of the arena… make it bigger, in short."*
+   */
   const [telling, setTelling] = useState<string | null>(null);
   const here = arenaFor(trophies);
   const progress = arenaProgress(trophies);
   const next = ARENAS[ARENAS.indexOf(here) + 1];
+  /* Only ever one you have been to: a locked row does not answer. */
+  const tale = ARENAS.find((a) => a.id === telling && best >= a.from) ?? null;
 
   return (
     <>
@@ -89,13 +98,10 @@ export function ArenaTrack({
               {ARENAS.map((a) => {
                 const reached = best >= a.from;
                 const current = a.id === here.id;
-                const told = telling === a.id;
                 return (
                   <li
                     key={a.id}
-                    className={`arenas__row${reached ? " is-open" : " is-locked"}${
-                      current ? " is-here" : ""
-                    }${told ? " is-telling" : ""}`}
+                    className={`arenas__row${reached ? " is-open" : " is-locked"}${current ? " is-here" : ""}`}
                     /*
                      * ═══ THE ROW IS THE BUTTON ═══
                      *
@@ -106,7 +112,7 @@ export function ArenaTrack({
                      * have not been yet, and reading it off the list would
                      * be the same as having been.
                      */
-                    onClick={reached ? () => setTelling(told ? null : a.id) : undefined}
+                    onClick={reached ? () => setTelling(a.id) : undefined}
                   >
                     <span
                       className="arenas__art"
@@ -115,7 +121,7 @@ export function ArenaTrack({
                     />
                     <span className="arenas__who">
                       <b>{say(a.name)}</b>
-                      <small>{told ? say(a.story) : say(a.tease)}</small>
+                      <small>{say(a.tease)}</small>
                     </span>
                     <span className="arenas__at">
                       {current ? (
@@ -133,6 +139,13 @@ export function ArenaTrack({
               })}
             </ol>
           </div>
+          {/*
+            The arena's own page, opened from the ladder and closing back to
+            it. Written inside this Overlay and rendered at the end of the
+            body like every other one — see Overlay.tsx for why a backdrop
+            click here does not also close the ladder behind it.
+          */}
+          {tale && <ArenaStory arena={tale} onClose={() => setTelling(null)} />}
         </Overlay>
       )}
     </>

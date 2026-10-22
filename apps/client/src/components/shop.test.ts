@@ -60,12 +60,57 @@ describe("the item's own page", () => {
 
   /* A catchphrase's name IS the phrase, drawn above it. */
   it("does not say a phrase twice", () => {
-    expect(DEET).toContain("{!phrase && <h2 className=\"deet__name\">");
+    // Its name IS the phrase. The plaque shows it and deet__phrase says it;
+    // a third copy as a heading was the clutter Or took off the shelf.
+    expect(DEET).toContain("{phrase ? (");
+    expect(DEET).toContain('<p className="deet__phrase">{say(phrase)}</p>');
   });
 
   it("is the only place a purchase can be made", () => {
     const buys = [...SHOP.matchAll(/void take\(item\)/g)];
     expect(buys, "one call, from the detail").toHaveLength(1);
     expect(SHOP).toContain("onBuy={() => void take(item).then(() => setLooking(null))}");
+  });
+});
+
+/**
+ * ═══ THE SHELF THAT IS NOT A POSSESSION ═══
+ *
+ * Or: *"in the shop add chests… and add the text of the full sentence to
+ * the catchphrases (because in the picture you only see part of it), and add
+ * whatever is needed."*
+ *
+ * A chest is the first thing in this shop that is not yours after you buy
+ * it: you open it and it is gone, and there is another one tomorrow. So the
+ * shelf cannot answer it with "שלך" — it has to say when.
+ */
+describe("a chest on the shelf", () => {
+  it("asks whether today's has been taken, not whether it is owned", () => {
+    expect(SHOP).toContain("today.includes(item.id)");
+    expect(SHOP).toContain('t("s52f7e9a", "מחר")');
+  });
+
+  it("tells the item's page as well, so the two cannot disagree", () => {
+    expect(SHOP).toContain("taken={today.includes(item.id)}");
+    expect(DEET).toContain('t("s3df89df", "לקחת היום. תחזור מחר")');
+  });
+
+  it("does not offer a buy button for one already taken", () => {
+    expect(DEET).toContain(") : taken ? (");
+  });
+});
+
+describe("a catchphrase", () => {
+  /*
+   * The plaque holds the line to one row by shrinking the type and stops at
+   * 62% (Plaque.tsx), so a long phrase is cut. That is right for the goods
+   * and wrong for knowing what you are buying.
+   */
+  it("is written out in full under the plaque", () => {
+    expect(DEET).toContain('<p className="deet__phrase">{say(phrase)}</p>');
+  });
+
+  it("leaves every other item with its name as a heading", () => {
+    expect(DEET).toContain("<h2 className=\"deet__name\">{say(item.name)}</h2>");
   });
 });
