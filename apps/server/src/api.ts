@@ -528,6 +528,46 @@ async function handleMeta(req: IncomingMessage, res: ServerResponse, path: strin
     const outcome = soloResult(await readBody(req));
     if ("error" in outcome) return send(res, 400, { error: outcome.error });
     const facts = factsFor(outcome.result, "A", outcome.mine);
+    /*
+     * ═══ IF THE TWO REPLAYS DISAGREE, NOBODY IS PAID ═══
+     *
+     * Or, with a photograph of a result screen that says he won: *"I won but
+     * I lost trophies."*
+     *
+     * He had. The screen said won, the server's replay said lost, and the
+     * server is the authority — so it took four trophies for a match he had
+     * just been congratulated for. The cause was a DEPLOY SKEW: the browser
+     * had the arena ground bonus (+20% to the family that lives there) and
+     * the server did not, so the two were replaying different battles from
+     * the same inputs. The whole of solo.ts rests on that not being possible.
+     *
+     * It is possible, because the client and the server ship separately and
+     * always will. So when the answers differ, this pays nothing and takes
+     * nothing, and says so in the log. A silent wrong payment becomes a
+     * visible no-op.
+     *
+     * ═══ AND IT GIVES A CHEAT NOTHING ═══
+     *
+     * "Claim a win on every loss and never drop a trophy" is the obvious
+     * worry, and it is already free: a browser that does not want to report
+     * a loss simply does not report it. Refusing to pay on a disagreement
+     * grants nobody anything they could not have by closing the tab.
+     */
+    if (outcome.claimedWon !== null && outcome.claimedWon !== facts.won) {
+      console.warn(
+        `[solo] replay disagrees with the screen — paid nothing (player ${playerId}, screen said ${
+          outcome.claimedWon ? "won" : "lost"
+        }, replay said ${facts.won ? "won" : "lost"})`,
+      );
+      return send(res, 200, {
+        nachos: 0,
+        chests: [],
+        moved: [],
+        trophies: 0,
+        score: facts.score,
+        won: outcome.claimedWon,
+      });
+    }
     const award = await awardMatch(sb, playerId, facts, new Date(), outcome.level);
     // The score comes back from HERE even though the browser graded the same
     // battle itself: one authority, so a bug in either grader shows up as a

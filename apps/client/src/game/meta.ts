@@ -224,6 +224,15 @@ export async function reportSolo(opts: {
    * different battle. See solo.ts.
    */
   arenaId: string;
+  /**
+   * Who the browser says won — what the player is looking at.
+   *
+   * The server does not believe it and does not pay on it. It re-runs the
+   * battle as it always has, and uses this for one thing only: if its answer
+   * disagrees with the screen, nobody is paid and nobody is charged. See the
+   * solo route in apps/server/src/api.ts.
+   */
+  won: boolean;
 }): Promise<Award> {
   const base = serverHttp();
   if (!base) return NOTHING;

@@ -29,8 +29,8 @@
  * A day of beating the computer is capped as well, so the ladder cannot be
  * climbed by grinding it.
  */
-import { runBattle, type BattleResult, type Placement } from "@amanda/engine";
-import { ARENAS, BOARD, payableLevel, type BotLevel } from "@amanda/shared";
+import { runBattle, type BattleResult, type Placement, type PlacementBuff } from "@amanda/engine";
+import { ARENAS, BOARD, LEVELS, levelMultiplier, payableLevel, type BotLevel } from "@amanda/shared";
 import { CATALOG, SYNERGIES } from "./content.js";
 
 /** The most placements one side can send: a 4x4 board, both halves in co-op. */
@@ -51,6 +51,65 @@ function realCards(placements: Placement[]): number {
   return placements.filter((p) => p.cardId !== FILLER && CATALOG.has(p.cardId)).length;
 }
 
+/**
+ * ═══ WHAT A PLACEMENT CARRIES BESIDES A CARD AND A SQUARE ═══
+ *
+ * Or, with a photograph of a result screen reading "ניצחת": *"I won but I
+ * lost trophies."*
+ *
+ * This file took the board apart and kept four things: the card, x, y and
+ * whether it is the King. It dropped `buff` — and `buff` is not a detail.
+ * It is where a card's LEVEL lives (levels ride the same multipliers an
+ * action card uses, so the engine needs to know nothing about albums, see
+ * cellBuff in useMatch.ts) and where every action card's effect lands.
+ *
+ * So the player fought with a levelled, boosted board and the server
+ * replayed the same match with every card at level 1 and no action cards at
+ * all. Measured over 600 random matches: with half the board at level 2 —
+ * which is Or's album today — and one Energy Boost played, the replay
+ * disagrees with the screen in 9.8% of matches. One game in ten said "you
+ * won" and was paid as a loss.
+ *
+ * `below` was dropped the same way: a card stacked under another by Ground
+ * Floor was simply not there in the replay.
+ *
+ * ═══ AND IT IS CLAMPED, BECAUSE IT COMES FROM THE BROWSER ═══
+ *
+ * Every number here is the client's word. The ceiling is what the GAME can
+ * produce: the best a card can be is level 10 (LEVELS.max) with a boosted
+ * cell on top of it, and the most flat power is a whole action deck of
+ * Energy Boosts. Past that it is not a buff, it is a request.
+ *
+ * It does not make this file trusting — the header above says what it
+ * already is. It stops the server and the browser fighting different
+ * battles, which is the one thing it was written to prevent.
+ */
+const MAX_MULT = levelMultiplier(LEVELS.max) * 1.5;
+/** Five action cards reach a match (ACTION_DECK_COUNT), +50 power each. */
+const MAX_POWER_ADD = 5 * 50;
+
+/** A positive number, no bigger than the game can make it. */
+function capped(raw: unknown, max: number): number | undefined {
+  const n = Number(raw);
+  if (!Number.isFinite(n) || n <= 0) return undefined;
+  return Math.min(n, max);
+}
+
+function buffOf(raw: unknown): PlacementBuff | undefined {
+  if (!raw || typeof raw !== "object") return undefined;
+  const b = raw as Record<string, unknown>;
+  const out: PlacementBuff = {};
+  const add = capped(b.powerAdd, MAX_POWER_ADD);
+  if (add !== undefined) out.powerAdd = add;
+  const power = capped(b.powerMult, MAX_MULT);
+  if (power !== undefined) out.powerMult = power;
+  // A King wounded by the eraser arrives as an hpMult BELOW one, which is a
+  // reduction and needs no ceiling — only the same floor as everything else.
+  const hp = capped(b.hpMult, MAX_MULT);
+  if (hp !== undefined) out.hpMult = hp;
+  return Object.keys(out).length ? out : undefined;
+}
+
 /** One placement, taken apart rather than trusted. */
 function placement(raw: unknown): Placement | null {
   if (!raw || typeof raw !== "object") return null;
@@ -63,7 +122,17 @@ function placement(raw: unknown): Placement | null {
   const y = Number(p.y);
   if (!Number.isInteger(x) || !Number.isInteger(y)) return null;
   if (x < 0 || x >= BOARD.width || y < 0 || y >= BOARD.height * 2) return null;
-  return { cardId, x, y, ...(p.king === true ? { king: true } : {}) };
+  const buff = buffOf(p.buff);
+  // Stacked underneath by Ground Floor, and revealed when the top one dies.
+  const below = typeof p.below === "string" && CATALOG.has(p.below) ? p.below : null;
+  return {
+    cardId,
+    x,
+    y,
+    ...(p.king === true ? { king: true } : {}),
+    ...(below ? { below } : {}),
+    ...(buff ? { buff } : {}),
+  };
 }
 
 function board(raw: unknown): Placement[] | null {
@@ -86,6 +155,14 @@ export interface SoloOutcome {
    * opponent board can support. See payableLevel.
    */
   level: BotLevel;
+  /**
+   * Who the BROWSER says won — what the player is looking at right now.
+   *
+   * Not believed and never paid on. It is here so the caller can compare it
+   * with the battle this file just replayed, and refuse to pay anything at
+   * all when the two disagree. Null from a client too old to send it.
+   */
+  claimedWon: boolean | null;
 }
 
 /**
@@ -137,7 +214,12 @@ export function soloResult(raw: unknown): SoloOutcome | { error: string } {
       b: { owner: "B", placements: theirs },
       recordFrames: false,
     });
-    return { result, mine, level };
+    return {
+      result,
+      mine,
+      level,
+      claimedWon: typeof body.won === "boolean" ? body.won : null,
+    };
   } catch (err) {
     console.error("[solo] could not replay the match", err);
     return { error: "could not replay" };

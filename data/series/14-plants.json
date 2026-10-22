@@ -412,7 +412,7 @@
       ],
       "rarity": "epic",
       "stats": {
-        "hp": 2400,
+        "hp": 2000,
         "power": 350,
         "attackSpeed": 4,
         "moveSpeed": 0,
@@ -425,7 +425,7 @@
           "type": "regen",
           "trigger": "passive",
           "params": {
-            "hpPerSecond": 120
+            "hpPerSecond": 70
           }
         },
         {

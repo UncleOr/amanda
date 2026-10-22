@@ -1,5 +1,6 @@
 import { describe, expect, it } from "vitest";
 import type { Placement } from "@amanda/engine";
+import { LEVELS, levelMultiplier } from "@amanda/shared";
 import { soloResult } from "./solo.js";
 import { factsFor } from "./meta.js";
 
@@ -187,5 +188,128 @@ describe("reading a side's performance off the replay", () => {
       expect(score).toBeGreaterThanOrEqual(1);
       expect(score).toBeLessThanOrEqual(10);
     }
+  });
+});
+
+/**
+ * ═══ WHAT THE SCREEN SAID ═══
+ *
+ * Or, with a photograph of a result screen reading "ניצחת": *"I won but I
+ * lost trophies."*
+ *
+ * He had. His browser had the arena ground bonus and the server did not —
+ * they ship separately — so the two replayed different battles from the same
+ * inputs, the server's answer was "lost", and it took four trophies for a
+ * match he had just been congratulated for.
+ *
+ * This file's whole premise is that the two sides cannot disagree. They can,
+ * whenever a deploy lands on one side first, so the claim is carried now and
+ * the route refuses to pay when it does not match (see api.ts).
+ */
+describe("who the browser says won", () => {
+  it("is carried through, untouched", () => {
+    const got = soloResult({ seed: 7, mine: strong, theirs: weak, won: true });
+    expect("error" in got).toBe(false);
+    if ("error" in got) return;
+    expect(got.claimedWon).toBe(true);
+  });
+
+  it("is null when the browser is too old to say", () => {
+    // An old client simply does not send it, and must keep being paid.
+    const got = soloResult({ seed: 7, mine: strong, theirs: weak });
+    expect("error" in got).toBe(false);
+    if ("error" in got) return;
+    expect(got.claimedWon).toBeNull();
+  });
+
+  it("is null for anything that is not a yes or a no", () => {
+    for (const claim of ["true", 1, {}, []]) {
+      const got = soloResult({ seed: 7, mine: strong, theirs: weak, won: claim });
+      if ("error" in got) throw new Error("should have replayed");
+      expect(got.claimedWon, JSON.stringify(claim)).toBeNull();
+    }
+  });
+
+  it("does not change the battle in any way", () => {
+    const quiet = soloResult({ seed: 99, mine: strong, theirs: weak });
+    const loud = soloResult({ seed: 99, mine: strong, theirs: weak, won: false });
+    if ("error" in quiet || "error" in loud) throw new Error("should have replayed");
+    expect(loud.result.winner).toBe(quiet.result.winner);
+    expect(loud.result.ticks).toBe(quiet.result.ticks);
+  });
+});
+
+/**
+ * ═══ THE BOARD THAT FOUGHT, NOT A COPY OF IT WITH THE BUFFS TAKEN OFF ═══
+ *
+ * Or: *"I won but I lost trophies."*
+ *
+ * This file kept four fields from each placement and dropped `buff`, which
+ * is where a card's LEVEL lives as well as every action card's effect. The
+ * player fought with a levelled, boosted board; the server replayed the same
+ * match at level 1 with nothing played. Measured: with half a board at level
+ * 2 and one Energy Boost, the two disagree in 9.8% of matches.
+ */
+describe("the buffs on a reported board", () => {
+  const buffed = (ps: Placement[], buff: Record<string, number>): Placement[] =>
+    ps.map((p) => ({ ...p, buff }));
+
+  it("are carried into the replay", () => {
+    const got = soloResult({ seed: 7, mine: buffed(weak, { powerMult: 1.9 }), theirs: weak });
+    if ("error" in got) throw new Error(got.error);
+    expect(got.mine[0]!.buff).toEqual({ powerMult: 1.9 });
+  });
+
+  it("change who wins, which is the whole point", () => {
+    // The same two boards, and the only difference is the levels the player
+    // actually fought with. This is the match Or saw one of.
+    const plain = soloResult({ seed: 11, mine: weak, theirs: strong });
+    const levelled = soloResult({
+      seed: 11,
+      mine: buffed(weak, { powerMult: 2.8, hpMult: 2.8 }),
+      theirs: strong,
+    });
+    if ("error" in plain || "error" in levelled) throw new Error("should have replayed");
+    expect(plain.result.winner).toBe("B");
+    expect(levelled.result.winner).toBe("A");
+  });
+
+  it("are capped at what the game can actually produce", () => {
+    // Level 10 (1.9) with a boosted cell on top (x1.5) is 2.85, and five
+    // Energy Boosts are +250. Anything past that is not a buff.
+    const got = soloResult({
+      seed: 7,
+      mine: buffed(weak, { powerMult: 1e9, hpMult: 1e9, powerAdd: 1e9 }),
+      theirs: weak,
+    });
+    if ("error" in got) throw new Error(got.error);
+    const ceiling = levelMultiplier(LEVELS.max) * 1.5;
+    expect(got.mine[0]!.buff).toEqual({
+      powerAdd: 250,
+      powerMult: ceiling,
+      hpMult: ceiling,
+    });
+  });
+
+  it("ignore nonsense instead of refusing the match", () => {
+    for (const buff of [{ powerMult: -3 }, { powerMult: NaN }, { hpMult: "big" }, {}, null]) {
+      const got = soloResult({ seed: 7, mine: weak.map((p) => ({ ...p, buff })), theirs: weak });
+      if ("error" in got) throw new Error(`refused ${JSON.stringify(buff)}`);
+      expect(got.mine[0]!.buff, JSON.stringify(buff)).toBeUndefined();
+    }
+  });
+
+  it("carries a card stacked underneath by Ground Floor", () => {
+    const stacked = weak.map((p, i) => (i === 1 ? { ...p, below: GIANT } : p));
+    const got = soloResult({ seed: 7, mine: stacked, theirs: weak });
+    if ("error" in got) throw new Error(got.error);
+    expect(got.mine[1]!.below).toBe(GIANT);
+  });
+
+  it("drops a card underneath that is not a card", () => {
+    const stacked = weak.map((p, i) => (i === 1 ? { ...p, below: "not_a_card" } : p));
+    const got = soloResult({ seed: 7, mine: stacked, theirs: weak });
+    if ("error" in got) throw new Error(got.error);
+    expect(got.mine[1]!.below).toBeUndefined();
   });
 });

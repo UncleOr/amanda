@@ -2609,6 +2609,12 @@ export function useMatch(): MatchApi {
       ...boards,
       level: botLevelRef.current,
       arenaId: soloArenaRef.current,
+      /*
+       * What this screen is SHOWING, so the server can tell whether its own
+       * replay agrees with it. It is not asked to believe this — see
+       * api.ts — only to stop paying when the two disagree.
+       */
+      won: w === mySideRef.current,
     }).then((won) => {
       if (won.nachos || won.chests.length || won.moved.length) setAward(won);
       /*
