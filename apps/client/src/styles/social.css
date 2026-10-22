@@ -761,6 +761,16 @@
   font-weight: 800;
   line-height: 1.4;
 }
+/* How many copies are already in the album. Not grey: it is a number a
+   child is deciding on, and "secondary" is the job of size, not colour. */
+.deet__have {
+  margin: 0 0 10px;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-size: var(--t-3);
+  font-weight: 800;
+}
 .deet__blurb { margin: 0 0 14px; font-size: var(--t-3); line-height: 1.5; color: var(--text); }
 /*
  * Everything in the pack. Or: *"when you open a monster pack you see all its

@@ -76,6 +76,27 @@ export const TUNED = {
    */
   diamondsPerLevel: 10,
   /*
+   * ═══ WHAT ONE COPY COSTS ON THE SHELF ═══
+   *
+   * Or: *"we'll also add the option to buy cards you already have, so you
+   * can upgrade."* So the shop sells copies, and this is what the cheapest
+   * one costs; the rest are multiples of it by what the card is WORTH (see
+   * cardShelf.ts), not by its rarity — Flame Dragon is a common and one of
+   * the hardest-hitting cards in the game, which is the whole argument in
+   * cardCost.ts.
+   *
+   * Sixty, measured against the only other way to get a copy: a gold chest
+   * is 500 diamonds for eight cards, so a RANDOM copy already costs about
+   * 62. A copy you chose should not be cheaper than one you were given, and
+   * a card you are four copies short of is then a few days of playing rather
+   * than a month of hoping.
+   *
+   * Tunable because it is the number that decides whether the shop competes
+   * with the chests or replaces them, and that is a thing to watch for a
+   * week and move — not to argue about now.
+   */
+  cardShelfPrice: 60,
+  /*
    * What sixteen cards may cost between them.
    *
    * Or: *"I think we should lower the deck budget a bit, it's too easy.
@@ -173,6 +194,16 @@ function clamp(v: number, t: Pick<Tunable, "min" | "max">): number {
 const seconds = (phase: { readonly seconds: number }) => phase as { seconds: number };
 
 export const TUNABLES: Tunable[] = [
+  {
+    id: "shop.cardPrice",
+    he: "מחיר קלף בחנות",
+    note: "כמה עולה עותק אחד של הקלף הזול ביותר. קלף חזק עולה עד פי חמישה. תיבת זהב היא 500 יהלומים לשמונה קלפים אקראיים, אז מתחת ל-60 עדיף לקנות את מה שבוחרים.",
+    min: 10,
+    max: 400,
+    step: 10,
+    get: () => TUNED.cardShelfPrice,
+    set: (v) => (TUNED.cardShelfPrice = v),
+  },
   {
     id: "phases.build",
     he: "שניות בנייה",

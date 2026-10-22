@@ -36,7 +36,15 @@ describe("the computer's board", () => {
   it("holds the two guard posts with cards that will not wander off them", () => {
     let staticPosts = 0;
     let posts = 0;
-    for (let i = 0; i < 20; i++)
+    /*
+     * Two hundred boards, not twenty, and the reason is a failure rather
+     * than a preference: twenty boards are forty posts, the planner holds
+     * them with a static card about 96% of the time, and 36 out of 40 is
+     * exactly 0.9 — which is not greater than 0.9. A real run failed on it.
+     * Four hundred samples put the measurement a long way from the bar it
+     * is being measured against, without moving the bar.
+     */
+    for (let i = 0; i < 200; i++)
       for (const p of __testing.generateAiPlan()) {
         if (p.king || p.x !== 3 || (p.y !== 1 && p.y !== 2)) continue;
         posts++;

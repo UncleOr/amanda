@@ -27,6 +27,7 @@ import {
 } from "./friends.js";
 import { isOnline } from "./presence.js";
 import { boughtToday, buy, ownedItems, shopWindow } from "./shop.js";
+import { cardsForSale } from "./cardShelf.js";
 import { inbox, markRead } from "./notify.js";
 import { handleAdmin, handleCopy } from "./admin.js";
 import { awardMatch, claim, factsFor, standings } from "./meta.js";
@@ -455,13 +456,25 @@ async function handleShop(req: IncomingMessage, res: ServerResponse, path: strin
   if (path === "/api/shop") {
     const items = await shopWindow(sb);
     const playerId = await playerFrom(req);
-    // What is mine, and what I have already taken today — the second is the
-    // chest shelf: one of each kind a day, so a chest can be on the shelf
-    // and not for sale until tomorrow. See boughtToday in shop.ts.
-    const [owned, today] = playerId
-      ? await Promise.all([ownedItems(sb, playerId), boughtToday(sb, playerId)])
-      : [[], []];
-    return send(res, 200, { items, owned, today });
+    /*
+     * What is mine, what I have already taken today, and today's cards.
+     *
+     * The second is the chest shelf: one of each kind a day, so a chest can
+     * be on the shelf and not for sale until tomorrow (boughtToday).
+     *
+     * The third is not in the table at all. It is four cards out of this
+     * player's own album, drawn from the calendar day — Or: *"the option to
+     * buy cards you already have, so you can upgrade"* — so it is per
+     * player, and a signed-out browser simply has no card shelf.
+     */
+    const [owned, today, cards] = playerId
+      ? await Promise.all([
+          ownedItems(sb, playerId),
+          boughtToday(sb, playerId),
+          cardsForSale(sb, playerId),
+        ])
+      : [[], [], []];
+    return send(res, 200, { items: [...items, ...cards], owned, today });
   }
 
   const playerId = await playerFrom(req);

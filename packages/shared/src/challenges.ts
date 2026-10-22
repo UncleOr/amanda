@@ -139,8 +139,15 @@ function hash(s: string): number {
   return h >>> 0;
 }
 
-/** A deterministic stream of numbers from a key. */
-function stream(key: string): () => number {
+/**
+ * A deterministic stream of numbers from a key.
+ *
+ * Exported because the shop draws today's cards the same way the day draws
+ * its challenges (apps/server/src/cardShelf.ts), and "the same for everyone,
+ * every time, with nothing stored" is a property worth having once rather
+ * than twice.
+ */
+export function stream(key: string): () => number {
   let s = hash(key) || 1;
   return () => {
     s ^= s << 13;

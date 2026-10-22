@@ -15,6 +15,7 @@ import { describe, expect, it } from "vitest";
 import { readFileSync } from "node:fs";
 import { fileURLToPath } from "node:url";
 import { EMOJI } from "@amanda/shared";
+import { SHELF_ORDER } from "./Shop";
 
 const read = (f: string) => readFileSync(fileURLToPath(new URL(f, import.meta.url)), "utf8");
 const SHOP = read("./Shop.tsx");
@@ -112,5 +113,22 @@ describe("a catchphrase", () => {
 
   it("leaves every other item with its name as a heading", () => {
     expect(DEET).toContain("<h2 className=\"deet__name\">{say(item.name)}</h2>");
+  });
+});
+
+/**
+ * The card shelf. Or: *"add cards to the card shelf in the shop"*, after
+ * *"the option to buy cards you already have, so you can upgrade."*
+ */
+describe("the card shelf", () => {
+  it("is near the top, with the chests", () => {
+    // The two shelves that change: one of each chest a day, four of your own
+    // cards drawn fresh. Everything under them was there last week too.
+    expect(SHELF_ORDER.slice(0, 2)).toEqual(["chest", "card"]);
+  });
+
+  it("says how many copies you already hold", () => {
+    expect(DEET).toContain("item.copies !== undefined");
+    expect(DEET).toContain('tf("s0ea3644", "יש לך {0}", item.copies)');
   });
 });

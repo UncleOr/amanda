@@ -2,6 +2,7 @@ import { describe, expect, it } from "vitest";
 import type { SupabaseClient } from "@supabase/supabase-js";
 import { israelDay } from "@amanda/shared";
 import { audienceOf, boughtToday, buy, priceNow, runGrant } from "./shop.js";
+import { cardsForSale } from "./cardShelf.js";
 
 /**
  * The two things in this file that cannot be allowed to be wrong.
@@ -549,5 +550,60 @@ describe("a row made in the admin panel", () => {
     expect(await buy(sb, ME, "skin.one")).toBeNull();
     expect(state.cards).toHaveLength(0);
     expect(state.owned.some((o) => o.item_id === "skin.one")).toBe(true);
+  });
+});
+
+/**
+ * ═══ AND THE CARDS ON THE SHELF ═══
+ *
+ * Today's cards are not rows in a table (cardShelf.ts): they are four cards
+ * out of this player's own album, drawn from the calendar day. Which means
+ * the till is the only thing standing between "an id is a string" and a free
+ * copy of anything in the game.
+ */
+describe("buying one of today's cards", () => {
+  const album = [
+    { player_id: ME, card_id: "dragons_01_flame_dragon", copies: 2 },
+    { player_id: ME, card_id: "plants_01_thorn_sprout", copies: 1 },
+    { player_id: ME, card_id: "giants_10_titan_king", copies: 1 },
+  ];
+
+  it("adds a copy and charges what the shelf showed", async () => {
+    const { sb, state } = fakeDb({ players: { [ME]: { diamonds: 900 } }, cards: [...album] });
+    const shelf = await cardsForSale(sb, ME);
+    expect(shelf.length).toBeGreaterThan(0);
+    const buying = shelf[0]!;
+    const was = state.cards.find(
+      (c) => c.card_id === (buying.grants as { cardId: string }).cardId,
+    )!.copies;
+
+    expect(await buy(sb, ME, buying.id)).toBeNull();
+    expect(state.players[ME]!.diamonds).toBe(900 - buying.price_diamonds);
+    expect(
+      state.cards.find((c) => c.card_id === (buying.grants as { cardId: string }).cardId)!.copies,
+    ).toBe(was + 1);
+  });
+
+  it("leaves nothing in player_items, so it can be bought again", async () => {
+    const { sb, state } = fakeDb({ players: { [ME]: { diamonds: 900 } }, cards: [...album] });
+    const shelf = await cardsForSale(sb, ME);
+    await buy(sb, ME, shelf[0]!.id);
+    expect(state.owned).toHaveLength(0);
+    expect(await buy(sb, ME, shelf[0]!.id)).toBeNull();
+  });
+
+  it("refuses a card that is not on today's shelf, and charges nothing", async () => {
+    const { sb, state } = fakeDb({ players: { [ME]: { diamonds: 900 } }, cards: [...album] });
+    // A card nobody in this test owns. The id is well-formed; that is the point.
+    expect(await buy(sb, ME, "card.today.insects_10_insect_empress")).toBe("shop.gone");
+    expect(state.players[ME]!.diamonds).toBe(900);
+    expect(state.cards).toHaveLength(3);
+  });
+
+  it("refuses when there are not enough diamonds", async () => {
+    const { sb, state } = fakeDb({ players: { [ME]: { diamonds: 10 } }, cards: [...album] });
+    const shelf = await cardsForSale(sb, ME);
+    expect(await buy(sb, ME, shelf[0]!.id)).toMatch(/^shop\.poor:/);
+    expect(state.players[ME]!.diamonds).toBe(10);
   });
 });

@@ -28,6 +28,7 @@ import {
   type GrantGives,
 } from "@amanda/shared";
 import { grantChest, rollChest } from "./progress.js";
+import { TODAY_CARD, cardForSale } from "./cardShelf.js";
 import { refreshAlbumPowerSoon } from "./albumPower.js";
 import { track } from "./events.js";
 
@@ -50,6 +51,15 @@ export interface ShopItem {
    */
   sale_price_diamonds?: number | null;
   sale_until?: string | null;
+  /**
+   * How many of this card the player already holds.
+   *
+   * Only ever set on the card shelf, which is the one part of this shop that
+   * is about a card you ALREADY own — so "do I need another" is the question
+   * the page has to answer, and it cannot be answered without this number.
+   * See cardShelf.ts.
+   */
+  copies?: number;
 }
 
 /**
@@ -233,13 +243,26 @@ export async function buy(
   itemId: string,
 ): Promise<string | null> {
   const now = new Date().toISOString();
-  const { data: item } = await sb
-    .from("shop_items")
-    .select(
-      "id, kind, grants, price_diamonds, active, available_from, available_until, sale_price_diamonds, sale_until",
-    )
-    .eq("id", itemId)
-    .maybeSingle();
+  /*
+   * Today's card shelf is not in the table — it is worked out from the
+   * player's own album and the calendar day (cardShelf.ts) — so it is asked
+   * first, and asked HERE rather than believed from the request: an id is a
+   * string anybody can type, and the shelf is the only thing that says this
+   * player may buy a copy of this card today.
+   */
+  const shelf = itemId.startsWith(TODAY_CARD) ? await cardForSale(sb, playerId, itemId) : null;
+  const { data: row } = shelf
+    ? { data: null }
+    : await sb
+        .from("shop_items")
+        .select(
+          "id, kind, grants, price_diamonds, active, available_from, available_until, sale_price_diamonds, sale_until",
+        )
+        .eq("id", itemId)
+        .maybeSingle();
+  const item = shelf
+    ? { ...shelf, active: true, available_from: null, available_until: null }
+    : row;
 
   if (!item || !item.active) return "shop.gone";
   if (item.available_from && item.available_from > now) return "shop.notYet";

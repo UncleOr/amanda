@@ -994,6 +994,14 @@ export interface ShopItem {
    */
   sale_price_diamonds?: number | null;
   sale_until?: string | null;
+  /**
+   * How many copies of this card are already in the album.
+   *
+   * Only the card shelf sets it, and that shelf exists for one reason — Or:
+   * *"the option to buy cards you already have, so you can upgrade"* — so
+   * the number you are adding to is the whole decision.
+   */
+  copies?: number;
 }
 
 /** What this item costs right now, and what it used to. Mirrors shop.ts. */

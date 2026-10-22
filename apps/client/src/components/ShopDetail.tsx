@@ -24,7 +24,7 @@ import { Icon } from "./Icon";
 import { Overlay } from "./Overlay";
 import { Plaque } from "./Plaque";
 import { priceNow, type ShopItem } from "../game/account";
-import { line as t } from "../game/copy";
+import { line as t, lineF as tf } from "../game/copy";
 import { say } from "../game/lang";
 import { shopItemArt } from "./Shop";
 
@@ -125,6 +125,16 @@ export function ShopDetail({
           <p className="deet__phrase">{say(phrase)}</p>
         ) : (
           <h2 className="deet__name">{say(item.name)}</h2>
+        )}
+        {/*
+          How many you already hold. The card shelf sells COPIES of cards
+          you own, so this is the number being added to — and without it the
+          page is asking a child to decide on a card they cannot count.
+        */}
+        {item.copies !== undefined && (
+          <p className="deet__have">
+            <Icon name="deck" size={15} /> {tf("s0ea3644", "יש לך {0}", item.copies)}
+          </p>
         )}
         {item.blurb?.he && <p className="deet__blurb">{say(item.blurb)}</p>}
 

@@ -83,13 +83,19 @@ const SHELF_LABELS: Record<ShopKind, string> = {
  * array did.
  */
 export const SHELF_ORDER: ShopKind[] = [
+  /*
+   * The two perishable shelves first, which is how a real shop stacks: the
+   * chests are one of each a day and the cards are four of your own, drawn
+   * fresh every morning. Everything under them is the same today as it was
+   * last week, and will be there when you come back.
+   */
+  "chest",
+  "card",
   "avatar",
   "skin",
   "back",
   "emoji",
   "phrase",
-  "chest",
-  "card",
 ];
 
 const SECTIONS = SHELF_ORDER.map((kind) => ({ kind, he: SHELF_LABELS[kind] }));
