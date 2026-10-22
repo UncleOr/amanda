@@ -28,6 +28,7 @@ import {
 import { isOnline } from "./presence.js";
 import { boughtToday, buy, ownedItems, shopWindow } from "./shop.js";
 import { cardsForSale } from "./cardShelf.js";
+import { offersFor } from "./offers.js";
 import { inbox, markRead } from "./notify.js";
 import { handleAdmin, handleCopy } from "./admin.js";
 import { awardMatch, claim, factsFor, standings } from "./meta.js";
@@ -474,7 +475,13 @@ async function handleShop(req: IncomingMessage, res: ServerResponse, path: strin
           cardsForSale(sb, playerId),
         ])
       : [[], [], []];
-    return send(res, 200, { items: [...items, ...cards], owned, today });
+    /*
+     * One thing from each shelf, cheaper, today. The sale fields are filled
+     * in here and read by `priceNow` on both sides, so the strip at the top
+     * of the shop and the till are looking at the same number — see
+     * offers.ts.
+     */
+    return send(res, 200, { items: offersFor([...items, ...cards]), owned, today });
   }
 
   const playerId = await playerFrom(req);

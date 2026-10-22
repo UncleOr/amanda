@@ -87,10 +87,38 @@ describe("when it can be read", () => {
  */
 describe("the sheet", () => {
   const STORY = read("../components/ArenaStory.tsx");
+  const CSS = read("../lab.css");
 
   it("draws the arena at the size it was painted", () => {
     expect(STORY).toContain("story__art");
     expect(STORY).toContain(`arena/${"${arena.id}"}.webp`);
+  });
+
+  /*
+   * Or: *"the picture in the arena doesn't really show the location. I would
+   * turn the picture into a sort of gif that runs in a loop with a small
+   * animation."*
+   *
+   * The paintings are 1152x576 and the window is a band — 780x142 on a phone
+   * held sideways — so a still shows a third of the place and the rest is
+   * never seen by anybody. It is an <img> that walks its own height past the
+   * window and back.
+   */
+  it("moves, so the whole place comes past", () => {
+    expect(STORY).toContain('className="story__pan"');
+    expect(CSS).toContain("@keyframes story-pan");
+    expect(CSS, "it travels the full height of the painting").toContain(
+      "object-position: 50% 100%",
+    );
+  });
+
+  it("opens on the middle of the painting, not its top edge", () => {
+    expect(CSS).toContain("0% { object-position: 50% 50%; }");
+  });
+
+  it("holds still for anybody who has asked their phone to stop moving things", () => {
+    const reduced = CSS.slice(CSS.indexOf("prefers-reduced-motion"));
+    expect(reduced).toContain(".story__pan { animation: none;");
   });
 
   it("shows the family that lives there", () => {

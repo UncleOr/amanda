@@ -125,6 +125,109 @@ export function shopItemArt(item: ShopItem): string | null {
   return pack ? `${BASE}emoji/${pack.id}.png` : null;
 }
 
+/**
+ * One thing on a shelf: its picture, its name and what it costs today.
+ *
+ * A component rather than a loop body because it is drawn in two places now
+ * — the offers at the top and the shelf it belongs to — and a tile that said
+ * one price in the strip and another on the shelf would be the shop arguing
+ * with itself.
+ */
+function Good({
+  item,
+  mine,
+  taken,
+  diamonds,
+  onOpen,
+}: {
+  item: ShopItem;
+  mine: boolean;
+  /** Today's one has been had. Only a chest can be this; see the server. */
+  taken: boolean;
+  diamonds: number;
+  onOpen: () => void;
+}) {
+  const art = shopItemArt(item);
+  // A phrase tile draws the line itself; see below.
+  const phrase = CATCHPHRASES.find((p) => p.item === item.id);
+  /*
+   * And a back tile draws the back, for exactly the same reason: what is
+   * being sold IS the picture. These have no `art` column and never will — a
+   * back is drawn in CSS, not stored as a file (see cardBacks.ts) — so
+   * without this they fell through to the generic gem and the shelf would
+   * have been six identical tiles with six different names.
+   */
+  const back = CARD_BACKS.find((b) => b.item === item.id);
+  // What it costs TODAY. The same arithmetic the server does at the till, so
+  // a sale cannot be shown and not charged (or the reverse) — see priceNow
+  // in shop.ts, and offers.ts for the one item a kind that is marked down.
+  const { pay, was } = priceNow(item);
+  const tooDear = pay > diamonds;
+  return (
+    <button
+      type="button"
+      className={`good${mine || taken ? " is-mine" : ""}${was !== null ? " is-deal" : ""}`}
+      onClick={onOpen}
+    >
+      {/* The picture is not lazy-loaded: the shop is a thing you deliberately
+          open, every tile is on screen at once, and they are 66 pixels
+          across. Deferring them only buys a row of empty circles. */}
+      {/*
+        A catchphrase has no picture, because it IS the picture: what is
+        being sold is how the sentence arrives, so the tile shows the
+        sentence in the treatment you would be buying. A generic gem there
+        would be selling it blind.
+      */}
+      <div
+        className={`good__art${phrase ? " good__art--phrase" : ""}${
+          back ? " good__art--back" : ""
+        }`}
+      >
+        {phrase ? (
+          <Plaque phrase={phrase} />
+        ) : back ? (
+          <CardBack size="small" back={back.id} />
+        ) : art ? (
+          <img src={art} alt="" />
+        ) : (
+          <Icon name="gem" size={30} />
+        )}
+      </div>
+      {/* The name of a phrase is the phrase, already shown above it. Saying
+          it twice is clutter. */}
+      {!phrase && <b className="good__name">{say(item.name)}</b>}
+      {/*
+        The blurb is gone from the shelf and lives in the detail now. Or:
+        *"all the explanation that is under every avatar"* — a sentence under
+        a 66px tile is a grey smear, and it was the third thing competing
+        with a picture that is what is being sold.
+      */}
+      {mine || taken ? (
+        <span className="good__mine">
+          <Icon name={taken ? "chest" : "ready"} size={13} />{" "}
+          {taken ? t("s52f7e9a", "מחר") : t("s1a96dcd", "שלך")}
+        </span>
+      ) : (
+        <span
+          className={`good__buy${tooDear ? " is-poor" : ""}${was !== null ? " is-sale" : ""}`}
+        >
+          {/* The old price, struck through, is the whole mechanism of a
+              sale: a lower number nobody has seen the higher one for is
+              just a price. */}
+          {was !== null && <s className="good__was">{was}</s>}
+          {pay === 0 ? (
+            t("s9eddab1", "חינם")
+          ) : (
+            <>
+              <Icon name="gem" size={12} /> {pay}
+            </>
+          )}
+        </span>
+      )}
+    </button>
+  );
+}
+
 export function Shop({
   onClose,
   diamonds,
@@ -147,6 +250,23 @@ export function Shop({
    * carried badly. See ShopDetail.
    */
   const [looking, setLooking] = useState<string | null>(null);
+  /*
+   * What is cheaper than it says on it. One per kind, drawn for the day by
+   * the server; a tile is in the strip exactly when `priceNow` finds a live
+   * sale on it, which is the same question the till asks.
+   */
+  const deals = (items ?? []).filter(
+    (i) =>
+      priceNow(i).was !== null &&
+      /*
+       * Not a thing you already have, and not today's chest if you have
+       * taken it. An offer you cannot accept is not an offer — it is a tile
+       * at the top of the shop saying "שלך", which is the clutter the strip
+       * exists to cut through. It is still on its own shelf, marked down.
+       */
+      !owned.includes(i.id) &&
+      !today.includes(i.id),
+  );
 
   const refresh = useCallback(async () => {
     const { items: list, owned: mine, today: taken } = await loadShop();
@@ -191,6 +311,38 @@ export function Shop({
           <p className="friends__hint">{t("s947b31f", "המדפים עוד ריקים. בקרוב.")}</p>
         ) : (
           <div className="shop__shelves">
+            {/*
+              ═══ THE OFFERS, AT THE TOP ═══
+
+              Or: *"and offers at the top of the shop. One product from each
+              category."*
+
+              Nothing is decided here. An item is on offer when the price it
+              came back with is lower than the price printed on it — the
+              server marks one per kind for the day (offers.ts) and both
+              sides read it through the same `priceNow`. So this strip cannot
+              show a deal the till will not honour: it is drawing the same
+              rows as the shelves below, which is also why a tile here and
+              the same tile down there say the same number.
+            */}
+            {deals.length > 0 && (
+              <section className="aisle aisle--deals">
+                <h3 className="aisle__label">{t("sf66666a", "מבצעים")}</h3>
+                <div className="aisle__row">
+                  {deals.map((item) => (
+                    <Good
+                      key={item.id}
+                      item={item}
+                      mine={owned.includes(item.id)}
+                      taken={today.includes(item.id)}
+                      diamonds={diamonds}
+                      onOpen={() => setLooking(item.id)}
+                    />
+                  ))}
+                </div>
+                <span className="aisle__edge" aria-hidden="true" />
+              </section>
+            )}
             {SECTIONS.map(({ kind, he }) => {
               const row = items.filter((i) => i.kind === kind);
               if (!row.length) return null;
@@ -198,104 +350,16 @@ export function Shop({
                 <section className="aisle" key={kind}>
                   <h3 className="aisle__label">{he}</h3>
                   <div className="aisle__row">
-                    {row.map((item) => {
-                      /*
-                       * A chest is never "yours" — it is opened and gone —
-                       * so what the shelf says about one is whether you have
-                       * had today's. See REPEATABLE in apps/server/src/shop.ts.
-                       */
-                      const taken = today.includes(item.id);
-                      const mine = owned.includes(item.id);
-                      const art = shopItemArt(item);
-                      // A phrase tile draws the line itself; see below.
-                      const phrase = CATCHPHRASES.find((p) => p.item === item.id);
-                      /*
-                       * And a back tile draws the back, for exactly the same
-                       * reason: what is being sold IS the picture. These have
-                       * no `art` column and never will — a back is drawn in
-                       * CSS, not stored as a file (see cardBacks.ts) — so
-                       * without this they fell through to the generic gem and
-                       * the shelf would have been six identical tiles with
-                       * six different names.
-                       */
-                      const back = CARD_BACKS.find((b) => b.item === item.id);
-                      // What it costs TODAY. The same arithmetic the server
-                      // does at the till, so a sale cannot be shown and not
-                      // charged (or the reverse) — see priceNow in shop.ts.
-                      const { pay, was } = priceNow(item);
-                      const tooDear = pay > diamonds;
-                      return (
-                        <button
-                          type="button"
-                          className={`good${mine || taken ? " is-mine" : ""}`}
-                          key={item.id}
-                          onClick={() => setLooking(item.id)}
-                        >
-                          {/* The picture is not lazy-loaded: the shop is a
-                              thing you deliberately open, every tile is on
-                              screen at once, and they are 66 pixels across.
-                              Deferring them only buys a row of empty circles. */}
-                          {/*
-                            A catchphrase has no picture, because it IS the
-                            picture: what is being sold is how the sentence
-                            arrives, so the tile shows the sentence in the
-                            treatment you would be buying. A generic gem
-                            there would be selling it blind.
-                          */}
-                          <div
-                            className={`good__art${phrase ? " good__art--phrase" : ""}${
-                              back ? " good__art--back" : ""
-                            }`}
-                          >
-                            {phrase ? (
-                              <Plaque phrase={phrase} />
-                            ) : back ? (
-                              <CardBack size="small" back={back.id} />
-                            ) : art ? (
-                              <img src={art} alt="" />
-                            ) : (
-                              <Icon name="gem" size={30} />
-                            )}
-                          </div>
-                          {/* The name of a phrase is the phrase, already
-                              shown above it. Saying it twice is clutter. */}
-                          {!phrase && <b className="good__name">{say(item.name)}</b>}
-                          {/*
-                            The blurb is gone from the shelf and lives in the
-                            detail now. Or: *"all the explanation that is
-                            under every avatar"* — a sentence under a 66px
-                            tile is a grey smear, and it was the third thing
-                            competing with a picture that is what is being
-                            sold.
-                          */}
-                          {mine || taken ? (
-                            <span className="good__mine">
-                              <Icon name={taken ? "chest" : "ready"} size={13} />{" "}
-                              {taken ? t("s52f7e9a", "מחר") : t("s1a96dcd", "שלך")}
-                            </span>
-                          ) : (
-                            <span
-                              className={`good__buy${tooDear ? " is-poor" : ""}${
-                                was !== null ? " is-sale" : ""
-                              }`}
-                            >
-                              {/* The old price, struck through, is the whole
-                                  mechanism of a sale: a lower number nobody
-                                  has seen the higher one for is just a
-                                  price. */}
-                              {was !== null && <s className="good__was">{was}</s>}
-                              {pay === 0 ? (
-                                t("s9eddab1", "חינם")
-                              ) : (
-                                <>
-                                  <Icon name="gem" size={12} /> {pay}
-                                </>
-                              )}
-                            </span>
-                          )}
-                        </button>
-                      );
-                    })}
+                    {row.map((item) => (
+                      <Good
+                        key={item.id}
+                        item={item}
+                        mine={owned.includes(item.id)}
+                        taken={today.includes(item.id)}
+                        diamonds={diamonds}
+                        onOpen={() => setLooking(item.id)}
+                      />
+                    ))}
                   </div>
                   <span className="aisle__edge" aria-hidden="true" />
                 </section>

@@ -1,7 +1,8 @@
 import { describe, expect, it } from "vitest";
 import type { SupabaseClient } from "@supabase/supabase-js";
 import { israelDay } from "@amanda/shared";
-import { audienceOf, boughtToday, buy, priceNow, runGrant } from "./shop.js";
+import { audienceOf, boughtToday, buy, priceNow, runGrant, shopWindow, type ShopItem } from "./shop.js";
+import { offersFor } from "./offers.js";
 import { cardsForSale } from "./cardShelf.js";
 
 /**
@@ -172,6 +173,30 @@ function fakeDb(seed: {
 }
 
 const ME = "player-1";
+/**
+ * The instant every purchase in this file happens at.
+ *
+ * Pinned because the price now depends on the DAY: one item per kind is on
+ * offer, drawn from the calendar date (offers.ts). Without this the expected
+ * numbers below would be right today and wrong tomorrow.
+ */
+const NOW = new Date("2026-10-22T09:00:00Z");
+
+/**
+ * What the shop SHOWS for this item right now — the number on the tile.
+ *
+ * Every assertion about money below is written against this rather than
+ * against a literal, and that is the property worth testing: one item per
+ * kind is marked down for the day (offers.ts), and what must never happen is
+ * the shelf saying one number and the till taking another. The arithmetic of
+ * the discount itself is pinned in offers.test.ts, with literals.
+ */
+async function shown(sb: SupabaseClient, itemId: string, shelf: ShopItem[] = []): Promise<number> {
+  const window = offersFor([...(await shopWindow(sb, NOW.toISOString())), ...shelf], NOW);
+  const item = window.find((i) => i.id === itemId);
+  if (!item) throw new Error(`${itemId} is not in the window`);
+  return priceNow(item, NOW.toISOString()).pay;
+}
 
 describe("buying", () => {
   const hat = { kind: "avatar", grants: { avatar: "av_yeti" }, price_diamonds: 100 };
@@ -181,8 +206,9 @@ describe("buying", () => {
       players: { [ME]: { diamonds: 250 } },
       items: { "avatar.yeti": hat },
     });
-    expect(await buy(sb, ME, "avatar.yeti")).toBeNull();
-    expect(state.players[ME]!.diamonds).toBe(150);
+    const pay = await shown(sb, "avatar.yeti");
+    expect(await buy(sb, ME, "avatar.yeti", NOW)).toBeNull();
+    expect(state.players[ME]!.diamonds).toBe(250 - pay);
     expect(state.owned.some((o) => o.item_id === "avatar.yeti")).toBe(true);
   });
 
@@ -192,7 +218,7 @@ describe("buying", () => {
       items: { "avatar.yeti": hat },
     });
     // The one code that carries a value: how many are missing.
-    expect(await buy(sb, ME, "avatar.yeti")).toBe("shop.poor:60");
+    expect(await buy(sb, ME, "avatar.yeti", NOW)).toBe(`shop.poor:${(await shown(sb, "avatar.yeti")) - 40}`);
     expect(state.players[ME]!.diamonds).toBe(40);
     expect(state.owned).toHaveLength(0);
   });
@@ -203,7 +229,7 @@ describe("buying", () => {
       items: { "avatar.yeti": hat },
       owned: [{ player_id: ME, item_id: "avatar.yeti" }],
     });
-    expect(await buy(sb, ME, "avatar.yeti")).toBe("shop.owned");
+    expect(await buy(sb, ME, "avatar.yeti", NOW)).toBe("shop.owned");
     expect(state.players[ME]!.diamonds).toBe(500);
   });
 
@@ -214,14 +240,15 @@ describe("buying", () => {
     });
     // Both read the same balance before either writes — which is exactly the
     // race. The `.eq("diamonds", have)` on the charge is what settles it.
-    const [a, b] = await Promise.all([buy(sb, ME, "avatar.yeti"), buy(sb, ME, "avatar.yeti")]);
+    const pay = await shown(sb, "avatar.yeti");
+    const [a, b] = await Promise.all([buy(sb, ME, "avatar.yeti", NOW), buy(sb, ME, "avatar.yeti", NOW)]);
     expect([a, b].filter((r) => r === null)).toHaveLength(1);
-    expect(state.players[ME]!.diamonds).toBe(50);
+    expect(state.players[ME]!.diamonds).toBe(150 - pay);
   });
 
   it("refuses an item that is not in the shop", async () => {
     const { sb } = fakeDb({ players: { [ME]: { diamonds: 500 } }, items: {} });
-    expect(await buy(sb, ME, "avatar.nope")).toBe("shop.gone");
+    expect(await buy(sb, ME, "avatar.nope", NOW)).toBe("shop.gone");
   });
 
   it("refuses one whose window has closed, however it is asked for", async () => {
@@ -231,7 +258,7 @@ describe("buying", () => {
         "avatar.yeti": { ...hat, available_until: "2000-01-01T00:00:00.000Z" },
       },
     });
-    expect(await buy(sb, ME, "avatar.yeti")).toBe("shop.ended");
+    expect(await buy(sb, ME, "avatar.yeti", NOW)).toBe("shop.ended");
     expect(state.players[ME]!.diamonds).toBe(500);
   });
 });
@@ -382,15 +409,16 @@ describe("what an item costs right now", () => {
  */
 describe("a chest on the shelf", () => {
   const chest = { kind: "chest", grants: { chest: "wood" }, price_diamonds: 80 };
-  const today = israelDay(new Date());
+  const today = israelDay(NOW);
 
   it("arrives shut, with its contents already rolled", async () => {
     const { sb, state } = fakeDb({
       players: { [ME]: { diamonds: 100 } },
       items: { "chest.wood": chest },
     });
-    expect(await buy(sb, ME, "chest.wood")).toBeNull();
-    expect(state.players[ME]!.diamonds).toBe(20);
+    const pay = await shown(sb, "chest.wood");
+    expect(await buy(sb, ME, "chest.wood", NOW)).toBeNull();
+    expect(state.players[ME]!.diamonds).toBe(100 - pay);
     expect(state.chests).toHaveLength(1);
     const got = state.chests[0]!;
     expect(got.kind).toBe("wood");
@@ -406,7 +434,7 @@ describe("a chest on the shelf", () => {
       players: { [ME]: { diamonds: 100 } },
       items: { "chest.wood": chest },
     });
-    await buy(sb, ME, "chest.wood");
+    await buy(sb, ME, "chest.wood", NOW);
     expect(state.owned).toHaveLength(0);
   });
 
@@ -418,7 +446,7 @@ describe("a chest on the shelf", () => {
         { player_id: ME, kind: "wood", bought_item: "chest.wood", bought_day: today },
       ],
     });
-    expect(await buy(sb, ME, "chest.wood")).toBe("shop.tomorrow");
+    expect(await buy(sb, ME, "chest.wood", NOW)).toBe("shop.tomorrow");
     expect(state.players[ME]!.diamonds).toBe(500);
     expect(state.chests).toHaveLength(1);
   });
@@ -435,7 +463,7 @@ describe("a chest on the shelf", () => {
         { player_id: ME, kind: "wood", bought_item: "chest.wood", bought_day: today },
       ],
     });
-    expect(await buy(sb, ME, "chest.gold")).toBeNull();
+    expect(await buy(sb, ME, "chest.gold", NOW)).toBeNull();
     expect(state.chests).toHaveLength(2);
   });
 
@@ -450,7 +478,7 @@ describe("a chest on the shelf", () => {
         { player_id: ME, kind: "wood", bought_item: null, bought_day: null },
       ],
     });
-    expect(await buy(sb, ME, "chest.wood")).toBeNull();
+    expect(await buy(sb, ME, "chest.wood", NOW)).toBeNull();
   });
 
   it("tells the shelf what has already been taken today", async () => {
@@ -481,12 +509,13 @@ describe("a card you already have", () => {
       items: { "card.flame": card },
       cards: [{ player_id: ME, card_id: "dragons_01_flame_dragon", copies: 2 }],
     });
-    expect(await buy(sb, ME, "card.flame")).toBeNull();
+    const pay = await shown(sb, "card.flame");
+    expect(await buy(sb, ME, "card.flame", NOW)).toBeNull();
     expect(state.cards[0]!.copies).toBe(3);
     // And again, with no daily cap: only chests have one.
-    expect(await buy(sb, ME, "card.flame")).toBeNull();
+    expect(await buy(sb, ME, "card.flame", NOW)).toBeNull();
     expect(state.cards[0]!.copies).toBe(4);
-    expect(state.players[ME]!.diamonds).toBe(80);
+    expect(state.players[ME]!.diamonds).toBe(200 - pay * 2);
   });
 });
 
@@ -497,7 +526,7 @@ describe("everything else is still bought once", () => {
       items: { "avatar.yeti": { kind: "avatar", grants: {}, price_diamonds: 100 } },
       owned: [{ player_id: ME, item_id: "avatar.yeti" }],
     });
-    expect(await buy(sb, ME, "avatar.yeti")).toBe("shop.owned");
+    expect(await buy(sb, ME, "avatar.yeti", NOW)).toBe("shop.owned");
   });
 });
 
@@ -512,7 +541,7 @@ describe("a row made in the admin panel", () => {
       // What AdminShop used to write: {kind}, not {chest}.
       items: { "chest.old": { kind: "chest", grants: { kind: "silver" }, price_diamonds: 200 } },
     });
-    expect(await buy(sb, ME, "chest.old")).toBeNull();
+    expect(await buy(sb, ME, "chest.old", NOW)).toBeNull();
     expect(state.chests).toHaveLength(1);
     expect(state.chests[0]!.kind).toBe("silver");
   });
@@ -529,7 +558,7 @@ describe("a row made in the admin panel", () => {
         },
       },
     });
-    expect(await buy(sb, ME, "card.one")).toBeNull();
+    expect(await buy(sb, ME, "card.one", NOW)).toBeNull();
     expect(state.cards).toEqual([
       { player_id: ME, card_id: "dragons_01_flame_dragon", copies: 1 },
     ]);
@@ -547,7 +576,7 @@ describe("a row made in the admin panel", () => {
         },
       },
     });
-    expect(await buy(sb, ME, "skin.one")).toBeNull();
+    expect(await buy(sb, ME, "skin.one", NOW)).toBeNull();
     expect(state.cards).toHaveLength(0);
     expect(state.owned.some((o) => o.item_id === "skin.one")).toBe(true);
   });
@@ -570,15 +599,16 @@ describe("buying one of today's cards", () => {
 
   it("adds a copy and charges what the shelf showed", async () => {
     const { sb, state } = fakeDb({ players: { [ME]: { diamonds: 900 } }, cards: [...album] });
-    const shelf = await cardsForSale(sb, ME);
+    const shelf = await cardsForSale(sb, ME, NOW);
     expect(shelf.length).toBeGreaterThan(0);
     const buying = shelf[0]!;
     const was = state.cards.find(
       (c) => c.card_id === (buying.grants as { cardId: string }).cardId,
     )!.copies;
 
-    expect(await buy(sb, ME, buying.id)).toBeNull();
-    expect(state.players[ME]!.diamonds).toBe(900 - buying.price_diamonds);
+    const pay = await shown(sb, buying.id, shelf);
+    expect(await buy(sb, ME, buying.id, NOW)).toBeNull();
+    expect(state.players[ME]!.diamonds).toBe(900 - pay);
     expect(
       state.cards.find((c) => c.card_id === (buying.grants as { cardId: string }).cardId)!.copies,
     ).toBe(was + 1);
@@ -586,24 +616,24 @@ describe("buying one of today's cards", () => {
 
   it("leaves nothing in player_items, so it can be bought again", async () => {
     const { sb, state } = fakeDb({ players: { [ME]: { diamonds: 900 } }, cards: [...album] });
-    const shelf = await cardsForSale(sb, ME);
-    await buy(sb, ME, shelf[0]!.id);
+    const shelf = await cardsForSale(sb, ME, NOW);
+    await buy(sb, ME, shelf[0]!.id, NOW);
     expect(state.owned).toHaveLength(0);
-    expect(await buy(sb, ME, shelf[0]!.id)).toBeNull();
+    expect(await buy(sb, ME, shelf[0]!.id, NOW)).toBeNull();
   });
 
   it("refuses a card that is not on today's shelf, and charges nothing", async () => {
     const { sb, state } = fakeDb({ players: { [ME]: { diamonds: 900 } }, cards: [...album] });
     // A card nobody in this test owns. The id is well-formed; that is the point.
-    expect(await buy(sb, ME, "card.today.insects_10_insect_empress")).toBe("shop.gone");
+    expect(await buy(sb, ME, "card.today.insects_10_insect_empress", NOW)).toBe("shop.gone");
     expect(state.players[ME]!.diamonds).toBe(900);
     expect(state.cards).toHaveLength(3);
   });
 
   it("refuses when there are not enough diamonds", async () => {
     const { sb, state } = fakeDb({ players: { [ME]: { diamonds: 10 } }, cards: [...album] });
-    const shelf = await cardsForSale(sb, ME);
-    expect(await buy(sb, ME, shelf[0]!.id)).toMatch(/^shop\.poor:/);
+    const shelf = await cardsForSale(sb, ME, NOW);
+    expect(await buy(sb, ME, shelf[0]!.id, NOW)).toMatch(/^shop\.poor:/);
     expect(state.players[ME]!.diamonds).toBe(10);
   });
 });

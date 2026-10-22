@@ -23,8 +23,11 @@ const DEET = read("./ShopDetail.tsx");
 
 describe("the shelf", () => {
   it("opens the item instead of buying from the tile", () => {
-    expect(SHOP).toContain("onClick={() => setLooking(item.id)}");
-    expect(SHOP, "the price on a tile is a label now").toContain('<span\n                              className={`good__buy');
+    // The tile is a door; the only till is on the item's own page.
+    expect(SHOP).toContain("onOpen={() => setLooking(item.id)}");
+    // And the price is a label, not a second button: `.good__buy` is a
+    // <span> inside the tile.
+    expect(SHOP).toMatch(/<span\s+className=\{`good__buy/);
   });
 
   /* The blurb moved; a sentence under a 66px tile is a grey smear. */
@@ -130,5 +133,40 @@ describe("the card shelf", () => {
   it("says how many copies you already hold", () => {
     expect(DEET).toContain("item.copies !== undefined");
     expect(DEET).toContain('tf("s0ea3644", "יש לך {0}", item.copies)');
+  });
+});
+
+/**
+ * ═══ THE OFFERS, AT THE TOP ═══
+ *
+ * Or: *"and offers at the top of the shop. One product from each category."*
+ *
+ * Nothing about WHICH is decided here — the server marks one row per kind
+ * for the day (offers.ts) and both sides read it through the same
+ * `priceNow`. What this screen must get right is that it draws the same
+ * tile it would draw on the shelf, and that it does not offer you something
+ * you cannot take.
+ */
+describe("the offers strip", () => {
+  it("is the first thing in the shop", () => {
+    expect(SHOP.indexOf("aisle--deals")).toBeLessThan(SHOP.indexOf("SECTIONS.map"));
+  });
+
+  it("asks the price, rather than deciding who is on offer", () => {
+    expect(SHOP).toContain("priceNow(i).was !== null");
+  });
+
+  it("leaves out anything you could not buy anyway", () => {
+    // A tile at the top of the shop saying "שלך" is the clutter the strip
+    // exists to cut through.
+    expect(SHOP).toContain("!owned.includes(i.id)");
+    expect(SHOP).toContain("!today.includes(i.id)");
+  });
+
+  it("draws the same tile as the shelf below it", () => {
+    // One component, used twice. A tile that said one price in the strip
+    // and another on the shelf would be the shop arguing with itself.
+    expect([...SHOP.matchAll(/<Good\b/g)]).toHaveLength(2);
+    expect([...SHOP.matchAll(/function Good\(/g)]).toHaveLength(1);
   });
 });

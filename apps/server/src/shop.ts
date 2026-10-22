@@ -28,7 +28,8 @@ import {
   type GrantGives,
 } from "@amanda/shared";
 import { grantChest, rollChest } from "./progress.js";
-import { TODAY_CARD, cardForSale } from "./cardShelf.js";
+import { TODAY_CARD, cardsForSale } from "./cardShelf.js";
+import { offersFor } from "./offers.js";
 import { refreshAlbumPowerSoon } from "./albumPower.js";
 import { track } from "./events.js";
 
@@ -90,8 +91,10 @@ export function priceNow(
  * and simply is not offered outside it, so a weekend event is a pair of dates
  * rather than somebody remembering to switch it on and off again.
  */
-export async function shopWindow(sb: SupabaseClient): Promise<ShopItem[]> {
-  const now = new Date().toISOString();
+export async function shopWindow(
+  sb: SupabaseClient,
+  now: string = new Date().toISOString(),
+): Promise<ShopItem[]> {
   const { data } = await sb
     .from("shop_items")
     .select(
@@ -241,8 +244,18 @@ export async function buy(
   sb: SupabaseClient,
   playerId: string,
   itemId: string,
+  /**
+   * The instant this purchase happens at, threaded rather than taken three
+   * times.
+   *
+   * It decides the price (a sale ends), the offer (one per kind, per day)
+   * and which day a chest counts against — and a purchase at 23:59:59 used
+   * to read the clock separately for each of those. Tests pin it; everything
+   * else leaves it alone.
+   */
+  at: Date = new Date(),
 ): Promise<string | null> {
-  const now = new Date().toISOString();
+  const now = at.toISOString();
   /*
    * Today's card shelf is not in the table — it is worked out from the
    * player's own album and the calendar day (cardShelf.ts) — so it is asked
@@ -250,7 +263,8 @@ export async function buy(
    * string anybody can type, and the shelf is the only thing that says this
    * player may buy a copy of this card today.
    */
-  const shelf = itemId.startsWith(TODAY_CARD) ? await cardForSale(sb, playerId, itemId) : null;
+  const cards = itemId.startsWith(TODAY_CARD) ? await cardsForSale(sb, playerId, at) : [];
+  const shelf = cards.find((i) => i.id === itemId) ?? null;
   const { data: row } = shelf
     ? { data: null }
     : await sb
@@ -285,7 +299,7 @@ export async function buy(
    * balance guard below is what stops the second one paying — it reads a
    * balance that has already changed and returns "retry".
    */
-  const day = israelDay(new Date());
+  const day = israelDay(at);
   if (item.kind === "chest") {
     const { data: todays } = await sb
       .from("chests")
@@ -297,9 +311,27 @@ export async function buy(
     if (todays) return "shop.tomorrow";
   }
 
-  // The same function the shelf used to draw the price, so the number on the
-  // tile and the number taken out of the purse cannot drift apart.
-  const price = priceNow(item, now).pay;
+  /*
+   * ═══ WHAT IT COSTS, INCLUDING TODAY'S OFFER ═══
+   *
+   * `priceNow` is the same function the shelf drew the tile with, so a sale
+   * cannot be shown and not charged. What it needs is the row AS THE SHOP
+   * SHOWED IT — one item per kind is marked down for the day, and that
+   * marking lives in offers.ts rather than in the table.
+   *
+   * So the window is read again and run through the same function. It costs
+   * one indexed query on a path that already does several, and it buys the
+   * only property that matters here: the number on the tile and the number
+   * taken out of the purse are worked out by one piece of code, from one
+   * input, twice.
+   *
+   * The card shelf comes along when a card is being bought, because the card
+   * offer is drawn from the four cards THIS player was shown.
+   */
+  const priced =
+    offersFor([...(await shopWindow(sb, now)), ...cards], at).find((i) => i.id === itemId) ??
+    (item as ShopItem);
+  const price = priceNow(priced, now).pay;
   const { data: me } = await sb.from("players").select("diamonds").eq("id", playerId).maybeSingle();
   const have = me?.diamonds ?? 0;
   // The one refusal a code alone cannot carry: it has to say how many.

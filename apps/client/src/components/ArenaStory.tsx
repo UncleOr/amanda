@@ -62,11 +62,27 @@ export function ArenaStory({ arena, onClose }: { arena: Arena; onClose: () => vo
           <Icon name="exit" size={15} />
         </button>
 
-        {/* The place itself, at the size it was painted, with its name on it. */}
-        <div
-          className="story__art"
-          style={{ backgroundImage: `url("${BASE}arena/${arena.id}.webp")` }}
-        >
+        {/*
+          ═══ THE PLACE, AND IT MOVES ═══
+
+          Or: *"the picture in the arena doesn't really show the location. I
+          would turn the picture into a sort of gif that runs in a loop with
+          a small animation."*
+
+          Both halves have one cause. The paintings are 1152x576 and the
+          window they are shown through is a band — on a phone held sideways
+          there is no room for anything taller — so a still picture shows
+          about a third of the place and no more, for ever.
+
+          A still is not what this needs. The picture drifts slowly from the
+          top of the painting to the bottom and back, so everything in it
+          comes past: it answers "show me the location" by showing all of it
+          in turn, and it answers "make it a gif" with the same motion. No
+          new art, nothing to export, and it works on every arena he paints
+          next.
+        */}
+        <div className="story__art">
+          <img className="story__pan" src={`${BASE}arena/${arena.id}.webp`} alt="" />
           <h2>{here}</h2>
         </div>
 

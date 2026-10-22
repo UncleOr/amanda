@@ -623,9 +623,36 @@
   font-weight: 700;
 }
 /* A whole tile that is on sale says so from across the shelf. */
-.good:has(.good__was) {
+.good.is-deal {
   border-color: rgba(255, 143, 208, 0.75);
   box-shadow: 0 0 16px rgba(255, 143, 208, 0.22);
+}
+/*
+ * ═══ THE OFFERS SHELF ═══
+ *
+ * Or: *"and offers at the top of the shop. One product from each category."*
+ *
+ * It is the same aisle as every other one — same tiles, same board — with
+ * two differences and no third: it is FIRST, and its marker is the one gold
+ * word on the screen. A strip that was also a different shape, a different
+ * surface and a different tile size would be a second shop sitting on top of
+ * this one.
+ */
+.aisle--deals .aisle__label {
+  color: var(--accent);
+  display: flex;
+  align-items: center;
+  gap: var(--sp-2);
+}
+.aisle--deals .aisle__label::after {
+  /* How long they last, without a sentence saying so. */
+  content: "";
+  flex: 1;
+  height: 1px;
+  background: linear-gradient(90deg, var(--line-lit), transparent);
+}
+.aisle--deals .aisle__edge {
+  background: linear-gradient(180deg, #6b5330, #3a2c18);
 }
 
 /* ---- notices ---- */
@@ -765,7 +792,14 @@
    child is deciding on, and "secondary" is the job of size, not colour. */
 .deet__have {
   margin: 0 0 10px;
-  display: inline-flex;
+  /*
+   * A row of its own. As an inline-flex it sat on the same line as the buy
+   * button — measured at 832x384: the count at x 267..287 and the button at
+   * 250..303, overlapping — because everything in this panel is centred and
+   * both of them are inline.
+   */
+  display: flex;
+  justify-content: center;
   align-items: center;
   gap: 6px;
   font-size: var(--t-3);

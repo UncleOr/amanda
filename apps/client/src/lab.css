@@ -599,10 +599,55 @@
   position: relative;
   flex: none;
   height: 190px;
-  background-size: cover;
-  background-position: center;
+  overflow: hidden;
   display: flex;
   align-items: flex-end;
+}
+/*
+ * ═══ THE PAINTING DRIFTS THROUGH THE WINDOW ═══
+ *
+ * Or: *"the picture in the arena doesn't really show the location. I would
+ * turn the picture into a sort of gif that runs in a loop with a small
+ * animation."*
+ *
+ * Measured: the paintings are 1152x576 and this window is 780x142 on the
+ * phone, so a still shows 36% of one and the other 64% is a thing nobody
+ * ever sees. `object-position` walks the whole height past the window and
+ * back, which shows every part of the place in turn — and is the loop he
+ * asked for, with no second file to draw.
+ *
+ * Slow on purpose: 13 seconds each way is a drift you notice without
+ * watching, which is the difference between a picture that is alive and a
+ * picture that is distracting.
+ */
+.story__pan {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: 50% 0%;
+  /*
+   * It opens on the MIDDLE of the painting and travels from there, rather
+   * than starting at the top edge: the first frame anybody sees should be
+   * the best single frame of the place, and in a landscape painting that is
+   * never the strip of sky at the top.
+   */
+  object-position: 50% 50%;
+  animation: story-pan 24s ease-in-out infinite;
+}
+@keyframes story-pan {
+  0% { object-position: 50% 50%; }
+  25% { object-position: 50% 0%; }
+  75% { object-position: 50% 100%; }
+  100% { object-position: 50% 50%; }
+}
+/*
+ * A still picture for anybody who has asked their phone to stop moving
+ * things. Centred, because that is the best single frame of a painting.
+ */
+@media (prefers-reduced-motion: reduce) {
+  .story__pan { animation: none; object-position: 50% 50%; }
 }
 /* The name sits ON the place, which is the one caption a picture earns. */
 .story__art::after {

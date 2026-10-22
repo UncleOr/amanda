@@ -33,8 +33,23 @@ const http = createServer((req, res) => {
   void handleApi(req, res)
     .then((handled) => {
       if (handled) return;
+      /*
+       * ═══ WHICH CODE IS ACTUALLY RUNNING HERE ═══
+       *
+       * The client deploys itself on every push (GitHub Pages); the server
+       * does not, and there is no way to tell from the outside. A whole
+       * day's work was live in the browser and absent from the server — the
+       * chest shelf drew itself from rows in the database while the till
+       * behind it was still the old one — and the only reason it was caught
+       * was a key missing from a JSON response.
+       *
+       * So the health check says what it is. Railway hands the commit to
+       * the process for free; anywhere else this is simply null, which is
+       * still an answer.
+       */
+      const sha = process.env.RAILWAY_GIT_COMMIT_SHA ?? process.env.GIT_COMMIT_SHA ?? null;
       res.writeHead(200, { "content-type": "text/plain" });
-      res.end("Amanda multiplayer server — OK");
+      res.end(`Amanda multiplayer server — OK${sha ? ` — ${sha.slice(0, 7)}` : ""}`);
     })
     .catch((err) => {
       /*
