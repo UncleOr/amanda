@@ -74,23 +74,41 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-      - name: Ask the server which commit it is running
+        with:
+          # The whole history: this reads the DATE of the commit the server
+          # reports, and a shallow clone does not have it.
+          fetch-depth: 0
+      - name: How far behind is the server?
         env:
           URL: ${{ vars.SERVER_URL || 'https://amanda-server-production.up.railway.app' }}
+          # How stale it may be before this is an alarm. A Railway build takes
+          # a few minutes and a push can land at any time, so "not the exact
+          # tip of main" is normal and says nothing. Six days was the outage;
+          # six hours is comfortably inside it and far outside a build.
+          STALE_HOURS: "6"
         run: |
-          want="$(git rev-parse --short=7 HEAD)"
           said="$(curl -fsS --max-time 25 "$URL" || echo 'no answer')"
-          echo "main is at $want"
           echo "the server says: $said"
-          case "$said" in
-            *"$want"*)
-              echo "::notice title=The server is up to date::$want"
-              ;;
-            *)
-              echo "::error title=The server is behind::main is at $want and the server said \"$said\". Railway has probably stopped deploying — check the project's GitHub integration, or add a RAILWAY_TOKEN secret to let this workflow do it."
-              exit 1
-              ;;
-          esac
+          echo "main is at $(git rev-parse --short=7 HEAD)"
+
+          sha="$(printf '%s' "$said" | grep -oE '[0-9a-f]{7}$' || true)"
+          if [ -z "$sha" ]; then
+            echo "::error title=The server did not say which commit it is::It answered \"$said\". Either it is down, or it is running code from before the health check named its commit — which is itself months behind."
+            exit 1
+          fi
+          if ! git cat-file -e "$sha^{commit}" 2>/dev/null; then
+            echo "::error title=The server is running a commit this repo has never seen::$sha"
+            exit 1
+          fi
+
+          age=$(( $(date +%s) - $(git log -1 --format=%ct "$sha") ))
+          hours=$(( age / 3600 ))
+          echo "that commit is ${hours}h old"
+          if [ "$hours" -ge "$STALE_HOURS" ]; then
+            echo "::error title=The server has stopped deploying::It is running $sha, which is ${hours} hours old. Railway's GitHub integration has probably stopped again — check the project, or add a RAILWAY_TOKEN secret and let this workflow deploy instead."
+            exit 1
+          fi
+          echo "::notice title=The server is current::$sha, ${hours}h old"
 
   # ═══ THE FALLBACK ═══
   #
