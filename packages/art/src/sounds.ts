@@ -147,6 +147,39 @@ export const SOUNDS: SoundSpec[] = [
     seconds: 1.0,
     level: 0.5,
   },
+  /*
+   * ═══ THE BATTLE ITSELF ═══
+   *
+   * Seventeen sounds in this game and not one of them was a blow, a shot or
+   * a card going down: a match played out in silence apart from the clock.
+   * These three play dozens of times a match, so the brief is harder than
+   * usual — under a third of a second, no tail, no character, nothing
+   * anybody could get tired of. Oscillator fallbacks are in place and are
+   * honest noise bursts; these are the upgrade.
+   *
+   *   pnpm art:sounds hit shoot die
+   */
+  {
+    id: "hit",
+    what: "a heavy blow lands on a monster",
+    prompt: `A single dull body impact — a padded thud with a little grit in it, like a mallet into a sandbag. No metal, no ring, no tail. ${DRY}`,
+    seconds: 0.3,
+    level: 0.5,
+  },
+  {
+    id: "shoot",
+    what: "a ranged monster looses something",
+    prompt: `A short dry whoosh of something small being thrown hard past the microphone. Airy, no pitch, no whistle, gone instantly. ${DRY}`,
+    seconds: 0.25,
+    level: 0.4,
+  },
+  {
+    id: "die",
+    what: "one card goes down mid-battle",
+    prompt: `A short low collapse — a soft thump with a dry crack on top, like a stack of cards slapped flat. Smaller and drier than an explosion. ${DRY}`,
+    seconds: 0.4,
+    level: 0.55,
+  },
   {
     id: "explode",
     what: "a monster dies",

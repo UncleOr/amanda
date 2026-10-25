@@ -48,6 +48,27 @@ type SoundName =
    * generates it from a list of note names.
    */
   | "birthday"
+  /**
+   * ═══ THE BATTLE HAD NO SOUND AT ALL ═══
+   *
+   * Seventeen clips in this game and not one of them was a blow, a shot or
+   * a death: a match played out in silence apart from the clock ticking and
+   * one explosion at the end. Sound is half of what makes a hit feel like a
+   * hit, and the half that was missing.
+   *
+   * All three are NOISE rather than tone, which is also the answer to Or's
+   * verdict on the old synthesis — *"they sound like a 386 making noise out
+   * of the CPU"* — because that was about melodies played on square waves.
+   * A filtered noise burst is what an impact actually is, and it is the one
+   * thing oscillators do convincingly.
+   *
+   * They are rate-limited at the call site (Arena.tsx): twenty cards
+   * trading blows in one frame is twenty sounds, which is a wall rather
+   * than a battle.
+   */
+  | "hit"
+  | "shoot"
+  | "die"
   | "tick"
   | "tickUrgent"
   | "timeUp"
@@ -146,6 +167,21 @@ const RECIPES: Record<SoundName, () => void> = {
     ].forEach(([f, ms, at]) =>
       tone(f!, ms!, { type: "triangle", gain: 0.12, delayMs: at }),
     ),
+  // A body blow: a short, low thump with no pitch in it.
+  hit: () => {
+    noise(90, 0.16);
+    tone(120, 90, { type: "triangle", slideTo: 60, gain: 0.1 });
+  },
+  // Something leaving a barrel: brighter, shorter, and it falls away.
+  shoot: () => {
+    noise(60, 0.07);
+    tone(820, 70, { type: "triangle", slideTo: 260, gain: 0.06 });
+  },
+  // A card going down: the thump, lower and longer, with a crack on top.
+  die: () => {
+    noise(220, 0.13);
+    tone(90, 200, { type: "sawtooth", slideTo: 40, gain: 0.09 });
+  },
   // A clock, not an alarm: quiet and low while there is still time…
   tick: () => tone(520, 55, { type: "square", gain: 0.05 }),
   // …then higher and harder once seconds actually matter.

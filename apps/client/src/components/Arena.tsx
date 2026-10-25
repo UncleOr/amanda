@@ -147,6 +147,15 @@ interface UnitGfx {
   flash: Graphics;
   /** Ground ring for units that project an aura. */
   aura: Graphics | null;
+  /**
+   * The shadow on the floor.
+   *
+   * Nothing in this battle touched the ground before it: every monster
+   * floated on the painting, which is the difference between a board of
+   * pieces and a place with things standing in it. It lies under the art and
+   * outside it, so the lunge and the shake do not drag it around.
+   */
+  shadow: Graphics;
   /** Frost ring + orbiting shards while the unit is frozen. */
   stun: Graphics;
   look: CombatLook;
@@ -176,6 +185,10 @@ interface UnitGfx {
   speed: number;
   half: number;
   owner: Owner;
+  /** 0 to 1: how much health is left, for the body to show it. */
+  life: number;
+  /** The King is the match; it is shown as hurt sooner. */
+  isKing: boolean;
   /**
    * The health this unit started with, kept so a blow can be weighed against
    * what it would take to kill it. 300 damage is a scratch on a King and most
@@ -294,6 +307,29 @@ export function Arena({
      */
     let freezeMs = 0;
     let lastFreezeAt = -9999;
+    /**
+     * The camera.
+     *
+     * There was no screen shake in this game — only a per-unit jitter, which
+     * says "this card was hit" and never "that landed". The whole field moves
+     * now, for the blows big enough to deserve it and for the King's death.
+     */
+    let quake = 0;
+    /*
+     * ═══ ONE SOUND AT A TIME, PER KIND ═══
+     *
+     * A frame can hold twenty blows. Twenty impact sounds on top of each
+     * other is not twenty times as loud, it is mud — so each kind of sound
+     * has a floor under how often it may be heard, and the loudest thing in
+     * any given moment is the one that gets through.
+     */
+    const lastSound: Record<string, number> = {};
+    function hear(name: "hit" | "shoot" | "die", everyMs: number): void {
+      if (clock - (lastSound[name] ?? -9999) < everyMs) return;
+      lastSound[name] = clock;
+      sfx.play(name);
+    }
+
     /** The losing board, falling one rank at a time. See triggerFinale. */
     const collapse: Array<{ at: number; g: UnitGfx; king: boolean }> = [];
     const timers: number[] = [];
@@ -320,6 +356,11 @@ export function Arena({
       const art = new Container();
       const look = combatLook(fu.cardId);
       const w = (fu.isKing ? 2 : 1) * CELL * 0.88;
+
+      // The shadow and the aura ring lie on the ground under the unit, so
+      // they must not inherit the lunge and shake that `art` carries.
+      const shadow = new Graphics();
+      container.addChild(shadow);
 
       // The aura ring lies on the ground under the unit, so it must not inherit
       // the lunge and shake that `art` carries.
@@ -422,6 +463,9 @@ export function Arena({
         shake: 0,
         offX: 0,
         offY: 0,
+        shadow,
+        life: 1,
+        isKing: fu.isKing,
         stunnedUntilMs: 0,
         exploding: false,
         deathT: 0,
@@ -461,6 +505,7 @@ export function Arena({
         g.toY = ny;
         g.targetAlpha = fu.alive ? 1 : 0;
         const ratio = Math.max(0, Math.min(1, fu.hp / fu.maxHp));
+        g.life = ratio;
         // HP bar sits inside the top of the unit, so it can never be confused
         // with the unit above it in the next lane.
         const barW = g.half * 2 - 6;
@@ -585,6 +630,7 @@ export function Arena({
      * in the ticker below, where `dies` picks how it goes.
      */
     function deathBurst(g: UnitGfx): void {
+      hear("die", 140);
       const x = g.container.x;
       const y = g.container.y;
       const c = g.look.death;
@@ -712,10 +758,25 @@ export function Arena({
       look: CombatLook,
       damage: number,
       edge = 1,
+      /** Who struck, when it was a body and not a shot already in the air. */
+      from?: UnitGfx,
     ): void {
       const heft = heftOf(target, damage);
       const strong = edge > 1.01;
       const weak = edge < 0.99;
+      /*
+       * The strike: the attacker is thrown AT what it is hitting, from
+       * wherever the wind-up left it. This is the other half of the shape —
+       * see the `attack` event above.
+       */
+      const hitter = from;
+      if (hitter && hitter !== target && hitter.look.attack === "lunge") {
+        const ax = target.container.x - hitter.container.x;
+        const ay = target.container.y - hitter.container.y;
+        const ad = Math.hypot(ax, ay) || 1;
+        hitter.offX = (ax / ad) * hitter.half * (0.42 + heft * 0.25);
+        hitter.offY = (ay / ad) * hitter.half * (0.42 + heft * 0.25);
+      }
       // A winning matchup reads as bigger than it is; a losing one as smaller.
       const force = heft * (strong ? 1.35 : weak ? 0.55 : 1);
       target.flashAmt = strong ? 1 : 0.75;
@@ -770,6 +831,25 @@ export function Arena({
         freezeMs = 70;
         lastFreezeAt = clock;
       }
+      // The field itself moves for a blow this size.
+      if (force > 0.55) quake = Math.max(quake, Math.min(1, (force - 0.5) * 1.6));
+      // And it is heard. Small pokes stay silent: a sound that plays for
+      // everything is a sound that means nothing.
+      if (force > 0.3) hear("hit", 110);
+      /*
+       * And the floor remembers it for a moment: a dark ring under the
+       * feet, which is the difference between a blow landing on a unit and
+       * a blow landing in a place.
+       */
+      if (force > 0.5)
+        spawnRing(
+          target.container.x,
+          target.container.y + target.half * 0.9,
+          0x0a0d16,
+          target.half * 0.2,
+          target.half * (0.9 + force),
+          2 + force * 2,
+        );
       spawnDamage(target, damage, edge);
     }
 
@@ -812,6 +892,7 @@ export function Arena({
       // And it rocks back on the shot, the way anything that fires does.
       from.offX -= Math.cos(ang) * (2 + heft * 4);
       from.offY -= Math.sin(ang) * (2 + heft * 4);
+      hear("shoot", 90);
 
       shots.push({
         g,
@@ -1164,14 +1245,31 @@ export function Arena({
           switch (ev.type) {
             case "attack": {
               if (!actor) return;
+              /*
+               * ═══ THE WIND-UP ═══
+               *
+               * Or: *"what else can be improved in the animations?"*
+               *
+               * This used to THROW the body forward on `attack` — which is
+               * the frame the swing starts, not the frame it lands — so the
+               * lunge and the impact happened at the same moment and the
+               * blow had no preparation at all. Anticipation, impact,
+               * recovery is the whole shape of a hit, and the engine already
+               * sends two events with a gap between them; only the first was
+               * being used, and for the wrong half.
+               *
+               * So `attack` pulls BACK, away from the target, and `hit`
+               * throws forward. A card that lunges leans into it; a card
+               * that shoots crouches on the spot.
+               */
               actor.pulse = 1;
-              if (actor.look.attack === "lunge" && target) {
-                // Melee: throw the body half a unit at whatever it is hitting.
+              if (target) {
                 const dx = target.container.x - actor.container.x;
                 const dy = target.container.y - actor.container.y;
                 const d = Math.hypot(dx, dy) || 1;
-                actor.offX = (dx / d) * actor.half * 0.5;
-                actor.offY = (dy / d) * actor.half * 0.5;
+                const back = actor.look.attack === "lunge" ? actor.half * 0.3 : actor.half * 0.16;
+                actor.offX = -(dx / d) * back;
+                actor.offY = -(dy / d) * back;
               }
               return;
             }
@@ -1183,7 +1281,15 @@ export function Arena({
                 fireProjectile(actor, target, damage, ev.edge ?? 1);
               } else {
                 const from = actor ?? target;
-                landHit(target, from.container.x, from.container.y, from.look, damage, ev.edge);
+                landHit(
+                  target,
+                  from.container.x,
+                  from.container.y,
+                  from.look,
+                  damage,
+                  ev.edge,
+                  actor,
+                );
               }
               return;
             }
@@ -1288,6 +1394,28 @@ export function Arena({
             }
           }
 
+          /*
+           * The camera, settling. Applied to the field and the effects on it
+           * — not to `uiLayer`, because a clock that shakes with the board
+           * reads as the screen breaking rather than as the board being hit.
+           */
+          quake *= 0.86;
+          if (quake > 0.004) {
+            const amp = quake * 7;
+            const ox = (Math.random() - 0.5) * amp;
+            const oy = (Math.random() - 0.5) * amp;
+            bgLayer.x = ox * 0.4;
+            bgLayer.y = oy * 0.4;
+            unitLayer.x = ox;
+            unitLayer.y = oy;
+            fxLayer.x = ox;
+            fxLayer.y = oy;
+          } else if (unitLayer.x !== 0) {
+            bgLayer.x = bgLayer.y = 0;
+            unitLayer.x = unitLayer.y = 0;
+            fxLayer.x = fxLayer.y = 0;
+          }
+
           // --- the losing board, going down in a wave ---
           while (collapse.length && collapse[0]!.at <= clock) {
             const { g, king } = collapse.shift()!;
@@ -1295,7 +1423,12 @@ export function Arena({
             g.exploding = true;
             deathBurst(g);
             // One shockwave, for the one death the battle was about.
-            if (king) spawnBurst(g.container.x, g.container.y);
+            if (king) {
+              spawnBurst(g.container.x, g.container.y);
+              quake = 1;
+            } else {
+              quake = Math.max(quake, 0.35);
+            }
           }
 
           // --- units: glide, walk, lunge spring, hit flash, shake, aura ---
@@ -1437,8 +1570,18 @@ export function Arena({
                   tilt = now * 0.05 * facing;
                   // The ground takes it: one shake on the frame the foot
                   // comes down, and only for things heavy enough to earn it.
-                  if (was >= 0 && now < 0 && g.look.weight > 0.5)
-                    g.shake = Math.max(g.shake, 0.45);
+                  if (was >= 0 && now < 0) {
+                    if (g.look.weight > 0.5) g.shake = Math.max(g.shake, 0.45);
+                    // Dust, where the foot actually lands.
+                    spawnParticles(
+                      g.container.x,
+                      g.container.y + g.half * 0.9,
+                      0x9c8e78,
+                      g.look.weight > 0.5 ? 4 : 2,
+                      0.035,
+                      { size: 2.5, gravity: -0.00006, dir: -Math.PI / 2, spread: 2.6 },
+                    );
+                  }
                 }
                 break;
               }
@@ -1475,6 +1618,61 @@ export function Arena({
               default:
                 break;
             }
+            /*
+             * ═══ AND IT CASTS A SHADOW ═══
+             *
+             * Or: *"what else can be improved in the animations?"* This,
+             * first. The shadow is what puts a thing ON the floor rather than
+             * in front of it, and it is also free information: it shrinks and
+             * pales as a flier rises, and it spreads as a stomper lands. The
+             * same ellipse does both because both are the same number — how
+             * far off the ground the body is.
+             */
+            if (g.targetAlpha > 0.5) {
+              const lift = Math.max(0, -walkY);
+              const spread = 1 - lift / 26;
+              g.shadow.clear();
+              /*
+               * Just BELOW the card, not under its middle: a unit here is
+               * drawn as a card standing on the floor, so a shadow inside
+               * its own footprint is a shadow nobody can see. The first
+               * version put it at 0.92 of the half-height and the card sat
+               * on top of it.
+               */
+              g.shadow
+                .ellipse(0, g.half * 1.06, g.half * 0.78 * spread, g.half * 0.19 * spread)
+                .fill({ color: 0x05070d, alpha: 0.5 * spread });
+            } else if (g.shadow.alpha !== 0) {
+              g.shadow.clear();
+            }
+
+            /*
+             * ═══ ALMOST DEAD SHOULD LOOK ALMOST DEAD ═══
+             *
+             * The most important state on the board was a thin bar. Under a
+             * quarter of its health a monster breathes hard and throws the
+             * odd spark of whatever it is made of — which is the same
+             * information the bar carries, in the place the eye already is,
+             * and it is what tells a seven-year-old who to finish.
+             *
+             * The King gets it from a third, because the King is the match.
+             */
+            const hurtAt = g.isKing ? 0.34 : 0.25;
+            if (g.life < hurtAt && g.targetAlpha > 0.5) {
+              const panic = 1 - g.life / hurtAt;
+              g.step += dt * 0.004 * panic;
+              sy *= 1 + Math.sin(clock / (120 - panic * 50)) * 0.05 * panic;
+              if (Math.random() < 0.035 * panic)
+                spawnParticles(
+                  g.container.x + (Math.random() - 0.5) * g.half,
+                  g.container.y + (Math.random() - 0.5) * g.half,
+                  g.look.color,
+                  1,
+                  0.05,
+                  { size: 2, gravity: -0.00025 },
+                );
+            }
+
             // Leaning into the direction of travel, on top of the walk.
             const lean = g.speed * 0.07 * facing;
             g.art.rotation += (tilt + lean - g.art.rotation) * Math.min(1, k * 0.8);

@@ -1,4 +1,6 @@
 import { describe, expect, it } from "vitest";
+import { readFileSync } from "node:fs";
+import { fileURLToPath } from "node:url";
 import { CATALOG, cardPool } from "../data/catalog";
 import { combatLook } from "./arenaFx";
 
@@ -129,5 +131,52 @@ describe("how a card walks", () => {
       expect(look.weight, id).toBeGreaterThanOrEqual(0);
       expect(look.weight, id).toBeLessThanOrEqual(1);
     }
+  });
+});
+
+/**
+ * ═══ THE THIRD WAVE ═══
+ *
+ * Or: *"what else can be improved in the animations?"* Four more, and these
+ * are the ones that live in Arena.tsx rather than in the look table — so
+ * what can be pinned here is that each of them exists and is wired to the
+ * thing it is supposed to answer to.
+ */
+describe("the battle floor and the camera", () => {
+  const ARENA = readFileSync(
+    fileURLToPath(new URL("./Arena.tsx", import.meta.url)),
+    "utf8",
+  );
+
+  it("gives every unit a shadow, under the card and not inside it", () => {
+    expect(ARENA).toContain("shadow: Graphics");
+    expect(ARENA).toContain("g.half * 1.06");
+  });
+
+  it("shrinks the shadow as the body leaves the ground", () => {
+    expect(ARENA).toContain("const spread = 1 - lift / 26");
+  });
+
+  it("winds up before it strikes", () => {
+    // `attack` pulls back; `hit` throws forward. Both halves, or it is just
+    // a lunge with extra steps.
+    expect(ARENA).toContain("actor.offX = -(dx / d) * back");
+    expect(ARENA).toContain("hitter.offX = (ax / ad) * hitter.half");
+  });
+
+  it("shakes the field, not the clock", () => {
+    expect(ARENA).toContain("unitLayer.x = ox");
+    expect(ARENA, "the UI layer stays still").not.toContain("uiLayer.x = ox");
+  });
+
+  it("shows a unit that is nearly dead, sooner for a King", () => {
+    expect(ARENA).toContain("const hurtAt = g.isKing ? 0.34 : 0.25");
+  });
+
+  it("rate-limits every sound it plays", () => {
+    for (const call of [...ARENA.matchAll(/hear\("(\w+)", (\d+)\)/g)]) {
+      expect(Number(call[2]), `${call[1]} plays too freely`).toBeGreaterThanOrEqual(80);
+    }
+    expect([...ARENA.matchAll(/hear\(/g)].length).toBeGreaterThan(3);
   });
 });
