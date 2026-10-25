@@ -101,6 +101,17 @@ export interface BattleEvent {
   lanes?: number[];
   damage?: number;
   targetHp?: number;
+  /**
+   * The element matchup this blow landed on: 1.5 when the attacker beats the
+   * defender's element, 0.75 when it loses to it, 1 otherwise.
+   *
+   * The engine already works this out to compute the damage (combat.ts). It
+   * is carried out so the PICTURE can say it — Or: *"the shooting, the dying,
+   * the movement, all of it has to be much more fun and impressive"* — and
+   * because a bonus the player is never shown is a rule they have to be told
+   * instead of one they can see.
+   */
+  edge?: number;
   /** This hit was damage thrown back at an attacker, not a strike of its own. */
   reflected?: boolean;
   untilTick?: number;

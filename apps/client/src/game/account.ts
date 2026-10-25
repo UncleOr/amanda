@@ -1002,6 +1002,8 @@ export interface ShopItem {
    * the number you are adding to is the whole decision.
    */
   copies?: number;
+  /** What level it is at, for the "6/10 towards the next" line. */
+  level?: number;
 }
 
 /** What this item costs right now, and what it used to. Mirrors shop.ts. */

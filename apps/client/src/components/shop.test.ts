@@ -222,3 +222,33 @@ describe("what is in the chest", () => {
     expect(DEET).toContain("RARITY_META[inside.guarantees]");
   });
 });
+
+/**
+ * Or, with a photograph of a card squashed inside the picture box: *"the card
+ * does not look good. Make it a normal one, and when you press it you get all
+ * the details the way you see a card in the game."* And: *"in the shop itself,
+ * show me under every card how many out of how many I have towards the next
+ * upgrade. No need to dig, just this format: מטמיע הצורות X5 | 6/10"*
+ */
+describe("a card in the shop", () => {
+  it("is drawn at the size a card is drawn everywhere else", () => {
+    expect(DEET).toContain('<CardView cardId={cardId} size="medium" />');
+    expect(DEET, "large is the album's size, in a panel built for it").not.toContain(
+      '<CardView cardId={cardId} size="large"',
+    );
+  });
+
+  it("has no picture box around it — it is already a card", () => {
+    expect(DEET).toContain("deet__art--card");
+  });
+
+  it("opens its own page, at the level the player has it at", () => {
+    expect(DEET).toContain("<CardDetailModal");
+    expect(DEET).toContain("{ copies: item.copies, level: item.level ?? 1 }");
+  });
+
+  it("says on the shelf how far the next level is, in his format", () => {
+    expect(SHOP).toContain("×{item.level ?? 1} | {item.copies ?? 0}/");
+    expect(SHOP).toContain("levelCost(card.rarity, item.level ?? 1)");
+  });
+});

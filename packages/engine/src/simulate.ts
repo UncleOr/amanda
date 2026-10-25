@@ -16,6 +16,7 @@ import {
 } from "./abilities.js";
 import {
   computeDamage,
+  elementMultiplier,
   gapAhead,
   isAhead,
   leftEdge,
@@ -386,6 +387,8 @@ export function runBattle(setup: BattleSetup): BattleResult {
       targetUid: target.uid,
       damage: dmg,
       targetHp: Math.max(0, target.hp),
+      // What the elements did to this blow, for the screen to show.
+      edge: elementMultiplier(u.activeElement, target.activeElement),
     });
 
     /*
@@ -403,6 +406,7 @@ export function runBattle(setup: BattleSetup): BattleResult {
         targetUid: splash.uid,
         damage: extra,
         targetHp: Math.max(0, splash.hp),
+        edge: elementMultiplier(u.activeElement, splash.activeElement),
       });
       if (splash.hp <= 0 && splash.alive) killUnit(splash, u);
     }

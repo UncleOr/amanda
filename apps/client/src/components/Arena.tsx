@@ -165,6 +165,12 @@ interface UnitGfx {
   dead: boolean;
   half: number;
   owner: Owner;
+  /**
+   * The health this unit started with, kept so a blow can be weighed against
+   * what it would take to kill it. 300 damage is a scratch on a King and most
+   * of a Crumb Demon, and until now both looked exactly the same.
+   */
+  maxHp: number;
 }
 interface Floater {
   text: Text;
@@ -187,6 +193,8 @@ interface Projectile {
   /** Lob height in px — 0 for flat shots. */
   arc: number;
   damage: number;
+  /** The element matchup this shot will land on: 1.5, 1 or 0.75. */
+  edge: number;
   phase: number;
 }
 interface Particle {
@@ -262,6 +270,13 @@ export function Arena({
     /** Last whole second announced by the battle clock, so each ticks once. */
     let lastTick = -1;
     let clock = 0; // replay time in ms, shared by every effect
+    /*
+     * Hit-stop: milliseconds the REPLAY is held still for, and when the last
+     * one was. The effects layer keeps running through it — that is the
+     * difference between a hit landing and the game stuttering.
+     */
+    let freezeMs = 0;
+    let lastFreezeAt = -9999;
     const timers: number[] = [];
     const app = new Application();
     const gfxByUid = new Map<string, UnitGfx>();
@@ -394,6 +409,7 @@ export function Arena({
         dead: false,
         half: w / 2,
         owner: fu.owner,
+        maxHp: fu.maxHp,
       };
       gfxByUid.set(fu.uid, g);
       uidByGfx.set(g, fu.uid);
@@ -419,14 +435,26 @@ export function Arena({
       }
     }
 
-    function spawnDamage(g: UnitGfx, amount: number): void {
+    function spawnDamage(g: UnitGfx, amount: number, edge = 1): void {
       if (amount <= 0) return;
+      /*
+       * The number grows with the blow and says when the elements decided it.
+       * A "×1.5" on the damage is the album's table, caught in the act — and
+       * it is the only place in a battle where a rule explains itself without
+       * a sentence.
+       */
+      const strong = edge > 1.01;
+      const weak = edge < 0.99;
+      // Built before the Text so the number keeps its own direction — a
+      // damage floater reads "-250" in any language and wrapping it
+      // right-to-left would move the minus sign. See Arena.test.ts.
+      const mark = strong ? " ×1.5" : "";
       const t = new Text({
-        text: `-${amount}`,
+        text: `-${amount}${mark}`,
         style: {
           fontFamily: "Segoe UI, sans-serif",
-          fontSize: 15,
-          fill: 0xff6b6b,
+          fontSize: Math.round(13 + heftOf(g, amount) * 9),
+          fill: strong ? 0xffd166 : weak ? 0xb9c0cf : 0xff6b6b,
           fontWeight: "800",
         },
       });
@@ -487,42 +515,104 @@ export function Arena({
       bursts.push({ g, life: 1 });
     }
 
-    /** The strike itself: flash, recoil, sparks and the damage number. */
+    /**
+     * ═══ HOW MUCH A BLOW IS WORTH, 0 TO 1 ═══
+     *
+     * Or: *"I want us to work on making the battle animations much prettier
+     * and more varied. The shooting, the dying, the movement — all of it has
+     * to be much more fun and impressive."*
+     *
+     * The first thing missing was not prettiness, it was WEIGHT. Every hit in
+     * this game drew the same six sparks and the same ring whether it took
+     * fifty health or nine hundred; the only thing that changed was the
+     * number floating up.
+     *
+     * Measured against what the TARGET can take, not against an absolute:
+     * 300 damage is a scratch on a King with 7,500 health and the end of a
+     * Crumb Demon. A blow that takes a third of a unit is a full-weight blow.
+     */
+    function heftOf(target: UnitGfx, damage: number): number {
+      const share = damage / Math.max(1, target.maxHp);
+      return Math.max(0.12, Math.min(1, share * 3));
+    }
+
+    /**
+     * ═══ AND THE ELEMENTS, WHERE THEY CAN BE SEEN ═══
+     *
+     * `edge` comes from the engine (1.5, 1 or 0.75) and is the table Or wrote
+     * out in the album, happening. A winning matchup hits in the ATTACKER's
+     * colour, wider and with more of everything; a losing one lands small and
+     * dull. Nobody has to be told the table if the board keeps showing it.
+     */
     function landHit(
       target: UnitGfx,
       fromX: number,
       fromY: number,
       look: CombatLook,
       damage: number,
+      edge = 1,
     ): void {
-      target.flashAmt = 1;
-      target.shake = 1;
+      const heft = heftOf(target, damage);
+      const strong = edge > 1.01;
+      const weak = edge < 0.99;
+      // A winning matchup reads as bigger than it is; a losing one as smaller.
+      const force = heft * (strong ? 1.35 : weak ? 0.55 : 1);
+      target.flashAmt = strong ? 1 : 0.75;
+      target.shake = Math.max(target.shake, force);
       const dx = target.container.x - fromX;
       const dy = target.container.y - fromY;
       const d = Math.hypot(dx, dy) || 1;
-      // Recoil away from whatever hit it.
-      target.offX += (dx / d) * 7;
-      target.offY += (dy / d) * 7;
+      // Recoil away from whatever hit it, as far as the blow deserves.
+      const push = 3 + force * 13;
+      target.offX += (dx / d) * push;
+      target.offY += (dy / d) * push;
       spawnParticles(
         target.container.x - (dx / d) * target.half * 0.6,
         target.container.y - (dy / d) * target.half * 0.6,
-        look.glow,
-        6,
-        0.14,
-        { size: 2.5 },
+        strong ? look.color : look.glow,
+        Math.round(4 + force * 16),
+        0.1 + force * 0.16,
+        { size: 2 + force * 3 },
       );
       spawnRing(
         target.container.x,
         target.container.y,
         look.color,
         target.half * 0.35,
-        target.half * 1.1,
-        2,
+        target.half * (0.9 + force * 0.9),
+        1.5 + force * 3,
       );
-      spawnDamage(target, damage);
+      // A second ring, a beat wider, only when the elements decided it.
+      if (strong)
+        spawnRing(
+          target.container.x,
+          target.container.y,
+          look.glow,
+          target.half * 0.6,
+          target.half * 2.1,
+          2,
+        );
+      /*
+       * ═══ THE FRAME STOPS ═══
+       *
+       * The oldest trick in fighting games and the one that makes a heavy
+       * blow feel heavy: the picture holds still for a few frames at the
+       * moment of impact. The replay clock pauses; the sparks do not, so the
+       * freeze reads as the hit landing rather than as a stutter.
+       *
+       * Only for blows that take a third of a unit, no more than once every
+       * half second, and 70ms at a time — a battle that stops for every poke
+       * is a battle in slow motion. Worst case this stretches a 45-second
+       * match by about two seconds.
+       */
+      if (force > 0.75 && clock - lastFreezeAt > 500) {
+        freezeMs = 70;
+        lastFreezeAt = clock;
+      }
+      spawnDamage(target, damage, edge);
     }
 
-    function fireProjectile(from: UnitGfx, target: UnitGfx, damage: number): void {
+    function fireProjectile(from: UnitGfx, target: UnitGfx, damage: number, edge = 1): void {
       const g = new Graphics();
       fxLayer.addChild(g);
       const dist = Math.hypot(
@@ -541,6 +631,9 @@ export function Arena({
         // A lobbed rock or blob travels in an arc; bolts and shards fly flat.
         arc: lobbed ? Math.min(26, dist * 0.12) : 0,
         damage,
+        // Carried along with the shot: the hit it lands is the one that has
+        // to show what the elements did.
+        edge,
         phase: Math.random() * 10,
       });
     }
@@ -868,10 +961,10 @@ export function Arena({
               const damage = ev.damage ?? 0;
               if (actor && actor.look.attack === "projectile") {
                 // Ranged: the reaction waits until the shot actually arrives.
-                fireProjectile(actor, target, damage);
+                fireProjectile(actor, target, damage, ev.edge ?? 1);
               } else {
                 const from = actor ?? target;
-                landHit(target, from.container.x, from.container.y, from.look, damage);
+                landHit(target, from.container.x, from.container.y, from.look, damage, ev.edge);
               }
               return;
             }
@@ -934,8 +1027,11 @@ export function Arena({
 
         app.ticker.add((ticker) => {
           const dt = ticker.deltaMS;
-          elapsed += dt;
-          clock = elapsed;
+          // The replay holds still for the length of a hit-stop; `clock`,
+          // which drives the effects and the countdown, never stops.
+          if (freezeMs > 0) freezeMs -= dt;
+          else elapsed += dt;
+          clock += dt;
           const k = Math.min(1, dt / 90);
 
           // The clock reads from the replay position, so it can never drift
@@ -1040,7 +1136,7 @@ export function Arena({
             p.g.y = p.y0 + (ty - p.y0) * u - Math.sin(u * Math.PI) * p.arc;
             drawProjectile(p.g, p.look, Math.atan2(ty - p.y0, tx - p.x0), p.phase + clock / 100, 5);
             if (p.t >= 1) {
-              if (target) landHit(target, p.x0, p.y0, p.look, p.damage);
+              if (target) landHit(target, p.x0, p.y0, p.look, p.damage, p.edge);
               p.g.destroy();
               shots.splice(i, 1);
             }

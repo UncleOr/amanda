@@ -67,7 +67,7 @@ export function cardPrice(card: Pick<Card, "stats"> & { cost?: number }): number
 }
 
 /** One card, dressed as something the shop can draw and sell. */
-function asItem(card: Card, copies: number, sort: number): ShopItem {
+function asItem(card: Card, copies: number, level: number, sort: number): ShopItem {
   return {
     id: `${TODAY_CARD}${card.id}`,
     kind: "card",
@@ -85,6 +85,13 @@ function asItem(card: Card, copies: number, sort: number): ShopItem {
     sort,
     /** How many you hold, so "do I need this" is answerable on the page. */
     copies,
+    /*
+     * And what level it is at. Or: *"in the shop itself, show me under every
+     * card how many out of how many I have towards the next upgrade. In this
+     * format: מטמיע הצורות X5 | 6/10"* — the level is the X5, and what the
+     * next one costs is worked out from it (levelCost).
+     */
+    level,
   };
 }
 
@@ -103,14 +110,18 @@ export async function cardsForSale(
 ): Promise<ShopItem[]> {
   const { data } = await sb
     .from("player_cards")
-    .select("card_id, copies")
+    .select("card_id, copies, level")
     .eq("player_id", playerId);
   if (!data?.length) return [];
 
   /** The album, as cards, in a fixed order so the draw cannot wobble. */
   const album = data
-    .map((r) => ({ card: CATALOG.get(r.card_id as string), copies: (r.copies as number) ?? 0 }))
-    .filter((c): c is { card: Card; copies: number } => !!c.card)
+    .map((r) => ({
+      card: CATALOG.get(r.card_id as string),
+      copies: (r.copies as number) ?? 0,
+      level: (r.level as number) ?? 1,
+    }))
+    .filter((c): c is { card: Card; copies: number; level: number } => !!c.card)
     .sort((a, b) => a.card.id.localeCompare(b.card.id));
   if (!album.length) return [];
 
@@ -132,7 +143,7 @@ export async function cardsForSale(
     if (!band.length) continue;
     const got = band[Math.floor(n * band.length) % band.length]!;
     taken.add(got.card.id);
-    out.push(asItem(got.card, got.copies, out.length));
+    out.push(asItem(got.card, got.copies, got.level, out.length));
   }
   return out;
 }

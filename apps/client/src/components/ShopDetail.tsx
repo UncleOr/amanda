@@ -30,6 +30,7 @@ import {
 } from "@amanda/shared";
 import { RARITY_META } from "../data/cardMeta";
 import { CardBack, CardView } from "./CardView";
+import { CardDetailModal } from "./CardDetailModal";
 import { Icon } from "./Icon";
 import { Overlay } from "./Overlay";
 import { Plaque } from "./Plaque";
@@ -106,6 +107,8 @@ export function ShopDetail({
    */
   const packs = item.kind === "card" ? CARD_PACKS : null;
   const [many, setMany] = useState(1);
+  /** The card's own page, over this one. */
+  const [open, setOpen] = useState(false);
   const total = packPrice(pay, many);
   const tooDear = total > diamonds;
 
@@ -117,13 +120,29 @@ export function ShopDetail({
         </button>
 
         {/* The thing itself, as big as the panel allows. */}
-        <div className="deet__art">
+        <div className={`deet__art${cardId ? " deet__art--card" : ""}`}>
           {phrase ? (
             <Plaque phrase={phrase} />
           ) : back ? (
             <CardBack size="medium" back={back.id} />
           ) : cardId ? (
-            <CardView cardId={cardId} size="large" />
+            /*
+             * ═══ AN ORDINARY CARD, AND IT OPENS ═══
+             *
+             * Or: *"the card does not look good. Make it a normal one, and
+             * when you press it you get all the details the way you see a
+             * card in the game."*
+             *
+             * It was drawn at `large`, which is the size the album uses in
+             * a panel built for it — in this one the stats ran off the
+             * bottom and the fist was cut in half. The same card at the
+             * size it is everywhere else fits, and the details it was
+             * trying to show all at once are one tap away on the card's own
+             * page, at the player's own level.
+             */
+            <button type="button" className="deet__card" onClick={() => setOpen(true)}>
+              <CardView cardId={cardId} size="medium" />
+            </button>
           ) : art ? (
             <img src={art} alt="" />
           ) : (
@@ -239,6 +258,19 @@ export function ShopDetail({
           <p className="deet__poor">{t("s02d239a", "אין מספיק יהלומים")}</p>
         )}
       </div>
+      {open && cardId && (
+        <CardDetailModal
+          cardId={cardId}
+          onClose={() => setOpen(false)}
+          /* At the level the player actually has it at, with the copies
+             towards the next one — the same card they see in the album. */
+          owned={
+            item.copies === undefined
+              ? null
+              : { copies: item.copies, level: item.level ?? 1 }
+          }
+        />
+      )}
     </Overlay>
   );
 }

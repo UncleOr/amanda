@@ -63,6 +63,8 @@ export interface ShopItem {
    * See cardShelf.ts.
    */
   copies?: number;
+  /** What level it is at, for the "6/10 towards the next" line. */
+  level?: number;
 }
 
 /**

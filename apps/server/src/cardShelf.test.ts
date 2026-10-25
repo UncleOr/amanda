@@ -189,3 +189,27 @@ describe("what a copy costs", () => {
     }
   });
 });
+
+/**
+ * Or: *"in the shop itself, show me under every card how many out of how many
+ * I have towards the next upgrade."* The level is half of that answer — what
+ * the next one costs is worked out from it (levelCost).
+ */
+describe("the level on a card in the shop", () => {
+  it("is the level the player actually has it at", async () => {
+    const album = [
+      { card_id: "dragons_01_flame_dragon", copies: 6, level: 5 },
+      { card_id: "plants_01_thorn_sprout", copies: 2, level: 1 },
+    ];
+    const shelf = await cardsForSale(albumOf(album), ME, DAY);
+    for (const item of shelf) {
+      const id = (item.grants as { cardId: string }).cardId;
+      expect(item.level, id).toBe(album.find((a) => a.card_id === id)!.level);
+    }
+  });
+
+  it("is one when the album row has never been levelled", async () => {
+    const shelf = await cardsForSale(albumOf([{ card_id: "furries_01_chuppy", copies: 1 }]), ME, DAY);
+    expect(shelf[0]!.level).toBe(1);
+  });
+});

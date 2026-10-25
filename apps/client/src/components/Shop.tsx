@@ -1,7 +1,15 @@
 import { useCallback, useEffect, useState } from "react";
 import { Icon } from "./Icon";
 import { Plaque } from "./Plaque";
-import { CARD_BACKS, CATCHPHRASES, EMOJI, SHOP_KINDS, type ShopKind } from "@amanda/shared";
+import {
+  CARD_BACKS,
+  CATCHPHRASES,
+  EMOJI,
+  SHOP_KINDS,
+  levelCost,
+  type ShopKind,
+} from "@amanda/shared";
+import { CATALOG } from "../data/catalog";
 import { CardBack } from "./CardView";
 import { priceNow } from "../game/account";
 import { buyItem, loadShop, type ShopItem } from "../game/account";
@@ -148,6 +156,15 @@ function Good({
   onOpen: () => void;
 }) {
   const art = shopItemArt(item);
+  /*
+   * The card this tile sells a copy of, when it sells one. `copies` is only
+   * ever set on the card shelf (cardShelf.ts), which is what makes it the
+   * test for "is this a card you can upgrade" rather than the kind.
+   */
+  const card =
+    item.copies === undefined
+      ? null
+      : CATALOG.get((item.grants as { cardId?: string }).cardId ?? "");
   // A phrase tile draws the line itself; see below.
   const phrase = CATCHPHRASES.find((p) => p.item === item.id);
   /*
@@ -196,6 +213,21 @@ function Good({
       {/* The name of a phrase is the phrase, already shown above it. Saying
           it twice is clutter. */}
       {!phrase && <b className="good__name">{say(item.name)}</b>}
+      {/*
+        ═══ HOW FAR THIS CARD IS FROM ITS NEXT LEVEL ═══
+
+        Or: *"in the shop itself, show me under every card how many out of
+        how many I have towards the next upgrade. No need to dig, just this
+        format: מטמיע הצורות X5 | 6/10"*
+
+        Which is the only thing a copy is FOR, so it is the only thing worth
+        saying about one on a tile. Two numbers and a level, in his shape.
+      */}
+      {card && (
+        <span className="good__lvl">
+          ×{item.level ?? 1} | {item.copies ?? 0}/{levelCost(card.rarity, item.level ?? 1)}
+        </span>
+      )}
       {/*
         The blurb is gone from the shelf and lives in the detail now. Or:
         *"all the explanation that is under every avatar"* — a sentence under
