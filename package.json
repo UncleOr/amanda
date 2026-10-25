@@ -32,7 +32,9 @@
     "art:scenes": "pnpm --filter @amanda/art scenes",
     "art:trailer": "pnpm --filter @amanda/art trailer",
     "copy:codemod": "node scripts/copy-codemod.mjs",
-    "copy:verify": "node scripts/copy-verify.mjs"
+    "copy:verify": "node scripts/copy-verify.mjs",
+    "art:voices": "pnpm --filter @amanda/art voices",
+    "art:voices-process": "pnpm --filter @amanda/art voices-process"
   },
   "engines": {
     "node": ">=20"

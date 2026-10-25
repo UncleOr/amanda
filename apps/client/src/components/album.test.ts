@@ -9,6 +9,10 @@ import { describe, expect, it } from "vitest";
 import { readFileSync } from "node:fs";
 import { fileURLToPath } from "node:url";
 import { RANGE_REACH } from "@amanda/shared";
+import { CATALOG } from "../data/catalog";
+
+/** Every card, for the rules that have to hold across all of them. */
+const CATALOG_CARDS = [...CATALOG.values()];
 
 const read = (f: string) => readFileSync(fileURLToPath(new URL(f, import.meta.url)), "utf8");
 /** The source from one marker to the next one AFTER it, not to the first in the file. */
@@ -93,10 +97,42 @@ describe("the card's own screen", () => {
     expect(aim).toContain('card.stats.range === "sniper"');
   });
 
-  /* Or: *"every card says 'abilities' and 'role' — merge them."* */
-  it("has one heading over what the card does, not two", () => {
-    expect(MODAL).toContain("{(card.role || card.abilities.length > 0) && (");
+  /*
+   * Or: *"every card says 'abilities' and 'role' — merge them."* They were
+   * merged; then `role` came off the card altogether.
+   *
+   * Or: *"the card still has the nonsense I asked to delete, with the tank
+   * you put on top of it. I asked for all those parts not to appear."* He
+   * means the Obsidian Egg's `role`, which is a note between designers — it
+   * names a strategy and a card that does not exist by that name — printed
+   * on the card as though it were a rule.
+   *
+   * The field stays in the data because it is useful for balancing, so the
+   * thing to guard is that the SCREEN never reads it again.
+   */
+  it("says what the card does once, and never reads `role`", () => {
     expect(MODAL, "תפקיד was the second heading").not.toContain('"תפקיד"');
+    expect(MODAL, "role is a designer's note, not card text").not.toContain("card.role");
+    expect(MODAL).toContain("{card.abilities.length > 0 && (");
+  });
+
+  /*
+   * Or: *"where do you see on a card whether it flies or walks? It should
+   * be written in the movement section. If it flies it has to say so."*
+   *
+   * It was a badge at the top and nothing in the row that answers how the
+   * thing moves — which for the five static flyers meant that row said
+   * "static" and stopped there.
+   */
+  it("says how it moves, not only how fast", () => {
+    // The icon sits ABOVE the label on the element, so it is not inside the
+    // value slice — two assertions, not one.
+    expect(MODAL, "the icon follows it").toContain('icon={card.flying ? "fly" : "move"}');
+    const move = between(MODAL, 'label={t("sefc23b0"', "/>");
+    expect(move, "a flyer is named in the movement row").toContain("card.flying");
+    // The five that have no speed to print: a hovering dragon is not a wall.
+    const still = CATALOG_CARDS.filter((c) => c.flying && c.stats.moveSpeed === 0);
+    expect(still.length, "static flyers exist, so that branch is reachable").toBeGreaterThan(0);
   });
 
   /* Or: *"no need to write the series synergy on every card, all the

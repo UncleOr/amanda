@@ -309,7 +309,23 @@
 .drag-ghost {
   position: fixed;
   width: 104px;
-  height: 96px;
+  /*
+   * ═══ A CARD IN THE AIR IS STILL A CARD ═══
+   *
+   * Or: *"when you drag a card its shape changes. It should stay in the
+   * shape of a card."*
+   *
+   * This said `height: 96px` against a width of 104, so the card was being
+   * squeezed into a LANDSCAPE box on the way up — and `.card` is
+   * width:100%/height:100%, so it has no shape of its own to defend itself
+   * with. Every card in this game is 1 : 1.3 and cards.css says so in a
+   * comment on the line that sets it: 124x161, 104x135, 72x94. 104x96 is
+   * the one box in the codebase that is not.
+   *
+   * An aspect-ratio rather than a second number, so the next person to
+   * change the width cannot reintroduce it.
+   */
+  aspect-ratio: 1 / 1.3;
   transform: translate(-50%, -50%) rotate(var(--lean, -4deg)) scale(1.06);
   pointer-events: none;
   z-index: 100;
@@ -349,9 +365,16 @@
   transform: translate(-50%, -58%) rotate(var(--lean, -4deg)) scale(1.06);
   animation: carry-flap 0.18s ease-in-out infinite alternate;
 }
+/*
+ * Wings lift a body; they do not squash it. This used to scale the card
+ * vertically between 0.97 and 1.03 on every beat, which is the same
+ * complaint as the box above in a smaller and faster form — six per cent,
+ * five times a second. The beat is the same distance now and the card keeps
+ * its proportions through all of it.
+ */
 @keyframes carry-flap {
-  from { translate: 0 -2px; scale: 1 0.97; }
-  to { translate: 0 2px; scale: 1 1.03; }
+  from { translate: 0 -3px; }
+  to { translate: 0 3px; }
 }
 
 /* Electric: it crackles. Three sparks, out of phase. */

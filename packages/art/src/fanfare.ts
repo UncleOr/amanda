@@ -301,6 +301,72 @@ const NEW: Fanfare[] = [
  * What they share with the fanfares: exact pitches, a chosen timbre, nothing
  * merely hoped for. What they do NOT share is the rising rule — see `lose`.
  */
+/* ── cards with a voice of their own ──────────────────────────────────── */
+/*
+ * Seven of the eight cards Or named are EVENTS — an egg cracking, rock
+ * grinding, something wet — and events are the model's. This one is not.
+ *
+ * *"A spiritual, high Healing Bloom."* There is no recording of spiritual.
+ * It is the fourth time the same line has been drawn in this project and it
+ * has been in the same place every time: epic, sad, a ting and now this are
+ * all FEELINGS, feelings are music, and music is the one thing an effects
+ * model cannot make. The other seven took one request each and came back
+ * right. This one would have come back as a wind chime in a cathedral.
+ */
+const CARDS: Fanfare[] = [
+  {
+    id: "card-healing-bloom",
+    idea: "Spiritual and high: an open fifth that arrives rather than starts, and three bells over it.",
+    build: () => {
+      const out = make(1.3);
+      /*
+       * ═══ WHAT MAKES A SOUND "SPIRITUAL" ═══
+       *
+       * Three things, and none of them is prettiness.
+       *
+       * NO THIRD. A and E, an open fifth, exactly as in `go` — and for the
+       * same reason, from the opposite end. A third is what makes a chord
+       * happy or sad, and a thing that is neither reads as older and larger
+       * than a mood. On a war horn that is an army; here it is the part
+       * that stops a healing sound being a greetings card.
+       *
+       * IT ARRIVES. Everything swells rather than strikes: 0.3s of swell on
+       * the voices against the 0.07 the horn gets. Nothing in this sound is
+       * hit, which is the whole difference between a bloom and a bell being
+       * rung — and it is why it can sit under `place` without fighting it,
+       * since `place` has already taken the attack.
+       *
+       * IT IS ALL TOP. Nothing below A5. Low frequencies are bodies and
+       * rooms; a sound with no bottom has no body, and a sound with no body
+       * is the nearest thing audio has to a thing that is not there. The
+       * same rule as `newcard`, reached from a different direction.
+       *
+       * And a bigger room than anything else in this file — 0.5 against the
+       * 0.3 the fanfares use. Everywhere else a tail is a nuisance by the
+       * tenth hearing; here the space IS the subject, and it plays once per
+       * placement of one card rather than once a match.
+       */
+      at(out, air(0.55, { cutoff: 4200, gain: 0.05, rise: true }), 0);
+      // The open fifth, breathed in rather than struck.
+      at(out, choir(note("A5"), 1.1, { gain: 0.15, swell: 0.3, decay: 1.2 }), 0.02);
+      at(out, choir(note("E6"), 1.1, { gain: 0.11, swell: 0.32, decay: 1.2 }), 0.02);
+      // The octave above, quieter still, which is what makes it "high"
+      // rather than merely not-low.
+      at(out, choir(note("A6"), 1.0, { gain: 0.07, swell: 0.34, decay: 1.3 }), 0.06);
+      /*
+       * Three bells rising, and the last of them is a B — the ninth, not
+       * the octave. Landing on the note ABOVE the one the ear is waiting
+       * for is what keeps it from sounding finished, and a healing card is
+       * not an ending; it is something continuing.
+       */
+      at(out, bell(note("E6"), 0.8, { ratio: 2.0, index: 1.4, decay: 2.4, gain: 0.17 }), 0.1);
+      at(out, bell(note("A6"), 0.9, { ratio: 2.0, index: 1.1, decay: 2.2, gain: 0.14 }), 0.24);
+      at(out, bell(note("B6"), 1.0, { ratio: 3.0, index: 0.8, decay: 2.0, gain: 0.1 }), 0.4);
+      return finish(room(out, { mix: 0.5, size: 1.6 }));
+    },
+  },
+];
+
 const STING: Fanfare[] = [
   {
     id: "go",
@@ -471,13 +537,15 @@ const CHOSEN: Record<string, string> = {
   go: "go",
   lose: "lose",
   beep: "beep",
+  // The one card voice that is music rather than an event.
+  "card-healing-bloom": "card-healing-bloom",
 };
 
 mkdirSync(OUT, { recursive: true });
 mkdirSync(RAW, { recursive: true });
 const only = process.argv[2];
 console.log();
-for (const f of [...WIN, ...NEW, ...STING]) {
+for (const f of [...WIN, ...NEW, ...STING, ...CARDS]) {
   if (only && !f.id.startsWith(only)) continue;
   const raw = join(OUT, `${f.id}.wav`);
   const mp3 = join(OUT, `${f.id}.mp3`);

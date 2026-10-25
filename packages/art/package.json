@@ -24,7 +24,9 @@
     "sounds-process": "tsx src/cli.ts sounds-process",
     "surfaces": "tsx src/cli.ts surfaces",
     "scenes": "tsx src/cli.ts scenes",
-    "trailer": "tsx src/trailer.ts"
+    "trailer": "tsx src/trailer.ts",
+    "voices": "tsx src/cli.ts voices",
+    "voices-process": "tsx src/cli.ts voices-process"
   },
   "dependencies": {
     "@amanda/shared": "workspace:*",

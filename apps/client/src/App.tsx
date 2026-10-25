@@ -47,6 +47,7 @@ import { BattleScreen } from "./components/BattleScreen";
 import { ResultScreen } from "./components/ResultScreen";
 import { useDrag } from "./game/useDrag";
 import { sfx } from "./game/sfx";
+import { voiceFor } from "./game/cardSound";
 import { music } from "./game/music";
 import { ACTIONS, cardPool, isEnemyTargeted, synergyGroups } from "./data/catalog";
 import { carryOf } from "./game/carry";
@@ -1726,7 +1727,26 @@ function Game() {
                 ) : (
                   <div
                     className={`hand__draggable${dragging ? " hand__draggable--dragging" : ""}`}
-                    onPointerDown={(e) => startDrag(m.hand!, e)}
+                    /*
+                     * ═══ THE CARD SAYS ITS NAME WHEN YOU TOUCH IT ═══
+                     *
+                     * Or, setting out the whole life of a card: *"Stone
+                     * Golem — when you press it, it says its name in
+                     * English in a deep voice. Through the drag it makes
+                     * the drag sound plus the animation. When you place it,
+                     * a placing sound."*
+                     *
+                     * This is the first of the three, and it belongs on
+                     * pointerDOWN rather than on click: the press IS the
+                     * gesture, and waiting for a click would mean a card
+                     * that is dragged never says anything at all. Eleven
+                     * cards have a name; every other card is silent here
+                     * and `sfx.voice` does nothing for them.
+                     */
+                    onPointerDown={(e) => {
+                      sfx.voice(voiceFor(m.hand!).name);
+                      startDrag(m.hand!, e);
+                    }}
                     title=""
                   >
                     <CardView

@@ -128,6 +128,67 @@ export async function sound(
   return res.data?.audio_file?.url ?? null;
 }
 
+/**
+ * A card saying its own name, in a voice chosen for it.
+ *
+ * Or: *"those specific ones should also say their name in their own special
+ * voice when you press them."*
+ *
+ * A DIFFERENT MODEL from `sound()` above, and it has to be: the effects
+ * model is told "no voice" in the last line of every prompt it is ever
+ * given, because a human noise in a card-placing sound is a fault. Speech
+ * is the one thing it must never do, so speech comes from somewhere else.
+ *
+ * MiniMax, because of `voice_setting` — a voice id, a pitch of -12 to +12,
+ * a speed of 0.5 to 2 and an emotion. Without those, eleven cards saying
+ * their names is one actor reading a list, which is worse than silence: it
+ * would make every card sound like the SAME card. The settings are the
+ * whole feature.
+ */
+export async function speak(
+  text: string,
+  voice: {
+    id: string;
+    /** -12 to +12. Down for anything enormous. */
+    pitch?: number;
+    /** 0.5 to 2. Slow is heavy; slow is also stupid. */
+    speed?: number;
+    emotion?: "happy" | "sad" | "angry" | "fearful" | "disgusted" | "surprised" | "neutral";
+  },
+): Promise<string | null> {
+  const res = (await fal.subscribe("fal-ai/minimax/speech-2.6-turbo", {
+    input: {
+      prompt: text,
+      voice_setting: {
+        voice_id: voice.id,
+        pitch: voice.pitch ?? 0,
+        speed: voice.speed ?? 1,
+        ...(voice.emotion ? { emotion: voice.emotion } : {}),
+      },
+      /*
+       * Mono and 44.1k, to match every other clip in the game.
+       *
+       * ⚠ The cast is not laziness. The fal client's generated types declare
+       * `sample_rate` and `channel` as STRING literals; the service rejects
+       * strings and asks for numbers, in as many words:
+       *
+       *   loc: ["body","audio_setting","sample_rate"]
+       *   msg: "Input should be 8000, 16000, 22050, 24000, 32000 or 44100"
+       *   input: "44100"
+       *
+       * So the types and the server disagree, and the server is the one that
+       * has to be satisfied. Written as numbers with the types silenced,
+       * rather than as strings with the API failing — and the reason is here
+       * so that the next person to "fix the cast" reads this first.
+       */
+      audio_setting: { sample_rate: 44100, channel: 1, format: "mp3" } as unknown as never,
+      language_boost: "English",
+      output_format: "url",
+    },
+  })) as { data?: { audio?: { url?: string } } };
+  return res.data?.audio?.url ?? null;
+}
+
 /** Download a generated image to disk. */
 export async function download(url: string, destPath: string): Promise<void> {
   const res = await fetch(url);

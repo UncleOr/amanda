@@ -30,6 +30,7 @@ import {
 } from "./achievementLooks.js";
 import { EMOJI_LOOK, buildEmojiPrompt, emojiReference } from "./emojiLooks.js";
 import { generateSounds, processSounds } from "./sounds.js";
+import { generateVoices, processVoices } from "./voices.js";
 import {
   SCENE_ASPECT,
   SCENE_LOOK,
@@ -468,6 +469,10 @@ const run = async () => {
       return cmdScenes(args[0]);
     case "sounds":
       return generateSounds(args);
+    case "voices":
+      return generateVoices(args);
+    case "voices-process":
+      return processVoices();
     case "sounds-process":
       return processSounds();
     default:

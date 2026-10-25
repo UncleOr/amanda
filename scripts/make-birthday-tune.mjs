@@ -159,41 +159,80 @@ for (const [i, m] of MELODY.entries()) {
 }
 
 /*
- * The ground, and it is two struck notes rather than a drone — a drone is
- * an organ, and he asked for a piano.
+ * ═══ THE CHORDS, TAKEN OFF THREE RECORDINGS HE MADE ═══
  *
- * C2 at the start, and C2 again under the last word, so the phrase is held
- * at both ends. The E-flat is struck once, with "you", and that single note
- * is what makes the whole thing minor: the melody is G G A G C B and has no
- * third in it at all, so it never says major or minor by itself. Against
- * C and E-flat, the held B becomes a C-minor-major-seventh — the most
- * unsettled chord in common use, arriving on exactly the word the tune is
- * addressed to.
+ * Or: *"a chord is missing there. And the last chord needs to break towards
+ * dark. I put three references in the folder that I played on an untuned
+ * piano, take it from there."*
+ *
+ * So I took it from there. Onset detection and an FFT at each strike, and
+ * all three takes say the same two things.
+ *
+ * FIRST, THERE IS A PROGRESSION. This had ONE chord holding under the whole
+ * phrase, which is a drone with a tune on top; his moves. The take in C —
+ * the same key as this — goes Cmaj9, down to Am7 under "birth-day", back to
+ * Cmaj9, and then away. That movement is the missing chord, and it is also
+ * why his sounds like an arrangement and this sounded like a backing.
+ *
+ * SECOND, AND IT IS THE INTERESTING ONE: the darkness is NOT in the key. I
+ * had made the whole thing C minor with a quiet E-flat, which darkens every
+ * bar equally and therefore darkens none of them — a sad tune is just a sad
+ * tune. He keeps it major and sweet all the way through and breaks exactly
+ * one chord, the last:
+ *
+ *     take 1   B D# F# A# C#   Bmaj9        …with a G in it (a flat 13th)
+ *     take 2   G B D F# A      Gmaj9        …with a D# in it (a sharp 5th)
+ *     take 3   Bb D F Ab       Bb7          …with an E in it (a sharp 11th)
+ *
+ * Three different chords, one idea: a lush MAJOR chord with a single note
+ * in it that should not be there. That is what "break towards dark" means,
+ * and it only works because everything before it was sweet.
+ *
+ * ═══ AND THE LAST CHORD WRITES ITSELF ═══
+ *
+ * His third take ends on B-flat 7 — the flat seventh of the key, which is
+ * already a step outside C and is the most quietly wrong place a tune in C
+ * can land on.
+ *
+ * The melody's last note is B natural, and it is held. B natural against a
+ * B-flat 7 IS the broken note: the flat ninth. So the chord does not need a
+ * colour added to it — the word "you", which the whole tune is addressed
+ * to, is the thing that breaks it. Bb7(b9), arriving under the one note
+ * that was always going to be there.
  */
-const lastAt = Math.round(MELODY[MELODY.length - 1].at * BEAT * RATE);
+const beat = (b) => Math.round(b * BEAT * RATE);
+
+/**
+ * One chord, struck.
+ *
+ * Quieter per note than the melody and spread across more of them, so it is
+ * a bed rather than a competitor — and the lowest note of each is given the
+ * hammer, because that is the one a hand lands on hardest.
+ */
+function chord(at, notes, gain, seconds, opts = {}) {
+  notes.forEach((n, i) => {
+    // The top of a voicing is always a touch quieter than the bottom.
+    piano(beat(at), seconds, hz(n), gain * (1 - i * 0.12), {
+      decay: opts.decay ?? 0.6,
+      stiffness: i === 0 ? 0.0014 : 0.0006,
+    });
+  });
+  hammer(beat(at), hz(notes[0]), gain * 0.3);
+}
+
+/* Cmaj7, low and open, under "happy". The melody's A makes it the ninth. */
+chord(0, ["C2", "G2", "B2", "E3"], 0.1, 2.0);
+/* Am7 under "birth-day" — the same notes a tone lower in feel, nothing new. */
+chord(2, ["A2", "E3", "G3"], 0.095, 1.6);
+/* and home, under "to". */
+chord(3, ["C2", "G2", "E3"], 0.1, 1.9);
 /*
- * The opening C2 rings for 3.4 seconds, which is longer than it needs to be
- * for its own sake and exactly as long as it needs to be for the pause.
- *
- * Measured, the first cut of this had ELEVEN fifty-millisecond windows of
- * true digital silence before the last word — the staccato cut and the
- * hesitation landing back to back, with the old 2.4s bass having already
- * stopped. Six hundred milliseconds of nothing in the middle of a tune does
- * not read as a held breath, it reads as a file that has broken. With a low
- * note still dying underneath, the same gap is the thing it was meant to be.
- *
- * `decay: 0.25` looks absurdly low beside every other note here, and is
- * not: the shape is `exp(-(decay + h * 0.9) * t)`, so the FUNDAMENTAL of
- * this note decays at 1.15, not at 0.25. The first attempt said 0.85 — the
- * fundamental then died at 1.75 and the gap measured −54dB, which is
- * silence by any honest reckoning. At 0.25 it measures −42: thirty dB under
- * the melody, present, and nowhere near loud enough to be a note of its own.
+ * Bb7, under "you", after the hesitation. The melody's own held B natural
+ * is the flat ninth sitting on top of it — see above. Longer than the rest
+ * and allowed to ring out under the fade, because it is the thing the tune
+ * is left on.
  */
-piano(0, 3.4, hz("C2"), 0.17, { decay: 0.25, stiffness: 0.0014 });
-piano(lastAt, 2.6, hz("C2"), 0.15, { decay: 1.0, stiffness: 0.0014 });
-piano(lastAt, 2.2, hz("D#3"), 0.085, { decay: 1.3 });
-hammer(0, hz("C2"), 0.05);
-hammer(lastAt, hz("C2"), 0.045);
+chord(4.35, ["A#2", "F3", "G#3", "D4"], 0.105, 3.0, { decay: 0.35 });
 
 /* Normalise to a hair under full scale, then a soft fade so nothing clicks. */
 let peak = 0;

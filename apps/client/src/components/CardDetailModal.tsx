@@ -141,10 +141,36 @@ export function CardDetailModal({
           <Stat icon="hp" label={t("sa1b7d2c", "חיים")} value={hp} />
           <Stat icon="power" label={t("s4173ded", "עוצמה")} value={power} />
           <Stat icon="timer" label={t("s4763941", "קצב תקיפה")} value={tf("s26ebf92", "{0}ש׳", card.stats.attackSpeed)} />
+          {/*
+            ═══ A FLYER HAS TO SAY SO WHERE MOVEMENT IS DESCRIBED ═══
+
+            Or: *"and where do you see on a card whether it flies or walks?
+            It should be written in the static/movement section. If it flies
+            it has to say so."*
+
+            It WAS said — as a badge at the top, beside element and rarity —
+            and that is not where anyone looks for how a thing moves. The
+            row that answers "how does it move" answered only "how fast",
+            which is half of it.
+
+            The five that make it a real hole are the static flyers:
+            Thunderwing, the Typhoon Dragon, the Sky King, the Insect
+            Empress and the Floating Brain all have moveSpeed 0, so this row
+            said "static" and nothing else — the one word that makes a
+            hovering dragon sound like a wall.
+          */}
           <Stat
-            icon="move"
+            icon={card.flying ? "fly" : "move"}
             label={t("sefc23b0", "תנועה")}
-            value={card.stats.moveSpeed > 0 ? tf("s9546375", "{0}/ש׳", card.stats.moveSpeed) : t("s60fd570", "סטטי")}
+            value={
+              card.stats.moveSpeed > 0
+                ? card.flying
+                  ? tf("s372d0ea", "עף {0}/ש׳", card.stats.moveSpeed)
+                  : tf("s118277a", "הולך {0}/ש׳", card.stats.moveSpeed)
+                : card.flying
+                  ? t("sb00a40a", "מעופף, במקום")
+                  : t("s60fd570", "סטטי")
+            }
           />
           {/*
             ═══ A RANGE IS A NUMBER OF SQUARES ═══
@@ -199,10 +225,28 @@ export function CardDetailModal({
           of this monster, and repeating it on all 53 cards made it look like
           something to compare them by.
         */}
-        {(card.role || card.abilities.length > 0) && (
+        {/*
+          ═══ AND `role` IS NOT FOR THE PLAYER EITHER ═══
+
+          Or: *"I saw the card still has the nonsense I asked to delete, with
+          the tank you put on top of it. I asked for all those parts not to
+          appear on the cards."*
+
+          He is quoting the Obsidian Egg, whose `role` reads "a ticking bomb
+          for the ground floor: place it underneath with a tank on top; by
+          the time the tank is breached the timer is up." That is a note
+          from a designer to a designer — it names a strategy, a card that
+          does not exist by that name, and a word the game never uses — and
+          it was being printed on the card as though it were a rule.
+
+          Exactly the same mistake as the series synergy above, which came
+          off the card for the same reason a paragraph earlier. `role` stays
+          in the data, because it is genuinely useful when balancing; it has
+          no business on a card a seven-year-old is reading.
+        */}
+        {card.abilities.length > 0 && (
           <div className="modal__section">
             <h3>{t("s8fa9cc4", "יכולות")}</h3>
-            {card.role && <p className="modal__role">{say(card.role)}</p>}
             {card.abilities.length > 0 && (
               <ul className="ability-list">
                 {card.abilities.map((ab, i) => (

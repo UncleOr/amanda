@@ -46,6 +46,7 @@ import {
   isTargetedAction,
 } from "../data/catalog";
 import { sfx } from "./sfx";
+import { voiceFor } from "./cardSound";
 import { track } from "./track";
 import {
   albumToPool,
@@ -1418,6 +1419,23 @@ export function useMatch(): MatchApi {
     return drawIfEmpty(next);
   }, []);
 
+  /**
+   * A card landing, in the two events it actually is.
+   *
+   * `place` is the card hitting the table and plays for every card there
+   * has ever been. The voice is the creature, and only eight cards have one
+   * — see cardSound.ts, where the per-card entry beats the per-series
+   * default because Or asked to be able to single out one card.
+   *
+   * The gap is the whole reason this is a function rather than two lines
+   * copied five times: landed-then-alive reads as a sequence, landed-and-
+   * alive-at-once reads as one muddier thud.
+   */
+  const landed = useCallback((cardId: string | null) => {
+    sfx.play("place");
+    if (cardId) sfx.voice(voiceFor(cardId).place, 90);
+  }, []);
+
   const placeAt = useCallback(
     (x: number, y: number) => {
       if (isKingCell(x, y)) return;
@@ -1444,7 +1462,8 @@ export function useMatch(): MatchApi {
         };
         if (enemy) setFoe((f) => ({ ...f, placements: write(f.placements) }));
         else setGs((cur) => ({ ...cur, placements: write(cur.placements) }));
-        sfx.play(held ? "place" : "discard");
+        if (held) landed(held);
+        else sfx.play("discard");
         return;
       }
 
@@ -1462,13 +1481,13 @@ export function useMatch(): MatchApi {
         setStacked((st) => ({ ...st, [key]: under }));
         if (!onTheHouse) setStackSlots((n) => n - 1);
         setGs(refill({ ...s, placements: { ...s.placements, [key]: s.hand }, hand: null }));
-        sfx.play("place");
+        landed(s.hand);
         return;
       }
       setGs(refill({ ...s, placements: { ...s.placements, [key]: s.hand }, hand: null }));
-      sfx.play("place");
+      landed(s.hand);
     },
-    [refill],
+    [refill, landed],
   );
 
   const placeKing = useCallback(() => {
@@ -1484,18 +1503,27 @@ export function useMatch(): MatchApi {
       if (!monster && !current) return;
       if (enemy) setFoe((f) => ({ ...f, king: monster }));
       else setGs((s) => ({ ...s, king: monster }));
-      sfx.play(monster ? "place" : "discard");
+      if (monster) landed(monster);
+      else sfx.play("discard");
       return;
     }
 
+    /*
+     * The crowned card is read off the ref rather than out of the updater.
+     * React runs an updater during RENDER and may run it twice in strict
+     * mode; `ok` survives that because it is only ever set true, and a
+     * CARD ID assigned there would be assigned twice. The same lesson as
+     * discardHand above, which has the long version of it.
+     */
     let ok = false;
+    const crowning = gsRef.current.hand;
     setGs((s) => {
       if (s.hand === null || !isMonsterId(s.hand) || s.king !== null) return s;
       ok = true;
       return drawIfEmpty({ ...s, king: s.hand, hand: null });
     });
-    if (ok) sfx.play("place");
-  }, []);
+    if (ok) landed(crowning);
+  }, [landed]);
 
   const discardHand = useCallback(() => {
     /*

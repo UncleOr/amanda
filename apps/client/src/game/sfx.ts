@@ -16,6 +16,8 @@
  * Must be unlocked from a user gesture (browser autoplay policy) — call
  * sfx.unlock() from the first click.
  */
+import { VOICE_CLIPS } from "./cardSound";
+
 type SoundName =
   | "click"
   | "draw"
@@ -338,6 +340,8 @@ const RECIPES: Record<SoundName, () => void> = {
 const BASE = import.meta.env.BASE_URL;
 /** Decoded and ready. A name missing from here falls back to the oscillators. */
 const buffers = new Map<SoundName, AudioBuffer>();
+/** The same, for card voices — where a miss means silence, not an oscillator. */
+const voices = new Map<string, AudioBuffer>();
 let loading = false;
 
 /**
@@ -360,6 +364,24 @@ function loadClips(): void {
       .then((decoded) => buffers.set(name, decoded))
       .catch(() => {
         /* this one stays synthesised; see the note at the top */
+      });
+  }
+  /*
+   * And the card voices, in the same breath.
+   *
+   * These have NO fallback recipe and must not get one: an oscillator
+   * impression of a dragon is worse than the dragon saying nothing, and the
+   * generic `place` has already played underneath. Silence is the correct
+   * failure here, which is the whole difference between this map and the
+   * one above.
+   */
+  for (const slug of VOICE_CLIPS) {
+    void fetch(`${BASE}sfx/${slug}.mp3`)
+      .then((r) => (r.ok ? r.arrayBuffer() : Promise.reject(new Error(String(r.status)))))
+      .then((buf) => c.decodeAudioData(buf))
+      .then((decoded) => voices.set(slug, decoded))
+      .catch(() => {
+        /* no voice, and the card is still placed */
       });
   }
 }
@@ -388,6 +410,35 @@ export const sfx = {
     try {
       if (playClip(name)) return;
       RECIPES[name]();
+    } catch {
+      /* audio is best-effort */
+    }
+  },
+  /**
+   * A card's own sound, over the top of whatever the board just played.
+   *
+   * `delayMs` is the point of the signature. A card landing is two events in
+   * quick succession — the card hitting the table, and then the thing on it
+   * being there — and ninety milliseconds between them is the difference
+   * between a sequence and a smear. Played at the same instant they mask
+   * each other and both come out smaller.
+   *
+   * Scheduled on the AudioContext rather than through setTimeout, so the
+   * gap is the gap it says it is and not whatever the main thread was doing
+   * at the time.
+   */
+  voice(slug: string | undefined, delayMs = 0): void {
+    if (!slug || muted) return;
+    const c = ac();
+    if (!c) return;
+    if (c.state === "suspended") void c.resume();
+    const buf = voices.get(slug);
+    if (!buf) return; // not loaded, or there is no such clip. Say nothing.
+    try {
+      const src = c.createBufferSource();
+      src.buffer = buf;
+      src.connect(c.destination);
+      src.start(c.currentTime + delayMs / 1000);
     } catch {
       /* audio is best-effort */
     }

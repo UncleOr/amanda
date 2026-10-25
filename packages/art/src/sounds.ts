@@ -33,7 +33,7 @@
  * and "no reverb" to a model that loves adding both.
  */
 import { existsSync } from "node:fs";
-import { execFileSync } from "node:child_process";
+import { execFileSync, spawnSync } from "node:child_process";
 import { mkdirSync } from "node:fs";
 import { join } from "node:path";
 import { download, sound } from "./fal.js";
@@ -44,6 +44,11 @@ const OUT = join(REPO_ROOT, "apps", "client", "public", "sfx");
 
 /** ffmpeg from winget, falling back to whatever is on PATH. */
 function ffmpeg(): string {
+  return tool("ffmpeg");
+}
+
+/** The same, for anything outside this file — voices.ts needs it too. */
+export function ffmpegBin(): string {
   return tool("ffmpeg");
 }
 
@@ -59,6 +64,22 @@ function tool(name: "ffmpeg" | "ffprobe"): string {
     `ffmpeg-8.1.1-full_build/bin/${name}.exe`,
   );
   return existsSync(winget) ? winget : name;
+}
+
+/**
+ * The loudest sample in a file, in dBFS. Silence comes back as -91.
+ *
+ * `volumedetect` prints to STDERR and exits 0, which is why this is a
+ * spawnSync rather than the execFileSync every other call here uses.
+ */
+function peakDb(path: string): number {
+  const r = spawnSync(
+    ffmpeg(),
+    ["-hide_banner", "-i", path, "-af", "volumedetect", "-f", "null", "-"],
+    { encoding: "utf8" },
+  );
+  const m = /max_volume:\s*(-?[\d.]+) dB/.exec(r.stderr ?? "");
+  return m ? Number(m[1]) : 0;
 }
 
 /** Said at the end of every prompt, because the model forgets otherwise. */
@@ -129,9 +150,30 @@ export const SOUNDS: SoundSpec[] = [
   {
     id: "place",
     what: "a monster lands on the board",
-    prompt: `A thick trading card slapped down flat onto a wooden table. One hit, punchy, a little card-stock snap, no echo. ${DRY}`,
-    seconds: 0.6,
-    level: 0.75,
+    /*
+     * Or, twice: *"the sound of sticking a card into the album should not
+     * sound like a gunshot, it should be much gentler — it is only a card
+     * being stuck onto an album. Let's keep the gunshots for the battle."*
+     * And then, going through the flow of a single card: *"when you place
+     * it, a placing sound — which should not be like a gunshot (what is in
+     * the sound desk now) but much gentler."*
+     *
+     * The old prompt asked for it in as many words: "SLAPPED down flat",
+     * "one hit", "PUNCHY". Every one of those is an instruction to make an
+     * impact, and the level was 0.75 — louder than the explosion that ends
+     * a match, for the commonest gesture in the game, twelve times a build
+     * phase.
+     *
+     * It is the quietest thing a card can do. The weight in a placement
+     * comes from the CARD'S OWN voice landing on top of it ninety
+     * milliseconds later (cardSound.ts); this only has to say "that is
+     * down now", and anything more than that is in the way of the thing it
+     * is announcing.
+     */
+    prompt: `One thin playing card set down gently onto a soft felt table — a quiet brush of paper settling, no snap and no impact at all. Very light, soft, close and brief. No slap, no bang, no knock, no wood, no echo. ${DRY}`,
+    generate: 2,
+    seconds: 0.35,
+    level: 0.45,
   },
   {
     id: "discard",
@@ -342,6 +384,149 @@ export const SOUNDS: SoundSpec[] = [
     seconds: 2.2,
     level: 0.8,
   },
+
+  /* ── the cards that say something when they land ──────────────────────
+   *
+   * Or, naming eight of them in one line each: *"make a special sound for
+   * Flame Dragon too, the rattle of a breaking egg when you put down the
+   * Obsidian Egg, a deep scorched sound for Lava, a deep sound from the
+   * depths of the earth for the Father of Giants, an energetic ant soldier,
+   * a spiritual high Healing Bloom, the slime slimy and disgusting, a stone
+   * golem huge and a bit stupid."*
+   *
+   * These are not board sounds, they are CARDS. `place` is the card hitting
+   * the table and stays exactly as it is; this plays ninety milliseconds
+   * later, over the top, and is the creature waking up. Two events, in the
+   * order they happen: the thing lands, and then the thing is there.
+   *
+   * Seven of the eight are EVENTS and go to the model — an egg cracking,
+   * rock grinding, something wet. The Healing Bloom is the exception and the
+   * reason is the rule this file has been learning all day: "spiritual and
+   * high" is not a thing that happens in a room, it is a FEELING, which
+   * means it is music, which is the one thing this model cannot do. It is
+   * built note by note in fanfare.ts with the other computed ones.
+   *
+   * `level` is low across all of them on purpose. A card voice that competes
+   * with `place` turns every placement into a pile-up, and there are twelve
+   * placements in a build phase.
+   */
+  {
+    id: "card-flame-dragon",
+    what: "Flame Dragon is put down",
+    prompt: `A small fire-breathing dragon: one short guttural roar and a quick burst of flame. Close, dry and immediate. One roar only. No echo, no music, no human voice, no crowd. ${DRY}`,
+    generate: 3,
+    seconds: 0.95,
+    level: 0.45,
+  },
+  {
+    id: "card-obsidian-egg",
+    what: "the Obsidian Egg is put down",
+    /*
+     * His most specific brief of the eight — *"the rattle of a breaking egg
+     * when you put down the Obsidian Egg"* — so the prompt is nearly a
+     * transcription. The thing to keep OUT is the impact: a thud at the
+     * front would be `place` happening twice, and `place` is already playing
+     * under this.
+     */
+    prompt: `A large stone egg cracking: one sharp crisp crack, then fine shell crackling, then a few small fragments settling. Dry, close and quick. No impact thud at the start, no glass, no echo, no music. ${DRY}`,
+    generate: 3,
+    seconds: 0.85,
+    level: 0.5,
+  },
+  {
+    id: "card-lava",
+    what: "Lava is put down",
+    prompt: `Thick molten lava moving: one deep slow gloop and a scorched sizzling hiss over it. Heavy, close and dry. No water splash, no steam whistle, no boiling kettle, no music. ${DRY}`,
+    generate: 3,
+    seconds: 1.1,
+    level: 0.45,
+  },
+  {
+    id: "card-titan-king",
+    what: "the Father of Giants is put down",
+    /*
+     * *"A deep sound from the depths of the earth."* The hard part is that
+     * "from the depths" is normally bought with reverb, and reverb is the
+     * one thing every prompt in this file spends its last sentence
+     * forbidding — a game sound with a tail is a nuisance by the tenth time
+     * you hear it. So the depth has to come from the SOURCE being low and
+     * enormous rather than from the room being large, which is why the
+     * prompt says "close" and "enormous" in the same breath.
+     */
+    prompt: `A deep subterranean rumble from far underground: a low groaning earth movement with rock shifting inside it, enormous and slow. Close and dry despite its size. No explosion, no thunder, no echo, no music. ${DRY}`,
+    generate: 4,
+    seconds: 1.3,
+    level: 0.5,
+  },
+  {
+    id: "card-ant-soldier",
+    what: "the Ant Soldier is put down",
+    /*
+     * ⚠ THIS ONE CAME BACK EMPTY THE FIRST TIME, and it is worth saying why
+     * rather than just trying again.
+     *
+     * The first prompt asked for "a small insect soldier" and the model
+     * returned two seconds of silence — an honest answer, in its way, since
+     * an insect soldier is not a thing that makes a sound. Of the eight
+     * cards, this was the only brief that named a CHARACTER instead of a
+     * physical event; the egg cracks, the rock grinds, the slime squelches,
+     * and this one was asked to be a rank.
+     *
+     * So it names the movement instead. "Energetic" survives as the only
+     * adjective, because it is about the tempo of the skittering, which is
+     * something the model can actually do.
+     */
+    prompt: `Many small hard insect legs skittering very fast across a stone floor, with dry clicking and scratching as they go. Brisk, busy and close. No wing buzz, no echo, no music. ${DRY}`,
+    generate: 3,
+    seconds: 0.6,
+    level: 0.4,
+  },
+  {
+    id: "card-slime",
+    what: "the Slime is put down",
+    /*
+     * The wet, slurping quality that was wrong for `explode` is exactly
+     * right here. It is the same note from the other side: *"it is not
+     * clear what that slurp is"* about a board collapsing, and *"slimy and
+     * disgusting"* about a slime. The sound was never bad; it was in the
+     * wrong place.
+     */
+    prompt: `A wet gelatinous blob: one thick slimy squelch and a sticky peel after it. Gooey, close and unpleasant. No water splash, no footsteps in mud, no echo, no music. ${DRY}`,
+    generate: 2,
+    seconds: 0.7,
+    level: 0.45,
+  },
+  {
+    id: "card-stone-golem",
+    what: "the Stone Golem is put down",
+    /*
+     * *"Huge and a bit stupid."* Huge is the easy half and the prompt can
+     * ask for it. Stupid is TIMING, and no prompt gets it: it is a second
+     * footfall arriving a beat later than it should, which is why the trim
+     * here is generous rather than tight. A golem that finishes briskly is
+     * a competent golem.
+     */
+    prompt: `A huge stone body moving: heavy grinding rock, one slow lumbering step, and a few loose pebbles falling afterwards. Massive, clumsy and unhurried. Close and dry. No explosion, no echo, no music. ${DRY}`,
+    generate: 3,
+    seconds: 1.15,
+    level: 0.5,
+  },
+  {
+    id: "card-healing-bloom",
+    what: "the Healing Bloom is put down",
+    /*
+     * Computed — see fanfare.ts. *"Spiritual and high."*
+     *
+     * The only one of the eight with no prompt, and the reason is the same
+     * one that cost this file two generated error-sounds earlier: every
+     * clause Or has ever written asking for a FEELING turned out to be
+     * music. Epic, sad, a ting, and now spiritual. The other seven are
+     * things that happen — an egg, a rock, a slurp — and those are the
+     * model's.
+     */
+    seconds: 1.3,
+    level: 0.4,
+  },
 ];
 
 /** Generate the missing ones (or the named ones) into assets/raw/sfx. */
@@ -421,6 +606,32 @@ export function processSounds(): void {
      * is the same as no warning. fanfare.ts builds to an exact length, so
      * there every hundredth of a second of gap is a mistake.
      */
+    /*
+     * ⚠ AND SAY SO WHEN THERE IS NO SOUND IN IT AT ALL.
+     *
+     * The model answered the Ant Soldier with two seconds of silence — a
+     * perfectly valid 352,878-byte wav whose loudest sample was -63.5dBFS.
+     * Nothing downstream noticed: `loudnorm` dutifully normalised the noise
+     * floor, ffmpeg wrote a 358-byte mp3 that is not decodable, and this
+     * loop printed "ok card-ant-soldier" and moved on. The first I knew of
+     * it was a file listing.
+     *
+     * A generation that comes back empty is not rare enough to find by
+     * accident, and it is invisible at every single stage unless something
+     * asks. -45dBFS is far below anything deliberate and far above a true
+     * noise floor, so there is no judgement in the threshold.
+     *
+     * This one applies to computed sounds too: a fanfare that renders
+     * silent is a bug in the builder, and the same line catches it.
+     */
+    const loudest = peakDb(src);
+    if (loudest < -45) {
+      console.log(
+        `   ⚠     ${spec.id}: the source peaks at ${loudest.toFixed(1)}dBFS — there is ` +
+          `no sound in it. ${spec.prompt ? "Generate it again." : "The builder produced silence."}`,
+      );
+    }
+
     if (!spec.prompt) {
       const raw = Number(
         execFileSync(ffprobe(), [

@@ -12,9 +12,24 @@ export const ACTION_LOOK: Record<string, string> = {
   energy_boost:
     "a cracked battery cell overloading, raw yellow lightning bursting from its terminals, " +
     "surging power rings radiating outward",
+  /*
+   * Or: *"the card-destroyer card is not an eraser any more — make it look
+   * more like some kind of missile, not like an eraser."*
+   *
+   * The Hebrew name moved on a while ago. It is משמיד הקלפים, the card
+   * DESTROYER, and this prompt was still asking for a chunky pencil eraser
+   * rubbing something out — which is a stationery cupboard, not a weapon,
+   * and reads as a mistake beside a card that takes an enemy monster off
+   * the board and does 2000 damage to a King.
+   *
+   * The radioactive green stays: it is the one thing tying the art to the
+   * id, to the English name, and to every copy of this card already sitting
+   * in somebody's album.
+   */
   radioactive_eraser:
-    "a chunky pencil eraser glowing sickly radioactive green, rubbing a card out of existence, " +
-    "the erased corner dissolving into glowing dust",
+    "a sleek radioactive warhead missile streaking downward at a steep angle, glowing sickly " +
+    "green, a trail of green fire and vapour behind it, the card beneath it already " +
+    "disintegrating into glowing green dust at the point of impact",
   time_freeze:
     "an ornate pocket watch encased in jagged blue ice, its hands frozen mid-tick, " +
     "frost spreading across the glass",
