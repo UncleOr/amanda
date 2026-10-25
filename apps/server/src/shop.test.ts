@@ -492,7 +492,7 @@ describe("a chest on the shelf", () => {
     });
     // The shelf and the till read the same day, so a chest cannot be offered
     // and then refused.
-    expect(await boughtToday(sb, ME)).toEqual(["chest.wood"]);
+    expect(await boughtToday(sb, ME, NOW)).toEqual(["chest.wood"]);
   });
 });
 

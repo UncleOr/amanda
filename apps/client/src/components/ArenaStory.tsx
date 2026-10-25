@@ -18,7 +18,9 @@
  * underneath, and the caption is the one rule worth knowing about the place:
  * on this ground, these cards hit harder (packages/shared/src/arenas.ts).
  */
+import { useState } from "react";
 import { ARENA_POWER_BONUS, atArena, type Arena } from "@amanda/shared";
+import { CardDetailModal } from "./CardDetailModal";
 import { CATALOG, SERIES_BY_ID } from "../data/catalog";
 import { Icon } from "./Icon";
 import { Overlay } from "./Overlay";
@@ -35,16 +37,59 @@ const BASE = import.meta.env.BASE_URL;
  * is here" needs — and at ten across it would be four things too small to
  * read each.
  */
-function Family({ seriesId }: { seriesId: string }) {
+function Family({
+  seriesId,
+  name,
+  onPick,
+}: {
+  seriesId: string;
+  name: string;
+  /** Open one card's own page. Every card here is a card you can look at. */
+  onPick: (cardId: string) => void;
+}) {
   const cards = [...CATALOG.values()].filter((c) => c.seriesId === seriesId);
+  /*
+   * ═══ A PACK, UNTIL YOU OPEN IT ═══
+   *
+   * Or: *"after you open an arena, show a pack of cards with '(the Slimes)'
+   * written beside it, and when you press it, it fans out and you see all
+   * the cards the way you do now (and of course you can press each card and
+   * see its details)."*
+   *
+   * Closed is the right first state and not only for the room it saves: ten
+   * card backs with a family's name beside them is a THING — something that
+   * arrived with this place — and a row of ten small pictures is an index.
+   * The fan is what makes opening it worth a press.
+   */
+  const [open, setOpen] = useState(false);
   if (!cards.length) return null;
+
+  if (!open)
+    return (
+      <button type="button" className="ground__pack" onClick={() => setOpen(true)}>
+        <span className="ground__fan" aria-hidden="true">
+          {/* Three backs, stacked and splayed: the shape of a pack. */}
+          {cards.slice(0, 3).map((c) => (
+            <i key={c.id} style={{ backgroundImage: `url("${BASE}cards/${c.id}.webp")` }} />
+          ))}
+        </span>
+        <b>{name}</b>
+        <small>{cards.length}</small>
+      </button>
+    );
+
   return (
     <div className="ground__cards">
       {cards.map((c) => (
-        <figure key={c.id} className="ground__card">
+        <button
+          type="button"
+          key={c.id}
+          className="ground__card"
+          onClick={() => onPick(c.id)}
+        >
           <img src={`${BASE}cards/${c.id}.webp`} alt="" loading="lazy" />
-          <figcaption>{say(c.name)}</figcaption>
-        </figure>
+          <span>{say(c.name)}</span>
+        </button>
       ))}
     </div>
   );
@@ -54,6 +99,8 @@ export function ArenaStory({ arena, onClose }: { arena: Arena; onClose: () => vo
   const series = SERIES_BY_ID.get(arena.family);
   const here = say(arena.name);
   const pct = Math.round(ARENA_POWER_BONUS * 100);
+  /** A card from the pack, opened. Its own sheet, over this one. */
+  const [looking, setLooking] = useState<string | null>(null);
 
   return (
     <Overlay onClick={onClose}>
@@ -91,7 +138,7 @@ export function ArenaStory({ arena, onClose }: { arena: Arena; onClose: () => vo
 
           {series && (
             <>
-              <Family seriesId={arena.family} />
+              <Family seriesId={arena.family} name={say(series.name)} onPick={setLooking} />
               {/*
                 The rule of the place, in his words.
 
@@ -116,6 +163,12 @@ export function ArenaStory({ arena, onClose }: { arena: Arena; onClose: () => vo
           )}
         </div>
       </div>
+      {/*
+        One card's own page, opened from the pack. Written inside this
+        Overlay and portalled out like every other one — see Overlay.tsx for
+        why a click on its backdrop does not also close the arena behind it.
+      */}
+      {looking && <CardDetailModal cardId={looking} onClose={() => setLooking(null)} />}
     </Overlay>
   );
 }

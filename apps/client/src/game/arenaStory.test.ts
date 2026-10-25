@@ -136,3 +136,48 @@ describe("the sheet", () => {
     expect(STORY).toContain("קלפים מסדרת {0} מקבלים {1} +{2}% עוצמה!");
   });
 });
+
+/**
+ * ═══ THE FAMILY ARRIVES AS A PACK ═══
+ *
+ * Or: *"after you open an arena, show a pack of cards with '(the Slimes)'
+ * written beside it, and when you press it, it fans out and you see all the
+ * cards the way you do now (and of course you can press each card and see
+ * its details)."*
+ */
+describe("the family on the sheet", () => {
+  const STORY = read("../components/ArenaStory.tsx");
+
+  it("is a pack until it is pressed", () => {
+    expect(STORY).toContain("ground__pack");
+    expect(STORY).toContain("useState(false)");
+  });
+
+  it("fans out into every card in the family", () => {
+    expect(STORY).toContain("ground__cards");
+    expect(STORY).toContain("c.seriesId === seriesId");
+  });
+
+  it("opens any card's own page from there", () => {
+    expect(STORY).toContain("<CardDetailModal cardId={looking}");
+  });
+
+  it("says whose pack it is", () => {
+    expect(STORY).toContain("name={say(series.name)}");
+  });
+});
+
+/**
+ * Or: *"you cut my texts and shortened them, didn't you?"* Not in the file —
+ * on the screen. The column does not scroll, so a flex item shrinks before
+ * its siblings unless told not to, and the Fuel Stop's story is the longest
+ * in the game.
+ */
+describe("his story", () => {
+  const CSS = read("../lab.css");
+
+  it("is never the thing that gives way", () => {
+    const tale = CSS.slice(CSS.indexOf(".story__tale {"));
+    expect(tale.slice(0, 120)).toContain("flex: none");
+  });
+});

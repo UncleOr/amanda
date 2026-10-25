@@ -687,11 +687,77 @@
    */
   overflow: hidden;
 }
+/*
+ * ═══ THE STORY IS NEVER SQUEEZED ═══
+ *
+ * Or: *"you cut my texts and shortened them, didn't you?"*
+ *
+ * Not in the file — his five are there word for word — but on the screen,
+ * yes. This column does not scroll (the caption has to stay visible), and a
+ * flex item shrinks before its siblings do unless it is told not to. The
+ * Fuel Stop's story is twice the length of the Court's, so on a phone it
+ * was the thing that gave way.
+ *
+ * `flex: none` is the whole fix: the story takes the height it needs, the
+ * family below it takes what is left over, and the family is the part that
+ * can scroll because it is pictures.
+ */
 .story__tale {
+  flex: none;
   margin: 0;
   font-size: var(--t-3);
   line-height: 1.55;
 }
+/*
+ * ═══ THE FAMILY, STILL IN ITS PACK ═══
+ *
+ * Or: *"show a pack of cards with '(the Slimes)' written beside it, and when
+ * you press it, it fans out."* Three backs splayed like a hand, the name,
+ * and how many are in it.
+ */
+.ground__pack {
+  flex: none;
+  align-self: center;
+  display: flex;
+  align-items: center;
+  gap: var(--sp-3);
+  padding: var(--sp-2) var(--sp-4) var(--sp-2) var(--sp-3);
+  border-radius: 14px;
+  border: 1px solid var(--line);
+  background: var(--sur-1);
+  color: var(--text);
+  font: inherit;
+  cursor: pointer;
+}
+.ground__pack:hover { border-color: var(--line-lit); }
+.ground__pack b { font-size: var(--t-4); }
+.ground__pack small {
+  /* How many are in it: a number beside the thing it counts. */
+  font-size: var(--t-2);
+  color: var(--muted);
+  font-variant-numeric: tabular-nums;
+}
+.ground__fan {
+  position: relative;
+  flex: none;
+  width: 76px;
+  height: 56px;
+}
+.ground__fan i {
+  position: absolute;
+  inset-block: 0;
+  width: 42px;
+  border-radius: 7px;
+  border: 1px solid var(--line);
+  background-size: cover;
+  background-position: center top;
+  box-shadow: 0 3px 10px rgba(0, 0, 0, 0.5);
+}
+/* Splayed, so it reads as a handful rather than as one card. */
+.ground__fan i:nth-child(1) { inset-inline-start: 0; transform: rotate(-9deg); }
+.ground__fan i:nth-child(2) { inset-inline-start: 17px; }
+.ground__fan i:nth-child(3) { inset-inline-start: 34px; transform: rotate(9deg); }
+
 /* The family that lives here. The art and the name; nothing else fits ten. */
 .ground__cards {
   flex: 1 1 auto;
@@ -711,7 +777,14 @@
   flex-direction: column;
   align-items: center;
   gap: var(--sp-1);
+  padding: 0;
+  border: 0;
+  background: none;
+  color: inherit;
+  font: inherit;
+  cursor: pointer;
 }
+.ground__card:hover img { border-color: var(--line-lit); }
 .ground__card img {
   width: 100%;
   aspect-ratio: 3 / 4;
@@ -720,7 +793,7 @@
   border: 1px solid var(--line);
   background: var(--sur-1);
 }
-.ground__card figcaption {
+.ground__card span {
   /* A caption under a picture, which is what --t-2 is for. Not --t-1: that
      is a number beside something that explains it, never a word on its own. */
   font-size: var(--t-2);
@@ -1209,7 +1282,23 @@
   .story__art { height: 142px; }
   .story__text { padding: var(--sp-2) var(--sp-3) var(--sp-3); gap: var(--sp-2); }
   .story__tale { line-height: 1.4; }
-  .ground__card { width: 52px; }
+  /*
+   * ═══ NO NAMES ON A PHONE, AND BIGGER PICTURES INSTEAD ═══
+   *
+   * Measured: ten cards with their names need 102px and the row has 82 once
+   * the story has taken what it needs. The first try truncated them, and
+   * eight of the ten dragons came out as "דרקון ה…" — which is not a name,
+   * it is noise shaped like one.
+   *
+   * So the pictures get the room instead. The name is one tap away on the
+   * card's own page, which is where the rest of it is anyway.
+   */
+  .ground__card { width: 58px; }
+  .ground__card span { display: none; }
+  .ground__fan { width: 66px; height: 48px; }
+  .ground__fan i { width: 36px; }
+  .ground__fan i:nth-child(2) { inset-inline-start: 15px; }
+  .ground__fan i:nth-child(3) { inset-inline-start: 30px; }
 }
 
 

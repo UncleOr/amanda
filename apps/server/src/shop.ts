@@ -232,12 +232,19 @@ export function shopGives(kind: string, grants: Record<string, unknown>): GrantG
  * drawn from the same answer that would refuse the purchase — a shop that
  * offers something it will not sell is worse than one that sells nothing.
  */
-export async function boughtToday(sb: SupabaseClient, playerId: string): Promise<string[]> {
+export async function boughtToday(
+  sb: SupabaseClient,
+  playerId: string,
+  /** The instant "today" is measured at — threaded, like every other clock
+      read in this file, so the shelf and the till cannot land on different
+      days a millisecond apart. */
+  at: Date = new Date(),
+): Promise<string[]> {
   const { data } = await sb
     .from("chests")
     .select("bought_item")
     .eq("player_id", playerId)
-    .eq("bought_day", israelDay(new Date()));
+    .eq("bought_day", israelDay(at));
   return (data ?? []).map((r) => r.bought_item as string).filter(Boolean);
 }
 

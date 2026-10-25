@@ -19,7 +19,16 @@
  * see all its emoji."*
  */
 import { useState } from "react";
-import { CARD_BACKS, CARD_PACKS, CATCHPHRASES, EMOJI, packPrice } from "@amanda/shared";
+import {
+  CARD_BACKS,
+  CARD_PACKS,
+  CATCHPHRASES,
+  CHESTS,
+  EMOJI,
+  chestKindOf,
+  packPrice,
+} from "@amanda/shared";
+import { RARITY_META } from "../data/cardMeta";
 import { CardBack, CardView } from "./CardView";
 import { Icon } from "./Icon";
 import { Overlay } from "./Overlay";
@@ -79,6 +88,9 @@ export function ShopDetail({
   const back = CARD_BACKS.find((b) => b.item === item.id);
   const cardId = (item.grants as { cardId?: string }).cardId;
   const pack = EMOJI.some((e) => e.pack === item.id) ? item.id : null;
+  /** A chest: what is in it, from the table the server fills it from. */
+  const kind = chestKindOf(item.grants);
+  const inside = kind ? CHESTS[kind] : null;
   const art = shopItemArt(item);
   const { pay, was } = priceNow(item);
   /*
@@ -155,6 +167,34 @@ export function ShopDetail({
         {item.blurb?.he && <p className="deet__blurb">{say(item.blurb)}</p>}
 
         {pack && <PackContents pack={pack} />}
+
+        {/*
+          ═══ WHAT IS IN THE CHEST ═══
+
+          Or: *"when you press a chest you should be able to see how many
+          cards and what range of diamonds you can get in it."*
+
+          Read from the same table the server fills a chest from (chests.ts),
+          so it cannot promise eight cards and hand over five. Numbers beside
+          their icons rather than a sentence: a chest's contents is a list of
+          amounts, and a list of amounts written out as prose is the thing
+          that was taken off these tiles in the first place.
+        */}
+        {inside && (
+          <p className="deet__inside">
+            <span>
+              <Icon name="deck" size={16} /> {inside.cards}
+            </span>
+            <span>
+              <Icon name="gem" size={16} /> {inside.diamonds}
+            </span>
+            {inside.guarantees && (
+              <span className="deet__sure" style={{ color: RARITY_META[inside.guarantees].color }}>
+                {RARITY_META[inside.guarantees].he}
+              </span>
+            )}
+          </p>
+        )}
 
         {packs && !mine && (
           <div className="deet__packs">

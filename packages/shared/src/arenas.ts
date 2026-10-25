@@ -55,14 +55,30 @@ export interface Arena {
    * The pairing is thematic and nothing is derived from it, so any one of
    * them is a one-line change if Or wants it elsewhere:
    *
-   *   the playroom   a sprout on the windowsill — the gentlest family
+   *   the playroom   Chuppy, the friend you are handed — and a playroom is
+   *                  exactly where a furry toy lives
    *   the court      HIS: *"the Slimes. Yum."* is in his own story text
-   *   the station    steel, concrete, things that are too big
+   *   the station    weeds through the platform; nobody stops here
    *   the alley      the crickets in his story ARE this family
    *   the fuel stop  *"don't strike a match"*, which is his joke
    *
-   * The Furries are nobody's ground on purpose: there is one of them, and
-   * Chuppy is the friend you are handed rather than a family you collect.
+   * ═══ AND THE GIANTS ARE NOBODY'S GROUND ═══
+   *
+   * Or: *"the arenas need sorting — you already have Giants from the start
+   * (they turn up in the tutorial), so it needs other series."*
+   *
+   * He is right and the Giants are the clearest case: Amanda fields one in
+   * the tutorial, so by the time anybody reaches the station the family is
+   * an old acquaintance rather than the thing that lives there.
+   *
+   * Worth writing down, because it is bigger than the Giants: ALL SIX
+   * collectable families are in the starter album (one card each, see
+   * STARTER_ALBUM), so no arena can honestly promise a family nobody has
+   * met. What an arena's family is TODAY is the one that fights harder on
+   * its own ground. Making it also mean "and here is where you first meet
+   * them" needs the starter album to be thinner, or more families than
+   * there are arenas — which is the conversation Or parked: *"later we will
+   * add more series and more arenas, and then we will work on it together."*
    */
   family: string;
 }
@@ -108,7 +124,7 @@ export const ARENA_POWER_BONUS = 0.2;
 export const ARENAS: Arena[] = [
   {
     id: "playroom",
-    family: "plants",
+    family: "furries",
     name: { he: "חדר המשחקים", en: "The Playroom" },
     from: 0,
     tease: { he: "כאן כולם מתחילים. על השטיח.", en: "Everyone starts here. On the rug." },
@@ -130,7 +146,7 @@ export const ARENAS: Arena[] = [
   },
   {
     id: "station",
-    family: "giants",
+    family: "plants",
     name: { he: "תחנת הרכבת", en: "The Station" },
     from: 450,
     tease: { he: "אף אחד לא עוצר פה. חוץ ממך.", en: "Nobody stops here. Except you." },

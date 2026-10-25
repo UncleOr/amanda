@@ -28,6 +28,9 @@ export * from "./collectable.js";
 export * from "./cardCost.js";
 // Copies come in packs: 1, 5 or 10 of one card. See the file.
 export * from "./cardPacks.js";
+// What is inside each kind of chest — read by the one that fills them and
+// by the shop that sells them.
+export * from "./chests.js";
 
 // The faces, and a name and a face for whoever never chose one
 export * from "./avatars.js";

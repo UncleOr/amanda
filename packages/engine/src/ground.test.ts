@@ -138,6 +138,16 @@ describe("which ground", () => {
     expect(new Set(families).size).toBe(families.length);
   });
 
+  /*
+   * Or: *"you already have Giants from the start (they turn up in the
+   * tutorial), so it needs other series."* Amanda fields one in the
+   * tutorial, so they are an old acquaintance before any arena could
+   * introduce them.
+   */
+  it("is never the family Amanda already shows you in the tutorial", () => {
+    expect(ARENAS.map((a) => a.family)).not.toContain("giants");
+  });
+
   it("is the Slimes in the Court, which is Or's own line", () => {
     expect(ARENAS.find((a) => a.id === "court")!.family).toBe("slimes");
   });

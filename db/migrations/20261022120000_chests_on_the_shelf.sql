@@ -34,6 +34,13 @@ create index if not exists chests_bought_today_idx
 -- repeated here — the row says what it costs, not what it holds.
 --
 -- The names and the blurbs are Or's to change from the admin panel.
+--
+-- The blurbs are one line each, and short on purpose: the item's own page
+-- draws what is INSIDE a chest from the table the server fills it from
+-- (packages/shared/src/chests.ts) — 8 cards, 40 diamonds, one epic promised.
+-- A blurb that said that in words would be saying it twice, which is the
+-- clutter Or took off these tiles in the first place. What the numbers
+-- cannot say is that it comes back tomorrow, so that is what is left here.
 
 insert into public.shop_items (id, kind, name, blurb, grants, price_diamonds, art, sort, active)
 values
@@ -41,7 +48,7 @@ values
     'chest.wood',
     'chest',
     '{"he": "תיבת עץ", "en": "Wooden Chest"}'::jsonb,
-    '{"he": "3 קלפים וקצת יהלומים. אחת ביום.", "en": "3 cards and a few diamonds. One a day."}'::jsonb,
+    '{"he": "אחת ביום.", "en": "One a day."}'::jsonb,
     '{"chest": "wood"}'::jsonb,
     80,
     'scenes/chest_wood.png',
@@ -52,7 +59,7 @@ values
     'chest.silver',
     'chest',
     '{"he": "תיבת כסף", "en": "Silver Chest"}'::jsonb,
-    '{"he": "5 קלפים, אחד נדיר בטוח. אחת ביום.", "en": "5 cards, one rare guaranteed. One a day."}'::jsonb,
+    '{"he": "אחת ביום.", "en": "One a day."}'::jsonb,
     '{"chest": "silver"}'::jsonb,
     200,
     'scenes/chest_silver.png',
@@ -63,7 +70,7 @@ values
     'chest.gold',
     'chest',
     '{"he": "תיבת זהב", "en": "Gold Chest"}'::jsonb,
-    '{"he": "8 קלפים, אחד אפי בטוח. אחת ביום.", "en": "8 cards, one epic guaranteed. One a day."}'::jsonb,
+    '{"he": "אחת ביום.", "en": "One a day."}'::jsonb,
     '{"chest": "gold"}'::jsonb,
     500,
     'scenes/chest_gold.png',

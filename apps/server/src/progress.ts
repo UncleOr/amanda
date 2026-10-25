@@ -47,27 +47,15 @@ export const PROGRESS_ENABLED = CAN_SAVE;
 export const TROPHIES_PER_WIN = TUNED.trophiesPerWin;
 export const TROPHIES_PER_LOSS = TUNED.trophiesPerLoss;
 
-/** What each kind of chest holds. See docs/META.md. */
-interface ChestKind {
-  cards: number;
-  diamonds: number;
-  /** A rarity that is guaranteed to appear at least once. */
-  guarantees?: Card["rarity"];
-  /**
-   * The chance this chest also holds something from the shop — an emoji pack
-   * or a catchphrase.
-   *
-   * Or asked for both: *"something you buy in the shop OR win in a chest."*
-   * The wooden one never does, which is what makes a silver one worth
-   * counting towards; see nachoChestKind for the rhythm those arrive on.
-   */
-  treasure?: number;
-}
-export const CHESTS: Record<string, ChestKind> = {
-  wood: { cards: 3, diamonds: 5 },
-  silver: { cards: 5, diamonds: 15, guarantees: "rare", treasure: 0.25 },
-  gold: { cards: 8, diamonds: 40, guarantees: "epic", treasure: 0.6 },
-};
+/*
+ * What each kind of chest holds moved to packages/shared/src/chests.ts, so
+ * that the shop can say what is in one before you buy it — Or: *"when you
+ * press a chest you should be able to see how many cards and what range of
+ * diamonds you can get in it."* Re-exported here because this is where the
+ * rest of the server has always asked.
+ */
+import { CHESTS, type ChestKind } from "@amanda/shared";
+export { CHESTS, type ChestKind };
 
 /**
  * How often each rarity turns up in a draw.

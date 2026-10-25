@@ -201,3 +201,24 @@ describe("how many copies", () => {
     expect(SHOP).toContain("buyItem(item.id, count)");
   });
 });
+
+/**
+ * Or: *"when you press a chest you should be able to see how many cards and
+ * what range of diamonds you can get in it."*
+ */
+describe("what is in the chest", () => {
+  it("is read from the table the server fills it from", () => {
+    expect(DEET).toContain("chestKindOf(item.grants)");
+    expect(DEET).toContain("CHESTS[kind]");
+  });
+
+  it("is amounts beside their icons, not a sentence", () => {
+    expect(DEET).toContain("deet__inside");
+    expect(DEET).toContain("{inside.cards}");
+    expect(DEET).toContain("{inside.diamonds}");
+  });
+
+  it("names the rarity it promises, in the colour that rarity always is", () => {
+    expect(DEET).toContain("RARITY_META[inside.guarantees]");
+  });
+});
