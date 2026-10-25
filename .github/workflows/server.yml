@@ -1,0 +1,158 @@
+name: Deploy the server to Railway
+
+# ═══ WHY THIS FILE EXISTS ═══
+#
+# The client deploys itself on every push (deploy.yml, GitHub Pages). The
+# server did not, and nothing said so — which is a quiet way for a game to
+# break in a very loud way.
+#
+# On 22 October the browser had the arena ground bonus, the chest shelf, the
+# card shelf and a fix for the match replay; the server had none of them,
+# for most of a day. Two things followed. The shop looked unfinished — the
+# offers and the card shelf are worked out on the server, so there was
+# nothing to draw. And worse, the two sides replayed the same bot match
+# differently: Or won a match on screen and was charged four trophies for a
+# loss, twice, because the server's answer is the one that pays.
+#
+# A deploy nobody can see the state of is a deploy that does not happen. So:
+# every push that can change the server deploys it, the same way the client
+# has always worked.
+#
+# ═══ WHAT OR HAS TO DO ONCE ═══
+#
+#   1. Railway → the amanda-server project → Settings → Tokens → create a
+#      PROJECT token for the production environment.
+#   2. GitHub → the repo → Settings → Secrets and variables → Actions →
+#      New repository secret, named RAILWAY_TOKEN.
+#
+# That is all. Until the secret exists this workflow skips itself with a
+# warning rather than failing — a red tick on every commit would teach
+# everybody to ignore red ticks.
+#
+# If the service is called something other than `amanda-server`, add a repo
+# VARIABLE (not a secret) called RAILWAY_SERVICE with its name.
+#
+# ═══ AND IT DOES NOT REPLACE RAILWAY'S OWN GITHUB INTEGRATION ═══
+#
+# If that integration is connected and working, this file is a second way in
+# and they will both deploy the same commit. Harmless, and wasteful. Turn one
+# of them off: either disconnect the repo in Railway's service settings, or
+# delete this file.
+
+on:
+  push:
+    branches: [main]
+    # Only what the server actually runs. A change to the client's CSS does
+    # not need a server deploy, and a deploy that happens for no reason is
+    # one more thing that can fail for no reason.
+    paths:
+      - "apps/server/**"
+      - "packages/**"
+      - "data/**"
+      - "package.json"
+      - "pnpm-lock.yaml"
+      - "pnpm-workspace.yaml"
+      - ".github/workflows/server.yml"
+  workflow_dispatch:
+
+# One deploy at a time, and a queued one WAITS rather than cancelling the one
+# in flight — the same reasoning as the Pages workflow, where cancelling left
+# three commits stranded.
+concurrency:
+  group: railway
+  cancel-in-progress: false
+
+permissions:
+  contents: read
+
+jobs:
+  # Nothing reaches the server that does not typecheck and pass, for exactly
+  # the reasons written out in deploy.yml. The server is the half that holds
+  # the database and decides who won.
+  check:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: pnpm/action-setup@v4
+        with:
+          version: 9
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: pnpm
+      - run: pnpm install
+      - run: pnpm typecheck
+      - run: pnpm --filter @amanda/engine test -- --run
+      - run: pnpm --filter @amanda/server test -- --run
+
+  deploy:
+    needs: check
+    runs-on: ubuntu-latest
+    # `railway up` streams the build and waits for it. Twenty minutes is far
+    # more than this build takes; it is here so a hung upload ends as a
+    # failure rather than as a runner sitting there for six hours.
+    timeout-minutes: 20
+    env:
+      RAILWAY_TOKEN: ${{ secrets.RAILWAY_TOKEN }}
+      # The name in Railway. A repo variable so it can change without a commit.
+      RAILWAY_SERVICE: ${{ vars.RAILWAY_SERVICE || 'amanda-server' }}
+    steps:
+      - name: Is there a token yet?
+        id: armed
+        run: |
+          if [ -z "$RAILWAY_TOKEN" ]; then
+            echo "::warning title=No RAILWAY_TOKEN::The server was NOT deployed. Add a Railway project token as a repository secret called RAILWAY_TOKEN — see the comment at the top of .github/workflows/server.yml."
+            echo "ok=false" >> "$GITHUB_OUTPUT"
+          else
+            echo "ok=true" >> "$GITHUB_OUTPUT"
+          fi
+
+      - uses: actions/checkout@v4
+        if: steps.armed.outputs.ok == 'true'
+
+      - uses: actions/setup-node@v4
+        if: steps.armed.outputs.ok == 'true'
+        with:
+          node-version: 22
+
+      # Pinned on purpose: this workflow is built on the flags this version
+      # has. `railway up` on a newer CLI that renamed one of them would fail
+      # on a Tuesday for no reason anybody could see.
+      - name: Install the Railway CLI
+        if: steps.armed.outputs.ok == 'true'
+        run: npm install -g @railway/cli@5.71.0
+
+      # ═══ WHICH COMMIT IS RUNNING THERE ═══
+      #
+      # The whole mess above was invisible because there was no way to ask the
+      # server what it was running. There is now — `GET /` prints this — and
+      # it is set here because Railway only fills in its own
+      # RAILWAY_GIT_COMMIT_SHA for deploys IT triggers from GitHub.
+      #
+      # `--skip-deploys` so setting it does not start a deploy of the OLD
+      # code a second before `railway up` starts one of the new; the variable
+      # is in place for the deploy that follows. Allowed to fail: a missing
+      # commit marker is worth nothing next to a missing deploy.
+      - name: Tell the server which commit it is
+        if: steps.armed.outputs.ok == 'true'
+        continue-on-error: true
+        run: railway variable set "GIT_COMMIT_SHA=$GITHUB_SHA" --service "$RAILWAY_SERVICE" --skip-deploys
+
+      # No `-y`. On a cold or unlinked run that flag makes `up` CREATE a new
+      # project rather than deploy to the existing one, and a second Railway
+      # project nobody meant to make is a worse day than a failed deploy.
+      - name: Deploy
+        if: steps.armed.outputs.ok == 'true'
+        run: railway up --ci --service "$RAILWAY_SERVICE"
+
+      # Ask the thing itself, from outside, rather than trusting the deploy
+      # that just said it worked. It answers with the commit it is running.
+      - name: Ask the server what it is running
+        if: steps.armed.outputs.ok == 'true'
+        continue-on-error: true
+        env:
+          URL: ${{ vars.SERVER_URL || 'https://amanda-server-production.up.railway.app' }}
+        run: |
+          sleep 20
+          echo "$URL says: $(curl -fsS --max-time 20 "$URL" || echo '(no answer)')"
+          echo "this commit is: $GITHUB_SHA"
