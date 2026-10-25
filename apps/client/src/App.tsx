@@ -866,7 +866,9 @@ function Game() {
 
   // Drag a card from the hand onto a board slot (mouse + touch).
   const { drag, start: startDrag, dragging } = useDrag((_cardId, target) => {
-    if (target === "king") m.placeKing();
+    // An action card goes to the bar; everything else goes on the board.
+    if (target === "actionbar") m.takeAction();
+    else if (target === "king") m.placeKing();
     else {
       const [x, y] = target.split("-").map(Number);
       if (x !== undefined && y !== undefined) m.placeAt(x, y);
@@ -1593,7 +1595,29 @@ function Game() {
           )}
 
           {interactive && (
-            <div className={`actions${actionsOpen ? " actions--open" : ""}`}>
+            /*
+              ═══ AND YOU CAN DRAG A CARD INTO IT ═══
+
+              Or: *"besides that, action cards need dragging too — you drag
+              them to the bar."*
+
+              Monsters have been dragged onto the board since the drag
+              existed; an action card was the one thing in the hand you
+              could only ever press a button for. Same gesture, different
+              target, and the drag system already took whatever `data-drop`
+              it landed on — so this is an attribute and a branch, not a
+              second drag.
+
+              `data-drop` goes on the whole panel rather than on the row of
+              chips: the bar can be EMPTY, which is exactly when you most
+              want to drop something into it.
+            */
+            <div
+              className={`actions${actionsOpen ? " actions--open" : ""}${
+                drag.over === "actionbar" && !m.barFull ? " actions--dropping" : ""
+              }`}
+              data-drop={m.handIsAction && !m.barFull ? "actionbar" : undefined}
+            >
               <button
                 className={`actions__handle${m.actionBar.length ? " actions__handle--full" : ""}`}
                 onClick={() => setActionsOpen((v) => !v)}
@@ -1716,11 +1740,16 @@ function Game() {
                 {!m.hand ? (
                   <div className="hand__empty">{t("sb0d338c", "אין קלף")}</div>
                 ) : m.handIsAction ? (
-                  <div className="action-hand">
+                  <div
+                    className={`action-hand hand__draggable${
+                      dragging ? " hand__draggable--dragging" : ""
+                    }`}
+                    onPointerDown={(e) => startDrag(m.hand!, e)}
+                  >
                     <ActionCardView
                       actionId={m.hand}
                       size="large"
-                      onClick={() => setActionDetail(m.hand!)}
+                      onClick={() => !dragging && setActionDetail(m.hand!)}
                       onInfo={() => setActionDetail(m.hand!)}
                     />
                   </div>
@@ -1964,7 +1993,12 @@ function Game() {
                   <i />
                 </span>
               )}
-              <CardView cardId={drag.cardId} size="medium" />
+              {/* An action card is not a monster and does not draw like one. */}
+              {ACTIONS.has(drag.cardId) ? (
+                <ActionCardView actionId={drag.cardId} size="medium" />
+              ) : (
+                <CardView cardId={drag.cardId} size="medium" />
+              )}
               {carry.style === "spark" && (
                 <>
                   <span className="drag-ghost__arc" aria-hidden="true">

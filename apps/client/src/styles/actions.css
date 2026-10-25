@@ -144,3 +144,24 @@
   background: linear-gradient(180deg, #ff6b6b, #c9342f);
   border-color: var(--danger);
 }
+/*
+ * ═══ THE BAR, WHEN SOMETHING IS ABOUT TO LAND IN IT ═══
+ *
+ * Or: *"action cards need dragging too — you drag them to the bar."*
+ *
+ * The same language a board slot uses while a monster is over it
+ * (`.slot--dragover` in board.css): green, brighter, slightly larger. A
+ * drop target that does not light up is a drop target you have to guess at,
+ * and this one can be EMPTY — which is exactly when you most need telling
+ * that it will take what you are holding.
+ */
+.actions--dropping {
+  outline: 2px solid #5ad25a;
+  outline-offset: 2px;
+  border-radius: 14px;
+  background: rgba(90, 210, 90, 0.12);
+}
+.actions--dropping .actions__handle {
+  border-color: #5ad25a;
+  color: #bff5bf;
+}
