@@ -120,18 +120,53 @@ const END_WORDS: Record<EndedBy, () => string> = {
   deadEnd: () => t("s683d48d", "דד אנד!"),
 };
 
-/**
- * The mark beside the words. A glyph rather than an icon because this is
- * drawn into a canvas, where the game's own icon set does not reach.
+/*
+ * ═══ THERE USED TO BE A GLYPH BESIDE THE WORDS ═══
+ *
+ * ♛ for the king, ⏱ for the clock, ✖ for a dead end. Or, looking at it:
+ * *"the old-fashioned crown. The serif font. The gold. None of that has
+ * anything to do with us."*
+ *
+ * All three are the same mistake. A character like ♛ is not drawn by the
+ * font the rest of the line is set in — nothing in a UI stack has it — so
+ * the browser goes looking and lands on whatever symbol font the machine
+ * keeps for such things, which on Windows is a serif chess piece from the
+ * nineteen-nineties. That is where the serif came from, and it could not
+ * have come from anywhere else: we never chose it, we only chose a
+ * character that forced somebody else to.
+ *
+ * It is not replaced with the game's own crown. The words are the message
+ * and they are enough; a mark beside them is a second thing to read at the
+ * one moment there is no time to read twice.
  */
-const END_MARKS: Record<EndedBy, string> = {
-  king: "♛",
-  time: "⏱",
-  deadEnd: "✖",
-};
 
-/** How long "time's up" and the verdict stay on screen before the result. */
-const VERDICT_MS = 2600;
+/**
+ * How long the ending's two words are on screen, start to finish.
+ *
+ * Or: *"the banner that comes up saying 'the king is dead' is huge, it
+ * hides all the explosions on the board, and it is not in the brand's
+ * design language at all. Do it without the background, coming up like
+ * that for a second (there is a detailed summary afterwards anyway)."*
+ *
+ * Every part of that is one mistake: it was a PANEL. A dark rounded box
+ * with a gold outline drawn across the middle of the board, holding the
+ * ending words AND a sentence of explanation — and it never faded, so it
+ * was still sitting there, opaque, while the losing board blew up behind
+ * it. The one moment the game has built up to for three minutes, covered
+ * by a caption of itself.
+ *
+ * The sentence it held is `verdictText()`, which the result screen shows a
+ * few seconds later in full. That is the "detailed summary afterwards": the
+ * banner was not adding anything, it was repeating the next screen early
+ * and charging the finale for it.
+ *
+ * So: the words alone, no box, in the brand's accent rather than a gold
+ * invented here, and gone before the explosions start.
+ */
+const ANNOUNCE_MS = 1200;
+
+/** The pause between the words clearing and the board coming down. */
+const VERDICT_MS = 1500;
 
 const cx = (col: number): number => (col + 0.5) * CELL;
 const cy = (lane: number): number => HEAD + (lane + 0.5) * CELL;
@@ -226,10 +261,6 @@ interface Floater {
   text: Text;
   life: number;
 }
-interface Burst {
-  g: Graphics;
-  life: number;
-}
 /** A shot in flight, carrying the damage reaction it will trigger on arrival. */
 interface Projectile {
   g: Graphics;
@@ -268,13 +299,14 @@ interface Ring {
   from: number;
   to: number;
   width: number;
+  /** How long it takes to travel. 380ms unless something says otherwise. */
+  ms: number;
 }
 
 export function Arena({
   result,
   onFinish,
   flip = false,
-  verdict,
   backdrop = BACKDROP,
   me,
   them,
@@ -288,8 +320,6 @@ export function Arena({
   backdrop?: string;
   /** Mirror horizontally so the local player (B) still sees themselves on the left. */
   flip?: boolean;
-  /** One sentence saying how the match was decided, shown when the clock runs out. */
-  verdict?: string;
 }) {
   const hostRef = useRef<HTMLDivElement>(null);
   const finishedRef = useRef(false);
@@ -363,7 +393,6 @@ export function Arena({
     const gfxByUid = new Map<string, UnitGfx>();
     const uidByGfx = new Map<UnitGfx, string>();
     const floaters: Floater[] = [];
-    const bursts: Burst[] = [];
     const shots: Projectile[] = [];
     const particles: Particle[] = [];
     const rings: Ring[] = [];
@@ -613,12 +642,13 @@ export function Arena({
       from: number,
       to: number,
       width = 3,
+      ms = 380,
     ): void {
       const g = new Graphics();
       g.x = x;
       g.y = y;
       fxLayer.addChild(g);
-      rings.push({ g, life: 1, color, from, to, width });
+      rings.push({ g, life: 1, color, from, to, width, ms });
     }
 
     /**
@@ -772,12 +802,49 @@ export function Arena({
       }
     }
 
-    function spawnBurst(x: number, y: number): void {
-      const g = new Graphics();
-      g.x = x;
-      g.y = y;
-      fxLayer.addChild(g);
-      bursts.push({ g, life: 1 });
+    /**
+     * ═══ THE KING FALLING, WHICH IS NOT A BUBBLE ═══
+     *
+     * Or, after the losing board was given each unit's own death: *"those
+     * bubbles that happen when the cards come apart at the end still don't
+     * look good. Something more powerful would be better, like the cards
+     * that die in the middle of a game."*
+     *
+     * He had found the one that was left. Every other unit on that board
+     * dies its own death now; the King still had `spawnBurst`, and
+     * `spawnBurst` was a bubble by construction — the numbers say so:
+     *
+     *            a death's ring        the King's burst
+     *   lives    380ms                 1700ms
+     *   draws    one stroke            a stroke AND a white FILLED disc
+     *   grows    to the unit's size    to 60px, slowly
+     *
+     * A translucent white circle swelling for nearly two seconds is a soap
+     * bubble; there is no other thing it could be. And it was the slowest
+     * object on a screen where every impact in the preceding three minutes
+     * resolved in under four hundred milliseconds — so the biggest moment in
+     * the game was also the only one that dawdled.
+     *
+     * "Like the cards that die in the middle" is the answer and it is
+     * literal: this is built out of the same two primitives every death in
+     * this file uses, `spawnRing` and `spawnParticles`, at the same tempo.
+     * It is not a different KIND of effect, it is more of the same one —
+     * three rings instead of one, forty-six pieces instead of a dozen, and
+     * the widest ring given 620ms rather than 380 because it has four times
+     * as far to travel and should not have to hurry.
+     *
+     * No fill anywhere. That was the bubble.
+     */
+    function kingFall(x: number, y: number, half: number): void {
+      // The flash, the brand's gold, and a wide red one that outruns both.
+      spawnRing(x, y, 0xffffff, half * 0.2, half * 2.2, 5);
+      spawnRing(x, y, 0xffb020, half * 0.4, half * 3.4, 4, 500);
+      spawnRing(x, y, 0xff6b6b, half * 0.9, half * 5.0, 2, 620);
+      // What a crown is made of, and what is under it.
+      spawnParticles(x, y, 0xffb020, 22, 0.42, { size: 3.5, shape: "chip", gravity: 0.0006 });
+      spawnParticles(x, y, 0xffffff, 14, 0.5, { size: 2, shape: "streak" });
+      // Dust, lifting, so the ground is in it too.
+      spawnParticles(x, y + half * 0.5, 0x9c8e78, 10, 0.08, { size: 6, gravity: -0.00012 });
     }
 
     /**
@@ -1015,6 +1082,9 @@ export function Arena({
      * one, all at the same instant, over the whole half of the board. Ten
      * bubbles and a board that was gone before anybody could look at it.
      *
+     * (And one bubble survived that round, on the King, until he found it
+     * too. See `kingFall`.)
+     *
      * Two changes, and the first matters more: each unit dies ITS OWN death
      * now (deathBurst, by element) instead of the generic ring. The second is
      * that they go in a WAVE rather than together — front rank first, back
@@ -1248,10 +1318,10 @@ export function Arena({
         urgency.alpha = 0;
         uiLayer.addChild(urgency);
 
-        // The end-of-time announcement: "time is up", then how it was decided.
+        // How the battle ended, in two words, over the board rather than on
+        // top of a panel laid across it.
         const announce = new Container();
         announce.alpha = 0;
-        const annBg = new Graphics();
         /*
          * Big, because he asked for big: *"in big letters in the middle of
          * the screen, like the ones at the start of a battle."* The
@@ -1282,42 +1352,75 @@ export function Arena({
          */
         const endedBy: EndedBy =
           result.endedBy ?? (result.winReason === "kingDown" ? "king" : "time");
-        const annTitle = new Text({
-          text: rtl((END_MARKS[endedBy] ?? "") + " " + (END_WORDS[endedBy] ?? END_WORDS.time)()),
-          style: {
-            fontFamily: "Segoe UI, sans-serif",
-            fontSize: Math.round(Math.min(56, W / 11)),
-            fill: 0xffd36b,
-            fontWeight: "900",
-          },
-        });
-        annTitle.anchor.set(0.5);
-        const annBody = new Text({
-          text: verdict ? rtl(verdict) : "",
-          style: {
-            fontFamily: "Segoe UI, sans-serif",
-            fontSize: 13,
-            fill: 0xe7ecf5,
-            fontWeight: "600",
-            align: "center",
-            wordWrap: true,
-            wordWrapWidth: W - 80,
-          },
-        });
-        annBody.anchor.set(0.5);
-        annTitle.y = -Math.round(annTitle.height * 0.22);
-        annBody.y = Math.round(annTitle.height * 0.5) + 14;
-        const annH = Math.round(annTitle.height + 56);
-        annBg
-          .roundRect(-W / 2 + 28, -annH / 2, W - 56, annH, 14)
-          .fill({ color: 0x080c16, alpha: 0.92 })
-          .roundRect(-W / 2 + 28, -annH / 2, W - 56, annH, 14)
-          .stroke({ width: 2, color: 0xffd36b, alpha: 0.7 });
-        announce.addChild(annBg, annTitle, annBody);
+        /*
+         * ═══ THE BIGGEST WORDS IN THE GAME, IN THE GAME'S OWN FACE ═══
+         *
+         * Everything drawn into this canvas is set in Segoe UI, which is
+         * nobody's choice — it is the system's. The brand already has an
+         * answer for its biggest word, on the home screen (album.css,
+         * `.intro__name`): Rubik Beastly, white, glowing in Amanda's teal.
+         * A Hebrew display face that looks chewed, because the game's name
+         * should read as a monster rather than as a title bar.
+         *
+         * The end of a battle is the other moment that deserves it, and it
+         * was the one place still dressed as medieval fantasy: a gold that
+         * belongs to buttons, under a chess piece.
+         *
+         * The teal glow is a SECOND copy of the same text behind the first,
+         * because a Pixi text style carries one shadow and this needs two —
+         * the glow that makes it Amanda's, and a dark one underneath that
+         * keeps it readable over a bright board. Same string, same metrics,
+         * so they sit exactly on top of each other.
+         */
+        const annBaseY = HEAD + (H - HEAD) / 2;
         announce.x = W / 2;
-        announce.y = HEAD + (H - HEAD) / 2;
+        announce.y = annBaseY;
         uiLayer.addChild(announce);
 
+        const annSize = Math.round(Math.min(56, W / 11));
+        // Held unwrapped, and wrapped at each `new Text` below: the rule is
+        // that a canvas string is VISIBLY right-to-left where it is drawn
+        // (see Arena.test.ts), and a wrapping hidden one line up is the
+        // shape that rule exists to catch.
+        const annWords = (END_WORDS[endedBy] ?? END_WORDS.time)();
+        const annFace = { fontFamily: "Rubik Beastly, Segoe UI, sans-serif", fontSize: annSize, fill: 0xffffff };
+        const buildEnding = (): void => {
+          const glow = new Text({
+            text: rtl(annWords),
+            style: {
+              ...annFace,
+              // Amanda's teal, at no distance and a wide blur: a glow, not a
+              // shadow. The same colour as the name on the home screen.
+              dropShadow: { color: 0x5ae6dc, alpha: 0.85, blur: 20, distance: 0, angle: 0 },
+            },
+          });
+          const body = new Text({
+            text: rtl(annWords),
+            style: {
+              ...annFace,
+              dropShadow: { color: 0x05070d, alpha: 0.9, blur: 9, distance: 3, angle: Math.PI / 2 },
+            },
+          });
+          glow.anchor.set(0.5);
+          body.anchor.set(0.5);
+          announce.addChild(glow, body);
+        };
+        /*
+         * And it waits for the font. Pixi measures and rasterises a Text the
+         * moment it is made; made before Rubik Beastly has loaded, it bakes
+         * in the fallback and looks exactly like the thing being fixed. The
+         * words are not needed for another fifteen seconds, so there is no
+         * cost to asking first — and either outcome builds them, because a
+         * missing font must not cost the player the ending.
+         */
+        if (typeof document !== "undefined" && document.fonts?.load) {
+          void document.fonts.load(`${annSize}px "Rubik Beastly"`).then(buildEnding, buildEnding);
+        } else {
+          buildEnding();
+        }
+
+        /** Milliseconds since the ending was announced; drives it off again. */
+        let annMs = 0;
         const frames = result.frames;
         const events = result.events;
         const msPerFrame = 1000 / SIMULATION.ticksPerSecond;
@@ -1471,8 +1574,49 @@ export function Arena({
             urgency.clear();
             urgency.alpha = 0;
           }
-          // Once the clock is out, say so and say what decided it.
-          if (timeUp) announce.alpha += (1 - announce.alpha) * Math.min(1, dt / 180);
+          /*
+           * The end of the replay, measured by the replay. `elapsed` is the
+           * position in the recording; when it reaches the end, the last
+           * frame has been SHOWN, hit-stops and all.
+           */
+          if (!timeUp && elapsed >= playbackMs) {
+            timeUp = true;
+            // The clock sting belongs to the clock. A crown falling has the
+            // battle's own noise behind it already.
+            if (endedBy !== "king") sfx.play("timeUp");
+          }
+
+          /*
+           * Once the battle is over, say how — and then get out of the way.
+           *
+           * This used to ease alpha towards 1 and stop there, which is a
+           * fade-in with no fade-out: whatever it covered, it covered until
+           * the screen changed. The explosions start 300ms after it
+           * finishes now, with nothing in front of them.
+           *
+           * It rises the whole time it is up, which is the other half of
+           * what he asked for and also why it never sits still long enough
+           * to feel like a sign.
+           */
+          if (timeUp) {
+            annMs += dt;
+            const appear = Math.min(1, annMs / 180);
+            const leave = Math.max(0, annMs - (ANNOUNCE_MS - 400)) / 400;
+            announce.alpha = Math.max(0, Math.min(appear, 1 - leave));
+            announce.y = annBaseY - Math.min(1, annMs / ANNOUNCE_MS) * 30;
+
+            // Nothing is playing any more, so from here real time is the
+            // right clock again — and `annMs` is real time, counted from a
+            // moment the picture chose rather than a moment a timer did.
+            // `triggerFinale` sets `finaleStarted` but does not check it —
+            // it was only ever called once, by a timer. Called from a ticker
+            // it would fire sixty explosions a second.
+            if (annMs >= holdMs && !finaleStarted) triggerFinale(lastUnits);
+            if (annMs >= holdMs + FINALE_MS && !finishedRef.current) {
+              finishedRef.current = true;
+              onFinish();
+            }
+          }
 
           if (!finaleStarted) {
             const idx = Math.min(frames.length - 1, Math.floor(elapsed / msPerFrame));
@@ -1515,7 +1659,7 @@ export function Arena({
             deathBurst(g);
             // One shockwave, for the one death the battle was about.
             if (king) {
-              spawnBurst(g.container.x, g.container.y);
+              kingFall(g.container.x, g.container.y, g.half);
               quake = 1;
             } else {
               quake = Math.max(quake, 0.35);
@@ -1904,7 +2048,7 @@ export function Arena({
           // --- expanding rings ---
           for (let i = rings.length - 1; i >= 0; i--) {
             const r = rings[i]!;
-            r.life -= dt / 380;
+            r.life -= dt / r.ms;
             const u = 1 - Math.max(0, r.life);
             r.g.clear();
             r.g
@@ -1926,18 +2070,6 @@ export function Arena({
               floaters.splice(i, 1);
             }
           }
-          for (let i = bursts.length - 1; i >= 0; i--) {
-            const b = bursts[i]!;
-            b.life -= dt / FINALE_MS;
-            const r = (1 - b.life) * 60;
-            b.g.clear();
-            b.g.circle(0, 0, r).stroke({ width: 4, color: 0xffcc44, alpha: Math.max(0, b.life) });
-            b.g.circle(0, 0, r * 0.6).fill({ color: 0xffffff, alpha: Math.max(0, b.life * 0.5) });
-            if (b.life <= 0) {
-              b.g.destroy();
-              bursts.splice(i, 1);
-            }
-          }
         });
 
         const playbackMs = frames.length * msPerFrame;
@@ -1949,24 +2081,54 @@ export function Arena({
          * with nothing on the screen: the board just collapsed. Or asked for
          * all three, *"before you get to the end"*, and he is right that the
          * king is the one most worth saying out loud.
+         *
+         * ═══ AND IT USED TO SAY IT BEFORE IT HAPPENED ═══
+         *
+         * Or: *"a message comes up saying the king is dead two seconds
+         * before the battle ends, and only afterwards the clock runs out and
+         * I see him explode."*
+         *
+         * Two clocks, and they do not run at the same speed. The replay
+         * advances by `elapsed`, which STOPS during a hit-stop — `freezeMs`
+         * holds the picture still for 70ms on every telling blow, which is
+         * what gives a hit its weight. These three moments were
+         * `window.setTimeout`, which knows nothing about that and counts
+         * wall time regardless.
+         *
+         * So every hit-stop in the battle pushed the picture further behind
+         * the timers, and by the end of a long fight the gap is the sum of
+         * all of them — twenty or thirty blows, a second or two. The
+         * announcement fired on time by the wall and early by the board: the
+         * words arrived, THEN the clock ran out, THEN the king fell. Exactly
+         * backwards, and the one ordering the whole screen is about.
+         *
+         * They are marks on the replay's own clock now. There is only one
+         * clock, so nothing can run ahead of the thing it is announcing.
          */
         const holdMs = VERDICT_MS;
+
+        /*
+         * ═══ AND A BATTLE STILL HAS TO END ═══
+         *
+         * The timers above were wrong about WHEN, and right about one thing:
+         * they always fired. The ticker does not — a hidden tab gets no
+         * animation frames at all, so a player who switches away mid-battle
+         * and never comes back would sit in a match that cannot finish.
+         *
+         * So one backstop, at ten seconds past the longest this can honestly
+         * take. It is not the normal path and must never beat it, which is
+         * what the margin is for; `finishedRef` means whichever arrives
+         * first is the only one that counts.
+         */
         timers.push(
-          window.setTimeout(() => {
-            timeUp = true;
-            // The clock sting belongs to the clock. A crown falling has the
-            // battle's own noise behind it already.
-            if (endedBy !== "king") sfx.play("timeUp");
-          }, playbackMs),
-        );
-        timers.push(window.setTimeout(() => triggerFinale(lastUnits), playbackMs + holdMs));
-        timers.push(
-          window.setTimeout(() => {
-            if (!finishedRef.current) {
+          window.setTimeout(
+            () => {
+              if (disposed || finishedRef.current) return;
               finishedRef.current = true;
               onFinish();
-            }
-          }, playbackMs + holdMs + FINALE_MS),
+            },
+            playbackMs + holdMs + FINALE_MS + 10_000,
+          ),
         );
       })
       .catch((err: unknown) => {
@@ -2013,7 +2175,7 @@ export function Arena({
       for (const t of timers) window.clearTimeout(t);
       if (initialized) app.destroy(true, { children: true });
     };
-  }, [result, onFinish, verdict]);
+  }, [result, onFinish]);
 
   // The result was already computed before this component mounted, so skipping
   // the animation costs the replay and nothing else. Offer the way out, and

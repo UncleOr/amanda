@@ -251,19 +251,40 @@ export async function reportSolo(opts: {
   }
 }
 
-/** Take the reward for a finished challenge. Null when it worked. */
-export async function claimChallenge(challengeId: string): Promise<string | null> {
+/**
+ * Take the reward for a finished challenge.
+ *
+ * `why` is null when it worked. `chests` is anything the nachos in that
+ * reward just FILLED — a challenge pays into the same bar a match does, so
+ * it can hand over a chest, and for a long time it did so without saying
+ * anything (see claim() on the server).
+ */
+/**
+ * Fired when the chests waiting for this player have changed under a screen
+ * that is already up. ChestShelf listens; see claimChallenge.
+ */
+export const CHESTS_CHANGED = "amanda:chests";
+
+export interface Claimed {
+  /** Null when it worked; a sentence to show when it did not. */
+  why: string | null;
+  /** Chest kinds the bar paid out as a result. Usually empty. */
+  chests: string[];
+}
+
+export async function claimChallenge(challengeId: string): Promise<Claimed> {
+  const no = (why: string): Claimed => ({ why, chests: [] });
   const base = serverHttp();
-  if (!base) return t("sbd36b97", "אין חיבור לשרת");
+  if (!base) return no(t("sbd36b97", "אין חיבור לשרת"));
   try {
     const token = await authToken();
-    if (!token) return t("s7a0587d", "צריך חשבון");
+    if (!token) return no(t("s7a0587d", "צריך חשבון"));
     const res = await fetch(`${base}/api/meta/claim`, {
       method: "POST",
       headers: { authorization: `Bearer ${token}`, "content-type": "application/json" },
       body: JSON.stringify({ challengeId }),
     });
-    const body = (await res.json().catch(() => ({}))) as { error?: string };
+    const body = (await res.json().catch(() => ({}))) as { error?: string; chests?: string[] };
     if (res.ok) {
       /*
        * Claimed, now, without asking anybody. The server has just said so,
@@ -271,16 +292,37 @@ export async function claimChallenge(challengeId: string): Promise<string | null
        * watchChallenges for what that second cost.
        */
       remember(markClaimed(lastChallenges, challengeId));
-      return null;
+      const chests = Array.isArray(body.chests) ? body.chests : [];
+      /*
+       * ═══ AND THE SHELF HAS TO LOOK AGAIN ═══
+       *
+       * Or: *"after I opened and closed it I saw the chest, but it didn't
+       * appear straight away."*
+       *
+       * The shelf asks the server what is waiting ONCE, when the home screen
+       * mounts. Nothing had ever changed that list while the home screen was
+       * up, because until now only a match could fill the bar and a match
+       * takes you away and brings you back. A challenge is claimed in a panel
+       * over the home screen — so the chest arrived behind an unchanged list,
+       * and stayed invisible until something else remounted it.
+       *
+       * An event rather than a prop, for the same reason flyReward is plain
+       * DOM (see reward.ts): the shelf and the challenge list are in
+       * different branches of the tree, and the thing that happened belongs
+       * to neither of them.
+       */
+      if (chests.length && typeof window !== "undefined")
+        window.dispatchEvent(new Event(CHESTS_CHANGED));
+      return { why: null, chests };
     }
-    return (
+    return no(
       {
         expired: t("sc65088a", "האתגר הזה כבר לא פעיל."),
         notDone: t("sc6b6e23", "עוד לא סיימת את האתגר."),
         claimed: t("s1322daa", "כבר לקחת את הפרס."),
-      }[body.error ?? ""] ?? t("sbf13716", "לא הצלחתי. נסה שוב.")
+      }[body.error ?? ""] ?? t("sbf13716", "לא הצלחתי. נסה שוב."),
     );
   } catch (err) {
-    return (err as Error).message;
+    return no((err as Error).message);
   }
 }

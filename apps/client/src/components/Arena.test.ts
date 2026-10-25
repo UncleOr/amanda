@@ -59,10 +59,33 @@ describe("text drawn into the arena", () => {
    * and forcing it right-to-left would move the minus sign.
    */
   it("wraps every string that can be Hebrew", () => {
-    const texts = [...ARENA.matchAll(/new Text\(\{\s*\n?\s*text:\s*([^,\n]+)/g)].map((m) =>
-      m[1]!.trim(),
+    /*
+     * `new Text({` … `text:` — with whatever stands between them.
+     *
+     * What stands between them is usually a COMMENT, and the pattern used to
+     * allow only whitespace, so the two Texts that explain themselves were
+     * the two this test never read. Both happen to be correct; the point is
+     * that writing a line of explanation above `text:` quietly excused the
+     * string below it from the only rule this file exists to enforce.
+     */
+    const texts = [
+      ...ARENA.matchAll(/new Text\(\{(?:\s*\/\/[^\n]*|\s*\/\*[\s\S]*?\*\/|\s)*text:\s*([^,\n]+)/g),
+    ].map((m) => m[1]!.trim());
+    /*
+     * The guard used to be `toBeGreaterThan(3)`, which is a number that goes
+     * stale: deleting the verdict caption from the ending took the count to
+     * exactly 3 and failed a test that had found nothing wrong. Worse, it
+     * would have passed while the regex matched four calls out of seven.
+     *
+     * Counting the `new Text(` in the file and demanding the SAME number
+     * fails for the thing actually worth failing for — a Text the pattern
+     * cannot see — and never for one more or one fewer.
+     */
+    const declared = [...ARENA.matchAll(/new Text\(/g)].length;
+    expect(declared, "no Text calls found at all — did the shape change?").toBeGreaterThan(0);
+    expect(texts.length, "a `new Text(` the pattern could not read — check its shape").toBe(
+      declared,
     );
-    expect(texts.length, "no Text calls found — did the shape change?").toBeGreaterThan(3);
 
     for (const expr of texts) {
       // A template of digits, or an empty string, needs no direction.

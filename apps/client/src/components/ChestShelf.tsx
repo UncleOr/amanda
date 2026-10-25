@@ -1,5 +1,6 @@
 import { useCallback, useEffect, useState } from "react";
 import { openChest, unopenedChests, type Chest } from "../game/account";
+import { CHESTS_CHANGED } from "../game/meta";
 import { Icon } from "./Icon";
 import { line as t } from "../game/copy";
 
@@ -46,6 +47,19 @@ export function ChestShelf({
   }, []);
 
   useEffect(load, [load]);
+
+  /*
+   * And again whenever something off to the side wins one — today that is a
+   * challenge reward filling the nacho bar, which happens in a panel sitting
+   * on top of this very screen. See CHESTS_CHANGED in game/meta.ts.
+   */
+  useEffect(() => {
+    const again = (): void => {
+      load();
+    };
+    window.addEventListener(CHESTS_CHANGED, again);
+    return () => window.removeEventListener(CHESTS_CHANGED, again);
+  }, [load]);
 
   if (!chests.length) return null;
 

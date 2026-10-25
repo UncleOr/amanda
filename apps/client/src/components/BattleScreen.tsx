@@ -2,7 +2,6 @@ import { Suspense, lazy } from "react";
 import { Icon } from "./Icon";
 import { ErrorBoundary } from "./ErrorBoundary";
 import { SayButton, SaidBubble } from "./Say";
-import { verdictText } from "../game/verdict";
 import type { MatchApi } from "../game/useMatch";
 import { line as t } from "../game/copy";
 
@@ -79,7 +78,6 @@ export function BattleScreen({
               me={m.me}
               them={m.rival}
               flip={m.mySide === "B"}
-              verdict={verdictText(result, m.iWon)}
               // Where you fight is where you have climbed to. A guest with
               // no account fights in the first one, which is right.
               backdrop={backdrop}

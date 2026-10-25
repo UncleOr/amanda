@@ -390,6 +390,42 @@ describe("challenges", () => {
     expect(result).toEqual({ ok: false, why: "expired" });
   });
 
+  /*
+   * ═══ THE CHEST A CHALLENGE FILLED, SAID OUT LOUD ═══
+   *
+   * Or: *"I just got a fifth nacho, the nachos reset, but I didn't get a
+   * chest."* It HAD been minted — this is from his own row, where the silver
+   * chest's `earned_at` is the same tenth of a second as the claim. `claim`
+   * called addNachos and dropped the answer, so the only thing that reached
+   * the screen was the reward printed on the challenge, which can say "3
+   * nachos" and cannot say "and the chest those three just paid for".
+   *
+   * The assertion that matters is the RETURNED list, not the table: the row
+   * was always written correctly, and a test that only checked the table
+   * would have passed throughout the bug.
+   */
+  it("hands back the chest its nachos filled", async () => {
+    const one = liveChallenges(DAY).find((c) => c.reward.nachos)!;
+    const { sb, state } = fakeDb({
+      players: { [ME]: { nachos: NACHOS_PER_CHEST - one.reward.nachos!, nacho_chests: 0 } },
+      challenges: [{ player_id: ME, challenge_id: one.id, progress: one.need, claimed_at: null }],
+    });
+    const paid = await claim(sb, ME, one.id, DAY);
+    expect(paid.ok).toBe(true);
+    expect(paid.ok && paid.chests).toEqual(["wood"]);
+    expect(state.chests).toHaveLength(1);
+  });
+
+  it("says nothing about chests when the bar did not fill", async () => {
+    const one = liveChallenges(DAY).find((c) => c.reward.nachos)!;
+    const { sb } = fakeDb({
+      players: { [ME]: { nachos: 0, nacho_chests: 0 } },
+      challenges: [{ player_id: ME, challenge_id: one.id, progress: one.need, claimed_at: null }],
+    });
+    const paid = await claim(sb, ME, one.id, DAY);
+    expect(paid.ok && paid.chests).toEqual([]);
+  });
+
   it("pays once, and the second tap pays nothing", async () => {
     const one = liveChallenges(DAY).find((c) => c.reward.diamonds)!;
     const { sb, state } = fakeDb({

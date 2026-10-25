@@ -11,11 +11,20 @@
  * these are recordings.
  *
  * Raw results are kept in `assets/raw/sfx/*.mp3` and never regenerated once
- * they exist (they cost money). The two COMPUTED ones — `win` and `newcard`
- * — are the exception and cost nothing: `pnpm art:fanfare` rebuilds them
- * from fanfare.ts note by note, which is also the only way to get them back
- * on a fresh clone, since assets/raw is not in git. The client copies are trimmed and loudness-
+ * they exist (they cost money). The COMPUTED ones are the exception and cost
+ * nothing: `pnpm art:fanfare` rebuilds them from fanfare.ts note by note,
+ * which is also the only way to get them back on a fresh clone, since
+ * assets/raw is not in git. The client copies are trimmed and loudness-
  * matched into `apps/client/public/sfx/`.
+ *
+ * There are five computed ones — `win`, `newcard`, `go`, `lose`, `beep` —
+ * and the last three arrived together, after Or sat down and listened to
+ * every sound in this game in one go. What he marked wrong divides cleanly:
+ * the things that are EVENTS in the world stayed with the model (a bin, a
+ * burst, a thrown stone), and every single one he wanted a FEELING from —
+ * epic, sad, a ting — turned out to be music, and music is the thing this
+ * model cannot do. Twice a fanfare was asked for and twice it came back as
+ * an error sound. That was never a wording problem.
  *
  * The brief for every one of them: SHORT, DRY, CLOSE. A game sound plays a
  * hundred times an hour. Anything with a tail, a room, or a tune in it turns
@@ -35,16 +44,26 @@ const OUT = join(REPO_ROOT, "apps", "client", "public", "sfx");
 
 /** ffmpeg from winget, falling back to whatever is on PATH. */
 function ffmpeg(): string {
+  return tool("ffmpeg");
+}
+
+/** Its sibling, for asking how long a file is before cutting it short. */
+function ffprobe(): string {
+  return tool("ffprobe");
+}
+
+function tool(name: "ffmpeg" | "ffprobe"): string {
   const winget = join(
     process.env.LOCALAPPDATA ?? "",
     "Microsoft/WinGet/Packages/Gyan.FFmpeg_Microsoft.Winget.Source_8wekyb3d8bbwe",
-    "ffmpeg-8.1.1-full_build/bin/ffmpeg.exe",
+    `ffmpeg-8.1.1-full_build/bin/${name}.exe`,
   );
-  return existsSync(winget) ? winget : "ffmpeg";
+  return existsSync(winget) ? winget : name;
 }
 
 /** Said at the end of every prompt, because the model forgets otherwise. */
-const DRY = "Dry close-miked recording, no music, no reverb, no room tone, no voice, mono, starts immediately.";
+const DRY =
+  "Dry close-miked recording, no music, no reverb, no room tone, no voice, mono, starts immediately.";
 
 export interface SoundSpec {
   id: string;
@@ -76,8 +95,28 @@ export const SOUNDS: SoundSpec[] = [
   {
     id: "click",
     what: "any button",
-    prompt: `A single soft wooden UI click, like a fingernail tapping a lacquered board game box. Very short, tactile, low. ${DRY}`,
-    seconds: 0.4,
+    /*
+     * Or: *"not really related. It sounds like a die being thrown. It needs
+     * to be more of a click."*
+     *
+     * And the old prompt asked for exactly that, in writing: *"like a
+     * fingernail tapping a lacquered board game box"*. A board game box is
+     * a hollow wooden container, which is the thing dice are thrown into —
+     * so "wooden", "box" and "low" together could only ever produce a
+     * rattle. The simile was doing the opposite of its job: it was there to
+     * say "warm, not electronic", and it named the object instead of the
+     * quality.
+     *
+     * A click is ONE transient and then nothing. Everything that makes it
+     * sound like dice is the stuff after the first millisecond — a bounce,
+     * a hollow ring, a second tap. So the prompt now forbids each of those
+     * by name, and the trim is the belt to that braces: 0.4s was room for a
+     * rattle to happen in, and a click that is still going 180ms later is
+     * not a click whatever the model thought it was making.
+     */
+    prompt: `One single crisp click, like a small plastic switch or a mouse button. One sharp transient and silence after it. Tiny, dry, bright and immediate. No wood, no hollow box, no rattle, no bounce, no roll, no second tap, no ring. ${DRY}`,
+    generate: 2,
+    seconds: 0.18,
     level: 0.35,
   },
   {
@@ -96,16 +135,44 @@ export const SOUNDS: SoundSpec[] = [
   },
   {
     id: "discard",
-    what: "a card goes in the bin",
-    prompt: `A card flicked into a metal bin — light paper flutter followed by one small hollow metallic tap. ${DRY}`,
+    /*
+     * It is not only the bin: it also plays for the eraser and for the
+     * freeze — three different ways of getting rid of something. Which is
+     * part of why the bin's metallic tap was wrong for it.
+     */
+    what: "a card is thrown away",
+    /*
+     * Or: *"not related at all. It should be the sound of paper being
+     * crumpled, maybe."*
+     *
+     * The old prompt asked for a flutter and a tap on a metal bin, and the
+     * tap is the problem — it is the sound of the BIN, and what the player
+     * is doing is destroying a card. Crumpling is the right idea and it is
+     * his: it has the paper in it, and it is violent in a small way.
+     */
+    prompt: `One sheet of paper being crushed into a ball in a fist — dry crumpling and crackling, close and quick, dying away. No tap, no metal, no bin, no impact at the end. ${DRY}`,
+    generate: 3,
     seconds: 0.8,
     level: 0.5,
   },
   {
     id: "beep",
-    what: "each second of the countdown before building",
-    prompt: `One muffled wooden temple-block hit, deep and short, like a countdown marker. Single hit only. ${DRY}`,
-    seconds: 0.4,
+    /*
+     * This said "each second of the countdown before building" until today,
+     * and had not been true since the countdown became a clock — which is
+     * half of why the sound was wrong. It is a notification: an invitation
+     * arrives, a rematch is offered, somebody says something to you, or you
+     * push at a locked door.
+     */
+    what: "something wants your attention",
+    /*
+     * Computed — see fanfare.ts. Or: *"not related, needs more 'ting'."*
+     *
+     * The clip was a muffled wooden temple block, which is a knock. Three
+     * bells now, and the one that does the actual work is the top one, too
+     * quiet to hear as a note.
+     */
+    seconds: 0.55,
     level: 0.5,
   },
   {
@@ -132,12 +199,19 @@ export const SOUNDS: SoundSpec[] = [
   {
     id: "go",
     what: "the battle starts",
-    prompt: `A monstrous war horn blast with one deep taiko drum hit under it. Dark fantasy, short and brutal, no melody. ${DRY}`,
+    /*
+     * Computed — see fanfare.ts. Or, listening to the generated one:
+     * *"something a bit more epic."*
+     *
+     * It is here rather than at the model for the same reason `win` is: a
+     * horn CALL is music. The clip this replaces was one honk with a drum
+     * under it, and no sentence was going to turn that into two horns
+     * answering each other a fifth apart.
+     *
+     * The prompt is deliberately gone. While it was here, `pnpm art:sounds`
+     * on a fresh clone would have quietly put the honk back.
+     */
     seconds: 1.6,
-    // Generated long: the first attempt put the blast at the very END of a
-    // 2-second clip, so cutting the lead silence left a third of a second of
-    // horn. More room to place it in means more of it survives the trim.
-    generate: 5,
     level: 0.85,
   },
   {
@@ -148,51 +222,99 @@ export const SOUNDS: SoundSpec[] = [
     level: 0.5,
   },
   /*
-   * ═══ THE BATTLE ITSELF ═══
+   * ═══ THE BATTLE ITSELF, AND THE THREE THAT WERE NEVER GENERATED ═══
    *
    * Seventeen sounds in this game and not one of them was a blow, a shot or
    * a card going down: a match played out in silence apart from the clock.
    * These three play dozens of times a match, so the brief is harder than
    * usual — under a third of a second, no tail, no character, nothing
-   * anybody could get tired of. Oscillator fallbacks are in place and are
-   * honest noise bursts; these are the upgrade.
+   * anybody could get tired of.
    *
-   *   pnpm art:sounds hit shoot die
+   * They were written as prompts and the prompts were never run. What Or
+   * heard, and judged, is the OSCILLATOR version in the client's sfx.ts:
+   * `hit` he approved as it stands, and of the other two he said *"it
+   * sounds like a thump"* and *"maybe it needs more wind"* — both of which
+   * were true of noise through a fixed 900Hz lowpass, which is what all
+   * three were. That filter is a parameter now and the two are rebuilt.
+   *
+   * ⚠ THE PROMPTS ARE GONE ON PURPOSE. Left in place, the next person to
+   * run `pnpm art:sounds` on a clone — where nothing in assets/raw exists —
+   * would have paid for three clips and silently replaced a sound Or had
+   * already signed off, with one he has never heard. That is the same
+   * failure as trimming the new victory fanfare back to the old length:
+   * a change nobody can hear, in the other direction. The wording is kept
+   * below so it costs nothing to change our minds.
+   *
+   *   hit    A single dull body impact — a padded thud with a little grit
+   *          in it, like a mallet into a sandbag. No metal, no ring, no tail.
+   *   shoot  A short dry whoosh of something small being thrown hard past
+   *          the microphone. Airy, no pitch, no whistle, gone instantly.
+   *   die    A short low collapse — a soft thump with a dry crack on top,
+   *          like a stack of cards slapped flat. Smaller than an explosion.
    */
   {
     id: "hit",
     what: "a heavy blow lands on a monster",
-    prompt: `A single dull body impact — a padded thud with a little grit in it, like a mallet into a sandbag. No metal, no ring, no tail. ${DRY}`,
+    // Synthesised, and approved that way. See above before adding a prompt.
     seconds: 0.3,
     level: 0.5,
   },
   {
     id: "shoot",
     what: "a ranged monster looses something",
-    prompt: `A short dry whoosh of something small being thrown hard past the microphone. Airy, no pitch, no whistle, gone instantly. ${DRY}`,
+    // Synthesised. Rebuilt for *"maybe it needs more wind"* — sfx.ts.
     seconds: 0.25,
     level: 0.4,
   },
   {
     id: "die",
     what: "one card goes down mid-battle",
-    prompt: `A short low collapse — a soft thump with a dry crack on top, like a stack of cards slapped flat. Smaller and drier than an explosion. ${DRY}`,
+    // Synthesised. Rebuilt for *"it sounds like a thump"* — sfx.ts.
     seconds: 0.4,
     level: 0.55,
   },
   {
     id: "explode",
-    what: "a monster dies",
-    prompt: `A short punchy monster burst — a wet thump with debris and a brief gravelly growl cut off. Not a bomb, not cartoonish. ${DRY}`,
-    seconds: 0.9,
+    /*
+     * This has not been "a monster dies" for a while — `die` is that. It is
+     * the two biggest moments in the game: the losing board coming down at
+     * the end of a match (Arena.tsx, triggerFinale) and a chest finally
+     * giving way on the last tap. Both are endings, which is exactly what
+     * Or asked it to sound like.
+     */
+    what: "a board comes down, or a chest gives way",
+    /*
+     * Or: *"it is not clear what that slurp is. It needs a big, final
+     * explosion."*
+     *
+     * The slurp is in the prompt, in writing: it asked for "a wet thump".
+     * Wet was meant to keep it organic and away from an action-film bomb,
+     * and instead it is the only thing you can hear. Dry now, and bigger —
+     * and allowed to be, because unlike `die` it plays once.
+     *
+     * "Final" is the harder half, and it is about the END of the sound
+     * rather than the start: rubble that stops dead reads as finished,
+     * rubble that fades out reads as something still going on offscreen.
+     */
+    prompt: `One huge final explosion: a sharp crack, then a deep heavy boom, then a short burst of falling rubble that stops dead. Dry, close and enormous. No wet or squelchy sounds, no growl, no slurp, no fade-out. ${DRY}`,
+    generate: 4,
+    seconds: 1.4,
     level: 0.7,
   },
   {
     id: "win",
     what: "you won",
-    // Computed — see fanfare.ts. Or: *"the win sound and the new-chest sound
-    // are really awful."* He picked the trumpets.
-    seconds: 1.35,
+    /*
+     * Computed — see fanfare.ts. Or: *"the win sound and the new-chest sound
+     * are really awful."* He picked the trumpets; then, going through every
+     * sound in the game: *"needs to be a bit longer and happier."*
+     *
+     * This number is a CEILING, not a label: the processor trims to it. The
+     * new fanfare is 1.9s long and came out of here at 1.35 — the same 16,972
+     * bytes as the old one, which is how a change to a sound can be made and
+     * heard by nobody.
+     */
+    seconds: 1.9,
     level: 0.8,
   },
   {
@@ -210,7 +332,13 @@ export const SOUNDS: SoundSpec[] = [
   {
     id: "lose",
     what: "you lost",
-    prompt: `A short descending dark-fantasy sting: low strings sliding down into a dying monstrous groan. Under two seconds. ${DRY}`,
+    /*
+     * Computed — see fanfare.ts. Or: *"needs to be a bit sadder."*
+     *
+     * Sad is a chord, and the clip had none — it was a slide. A slide is a
+     * noise going down; D minor sagging to C minor is a feeling going down,
+     * and only one of the two can be asked for by name.
+     */
     seconds: 2.2,
     level: 0.8,
   },
@@ -219,11 +347,15 @@ export const SOUNDS: SoundSpec[] = [
 /** Generate the missing ones (or the named ones) into assets/raw/sfx. */
 export async function generateSounds(only: string[]): Promise<void> {
   mkdirSync(RAW, { recursive: true });
-  const list = (only.length ? SOUNDS.filter((s) => only.includes(s.id)) : SOUNDS)
+  const list = (
+    only.length ? SOUNDS.filter((s) => only.includes(s.id)) : SOUNDS
+  )
     // The computed ones have no prompt and are not the model's to make.
     .filter((s) => s.prompt);
   if (!list.length) {
-    console.error(`No such sound. Options: ${SOUNDS.map((s) => s.id).join(", ")}`);
+    console.error(
+      `No such sound. Options: ${SOUNDS.map((s) => s.id).join(", ")}`,
+    );
     process.exit(1);
   }
   console.log(`\nGenerating ${list.length} sounds\n`);
@@ -234,7 +366,9 @@ export async function generateSounds(only: string[]): Promise<void> {
       console.log(`   skip  ${spec.id} (exists)`);
       continue;
     }
-    process.stdout.write(`   ${spec.id.padEnd(12)} ${spec.what.padEnd(34)} ... `);
+    process.stdout.write(
+      `   ${spec.id.padEnd(12)} ${spec.what.padEnd(34)} ... `,
+    );
     try {
       const url = await sound(spec.prompt!, {
         seconds: spec.generate ?? Math.max(2, Math.ceil(spec.seconds)),
@@ -270,6 +404,45 @@ export function processSounds(): void {
       console.log(`   miss  ${spec.id} (generate it first)`);
       continue;
     }
+    /*
+     * ⚠ SAY SO WHEN MOST OF A SOUND IS BEING THROWN AWAY.
+     *
+     * `atrim` below cuts at spec.seconds, and the day a new victory fanfare
+     * was built at 1.9s against a spec that still said 1.35, this loop
+     * printed "ok win" and wrote the same 16,972 bytes as the day before.
+     * A change to a sound that nobody can hear is worse than no change: it
+     * is a change you believe you have made.
+     *
+     * COMPUTED SOUNDS ONLY. A generated clip is asked for long on purpose —
+     * the model takes whole seconds and needs somewhere to put the sound —
+     * so a 2-second source behind a 0.4s click is the system working. The
+     * first version of this warned about all of them, which is eleven lines
+     * of noise around the one line that matters, and a warning nobody reads
+     * is the same as no warning. fanfare.ts builds to an exact length, so
+     * there every hundredth of a second of gap is a mistake.
+     */
+    if (!spec.prompt) {
+      const raw = Number(
+        execFileSync(ffprobe(), [
+          "-v",
+          "error",
+          "-show_entries",
+          "format=duration",
+          "-of",
+          "csv=p=0",
+          src,
+        ])
+          .toString()
+          .trim(),
+      );
+      if (Number.isFinite(raw) && raw - spec.seconds > 0.15) {
+        console.log(
+          `   ⚠     ${spec.id}: the source is ${raw.toFixed(2)}s and seconds is ` +
+            `${spec.seconds} — ${(raw - spec.seconds).toFixed(2)}s is being cut off the end.`,
+        );
+      }
+    }
+
     const dest = join(OUT, `${spec.id}.mp3`);
     execFileSync(
       bin,
@@ -283,7 +456,9 @@ export function processSounds(): void {
           `atrim=0:${spec.seconds}`,
           "loudnorm=I=-16:TP=-1.5:LRA=11",
           `volume=${spec.level}`,
-          "afade=t=out:st=" + Math.max(0, spec.seconds - 0.05).toFixed(2) + ":d=0.05",
+          "afade=t=out:st=" +
+            Math.max(0, spec.seconds - 0.05).toFixed(2) +
+            ":d=0.05",
         ].join(","),
         "-ac",
         "1",

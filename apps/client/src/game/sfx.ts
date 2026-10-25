@@ -123,22 +123,78 @@ function tone(
   osc.stop(t0 + dur + 0.02);
 }
 
-function noise(durMs: number, gain = 0.3): void {
+/*
+ * Noise, which until now could only ever be one noise.
+ *
+ * Every percussive sound in this file went through a fixed lowpass at 900Hz
+ * with a fixed fade-out, and that single line is why Or heard the same
+ * object three times over: *"[the death] sounds like a thump"*, and of the
+ * shot, *"if it is from a distance maybe it needs more wind."* There is no
+ * wind below 900Hz. Air is the part that was being filtered out.
+ *
+ * So the filter is a parameter now, and it can SWEEP — a band of noise
+ * moving down in pitch is the Doppler shift of something passing your ear,
+ * and it is most of what the word "whoosh" means.
+ *
+ * ═══ WHY THE ENVELOPE IS STILL IN THE SAMPLE DATA ═══
+ *
+ * `hit` must not move. Or listened to it and approved it, and it is the
+ * only sound here sharing this function with the two he rejected.
+ *
+ * The tidy version of this rewrite put the fade on the gain node, where
+ * ramps belong, and it is a different sound: rendered offline five times
+ * each, the old `hit` has a spectral centroid of 803–896Hz and the gain-node
+ * one came out at 944. Of course it did — the fade used to happen BEFORE
+ * the filter, so the biquad was fed a decaying signal; after the filter it
+ * is fed full-scale noise throughout and settles differently. A fade and a
+ * filter do not commute, which is not obvious until it is measured.
+ *
+ * So the shape stays baked into the samples, swell included, and the gain
+ * node is a constant. Measured the same five ways, that version lands at
+ * 826–888Hz — inside the original's own spread.
+ */
+function noise(
+  durMs: number,
+  gain = 0.3,
+  opts: {
+    /** Where the filter sits. The old fixed value is the default. */
+    cutoff?: number;
+    type?: BiquadFilterType;
+    /** Resonance. Only worth raising for a bandpass. */
+    q?: number;
+    /** Slide the filter to this by the end — a pass-by, rather than a hit. */
+    sweepTo?: number;
+    /** Fade IN over this long first, so the sound arrives instead of starting. */
+    swellMs?: number;
+    delayMs?: number;
+  } = {},
+): void {
   const c = ac();
   if (!c) return;
+  const t0 = c.currentTime + (opts.delayMs ?? 0) / 1000;
   const frames = Math.floor((c.sampleRate * durMs) / 1000);
+  const rise = Math.min(Math.floor((c.sampleRate * (opts.swellMs ?? 0)) / 1000), Math.floor(frames * 0.6));
   const buf = c.createBuffer(1, frames, c.sampleRate);
   const data = buf.getChannelData(0);
-  for (let i = 0; i < frames; i++) data[i] = (Math.random() * 2 - 1) * (1 - i / frames);
+  for (let i = 0; i < frames; i++) {
+    // Up over `rise`, then the same straight fall it always had.
+    const shape = i < rise ? i / rise : 1 - (i - rise) / (frames - rise);
+    data[i] = (Math.random() * 2 - 1) * shape;
+  }
   const src = c.createBufferSource();
   src.buffer = buf;
+
   const g = c.createGain();
   g.gain.value = gain;
-  const lp = c.createBiquadFilter();
-  lp.type = "lowpass";
-  lp.frequency.value = 900;
-  src.connect(lp).connect(g).connect(c.destination);
-  src.start();
+
+  const f = c.createBiquadFilter();
+  f.type = opts.type ?? "lowpass";
+  f.frequency.setValueAtTime(opts.cutoff ?? 900, t0);
+  if (opts.sweepTo) f.frequency.exponentialRampToValueAtTime(opts.sweepTo, t0 + frames / c.sampleRate);
+  if (opts.q) f.Q.value = opts.q;
+
+  src.connect(f).connect(g).connect(c.destination);
+  src.start(t0);
 }
 
 const RECIPES: Record<SoundName, () => void> = {
@@ -172,15 +228,79 @@ const RECIPES: Record<SoundName, () => void> = {
     noise(90, 0.16);
     tone(120, 90, { type: "triangle", slideTo: 60, gain: 0.1 });
   },
-  // Something leaving a barrel: brighter, shorter, and it falls away.
+  /*
+   * Something thrown past you. Or: *"if it is from a distance maybe it
+   * needs more wind."*
+   *
+   * It was 60ms of muffled noise and an 820Hz slide down to 260 — which is
+   * a laser, and a short one. Three changes and none of them is volume:
+   *
+   *   LONGER   60ms to 200. A whoosh you cannot hear travelling is a tick.
+   *   A BAND   bandpass rather than lowpass, so there is air in it at all,
+   *            and the resonance gives the air a direction.
+   *   IT GOES  the band sweeps 2.4kHz down to 650 while it plays, which is
+   *   PAST     what something passing your ear does to the sound of itself.
+   *
+   * The swell matters as much as the sweep: it fades IN over the first
+   * 60ms, so the thing approaches rather than appearing beside you — which
+   * is the "from a distance" half of what he asked for.
+   */
   shoot: () => {
-    noise(60, 0.07);
-    tone(820, 70, { type: "triangle", slideTo: 260, gain: 0.06 });
+    noise(200, 0.17, { type: "bandpass", cutoff: 2400, q: 1.1, sweepTo: 650, swellMs: 60 });
+    // One quiet low knock at the release, so it still reads as a THROW and
+    // not just as weather.
+    tone(190, 60, { type: "triangle", slideTo: 95, gain: 0.05 });
   },
-  // A card going down: the thump, lower and longer, with a crack on top.
+  /*
+   * A card going down. Or: *"it sounds like a thump."*
+   *
+   * It was a thump: 220ms of 900Hz-lowpassed noise over a falling saw,
+   * which is `hit` again with the lows turned up. So the two loudest events
+   * in a battle — being struck, and dying — differed by about a tone, and
+   * nothing told you which had happened.
+   *
+   * A death is not an impact, it is a COLLAPSE, and a collapse has three
+   * parts in this order: the crack of the thing giving way, the weight
+   * going down, and then the pieces settling. The crack is the part `hit`
+   * has none of, which is what finally makes them two sounds.
+   *
+   * ═══ AND THEN THE SECOND HALF OF THE NOTE ARRIVED ═══
+   *
+   * The first version of this answered *"it sounds like a thump"* and had
+   * to stop there, because the rest of his sentence had been eaten by a bug
+   * in the sound desk. The rest was: *"it needs a bit more depth to the
+   * sound. Really just a bit deeper and longer."*
+   *
+   * Which is a smaller ask than it looks, and the word that matters is
+   * "really just". The collapse is right; it is too SMALL. So nothing here
+   * changes shape — every part stays where it was and goes lower and
+   * further:
+   *
+   *   the fall    105→38Hz over 250ms becomes 86→28 over 340
+   *   the weight  a 240ms body filtered 800→260 becomes 320ms, 700→200
+   *   the debris  the last tap moves from 200ms out to 250
+   *
+   * And one part is new: a sine under all of it, an octave below the saw.
+   * That is where "depth" actually lives. A sawtooth at 86Hz is mostly its
+   * own harmonics — the fundamental is the quietest thing in it, and a
+   * phone speaker throws away everything under about 200Hz anyway, so the
+   * low end has to be LOUD and pure to survive at all. A sine is the one
+   * waveform that spends all of itself on the note you asked for.
+   */
   die: () => {
-    noise(220, 0.13);
-    tone(90, 200, { type: "sawtooth", slideTo: 40, gain: 0.09 });
+    // The crack. High, and gone in a twentieth of a second.
+    noise(55, 0.1, { type: "highpass", cutoff: 1800 });
+    // The weight. Darkening as it goes down, which a fixed filter cannot do.
+    noise(320, 0.1, { cutoff: 700, sweepTo: 200 });
+    tone(86, 340, { type: "sawtooth", slideTo: 28, gain: 0.08 });
+    // The body underneath it — see above. Quiet, because it is felt more
+    // than heard, and it would be mud if it were not.
+    tone(58, 300, { type: "sine", slideTo: 26, gain: 0.07 });
+    // The pieces settling: three small taps, spaced unevenly on purpose —
+    // an even three is a drum roll, and the point is that it is debris.
+    [95, 160, 250].forEach((d, i) =>
+      noise(50, 0.045 - i * 0.012, { type: "bandpass", cutoff: 1300 - i * 260, q: 2.2, delayMs: d }),
+    );
   },
   // A clock, not an alarm: quiet and low while there is still time…
   tick: () => tone(520, 55, { type: "square", gain: 0.05 }),

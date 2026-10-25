@@ -583,7 +583,13 @@ async function handleMeta(req: IncomingMessage, res: ServerResponse, path: strin
     const id = typeof body.challengeId === "string" ? body.challengeId : "";
     if (!id) return send(res, 400, { error: "which challenge" });
     const done = await claim(sb, playerId, id);
-    return send(res, done.ok ? 200 : 400, done.ok ? { ok: true, gave: done.gave } : { error: done.why });
+    return send(
+      res,
+      done.ok ? 200 : 400,
+      // `chests` is what the bar filling paid out, which the challenge's own
+      // reward cannot describe — see claim().
+      done.ok ? { ok: true, gave: done.gave, chests: done.chests } : { error: done.why },
+    );
   }
 
   send(res, 404, { error: "no such thing" });

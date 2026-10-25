@@ -512,7 +512,9 @@ export async function claim(
   playerId: string,
   challengeId: string,
   now: Date = new Date(),
-): Promise<{ ok: true; gave: Challenge["reward"] } | { ok: false; why: string }> {
+): Promise<
+  { ok: true; gave: Challenge["reward"]; chests: string[] } | { ok: false; why: string }
+> {
   const challenge = liveChallenges(now).find((c) => c.id === challengeId);
   // Not live: either it has expired, or it was never real. Both are "no".
   if (!challenge) return { ok: false, why: "expired" };
@@ -537,12 +539,36 @@ export async function claim(
 
   if (challenge.reward.diamonds)
     await deliver(sb, playerId, { diamonds: challenge.reward.diamonds }, "challenge");
-  if (challenge.reward.nachos) await addNachos(sb, playerId, challenge.reward.nachos);
+  /*
+   * ═══ THE CHEST THAT WAS MINTED AND NEVER MENTIONED ═══
+   *
+   * Or: *"I just got a fifth nacho, the nachos reset, but I didn't get a
+   * chest."* And a few minutes later: *"after I opened and closed it I saw
+   * the chest, but it didn't appear straight away."*
+   *
+   * Both halves of one line. `addNachos` does the right thing — it filled
+   * the bar, minted a silver chest and wrote it to the table — and this
+   * threw the answer on the floor. `claim` returned `gave`, the reward as
+   * WRITTEN on the challenge, which says "3 nachos" and cannot say "and the
+   * chest those three nachos just filled".
+   *
+   * So the bar emptied in front of him with nothing to show for it. The
+   * chest was real the whole time, sitting on the shelf, waiting to be
+   * stumbled on — which is exactly how a game teaches someone it is buggy:
+   * the thing it owes you arrives, silently, somewhere you were not looking.
+   *
+   * A match has always reported this (`awardMatch` returns `chests`). A
+   * challenge pays in the same nachos and fills the same bar; it has to
+   * answer the same question.
+   */
+  const filled = challenge.reward.nachos
+    ? await addNachos(sb, playerId, challenge.reward.nachos)
+    : { chests: [] as string[] };
   // Which challenges actually get finished, and which sit there all week.
   track(sb, playerId, "claim", {
     id: challengeId,
     period: challenge.period,
     diamonds: challenge.reward.diamonds ?? 0,
   });
-  return { ok: true, gave: challenge.reward };
+  return { ok: true, gave: challenge.reward, chests: filled.chests };
 }

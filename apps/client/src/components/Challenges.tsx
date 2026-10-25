@@ -121,10 +121,10 @@ export function Challenges({
     setError(null);
     const prize = live.find((c) => c.id === id)?.reward;
     const flyFrom = button.closest("li")?.querySelector(".quests__pay");
-    const failed = await claimChallenge(id);
+    const { why } = await claimChallenge(id);
     setBusy(null);
-    if (failed) {
-      setError(failed);
+    if (why) {
+      setError(why);
       return;
     }
     /*
