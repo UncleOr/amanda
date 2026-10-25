@@ -1,4 +1,7 @@
 import { describe, expect, it } from "vitest";
+import { readdirSync, readFileSync } from "node:fs";
+import { join } from "node:path";
+import { fileURLToPath } from "node:url";
 import { buildBattle } from "./setup.js";
 import type { BoardInput } from "./setup.js";
 import { ARENAS, ARENA_POWER_BONUS, arenaFor, groundFor, type Card } from "@amanda/shared";
@@ -127,10 +130,24 @@ describe("the ground", () => {
 
 describe("which ground", () => {
   it("names a real series for every arena", () => {
-    // A typo here would be a caption promising a bonus that never arrives:
-    // nothing throws on an unknown seriesId, the units simply never match.
-    const known = new Set(["dragons", "giants", "furries", "insects", "plants", "slimes"]);
-    for (const a of ARENAS) expect(known.has(a.family)).toBe(true);
+    /*
+     * A typo here would be a caption promising a bonus that never arrives:
+     * nothing throws on an unknown seriesId, the units simply never match.
+     *
+     * The list used to be written out by hand, and it went stale the first
+     * time a series was added — the alley got a family of its own (the
+     * strays, data/series/11-strays.json) and this failed on a change that
+     * was entirely correct. Read from the same directory the game reads, it
+     * cannot say no to a real family or yes to a typo.
+     */
+    const dir = fileURLToPath(new URL("../../../data/series/", import.meta.url));
+    const known = new Set(
+      readdirSync(dir)
+        .filter((f) => f.endsWith(".json"))
+        .map((f) => JSON.parse(readFileSync(join(dir, f), "utf8")).id as string),
+    );
+    expect(known.size, "no series files found — has the data moved?").toBeGreaterThan(5);
+    for (const a of ARENAS) expect(known.has(a.family), a.family).toBe(true);
   });
 
   it("gives each arena its own family", () => {

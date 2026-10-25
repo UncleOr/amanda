@@ -146,7 +146,19 @@ export const ARENAS: Arena[] = [
   },
   {
     id: "station",
-    family: "plants",
+    /*
+     * Or: *"I saw that at the moment I get the plants. But that makes no
+     * sense, because the tutorial already has plants. Put insects there
+     * instead (and make sure there are no insects in the tutorial)."*
+     *
+     * Counted, by distinct cards in the tutorial: plants 6, giants 3,
+     * dragons 2, slimes 2, furries 1, insects 1. The plants were the most
+     * familiar family in the game by a factor of two, standing on the rung
+     * that was meant to introduce somebody new. The insects were the least
+     * familiar — one card, the Ant Soldier — and that one card is gone from
+     * the tutorial now, so this rung introduces a family nobody has met.
+     */
+    family: "insects",
     name: { he: "תחנת הרכבת", en: "The Station" },
     from: 450,
     tease: { he: "אף אחד לא עוצר פה. חוץ ממך.", en: "Nobody stops here. Except you." },
@@ -157,7 +169,23 @@ export const ARENAS: Arena[] = [
   },
   {
     id: "alley",
-    family: "insects",
+    /*
+     * Or: *"for the alley let's invent a new series that doesn't exist
+     * yet."*
+     *
+     * Which solves the thing the station's move broke — two arenas cannot
+     * be the same family — and solves it better than shuffling the existing
+     * six, because his alley story was never really about insects. It is
+     * about what is out there at night: jackals, a flickering lamp, a bin
+     * you should not look in, and "oh, it is only a cat". That is a family,
+     * and now it is one. See data/series/11-strays.json.
+     *
+     * It is also the first arena whose family exists BECAUSE of the arena
+     * rather than the other way round, which is what finally makes the
+     * ladder able to promise somebody new at a rung: see the note above
+     * about all six families being in the starter album.
+     */
+    family: "strays",
     name: { he: "סמטת האימה", en: "Fright Alley" },
     from: 1400,
     tease: { he: "אל תסתכל מה יש בפח.", en: "Don't look in the bin." },

@@ -89,7 +89,7 @@ export const LESSONS: Lesson[] = [
       "giants_10_titan_king", // the crown
       "giants_04_rock_troll", // heals itself: the second guard post
       "plants_03_healing_bloom",
-      "insects_01_ant_soldier",
+      "plants_07_dandelion",
     ],
     /*
      * Crumb Demons and a couple of ants — the board a player who did nothing
@@ -101,8 +101,8 @@ export const LESSONS: Lesson[] = [
      */
     opponent: [
       { cardId: "crumb_demon", x: 1, y: 1, king: true },
-      { cardId: "insects_01_ant_soldier", x: 3, y: 1 },
-      { cardId: "insects_01_ant_soldier", x: 3, y: 2 },
+      { cardId: "plants_07_dandelion", x: 3, y: 1 },
+      { cardId: "plants_07_dandelion", x: 3, y: 2 },
       ...fill("crumb_demon", [
         [3, 1],
         [3, 2],
@@ -231,8 +231,8 @@ export const STAGE_LESSONS: Lesson[] = [
     ],
     opponent: [
       { cardId: "crumb_demon", x: 1, y: 1, king: true },
-      { cardId: "insects_01_ant_soldier", x: 3, y: 1 },
-      { cardId: "insects_01_ant_soldier", x: 3, y: 2 },
+      { cardId: "plants_07_dandelion", x: 3, y: 1 },
+      { cardId: "plants_07_dandelion", x: 3, y: 2 },
       { cardId: "crumb_demon", x: 3, y: 0 },
       { cardId: "crumb_demon", x: 3, y: 3 },
       { cardId: "crumb_demon", x: 0, y: 1 },
@@ -272,8 +272,8 @@ export const STAGE_LESSONS: Lesson[] = [
     ],
     opponent: [
       { cardId: "crumb_demon", x: 1, y: 1, king: true },
-      { cardId: "insects_01_ant_soldier", x: 3, y: 1 },
-      { cardId: "insects_01_ant_soldier", x: 3, y: 2 },
+      { cardId: "plants_07_dandelion", x: 3, y: 1 },
+      { cardId: "plants_07_dandelion", x: 3, y: 2 },
       { cardId: "crumb_demon", x: 3, y: 0 },
     ],
   },
