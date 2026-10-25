@@ -112,6 +112,16 @@ export interface BattleEvent {
    * instead of one they can see.
    */
   edge?: number;
+  /**
+   * How much of this blow was stopped before it landed — armour, a damage
+   * reduction aura, a neighbour taking part of it.
+   *
+   * The screen had no way of knowing: it saw the number that got through and
+   * nothing about the number that did not, so a card whose whole job is to
+   * absorb looked exactly like a card that was simply not being hit hard.
+   * The engine works both out to arrive at the first one.
+   */
+  absorbed?: number;
   /** This hit was damage thrown back at an attacker, not a strike of its own. */
   reflected?: boolean;
   untilTick?: number;

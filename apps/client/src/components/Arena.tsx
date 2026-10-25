@@ -187,6 +187,32 @@ interface UnitGfx {
   owner: Owner;
   /** 0 to 1: how much health is left, for the body to show it. */
   life: number;
+  /**
+   * Health last frame, and whether a blow explains the difference.
+   *
+   * ═══ THE ONE WAY TO SEE AN ABILITY WORK ═══
+   *
+   * Or: *"yes, let's do the abilities."* Most of them never reached the
+   * screen at all: a card being healed, a card burning from poison and a
+   * card whose armour ate the blow all looked like nothing happening.
+   *
+   * Healing is the clearest case and the one that needed no engine change.
+   * It arrives a THIRTIETH of a point at a time — `hp + hpPerSecond / TPS`,
+   * every tick, from regen, from an aura and from the family bonus — so
+   * there is nothing to emit an event for without emitting thirty a second.
+   * But the frames carry health, and health going UP has exactly one cause.
+   * So the renderer watches the number instead of being told about it, and
+   * gets every source of healing for free, including the ones nobody has
+   * written yet.
+   *
+   * Health going DOWN with no blow to explain it is the other half: that is
+   * poison, or a lane that burns.
+   */
+  wasHp: number;
+  /** Health gained since the last frame, waiting to be shown. */
+  healed: number;
+  /** Health lost with no blow behind it: poison. */
+  burned: number;
   /** The King is the match; it is shown as hurt sooner. */
   isKing: boolean;
   /**
@@ -465,6 +491,9 @@ export function Arena({
         offY: 0,
         shadow,
         life: 1,
+        wasHp: fu.hp,
+        healed: 0,
+        burned: 0,
         isKing: fu.isKing,
         stunnedUntilMs: 0,
         exploding: false,
@@ -506,6 +535,15 @@ export function Arena({
         g.targetAlpha = fu.alive ? 1 : 0;
         const ratio = Math.max(0, Math.min(1, fu.hp / fu.maxHp));
         g.life = ratio;
+        /*
+         * What changed since the last frame. A rise is healing, whatever
+         * healed it; a fall is a blow until an event says otherwise, and
+         * what is left over after the events have been played is poison.
+         */
+        const moved = fu.hp - g.wasHp;
+        g.wasHp = fu.hp;
+        if (moved > 0) g.healed += moved;
+        else if (moved < 0) g.burned += -moved;
         // HP bar sits inside the top of the unit, so it can never be confused
         // with the unit above it in the next lane.
         const barW = g.half * 2 - 6;
@@ -518,7 +556,12 @@ export function Arena({
       }
     }
 
-    function spawnDamage(g: UnitGfx, amount: number, edge = 1): void {
+    function spawnDamage(
+      g: UnitGfx,
+      amount: number,
+      edge = 1,
+      extra: { absorbed?: number; reflected?: boolean; healed?: boolean } = {},
+    ): void {
       if (amount <= 0) return;
       /*
        * The number grows with the blow and says when the elements decided it.
@@ -531,13 +574,28 @@ export function Arena({
       // Built before the Text so the number keeps its own direction — a
       // damage floater reads "-250" in any language and wrapping it
       // right-to-left would move the minus sign. See Arena.test.ts.
-      const mark = strong ? " ×1.5" : "";
+      /*
+       * Three more things a number can be. Healing is the one that was
+       * missing entirely — health went up and the screen said nothing — and
+       * thorns were being drawn as an ordinary blow, from the wrong
+       * direction, which reads as the attacker hitting itself by accident.
+       */
+      const mark = strong ? " ×1.5" : extra.absorbed ? ` (${extra.absorbed})` : "";
+      const colour = extra.healed
+        ? 0x6ee787
+        : extra.reflected
+          ? 0xff9ad5
+          : strong
+            ? 0xffd166
+            : weak
+              ? 0xb9c0cf
+              : 0xff6b6b;
       const t = new Text({
-        text: `-${amount}${mark}`,
+        text: `${extra.healed ? "+" : "-"}${amount}${mark}`,
         style: {
           fontFamily: "Segoe UI, sans-serif",
           fontSize: Math.round(13 + heftOf(g, amount) * 9),
-          fill: strong ? 0xffd166 : weak ? 0xb9c0cf : 0xff6b6b,
+          fill: colour,
           fontWeight: "800",
         },
       });
@@ -760,7 +818,18 @@ export function Arena({
       edge = 1,
       /** Who struck, when it was a body and not a shot already in the air. */
       from?: UnitGfx,
+      /**
+       * Damage that never arrived: armour, a reduction aura, a neighbour
+       * taking a share. The engine works it out (simulate.ts) because only
+       * it knows what the blow would have been.
+       */
+      absorbed = 0,
+      /** Thorns: this is the attacker paying for having attacked. */
+      reflected = false,
     ): void {
+      // This much of the fall in its health is explained; anything left
+      // over at the end of the frame is poison. See UnitGfx.burned.
+      target.burned = Math.max(0, target.burned - damage);
       const heft = heftOf(target, damage);
       const strong = edge > 1.01;
       const weak = edge < 0.99;
@@ -850,7 +919,27 @@ export function Arena({
           target.half * (0.9 + force),
           2 + force * 2,
         );
-      spawnDamage(target, damage, edge);
+      /*
+       * ═══ WHAT THE ARMOUR STOPPED ═══
+       *
+       * A card whose whole job is to absorb looked exactly like a card that
+       * was not being hit hard: the screen only ever saw the number that
+       * got through. A pale shield ring and the blocked number in grey say
+       * the other half — and only when it is worth saying, because a blow
+       * reduced by three is not a card doing its job.
+       */
+      if (absorbed > damage * 0.15 && absorbed > 20) {
+        spawnRing(
+          target.container.x,
+          target.container.y,
+          0x8fb6e8,
+          target.half * 1.15,
+          target.half * 0.55,
+          2.5,
+        );
+        spawnParticles(target.container.x, target.container.y, 0xcfe2ff, 4, 0.06, { size: 2 });
+      }
+      spawnDamage(target, damage, edge, { absorbed, reflected });
     }
 
     /**
@@ -1289,6 +1378,8 @@ export function Arena({
                   damage,
                   ev.edge,
                   actor,
+                  ev.absorbed ?? 0,
+                  ev.reflected === true,
                 );
               }
               return;
@@ -1644,6 +1735,52 @@ export function Arena({
                 .fill({ color: 0x05070d, alpha: 0.5 * spread });
             } else if (g.shadow.alpha !== 0) {
               g.shadow.clear();
+            }
+
+            /*
+             * ═══ HEALING, AND BURNING ═══
+             *
+             * Both read off the health itself (see UnitGfx.wasHp), so every
+             * source counts — regen, an aura, the family bonus, a poison
+             * stack, a lane that burns — without the engine emitting thirty
+             * events a second for a thirtieth of a point at a time.
+             *
+             * Shown in whole numbers, when enough of them have gathered: a
+             * "+2" floating off a card every tick is noise, and a card
+             * quietly going green while nothing is written on it is the
+             * thing that was missing.
+             */
+            if (g.healed >= 1 && g.targetAlpha > 0.5) {
+              if (Math.random() < 0.35)
+                spawnParticles(
+                  g.container.x + (Math.random() - 0.5) * g.half,
+                  g.container.y + g.half * 0.5,
+                  0x6ee787,
+                  1,
+                  0.05,
+                  { size: 2.5, gravity: -0.0004, dir: -Math.PI / 2, spread: 0.8 },
+                );
+              if (g.healed >= 60) {
+                spawnDamage(g, Math.round(g.healed), 1, { healed: true });
+                g.healed = 0;
+              }
+            }
+            if (g.burned >= 1 && g.targetAlpha > 0.5) {
+              // Poison: it drips rather than striking, and it is the colour
+              // of the thing that put it there.
+              if (Math.random() < 0.3)
+                spawnParticles(
+                  g.container.x + (Math.random() - 0.5) * g.half,
+                  g.container.y - g.half * 0.3,
+                  0x8bd450,
+                  1,
+                  0.03,
+                  { size: 2.5, gravity: 0.0003 },
+                );
+              if (g.burned >= 60) {
+                spawnDamage(g, Math.round(g.burned));
+                g.burned = 0;
+              }
             }
 
             /*

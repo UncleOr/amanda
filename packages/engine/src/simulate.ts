@@ -1,4 +1,4 @@
-import { ARENA, RANGE_REACH, SIMULATION, SUDDEN_DEATH } from "@amanda/shared";
+import { ARENA, COMBAT, RANGE_REACH, SIMULATION, SUDDEN_DEATH } from "@amanda/shared";
 import {
   damageSharer,
   rowAttackTargets,
@@ -380,6 +380,15 @@ export function runBattle(setup: BattleSetup): BattleResult {
     }
 
     target.hp -= dmg;
+    /*
+     * What this blow would have been with nothing in the way, so the screen
+     * can show the difference. Armour, a reduction aura and a neighbour
+     * taking a share all land in the same gap — see computeDamage.
+     */
+    const unprotected = Math.floor(
+      u.power * escalation() * COMBAT.damageMultiplier *
+        elementMultiplier(u.activeElement, target.activeElement),
+    );
     state.events.push({
       tick: state.tick,
       type: "hit",
@@ -389,6 +398,7 @@ export function runBattle(setup: BattleSetup): BattleResult {
       targetHp: Math.max(0, target.hp),
       // What the elements did to this blow, for the screen to show.
       edge: elementMultiplier(u.activeElement, target.activeElement),
+      ...(unprotected > dmg ? { absorbed: unprotected - dmg } : {}),
     });
 
     /*

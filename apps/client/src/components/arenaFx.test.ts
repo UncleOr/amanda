@@ -180,3 +180,53 @@ describe("the battle floor and the camera", () => {
     expect([...ARENA.matchAll(/hear\(/g)].length).toBeGreaterThan(3);
   });
 });
+
+/**
+ * ═══ THE ABILITIES, ON THE SCREEN ═══
+ *
+ * Or: *"yes, let's do the abilities."* A card being healed, a card burning
+ * from poison and a card whose armour ate the blow all looked like nothing
+ * happening at all.
+ *
+ * Healing and poison are read off the HEALTH in the frames rather than from
+ * events, and that is the part worth pinning: healing arrives a thirtieth of
+ * a point at a time from three different sources, so there is nothing to
+ * emit an event for without emitting thirty a second — and watching the
+ * number instead catches every source, including ones nobody has written.
+ */
+describe("abilities you can see", () => {
+  const ARENA = readFileSync(
+    fileURLToPath(new URL("./Arena.tsx", import.meta.url)),
+    "utf8",
+  );
+
+  it("reads healing off the health, not off an event", () => {
+    expect(ARENA).toContain("const moved = fu.hp - g.wasHp");
+    expect(ARENA).toContain("if (moved > 0) g.healed += moved");
+  });
+
+  it("calls a fall with no blow behind it poison", () => {
+    expect(ARENA).toContain("g.burned += -moved");
+    // A blow accounts for its own share, so what is left over is the poison.
+    expect(ARENA).toContain("target.burned = Math.max(0, target.burned - damage)");
+  });
+
+  it("waits until there is a whole number worth saying", () => {
+    // "+2" floating off a card every tick is noise.
+    expect(ARENA).toContain("if (g.healed >= 60)");
+    expect(ARENA).toContain("if (g.burned >= 60)");
+  });
+
+  it("draws what the armour stopped, and only when it is worth saying", () => {
+    expect(ARENA).toContain("absorbed > damage * 0.15 && absorbed > 20");
+  });
+
+  it("gives thorns their own colour instead of an ordinary blow", () => {
+    expect(ARENA).toContain("ev.reflected === true");
+    expect(ARENA).toContain("extra.reflected");
+  });
+
+  it("writes healing with a plus and damage with a minus", () => {
+    expect(ARENA).toContain('`${extra.healed ? "+" : "-"}${amount}${mark}`');
+  });
+});
