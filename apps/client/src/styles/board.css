@@ -404,6 +404,171 @@
   100% { opacity: 0; }
 }
 
+/*
+ * ═══ AND SOMETHING COMES OUT OF THE CARD ═══
+ *
+ * Or: *"in addition to the sounds, when you drag a card there should also
+ * be some animation — wings of an insect/dragon that come out of the card
+ * and flap, a current that surrounds the card, small stones that come out
+ * of the giants."*
+ *
+ * The three styles already existed and were all MOTION of the card itself:
+ * a heavy one strains, a flier bobs, an electric one jitters. What none of
+ * them did was put anything on the screen that was not the card — so a
+ * dragon and a troll were the same rectangle moving differently.
+ *
+ * Each of these hangs off the ghost and nothing else knows about them.
+ * They are deliberately CSS: the card is already a DOM element following a
+ * spring, and the cheapest honest wing is one the compositor animates.
+ */
+
+/* ── wings, for anything that flies ──
+ * Two of them, behind the card, hinged at the edge they grow from. The
+ * shape is one border-radius — a leading edge that curves away and a
+ * trailing edge that comes to a point — and the beat is a rotation about
+ * that hinge, not a scale, so the card itself never changes shape. */
+/*
+ * BEHIND the card, and said rather than relied on.
+ *
+ * DOM order is not enough: an absolutely positioned element paints above a
+ * static one whatever the order, and `.card` is only `position: relative`
+ * by habit rather than by promise. Two z-indexes in one stacking context
+ * cost nothing and mean the wings cannot climb over the artwork.
+ */
+.drag-ghost { isolation: isolate; }
+.drag-ghost__wings { z-index: 0; }
+.drag-ghost .card { position: relative; z-index: 1; }
+
+.drag-ghost__wings i {
+  position: absolute;
+  top: 15%;
+  width: 50%;
+  height: 34%;
+  background: linear-gradient(120deg, rgba(255, 255, 255, 0.8), rgba(167, 199, 255, 0.35));
+  border-radius: 92% 18% 76% 24% / 100% 64% 36% 0%;
+  filter: drop-shadow(0 2px 5px rgba(0, 0, 0, 0.45));
+  opacity: 0.78;
+}
+/*
+ * Mirrored by hand rather than with a flip.
+ *
+ * The first version gave the right wing `scale: -1 1` and reused one set of
+ * keyframes, and both wings came out on the LEFT — because a scale is taken
+ * about `transform-origin` like everything else, so flipping a wing hinged
+ * at its own left edge throws it across to the other side of that hinge.
+ * Two rotations in opposite directions and a border-radius written out
+ * backwards costs four lines and cannot do that.
+ */
+.drag-ghost__wings i:first-child {
+  right: 82%;
+  transform-origin: 100% 62%;
+  animation: wing-l 0.17s ease-in-out infinite alternate;
+}
+.drag-ghost__wings i:last-child {
+  left: 82%;
+  transform-origin: 0 62%;
+  /* the same shape, with each horizontal pair swapped */
+  border-radius: 18% 92% 24% 76% / 64% 100% 0% 36%;
+  background: linear-gradient(60deg, rgba(255, 255, 255, 0.8), rgba(167, 199, 255, 0.35));
+  animation: wing-r 0.17s ease-in-out infinite alternate;
+}
+/*
+ * ── and a dragon's, which is a different animal ──
+ *
+ * Bigger, darker and slower, hinged lower so the stroke sweeps rather than
+ * flickers: 0.34s against the insect's 0.17, and a membrane with a lit
+ * leading edge instead of a translucent blur. An insect's wing is a blur
+ * you cannot resolve; a dragon's is a shape you can watch move.
+ */
+.drag-ghost--soar .drag-ghost__wings i {
+  top: 10%;
+  width: 64%;
+  height: 50%;
+  opacity: 0.88;
+  background: linear-gradient(120deg, rgba(234, 212, 255, 0.9) 0 14%, rgba(92, 64, 120, 0.72) 42%, rgba(58, 38, 80, 0.6));
+  border-radius: 96% 10% 60% 40% / 100% 52% 48% 0%;
+  filter: drop-shadow(0 4px 8px rgba(0, 0, 0, 0.55));
+}
+.drag-ghost--soar .drag-ghost__wings i:first-child {
+  right: 86%;
+  transform-origin: 100% 55%;
+  animation: wing-dl 0.34s ease-in-out infinite alternate;
+}
+.drag-ghost--soar .drag-ghost__wings i:last-child {
+  left: 86%;
+  transform-origin: 0 55%;
+  border-radius: 10% 96% 40% 60% / 52% 100% 0% 48%;
+  background: linear-gradient(60deg, rgba(234, 212, 255, 0.9) 0 14%, rgba(92, 64, 120, 0.72) 42%, rgba(58, 38, 80, 0.6));
+  animation: wing-dr 0.34s ease-in-out infinite alternate;
+}
+@keyframes wing-dl {
+  from { transform: rotate(26deg) scaleY(0.72); }
+  to { transform: rotate(-32deg) scaleY(1.12); }
+}
+@keyframes wing-dr {
+  from { transform: rotate(-26deg) scaleY(0.72); }
+  to { transform: rotate(32deg) scaleY(1.12); }
+}
+
+@keyframes wing-l {
+  from { transform: rotate(14deg) scaleY(0.84); }
+  to { transform: rotate(-24deg) scaleY(1.05); }
+}
+@keyframes wing-r {
+  from { transform: rotate(-14deg) scaleY(0.84); }
+  to { transform: rotate(24deg) scaleY(1.05); }
+}
+
+/* ── a current, for anything electric ──
+ * Two rings around the card with only two sides coloured, spinning in
+ * opposite directions at different speeds. Neither is a circle and neither
+ * is ever still, which between them reads as something running AROUND the
+ * card rather than drawn on it. */
+.drag-ghost__arc i {
+  position: absolute;
+  inset: -7px;
+  border-radius: 15px;
+  border: 2px solid transparent;
+  border-top-color: #fff3a8;
+  border-bottom-color: #fff3a8;
+  animation: arc-spin 0.52s linear infinite;
+}
+.drag-ghost__arc i:last-child {
+  inset: -12px;
+  border-radius: 19px;
+  border-width: 1.5px;
+  border-top-color: rgba(255, 220, 90, 0.75);
+  border-bottom-color: rgba(255, 220, 90, 0.75);
+  animation: arc-spin 0.83s linear infinite reverse;
+  opacity: 0.7;
+}
+@keyframes arc-spin {
+  to { transform: rotate(360deg); }
+}
+
+/* ── and stones, for anything heavy ──
+ * Chips that fall off it as it is hauled. Three, on different clocks, each
+ * dropping and fading — the dust ellipse underneath stays, because the dust
+ * is what makes them look like they landed. */
+.drag-ghost__rubble i {
+  position: absolute;
+  bottom: 12%;
+  width: 6px;
+  height: 5px;
+  border-radius: 2px 1px 2px 1px;
+  background: #9c8e78;
+  box-shadow: 0 0 0 1px rgba(0, 0, 0, 0.3);
+  animation: rubble-fall 0.85s linear infinite;
+}
+.drag-ghost__rubble i:nth-child(1) { left: 16%; animation-delay: 0s; }
+.drag-ghost__rubble i:nth-child(2) { left: 52%; animation-delay: 0.31s; }
+.drag-ghost__rubble i:nth-child(3) { left: 78%; animation-delay: 0.58s; }
+@keyframes rubble-fall {
+  0% { opacity: 0; transform: translate(0, -6px) rotate(0deg); }
+  18% { opacity: 1; }
+  100% { opacity: 0; transform: translate(-7px, 26px) rotate(140deg); }
+}
+
 /* A phone that has been asked to stop moving things gets a card that is
    simply carried: the spring still runs, the decoration does not. */
 @media (prefers-reduced-motion: reduce) {
@@ -411,9 +576,15 @@
   .drag-ghost--flutter,
   .drag-ghost--spark,
   .drag-ghost__dust,
-  .drag-ghost__spark i {
+  .drag-ghost__spark i,
+  .drag-ghost__wings i,
+  .drag-ghost__arc i,
+  .drag-ghost__rubble i {
     animation: none;
   }
+  /* The wings would otherwise sit at whatever the first frame happens to
+     be, which is a card with two slabs stuck to it. */
+  .drag-ghost__wings { display: none; }
 }
 
 /*

@@ -16,7 +16,7 @@
  * Must be unlocked from a user gesture (browser autoplay policy) — call
  * sfx.unlock() from the first click.
  */
-import { VOICE_CLIPS } from "./cardSound";
+import { VOICE_CLIPS, type DragLayer } from "./cardSound";
 
 type SoundName =
   | "click"
@@ -342,6 +342,8 @@ const BASE = import.meta.env.BASE_URL;
 const buffers = new Map<SoundName, AudioBuffer>();
 /** The same, for card voices — where a miss means silence, not an oscillator. */
 const voices = new Map<string, AudioBuffer>();
+/** The looping layers of the card currently in hand. Empty the rest of the time. */
+const carried: Array<{ src: AudioBufferSourceNode; g: GainNode }> = [];
 let loading = false;
 
 /**
@@ -443,8 +445,78 @@ export const sfx = {
       /* audio is best-effort */
     }
   },
+  /**
+   * The mix a card makes while it is being carried, started and held.
+   *
+   * ═══ WHY THE LOOP IS THE MIDDLE OF THE CLIP ═══
+   *
+   * These go through the same processing as every other sound, which trims
+   * the head and fades the last 15ms — and a fade is a hole. Looping the
+   * whole buffer would pulse once every two seconds, which is the one thing
+   * a background texture must not do. So each source loops a window INSIDE
+   * the clip, clear of the attack at the front and the fade at the back,
+   * where the material is steady.
+   *
+   * Each layer gets its own gain and its own playback rate, because that is
+   * the entire feature: the same two ingredients at different levels are
+   * different dragons (cardSound.ts). The short ramp on the way in and out
+   * is not decoration — starting four looping sources at full gain on the
+   * same frame is an audible click, four times.
+   */
+  drag(layers: DragLayer[]): void {
+    this.dragStop();
+    if (muted || !layers.length) return;
+    const c = ac();
+    if (!c) return;
+    if (c.state === "suspended") void c.resume();
+    const now = c.currentTime;
+    for (const layer of layers) {
+      const buf = voices.get(layer.clip);
+      if (!buf) continue; // not loaded: this layer is simply absent
+      try {
+        const src = c.createBufferSource();
+        src.buffer = buf;
+        src.loop = true;
+        // Inside the clip, away from both ends. A quarter of a second is
+        // comfortably past the trim and before the fade on a 2.2s loop.
+        const edge = Math.min(0.25, buf.duration / 5);
+        src.loopStart = edge;
+        src.loopEnd = Math.max(edge + 0.1, buf.duration - edge);
+        src.playbackRate.value = layer.rate;
+        const g = c.createGain();
+        g.gain.setValueAtTime(0.0001, now);
+        g.gain.linearRampToValueAtTime(layer.gain, now + 0.09);
+        src.connect(g).connect(c.destination);
+        src.start(now, edge);
+        carried.push({ src, g });
+      } catch {
+        /* audio is best-effort */
+      }
+    }
+  },
+  /** Let go: ramp every layer down and stop it once it is silent. */
+  dragStop(): void {
+    const c = ac();
+    for (const { src, g } of carried) {
+      try {
+        if (c) {
+          g.gain.cancelScheduledValues(c.currentTime);
+          g.gain.setValueAtTime(g.gain.value, c.currentTime);
+          g.gain.linearRampToValueAtTime(0.0001, c.currentTime + 0.08);
+          src.stop(c.currentTime + 0.1);
+        } else {
+          src.stop();
+        }
+      } catch {
+        /* already stopped */
+      }
+    }
+    carried.length = 0;
+  },
   toggleMute(): boolean {
     muted = !muted;
+    // A loop that is already running does not stop by itself.
+    if (muted) this.dragStop();
     return muted;
   },
   get muted(): boolean {

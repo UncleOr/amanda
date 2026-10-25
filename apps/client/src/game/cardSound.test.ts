@@ -21,10 +21,12 @@ import { describe, expect, it } from "vitest";
 import { existsSync, readFileSync, statSync } from "node:fs";
 import { fileURLToPath } from "node:url";
 import { CATALOG } from "../data/catalog";
-import { voiceFor, VOICE_CLIPS } from "./cardSound";
+import { dragMix, voiceFor, VOICE_CLIPS } from "./cardSound";
 
 const SRC = fileURLToPath(new URL("./cardSound.ts", import.meta.url));
 const SFX = fileURLToPath(new URL("../../public/sfx/", import.meta.url));
+/** Every card, for the rules that must hold across all of them. */
+const CATALOG_ALL = [...CATALOG.values()];
 
 /** The card ids written into the table, read out of the source. */
 const declared = (): string[] => {
@@ -103,5 +105,61 @@ describe("a voice for a whole kind", () => {
     // Every slime squelches, whatever it happens to be made of.
     const slime = voiceFor("slimes_03_acid_ooze");
     expect(slime.place).toBe("card-slime");
+  });
+});
+
+/**
+ * **The mix, which is the whole of "do them all like that".**
+ *
+ * Or: *"flame + wings = Flame Dragon, wings + cracking ice = Ice Dragon,
+ * different levels of flame + wings give different dragons."* Nothing in
+ * dragMix is written per card, so what has to hold is that the recipe comes
+ * out of the card's own traits and that the levels actually differ.
+ */
+describe("what a card sounds like while it is carried", () => {
+  const clips = (id: string) => dragMix(id).map((l) => l.clip).sort();
+
+  it("mixes flame and wings into a Flame Dragon", () => {
+    expect(clips("dragons_01_flame_dragon")).toEqual(["ing-flame", "ing-wings-dragon"]);
+  });
+
+  it("mixes the same wings with ice into an Ice Dragon", () => {
+    expect(clips("dragons_06_frost_breath")).toEqual(["ing-ice"]);
+    // It does not fly, so it is ice and nothing else — which is the recipe
+    // doing what the data says rather than what the name suggests.
+    expect(CATALOG.get("dragons_06_frost_breath")!.flying).toBe(false);
+    // The one that does both:
+    expect(clips("dragons_09_typhoon_dragon")).toContain("ing-wings-dragon");
+  });
+
+  it("gives dragons and insects different wings", () => {
+    expect(clips("dragons_10_sky_king")).toContain("ing-wings-dragon");
+    expect(clips("insects_08_firefly")).toContain("ing-wings-insect");
+  });
+
+  it("makes a bigger card slower than a smaller one", () => {
+    const king = dragMix("dragons_10_sky_king").find((l) => l.clip === "ing-wings-dragon")!;
+    const ghost = dragMix("dragons_08_ghost_dragon").find((l) => l.clip === "ing-wings-dragon")!;
+    const bigger = CATALOG.get("dragons_10_sky_king")!.stats.hp;
+    const smaller = CATALOG.get("dragons_08_ghost_dragon")!.stats.hp;
+    expect(bigger).toBeGreaterThan(smaller);
+    expect(king.rate, "the heavier wing beats slower").toBeLessThan(ghost.rate);
+  });
+
+  it("leaves the egg alone, because the egg is its own thing", () => {
+    expect(clips("dragons_02_obsidian_egg")).toEqual(["card-obsidian-egg"]);
+  });
+
+  it("never leaves a card silent in the hand", () => {
+    for (const card of CATALOG_ALL) {
+      expect(dragMix(card.id).length, `${card.id} makes no sound when carried`).toBeGreaterThan(0);
+    }
+  });
+
+  it("asks only for clips that exist", () => {
+    const wanted = new Set(CATALOG_ALL.flatMap((c) => dragMix(c.id).map((l) => l.clip)));
+    for (const clip of wanted) {
+      expect(existsSync(`${SFX}${clip}.mp3`), `public/sfx/${clip}.mp3 is missing`).toBe(true);
+    }
   });
 });

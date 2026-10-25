@@ -20,11 +20,29 @@ describe("carrying a card", () => {
     expect(carryOf("plants_10_great_mother_tree").style).toBe("heavy");
   });
 
-  it("makes a flier flutter, whatever else it is", () => {
-    expect(carryOf("insects_07_aggressive_wasp").style).toBe("flutter");
+  it("never makes a flier plod, whatever else it is", () => {
     // A flying giant is still a flier: it is carrying itself.
     for (const id of cardPool())
-      if (CATALOG.get(id)!.flying) expect(carryOf(id).style, id).toBe("flutter");
+      if (CATALOG.get(id)!.flying)
+        expect(["flutter", "soar"], id).toContain(carryOf(id).style);
+  });
+
+  /*
+   * Or: *"the wings you made suit insects, but dragons will of course need
+   * different wings (which also sound different from insect wings)."*
+   *
+   * So flying is two styles, and the split is by family rather than by size
+   * — a firefly and the Insect Empress beat the same way at different
+   * speeds, and neither of them beats the way a dragon does.
+   */
+  it("gives a dragon different wings from an insect", () => {
+    expect(carryOf("insects_07_aggressive_wasp").style).toBe("flutter");
+    expect(carryOf("dragons_10_sky_king").style).toBe("soar");
+    for (const id of cardPool()) {
+      const card = CATALOG.get(id)!;
+      if (!card.flying) continue;
+      expect(carryOf(id).style, id).toBe(card.seriesId === "dragons" ? "soar" : "flutter");
+    }
   });
 
   it("makes Chuppy crackle — because he is electric, not because he is Chuppy", () => {

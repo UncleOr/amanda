@@ -527,6 +527,96 @@ export const SOUNDS: SoundSpec[] = [
     seconds: 1.3,
     level: 0.4,
   },
+
+  /* ── the ingredients a drag is mixed from ─────────────────────────────
+   *
+   * Or, after hearing the eight: *"the sound that is now in the 'cards that
+   * say something' category is pretty much the sound cards should make when
+   * you DRAG them. The egg specifically. But Flame Dragon with a wingbeat
+   * would suit all the dragons. The Father of Giants with a bit of rubbing
+   * stones would suit the giants. You can make combinations — flame +
+   * wings = Flame Dragon, wings + cracking ice = Ice Dragon, different
+   * levels of flame + wings give different dragons. Do them all like that."*
+   *
+   * Which is a better idea than the one it replaces, and it is the
+   * difference between fifty-two clips and eight. A card's drag sound is
+   * MIXED at the moment it is picked up, out of layers chosen by what the
+   * card already says it is — it flies, it is made of fire, it is a slime —
+   * with the levels set by how big it is. Nothing here is written per card.
+   *
+   * They are longer than every other sound in this file and that is on
+   * purpose: they LOOP for as long as a finger is down, so each one has to
+   * be a continuous texture with no shape of its own. Anything with a
+   * beginning in it announces itself every two seconds.
+   *
+   * Wings are two ingredients, not one. Or: *"the wings you made suit
+   * insects, but dragons will of course need different wings (which also
+   * sound different from insect wings)."*
+   */
+  {
+    id: "ing-wings-dragon",
+    what: "a dragon's wings, while it is carried",
+    prompt: `Two or three slow heavy leathery wingbeats of a very large creature — a deep whoomph of displaced air on each downstroke, unhurried and powerful. Close and dry. No bird chirps, no cloth flapping, no wind howl, no music. ${DRY}`,
+    generate: 4,
+    seconds: 2.2,
+    level: 0.5,
+  },
+  {
+    id: "ing-wings-insect",
+    what: "an insect's wings, while it is carried",
+    prompt: `Fast papery insect wings beating continuously, a dry thin whirr very close to the microphone. Light and quick and steady. No deep whoomph, no bee buzz melody, no wind, no music. ${DRY}`,
+    generate: 4,
+    seconds: 2.2,
+    level: 0.5,
+  },
+  {
+    id: "ing-flame",
+    what: "fire, while it is carried",
+    prompt: `A steady close flame burning — low roaring and soft crackling, continuous and even. No explosion, no fire alarm, no sizzling water, no music. ${DRY}`,
+    generate: 4,
+    seconds: 2.2,
+    level: 0.5,
+  },
+  {
+    id: "ing-ice",
+    what: "ice, while it is carried",
+    prompt: `Ice creaking and cracking slowly under pressure — dry brittle crackles and a low groan, continuous. No water, no splash, no glass smashing, no music. ${DRY}`,
+    generate: 4,
+    seconds: 2.2,
+    level: 0.5,
+  },
+  {
+    id: "ing-stone",
+    what: "stone, while it is carried",
+    prompt: `Two heavy stone surfaces rubbing and grinding slowly against each other, with loose grit between them. Continuous, low and rough. No impact, no explosion, no echo, no music. ${DRY}`,
+    generate: 4,
+    seconds: 2.2,
+    level: 0.5,
+  },
+  {
+    id: "ing-slime",
+    what: "something wet, while it is carried",
+    prompt: `A thick wet gelatinous mass shifting and squelching slowly and continuously. Gooey and sticky and close. No water splash, no footsteps, no music. ${DRY}`,
+    generate: 4,
+    seconds: 2.2,
+    level: 0.5,
+  },
+  {
+    id: "ing-spark",
+    what: "electricity, while it is carried",
+    prompt: `A continuous close electrical crackle and fizz, like current arcing across a small gap. Dry and bright and constant. No thunder, no explosion, no machine hum, no music. ${DRY}`,
+    generate: 4,
+    seconds: 2.2,
+    level: 0.5,
+  },
+  {
+    id: "ing-skitter",
+    what: "many small legs, while it is carried",
+    prompt: `Many small hard insect legs skittering continuously over stone, dry clicking and scratching without pause. Light, busy and close. No wing buzz, no echo, no music. ${DRY}`,
+    generate: 4,
+    seconds: 2.2,
+    level: 0.5,
+  },
 ];
 
 /** Generate the missing ones (or the named ones) into assets/raw/sfx. */

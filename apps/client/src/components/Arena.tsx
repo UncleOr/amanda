@@ -7,6 +7,7 @@ import type { BattleResult, EndedBy, FrameUnit, Owner } from "@amanda/engine";
 import { cardColor, CATALOG } from "../data/catalog";
 import { seriesColor } from "../data/cardMeta";
 import { sfx } from "../game/sfx";
+import { voiceFor } from "../game/cardSound";
 import { combatLook, drawAura, drawProjectile, type CombatLook } from "./arenaFx";
 import { line as t, lineF as tf } from "../game/copy";
 import { say } from "../game/lang";
@@ -173,6 +174,14 @@ const cy = (lane: number): number => HEAD + (lane + 0.5) * CELL;
 const laneCenter = (lanes: number[]): number => lanes.reduce((s, l) => s + l, 0) / lanes.length;
 
 interface UnitGfx {
+  /**
+   * Which card this is currently drawn as.
+   *
+   * Not always the card it started as: a delayed transform changes a unit's
+   * `cardId` mid-battle and the frames carry the new one from that tick on.
+   * See `reskin`.
+   */
+  cardId: string;
   /** Positioned from the replay frame — never touched by the effects. */
   container: Container;
   /** Everything visible. Carries the lunge, recoil and shake offsets. */
@@ -535,15 +544,48 @@ export function Arena({
         half: w / 2,
         owner: fu.owner,
         maxHp: fu.maxHp,
+        cardId: fu.cardId,
       };
       gfxByUid.set(fu.uid, g);
       uidByGfx.set(g, fu.uid);
       return g;
     }
 
+    /**
+     * The same unit, drawn as a different card.
+     *
+     * Or: *"the Obsidian Egg died and no dragon hatched out of it."* The
+     * engine turns it into one now (abilities.ts, runDelayed) by changing
+     * the unit's `cardId`, which every frame after that moment carries.
+     *
+     * A unit's artwork, colour, series ring and name are all decided once,
+     * in `drawUnit`, from the card it was at the time — so the honest way
+     * to change the card is to build the unit again. It costs one container
+     * at one moment in a battle, and it means the dragon is a DRAGON in
+     * every respect that drawUnit knows about, rather than an egg with a
+     * different picture glued on.
+     *
+     * Position is carried across by hand. Everything else on the record is
+     * either per-frame (and about to be written by the caller) or an effect
+     * that has no business surviving a creature turning into another one.
+     */
+    function reskin(old: UnitGfx, fu: FrameUnit): UnitGfx {
+      const { x, y } = old.container;
+      gfxByUid.delete(fu.uid);
+      uidByGfx.delete(old);
+      old.container.destroy({ children: true });
+      const g = drawUnit(fu);
+      g.container.x = x;
+      g.container.y = y;
+      g.toX = x;
+      g.toY = y;
+      return g;
+    }
+
     function applyFrame(units: FrameUnit[]): void {
       for (const fu of units) {
-        const g = gfxByUid.get(fu.uid) ?? drawUnit(fu);
+        let g = gfxByUid.get(fu.uid) ?? drawUnit(fu);
+        if (g.cardId !== fu.cardId) g = reskin(g, fu);
         /*
          * ═══ WHERE IT IS GOING, NOT WHERE IT IS ═══
          *
@@ -1526,6 +1568,52 @@ export function Arena({
               spawnParticles(actor.container.x, actor.container.y, actor.look.color, 10, 0.18, {
                 size: 3,
               });
+              return;
+            }
+            /*
+             * ═══ THE EGG OPENING ═══
+             *
+             * The card swap above is silent and instant, which on its own
+             * reads as a glitch — a monster replaced between two frames.
+             * This is the moment of it: the shell goes outwards as chips,
+             * fire goes up, and two rings say that something arrived.
+             *
+             * Drawn from the same two primitives as every death in this
+             * file, for the same reason the King's fall is: an effect built
+             * out of the game's own vocabulary belongs to the game, and one
+             * invented for a single card does not.
+             */
+            case "transform": {
+              const g = actor;
+              if (!g) return;
+              /*
+               * The shell giving way, and then what was inside it.
+               *
+               * `die` is this game's sound for a thing coming apart — a
+               * crack, a weight going down, pieces settling — which is
+               * exactly what a shell does. The voice is looked up from the
+               * card the unit has NOW, so the Flame Dragon roars as it
+               * arrives and nothing here knows the name of a single card.
+               */
+              sfx.play("die");
+              sfx.voice(voiceFor(g.cardId).place, 120);
+              // The shell, outwards and down.
+              spawnParticles(g.container.x, g.container.y, 0x2b2b35, 16, 0.3, {
+                size: 3,
+                shape: "chip",
+                gravity: 0.0006,
+              });
+              // And what was inside it, upwards.
+              spawnParticles(g.container.x, g.container.y, 0xffb347, 12, 0.22, {
+                size: 2.5,
+                gravity: -0.0004,
+                dir: -Math.PI / 2,
+                spread: 1.5,
+              });
+              spawnRing(g.container.x, g.container.y, 0xffffff, g.half * 0.2, g.half * 1.8, 4);
+              spawnRing(g.container.x, g.container.y, 0xffb020, g.half * 0.5, g.half * 2.8, 2, 520);
+              g.pulse = 1;
+              quake = Math.max(quake, 0.5);
               return;
             }
             case "reveal": {

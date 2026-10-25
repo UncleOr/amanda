@@ -1,5 +1,7 @@
 import { useCallback, useEffect, useRef, useState } from "react";
 import { carryOf } from "./carry";
+import { sfx } from "./sfx";
+import { dragMix } from "./cardSound";
 
 /**
  * Pointer-based drag for placing a card from the hand onto a board slot.
@@ -64,6 +66,14 @@ export function useDrag(onDrop: (cardId: string, target: string) => void) {
       const p = pending.current;
       if (p && !dragRef.current.cardId) {
         if (Math.hypot(e.clientX - p.x, e.clientY - p.y) < DRAG_THRESHOLD) return;
+        /*
+         * The card starts making its own noise HERE and not in `start`,
+         * because `start` is only a finger going down — a tap that opens
+         * the card's details never becomes a drag, and it should not spend
+         * a second sounding like one. This is the first frame at which the
+         * gesture is definitely a carry.
+         */
+        sfx.drag(dragMix(p.cardId));
         setDrag({
           cardId: p.cardId,
           x: e.clientX,
@@ -85,6 +95,9 @@ export function useDrag(onDrop: (cardId: string, target: string) => void) {
     const up = (e: PointerEvent) => {
       const d = dragRef.current;
       pending.current = null;
+      // Unconditionally, before the early return: a pointerup with no drag
+      // in progress still has to be able to silence one that got away.
+      sfx.dragStop();
       if (!d.cardId) return;
       const target = dropTargetAt(e.clientX, e.clientY);
       if (target) onDropRef.current(d.cardId, target);
@@ -120,6 +133,10 @@ export function useDrag(onDrop: (cardId: string, target: string) => void) {
     window.addEventListener("pointerup", up);
     window.addEventListener("pointercancel", up);
     return () => {
+      // The hand can be unmounted mid-carry — a match ending under a finger
+      // that is still down — and a loop with nothing left to stop it runs
+      // for as long as the tab does.
+      sfx.dragStop();
       cancelAnimationFrame(frame);
       window.removeEventListener("pointermove", move);
       window.removeEventListener("pointerup", up);

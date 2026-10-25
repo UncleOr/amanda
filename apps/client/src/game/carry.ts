@@ -23,7 +23,15 @@
  */
 import { CATALOG } from "../data/catalog";
 
-export type CarryStyle = "heavy" | "flutter" | "spark" | "steady";
+/*
+ * Or: *"the wings you made here suit insects, but dragons will of course
+ * need different wings (which also sound different from insect wings)."*
+ *
+ * So flying is two styles. They are not one gesture at two sizes: an insect
+ * beats faster than the eye resolves and a dragon takes one slow stroke and
+ * rides it. The sound splits the same way — see cardSound.ts.
+ */
+export type CarryStyle = "heavy" | "flutter" | "soar" | "spark" | "steady";
 
 export interface Carry {
   style: CarryStyle;
@@ -45,6 +53,9 @@ const STYLES: Record<CarryStyle, Omit<Carry, "style">> = {
   heavy: { pull: 0.1, damp: 0.86, lead: 0, tilt: 10 },
   // A thing flying itself: it is already where you are going.
   flutter: { pull: 0.34, damp: 0.7, lead: 3.2, tilt: 16 },
+  // A dragon flies itself too, and weighs something while it does it: it
+  // still runs ahead of your thumb, but it takes longer to turn.
+  soar: { pull: 0.22, damp: 0.78, lead: 2.4, tilt: 13 },
   // Light and jumpy, and it crackles — see the sparks in App.tsx.
   spark: { pull: 0.3, damp: 0.62, lead: 1.4, tilt: 12 },
   // Everything else: a card, carried.
@@ -55,7 +66,7 @@ const STYLES: Record<CarryStyle, Omit<Carry, "style">> = {
 const HEAVY_HP = 1600;
 
 /**
- * Which of the four, from what the card already says about itself.
+ * Which of the five, from what the card already says about itself.
  *
  * The order is the priority, and it is the same one the walk uses in a
  * battle (arenaFx.ts): what flies does not plod, and after that it is the
@@ -67,7 +78,9 @@ export function carryOf(cardId: string): Carry {
   const card = CATALOG.get(cardId);
   if (!card) return { style: "steady", ...STYLES.steady };
   const style: CarryStyle = card.flying
-    ? "flutter"
+    ? card.seriesId === "dragons"
+      ? "soar"
+      : "flutter"
     : card.elements[0] === "electric"
       ? "spark"
       : card.stats.hp >= HEAVY_HP || card.midBoss

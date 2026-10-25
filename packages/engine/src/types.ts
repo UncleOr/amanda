@@ -91,6 +91,8 @@ export interface BattleEvent {
     | "stun"
     | "split"
     | "reveal"
+    /** A delayed transform came due: this unit is now a different card. */
+    | "transform"
     | "win";
   /** Acting unit. */
   uid?: string;

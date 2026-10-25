@@ -391,8 +391,41 @@ export function runDelayed(state: BattleState, u: Unit): void {
     if (ab.trigger !== "delayed") continue;
     if (ab.type === "delayedTransform" && !u.flags.transformed) {
       if (elapsed >= num(ab.params.afterSeconds, 10)) {
+        /*
+         * ═══ AND SOMETHING HAS TO COME OUT OF THE EGG ═══
+         *
+         * Or: *"the Obsidian Egg died and no dragon hatched out of it."*
+         *
+         * It never could. This added 1500 to `power` and set a flag, and
+         * that was the whole of it: no event, no change of any kind that
+         * reaches a screen. The card promises "after 10 seconds a dragon
+         * hatches from it with +1500 power" and the game turned an egg into
+         * a slightly stronger egg — silently, in the middle of a battle, at
+         * a moment nothing marked.
+         *
+         * Two things are added and the second is the one that matters.
+         *
+         * `into` changes the unit's CARD. Every frame already carries
+         * `cardId` to the client, and the client preloads the art of every
+         * card that appears in any frame — so a unit that becomes a dragon
+         * on tick 300 has a dragon's artwork ready and starts being drawn
+         * as one. Nothing new had to be plumbed; the data was already
+         * flowing and nothing was changing it.
+         *
+         * The event is what lets the shell break on screen. Without it the
+         * card would still SWAP, which is a cut rather than a hatching.
+         */
         u.power += num(ab.params.powerBonus, 0);
         u.flags.transformed = true;
+        const into = typeof ab.params.into === "string" ? ab.params.into : null;
+        if (into) u.cardId = into;
+        state.events.push({
+          tick: state.tick,
+          type: "transform",
+          uid: u.uid,
+          cardId: u.cardId,
+          owner: u.owner,
+        });
       }
     }
   }

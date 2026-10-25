@@ -1953,15 +1953,41 @@ function Game() {
                 ["--lean" as string]: `${lean}deg`,
               }}
             >
-              <CardView cardId={drag.cardId} size="medium" />
-              {carry.style === "spark" && (
-                <span className="drag-ghost__spark" aria-hidden="true">
-                  <i />
+              {/*
+                The wings go BEFORE the card in the DOM so the card paints
+                over their hinges — they grow out from behind it rather than
+                being stuck on the front of it.
+              */}
+              {(carry.style === "flutter" || carry.style === "soar") && (
+                <span className="drag-ghost__wings" aria-hidden="true">
                   <i />
                   <i />
                 </span>
               )}
-              {carry.style === "heavy" && <span className="drag-ghost__dust" aria-hidden="true" />}
+              <CardView cardId={drag.cardId} size="medium" />
+              {carry.style === "spark" && (
+                <>
+                  <span className="drag-ghost__arc" aria-hidden="true">
+                    <i />
+                    <i />
+                  </span>
+                  <span className="drag-ghost__spark" aria-hidden="true">
+                    <i />
+                    <i />
+                    <i />
+                  </span>
+                </>
+              )}
+              {carry.style === "heavy" && (
+                <>
+                  <span className="drag-ghost__rubble" aria-hidden="true">
+                    <i />
+                    <i />
+                    <i />
+                  </span>
+                  <span className="drag-ghost__dust" aria-hidden="true" />
+                </>
+              )}
             </div>
           );
         })()}
