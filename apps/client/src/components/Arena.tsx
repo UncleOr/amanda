@@ -1596,7 +1596,7 @@ export function Arena({
                * arrives and nothing here knows the name of a single card.
                */
               sfx.play("die");
-              sfx.voice(voiceFor(g.cardId).place, 120);
+              sfx.voice(voiceFor(g.cardId).cry, 120);
               // The shell, outwards and down.
               spawnParticles(g.container.x, g.container.y, 0x2b2b35, 16, 0.3, {
                 size: 3,

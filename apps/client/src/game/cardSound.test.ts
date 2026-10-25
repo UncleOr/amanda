@@ -65,7 +65,7 @@ describe("card voices", () => {
     // Or: "let me also be able to define a specific animation for a specific
     // card, not only by series or by power."
     const lava = voiceFor("dragons_04_lava");
-    expect(lava.place).toBe("card-lava");
+    expect(lava.cry).toBe("card-lava");
     // A card with no entry, no series default and an element nothing maps
     // to asks for nothing — and that has to stay an empty object rather
     // than undefined, because every caller reads a field off it.
@@ -85,26 +85,26 @@ describe("a voice for a whole kind", () => {
   it("gives a card the voice of what it is made of", () => {
     // Acid Ooze is fire first, poison second, and has no entry of its own —
     // but it is a slime, and a slime squelches. Its SERIES wins.
-    expect(voiceFor("slimes_03_acid_ooze").place).toBe("card-slime");
+    expect(voiceFor("slimes_03_acid_ooze").cry).toBe("card-slime");
     // Spike is earth. The one card in the dragons that grinds.
-    expect(voiceFor("dragons_05_spike").place).toBe("card-stone-golem");
+    expect(voiceFor("dragons_05_spike").cry).toBe("card-stone-golem");
   });
 
   it("gives every earth card the golem's", () => {
-    expect(voiceFor("giants_03_hill_giant").place).toBe("card-stone-golem");
+    expect(voiceFor("giants_03_hill_giant").cry).toBe("card-stone-golem");
   });
 
   it("lets a card keep its own against its element", () => {
     // Lava is fire. It is not the Flame Dragon.
-    expect(voiceFor("dragons_04_lava").place).toBe("card-lava");
+    expect(voiceFor("dragons_04_lava").cry).toBe("card-lava");
     // The Father of Giants is earth. He is not the Stone Golem.
-    expect(voiceFor("giants_10_titan_king").place).toBe("card-titan-king");
+    expect(voiceFor("giants_10_titan_king").cry).toBe("card-titan-king");
   });
 
   it("lets a series beat an element", () => {
     // Every slime squelches, whatever it happens to be made of.
     const slime = voiceFor("slimes_03_acid_ooze");
-    expect(slime.place).toBe("card-slime");
+    expect(slime.cry).toBe("card-slime");
   });
 });
 

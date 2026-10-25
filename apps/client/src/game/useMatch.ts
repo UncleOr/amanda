@@ -46,7 +46,6 @@ import {
   isTargetedAction,
 } from "../data/catalog";
 import { sfx } from "./sfx";
-import { voiceFor } from "./cardSound";
 import { track } from "./track";
 import {
   albumToPool,
@@ -1420,20 +1419,20 @@ export function useMatch(): MatchApi {
   }, []);
 
   /**
-   * A card landing, in the two events it actually is.
+   * A card landing.
    *
-   * `place` is the card hitting the table and plays for every card there
-   * has ever been. The voice is the creature, and only eight cards have one
-   * — see cardSound.ts, where the per-card entry beats the per-series
-   * default because Or asked to be able to single out one card.
+   * For one afternoon this also played the card's own voice ninety
+   * milliseconds behind the thud. Or: *"take them off the placing, let the
+   * placing be only the gentle sound."* Which is the same judgement that
+   * made `place` gentle in the first place — a build phase has twelve
+   * placements in it, so this is a rhythm rather than a moment, and a
+   * creature announcing itself twelve times is noise.
    *
-   * The gap is the whole reason this is a function rather than two lines
-   * copied five times: landed-then-alive reads as a sequence, landed-and-
-   * alive-at-once reads as one muddier thud.
+   * The character is in the DRAG now, where the gesture lasts long enough
+   * to hear it and happens once per card.
    */
-  const landed = useCallback((cardId: string | null) => {
+  const landed = useCallback(() => {
     sfx.play("place");
-    if (cardId) sfx.voice(voiceFor(cardId).place, 90);
   }, []);
 
   const placeAt = useCallback(
@@ -1462,7 +1461,7 @@ export function useMatch(): MatchApi {
         };
         if (enemy) setFoe((f) => ({ ...f, placements: write(f.placements) }));
         else setGs((cur) => ({ ...cur, placements: write(cur.placements) }));
-        if (held) landed(held);
+        if (held) landed();
         else sfx.play("discard");
         return;
       }
@@ -1481,11 +1480,11 @@ export function useMatch(): MatchApi {
         setStacked((st) => ({ ...st, [key]: under }));
         if (!onTheHouse) setStackSlots((n) => n - 1);
         setGs(refill({ ...s, placements: { ...s.placements, [key]: s.hand }, hand: null }));
-        landed(s.hand);
+        landed();
         return;
       }
       setGs(refill({ ...s, placements: { ...s.placements, [key]: s.hand }, hand: null }));
-      landed(s.hand);
+      landed();
     },
     [refill, landed],
   );
@@ -1503,7 +1502,7 @@ export function useMatch(): MatchApi {
       if (!monster && !current) return;
       if (enemy) setFoe((f) => ({ ...f, king: monster }));
       else setGs((s) => ({ ...s, king: monster }));
-      if (monster) landed(monster);
+      if (monster) landed();
       else sfx.play("discard");
       return;
     }
@@ -1522,7 +1521,7 @@ export function useMatch(): MatchApi {
       ok = true;
       return drawIfEmpty({ ...s, king: s.hand, hand: null });
     });
-    if (ok) landed(crowning);
+    if (ok) landed();
   }, [landed]);
 
   const discardHand = useCallback(() => {

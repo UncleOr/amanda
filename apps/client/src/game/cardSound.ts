@@ -45,8 +45,21 @@ export interface CardVoice {
   name?: string;
   /** While it is being carried. Loops for as long as the drag lasts. */
   drag?: string;
-  /** Over the top of the generic placement sound, when it lands. */
-  place?: string;
+  /**
+   * The card's own cry — the creature, rather than the card.
+   *
+   * ⚠ NOT a placement sound. It was one for an afternoon, under the gentle
+   * `place`, and Or took it off: *"take them off the placing, let the
+   * placing be only the gentle sound."* He is right, and the reason is the
+   * one he gave for making `place` gentle in the first place — twelve
+   * placements a build phase is not a moment, it is a rhythm, and a
+   * creature announcing itself twelve times is noise.
+   *
+   * It is kept for the moments that ARE moments. Today that is one: a
+   * dragon bursting out of the Obsidian Egg, which happens once in a match
+   * if it happens at all.
+   */
+  cry?: string;
 }
 
 /**
@@ -68,8 +81,8 @@ export interface CardVoice {
  * exists.
  */
 const BY_ELEMENT: Record<string, CardVoice> = {
-  fire: { place: "card-flame-dragon" },
-  earth: { place: "card-stone-golem" },
+  fire: { cry: "card-flame-dragon" },
+  earth: { cry: "card-stone-golem" },
 };
 
 /**
@@ -82,9 +95,9 @@ const BY_ELEMENT: Record<string, CardVoice> = {
  * every plant's.
  */
 const BY_SERIES: Record<string, CardVoice> = {
-  slimes: { place: "card-slime" },
-  insects: { place: "card-ant-soldier" },
-  plants: { place: "card-healing-bloom" },
+  slimes: { cry: "card-slime" },
+  insects: { cry: "card-ant-soldier" },
+  plants: { cry: "card-healing-bloom" },
 };
 
 /**
@@ -96,14 +109,14 @@ const BY_SERIES: Record<string, CardVoice> = {
  * packages/art/src/sounds.ts and fanfare.ts.
  */
 const CARDS: Record<string, CardVoice> = {
-  dragons_01_flame_dragon: { name: "card-name-flame-dragon", place: "card-flame-dragon" },
-  dragons_02_obsidian_egg: { name: "card-name-obsidian-egg", place: "card-obsidian-egg" },
-  dragons_04_lava: { name: "card-name-lava", place: "card-lava" },
-  giants_01_stone_colossus: { name: "card-name-stone-golem", place: "card-stone-golem" },
-  giants_10_titan_king: { name: "card-name-titan-king", place: "card-titan-king" },
-  insects_01_ant_soldier: { name: "card-name-ant-soldier", place: "card-ant-soldier" },
-  plants_03_healing_bloom: { name: "card-name-healing-bloom", place: "card-healing-bloom" },
-  slimes_01_basic_slime: { name: "card-name-slime", place: "card-slime" },
+  dragons_01_flame_dragon: { name: "card-name-flame-dragon", cry: "card-flame-dragon" },
+  dragons_02_obsidian_egg: { name: "card-name-obsidian-egg", cry: "card-obsidian-egg" },
+  dragons_04_lava: { name: "card-name-lava", cry: "card-lava" },
+  giants_01_stone_colossus: { name: "card-name-stone-golem", cry: "card-stone-golem" },
+  giants_10_titan_king: { name: "card-name-titan-king", cry: "card-titan-king" },
+  insects_01_ant_soldier: { name: "card-name-ant-soldier", cry: "card-ant-soldier" },
+  plants_03_healing_bloom: { name: "card-name-healing-bloom", cry: "card-healing-bloom" },
+  slimes_01_basic_slime: { name: "card-name-slime", cry: "card-slime" },
   /*
    * Three more that say their name and have no sound of their own yet —
    * the two Or named when the drag voices were first described, and Chuppy.
@@ -267,14 +280,14 @@ export const VOICE_CLIPS: string[] = [
       // The drag ingredients, which are asked for mid-gesture and so cannot
       // be fetched when they are wanted.
       ...["ing-wings-dragon", "ing-wings-insect", "ing-flame", "ing-ice", "ing-stone", "ing-slime", "ing-spark", "ing-skitter"].map(
-        (clip) => ({ name: undefined, drag: clip, place: undefined }) as CardVoice,
+        (clip) => ({ drag: clip }) as CardVoice,
       ),
       ...Object.values(OWN_DRAG).map((clip) => ({ drag: clip }) as CardVoice),
       ...Object.values(BY_ELEMENT),
       ...Object.values(BY_SERIES),
       ...Object.values(CARDS),
     ].flatMap((v) =>
-      [v.name, v.drag, v.place].filter((c): c is string => !!c),
+      [v.name, v.drag, v.cry].filter((c): c is string => !!c),
     ),
   ),
 ];
