@@ -54,3 +54,80 @@ describe("combatLook", () => {
     }
   });
 });
+
+/**
+ * ═══ TEN DEATHS AND SIX WALKS ═══
+ *
+ * Or: *"the shooting, the dying, the movement — all of it has to be much more
+ * fun and impressive."*
+ *
+ * Every card died the same death and walked the same walk: fourteen dots in
+ * the family's colour, and a slide across the floor. Both are derived now,
+ * for the same reason everything else here is — fifty-three cards, and more
+ * coming, cannot each be animated by hand.
+ */
+describe("how a card dies", () => {
+  it("is decided by what it is made of", () => {
+    expect(combatLook("dragons_01_flame_dragon").dies).toBe("ash");
+    expect(combatLook("giants_01_stone_colossus").dies).toBe("crumble");
+    expect(combatLook("dragons_03_thunderwing").dies).toBe("zap");
+    expect(combatLook("plants_06_toxic_mushroom").dies).toBe("melt");
+    expect(combatLook("dragons_09_typhoon_dragon").dies).toBe("gust");
+  });
+
+  it("never falls through to the generic one by accident", () => {
+    // "pop" is the old death, kept for `variable` — the element that IS
+    // "could be anything". Any OTHER card landing on it is an element that
+    // was added without a death to go with it.
+    for (const id of cardPool()) {
+      const card = CATALOG.get(id)!;
+      if (combatLook(id).dies !== "pop") continue;
+      expect(card.elements[0], `${id} has no death of its own`).toBe("variable");
+    }
+  });
+});
+
+describe("how a card walks", () => {
+  it("does not, when it cannot move", () => {
+    expect(combatLook("slimes_05_sticky_rug").walk).toBe("rooted");
+  });
+
+  it("floats when it flies, whatever family it is in", () => {
+    expect(combatLook("insects_07_aggressive_wasp").walk).toBe("float");
+  });
+
+  it("squashes if it is a slime and scurries if it is an insect", () => {
+    expect(combatLook("slimes_01_basic_slime").walk).toBe("squish");
+    expect(combatLook("insects_01_ant_soldier").walk).toBe("scuttle");
+  });
+
+  it("stomps when it is big enough to shake the ground", () => {
+    expect(combatLook("giants_03_hill_giant").walk).toBe("stomp");
+    expect(combatLook("giants_03_hill_giant").weight).toBeGreaterThan(0.5);
+  });
+
+  it("gives everything else an ordinary step", () => {
+    expect(combatLook("dragons_07_gold_horn").walk).toBe("step");
+  });
+
+  /*
+   * Most of this catalogue does not move at all — the board is small and a
+   * wall that walks away from the King is not a wall. Worth pinning, because
+   * "nothing in the battle moves" would otherwise look like the walk code
+   * being broken rather than like the cards being what they are.
+   */
+  it("leaves the majority rooted, which is what the cards say", () => {
+    const walks = cardPool().map((id) => combatLook(id).walk);
+    expect(walks.filter((w) => w === "rooted").length).toBeGreaterThan(walks.length / 2);
+    expect(new Set(walks).size, "and the ones that do move do not all move alike")
+      .toBeGreaterThan(2);
+  });
+
+  it("weighs every card between nothing and a Titan", () => {
+    for (const id of cardPool()) {
+      const look = combatLook(id);
+      expect(look.weight, id).toBeGreaterThanOrEqual(0);
+      expect(look.weight, id).toBeLessThanOrEqual(1);
+    }
+  });
+});

@@ -157,12 +157,23 @@ interface UnitGfx {
   /** Current displacement from a lunge or a recoil, springing back to zero. */
   offX: number;
   offY: number;
-  /** Phase for the idle bob of flying units. */
-  bob: number;
   /** Replay time (ms) until which the unit shows as frozen. */
   stunnedUntilMs: number;
   exploding: boolean;
+  /** 0 to 1 through its death, so the body can go its own way out. */
+  deathT: number;
   dead: boolean;
+  /** Where the replay wants it; the body glides toward this. */
+  toX: number;
+  toY: number;
+  /**
+   * Phase of the walk cycle, advanced only while it is actually moving —
+   * and the idle hover of a flier, which never stops. It replaced `bob`,
+   * which did the second job and only that.
+   */
+  step: number;
+  /** How fast it is travelling right now, in px per second. */
+  speed: number;
   half: number;
   owner: Owner;
   /**
@@ -403,10 +414,14 @@ export function Arena({
         shake: 0,
         offX: 0,
         offY: 0,
-        bob: Math.random() * Math.PI * 2,
         stunnedUntilMs: 0,
         exploding: false,
+        deathT: 0,
         dead: false,
+        toX: 0,
+        toY: 0,
+        step: Math.random() * 6,
+        speed: 0,
         half: w / 2,
         owner: fu.owner,
         maxHp: fu.maxHp,
@@ -419,8 +434,23 @@ export function Arena({
     function applyFrame(units: FrameUnit[]): void {
       for (const fu of units) {
         const g = gfxByUid.get(fu.uid) ?? drawUnit(fu);
-        g.container.x = fx(fu.col);
-        g.container.y = cy(laneCenter(fu.lanes));
+        /*
+         * ═══ WHERE IT IS GOING, NOT WHERE IT IS ═══
+         *
+         * The frames are thirty a second and the screen draws sixty, so
+         * writing the frame's position straight onto the unit made every
+         * monster in the game advance in little jumps. The frame sets a
+         * target now and the body glides to it in the ticker, which is both
+         * smoother and what lets the walk know whether it is moving at all.
+         */
+        const nx = fx(fu.col);
+        const ny = cy(laneCenter(fu.lanes));
+        if (g.toX === 0 && g.toY === 0) {
+          g.container.x = nx;
+          g.container.y = ny;
+        }
+        g.toX = nx;
+        g.toY = ny;
         g.targetAlpha = fu.alive ? 1 : 0;
         const ratio = Math.max(0, Math.min(1, fu.hp / fu.maxHp));
         // HP bar sits inside the top of the unit, so it can never be confused
@@ -480,20 +510,45 @@ export function Arena({
       rings.push({ g, life: 1, color, from, to, width });
     }
 
+    /**
+     * A handful of something thrown out from a point.
+     *
+     * `shape` and `dir` are what let one function make ash, rubble and a gust
+     * of wind: a dot for sparks, a chip for anything that breaks, a streak
+     * for anything blown. Without them every death in the game was the same
+     * ring of dots in a different colour.
+     */
     function spawnParticles(
       x: number,
       y: number,
       color: number,
       count: number,
       speed: number,
-      opts: { gravity?: number; size?: number } = {},
+      opts: {
+        gravity?: number;
+        size?: number;
+        shape?: "dot" | "chip" | "streak";
+        /** Centre of the spray, in radians. Left out, it goes everywhere. */
+        dir?: number;
+        /** How wide the spray is around `dir`. */
+        spread?: number;
+      } = {},
     ): void {
       for (let i = 0; i < count; i++) {
-        const a = Math.random() * Math.PI * 2;
+        const a =
+          opts.dir === undefined
+            ? Math.random() * Math.PI * 2
+            : opts.dir + (Math.random() - 0.5) * (opts.spread ?? Math.PI / 3);
         const v = speed * (0.4 + Math.random() * 0.8);
         const size = (opts.size ?? 3) * (0.5 + Math.random());
         const g = new Graphics();
-        g.circle(0, 0, size).fill(color);
+        if (opts.shape === "chip")
+          g.rect(-size, -size * 0.8, size * 2, size * 1.6)
+            .fill(color)
+            .rotation = Math.random() * Math.PI;
+        else if (opts.shape === "streak")
+          g.rect(-size * 3, -size * 0.4, size * 6, size * 0.8).fill(color);
+        else g.circle(0, 0, size).fill(color);
         g.x = x;
         g.y = y;
         fxLayer.addChild(g);
@@ -504,6 +559,104 @@ export function Arena({
           life: 1,
           gravity: opts.gravity ?? 0.00035,
         });
+      }
+    }
+
+    /**
+     * ═══ TEN DEATHS ═══
+     *
+     * Or: *"the shooting, the dying, the movement — all of it has to be much
+     * more fun and impressive."*
+     *
+     * Every card in the game used to die the same death: fourteen dots in the
+     * family's colour and a ring. The element decides now (arenaFx.ts), which
+     * is the dimension the player is already being taught to read, so a thing
+     * made of fire does not go out like a thing made of stone.
+     *
+     * What is thrown here is only half of it — the BODY does the other half,
+     * in the ticker below, where `dies` picks how it goes.
+     */
+    function deathBurst(g: UnitGfx): void {
+      const x = g.container.x;
+      const y = g.container.y;
+      const c = g.look.death;
+      const glow = g.look.glow;
+      const UP = -Math.PI / 2;
+      switch (g.look.dies) {
+        case "ash":
+          // Burns out: embers lift, ash falls through them.
+          spawnRing(x, y, 0xffb347, g.half * 0.3, g.half * 1.6, 3);
+          spawnParticles(x, y, 0xffc46b, 10, 0.13, {
+            size: 2.5,
+            gravity: -0.00045,
+            dir: UP,
+            spread: 1.4,
+          });
+          spawnParticles(x, y, 0x4a4a52, 12, 0.07, { size: 3, gravity: 0.00018, shape: "chip" });
+          return;
+        case "wash":
+          // Breaks like water: a splash out, drops down.
+          spawnRing(x, y, 0x7fd4ff, g.half * 0.3, g.half * 2, 3);
+          spawnParticles(x, y, 0x9fe6ff, 16, 0.18, { size: 2.5, gravity: 0.0006 });
+          return;
+        case "crumble":
+          // Falls apart: rubble, straight down, and a puff of dust.
+          spawnParticles(x, y, c, 14, 0.1, { size: 3.5, gravity: 0.0009, shape: "chip" });
+          spawnParticles(x, y + g.half * 0.6, 0x9c8e78, 8, 0.05, { size: 5, gravity: -0.00008 });
+          return;
+        case "gust":
+          // Blown away, sideways, the way it was facing.
+          spawnParticles(x, y, glow, 14, 0.3, {
+            size: 2,
+            shape: "streak",
+            dir: g.owner === "A" ? 0 : Math.PI,
+            spread: 0.9,
+            gravity: -0.00005,
+          });
+          return;
+        case "zap":
+          // Shorts out: a white flash and a scatter of sparks.
+          spawnRing(x, y, 0xffffff, g.half * 0.2, g.half * 1.9, 2);
+          spawnRing(x, y, c, g.half * 0.5, g.half * 2.4, 1.5);
+          spawnParticles(x, y, 0xfff3a8, 14, 0.28, { size: 2, shape: "streak" });
+          return;
+        case "shatter":
+          // Breaks: shards out fast and far, with a hard spark ring.
+          spawnRing(x, y, glow, g.half * 0.3, g.half * 2.2, 2);
+          spawnParticles(x, y, c, 18, 0.32, { size: 3, shape: "chip", gravity: 0.0005 });
+          return;
+        case "bloom":
+          // Goes up and out, bright, with nothing left behind.
+          spawnRing(x, y, 0xffffff, g.half * 0.2, g.half * 2.6, 4);
+          spawnParticles(x, y, 0xfff6d0, 12, 0.08, {
+            size: 2.5,
+            gravity: -0.0004,
+            dir: UP,
+            spread: 2.2,
+          });
+          return;
+        case "swallow":
+          // Taken IN: the sparks fall toward where it was, not away from it.
+          for (let i = 0; i < 12; i++) {
+            const a = (i / 12) * Math.PI * 2;
+            const r = g.half * 1.9;
+            spawnParticles(x + Math.cos(a) * r, y + Math.sin(a) * r, c, 1, 0.1, {
+              size: 3,
+              dir: a + Math.PI,
+              spread: 0.2,
+            });
+          }
+          spawnRing(x, y, 0x1a1030, g.half * 1.8, g.half * 0.2, 4);
+          return;
+        case "melt":
+          // Goes down into a puddle, bubbling.
+          spawnParticles(x, y + g.half * 0.5, c, 10, 0.06, { size: 4, gravity: 0.0004 });
+          spawnRing(x, y + g.half * 0.7, c, g.half * 0.2, g.half * 1.5, 5);
+          return;
+        default:
+          spawnParticles(x, y, c, 14, 0.22, { size: 3.5 });
+          spawnParticles(x, y, 0x1a1f2e, 8, 0.12, { size: 5, gravity: -0.0002 });
+          spawnRing(x, y, c, g.half * 0.4, g.half * 1.8, 3);
       }
     }
 
@@ -972,12 +1125,7 @@ export function Arena({
               const g = actor ?? target;
               if (!g || g.dead) return;
               g.dead = true;
-              spawnParticles(g.container.x, g.container.y, g.look.death, 14, 0.22, { size: 3.5 });
-              spawnParticles(g.container.x, g.container.y, 0x1a1f2e, 8, 0.12, {
-                size: 5,
-                gravity: -0.0002,
-              });
-              spawnRing(g.container.x, g.container.y, g.look.death, g.half * 0.4, g.half * 1.8, 3);
+              deathBurst(g);
               return;
             }
             case "knockback": {
@@ -1074,18 +1222,100 @@ export function Arena({
             }
           }
 
-          // --- units: lunge spring, hit flash, shake, bob, aura, frost ---
+          // --- units: glide, walk, lunge spring, hit flash, shake, aura ---
           for (const g of gfxByUid.values()) {
             if (g.exploding) {
-              g.container.alpha += (0 - g.container.alpha) * k * 1.4;
-              const s = g.container.scale.x + (2.1 - g.container.scale.x) * k * 1.4;
-              g.container.scale.set(s);
+              /*
+               * ═══ AND THE BODY GOES ITS OWN WAY ═══
+               *
+               * The sparks are thrown in deathBurst; this is what happens to
+               * the monster itself, and it is the half that makes a death
+               * read as a KIND of death. Everything used to swell to twice
+               * its size and fade, whatever it was made of.
+               */
+              g.deathT = Math.min(1, g.deathT + dt / 420);
+              const ease = 1 - (1 - g.deathT) * (1 - g.deathT);
+              switch (g.look.dies) {
+                case "melt":
+                  // Down into a puddle: flattens and spreads.
+                  g.container.scale.set(1 + ease * 0.5, Math.max(0.04, 1 - ease * 1.05));
+                  g.art.y = ease * g.half * 0.8;
+                  g.container.alpha = 1 - ease * ease;
+                  break;
+                case "crumble":
+                  // Falls where it stood.
+                  g.container.scale.set(1 - ease * 0.25, 1 - ease * 0.45);
+                  g.art.y = ease * g.half * 0.7;
+                  g.art.rotation = ease * 0.5 * (g.owner === "A" ? 1 : -1);
+                  g.container.alpha = 1 - ease;
+                  break;
+                case "swallow":
+                  // Taken in: to a point, then nothing.
+                  g.container.scale.set(Math.max(0.02, 1 - ease * 1.1));
+                  g.container.alpha = 1 - ease * ease * ease;
+                  break;
+                case "gust":
+                  // Blown off the board, stretched along the way.
+                  g.container.scale.set(1 + ease * 0.9, Math.max(0.1, 1 - ease * 0.7));
+                  g.art.x = ease * g.half * 3 * (g.owner === "A" ? 1 : -1);
+                  g.container.alpha = 1 - ease;
+                  break;
+                case "zap":
+                  // Flickers out: a few blinks and gone.
+                  g.container.scale.set(1 + ease * 0.15);
+                  g.container.alpha =
+                    g.deathT > 0.75 ? 0 : Math.sin(g.deathT * 40) > 0 ? 0.95 : 0.15;
+                  break;
+                case "shatter":
+                  // One hard jolt, then pieces.
+                  g.container.scale.set(1 + ease * 0.25, 1 - ease * 0.15);
+                  g.container.alpha = 1 - ease * 1.6;
+                  break;
+                case "bloom":
+                  // Up and out, bright to the last frame.
+                  g.container.scale.set(1 + ease * 1.1);
+                  g.art.y = -ease * g.half * 1.2;
+                  g.container.alpha = 1 - ease * ease;
+                  break;
+                case "wash":
+                  // Sinks through the floor.
+                  g.container.scale.set(1 - ease * 0.2, 1 - ease * 0.6);
+                  g.art.y = ease * g.half;
+                  g.container.alpha = 1 - ease;
+                  break;
+                case "ash":
+                  // Shrinks as it burns, lifting a little.
+                  g.container.scale.set(Math.max(0.05, 1 - ease * 0.9));
+                  g.art.y = -ease * g.half * 0.5;
+                  g.container.alpha = 1 - ease;
+                  break;
+                default:
+                  g.container.alpha += (0 - g.container.alpha) * k * 1.4;
+                  g.container.scale.set(
+                    g.container.scale.x + (2.1 - g.container.scale.x) * k * 1.4,
+                  );
+              }
               continue;
             }
             g.container.alpha += (g.targetAlpha - g.container.alpha) * k;
-            const s = (g.targetAlpha < 0.5 ? 0.6 : 1) + g.pulse * 0.18;
-            g.container.scale.set(g.container.scale.x + (s - g.container.scale.x) * k);
             g.pulse *= 0.82;
+
+            /*
+             * ═══ THE GLIDE, AND WHAT IT TELLS THE WALK ═══
+             *
+             * The body chases the frame's target rather than being placed on
+             * it, so movement is smooth between frames — and the distance it
+             * covers per frame IS how fast it is going, which is the one
+             * thing a walk cycle needs to know. A unit standing still stands
+             * still; nothing bounces on the spot.
+             */
+            const dx = g.toX - g.container.x;
+            const dy = g.toY - g.container.y;
+            const close = Math.min(1, k * 1.6);
+            g.container.x += dx * close;
+            g.container.y += dy * close;
+            g.speed += (Math.min(1, Math.hypot(dx, dy) / 2.2) - g.speed) * Math.min(1, k * 0.6);
+            const walking = g.speed > 0.04 && g.targetAlpha > 0.5;
 
             // the lunge / recoil springs back toward rest
             const decay = 1 - Math.min(1, k * 1.1);
@@ -1093,10 +1323,93 @@ export function Arena({
             g.offY *= decay;
             g.shake *= 0.84;
             const shakeAmp = g.shake * 3;
-            g.bob += dt * 0.004;
-            const bobY = g.look.flying && g.targetAlpha > 0.5 ? Math.sin(g.bob) * 3 : 0;
-            g.art.x = g.offX + (Math.random() - 0.5) * shakeAmp;
-            g.art.y = g.offY + bobY + (Math.random() - 0.5) * shakeAmp;
+
+            /*
+             * ═══ SIX WALKS ═══
+             *
+             * Or: *"the movement, all of it has to be much more fun and
+             * impressive."* Every monster in the game slid across the floor
+             * upright and perfectly still. The style comes off the card —
+             * what flies, what is heavy, what family it belongs to
+             * (arenaFx.ts) — so nothing is authored per card and a new one
+             * walks the day it is drawn.
+             */
+            let walkY = 0;
+            let walkX = 0;
+            let sx = 1;
+            let sy = 1;
+            let tilt = 0;
+            const facing = g.owner === "A" ? 1 : -1;
+            const beat = dt * 0.006;
+            switch (g.look.walk) {
+              case "float": {
+                // Always hovering, harder when it is going somewhere.
+                g.step += dt * 0.0032;
+                walkY = Math.sin(g.step) * (2.5 + g.speed * 2);
+                break;
+              }
+              case "stomp": {
+                if (walking) {
+                  const was = Math.sin(g.step);
+                  g.step += beat * (0.7 + g.speed * 0.5);
+                  const now = Math.sin(g.step);
+                  const lift = Math.max(0, now);
+                  walkY = -lift * 3.5;
+                  // Lands flat and wide, the way something heavy does.
+                  sy = 1 - lift * 0.06;
+                  sx = 1 + lift * 0.05;
+                  tilt = now * 0.05 * facing;
+                  // The ground takes it: one shake on the frame the foot
+                  // comes down, and only for things heavy enough to earn it.
+                  if (was >= 0 && now < 0 && g.look.weight > 0.5)
+                    g.shake = Math.max(g.shake, 0.45);
+                }
+                break;
+              }
+              case "squish": {
+                if (walking) {
+                  g.step += dt * 0.009;
+                  const b = Math.sin(g.step);
+                  // Squash and stretch, which is the whole personality of a
+                  // blob: wide and low, then tall and narrow.
+                  sy = 1 + b * 0.12;
+                  sx = 1 - b * 0.1;
+                  walkY = -Math.max(0, b) * 3;
+                }
+                break;
+              }
+              case "scuttle": {
+                if (walking) {
+                  // Fast, small and slightly sideways: a thing with legs.
+                  g.step += dt * 0.021;
+                  walkY = -Math.abs(Math.sin(g.step)) * 1.6;
+                  walkX = Math.sin(g.step * 0.5) * 1.2;
+                  tilt = Math.sin(g.step * 0.5) * 0.05;
+                }
+                break;
+              }
+              case "step": {
+                if (walking) {
+                  g.step += dt * 0.011;
+                  walkY = -Math.abs(Math.sin(g.step)) * 2.4;
+                  tilt = Math.sin(g.step) * 0.04 * facing;
+                }
+                break;
+              }
+              default:
+                break;
+            }
+            // Leaning into the direction of travel, on top of the walk.
+            const lean = g.speed * 0.07 * facing;
+            g.art.rotation += (tilt + lean - g.art.rotation) * Math.min(1, k * 0.8);
+            const s = (g.targetAlpha < 0.5 ? 0.6 : 1) + g.pulse * 0.18;
+            const grow = (from: number, to: number) => from + (to - from) * k;
+            g.container.scale.set(
+              grow(g.container.scale.x, s * sx),
+              grow(g.container.scale.y, s * sy),
+            );
+            g.art.x = g.offX + walkX + (Math.random() - 0.5) * shakeAmp;
+            g.art.y = g.offY + walkY + (Math.random() - 0.5) * shakeAmp;
 
             g.flashAmt *= 0.8;
             g.flash.alpha = g.flashAmt * 0.65;

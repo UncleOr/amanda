@@ -35,6 +35,61 @@ const SHAPE_BY_ELEMENT: Record<string, ProjectileShape> = {
 
 export type AuraKind = "heal" | "armor" | "haste" | "slow";
 
+/**
+ * ═══ HOW A CARD DIES ═══
+ *
+ * Or: *"I want us to work on making the battle animations much prettier and
+ * more varied. The shooting, the dying, the movement — all of it has to be
+ * much more fun and impressive."*
+ *
+ * Every card in this game died the same death: fourteen dots in the family's
+ * colour and a ring. One death, fifty-three cards, and the only thing that
+ * ever changed was the colour of the dots.
+ *
+ * So the ELEMENT decides, which is both the most interesting dimension and
+ * the one the player is already being taught to read (the table in the
+ * album). A thing made of fire does not die like a thing made of stone, and
+ * now it does not: ten deaths, derived, with nothing hand-authored per card.
+ */
+export type DeathStyle =
+  | "ash"
+  | "wash"
+  | "crumble"
+  | "gust"
+  | "zap"
+  | "shatter"
+  | "bloom"
+  | "swallow"
+  | "melt"
+  | "pop";
+
+const DEATH_BY_ELEMENT: Record<string, DeathStyle> = {
+  fire: "ash",
+  water: "wash",
+  earth: "crumble",
+  air: "gust",
+  electric: "zap",
+  metal: "shatter",
+  light: "bloom",
+  dark: "swallow",
+  poison: "melt",
+  variable: "pop",
+};
+
+/**
+ * ═══ AND HOW IT WALKS ═══
+ *
+ * The movement was a position from the replay frame, thirty times a second,
+ * with nothing in between and nothing on top: every monster in the game slid
+ * across the floor at its own speed, upright and perfectly still.
+ *
+ * A giant should land. A slime should squash. A beetle should scurry. None of
+ * that needs new art — it is the body, moved — and all of it can be read off
+ * the card: whether it flies, whether it moves at all, how big it is and what
+ * family it belongs to.
+ */
+export type WalkStyle = "rooted" | "float" | "stomp" | "squish" | "scuttle" | "step";
+
 /** Which supportive abilities deserve a permanent ring under the unit. */
 const AURA_BY_ABILITY: Partial<Record<AbilityType, AuraKind>> = {
   healAura: "heal",
@@ -70,6 +125,12 @@ export interface CombatLook {
   flying: boolean;
   /** Colour the unit shatters into — its series, so deaths read as a family. */
   death: number;
+  /** The shape of its death, from its element. See DeathStyle. */
+  dies: DeathStyle;
+  /** How it carries itself while it moves. See WalkStyle. */
+  walk: WalkStyle;
+  /** How heavy it looks: 0 for a sprout, 1 for a Titan. Drives the walk. */
+  weight: number;
 }
 
 const FALLBACK: CombatLook = {
@@ -81,7 +142,31 @@ const FALLBACK: CombatLook = {
   aura: null,
   flying: false,
   death: 0x8a93a6,
+  dies: "pop",
+  walk: "step",
+  weight: 0.4,
 };
+
+/**
+ * Which walk, from what the card already says about itself.
+ *
+ * The order is the priority: a thing that cannot move does not walk, a thing
+ * that flies does not touch the ground, and after that it is the family and
+ * the size. Nothing here is hand-written per card.
+ */
+function walkOf(card: {
+  stats: { hp: number; moveSpeed: number };
+  seriesId: string;
+  flying: boolean;
+  midBoss?: boolean;
+}): WalkStyle {
+  if (card.stats.moveSpeed === 0) return "rooted";
+  if (card.flying) return "float";
+  if (card.seriesId === "slimes") return "squish";
+  if (card.seriesId === "insects") return "scuttle";
+  if (card.midBoss || card.stats.hp >= 1600) return "stomp";
+  return "step";
+}
 
 const cache = new Map<string, CombatLook>();
 
@@ -107,6 +192,10 @@ export function combatLook(cardId: string): CombatLook {
     aura: auraKind ? { kind: auraKind, color: AURA_COLOR[auraKind] } : null,
     flying: card.flying,
     death: hex(seriesColor(card.seriesId)),
+    dies: DEATH_BY_ELEMENT[element] ?? "pop",
+    walk: walkOf(card),
+    // 2,500 health is the heaviest thing in the game that is not Amanda.
+    weight: Math.max(0, Math.min(1, card.stats.hp / 2500)),
   };
   cache.set(cardId, look);
   return look;
