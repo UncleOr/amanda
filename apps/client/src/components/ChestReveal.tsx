@@ -47,6 +47,7 @@ import type { Chest } from "../game/account";
 import * as V from "../data/voice";
 import { line as t, lineF as tf } from "../game/copy";
 import { say } from "../game/lang";
+import { CardDetailModal } from "./CardDetailModal";
 
 /** How each kind of chest introduces itself, and which painting it is. */
 const CHEST_LOOK: Record<string, { he: string; tone: string; art: string }> = {
@@ -290,6 +291,8 @@ export function ChestReveal({ chest, onClose }: Props) {
  * arc, the fade — is in chests.css.
  */
 function NewCards({ ids, onClose }: { ids: string[]; onClose: () => void }) {
+  /** The card whose full sheet is open over the celebration. */
+  const [looking, setLooking] = useState<string | null>(null);
   const many = ids.length > 1;
   return (
     <div className="newcard" role="dialog" onClick={onClose}>
@@ -312,18 +315,44 @@ function NewCards({ ids, onClose }: { ids: string[]; onClose: () => void }) {
           {many ? tf("s297ce81", "{0} קלפים חדשים!", ids.length) : t("s605a181", "קלף חדש!")}
         </p>
         {/*
-          Each card gets a CELL with a shape on it. `.card` is 100% of
+          ═══ THE PICTURE AND THE NAME, AND NOTHING ELSE ═══
+
+          Or: *"when there is a new card you see its picture — let them see
+          only a picture and a name, and then when you press it they see the
+          normal display of all the cards."*
+
+          It was a whole CardView: artwork, element badges, rarity, health,
+          power, attack speed, range. All of that is true and none of it is
+          what this moment is. A new card is an EVENT — the thing you did
+          not have and now do — and a specification sheet is what you read
+          afterwards, once you have decided you care.
+
+          So the celebration shows the one thing that makes a card itself,
+          and the sheet is one press away, where it was always going to be.
+
+          Each card still gets a CELL with a shape on it: `.card` is 100% of
           whatever holds it in both directions, so a card dropped straight
           into a flex row has a width and no height at all and comes out
           invisible — the same trap the album grid fell into.
         */}
         <div className="newcard__cards">
           {ids.slice(0, 3).map((id) => (
-            <span className="newcard__cell" key={id}>
-              <CardView cardId={id} size="large" />
-            </span>
+            <button
+              type="button"
+              className="newcard__cell newcard__cell--press"
+              key={id}
+              onClick={() => {
+                sfx.play("click");
+                setLooking(id);
+              }}
+              title={t("s9e9b1f9", "לראות את הקלף")}
+            >
+              <img src={`${BASE}cards/${id}.webp`} alt="" />
+              <span>{say(CATALOG.get(id)?.name ?? { he: "", en: "" })}</span>
+            </button>
           ))}
         </div>
+        {looking && <CardDetailModal cardId={looking} onClose={() => setLooking(null)} />}
         {/* The one that is not a card: more than three and the row stops
             being a row of cards and starts being a list. */}
         {ids.length > 3 && (

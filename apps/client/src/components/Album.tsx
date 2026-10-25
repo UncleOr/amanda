@@ -18,6 +18,9 @@ import { CATALOG, SERIES, collectable } from "../data/catalog";
 import { CardView } from "./CardView";
 import { Icon } from "./Icon";
 import { useEffect, useState } from "react";
+import { sfx } from "../game/sfx";
+
+const BASE = import.meta.env.BASE_URL;
 import { LEVELS, levelCost, levelDiamonds, type Card } from "@amanda/shared";
 import {
   levelUpCard,
@@ -82,6 +85,13 @@ export function Album({ account, onClose, onCardInfo, onChanged }: Props) {
    * elements — so it is where the chart belongs. See ElementsTable.
    */
   const [chart, setChart] = useState(false);
+  /*
+   * Which families are fanned out. Closed is the first state for all of
+   * them — see the note by the shelf below — and it is deliberately NOT
+   * remembered between visits: the album is a thing you browse, and coming
+   * back to seven closed packs is coming back to the shelf.
+   */
+  const [opened, setOpened] = useState<Set<string>>(new Set());
 
   async function buyLevel(cardId: string) {
     setBusy(cardId);
@@ -239,6 +249,23 @@ export function Album({ account, onClose, onCardInfo, onChanged }: Props) {
           </section>
         )}
 
+        {/*
+          ═══ A SHELF OF PACKS, NOT A WALL OF CARDS ═══
+
+          Or: *"yes, let the series be closed as a pack and fan out when you
+          press them."*
+
+          Closed is the right first state, and the reason is the same one
+          the arena screen gives for its own pack: ten card backs with a
+          family's name beside them is a THING — something you own — and a
+          row of ten small pictures is an index. The fan is what makes
+          opening it worth a press.
+
+          It also answers the measurement at the top of this file. The album
+          is fifty-two cards over seven families on a screen 390px tall; a
+          shelf of seven packs fits on it at once, and a wall of fifty-two
+          never could.
+        */}
         {SERIES.map((series) => {
           /*
            * A family with nothing to win in it is not shown at all. That is
@@ -249,14 +276,40 @@ export function Album({ account, onClose, onCardInfo, onChanged }: Props) {
           const cards = collection.filter((c) => c.seriesId === series.id);
           if (!cards.length) return null;
           const have = cards.filter((c) => album?.has(c.id)).length;
+          const open = opened.has(series.id);
           return (
-            <section key={series.id} className="album__series">
-              <h3 className="album__series-name">
-                {say(series.name)}
+            <section key={series.id} className={`album__series${open ? " is-open" : ""}`}>
+              <button
+                type="button"
+                className="album__pack"
+                aria-expanded={open}
+                onClick={() => {
+                  sfx.play(open ? "discard" : "draw");
+                  setOpened((was) => {
+                    const next = new Set(was);
+                    if (next.has(series.id)) next.delete(series.id);
+                    else next.add(series.id);
+                    return next;
+                  });
+                }}
+              >
+                {/* Three backs, stacked and splayed: the shape of a pack. */}
+                <span className="album__fan" aria-hidden="true">
+                  {cards.slice(0, 3).map((c) => (
+                    <i key={c.id} style={{ backgroundImage: `url("${BASE}cards/${c.id}.webp")` }} />
+                  ))}
+                </span>
+                <b className="album__series-name">{say(series.name)}</b>
                 <span className="album__series-count">
                   {have}/{cards.length}
                 </span>
-              </h3>
+                {/* A disclosure triangle: the icon set has no chevron, and a
+                    play arrow turned ninety degrees is the same shape. */}
+                <span className="album__pack-mark" aria-hidden="true">
+                  <Icon name="play" size={13} />
+                </span>
+              </button>
+              {open && (
               <div className="album__grid">
                 {cards.map((card) => {
                   const mine = album?.get(card.id);
@@ -328,6 +381,7 @@ export function Album({ account, onClose, onCardInfo, onChanged }: Props) {
                   );
                 })}
               </div>
+              )}
             </section>
           );
         })}
