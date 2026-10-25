@@ -49,6 +49,7 @@ import { useDrag } from "./game/useDrag";
 import { sfx } from "./game/sfx";
 import { music } from "./game/music";
 import { ACTIONS, cardPool, isEnemyTargeted, synergyGroups } from "./data/catalog";
+import { carryOf } from "./game/carry";
 import * as V from "./data/voice";
 import { BoardGrid } from "./components/BoardGrid";
 import { CardView } from "./components/CardView";
@@ -1903,12 +1904,47 @@ function Game() {
         />
       )}
 
-      {/* floating card that follows the pointer while dragging */}
-      {drag.cardId && (
-        <div className="drag-ghost" style={{ left: drag.x, top: drag.y }}>
-          <CardView cardId={drag.cardId} size="medium" />
-        </div>
-      )}
+      {/*
+        ═══ THE CARD IN YOUR HAND ═══
+
+        Or: *"while it is being dragged it moves in the user's hand in its
+        own way. If it is a heavy giant it is a bit 'harder' to carry.
+        Fliers beat their wings and pull ahead. Chuppy gives off a current
+        and 'electrifies'."*
+
+        It follows the CARD, not the pointer — they are different places now
+        (useDrag), and the gap between them is the whole effect. The tilt is
+        the direction it is travelling, so a card thrown left leans left
+        without anybody writing a keyframe for it, and the class is what
+        gives the fliers their wingbeat and the electric ones their crackle.
+      */}
+      {drag.cardId &&
+        (() => {
+          const carry = carryOf(drag.cardId);
+          // It leans into its own movement, and a flier runs ahead of your
+          // thumb rather than trailing it.
+          const lean = Math.max(-carry.tilt, Math.min(carry.tilt, drag.vx * 1.6));
+          return (
+            <div
+              className={`drag-ghost drag-ghost--${carry.style}`}
+              style={{
+                left: drag.cx + drag.vx * carry.lead,
+                top: drag.cy + drag.vy * carry.lead,
+                ["--lean" as string]: `${lean}deg`,
+              }}
+            >
+              <CardView cardId={drag.cardId} size="medium" />
+              {carry.style === "spark" && (
+                <span className="drag-ghost__spark" aria-hidden="true">
+                  <i />
+                  <i />
+                  <i />
+                </span>
+              )}
+              {carry.style === "heavy" && <span className="drag-ghost__dust" aria-hidden="true" />}
+            </div>
+          );
+        })()}
 
       {confirmExit && (
         <Overlay onClick={() => setConfirmExit(false)}>
