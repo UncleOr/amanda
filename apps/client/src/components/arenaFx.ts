@@ -187,8 +187,14 @@ export function combatLook(cardId: string): CombatLook {
     shape: SHAPE_BY_ELEMENT[element] ?? "orb",
     color,
     glow: lighten(color, 0.55),
-    // A sniper's shot snaps across; a lobbed ranged attack has visible travel.
-    flightMs: card.stats.range === "sniper" ? 90 : 150,
+    /*
+     * A sniper's shot snaps across; an ordinary ranged attack has visible
+     * travel. Both came down when the shots got a trail — Or: *"the shots
+     * also need improving… how fast"* — because what was floaty about them
+     * was partly that they were slow and entirely that nothing marked their
+     * speed. 150ms a cell is four fifths of a second across the board.
+     */
+    flightMs: card.stats.range === "sniper" ? 60 : 100,
     aura: auraKind ? { kind: auraKind, color: AURA_COLOR[auraKind] } : null,
     flying: card.flying,
     death: hex(seriesColor(card.seriesId)),

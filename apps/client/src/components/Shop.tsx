@@ -226,6 +226,10 @@ function Good({
       {card && (
         <span className="good__lvl">
           ×{item.level ?? 1} | {item.copies ?? 0}/{levelCost(card.rarity, item.level ?? 1)}
+          {/* Or: *"and if I have 3 out of 10 cards towards the upgrade, make
+              it 3/10 [upgrade icon]."* A fraction on its own is a fraction of
+              something unsaid; the icon is what says it. */}
+          <Icon name="power" size={12} />
         </span>
       )}
       {/*

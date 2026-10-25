@@ -1345,6 +1345,25 @@ function Game() {
         <main
           className={`build${m.phase === "panic" ? " build--panic" : ""}${
             m.targeting ? " build--targeting" : ""
+          }${
+            /*
+             * ═══ WHICH BOARD IS BEING PICKED FROM ═══
+             *
+             * Or: *"the card destroyer does not work. I have no way to
+             * delete the opponent's cards."*
+             *
+             * The logic was right and had been fixed once already; the CSS
+             * was not. `.build--targeting .side--enemy` sets
+             * `pointer-events: none` on the opponent's half while a card is
+             * being aimed — correct for the four cards that aim at your own
+             * board, and exactly wrong for the one that aims at theirs. The
+             * bar said "pick a card on the opponent's side" over a board
+             * that could not be clicked.
+             *
+             * So the class says WHICH side is live, and the stylesheet pushes
+             * the other one into the background.
+             */
+            m.targeting && isEnemyTargeted(m.targeting) ? " build--targeting-enemy" : ""
           }${actionsOpen ? " build--drawer" : ""}${m.playground ? " build--lab" : ""}`}
         >
           <div className="boards">

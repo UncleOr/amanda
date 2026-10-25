@@ -398,10 +398,25 @@
   flex-shrink: 0;
 }
 
-/* While picking: push everything that cannot be picked into the background. */
-.build--targeting .side--enemy,
+/*
+ * While picking: push everything that cannot be picked into the background.
+ *
+ * ═══ AND THE ERASER AIMS THE OTHER WAY ═══
+ *
+ * Or: *"the card destroyer does not work. I have no way to delete the
+ * opponent's cards."*
+ *
+ * It never could: this rule took `pointer-events` off the opponent's half
+ * for EVERY card being aimed. Four of the five aim at your own board, so it
+ * was right four times out of five and silently impossible the fifth — with
+ * the bar still saying "pick a card on the opponent's side", over a board
+ * that could not be clicked. The handler underneath had been fixed for this
+ * card twice; nothing ever reached it.
+ */
 .build--targeting .hand,
-.build--targeting .actions {
+.build--targeting .actions,
+.build--targeting:not(.build--targeting-enemy) .side--enemy,
+.build--targeting-enemy .side--me {
   opacity: 0.3;
   pointer-events: none;
   filter: grayscale(0.6);

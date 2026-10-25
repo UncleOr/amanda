@@ -551,7 +551,28 @@
   letter-spacing: 0.04em;
   color: var(--text);
 }
-.aisle__row { display: flex; gap: 9px; overflow-x: auto; padding-bottom: 4px; }
+/*
+ * ═══ EVERY PRICE ON THE SAME LINE ═══
+ *
+ * Or: *"in the shop all the buttons need to be at the same height."*
+ *
+ * They were not, and the reason is that a tile is as tall as what is in it:
+ * a card carries a line saying how far its next level is, a catchphrase
+ * carries a plaque instead of a round picture, and the price tag sat
+ * underneath whatever that came to. So the shelf had its goods standing on
+ * the shelf and its prices at five different heights.
+ *
+ * `stretch` makes every tile in a row as tall as the tallest, and
+ * `margin-top: auto` on the tag pushes it to the bottom of each — which is
+ * the one line they then share.
+ */
+.aisle__row {
+  display: flex;
+  align-items: stretch;
+  gap: 9px;
+  overflow-x: auto;
+  padding-bottom: 4px;
+}
 /* the shelf board the goods are standing on */
 .aisle__edge {
   position: absolute;
@@ -598,14 +619,29 @@
   font-weight: 800;
   font-variant-numeric: tabular-nums;
   direction: ltr;
+  display: inline-flex;
+  align-items: center;
+  gap: 3px;
 }
-.good__mine { color: #4ade80; font-size: var(--t-3); font-weight: 700; display: flex; align-items: center; gap: 4px; }
+.good__mine {
+  margin-top: auto;
+  color: #4ade80;
+  font-size: var(--t-3);
+  font-weight: 700;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
 /* the price tag, clipped to the shelf rather than printed on the item */
 .good__buy {
   display: flex;
   align-items: center;
   gap: 4px;
-  margin-top: 2px;
+  /* Pushed to the bottom of the tile, which is what puts every price on
+     one line — `align-items: stretch` on the row makes the tiles equal and
+     this makes them agree about where the tag goes. It was `2px`, which is
+     why the one tile with no name on it (a catchphrase) sat 22px high. */
+  margin-top: auto;
   padding: 5px 12px;
   border-radius: 6px;
   border: 1px solid #ffd36b;

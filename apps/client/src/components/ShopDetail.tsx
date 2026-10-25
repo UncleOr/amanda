@@ -224,7 +224,8 @@ export function ShopDetail({
                 className={`deet__pack-pick${n === many ? " is-on" : ""}`}
                 onClick={() => setMany(n)}
               >
-                ×{n}
+                {/* Or: *"if I buy 5 cards make it 5× [card icon]."* */}
+                ×{n} <Icon name="deck" size={13} />
               </button>
             ))}
           </div>

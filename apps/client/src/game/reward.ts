@@ -56,85 +56,141 @@ const FLIGHT = 620;
  * fly to or the player has asked for less motion. A prize that cannot be
  * animated must still be a prize that is taken.
  */
+/**
+ * How many tokens fly for a prize of this size.
+ *
+ * Or: *"when you take a challenge or anything with diamonds or nachos, make
+ * it so that it is not one diamond flying up to the bar but MANY diamonds,
+ * by the number I got."*
+ *
+ * Which is right and is also the whole reason one token felt thin: the size
+ * of the prize was written on it in digits and shown by nothing. One each is
+ * the obvious rule and it holds up to about a dozen; past that they stop
+ * being countable and start being a swarm, so the count caps and the digits
+ * carry the rest. Nobody counts fourteen diamonds in the air anyway — what
+ * they read is "a lot".
+ */
+function tokensFor(amount: number): number {
+  return Math.max(1, Math.min(Math.round(amount), 14));
+}
+
+/**
+ * Play it, and resolve when the LAST of them lands.
+ *
+ * Resolves immediately — without drawing anything — when there is nowhere to
+ * fly to or the player has asked for less motion. A prize that cannot be
+ * animated must still be a prize that is taken.
+ */
 export function flyReward({ icon, amount, from }: Flight): Promise<void> {
   const target = document.querySelector(PURSE[icon] ?? "");
   const still = window.matchMedia?.("(prefers-reduced-motion: reduce)").matches ?? false;
   if (!target || still) return Promise.resolve();
 
-  const to = target.getBoundingClientRect();
+  // Narrowed once, here: the closure below outlives the check above.
+  const purse = target;
+  const to = purse.getBoundingClientRect();
   const base = import.meta.env.BASE_URL;
+  const cx = from.left + from.width / 2;
+  const cy = from.top + from.height / 2;
+  const count = tokensFor(amount);
 
-  const node = document.createElement("div");
-  node.className = "fly";
-  node.setAttribute("aria-hidden", "true");
-  node.style.left = `${from.left + from.width / 2}px`;
-  node.style.top = `${from.top + from.height / 2}px`;
-  node.innerHTML =
-    `<span class="fly__burst"></span>` +
-    `<img class="fly__icon" src="${base}icons/${icon}.png" alt="" draggable="false">` +
-    `<b class="fly__amount">+${amount}</b>`;
-  document.body.appendChild(node);
+  /** One coin: born at the prize, thrown out a little, then flown to the bar. */
+  function one(i: number): Promise<void> {
+    // Spread them around the source so they do not leave as a single stack.
+    const a = (i / count) * Math.PI * 2 + Math.random();
+    const r = i === 0 ? 0 : 10 + Math.random() * 22;
+    const sx = cx + Math.cos(a) * r;
+    const sy = cy + Math.sin(a) * r * 0.6;
 
-  const dx = to.left + to.width / 2 - (from.left + from.width / 2);
-  const dy = to.top + to.height / 2 - (from.top + from.height / 2);
+    const node = document.createElement("div");
+    node.className = "fly";
+    node.setAttribute("aria-hidden", "true");
+    node.style.left = `${sx}px`;
+    node.style.top = `${sy}px`;
+    node.innerHTML =
+      // The burst and the number ride on the first one only: the prize is
+      // won once, however many coins come out of it.
+      (i === 0 ? `<span class="fly__burst"></span>` : "") +
+      `<img class="fly__icon" src="${base}icons/${icon}.png" alt="" draggable="false">` +
+      (i === 0 ? `<b class="fly__amount">+${amount}</b>` : "");
+    document.body.appendChild(node);
 
-  return new Promise<void>((resolve) => {
-    let done = false;
-    const land = () => {
-      if (done) return;
-      done = true;
-      node.remove();
+    const dx = to.left + to.width / 2 - sx;
+    const dy = to.top + to.height / 2 - sy;
+    // They leave in a stream rather than a block, and the burst goes first.
+    const wait = i === 0 ? 0 : BURST * 0.45 + i * 45;
+    const lift = 30 + Math.random() * 30;
+
+    return new Promise<void>((resolve) => {
+      let done = false;
+      const land = () => {
+        if (done) return;
+        done = true;
+        node.remove();
+        /*
+         * The bar reacts to being landed on — once per coin, so a big prize
+         * makes it bump over and over. A class rather than an inline style,
+         * because React owns that element's attributes and will happily
+         * write over anything it recognises — and it does not recognise this.
+         */
+        purse.classList.add("is-gained");
+        window.setTimeout(() => purse.classList.remove("is-gained"), 400);
+        resolve();
+      };
+
       /*
-       * The bar reacts to being landed on. A class rather than an inline
-       * style, because React owns that element's attributes and will happily
-       * write over anything it recognises — and it does not recognise this.
+       * Two animations, one after the other: it swells where it was won, then
+       * travels. Written with the Web Animations API rather than as keyframes
+       * because the distance is only known now — a CSS keyframe cannot be
+       * told where the purse is.
        */
-      target.classList.add("is-gained");
-      window.setTimeout(() => target.classList.remove("is-gained"), 700);
-      resolve();
-    };
-
-    /*
-     * Two animations, one after the other: it swells where it was won, then
-     * travels. Written with the Web Animations API rather than as keyframes
-     * because the distance is only known now — a CSS keyframe cannot be told
-     * where the purse is.
-     */
-    node
-      .animate(
-        [
-          { transform: "translate(-50%, -50%) scale(0.2)", opacity: 0 },
-          { transform: "translate(-50%, -50%) scale(1.35)", opacity: 1, offset: 0.55 },
-          { transform: "translate(-50%, -50%) scale(1)", opacity: 1 },
-        ],
-        { duration: BURST, easing: "cubic-bezier(0.2, 0.9, 0.3, 1.4)", fill: "forwards" },
-      )
-      .finished.then(
-        () =>
-          node.animate(
-            [
-              { transform: "translate(-50%, -50%) scale(1)", opacity: 1 },
+      node
+        .animate(
+          [
+            { transform: "translate(-50%, -50%) scale(0.2)", opacity: 0 },
+            { transform: "translate(-50%, -50%) scale(1.35)", opacity: 1, offset: 0.55 },
+            { transform: "translate(-50%, -50%) scale(1)", opacity: 1 },
+          ],
+          {
+            duration: BURST,
+            delay: wait,
+            easing: "cubic-bezier(0.2, 0.9, 0.3, 1.4)",
+            fill: "both",
+          },
+        )
+        .finished.then(
+          () =>
+            node.animate(
+              [
+                { transform: "translate(-50%, -50%) scale(1)", opacity: 1 },
+                {
+                  // A lift before the run, so it arcs instead of sliding.
+                  transform: `translate(calc(-50% + ${dx * 0.45}px), calc(-50% + ${dy * 0.3 - lift}px)) scale(0.9)`,
+                  opacity: 1,
+                  offset: 0.5,
+                },
+                {
+                  transform: `translate(calc(-50% + ${dx}px), calc(-50% + ${dy}px)) scale(0.35)`,
+                  opacity: 0.1,
+                },
+              ],
               {
-                // A lift before the run, so it arcs instead of sliding.
-                transform: `translate(calc(-50% + ${dx * 0.45}px), calc(-50% + ${dy * 0.3 - 40}px)) scale(0.9)`,
-                opacity: 1,
-                offset: 0.5,
+                duration: FLIGHT,
+                easing: "cubic-bezier(0.5, 0, 0.75, 0.3)",
+                fill: "forwards",
               },
-              {
-                transform: `translate(calc(-50% + ${dx}px), calc(-50% + ${dy}px)) scale(0.35)`,
-                opacity: 0.1,
-              },
-            ],
-            { duration: FLIGHT, easing: "cubic-bezier(0.5, 0, 0.75, 0.3)", fill: "forwards" },
-          ).finished,
-      )
-      .then(land, land);
+            ).finished,
+        )
+        .then(land, land);
 
-    /*
-     * And a floor under all of it. `finished` never settles if the element is
-     * removed mid-flight — a panel closing, a route change — and the caller
-     * is waiting on this to refresh the number.
-     */
-    window.setTimeout(land, BURST + FLIGHT + 400);
-  });
+      /*
+       * And a floor under all of it. `finished` never settles if the element
+       * is removed mid-flight — a panel closing, a route change — and the
+       * caller is waiting on this to refresh the number.
+       */
+      window.setTimeout(land, wait + BURST + FLIGHT + 400);
+    });
+  }
+
+  return Promise.all(Array.from({ length: count }, (_, i) => one(i))).then(() => undefined);
 }

@@ -207,6 +207,12 @@ interface Projectile {
   /** The element matchup this shot will land on: 1.5, 1 or 0.75. */
   edge: number;
   phase: number;
+  /** How big it is drawn, from what it is about to do. */
+  size: number;
+  /** Tumble, for the things that tumble. */
+  spin: number;
+  /** Counts down to the next puff of trail behind it. */
+  trail: number;
 }
 interface Particle {
   g: Graphics;
@@ -288,6 +294,8 @@ export function Arena({
      */
     let freezeMs = 0;
     let lastFreezeAt = -9999;
+    /** The losing board, falling one rank at a time. See triggerFinale. */
+    const collapse: Array<{ at: number; g: UnitGfx; king: boolean }> = [];
     const timers: number[] = [];
     const app = new Application();
     const gfxByUid = new Map<string, UnitGfx>();
@@ -765,6 +773,19 @@ export function Arena({
       spawnDamage(target, damage, edge);
     }
 
+    /**
+     * ═══ A SHOT LEAVES SOMETHING BEHIND IT ═══
+     *
+     * Or: *"the shots also need improving — how they look, how they move,
+     * how fast."*
+     *
+     * They were five pixels wide whatever they were about to do, they left
+     * the barrel with no sign that anything had been fired, and they crossed
+     * the board with nothing behind them. So: the shooter flashes and rocks
+     * back, the shot is sized by the damage it carries, it tumbles if it is
+     * the kind of thing that tumbles, and it drags a thin trail — which is
+     * how fast a thing is going, made visible.
+     */
     function fireProjectile(from: UnitGfx, target: UnitGfx, damage: number, edge = 1): void {
       const g = new Graphics();
       fxLayer.addChild(g);
@@ -773,6 +794,25 @@ export function Arena({
         target.container.y - from.container.y,
       );
       const lobbed = from.look.shape === "rock" || from.look.shape === "blob";
+      const heft = heftOf(target, damage);
+
+      // The muzzle: a flash at the shooter, pointed at what it is shooting.
+      const ang = Math.atan2(
+        target.container.y - from.container.y,
+        target.container.x - from.container.x,
+      );
+      spawnParticles(
+        from.container.x + Math.cos(ang) * from.half * 0.6,
+        from.container.y + Math.sin(ang) * from.half * 0.6,
+        from.look.glow,
+        Math.round(3 + heft * 5),
+        0.1 + heft * 0.08,
+        { size: 1.8 + heft, dir: ang, spread: 0.7 },
+      );
+      // And it rocks back on the shot, the way anything that fires does.
+      from.offX -= Math.cos(ang) * (2 + heft * 4);
+      from.offY -= Math.sin(ang) * (2 + heft * 4);
+
       shots.push({
         g,
         x0: from.container.x,
@@ -780,9 +820,12 @@ export function Arena({
         targetUid: uidByGfx.get(target) ?? "",
         look: from.look,
         t: 0,
-        dur: Math.max(80, (dist / CELL) * from.look.flightMs),
+        dur: Math.max(70, (dist / CELL) * from.look.flightMs),
         // A lobbed rock or blob travels in an arc; bolts and shards fly flat.
         arc: lobbed ? Math.min(26, dist * 0.12) : 0,
+        size: 4 + heft * 4,
+        spin: lobbed ? 7 : 0,
+        trail: 0,
         damage,
         // Carried along with the shot: the hit it lands is the one that has
         // to show what the elements did.
@@ -791,20 +834,43 @@ export function Arena({
       });
     }
 
+    /**
+     * ═══ THE LOSING BOARD GOES DOWN ═══
+     *
+     * Or: *"and the death, mainly at the end, when everyone just turns into
+     * bubbles."*
+     *
+     * That is exactly what it was. Every surviving loser was flagged
+     * `exploding` and given a `spawnBurst` — a growing yellow ring, the same
+     * one, all at the same instant, over the whole half of the board. Ten
+     * bubbles and a board that was gone before anybody could look at it.
+     *
+     * Two changes, and the first matters more: each unit dies ITS OWN death
+     * now (deathBurst, by element) instead of the generic ring. The second is
+     * that they go in a WAVE rather than together — front rank first, back
+     * rank last — which is the difference between a board collapsing and a
+     * board being switched off. The King goes last and is the only one that
+     * still gets the shockwave, because it is the only one the shockwave was
+     * ever about.
+     */
     function triggerFinale(units: FrameUnit[]): void {
       finaleStarted = true;
       const loser = result.winner === "A" ? "B" : result.winner === "B" ? "A" : null;
       if (!loser) return; // a draw does not collapse a board
       sfx.play("explode");
-      for (const fu of units) {
-        if (fu.owner !== loser) continue;
-        if (!fu.alive && !fu.isKing) continue; // collapse the survivors + the King
-        const g = gfxByUid.get(fu.uid);
-        if (!g) continue;
-        g.container.alpha = 1;
-        g.exploding = true;
-        spawnBurst(g.container.x, g.container.y);
-      }
+      const falling = units
+        .filter((fu) => fu.owner === loser && (fu.alive || fu.isKing))
+        .map((fu) => ({ fu, g: gfxByUid.get(fu.uid) }))
+        .filter((x): x is { fu: FrameUnit; g: UnitGfx } => !!x.g)
+        // Nearest the middle of the arena first: the line that was holding.
+        .sort((a, b) => {
+          if (a.fu.isKing !== b.fu.isKing) return a.fu.isKing ? 1 : -1;
+          const mid = ARENA.width / 2;
+          return Math.abs(a.fu.col - mid) - Math.abs(b.fu.col - mid);
+        });
+      falling.forEach(({ fu, g }, i) => {
+        collapse.push({ at: clock + i * 70, g, king: fu.isKing });
+      });
     }
 
     void app
@@ -1222,6 +1288,16 @@ export function Arena({
             }
           }
 
+          // --- the losing board, going down in a wave ---
+          while (collapse.length && collapse[0]!.at <= clock) {
+            const { g, king } = collapse.shift()!;
+            g.container.alpha = 1;
+            g.exploding = true;
+            deathBurst(g);
+            // One shockwave, for the one death the battle was about.
+            if (king) spawnBurst(g.container.x, g.container.y);
+          }
+
           // --- units: glide, walk, lunge spring, hit flash, shake, aura ---
           for (const g of gfxByUid.values()) {
             if (g.exploding) {
@@ -1444,10 +1520,30 @@ export function Arena({
             const tx = target ? target.container.x : p.x0;
             const ty = target ? target.container.y : p.y0;
             const u = Math.min(1, p.t);
-            p.g.x = p.x0 + (tx - p.x0) * u;
+            /*
+             * A flat shot picks up speed on the way — it was perfectly
+             * linear, which is the one thing nothing ever thrown does — and
+             * a lobbed one keeps its even pace, because an arc reads as
+             * weight only if it hangs.
+             */
+            const travel = p.arc > 0 ? u : u * u * 0.35 + u * 0.65;
+            p.g.x = p.x0 + (tx - p.x0) * travel;
             // a lob rises and falls on the way over
-            p.g.y = p.y0 + (ty - p.y0) * u - Math.sin(u * Math.PI) * p.arc;
-            drawProjectile(p.g, p.look, Math.atan2(ty - p.y0, tx - p.x0), p.phase + clock / 100, 5);
+            p.g.y = p.y0 + (ty - p.y0) * travel - Math.sin(travel * Math.PI) * p.arc;
+            p.trail -= dt;
+            if (p.trail <= 0 && u < 0.95) {
+              p.trail = 26;
+              spawnParticles(p.g.x, p.g.y, p.look.color, 1, 0.01, { size: p.size * 0.42 });
+            }
+            // Swells through the last fifth of the flight: the hit is coming.
+            const near = u > 0.8 ? 1 + (u - 0.8) * 2.2 : 1;
+            drawProjectile(
+              p.g,
+              p.look,
+              p.spin > 0 ? (clock / 1000) * p.spin : Math.atan2(ty - p.y0, tx - p.x0),
+              p.phase + clock / 100,
+              p.size * near,
+            );
             if (p.t >= 1) {
               if (target) landHit(target, p.x0, p.y0, p.look, p.damage, p.edge);
               p.g.destroy();
