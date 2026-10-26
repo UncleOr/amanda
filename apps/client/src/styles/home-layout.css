@@ -284,20 +284,46 @@
   white-space: nowrap;
 }
 .quests__open:hover { border-color: var(--accent); }
-/* A COUNT here, not a dot: it counts rewards waiting, not challenges, and
-   "two things are sitting there" is worth a number. */
-.quests__dot--big {
+/*
+ * === THE COUNT WAS INSIDE A SEVEN-PIXEL CIRCLE ===
+ *
+ * Or: *"the challenges number is cut off."*
+ *
+ * It was, and the reason is 150 lines below this: `.quests__dot` is the
+ * plain green dot on the daily/weekly/monthly tabs, where "there is
+ * something here" is the whole message, and it is 7x7. This modifier made
+ * it 17x17 so a digit would fit — and lost, because the two selectors have
+ * the same specificity and the plain one is written LATER in the file. So
+ * the home screen's badge was a 7px circle with a number in it, and what a
+ * player saw was a sliver of a digit.
+ *
+ * It is `.quests__open .quests__dot--big` now, which is one class more
+ * specific than either and cannot be undone by where it sits in the file.
+ * And it is a pill rather than a circle: "12 rewards waiting" is a number
+ * this can legitimately show, and a fixed square is how a two-digit badge
+ * gets cut off the second time.
+ */
+.quests__open .quests__dot--big {
   position: absolute;
-  top: -5px;
-  inset-inline-end: -5px;
+  top: -6px;
+  inset-inline-end: -6px;
   display: grid;
   place-items: center;
-  width: 17px;
-  height: 17px;
-  font-size: 10px;
+  width: auto;
+  min-width: 19px;
+  height: 19px;
+  padding-inline: 4px;
+  border-radius: 999px;
+  font-size: var(--t-1);
   font-weight: 800;
   font-style: normal;
+  line-height: 1;
   color: #06240f;
+  /* It sits half outside its button, over whatever is behind it; the ring
+     is what stops it reading as a smudge on the artwork. */
+  box-shadow:
+    0 0 6px rgba(74, 222, 128, 0.8),
+    0 0 0 2px rgba(6, 36, 15, 0.55);
 }
 .modal--quests { max-width: 440px; }
 .modal--quests .quests { border: 0; background: none; padding: 0; }

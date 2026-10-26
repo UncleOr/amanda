@@ -18,7 +18,7 @@
  */
 import { VOICE_CLIPS, type DragLayer } from "./cardSound";
 
-type SoundName =
+export type SoundName =
   | "click"
   | "draw"
   | "place"

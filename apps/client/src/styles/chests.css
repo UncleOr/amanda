@@ -20,8 +20,23 @@
 }
 .chest__panel {
   width: min(520px, calc(100vw - 32px));
-  max-height: calc(100dvh - 40px);
-  overflow-y: auto;
+  /*
+   * === THE BUTTON IS NEVER BELOW THE FOLD ===
+   *
+   * Or, with a recording of a gold chest: *"I opened a gold chest — I have
+   * to SCROLL to reach its button. Really rubbish."*
+   *
+   * The panel itself was the scroller, so a chest holding eight cards
+   * pushed its own button off the bottom of a 384px-tall phone. It is a
+   * column that fits the screen now, and the only thing inside it that may
+   * scroll is the row of cards: the title stays at the top, the diamonds
+   * and the button stay at the bottom, and there is nothing to go looking
+   * for.
+   */
+  display: flex;
+  flex-direction: column;
+  max-height: calc(100dvh - 24px);
+  overflow: hidden;
   padding: clamp(10px, 3vh, 22px);
   border-radius: 20px;
   border: 2px solid var(--accent);
@@ -220,6 +235,31 @@
   justify-content: center;
   gap: 10px;
   margin-bottom: 14px;
+  /* The one part that gives way when there is not enough room. `min-height`
+     is what lets a grid shrink inside a flex column at all. */
+  flex: 0 1 auto;
+  min-height: 0;
+  overflow-y: auto;
+}
+.chest__panel > .btn-fight,
+.chest__gems { flex: none; }
+/* A flex column stretches its children; this one is a button and wants to be
+   the width of its own word, in the middle, the way it was before the panel
+   became a column. */
+.chest__panel > .btn-fight { align-self: center; margin-inline: auto; }
+/*
+ * A landscape phone is 384px tall and a gold chest holds eight cards. At
+ * 86px a tile is 115px of height, so two rows plus a title, the diamonds
+ * and a button do not fit — and the cards are the right thing to shrink,
+ * because they are being looked at rather than read.
+ */
+@media (max-height: 470px) {
+  .chest__cards {
+    grid-template-columns: repeat(auto-fit, minmax(54px, 66px));
+    gap: 7px;
+    margin-bottom: 9px;
+  }
+  .chest__title { margin-bottom: 8px; font-size: 17px; }
 }
 .chest__card { aspect-ratio: 3 / 4; }
 /* each one lands as it is turned over */

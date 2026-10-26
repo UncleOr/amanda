@@ -19,6 +19,7 @@ import { CardView } from "./CardView";
 import { Icon } from "./Icon";
 import { useEffect, useState } from "react";
 import { sfx } from "../game/sfx";
+import { pressed } from "../game/press";
 
 const BASE = import.meta.env.BASE_URL;
 import { LEVELS, levelCost, levelDiamonds, type Card } from "@amanda/shared";
@@ -93,15 +94,45 @@ export function Album({ account, onClose, onCardInfo, onChanged }: Props) {
    */
   const [opened, setOpened] = useState<Set<string>>(new Set());
 
-  async function buyLevel(cardId: string) {
+  /*
+   * === THE PARTY STARTS ON THE PRESS, NOT ON THE REPLY ===
+   *
+   * Or, with a screen recording: *"you press upgrade and it takes a few
+   * seconds until anything moves there. Not fun."* Measured off his own
+   * recording: the press is at 2.5s and the card's level changes at 4.5s,
+   * with nothing at all in between.
+   *
+   * Everything that made it an occasion — the confetti, the fireworks, the
+   * happy sound he asked for — was behind `await`. So an upgrade, which is
+   * the pay-off for every chest since the last one, was two seconds of a
+   * dead button.
+   *
+   * The celebration runs now, from what this screen already knows: the card
+   * is level N, so it is about to be level N+1, and the server is not
+   * needed to work that out. The request goes underneath, and if it is
+   * refused the party is taken down and the reason is shown. The check that
+   * matters — enough copies, enough diamonds — is on screen already: that
+   * is what decides whether this button exists at all.
+   */
+  async function buyLevel(cardId: string, button: HTMLElement) {
+    const mine = album?.get(cardId);
+    if (!mine || busy) return;
     setBusy(cardId);
+    setNote(null);
+    pressed(button, { sound: "win" });
+    setLevelled({ cardId, level: mine.level + 1 });
+
     const out = await levelUpCard(cardId);
     setBusy(null);
-    setNote(out.error ?? null);
-    if (!out.error) {
-      if (out.level) setLevelled({ cardId, level: out.level });
-      onChanged?.();
+    if (out.error) {
+      setLevelled(null);
+      setNote(out.error);
+      return;
     }
+    // The server has the last word on the number, and it almost always
+    // agrees — but if it does not, the card is what the server says.
+    if (out.level && out.level !== mine.level + 1) setLevelled({ cardId, level: out.level });
+    onChanged?.();
   }
 
   const album = account?.album;
@@ -374,7 +405,7 @@ export function Album({ account, onClose, onCardInfo, onChanged }: Props) {
                           mine={mine}
                           diamonds={account?.diamonds ?? 0}
                           busy={busy === card.id}
-                          onBuy={() => void buyLevel(card.id)}
+                          onBuy={(button) => void buyLevel(card.id, button)}
                         />
                       )}
                     </div>
@@ -435,7 +466,8 @@ function Upgrade({
   /** The purse, so the price can say whether it is affordable. */
   diamonds: number;
   busy: boolean;
-  onBuy: () => void;
+  /** Takes the button it was pressed on: the confetti comes out of it. */
+  onBuy: (button: HTMLElement) => void;
 }) {
   if (mine.level >= LEVELS.max) {
     return <span className="album__topped">{t("s3e3750f", "מקסימום")}</span>;
@@ -479,7 +511,7 @@ function Upgrade({
       title={tf("s15650ab", "שדרוג לרמה {0}", mine.level + 1)}
       onClick={(e) => {
         e.stopPropagation();
-        onBuy();
+        onBuy(e.currentTarget);
       }}
     >
       <b>{t("s4f9261a", "לשדרוג")}</b>

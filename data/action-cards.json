@@ -222,7 +222,7 @@
     "id": "fill_colossus",
     "name": {
       "he": "מילוי גולם אבן",
-      "en": "Colossus Fill"
+      "en": "Stone Colossus Fill"
     },
     "rarity": "epic",
     "copiesInPack": 5,
@@ -242,8 +242,8 @@
   {
     "id": "fill_flame",
     "name": {
-      "he": "מילוי דרקון אש",
-      "en": "Flame Fill"
+      "he": "מילוי פליים דראגון",
+      "en": "Flame Dragon Fill"
     },
     "rarity": "epic",
     "copiesInPack": 5,
@@ -264,7 +264,7 @@
     "id": "fill_cube",
     "name": {
       "he": "מילוי קוביית ג'לי",
-      "en": "Cube Fill"
+      "en": "Gelatinous Cube Fill"
     },
     "rarity": "epic",
     "copiesInPack": 5,

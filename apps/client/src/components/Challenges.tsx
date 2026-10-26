@@ -8,6 +8,7 @@ import {
   type Standing,
 } from "../game/meta";
 import { flyReward } from "../game/reward";
+import { pressed } from "../game/press";
 import { Icon } from "./Icon";
 import { Lock } from "./SignedInOnly";
 import { line as t, lineF as tf } from "../game/copy";
@@ -89,7 +90,13 @@ export function Challenges({
    * open."* It was opening empty and then waiting — see challengesSoFar.
    */
   const [live, setLive] = useState<Standing[]>(challengesSoFar);
-  const [busy, setBusy] = useState<string | null>(null);
+  /**
+   * Challenges this player has taken on this screen, before the server has
+   * confirmed it. Merged into what the server last said, so a row never
+   * flips back to "take me" for the second and a half the request is in the
+   * air. Cleared by the reload that follows, which answers it properly.
+   */
+  const [taken, setTaken] = useState<ReadonlySet<string>>(new Set());
   const [error, setError] = useState<string | null>(null);
   /** Which period is showing. Daily first: it is the one that expires soonest. */
   const [tab, setTab] = useState<Period>("daily");
@@ -119,40 +126,82 @@ export function Challenges({
    * change while the token was still in the air, so it arrived at a total
    * that had already gone up; see reward.ts.
    */
-  const take = async (id: string, button: HTMLElement) => {
-    setBusy(id);
+  /*
+   * === NOTHING HERE WAITS FOR THE SERVER ===
+   *
+   * Or, with a recording of himself pressing this very button: *"watch how
+   * you press 'take' and it turns into a button with three dots on it.
+   * Think about it, this is the FUN moment of the game. All these presses
+   * have to be an experience — fun, exploding, and responding
+   * immediately."*
+   *
+   * They did not. The order used to be: press, show three dots, wait for a
+   * round trip, and only then close the panel and fly the prize. Every
+   * piece of the celebration was downstream of a network call, so the fun
+   * part of the game ran at the speed of his phone's connection.
+   *
+   * It is two events now and only one of them is slow. The press goes off
+   * on this frame — confetti out of the button, the sound, the row struck
+   * through, the panel out of the way and the prize already in the air —
+   * and the request travels underneath it. By the time the server answers,
+   * the diamonds have landed.
+   *
+   * ⚠ WHICH MEANS IT CAN BE WRONG, so it is put back when it is. A refused
+   * claim (claimed already, or no connection) restores the row and shows
+   * why, which is the same thing the player saw before — just two seconds
+   * later than the party they were owed.
+   */
+  const take = (id: string, button: HTMLElement) => {
     setError(null);
     const prize = live.find((c) => c.id === id)?.reward;
     const flyFrom = button.closest("li")?.querySelector(".quests__pay");
-    const { why } = await claimChallenge(id);
-    setBusy(null);
-    if (why) {
-      setError(why);
-      return;
-    }
-    /*
-     * Get out of the way before the prize flies — see onTaking. The
-     * rectangle was measured above, while the button was still on screen,
-     * so the flight still starts from where the player pressed.
-     */
+    const from = flyFrom?.getBoundingClientRect();
+
+    // 1. The press itself. Synchronous, before anything else is touched.
+    pressed(button, { sound: "newcard" });
+    // 2. The row is taken. Locally, now — the server is told below.
+    setTaken((was) => new Set(was).add(id));
+    // 3. Out of the way: the purse and the nacho bar this flies TO are on
+    //    the home screen, behind this panel. See onTaking.
     onTaking?.();
-    if (prize && flyFrom) {
-      await flyReward({
-        icon: prize.diamonds ? "gem" : "nacho",
-        // Both are optional in the type and exactly one is ever set.
-        amount: prize.diamonds ?? prize.nachos ?? 0,
-        from: flyFrom.getBoundingClientRect(),
-      });
-    }
-    reload();
-    onClaimed?.();
+    // 4. And the prize is in the air.
+    const landed =
+      prize && from
+        ? flyReward({
+            icon: prize.diamonds ? "gem" : "nacho",
+            // Both are optional in the type and exactly one is ever set.
+            amount: prize.diamonds ?? prize.nachos ?? 0,
+            from,
+          })
+        : Promise.resolve();
+
+    // And only now, underneath all of that, the part that is slow.
+    void (async () => {
+      const { why } = await claimChallenge(id);
+      if (why) {
+        setTaken((was) => {
+          const next = new Set(was);
+          next.delete(id);
+          return next;
+        });
+        setError(why);
+        return;
+      }
+      // The count goes up when the token lands, never before it — see
+      // reward.ts for why that order is the whole feel of it.
+      await landed;
+      reload();
+      onClaimed?.();
+    })();
   };
 
   // Nothing to show is not an error: the server may simply not be reachable,
   // and an empty box on the home screen is worse than no box.
   if (!live.length) return null;
 
-  const showing = live.filter((c) => c.period === tab);
+  const showing = live
+    .filter((c) => c.period === tab)
+    .map((c) => (taken.has(c.id) ? { ...c, claimed: true } : c));
   const ready = (c: Standing) => c.done && !c.claimed;
 
   return (
@@ -219,12 +268,13 @@ export function Challenges({
                */
               <button
                 className="quests__take"
-                disabled={!c.done || busy === c.id}
-                onClick={
-                  signedIn ? (e) => void take(c.id, e.currentTarget) : gated(() => {})
-                }
+                disabled={!c.done}
+                onClick={signedIn ? (e) => take(c.id, e.currentTarget) : gated(() => {})}
               >
-                {busy === c.id ? "…" : t("s1d3665c", "לקחת")}
+                {/* No spinner. The button does not survive its own press:
+                    the row is struck through on the same frame, so there is
+                    nothing left to put a "please wait" on. */}
+                {t("s1d3665c", "לקחת")}
                 {guest && <Lock />}
               </button>
             )}

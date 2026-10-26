@@ -43,6 +43,8 @@ import { EmojiFace } from "./EmojiFace";
 import { Plaque } from "./Plaque";
 import { CATCHPHRASES, EMOJI, EMOJI_PACKS } from "@amanda/shared";
 import { sfx } from "../game/sfx";
+import { pressed } from "../game/press";
+import { flyReward } from "../game/reward";
 import type { Chest } from "../game/account";
 import * as V from "../data/voice";
 import { line as t, lineF as tf } from "../game/copy";
@@ -160,6 +162,29 @@ export function ChestReveal({ chest, onClose }: Props) {
   const allShown = shown >= chest.cards.length;
 
   /*
+   * === AND THE DIAMONDS GO SOMEWHERE YOU CAN SEE ===
+   *
+   * Or: *"and when you take a chest and it has diamonds and nachos in it,
+   * there is no animation of the diamonds and nachos going to the bar."*
+   *
+   * There was not, and the reason is the one the challenges panel had: this
+   * chest covers the whole screen and the purse it would fly to is behind
+   * it. So the flight starts as the chest closes, measured first — while
+   * the number is still on screen — so the diamonds leave the figure the
+   * player has been looking at.
+   *
+   * Nothing waits for it. The purse underneath is already correct; this is
+   * the part that says where the diamonds went, not the part that moves
+   * them.
+   */
+  const takeTheDiamonds = (button: HTMLElement) => {
+    pressed(button, { sound: "newcard" });
+    if (!chest.diamonds) return;
+    const from = document.querySelector(".chest__gems")?.getBoundingClientRect();
+    if (from) void flyReward({ icon: "gem", amount: chest.diamonds, from });
+  };
+
+  /*
    * ═══ A NEW CARD IS AN EVENT ═══
    *
    * Or: *"when I get a NEW card, make a bit of a celebration out of it. Pop
@@ -264,8 +289,43 @@ export function ChestReveal({ chest, onClose }: Props) {
               is to have one thing to press.
             */}
             {!party && (
-              <button className="btn-fight" disabled={!allShown} onClick={onClose}>
-                {allShown ? t("sbcd9e71", "יפה") : "…"}
+              /*
+               * === ONE BUTTON, NEVER A DEAD ONE ===
+               *
+               * Or, with a recording of a gold chest: *"I opened a gold
+               * chest — I have to SCROLL to reach its button. Really
+               * rubbish. Think about it, this is the FUN moment of the
+               * game."*
+               *
+               * Two things were wrong and this is the second of them. The
+               * button sat disabled reading "…" for as long as the cards
+               * took to turn over — eight cards at 420ms apiece is three
+               * and a half seconds of a button you may not press. A child
+               * who can already see what is in the chest had no way past
+               * it.
+               *
+               * It presses THROUGH the reveal now: the first press turns
+               * every remaining card at once, the next one closes. So the
+               * button is alive from the first frame and the deal-out is an
+               * offer rather than a queue.
+               *
+               * (The scrolling was the first thing and it is in chests.css:
+               * the panel keeps the cards in a scroller and keeps this
+               * where it is.)
+               */
+              <button
+                className="btn-fight"
+                onClick={(e) => {
+                  if (allShown) {
+                    takeTheDiamonds(e.currentTarget);
+                    onClose();
+                    return;
+                  }
+                  pressed(e.currentTarget, { sound: "draw", chips: 0 });
+                  setShown(chest.cards.length);
+                }}
+              >
+                {t("sbcd9e71", "יפה")}
               </button>
             )}
           </>
