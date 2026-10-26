@@ -272,8 +272,14 @@
   display: inline-grid;
   place-items: center;
   flex: none;
-  width: 19px;
-  height: 19px;
+  /*
+   * Or: *"the padlock is too small."* It was 19px holding a 12px glyph,
+   * which on artwork at the size this game is played at (a landscape phone,
+   * 832x384) is a dark speck. 26 holding 16 is the same badge at the size
+   * the rest of the furniture on these cards is drawn.
+   */
+  width: 26px;
+  height: 26px;
   margin-inline-start: 6px;
   border-radius: 50%;
   /*
@@ -326,8 +332,10 @@
  */
 .pick__card .lock {
   position: absolute;
-  top: var(--sp-1);
-  inset-inline-end: var(--sp-1);
+  /* The same inset on both axes, so it sits ON the corner rather than near
+     it — which is the other half of "out of sync". */
+  top: var(--sp-2);
+  inset-inline-end: var(--sp-2);
   margin: 0;
 }
 

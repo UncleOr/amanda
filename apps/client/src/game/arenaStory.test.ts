@@ -45,7 +45,7 @@ describe("when it can be read", () => {
    * player lost two matches.
    */
   it("is measured against the high-water mark, not today's trophies", () => {
-    expect(TRACK).toContain("const reached = best >= a.from;");
+    expect(TRACK).toContain("const reached = !a.locked && best >= a.from;");
     expect(TRACK, "the old rule read the live count").not.toContain(
       "const reached = trophies >= a.from;",
     );
@@ -70,7 +70,7 @@ describe("when it can be read", () => {
 
   it("will not open a rung you have only tapped the id of", () => {
     // `telling` is state and state can hold anything; the guard is here.
-    expect(TRACK).toContain("a.id === telling && best >= a.from");
+    expect(TRACK).toContain("a.id === telling && !a.locked && best >= a.from");
   });
 });
 

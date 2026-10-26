@@ -77,14 +77,31 @@ import { TUNED } from "./tunables.js";
 export const STARTER_ALBUM = [
   // Chuppy is the friend you are handed, the way Ash has Pikachu.
   "furries_01_chuppy",
+  /*
+   * === THE FOUR FAMILIES THE GAMES ROOM HAS ===
+   *
+   * Or: *"at the start of the game we are in the games room. We have
+   * Chuppy, giants, dragons and plants."* And then, a rung at a time: the
+   * Slimes at the Court, the Insects at the Station.
+   *
+   * This list used to hold one card of every family in the game, which
+   * quietly emptied the ladder: by the time an arena said *"here you meet
+   * the Slimes"* you had been playing one since your first evening. The
+   * Slimes and the Insects are no longer here, and meeting them is now a
+   * thing that HAPPENS to you — see arenas.ts (`introduces`).
+   *
+   * Still eight, because eight is what the deck budget hangs on: the
+   * cheapest legal eighteen is 33 against a budget of 45. See
+   * starterAlbum.test.ts, which measures it rather than trusting this
+   * comment.
+   */
   "dragons_01_flame_dragon",
-  "giants_01_stone_colossus",
-  "insects_01_ant_soldier",
-  "plants_01_thorn_sprout",
-  "slimes_01_basic_slime",
-  // And two at a price of one, which is what makes the budget a budget.
   "dragons_02_obsidian_egg",
-  "insects_04_toxic_moth",
+  "dragons_05_spike",
+  "giants_01_stone_colossus",
+  "giants_07_iron_bulwark",
+  "plants_01_thorn_sprout",
+  "plants_03_healing_bloom",
 ] as const;
 
 export const DECK_RULES = {

@@ -81,6 +81,50 @@ export interface Arena {
    * add more series and more arenas, and then we will work on it together."*
    */
   family: string;
+  /**
+   * === THE FAMILY YOU FIRST MEET HERE ===
+   *
+   * Or, laying the whole ladder out in one message: *"at the start of the
+   * game we are in the games room. We have Chuppy, giants, dragons and
+   * plants. Plants get +20% power. At the court we meet the Slimes. Only
+   * somebody who has reached the court for the first time can get a slime
+   * card at all. At the station we meet the Insects - only somebody who has
+   * reached the station can meet an insect."*
+   *
+   * Which turns the ladder from a backdrop into the way the game GROWS. It
+   * also answers the bug he found in the same message: *"and how can I have
+   * cards from the Strays series if I have not reached the alley yet? That
+   * is a bug you need to deal with."* He could, because a chest drew from
+   * the whole catalogue - every family at once, from the first wood chest
+   * on the first evening - so there was nothing left for an arena to
+   * introduce and nothing a new family could be FOR.
+   *
+   * `family` and `introduces` are deliberately not one field. `family` is
+   * the ground bonus, which is about this place; `introduces` is about the
+   * player's history, and the Fuel Stop's dragons are the case that proves
+   * they differ - dragons fight harder at the Fuel Stop and have been in
+   * your album since the first day.
+   */
+  introduces?: string;
+  /**
+   * === SHUT, AND NOT BECAUSE OF TROPHIES ===
+   *
+   * Or: *"lock the alley and the petrol station for now. There is no user
+   * advanced enough to get there anyway. When we are happy with what we
+   * have we will work on new series and new modes."*
+   *
+   * So these two are not a trophy wall that a good fortnight could climb:
+   * they are shut. Nothing promotes anybody into them, nothing promises a
+   * number of trophies to reach them, and the family one of them introduces
+   * is not in anybody's album - see isCollectable, which is what keeps the
+   * Strays out of chests, out of the album total and out of "collect them
+   * all" while their arena is closed.
+   *
+   * They stay VISIBLE, because that was Or's rule for the locked ones from
+   * the start: *"you should be able to see what arenas there are - dark and
+   * locked - so there is something to aim for."*
+   */
+  locked?: boolean;
 }
 
 /**
@@ -124,7 +168,14 @@ export const ARENA_POWER_BONUS = 0.2;
 export const ARENAS: Arena[] = [
   {
     id: "playroom",
-    family: "furries",
+    /*
+     * Or: *"plants get +20% power"* in the games room. It used to be the
+     * furries, on the reasoning that a playroom is where a furry toy lives
+     * - which is a nice sentence about a picture and not a decision about a
+     * game. The Furries are one card, Chuppy, who is handed to everybody;
+     * a +20% ground bonus for a family of one is a bonus for nobody.
+     */
+    family: "plants",
     name: { he: "חדר המשחקים", en: "The Playroom" },
     from: 0,
     tease: { he: "כאן כולם מתחילים. על השטיח.", en: "Everyone starts here. On the rug." },
@@ -136,6 +187,7 @@ export const ARENAS: Arena[] = [
   {
     id: "court",
     family: "slimes",
+    introduces: "slimes",
     name: { he: "המגרש", en: "The Court" },
     from: 150,
     tease: { he: "בחוץ, על האספלט, מול כולם.", en: "Outside, on the asphalt, in front of everyone." },
@@ -159,12 +211,13 @@ export const ARENAS: Arena[] = [
      * the tutorial now, so this rung introduces a family nobody has met.
      */
     family: "insects",
+    introduces: "insects",
     name: { he: "תחנת הרכבת", en: "The Station" },
     from: 450,
     tease: { he: "אף אחד לא עוצר פה. חוץ ממך.", en: "Nobody stops here. Except you." },
     story: {
-      he: "קניתם כרטיס, עברתם את המחסום וזהו - אתם כבר רחוקים מאוד מהבית. אתם רעבים, אין לכם קליטה והאיש הזה שם בספסל מסתכל עליכם מוזר. אין מה לעשות. החלטתם להיות אמיצים.",
-      en: "You bought a ticket, went through the barrier, and that is that — you are a long way from home. You are hungry, there is no signal, and that man on the bench is looking at you oddly. Nothing for it. You decided to be brave.",
+      he: "קניתם כרטיס, עברתם את המחסום וזהו - אתם כבר רחוקים מאוד מהבית. אתם רעבים, אין לכם קליטה והאיש הזה שם בספסל מסתכל עליכם מוזר. אין מה לעשות. החלטתם להיות אמיצים. מזל שיש לצדכם סדרת מפלצות חדשה: החרקים.",
+      en: "You bought a ticket, went through the barrier, and that is that — you are a long way from home. You are hungry, there is no signal, and that man on the bench is looking at you oddly. Nothing for it. You decided to be brave. Lucky you have a new family of monsters beside you: the Insects.",
     },
   },
   {
@@ -186,6 +239,8 @@ export const ARENAS: Arena[] = [
      * about all six families being in the starter album.
      */
     family: "strays",
+    introduces: "strays",
+    locked: true,
     name: { he: "סמטת האימה", en: "Fright Alley" },
     from: 1400,
     tease: { he: "אל תסתכל מה יש בפח.", en: "Don't look in the bin." },
@@ -197,6 +252,7 @@ export const ARENAS: Arena[] = [
   {
     id: "fuel",
     family: "dragons",
+    locked: true,
     name: { he: "תחנת הדלק", en: "The Fuel Stop" },
     from: 3600,
     tease: { he: "הסוף. אל תדליק כאן גפרור.", en: "The end of the road. Don't strike a match." },
@@ -239,11 +295,52 @@ function prefixed(name: string, letter: string): string {
   return name.startsWith("ה") ? `${letter}${name.slice(1)}` : `${letter}${name}`;
 }
 
-/** Which arena a player with this many trophies is fighting in. */
+/** The rungs that are actually on the ladder today. */
+export function openArenas(): Arena[] {
+  return ARENAS.filter((a) => !a.locked);
+}
+
+/**
+ * Which arena a player with this many trophies is fighting in.
+ *
+ * A locked arena is never the answer, however many trophies somebody has:
+ * the climb stops at the last open rung. Which is also what stops a locked
+ * arena from quietly handing out its ground bonus and its family to anybody
+ * who got there before it was shut.
+ */
 export function arenaFor(trophies: number): Arena {
-  let found = ARENAS[0]!;
-  for (const a of ARENAS) if (trophies >= a.from) found = a;
+  const open = openArenas();
+  let found = open[0] ?? ARENAS[0]!;
+  for (const a of open) if (trophies >= a.from) found = a;
   return found;
+}
+
+/**
+ * Has this player met this family yet?
+ *
+ * `best` is BEST trophies, never current ones. Or's rule is about having
+ * ARRIVED - *"only somebody who has reached the court for the first time
+ * can get a slime card at all"* - and trophies fall on a loss, so a player
+ * sitting on the Court's doorstep would meet the Slimes and unmeet them
+ * every other match.
+ *
+ * A family nobody introduces (the Furries, the Giants, the Dragons, the
+ * Plants) is open from the first evening. That is the games room, and it is
+ * the four families Or listed for it.
+ */
+export function familyOpen(seriesId: string, best: number): boolean {
+  const at = ARENAS.find((a) => a.introduces === seriesId);
+  if (!at) return true;
+  return !at.locked && best >= at.from;
+}
+
+/**
+ * Families that are not in the game at all yet, because the arena that
+ * introduces them is shut. Asked by isCollectable, which is why their cards
+ * are in no album, no chest and no achievement.
+ */
+export function sealedFamilies(): ReadonlySet<string> {
+  return new Set(ARENAS.filter((a) => a.locked && a.introduces).map((a) => a.introduces!));
 }
 
 /**
@@ -263,7 +360,8 @@ export function groundFor(trophies: number): string {
 /** How far into the current arena they are, 0–1, for a progress bar. */
 export function arenaProgress(trophies: number): number {
   const here = arenaFor(trophies);
-  const next = ARENAS[ARENAS.indexOf(here) + 1];
+  const open = openArenas();
+  const next = open[open.indexOf(here) + 1];
   if (!next) return 1;
   const span = next.from - here.from;
   return span <= 0 ? 1 : Math.min(1, Math.max(0, (trophies - here.from) / span));

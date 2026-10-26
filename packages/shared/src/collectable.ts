@@ -24,6 +24,7 @@
  * which is written as "a legendary card in the album" and simply starts
  * being earnable.
  */
+import { sealedFamilies } from "./arenas.js";
 import type { Card } from "./schemas/card.js";
 
 /**
@@ -47,9 +48,27 @@ export const UNCOLLECTABLE: ReadonlySet<string> = new Set([
   "legends_01_amanda",
 ]);
 
-/** Can this card end up in somebody's album? */
+/**
+ * Can this card end up in somebody's album?
+ *
+ * === AND A FAMILY WHOSE ARENA IS SHUT IS NOT IN THE GAME ===
+ *
+ * Or: *"lock the alley and the petrol station for now"*, and in the same
+ * breath about the family that lives in the alley: *"we will build a new
+ * series together and decide who is in it."* So the Strays are not a secret
+ * to be found early - they are not finished, and the arena that introduces
+ * them is shut.
+ *
+ * Asking it HERE rather than in the chest pool is the point. This one
+ * function is what the album total, the achievements and the draw all ask,
+ * so a sealed family is absent from every one of them at once: it is not in
+ * "41 of 51", it does not make "the whole album" unwinnable, and it cannot
+ * come out of a chest. The day the alley opens, it appears in all three
+ * with no other change.
+ */
 export function isCollectable(card: Pick<Card, "id" | "seriesId">): boolean {
-  return card.seriesId !== SYSTEM_SERIES && !UNCOLLECTABLE.has(card.id);
+  if (card.seriesId === SYSTEM_SERIES || UNCOLLECTABLE.has(card.id)) return false;
+  return !sealedFamilies().has(card.seriesId);
 }
 
 /** Every collectable card in a catalog, which is what "the whole album" means. */

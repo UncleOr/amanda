@@ -122,9 +122,24 @@ export const CRUMB_DEMON_CARD: Card = {
 };
 CATALOG.set(CRUMB_DEMON_CARD.id, CRUMB_DEMON_CARD);
 
+/**
+ * === A FAMILY WHOSE ARENA IS SHUT IS NOT ON ANY BOARD ===
+ *
+ * Or: *"how can I have cards from the Strays series if I have not reached
+ * the alley yet?"* — and keeping them out of his ALBUM is only half of it.
+ * A bot that fields one, or a King drawn from one, shows him the family
+ * just as surely as owning it would, and with no way to ask why.
+ *
+ * `isCollectable` already knows the rule (it asks arenas.ts), so this is
+ * the same question in the one other place that picks cards out of the
+ * whole catalogue. The Crumb Demon is not collectable either and is not in
+ * either of these pools anyway: it is synthesised filler, `launch: false`.
+ */
+const inTheGame = (c: Card): boolean => isCollectable(c);
+
 /** Cards designed to sit in the King slot (big mid-bosses first, then the rest). */
 export const KING_CANDIDATES: Card[] = (() => {
-  const kings = [...CATALOG.values()].filter((c) => c.midBoss && c.launch);
+  const kings = [...CATALOG.values()].filter((c) => c.midBoss && c.launch && inTheGame(c));
   const illustrated = kings.filter((c) => c.art.sprite);
   return illustrated.length > 0 ? illustrated : kings;
 })();
@@ -143,7 +158,7 @@ export function cardColor(cardId: string): string {
  * card has art this is simply the whole roster.
  */
 export function cardPool(): string[] {
-  const launch = [...CATALOG.values()].filter((c) => c.launch);
+  const launch = [...CATALOG.values()].filter((c) => c.launch && inTheGame(c));
   const illustrated = launch.filter((c) => c.art.sprite);
   // need a sensible deck's worth before we can restrict to illustrated cards
   const pool = illustrated.length >= 12 ? illustrated : launch;

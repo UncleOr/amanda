@@ -29,7 +29,7 @@ import {
   type GrantFilters,
   type GrantGives,
 } from "@amanda/shared";
-import { grantChest, rollChest } from "./progress.js";
+import { bestTrophiesOf, grantChest, rollChest } from "./progress.js";
 import { TODAY_CARD, cardsForSale } from "./cardShelf.js";
 import { offersFor } from "./offers.js";
 import { refreshAlbumPowerSoon } from "./albumPower.js";
@@ -169,7 +169,8 @@ export async function deliver(
     );
   }
 
-  if (gives.chest) await grantChest(sb, playerId, rollChest(gives.chest));
+  if (gives.chest)
+    await grantChest(sb, playerId, rollChest(await bestTrophiesOf(sb, playerId), gives.chest));
 
   // The album changed, so what it is worth changed. Not awaited: see
   // albumPower.ts for why a stale total beats a failed delivery.
@@ -409,7 +410,7 @@ export async function buy(
       player_id: playerId,
       kind: gives.chest,
       opened_at: null,
-      contents: rollChest(gives.chest),
+      contents: rollChest(await bestTrophiesOf(sb, playerId), gives.chest),
       bought_item: itemId,
       bought_day: day,
     });

@@ -365,7 +365,7 @@ async function addNachos(
 ): Promise<{ chests: string[]; total: number }> {
   const { data } = await sb
     .from("players")
-    .select("nachos, nacho_chests")
+    .select("nachos, nacho_chests, best_trophies, trophies")
     .eq("id", playerId)
     .maybeSingle();
   if (add <= 0) return { chests: [], total: data?.nachos ?? 0 };
@@ -395,7 +395,12 @@ async function addNachos(
       player_id: playerId,
       kind,
       opened_at: null,
-      contents: rollChest(kind, album, items),
+      contents: rollChest(
+        Math.max(data?.best_trophies ?? 0, data?.trophies ?? 0),
+        kind,
+        album,
+        items,
+      ),
     });
   }
   return { chests: kinds, total: nachos };

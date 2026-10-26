@@ -21,6 +21,7 @@ import {
   EMOJI_PACKS,
   LEVELS,
   arenaFor,
+  familyOpen,
   TUNED,
   collectableCards as pickCollectable,
   type Card,
@@ -110,6 +111,39 @@ function collectableCards(): Card[] {
 }
 
 /**
+ * === WHAT THIS PLAYER COULD BE GIVEN, WHICH IS NOT THE CATALOGUE ===
+ *
+ * Or: *"how can I have cards from the Strays series if I have not reached
+ * the alley yet? That is a bug you need to deal with."*
+ *
+ * He could because this pool was the whole catalogue. Every family was in
+ * every chest from the first evening, which quietly emptied the ladder of
+ * the one thing it was for: *"at the court we meet the Slimes. Only
+ * somebody who has reached the court for the first time can get a slime
+ * card at all."*
+ *
+ * `best` is BEST trophies and never the current count - see familyOpen. A
+ * player who climbs to the Court and then loses four matches has still met
+ * the Slimes.
+ */
+function poolFor(best: number): Card[] {
+  const open = collectableCards().filter((c) => familyOpen(c.seriesId, best));
+  // A pool that has somehow emptied gives a chest with nothing in it, which
+  // is worse than a chest from a family you have not been introduced to.
+  return open.length ? open : collectableCards();
+}
+
+/** The high-water mark this player's chests are drawn against. */
+export async function bestTrophiesOf(sb: SupabaseClient, playerId: string): Promise<number> {
+  const { data } = await sb
+    .from("players")
+    .select("best_trophies, trophies")
+    .eq("id", playerId)
+    .maybeSingle();
+  return Math.max(data?.best_trophies ?? 0, data?.trophies ?? 0);
+}
+
+/**
  * How much more likely a card you ALREADY HAVE is than one you do not.
  *
  * Or, describing what should come out of a chest: *"diamonds, and every so
@@ -156,13 +190,15 @@ function pickByRarity(pool: Card[], owned?: ReadonlySet<string>): Card | null {
  * present.
  */
 export function rollChest(
+  /** BEST trophies: which families this player has been introduced to. */
+  best: number,
   kind: string,
   owned?: ReadonlySet<string>,
   /** Shop items this player holds, so a chest never gives one twice. */
   items?: ReadonlySet<string>,
 ): { cards: string[]; diamonds: number; items?: string[] } {
   const spec = CHESTS[kind] ?? CHESTS.wood!;
-  const pool = collectableCards();
+  const pool = poolFor(best);
   const cards: string[] = [];
   if (spec.guarantees) {
     // The promised rarity is drawn WITHOUT the album tilt. It is the part of
@@ -318,7 +354,8 @@ export async function recordMatch(opts: {
       const trophies = data?.trophies ?? 0;
       // Every third win is a better chest, so there is something to count towards.
       const kind = trophies % 90 === 0 ? "gold" : trophies % 30 === 0 ? "silver" : "wood";
-      const won = rollChest(kind);
+      const bestNow = Math.max(data?.best_trophies ?? 0, trophies);
+      const won = rollChest(bestNow, kind);
       /*
        * ═══ CLIMBING AN ARENA IS AN EVENT, AND IT PAYS ═══
        *
@@ -366,7 +403,7 @@ export async function recordMatch(opts: {
           player_id: winnerId,
           kind: "gold",
           opened_at: null,
-          contents: rollChest("gold"),
+          contents: rollChest(bestAfter, "gold"),
         });
         await notify(
           sb,

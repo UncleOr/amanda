@@ -85,7 +85,14 @@ export const LESSONS: Lesson[] = [
       "giants_01_stone_colossus", // "a card with a lot of absorbing power"
       "dragons_01_flame_dragon", // flies, so the cube in front cannot block it
       "energy_boost", // the action card: taken, not placed
-      "slimes_02_gelatinous_cube", // "a card, erm... not great" — binned, then recovered
+      /*
+       * "A card, erm... not great" — Or's own line for the one that gets
+       * binned and fetched back. It was a Gelatinous Cube until the Slimes
+       * became a family you MEET at the Court (arenas.ts, `introduces`);
+       * a tutorial that deals you a card you cannot own is the same
+       * mistake the insects were taken out for.
+       */
+      "plants_01_thorn_sprout",
       "giants_10_titan_king", // the crown
       "giants_04_rock_troll", // heals itself: the second guard post
       "plants_03_healing_bloom",
@@ -155,7 +162,9 @@ export const LESSONS: Lesson[] = [
      * crowns the wrong card and puts the sniper in the front row.
      */
     opponent: [
-      { cardId: "slimes_01_basic_slime", x: 1, y: 1, king: true },
+      // Soft on purpose, and a plant rather than a slime for the reason
+      // above: nothing in the tutorial comes from a family you have not met.
+      { cardId: "plants_05_creeping_vine", x: 1, y: 1, king: true },
       // The pair poison is the answer to.
       { cardId: "plants_02_ancient_tree", x: 3, y: 1 },
       { cardId: "plants_02_ancient_tree", x: 3, y: 2 },
@@ -227,7 +236,7 @@ export const STAGE_LESSONS: Lesson[] = [
       "dragons_03_thunderwing",
       // The one that gets thrown away and fetched back. Or called it
       // *"a card, erm... not great"* when he wrote this lesson the first time.
-      "slimes_02_gelatinous_cube",
+      "plants_01_thorn_sprout",
     ],
     opponent: [
       { cardId: "crumb_demon", x: 1, y: 1, king: true },

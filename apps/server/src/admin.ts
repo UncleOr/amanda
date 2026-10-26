@@ -31,20 +31,22 @@ import { liveState, refreshLive } from "./live.js";
 import { aboutPlayer, overview } from "./stats.js";
 import { liveCounts, startedAt } from "./liveops.js";
 import { track } from "./events.js";
-import { TUNABLES } from "@amanda/shared";
+import { STARTER_ALBUM, TUNABLES } from "@amanda/shared";
 import { listReports } from "./reports.js";
 import { audienceOf, deliver, runGrant } from "./shop.js";
 import { notify } from "./notify.js";
 
-/** The cards a brand new player starts with, as the database grants them. */
-const STARTER = [
-  "dragons_01_flame_dragon",
-  "giants_01_stone_colossus",
-  "insects_01_ant_soldier",
-  "plants_01_thorn_sprout",
-  "slimes_01_basic_slime",
-  "furries_01_chuppy",
-];
+/**
+ * The cards a brand new player starts with.
+ *
+ * Imported rather than written out. This was a hand-copied list and it had
+ * already drifted twice: it was still the six-card album two changes after
+ * the database went to eight, and it still named a slime and an ant after
+ * those families became things you MEET rather than things you are given
+ * (arenas.ts, `introduces`). A test player minted from the admin panel is
+ * supposed to be what a real new player is.
+ */
+const STARTER: readonly string[] = STARTER_ALBUM;
 
 export interface AdminDeps {
   db: () => SupabaseClient | null;

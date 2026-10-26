@@ -84,6 +84,7 @@ export function HomeScreen({
   panel,
   gated,
   signedIn,
+  guest,
   promo,
   onChest,
   viewport,
@@ -96,6 +97,8 @@ export function HomeScreen({
   /** Run this, or show the sign-in prompt — see SignedInOnly.tsx. */
   gated: (open: () => void) => () => void;
   signedIn: boolean;
+  /** Known to be a guest — not merely "we have not heard yet". See App.tsx. */
+  guest: boolean;
   /** What the shop corner advertises, or null. */
   promo: ShopItem | null;
   onChest: (chest: Chest) => void;
@@ -351,7 +354,7 @@ export function HomeScreen({
                   ))}
                 </span>
                 <span>{t("sa6f7e6a", "לשחק עם חברים")}</span>
-                {!signedIn && <Lock />}
+                {guest && <Lock />}
               </button>
             </div>
           ) : (
@@ -530,6 +533,7 @@ export function HomeScreen({
           ) : (
             <Challenges
               signedIn={signedIn}
+              guest={guest}
               gated={gated}
               onClaimed={() => m.reloadAccount()}
               // Re-read after every finished match, which is the only thing
@@ -650,7 +654,7 @@ export function HomeScreen({
           <button className="rail__item" onClick={gated(() => panel.show("shop"))}>
             <Icon name="gem" size={19} />
             <span>{t("s2706aa0", "חנות נוחות")}</span>
-            {!signedIn && <Lock />}
+            {guest && <Lock />}
           </button>
           {/*
             The promotion slot.
@@ -697,7 +701,7 @@ export function HomeScreen({
             {friends && friends.waiting > 0 && (
               <i className="rail__dot" aria-label={t("sd0647c4", "מישהו מחכה לתשובה")} />
             )}
-            {!signedIn && <Lock />}
+            {guest && <Lock />}
           </button>
         </section>
 

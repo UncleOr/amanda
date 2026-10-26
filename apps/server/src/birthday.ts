@@ -30,7 +30,7 @@
 import type { SupabaseClient } from "@supabase/supabase-js";
 import { israelDay } from "@amanda/shared";
 import { notify } from "./notify.js";
-import { rollChest } from "./progress.js";
+import { bestTrophiesOf, rollChest } from "./progress.js";
 
 /**
  * Is `birthDate`'s month and day today's, in Israel?
@@ -128,7 +128,7 @@ export async function birthdayGift(
       player_id: playerId,
       kind: "gold",
       opened_at: null,
-      contents: rollChest("gold"),
+      contents: rollChest(await bestTrophiesOf(sb, playerId), "gold"),
     });
 
     await notify(

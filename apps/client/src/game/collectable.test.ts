@@ -1,6 +1,12 @@
 import { describe, expect, it } from "vitest";
-import { AMANDA_CARD, collectableCards, isCollectable, UNCOLLECTABLE } from "@amanda/shared";
-import { collectable, collectableBySeries } from "../data/catalog";
+import {
+  AMANDA_CARD,
+  collectableCards,
+  isCollectable,
+  sealedFamilies,
+  UNCOLLECTABLE,
+} from "@amanda/shared";
+import { collectable, collectableBySeries, SERIES_BY_ID } from "../data/catalog";
 
 /*
  * Two cards are not prizes, and three different places used to decide that
@@ -73,8 +79,30 @@ describe("against the real card data", () => {
   });
 
   it("leaves every other family alone", () => {
+    const sealed = sealedFamilies();
     for (const [id, n] of collectableBySeries()) {
-      if (id !== "legends") expect(n).toBeGreaterThan(0);
+      if (id !== "legends" && !sealed.has(id)) expect(n, id).toBeGreaterThan(0);
+    }
+  });
+
+  /*
+   * === AND A FAMILY WHOSE ARENA IS SHUT IS NOT IN THE ALBUM EITHER ===
+   *
+   * Or: *"how can I have cards from the Strays series if I have not reached
+   * the alley yet?"* and, about the alley itself: *"lock the alley and the
+   * petrol station for now."*
+   *
+   * The two halves of the answer are the same function. A sealed family
+   * cannot come out of a chest (apps/server/src/progress.test.ts) AND does
+   * not count towards "41 of 51" or towards collecting them all — which is
+   * the half that would otherwise make the album impossible to finish.
+   */
+  it("leaves a sealed family out of the album entirely", () => {
+    const sealed = sealedFamilies();
+    expect(sealed.size, "nothing to test if nothing is sealed").toBeGreaterThan(0);
+    for (const id of sealed) {
+      expect(SERIES_BY_ID.get(id)?.cards.length, `${id} should still exist as data`).toBeGreaterThan(0);
+      expect(collectableBySeries().get(id), `${id} is not winnable`).toBe(0);
     }
   });
 });

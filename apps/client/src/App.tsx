@@ -985,6 +985,23 @@ function Game() {
    * Locked, not hidden: see SignedInOnly.tsx.
    */
   const signedIn = m.account?.linked === true;
+  /**
+   * === THE PADLOCK WAITS UNTIL IT KNOWS ===
+   *
+   * Or: *"the padlock is too small and out of sync."*
+   *
+   * Out of sync because `signedIn` is false in two completely different
+   * situations: this player is a guest, and we have not heard back yet.
+   * The account is fetched after the first paint, so EVERY load of the home
+   * screen drew padlocks on the friends card and the challenges for as long
+   * as that took, and then took them off again — on a signed-in account,
+   * which is the one place they are simply wrong.
+   *
+   * So the lock is drawn from a third state: not "not signed in" but "known
+   * to be a guest". While the answer is unknown nothing is drawn, which is
+   * the one of the three readings that is never wrong on screen.
+   */
+  const guest = m.account?.linked === false;
   /** Open the thing, or explain why not. One call at every locked door. */
   const gated = (open: () => void) => () => {
     if (signedIn) open();
@@ -1277,6 +1294,7 @@ function Game() {
           panel={panel}
           gated={gated}
           signedIn={signedIn}
+          guest={guest}
           promo={promo}
           onChest={setChest}
           viewport={viewport}
@@ -2329,6 +2347,7 @@ function Game() {
             </button>
             <Challenges
               signedIn={signedIn}
+              guest={guest}
               gated={gated}
               // Close before the prize flies: the purse and the nacho bar it
               // flies to are on the home screen, behind this panel. See

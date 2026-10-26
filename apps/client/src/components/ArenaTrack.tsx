@@ -1,7 +1,8 @@
 import { useState } from "react";
-import { ARENAS, arenaFor, arenaProgress, toArena } from "@amanda/shared";
+import { ARENAS, arenaFor, arenaProgress, openArenas, toArena } from "@amanda/shared";
 import { ArenaStory } from "./ArenaStory";
 import { Icon } from "./Icon";
+import { Lock } from "./SignedInOnly";
 import { Overlay } from "./Overlay";
 import { line as t, lineF as tf } from "../game/copy";
 import { lang, say } from "../game/lang";
@@ -47,9 +48,19 @@ export function ArenaTrack({
   const [telling, setTelling] = useState<string | null>(null);
   const here = arenaFor(trophies);
   const progress = arenaProgress(trophies);
-  const next = ARENAS[ARENAS.indexOf(here) + 1];
+  /*
+   * The next rung is the next OPEN one, and when there is none the sentence
+   * underneath stops promising anything.
+   *
+   * Or: *"lock the alley and the petrol station for now."* Before this, a
+   * player at the top of the ladder was told "908 more to Fright Alley" for
+   * an arena that no number of trophies opens — a countdown to nothing,
+   * which is worse than no countdown.
+   */
+  const open_ = openArenas();
+  const next = open_[open_.indexOf(here) + 1];
   /* Only ever one you have been to: a locked row does not answer. */
-  const tale = ARENAS.find((a) => a.id === telling && best >= a.from) ?? null;
+  const tale = ARENAS.find((a) => a.id === telling && !a.locked && best >= a.from) ?? null;
 
   return (
     <>
@@ -96,7 +107,8 @@ export function ArenaTrack({
             <h2 className="arenas__title">{t("s474cafb", "הדרך")}</h2>
             <ol className="arenas__list">
               {ARENAS.map((a) => {
-                const reached = best >= a.from;
+                // A shut arena is never reached, whatever the trophies say.
+                const reached = !a.locked && best >= a.from;
                 const current = a.id === here.id;
                 return (
                   <li
@@ -113,6 +125,7 @@ export function ArenaTrack({
                      * be the same as having been.
                      */
                     onClick={reached ? () => setTelling(a.id) : undefined}
+                    data-shut={a.locked ? "" : undefined}
                   >
                     <span
                       className="arenas__art"
@@ -128,6 +141,14 @@ export function ArenaTrack({
                         <span className="arenas__badge">{t("s2411278", "אתה כאן")}</span>
                       ) : reached ? (
                         <Icon name="ready" size={18} />
+                      ) : a.locked ? (
+                        /*
+                         * No number, because there is no number. A trophy
+                         * count beside a shut door is a promise the ladder
+                         * cannot keep; a padlock is the truth and still
+                         * leaves the arena on the list to be wanted.
+                         */
+                        <Lock />
                       ) : (
                         <>
                           <Icon name="win" size={13} /> {a.from}

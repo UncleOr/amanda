@@ -50,6 +50,8 @@ function timeLeft(period: Period): string {
 
 export function Challenges({
   signedIn,
+  /** Known to be a guest — not merely "we have not heard yet". See App.tsx. */
+  guest,
   /** Run this, or show the sign-in prompt — see SignedInOnly.tsx. */
   gated,
   /** Run after a reward is taken, so the purse on screen catches up. */
@@ -75,6 +77,7 @@ export function Challenges({
   reloadKey,
 }: {
   signedIn: boolean;
+  guest: boolean;
   gated: (open: () => void) => () => void;
   onClaimed?: () => void;
   onTaking?: () => void;
@@ -222,7 +225,7 @@ export function Challenges({
                 }
               >
                 {busy === c.id ? "…" : t("s1d3665c", "לקחת")}
-                {!signedIn && <Lock />}
+                {guest && <Lock />}
               </button>
             )}
           </li>

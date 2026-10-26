@@ -11,7 +11,7 @@
  * numbers themselves are Or's to move.
  */
 import { describe, expect, it } from "vitest";
-import { ARENAS, arenaFor, arenaProgress } from "@amanda/shared";
+import { ARENAS, arenaFor, arenaProgress, openArenas } from "@amanda/shared";
 
 const gaps = ARENAS.slice(1).map((a, i) => a.from - ARENAS[i]!.from);
 
@@ -40,7 +40,9 @@ describe("the shape of the ladder", () => {
   });
 
   it("still puts a player on the rung they have reached", () => {
-    for (const a of ARENAS) {
+    // The open rungs. A locked arena is not a rung anybody stands on — see
+    // arenas.test.ts, which is where that is pinned.
+    for (const a of openArenas()) {
       expect(arenaFor(a.from).id).toBe(a.id);
       // The first rung has nothing below it: a player on zero is in the
       // playroom and so is a player the ladder has never heard of.

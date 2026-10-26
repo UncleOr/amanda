@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { ARENAS, arenaFor, arenaProgress, toArena } from "@amanda/shared";
+import { ARENAS, arenaFor, arenaProgress, openArenas, toArena } from "@amanda/shared";
 
 /*
  * ל and ה collapse in Hebrew, and a string concatenation does not know that.
@@ -27,8 +27,26 @@ describe("the ladder", () => {
   });
 
   it("climbs as trophies climb, and never past the end", () => {
-    expect(arenaFor(ARENAS[1]!.from).id).toBe(ARENAS[1]!.id);
-    expect(arenaFor(999999).id).toBe(ARENAS[ARENAS.length - 1]!.id);
+    const open = openArenas();
+    expect(arenaFor(open[1]!.from).id).toBe(open[1]!.id);
+    expect(arenaFor(999999).id).toBe(open[open.length - 1]!.id);
+  });
+
+  /*
+   * Or: *"lock the alley and the petrol station for now. There is no user
+   * advanced enough to get there anyway."*
+   *
+   * Which is a thing a trophy count must not be able to undo. The two are
+   * still in ARENAS — they are drawn, dark, on the ladder — so the only
+   * thing standing between a player and a shut arena is this.
+   */
+  it("never puts anybody in a locked arena, however high they climb", () => {
+    const shut = ARENAS.filter((a) => a.locked);
+    expect(shut.length, "nothing to test if nothing is locked").toBeGreaterThan(0);
+    for (const a of shut) {
+      expect(arenaFor(a.from).id).not.toBe(a.id);
+      expect(arenaFor(a.from + 100000).id).not.toBe(a.id);
+    }
   });
 
   it("progress stays between 0 and 1, and is full at the top", () => {
