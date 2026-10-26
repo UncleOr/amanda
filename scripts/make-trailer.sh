@@ -252,7 +252,7 @@ TILES=(
 # is not energy, it is a mess.
 FROM=(left top right left bottom right)
 
-COL_HOLD=2.6
+COL_HOLD=2.4
 TILE_W=620
 TILE_H=286          # the game is 2.165:1, and 620/2.165 is 286
 GAP=12

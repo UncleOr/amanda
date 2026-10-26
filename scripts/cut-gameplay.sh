@@ -40,10 +40,9 @@
 #   0:01  the two catchphrases facing each other
 #   0:04  BUILD FRENZY, and the first card goes down
 #   0:33  three cards dragged onto a board that is already full
-#   0:36  that board, held for a second, because it is the thing you built
 #   0:47  the countdown: 2, 1, 0, INTO BATTLE!
 #   0:51  the clash, damage numbers coming off both sides
-#   1:16  KING DOWN!
+#   1:15  KING DOWN!
 #
 # ═══ TWO THAT WERE HERE AND ARE NOT ═══
 #
@@ -105,14 +104,45 @@ FPS=25
 # The 0.7s they gave back went to `building`, which is three cards being
 # dragged onto a board that is already full of monsters.
 PIECES=(
-  "clip    0.75  1.5   0   catchphrases"
-  "clip    3.55  1.5  36   frenzy"
-  "clip   33.10  3.6  36   building"
-  "still  36.20  1.1  36   board"
-  "clip   47.65  2.6  36   countdown"
-  "clip   51.30  2.8  36   clash"
-  "clip   75.75  2.2  36   kingdown"
+  "clip    0.75  1.8   0   catchphrases"
+  "clip    3.55  1.8  36   frenzy"
+  "clip   33.10  3.7  36   building"
+  "clip   47.65  2.8  36   countdown"
+  "clip   51.30  2.9  36   clash"
+  "clip   75.10  2.3  36   kingdown"
 )
+
+# ═══ WHY THE BOARD IS NOT HELD ANY MORE, AND WHY THE REST ARE LONGER ═══
+#
+# Or: *"the slide transitions are not good where the pieces are too short.
+# Make the pieces a bit longer and the transitions a bit shorter."*
+#
+# He is pointing at arithmetic. A piece pays a transition at each end, so at
+# 0.24s a 1.1-second still was 0.62 seconds of actually standing still — it
+# arrived and left without ever being a picture, which is what makes a slide
+# look like a stumble rather than a push.
+#
+# Nothing is longer by much; the shortest static stretch went from 0.62s to
+# 1.48, which is the whole difference. What paid for it was the still: the
+# board held for a second was the shortest piece AND the only one not moving,
+# and the collage in front of the montage is already the beat where a screen
+# stands still long enough to be read.
+#
+# ═══ AND THE KING-DOWN PIECE STOPS AT 1:17.40 ═══
+#
+# Or: *"and at the end there is this 'Obsidian Egg' that is heard by
+# accident — take it out."*
+#
+# Found by measuring the recording's own loudness every tenth of a second
+# across that piece rather than by scrubbing for it:
+#
+#   1:15.99 – 1:16.35   -28 dB, short      the king going down
+#   1:16.35 – 1:17.43   -91 dB            silence
+#   1:17.43 onwards     -15 dB, sustained   the egg, still going
+#
+# So the piece starts 0.65s earlier and ends at 1:17.40, which is before the
+# sound rather than after it. The banner is still in the middle of it, and
+# nothing was faded or ducked — the cut simply stops where the noise starts.
 
 # ═══ HOW THE PIECES MEET ═══
 #
@@ -126,7 +156,7 @@ PIECES=(
 # "next" where the cut said nothing, it is the gesture a player makes going
 # through their own cards, and it keeps the montage moving even across the
 # still.
-XFADE=0.24
+XFADE=0.16
 TRANS=slideleft
 
 [ -f "$SRC" ] || { echo "no recording at: $SRC" >&2; exit 1; }
