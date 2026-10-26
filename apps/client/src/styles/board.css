@@ -569,6 +569,137 @@
   100% { opacity: 0; transform: translate(-7px, 26px) rotate(140deg); }
 }
 
+/*
+ * ── lightning, for anything electric ──
+ *
+ * Or lists *"lightning"* separately from *"a current that surrounds the
+ * card"*, and he is right to: a current is continuous and a bolt is an
+ * event. The rings above are the current. These are the bolts.
+ *
+ * A clip-path zigzag rather than an image — a bolt is a shape, and one the
+ * compositor can draw costs nothing. Each is struck for about a tenth of a
+ * second out of its cycle and is invisible the rest of the time, which is
+ * what makes three of them read as weather rather than as decoration.
+ */
+.drag-ghost__bolt i {
+  position: absolute;
+  width: 9px;
+  height: 34px;
+  background: linear-gradient(180deg, #fffce0, #ffe066 55%, rgba(255, 210, 60, 0.4));
+  clip-path: polygon(52% 0%, 16% 46%, 44% 46%, 10% 100%, 86% 38%, 54% 38%, 92% 0%);
+  filter: drop-shadow(0 0 5px rgba(255, 224, 102, 0.9));
+  opacity: 0;
+  animation: bolt-strike 0.78s steps(1, end) infinite;
+}
+.drag-ghost__bolt i:nth-child(1) { left: -9px; top: 14%; animation-delay: 0s; }
+.drag-ghost__bolt i:nth-child(2) { right: -8px; top: 42%; transform: rotate(18deg); animation-delay: 0.29s; }
+.drag-ghost__bolt i:nth-child(3) { left: 38%; bottom: -16px; transform: rotate(-9deg); animation-delay: 0.53s; }
+@keyframes bolt-strike {
+  0% { opacity: 1; }
+  14% { opacity: 0; }
+  18% { opacity: 0.85; }
+  26% { opacity: 0; }
+  100% { opacity: 0; }
+}
+
+/*
+ * ── jelly, for anything with no bones in it ──
+ *
+ * Or: *"a drag 'feel' … wobbles"* and *"jelly/slime splatter"*. The sway is
+ * the feel and the drips are the splatter, and they are two things on
+ * purpose: a card that only swayed would be a card on a loose spring, and
+ * drips alone would be a wet picture.
+ *
+ * ⚠ THE SWAY IS A ROTATION, NEVER A SCALE. Or, about this exact ghost:
+ * *"when you drag a card its shape changes. It should stay in the shape of
+ * a card."* A squash-and-stretch wobble is the obvious way to draw jelly
+ * and it is the one thing this may not do, so the card leans instead and
+ * the softness is carried by the spring in carry.ts.
+ */
+.drag-ghost--ooze { animation: carry-slosh 0.74s ease-in-out infinite alternate; }
+@keyframes carry-slosh {
+  from { translate: -2px 1px; }
+  to { translate: 2px -1px; }
+}
+.drag-ghost__drip i {
+  position: absolute;
+  bottom: 6%;
+  width: 7px;
+  height: 9px;
+  border-radius: 50% 50% 46% 46% / 38% 38% 62% 62%;
+  background: radial-gradient(ellipse at 38% 30%, rgba(214, 255, 196, 0.95), rgba(122, 199, 104, 0.85) 60%, rgba(74, 140, 64, 0.8));
+  box-shadow: 0 0 6px rgba(140, 240, 120, 0.5);
+  animation: drip-fall 1.1s ease-in infinite;
+}
+.drag-ghost__drip i:nth-child(1) { left: 12%; animation-delay: 0s; }
+.drag-ghost__drip i:nth-child(2) { left: 34%; animation-delay: 0.26s; }
+.drag-ghost__drip i:nth-child(3) { left: 56%; animation-delay: 0.52s; }
+.drag-ghost__drip i:nth-child(4) { left: 76%; animation-delay: 0.78s; }
+.drag-ghost__drip i:nth-child(5) { left: 46%; animation-delay: 0.95s; }
+/*
+ * It stretches before it lets go, which is the whole of what makes a drop
+ * read as thick. `scaleY` on a 7px blob is not the card changing shape —
+ * the rule above is about the CARD.
+ */
+@keyframes drip-fall {
+  0% { opacity: 0; transform: translateY(0) scaleY(0.6); }
+  22% { opacity: 1; transform: translateY(2px) scaleY(1.5); }
+  38% { transform: translateY(6px) scaleY(1.1); }
+  100% { opacity: 0; transform: translateY(30px) scaleY(0.9); }
+}
+
+/*
+ * ── earth, for anything that was rooted in it ──
+ *
+ * Or: *"flying earth"*, and a feel he called *"resists"*. They are one
+ * idea: a card that stands still on a board does not want to be lifted off
+ * one either, so it judders in the hand and tears clods up with it. The
+ * dust ellipse under the giants is reused, because what is under this is
+ * the same hole in the ground.
+ */
+.drag-ghost--root {
+  transform: translate(-50%, -48%) rotate(var(--lean, -4deg)) scale(1.04);
+  animation: carry-judder 0.13s steps(2, end) infinite;
+}
+@keyframes carry-judder {
+  from { translate: -1.5px 0.5px; }
+  to { translate: 1.5px -0.5px; }
+}
+.drag-ghost__soil i {
+  position: absolute;
+  bottom: 8%;
+  width: 5px;
+  height: 4px;
+  /* Not the giants' grey: this is soil, and it comes off in crumbs rather
+     than in chips. */
+  border-radius: 60% 40% 55% 45%;
+  background: #6b4f33;
+  box-shadow: 0 0 0 1px rgba(0, 0, 0, 0.35);
+  animation: soil-fly 0.72s ease-out infinite;
+}
+.drag-ghost__soil i:nth-child(1) { left: 18%; animation-delay: 0s; }
+.drag-ghost__soil i:nth-child(2) { left: 40%; animation-delay: 0.19s; }
+.drag-ghost__soil i:nth-child(3) { left: 62%; animation-delay: 0.37s; }
+.drag-ghost__soil i:nth-child(4) { left: 82%; animation-delay: 0.55s; }
+/* Thrown UP and out, then dropped — earth coming off something being
+   pulled, rather than gravel falling off something being carried. */
+@keyframes soil-fly {
+  0% { opacity: 0; transform: translate(0, 0) rotate(0deg); }
+  15% { opacity: 1; transform: translate(-3px, -11px) rotate(60deg); }
+  100% { opacity: 0; transform: translate(-9px, 18px) rotate(220deg); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .drag-ghost--ooze,
+  .drag-ghost--root,
+  .drag-ghost__drip i,
+  .drag-ghost__soil i,
+  .drag-ghost__bolt i { animation: none; }
+  .drag-ghost__drip i,
+  .drag-ghost__soil i,
+  .drag-ghost__bolt i { opacity: 0; }
+}
+
 /* A phone that has been asked to stop moving things gets a card that is
    simply carried: the spring still runs, the decoration does not. */
 @media (prefers-reduced-motion: reduce) {

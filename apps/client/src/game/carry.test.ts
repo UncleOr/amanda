@@ -51,17 +51,42 @@ describe("carrying a card", () => {
   });
 
   it("carries everything else steadily", () => {
-    expect(carryOf("plants_01_thorn_sprout").style).toBe("steady");
+    // A plant that WALKS. The thorn sprout used to stand in for "everything
+    // else" and it no longer can: it has no move speed, so it is one of the
+    // cards that now resists being lifted. See `root` in carry.ts.
+    expect(carryOf("plants_05_creeping_vine").style).toBe("steady");
+  });
+
+  /*
+   * Or's two missing feelings: *"a drag 'feel' (flies fast, WOBBLES, slow,
+   * heavy, RESISTS, etc.)"*. Both are derived, like every other style —
+   * a slime wobbles because it is a slime, and anything rooted resists
+   * because standing still is what being rooted means.
+   */
+  it("wobbles a slime", () => {
+    expect(carryOf("slimes_01_basic_slime").style).toBe("ooze");
+    expect(carryOf("slimes_05_sticky_rug").style).toBe("ooze");
+  });
+
+  it("makes anything rooted resist being lifted", () => {
+    expect(carryOf("plants_01_thorn_sprout").style).toBe("root");
+    for (const id of cardPool()) {
+      const card = CATALOG.get(id)!;
+      if (card.flying || card.seriesId === "slimes") continue;
+      if (card.elements[0] === "electric") continue;
+      if (card.stats.hp >= 1600 || card.midBoss) continue;
+      expect(carryOf(id).style, id).toBe(card.stats.moveSpeed === 0 ? "root" : "steady");
+    }
   });
 
   it("is slower to answer the harder it is to carry", () => {
     // `pull` IS the weight: how hard the card is dragged toward the pointer
     // each frame. A giant is late to every turn.
     expect(carryOf("giants_10_titan_king").pull).toBeLessThan(
-      carryOf("plants_01_thorn_sprout").pull,
+      carryOf("plants_05_creeping_vine").pull,
     );
     expect(carryOf("insects_07_aggressive_wasp").pull).toBeGreaterThan(
-      carryOf("plants_01_thorn_sprout").pull,
+      carryOf("plants_05_creeping_vine").pull,
     );
   });
 
@@ -108,15 +133,23 @@ function behindAfter(cardId: string, frames: number): number {
 }
 
 describe("the weight you can feel", () => {
-  it("leaves a giant further behind your thumb than a sprout", () => {
+  it("leaves a giant further behind your thumb than a vine", () => {
     expect(behindAfter("giants_10_titan_king", 10)).toBeGreaterThan(
-      behindAfter("plants_01_thorn_sprout", 10),
+      behindAfter("plants_05_creeping_vine", 10),
     );
+  });
+
+  it("leaves the one that RESISTS furthest behind of all", () => {
+    // Measured over the ten frames the spring really runs: 259px for a
+    // rooted card, 227 for a giant, 76 for a vine.
+    const rooted = behindAfter("plants_01_thorn_sprout", 10);
+    expect(rooted).toBeGreaterThan(behindAfter("giants_10_titan_king", 10));
+    expect(rooted).toBeGreaterThan(behindAfter("plants_05_creeping_vine", 10));
   });
 
   it("gets a flier there first", () => {
     expect(behindAfter("insects_07_aggressive_wasp", 10)).toBeLessThan(
-      behindAfter("plants_01_thorn_sprout", 10),
+      behindAfter("plants_05_creeping_vine", 10),
     );
   });
 

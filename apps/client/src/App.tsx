@@ -2073,11 +2073,65 @@ function Game() {
                     <i />
                     <i />
                   </span>
+                  {/*
+                    ═══ AND ACTUAL LIGHTNING ═══
+
+                    Or's list of what a drag should throw off names
+                    *"lightning"* on its own, beside the wings and the
+                    gravel. What was here was a CURRENT — two rings running
+                    around the card — which is the other thing he asked for
+                    and is not this. A current is continuous and a bolt is
+                    an event, and the difference is the whole of why he
+                    listed them separately.
+
+                    Three of them, on different clocks, each struck for
+                    about a tenth of a second and gone. The zigzag is a
+                    clip-path rather than an image: a bolt is a shape, and
+                    a shape that the compositor can draw costs nothing.
+                  */}
+                  <span className="drag-ghost__bolt" aria-hidden="true">
+                    <i />
+                    <i />
+                    <i />
+                  </span>
                   <span className="drag-ghost__spark" aria-hidden="true">
                     <i />
                     <i />
                     <i />
                   </span>
+                </>
+              )}
+              {/*
+                Jelly, for anything with no bones in it. Or: *"jelly/slime
+                splatter"*. Five drips on their own clocks, leaving from
+                different points along the bottom edge — a blob stretches,
+                lets go and falls, which is the one thing that says a thing
+                is WET rather than merely green.
+              */}
+              {carry.style === "ooze" && (
+                <span className="drag-ghost__drip" aria-hidden="true">
+                  <i />
+                  <i />
+                  <i />
+                  <i />
+                  <i />
+                </span>
+              )}
+              {/*
+                And earth, for anything being pulled out of the ground. Or:
+                *"flying earth"* — which belongs to the card that RESISTS,
+                because the thing that throws soil is something coming up by
+                the roots rather than something walking about on it.
+              */}
+              {carry.style === "root" && (
+                <>
+                  <span className="drag-ghost__soil" aria-hidden="true">
+                    <i />
+                    <i />
+                    <i />
+                    <i />
+                  </span>
+                  <span className="drag-ghost__dust" aria-hidden="true" />
                 </>
               )}
               {carry.style === "heavy" && (

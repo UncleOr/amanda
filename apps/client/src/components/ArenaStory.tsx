@@ -18,7 +18,7 @@
  * underneath, and the caption is the one rule worth knowing about the place:
  * on this ground, these cards hit harder (packages/shared/src/arenas.ts).
  */
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { ARENA_POWER_BONUS, atArena, type Arena } from "@amanda/shared";
 import { CardDetailModal } from "./CardDetailModal";
 import { CATALOG, SERIES_BY_ID } from "../data/catalog";
@@ -26,6 +26,21 @@ import { Icon } from "./Icon";
 import { Overlay } from "./Overlay";
 import { line as t, lineF as tf } from "../game/copy";
 import { lang, say } from "../game/lang";
+import { sfx } from "../game/sfx";
+
+/**
+ * How long the pack takes to come apart before the cards are dealt.
+ *
+ * Or: *"the animation of a pack of cards opening in the arena still does
+ * not exist."* It did not: the pack vanished between two frames and a grid
+ * appeared where it had been, which is a state change rather than an event.
+ *
+ * 260ms, which is about as long as a thing can take before a child presses
+ * it again. It is also the length of the burst in chests.css, deliberately
+ * — a pack coming apart and a chest lid giving way are the same moment in
+ * this game and should not be two different speeds.
+ */
+const BURST_MS = 260;
 
 const BASE = import.meta.env.BASE_URL;
 
@@ -62,11 +77,38 @@ function Family({
    * The fan is what makes opening it worth a press.
    */
   const [open, setOpen] = useState(false);
+  /*
+   * === AND IT COMES APART BEFORE IT DEALS ===
+   *
+   * The press has three moments, and the middle one is the one that was
+   * missing. The pack jolts and its three backs fly out of the stack; the
+   * grid replaces it; the cards land one after another, 26ms apart, the
+   * same stagger the album's packs use (album.css) — because a pack opening
+   * is a pack opening and two different speeds for it would read as two
+   * different games.
+   */
+  const [bursting, setBursting] = useState(false);
+  useEffect(() => {
+    if (!bursting) return;
+    const t = window.setTimeout(() => {
+      setBursting(false);
+      setOpen(true);
+    }, BURST_MS);
+    return () => window.clearTimeout(t);
+  }, [bursting]);
   if (!cards.length) return null;
 
   if (!open)
     return (
-      <button type="button" className="ground__pack" onClick={() => setOpen(true)}>
+      <button
+        type="button"
+        className={`ground__pack${bursting ? " is-bursting" : ""}`}
+        onClick={() => {
+          if (bursting) return;
+          sfx.play("draw");
+          setBursting(true);
+        }}
+      >
         <span className="ground__fan" aria-hidden="true">
           {/* Three backs, stacked and splayed: the shape of a pack. */}
           {cards.slice(0, 3).map((c) => (
@@ -79,7 +121,7 @@ function Family({
     );
 
   return (
-    <div className="ground__cards">
+    <div className="ground__cards is-dealt">
       {cards.map((c) => (
         <button
           type="button"

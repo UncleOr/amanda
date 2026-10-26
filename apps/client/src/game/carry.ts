@@ -31,7 +31,35 @@ import { CATALOG } from "../data/catalog";
  * beats faster than the eye resolves and a dragon takes one slow stroke and
  * rides it. The sound splits the same way — see cardSound.ts.
  */
-export type CarryStyle = "heavy" | "flutter" | "soar" | "spark" | "steady";
+/*
+ * And Or's own list of what a carry can FEEL like: *"a drag 'feel' (flies
+ * fast, wobbles, slow, heavy, resists, etc.)"*, beside a list of what it
+ * should throw off: *"insect wings (small, beating fast), dragon wings
+ * (big, moving slowly), flying gravel, lightning, jelly/slime splatter,
+ * flying earth."*
+ *
+ * Two of those feelings had no style at all and both are added here.
+ *
+ *   ooze   WOBBLES. A slime has no skeleton, so it is the loosest spring in
+ *          the set — it arrives late, overshoots, and sways on the way. It
+ *          throws drips.
+ *   root   RESISTS. A card that does not move on a board does not want to
+ *          leave the ground either: it is heavy to start, it judders in the
+ *          hand, and it tears earth up with it. Which is also where Or's
+ *          *"flying earth"* belongs — the thing that would throw soil is
+ *          something being pulled OUT of it, not something walking on it.
+ *
+ * Seven styles for fifty-one cards, all of them read off what the card
+ * already says it is. Nothing is written per card.
+ */
+export type CarryStyle =
+  | "heavy"
+  | "flutter"
+  | "soar"
+  | "spark"
+  | "ooze"
+  | "root"
+  | "steady";
 
 export interface Carry {
   style: CarryStyle;
@@ -58,6 +86,22 @@ const STYLES: Record<CarryStyle, Omit<Carry, "style">> = {
   soar: { pull: 0.22, damp: 0.78, lead: 2.4, tilt: 13 },
   // Light and jumpy, and it crackles — see the sparks in App.tsx.
   spark: { pull: 0.3, damp: 0.62, lead: 1.4, tilt: 12 },
+  /*
+   * Or's *"wobbles"*. The loosest spring in the set and deliberately so: a
+   * low pull makes it late and a low damping stops it settling, which
+   * together are a thing with no bones in it. It is NOT a scale — Or:
+   * *"when you drag a card its shape changes. It should stay in the shape
+   * of a card"* — so the wobble is a sway about its own middle.
+   */
+  ooze: { pull: 0.14, damp: 0.52, lead: 0, tilt: 20 },
+  /*
+   * Or's *"resists"*. The slowest to answer of the seven, measured over the
+   * same ten frames the spring actually runs: 259px behind the thumb, where
+   * a giant is 227 and a sprout is 76. It has to COME HOME though — a card
+   * that never catches up is a card you cannot place — so the damping is
+   * high enough to settle it inside half a pixel after ninety frames.
+   */
+  root: { pull: 0.1, damp: 0.88, lead: 0, tilt: 6 },
   // Everything else: a card, carried.
   steady: { pull: 0.22, damp: 0.74, lead: 0.8, tilt: 8 },
 };
@@ -83,8 +127,19 @@ export function carryOf(cardId: string): Carry {
       : "flutter"
     : card.elements[0] === "electric"
       ? "spark"
-      : card.stats.hp >= HEAVY_HP || card.midBoss
-        ? "heavy"
-        : "steady";
+      : card.seriesId === "slimes"
+        ? "ooze"
+        : card.stats.hp >= HEAVY_HP || card.midBoss
+          ? "heavy"
+          : /*
+             * Rooted, and that is the whole test: a card with no move speed
+             * is one that stands where it is put. Most of them are plants
+             * and all of them resist being lifted, which is a property of
+             * standing still rather than of being green — so the next
+             * rooted card anybody draws resists too.
+             */
+            card.stats.moveSpeed === 0
+            ? "root"
+            : "steady";
   return { style, ...STYLES[style] };
 }
