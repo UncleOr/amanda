@@ -266,24 +266,41 @@
 
 /* The challenges, as a button. Only ever drawn on a screen with no room for
    the list — see ChallengeButton. */
+/*
+ * === THE DOOR TO THE CHALLENGES ===
+ *
+ * Or: *"the challenges button is no good."*
+ *
+ * It was a column built to hold an icon above a word, and when the word
+ * became a picture (he asked for that in the same message) the column kept
+ * its shape: a tall narrow box with a small rosette floating in the middle
+ * of it, pressed against the edge of the screen.
+ *
+ * A square with the rosette filling it, and the count sitting on the
+ * corner. Lit rather than dark, because this is the one tile on the home
+ * screen that is sometimes worth money and should look it when it is.
+ */
 .quests__open {
-  display: inline-flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 2px;
+  display: inline-grid;
+  place-items: center;
   position: relative;
-  padding: 7px 12px;
-  border-radius: 11px;
-  border: 1px solid var(--line);
+  width: 46px;
+  height: 46px;
+  padding: 0;
+  border-radius: 13px;
+  border: 1px solid var(--line-lit);
   background: rgba(10, 14, 24, 0.72);
-  color: var(--text);
+  color: var(--accent);
   font: inherit;
-  font-size: var(--t-2);
-  font-weight: 700;
   cursor: pointer;
-  white-space: nowrap;
 }
 .quests__open:hover { border-color: var(--accent); }
+/* Something to take: the tile says so before the badge is read. */
+.quests__open:has(.quests__dot--big) {
+  border-color: var(--accent);
+  background: rgba(74, 222, 128, 0.12);
+  box-shadow: 0 0 14px rgba(74, 222, 128, 0.25);
+}
 /*
  * === THE COUNT WAS INSIDE A SEVEN-PIXEL CIRCLE ===
  *
@@ -419,7 +436,29 @@
   background: rgba(8, 11, 19, 0.6);
   text-align: start;
 }
-.quests__head { display: flex; align-items: center; justify-content: space-between; gap: 8px; }
+/*
+ * === THE TITLE AND THE TABS ARE TWO ROWS ===
+ *
+ * Or, with the panel open in English: *"the headings are really crowded.
+ * They run over the X."*
+ *
+ * They were one row - a title at the start, three tabs at the end - and
+ * that holds in Hebrew, where the three read "היום / השבוע / החודש". In
+ * English they are TODAY / THIS WEEK / THIS MONTH, in capitals, in a wide
+ * display face, and no amount of padding was ever going to hold them.
+ *
+ * Padding was the old answer and it is kept below, because it is still what
+ * keeps the TITLE clear of the close button. What is new is that the tabs
+ * have a line of their own, which cannot overflow into anything however
+ * long the words get - in any language anybody translates this into next.
+ */
+.quests__head {
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+  gap: var(--sp-2);
+}
+.quests__head h2 { align-self: start; }
 /*
  * ═══ THE LAST TAB WAS UNDER THE CLOSE BUTTON ═══
  *
@@ -445,7 +484,16 @@
   margin: 0;
   font-size: var(--t-4);
 }
-.quests__tabs { display: flex; gap: 3px; padding: 3px; border-radius: 999px; background: rgba(0, 0, 0, 0.4); }
+.quests__tabs {
+  display: flex;
+  /* Three equal pills across the panel, rather than three different widths
+     huddled at one end. */
+  gap: 3px;
+  padding: 3px;
+  border-radius: 999px;
+  background: rgba(0, 0, 0, 0.4);
+}
+.quests__tabs button { flex: 1; }
 .quests__tabs button {
   position: relative;
   padding: 3px 10px;
@@ -541,7 +589,8 @@
   cursor: pointer;
 }
 .quests__take:disabled { opacity: 0.25; cursor: default; filter: grayscale(1); }
-.quests__taken { grid-area: take; color: var(--muted); font-size: var(--t-2); }
+/* Empty on purpose - it holds the column open. See Challenges.tsx. */
+.quests__taken { grid-area: take; }
 
 /* The purse gained a third number that is not the album size. */
 .purse__item--nacho { color: #ffd36b; }

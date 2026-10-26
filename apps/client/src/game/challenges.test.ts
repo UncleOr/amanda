@@ -12,13 +12,13 @@ import {
 
 const POOLS: Pools = {
   cards: [
-    { id: "lion_a", he: "אריה" },
-    { id: "slime_b", he: "ריר" },
-    { id: "ghost_c", he: "רוח" },
+    { id: "lion_a", he: "אריה", en: "Lion" },
+    { id: "slime_b", he: "ריר", en: "Slime" },
+    { id: "ghost_c", he: "רוח", en: "Ghost" },
   ],
   series: [
-    { id: "lions", he: "אריות" },
-    { id: "slimes", he: "רירים" },
+    { id: "lions", he: "אריות", en: "The Lions" },
+    { id: "slimes", he: "רירים", en: "The Slimes" },
   ],
 };
 
@@ -169,5 +169,57 @@ describe("whether a match counted", () => {
     const goal = { kind: "placeSeries", seriesId: "lions", row: "front" } as const;
     expect(progressFrom(goal, facts())).toBe(1);
     expect(progressFrom({ ...goal, row: "back" }, facts())).toBe(0);
+  });
+});
+
+/**
+ * ═══ AND EVERY ONE OF THEM SAYS IT IN ENGLISH TOO ═══
+ *
+ * Or, with the panel open in an English game: *"the challenges are in
+ * Hebrew."*
+ *
+ * They were, and nothing could have translated them. Every other string in
+ * this game either sits in docs/COPY.md under an id or carries `en` beside
+ * its `he` in a data file; a challenge is BUILT at run time out of a
+ * template and a card's name, so there was no id to translate and no column
+ * to put one in.
+ *
+ * Which makes this the kind of thing that comes back: the next template
+ * somebody adds will be written in Hebrew, because that is how the five
+ * above it are written. So the test is over the whole year.
+ */
+describe("a challenge in English", () => {
+  it("exists for every challenge the year can produce", () => {
+    const seen = new Set<string>();
+    for (let d = 0; d < 365; d++) {
+      const day = new Date(Date.UTC(2026, 0, 1 + d, 12));
+      for (const c of challengesFor(POOLS, day)) {
+        expect(c.en, `${c.id}: ${c.he}`).toBeTruthy();
+        seen.add(c.en);
+      }
+    }
+    // Enough different sentences that this is reading real templates.
+    expect(seen.size).toBeGreaterThan(10);
+  });
+
+  it("is English, not the Hebrew pasted back", () => {
+    for (let d = 0; d < 60; d++) {
+      const day = new Date(Date.UTC(2026, 0, 1 + d, 12));
+      for (const c of challengesFor(POOLS, day))
+        expect(c.en, c.id).not.toMatch(/[\u0590-\u05ff]/);
+    }
+  });
+
+  it("names the card or the family it is about", () => {
+    // The two templates that take a name out of the pools must take the
+    // ENGLISH one — the half of this that a `en: he` typo would pass.
+    const names = ["Lion", "Slime", "Ghost", "The Lions", "The Slimes"];
+    let named = 0;
+    for (let d = 0; d < 120; d++) {
+      const day = new Date(Date.UTC(2026, 0, 1 + d, 12));
+      for (const c of challengesFor(POOLS, day))
+        if (names.some((n) => c.en.includes(n))) named++;
+    }
+    expect(named, "no challenge ever named anything").toBeGreaterThan(0);
   });
 });

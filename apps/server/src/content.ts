@@ -43,7 +43,9 @@ CATALOG.set("crumb_demon", {
  * needs to say "Lions" in Hebrew, and nothing else about a series reaches
  * packages/shared/src/challenges.ts on purpose — see the Pools type there.
  */
-export const SERIES_NAMES = new Map<string, string>(series.map((s) => [s.id, s.name.he]));
+export const SERIES_NAMES = new Map<string, { he: string; en: string }>(
+  series.map((s) => [s.id, { he: s.name.he, en: s.name.en }]),
+);
 
 /** Series synergies applied in battle (same as the client passes). */
 export const SYNERGIES = series.map((s) => ({

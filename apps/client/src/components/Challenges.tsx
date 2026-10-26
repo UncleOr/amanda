@@ -254,7 +254,18 @@ export function Challenges({
               )}
             </span>
             {c.claimed ? (
-              <span className="quests__taken">{t("sb752d13", "נלקח")}</span>
+              /*
+               * Or: *"you do not need the TAKEN."*
+               *
+               * He is right, and it was doing the row's job twice: a
+               * claimed challenge already goes grey, loses its button and
+               * keeps its bar full. A word beside all of that is a caption
+               * on a picture that was clear.
+               *
+               * Something still has to occupy the cell, or the three-column
+               * grid collapses and the rows stop lining up.
+               */
+              <span className="quests__taken" aria-label={t("sb752d13", "נלקח")} />
             ) : (
               /*
                * A LOCK, not a dead button.

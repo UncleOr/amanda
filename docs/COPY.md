@@ -864,8 +864,8 @@
 | מזהה | טקסט נוכחי | טקסט חדש | אנגלית |
 | --- | --- | --- | --- |
 | sfbba2d0 | היום | | Today |
-| sb2dcc21 | השבוע | | This week |
-| scbbd32e | החודש | | This month |
+| sb2dcc21 | השבוע | | Week |
+| scbbd32e | החודש | | Month |
 | sa421571 | עוד פחות משעה | | Less than an hour left |
 | sde4b772 | עוד {0} שעות | | {0} hours left |
 | s58b31e8 | עוד יום | | One day left |

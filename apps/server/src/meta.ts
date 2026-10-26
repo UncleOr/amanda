@@ -76,10 +76,10 @@ const POOLS: Pools = (() => {
    */
   const families = new Set(playable.map((c) => c.seriesId));
   return {
-    cards: playable.map((c) => ({ id: c.id, he: c.name.he })),
+    cards: playable.map((c) => ({ id: c.id, he: c.name.he, en: c.name.en })),
     series: [...SERIES_NAMES]
       .filter(([id]) => families.has(id))
-      .map(([id, he]) => ({ id, he })),
+      .map(([id, name]) => ({ id, ...name })),
   };
 })();
 

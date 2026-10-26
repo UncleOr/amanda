@@ -8110,7 +8110,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/components/Challenges.tsx",
-   "line": 257
+   "line": 268
   }
  },
  {
@@ -8120,7 +8120,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/components/Challenges.tsx",
-   "line": 277
+   "line": 288
   }
  },
  {
@@ -8130,7 +8130,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/components/Challenges.tsx",
-   "line": 342
+   "line": 353
   }
  },
  {
@@ -8140,7 +8140,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/components/Challenges.tsx",
-   "line": 343
+   "line": 354
   }
  },
  {

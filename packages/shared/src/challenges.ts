@@ -70,6 +70,22 @@ export interface Challenge {
   reward: { diamonds?: number; nachos?: number };
   /** The sentence shown to the player. Or's words — see docs/COPY.md. */
   he: string;
+  /**
+   * === AND THE SAME SENTENCE IN ENGLISH ===
+   *
+   * Or, with the challenges panel open in an English game: *"the challenges
+   * are in Hebrew."*
+   *
+   * They were, and nothing could have translated them. Every other string
+   * in the game is either in docs/COPY.md by id or carries `en` beside its
+   * `he` in a data file; a challenge is BUILT, at run time, out of a
+   * template and a card's name. There was no id to translate and no column
+   * to put one in.
+   *
+   * So the templates say both, and the pools carry both names. `say()` in
+   * the client picks one, like it does everywhere else.
+   */
+  en: string;
 }
 
 /* ─────────────────────────── when a period ends ────────────────────────── */
@@ -159,10 +175,10 @@ export function stream(key: string): () => number {
 
 /** The names this module is deliberately not allowed to know on its own. */
 export interface Pools {
-  /** Collectable cards: id and Hebrew name. */
-  cards: ReadonlyArray<{ id: string; he: string }>;
-  /** Series: id and Hebrew name. */
-  series: ReadonlyArray<{ id: string; he: string }>;
+  /** Collectable cards: id and name, in both languages. */
+  cards: ReadonlyArray<{ id: string; he: string; en: string }>;
+  /** Series: id and name, in both languages. */
+  series: ReadonlyArray<{ id: string; he: string; en: string }>;
 }
 
 /**
@@ -179,7 +195,13 @@ interface Template {
   make(
     pick: () => number,
     pools: Pools,
-  ): { goal: Goal; need: number; reward: Challenge["reward"]; he: string } | null;
+  ): {
+    goal: Goal;
+    need: number;
+    reward: Challenge["reward"];
+    he: string;
+    en: string;
+  } | null;
 }
 
 function oneOf<T>(pick: () => number, xs: ReadonlyArray<T>): T | undefined {
@@ -205,6 +227,7 @@ const TEMPLATES: Template[] = [
         need,
         reward: { nachos: need },
         he: need === 1 ? `לשחק משחק עם ${card.he}` : `לשחק ${need} משחקים עם ${card.he}`,
+        en: need === 1 ? `Play a game with ${card.en}` : `Play ${need} games with ${card.en}`,
       };
     },
   },
@@ -219,6 +242,10 @@ const TEMPLATES: Template[] = [
         need: 1,
         reward: { nachos: 1 },
         he: row === "front" ? `לשים קלף מ${s.he} בשורה הקדמית` : `לשים קלף מ${s.he} בשורה האחורית`,
+        en:
+          row === "front"
+            ? `Put a ${s.en} card in the front row`
+            : `Put a ${s.en} card in the back row`,
       };
     },
   },
@@ -231,6 +258,7 @@ const TEMPLATES: Template[] = [
         need: 1,
         reward: { diamonds: least * 2 },
         he: `לסיים משחק עם ציון ${least} ומעלה`,
+        en: `Finish a game scoring ${least} or better`,
       };
     },
   },
@@ -243,6 +271,7 @@ const TEMPLATES: Template[] = [
         need,
         reward: { diamonds: need * 5 },
         he: `לנצח ב-${need} משחקים`,
+        en: `Win ${need} games`,
       };
     },
   },
@@ -255,6 +284,7 @@ const TEMPLATES: Template[] = [
         need,
         reward: { diamonds: need * 3 },
         he: `לשחק ${need} משחקים`,
+        en: `Play ${need} games`,
       };
     },
   },
@@ -267,6 +297,7 @@ const TEMPLATES: Template[] = [
         need,
         reward: { diamonds: need * 6 },
         he: `לנצח ב-${need} משחקים`,
+        en: `Win ${need} games`,
       };
     },
   },

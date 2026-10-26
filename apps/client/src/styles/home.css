@@ -612,10 +612,39 @@ html[lang="en"] .modal__actions button {
   letter-spacing: 0.01em;
 }
 /*
- * The exceptions, and they are all the same exception: a button whose words
- * are somebody's NAME. A card, a family, a player and a catchphrase are
- * written the way they are written.
+ * === AND THE HEADINGS, EVERYWHERE ===
+ *
+ * Or: *"headings in capitals and in the gamer font. Like that on every
+ * screen."*
+ *
+ * The same reasoning as the buttons and the same rule shape: on the
+ * ELEMENT, so the next panel somebody writes is already right. A heading in
+ * this game is short by design — the UI rules allow a screen title and a
+ * section title and nothing else — so a display face fits all of them.
+ *
+ * `h1` is deliberately absent. The only one on any screen is the wordmark,
+ * which is a drawn picture of the word AMANDA and must not be re-set in
+ * anything.
  */
+html[lang="en"] h2,
+html[lang="en"] h3,
+html[lang="en"] h4 {
+  font-family: "Bungee", "Segoe UI", system-ui, sans-serif;
+  text-transform: uppercase;
+  letter-spacing: 0.02em;
+  /* Bungee has no weights and a heavy stroke; the browser's synthetic bold
+     on top of it closes up the counters. */
+  font-weight: 400;
+}
+/*
+ * The exceptions, and they are all the same exception: a word that is
+ * somebody's NAME. A card, a family, a player and a catchphrase are written
+ * the way they are written — which goes for a heading that IS one, like the
+ * family name over a shelf in the album.
+ */
+html[lang="en"] .album__series-name,
+html[lang="en"] .ground__pack b,
+html[lang="en"] .chest__prize b,
 html[lang="en"] .ground__card,
 html[lang="en"] .album__cell,
 html[lang="en"] .gallery__cap,
@@ -623,7 +652,12 @@ html[lang="en"] .picker__card,
 html[lang="en"] .friend,
 html[lang="en"] .plaque,
 html[lang="en"] .card,
-html[lang="en"] .admin button {
+html[lang="en"] .admin button,
+html[lang="en"] .admin h2,
+html[lang="en"] .admin h3,
+html[lang="en"] .admin h4 {
   text-transform: none;
   letter-spacing: normal;
+  font-family: inherit;
+  font-weight: inherit;
 }
