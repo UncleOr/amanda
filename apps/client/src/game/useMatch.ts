@@ -986,8 +986,13 @@ export interface MatchApi {
   joinRoom: (code: string) => void;
   discardHand: () => void;
   takeDiscard: () => void;
-  placeAt: (x: number, y: number) => void;
-  placeKing: () => void;
+  /**
+   * `onSide` is the playground only: a drop knows which board it landed on,
+   * so it says so rather than relying on which side happens to be selected.
+   * See the note in placeAt.
+   */
+  placeAt: (x: number, y: number, onSide?: EditSide) => void;
+  placeKing: (onSide?: EditSide) => void;
   toBattle: () => void;
   /**
    * Bring on the last phase, because a lesson has no clock to do it.
@@ -1436,7 +1441,7 @@ export function useMatch(): MatchApi {
   }, []);
 
   const placeAt = useCallback(
-    (x: number, y: number) => {
+    (x: number, y: number, onSide?: EditSide) => {
       if (isKingCell(x, y)) return;
       if (frozenRef.current > 0) return; // frozen hands: hold it, do not place it
       const key = cellKey(x, y);
@@ -1449,6 +1454,26 @@ export function useMatch(): MatchApi {
        * the only sensible "undo" when there is no deck to put it back into.
        */
       if (playgroundRef.current) {
+        /*
+         * === THE BOARD YOU DROPPED ON IS THE BOARD YOU MEANT ===
+         *
+         * Or: *"I need to be able to drag straight onto the board, whatever
+         * side I have 'picked' right now. Just drag and stick."*
+         *
+         * The playground used to have a selected side and everything wrote
+         * into it, so the other board was a picture — you had to press a
+         * label before you could touch it. That is a mode, and a mode is
+         * the thing a seven-year-old loses track of.
+         *
+         * The side comes from the gesture now. `editSideRef` is written
+         * directly as well as through setState because this call places on
+         * the very next line: a `setEditSide` alone would not land until
+         * the next render and the card would go on the wrong board.
+         */
+        if (onSide && onSide !== editSideRef.current) {
+          editSideRef.current = onSide;
+          setEditSide(onSide);
+        }
         const enemy = editSideRef.current === "enemy";
         const held = s.hand !== null && isMonsterId(s.hand) ? s.hand : null;
         const occupied = enemy ? foeRef.current.placements[key] : s.placements[key];
@@ -1489,12 +1514,17 @@ export function useMatch(): MatchApi {
     [refill, landed],
   );
 
-  const placeKing = useCallback(() => {
+  const placeKing = useCallback((onSide?: EditSide) => {
     if (frozenRef.current > 0) return;
 
     // Playground: the crown is editable too, and re-crowning replaces rather
     // than refusing — there is no "you already chose" when you are testing.
     if (playgroundRef.current) {
+      // Whichever crown was dropped on. See placeAt.
+      if (onSide && onSide !== editSideRef.current) {
+        editSideRef.current = onSide;
+        setEditSide(onSide);
+      }
       const held = gsRef.current.hand;
       const monster = held !== null && isMonsterId(held) ? held : null;
       const enemy = editSideRef.current === "enemy";

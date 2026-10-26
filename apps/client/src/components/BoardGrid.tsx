@@ -29,6 +29,17 @@ interface Props {
   targeting?: boolean;
   onTarget?: (x: number, y: number) => void;
   onTargetKing?: () => void;
+  /**
+   * Which half of the playground this grid is, written into every drop key.
+   *
+   * Or: *"I need to be able to drag straight onto the board, whatever side I
+   * have 'picked' right now."* Both boards are live at once there, so a
+   * drop key of "2-1" is ambiguous — it exists on both of them. With this
+   * set the keys read "me:2-1" and "enemy:2-1" and the drop knows where it
+   * landed. Left out in a real match, where there is only one board you can
+   * put anything on.
+   */
+  dropSide?: "me" | "enemy";
   /** data-drop key currently hovered during a drag (highlights the slot). */
   dragOver?: string | null;
   /** True while a card is being dragged — marks legal empty slots. */
@@ -119,6 +130,7 @@ export function BoardGrid({
   onTarget,
   onTargetKing,
   dragOver = null,
+  dropSide,
   dragging = false,
   editing = false,
   synergy,
@@ -160,6 +172,13 @@ export function BoardGrid({
    */
   const showKing = !only || only.has(KING_KEY);
 
+  /*
+   * A drop key, and which board it is on. In a real match a cell is "2-1";
+   * in the playground, where both boards take drops at once, it is
+   * "enemy:2-1" — see `dropSide`.
+   */
+  const dropKey = (key: string) => (dropSide ? `${dropSide}:${key}` : key);
+
   const size = compact ? "small" : "medium";
   // Depth (x) runs horizontally so the two boards face each other; lanes (y)
   // run vertically and align across both boards.
@@ -189,9 +208,9 @@ export function BoardGrid({
           `${king && revealKing ? " slot--readable" : ""}` +
           `${targeting && king ? " slot--target" : ""}` +
           `${interactive && dragging && !king ? " slot--droppable" : ""}` +
-          `${dragOver === KING_KEY && !king ? " slot--dragover" : ""}`
+          `${dragOver === dropKey(KING_KEY) && !king ? " slot--dragover" : ""}`
         }
-        data-drop={interactive && !king ? KING_KEY : undefined}
+        data-drop={interactive && !king ? dropKey(KING_KEY) : undefined}
         style={{ gridColumn: "2 / 4", gridRow: `${kingLane + 1} / ${kingLane + 3}` }}
         onClick={() => {
           if (targeting && interactive) {
@@ -239,9 +258,9 @@ export function BoardGrid({
               `${stackableHere(key, occ) ? " slot--stackable" : ""}` +
               `${targeting && occ ? " slot--target" : ""}` +
               `${interactive && dragging && (!occ || stackableHere(key, occ)) ? " slot--droppable" : ""}` +
-              `${dragOver === key && (!occ || stackableHere(key, occ)) ? " slot--dragover" : ""}`
+              `${dragOver === dropKey(key) && (!occ || stackableHere(key, occ)) ? " slot--dragover" : ""}`
             }
-            data-drop={interactive && (!occ || stackableHere(key, occ)) ? key : undefined}
+            data-drop={interactive && (!occ || stackableHere(key, occ)) ? dropKey(key) : undefined}
             style={{ gridColumn: colForX(x), gridRow: rowForY(y) }}
             onClick={() => {
               if (targeting && interactive) {

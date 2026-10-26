@@ -866,12 +866,26 @@ function Game() {
 
   // Drag a card from the hand onto a board slot (mouse + touch).
   const { drag, start: startDrag, dragging } = useDrag((_cardId, target) => {
+    /*
+     * ═══ A DROP KEY MAY NAME ITS BOARD ═══
+     *
+     * Or: *"I need to be able to drag straight onto the board, whatever
+     * side I have 'picked' right now. Just drag and stick."*
+     *
+     * In a match there is one board you can put anything on and a key is
+     * "2-1". In the playground both are live, so BoardGrid writes
+     * "me:2-1" and "enemy:2-1" and the side travels with the gesture — see
+     * `dropSide` there and `onSide` in useMatch's placeAt.
+     */
+    const at = target.indexOf(":");
+    const side = at < 0 ? undefined : (target.slice(0, at) as "me" | "enemy");
+    const where = at < 0 ? target : target.slice(at + 1);
     // An action card goes to the bar; everything else goes on the board.
-    if (target === "actionbar") m.takeAction();
-    else if (target === "king") m.placeKing();
+    if (where === "actionbar") m.takeAction();
+    else if (where === "king") m.placeKing(side);
     else {
-      const [x, y] = target.split("-").map(Number);
-      if (x !== undefined && y !== undefined) m.placeAt(x, y);
+      const [x, y] = where.split("-").map(Number);
+      if (x !== undefined && y !== undefined) m.placeAt(x, y, side);
     }
   });
 
@@ -1443,9 +1457,17 @@ function Game() {
                  * Null in every other match, which is the whole game.
                  */
                 only={teachingBoard}
-                // In the lab the board you are not editing is still a picture.
-                interactive={interactive && (!m.playground || m.editSide === "me")}
-                editing={m.playground && m.editSide === "me"}
+                /*
+                 * Both halves of the playground are live at once now. The
+                 * side label still lights up and still has its "clear", but
+                 * it is a HIGHLIGHT rather than a gate: a mode you have to
+                 * remember you are in is the thing a seven-year-old loses
+                 * track of, and Or's instruction was *"just drag and
+                 * stick"*.
+                 */
+                interactive={interactive}
+                editing={m.playground}
+                dropSide={m.playground ? "me" : undefined}
                 synergy={mySynergy}
                 handActive={m.hand !== null}
                 mods={m.mods}
@@ -1457,8 +1479,8 @@ function Game() {
                 stackCorners={m.stackCorners}
                 dragging={dragging}
                 dragOver={drag.over}
-                onCellClick={(x, y) => m.placeAt(x, y)}
-                onKingClick={m.placeKing}
+                onCellClick={(x, y) => m.placeAt(x, y, m.playground ? "me" : undefined)}
+                onKingClick={() => m.placeKing(m.playground ? "me" : undefined)}
                 onCardInfo={openInfo}
               />
               {m.coop && (
@@ -1564,17 +1586,17 @@ function Game() {
                 onCardInfo={openInfo}
                 targeting={m.targeting !== null && isEnemyTargeted(m.targeting)}
                 interactive={
-                  (m.playground && m.editSide === "enemy") ||
-                  (m.targeting !== null && isEnemyTargeted(m.targeting))
+                  m.playground || (m.targeting !== null && isEnemyTargeted(m.targeting))
                 }
                 handActive={m.playground && m.hand !== null}
-                editing={m.playground && m.editSide === "enemy"}
+                editing={m.playground}
+                dropSide={m.playground ? "enemy" : undefined}
                 onTarget={m.applyTargetCell}
                 onTargetKing={m.applyTargetKing}
                 // The lab writes into whichever board is being edited, so the
                 // same two calls serve both halves (see placeAt).
-                onCellClick={m.playground ? (x, y) => m.placeAt(x, y) : undefined}
-                onKingClick={m.playground ? m.placeKing : undefined}
+                onCellClick={m.playground ? (x, y) => m.placeAt(x, y, "enemy") : undefined}
+                onKingClick={m.playground ? () => m.placeKing("enemy") : undefined}
               />
             </section>
 
@@ -1704,22 +1726,50 @@ function Game() {
           {interactive && m.playground && (
             <aside className="lab">
               <div className="lab__hold">
-              <div className="lab__held">
+              {/*
+                ═══ AND IT IS DRAGGED HERE TOO ═══
+
+                Or: *"the animations and the sounds and the whole drag
+                thing need to work in the playground as well."*
+
+                They did not exist here at all. The playground's held card
+                was a picture with an onClick, so the one screen in the game
+                whose entire purpose is to look at cards and try them out
+                was the one screen where a card did not say its name, make
+                its noise or grow its wings. Everything below is the same
+                three lines the hand uses in a match — the drag, the voice,
+                the ghost — because it is the same gesture and should not be
+                a second implementation of it.
+              */}
+              <div className={`lab__held${dragging ? " hand__draggable--dragging" : ""}`}>
                 {m.hand ? (
                   m.handIsAction ? (
-                    <ActionCardView
-                      actionId={m.hand}
-                      size="large"
-                      onClick={() => setActionDetail(m.hand!)}
-                      onInfo={() => setActionDetail(m.hand!)}
-                    />
+                    <div
+                      className="hand__draggable"
+                      onPointerDown={(e) => startDrag(m.hand!, e)}
+                    >
+                      <ActionCardView
+                        actionId={m.hand}
+                        size="large"
+                        onClick={() => !dragging && setActionDetail(m.hand!)}
+                        onInfo={() => setActionDetail(m.hand!)}
+                      />
+                    </div>
                   ) : (
-                    <CardView
-                      cardId={m.hand}
-                      size="large"
-                      onClick={() => openInfo(m.hand!)}
-                      onInfo={() => openInfo(m.hand!)}
-                    />
+                    <div
+                      className="hand__draggable"
+                      onPointerDown={(e) => {
+                        sfx.voice(voiceFor(m.hand!).name);
+                        startDrag(m.hand!, e);
+                      }}
+                    >
+                      <CardView
+                        cardId={m.hand}
+                        size="large"
+                        onClick={() => !dragging && openInfo(m.hand!)}
+                        onInfo={() => openInfo(m.hand!)}
+                      />
+                    </div>
                   )
                 ) : (
                   <div className="lab__eraser" title={t("s932d88e", "גע בקלף על הלוח כדי להוריד אותו")}>

@@ -170,7 +170,15 @@ describe("which ground", () => {
   });
 
   it("follows trophies the way the arena does", () => {
-    for (const a of ARENAS) expect(groundFor(a.from)).toBe(a.family);
+    // The OPEN rungs. Fright Alley and the Fuel Stop are shut (Or: "lock the
+    // alley and the petrol station for now"), so no trophy count puts
+    // anybody on their ground — see arenas.ts.
+    for (const a of ARENAS.filter((x) => !x.locked)) expect(groundFor(a.from)).toBe(a.family);
     expect(groundFor(-50)).toBe(arenaFor(0).family);
+  });
+
+  it("is never a shut arena's family, however high the pile", () => {
+    const shut = ARENAS.filter((a) => a.locked).map((a) => a.family);
+    for (const t of [0, 500, 2000, 99999]) expect(shut).not.toContain(groundFor(t));
   });
 });

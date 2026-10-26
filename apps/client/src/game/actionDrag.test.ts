@@ -37,9 +37,12 @@ describe("dragging an action card to the bar", () => {
   });
 
   it("plays it into the bar on the drop", () => {
+    // The key may now carry the board it landed on — "me:2-1" in the
+    // playground, where both halves take drops. `where` is what is left
+    // after that prefix, and the bar is still the bar.
     const drop = APP.slice(APP.indexOf("useDrag((_cardId, target)"));
-    expect(drop.slice(0, 400)).toContain('target === "actionbar"');
-    expect(drop.slice(0, 400)).toContain("m.takeAction()");
+    expect(drop.slice(0, 1400)).toContain('where === "actionbar"');
+    expect(drop.slice(0, 1400)).toContain("m.takeAction()");
   });
 
   it("draws the thing being carried as an action card", () => {
