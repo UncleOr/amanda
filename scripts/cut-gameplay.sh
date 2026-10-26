@@ -159,6 +159,51 @@ PIECES=(
 XFADE=0.16
 TRANS=slideleft
 
+# ═══ THE GAME SAYS THE CARD'S NAME, AND THE TRAILER MUST NOT ═══
+#
+# Or, twice: *"at the end there is this 'Obsidian Egg' that is heard by
+# accident — take it out"*, and then *"you can still hear 'Obsidian' at the
+# end."*
+#
+# The first attempt cut the wrong sound. What I had measured was a loud
+# sustained thing after the king goes down, and moving the cut in front of
+# it was right on its own terms and had nothing to do with what he was
+# hearing: the game plays apps/client/public/sfx/card-name-*.mp3 when a card
+# goes down, and one of them is a voice saying "Obsidian Egg".
+#
+# Found properly the second time, by correlating each of the eleven voice
+# clips' loudness envelopes against the recording's. Everything at r >= 0.94
+# is a real callout; the weaker matches are short clips landing on ordinary
+# transients. All seven are in the build phase, which is where the game
+# announces a card:
+#
+#   17.16 – 18.54  Obsidian Egg    r=0.97
+#   20.28 – 21.90  Stone Golem     r=0.97
+#   23.88 – 25.52  Zelig           r=0.96
+#   27.54 – 28.00  Choopy          r=0.96
+#   29.38 – 31.08  Healing Bloom   r=0.99
+#   34.84 – 36.22  Obsidian Egg    r=0.98   <- the one in the cut
+#   36.90 – 38.52  Stone Golem     r=0.94
+#
+# Only the sixth falls inside a piece, and it is silenced rather than cut
+# around: the picture at that moment IS the egg being dragged onto the board
+# and it is one of the better seconds in the montage. One lone voice in half
+# a minute of music is what reads as a mistake, not the card.
+#
+# The whole list is here, not only the one that matters, so that moving a
+# cut point by a second does not quietly let one of the other six in.
+VOICES=(
+  "17.16 18.54 obsidian-egg"
+  "20.28 21.90 stone-golem"
+  "23.88 25.52 zelig"
+  "27.54 28.00 choopy"
+  "29.38 31.08 healing-bloom"
+  "34.84 36.22 obsidian-egg"
+  "36.90 38.52 stone-golem"
+)
+# A little either side, so the attack and the tail do not leak through.
+VOICE_PAD=0.08
+
 [ -f "$SRC" ] || { echo "no recording at: $SRC" >&2; exit 1; }
 rm -rf "$SEG"
 mkdir -p "$SEG" store
@@ -203,13 +248,27 @@ for p in "${PIECES[@]}"; do
   # Where the sound fades out, half a frame before the picture does.
   fo=$(awk -v l="$len" 'BEGIN{printf "%.2f", l-0.06}')
 
+  # Any spoken card name this piece overlaps, in the piece's own time.
+  vmute=""
+  for v in "${VOICES[@]}"; do
+    read -r va vb vname <<<"$v"
+    span=$(awk -v va="$va" -v vb="$vb" -v ss="$ss" -v len="$len" -v pad="$VOICE_PAD" 'BEGIN{
+      a = va - ss - pad; b = vb - ss + pad;
+      if (b <= 0 || a >= len) exit 1;
+      if (a < 0) a = 0; if (b > len) b = len;
+      printf "%.2f %.2f", a, b }') || continue
+    read -r a b <<<"$span"
+    printf '      muting %s at %ss to %ss\n' "$vname" "$a" "$b"
+    vmute+=",volume=enable='between(t,${a},${b})':volume=0"
+  done
+
   if [ "$kind" = "clip" ]; then
     ffmpeg -y -v error -ss "$ss" -t "$len" -i "$SRC" -filter_complex "\
 [0:v]crop=848:356:0:${cy},fps=${FPS},split=2[a][b];\
 [a]${BED}[bg];\
 [b]scale=${W}:-2:flags=lanczos,unsharp=5:5:0.75:5:5:0.0,${LIP}[fg];\
 [bg][fg]overlay=(W-w)/2:(H-h)/2,setsar=1,format=yuv420p[v];\
-[0:a]aresample=48000,aformat=channel_layouts=stereo,afade=t=in:st=0:d=0.06,\
+[0:a]aresample=48000,aformat=channel_layouts=stereo${vmute},afade=t=in:st=0:d=0.06,\
 afade=t=out:st=${fo}:d=0.06[a]" \
       -map "[v]" -map "[a]" -t "$len" "${ENC[@]}" "${AENC[@]}" "$out"
   else
