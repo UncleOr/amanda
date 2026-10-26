@@ -366,7 +366,7 @@
 
 | מזהה | טקסט נוכחי | טקסט חדש | אנגלית |
 | --- | --- | --- | --- |
-| safa431d | לרוקן את {0} | | Empty {0} |
+| safa431d | לרוקן את {0} | | Clear this side |
 | sdfa1c45 | נקה | | Clear |
 | sdfad51e | מתארגנת… | | Setting up… |
 | s8da6ce3 | מחפשת לך יריב… | | Finding you someone… |
@@ -402,7 +402,7 @@
 | s5d4a4e0 | לשלוף ולזרוק אפשר. להדביק — לא. | | Draw and bin, yes. Place, no. |
 | s138a2c6 | החצי שלך | | Your half |
 | sc8775fd | החצי של מי שאיתך | | Your teammate's half |
-| sfc83143 | הצד שמולך | | The side facing you |
+| sfc83143 | הצד שמולך | | The other side |
 | s9d29f31 | אמנדה | | Amanda |
 | s52b9172 | היריב | | Opponent |
 | sf0485e7 | נחשף! | | Revealed! |
@@ -465,10 +465,10 @@
 | מזהה | טקסט נוכחי | טקסט חדש | אנגלית |
 | --- | --- | --- | --- |
 | sf4b8060 | {0} עשה {1}% מהנזק של הצד הזה | | {0} did {1}% of this side's damage |
-| sb03fb80 | המלך {0} נשא את הקרב — {1}% מהנזק | | King {0} carried the battle — {1}% of the damage |
+| sb03fb80 | המלך {0} נשא את הקרב — {1}% מהנזק | | {0}, the King, carried it — {1}% of the damage |
 | sf2f72a8 | {0} קלפים לא נגעו בקרב בכלל — לא תקפו ולא ספגו | | {0} cards never touched the battle — no attacks, no damage taken |
 | s92c427c | {0} קלפים בעורף שרדו בלי לתקוף אף פעם — הלוח עמוק מדי | | {0} cards in the back row survived without ever attacking — the board is too deep |
-| sb6efc72 | המלך {0} נפל כבר בשנייה {1} | | King {0} fell as early as second {1} |
+| sb6efc72 | המלך {0} נפל כבר בשנייה {1} | | {0}, the King, fell as early as second {1} |
 | s296dff0 | כל הקלפים במסלול {0} נפלו — שם נפרצה החזית | | Every card in lane {0} fell — that is where the line broke |
 | s5ac99ca | בוזבז נזק על {0}: ספג {1}% מהחיים שלו | | Damage wasted on {0}: it took {1}% of its health |
 | s7268432 | הצד הזה נמחק לגמרי — {0} קלפים | | This side was wiped out completely — {0} cards |
@@ -479,7 +479,7 @@
 | s3c01a8e | משהו | | something |
 | s4813b7e | {0} הפיל את {1} | | {0} took down {1} |
 | se33f63d | משהו | | something |
-| s09d8eb1 | המלך {0} נפל | | King {0} fell |
+| s09d8eb1 | המלך {0} נפל | | {0}, the King, is down |
 | sf5f7bec | {0} ספג {1} נזק חוזר מ{2} — הוא פגע בקוצים | | {0} took {1} reflected damage from {2} — it hit the spikes |
 | s32b1dc6 | {0} התפצל | | {0} split |
 | s29eee42 | נחשף קלף קומת קרקע: {0} | | A ground-floor card was revealed: {0} |
@@ -1689,8 +1689,8 @@
 
 | מזהה | טקסט נוכחי | טקסט חדש | אנגלית |
 | --- | --- | --- | --- |
-| s656f60c | של היריב | | Opponent's |
-| s42347b7 | שלך | | Yours |
-| s38e8e92 | המלך {0} נפל — הקרב הסתיים | | The {0} King fell. That is the battle. |
+| s656f60c | של היריב | | Their |
+| s42347b7 | שלך | | Your |
+| s38e8e92 | המלך {0} נפל — הקרב הסתיים | | {0} King is down. That is the battle. |
 | sbc89487 | הזמן נגמר, הקרב הסתיים | | Time ran out and both Kings lived. King health decided it: {0} to {1}. |
 | s156d757 | הזמן נגמר, הקרב הסתיים. שניכם בתיקו מוחלט. הטלתי מטבע כדי לקבוע מי המנצח | | Dead even. A coin decided it. |

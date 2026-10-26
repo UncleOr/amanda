@@ -6230,7 +6230,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/components/Arena.tsx",
-   "line": 119
+   "line": 148
   }
  },
  {
@@ -6240,7 +6240,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/components/Arena.tsx",
-   "line": 120
+   "line": 149
   }
  },
  {
@@ -6250,7 +6250,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/components/Arena.tsx",
-   "line": 121
+   "line": 150
   }
  },
  {
@@ -6260,7 +6260,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/components/Arena.tsx",
-   "line": 1357
+   "line": 1386
   }
  },
  {
@@ -6270,7 +6270,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/components/Arena.tsx",
-   "line": 1358
+   "line": 1387
   }
  },
  {
@@ -6280,7 +6280,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/components/Arena.tsx",
-   "line": 2273
+   "line": 2302
   }
  },
  {
@@ -6290,7 +6290,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/components/Arena.tsx",
-   "line": 2304
+   "line": 2333
   }
  },
  {
@@ -6300,7 +6300,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/components/Arena.tsx",
-   "line": 2305
+   "line": 2334
   }
  },
  {
@@ -6310,7 +6310,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/components/Arena.tsx",
-   "line": 2317
+   "line": 2346
   }
  },
  {

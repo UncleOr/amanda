@@ -10,7 +10,7 @@ import { sfx } from "../game/sfx";
 import { voiceFor } from "../game/cardSound";
 import { combatLook, drawAura, drawProjectile, type CombatLook } from "./arenaFx";
 import { line as t, lineF as tf } from "../game/copy";
-import { say } from "../game/lang";
+import { lang, say } from "../game/lang";
 
 const CELL = 72;
 /** Header band above the lanes, so the identity banners never cover a unit. */
@@ -89,10 +89,39 @@ const WARN_AT = 5;
  * reason to suspect it.
  */
 const RTL_ISOLATE = "\u2067";
+/**
+ * The other one, and the reason this function is no longer called `rtl`.
+ *
+ * ═══ IT FORCED RIGHT-TO-LEFT ON ENGLISH TOO ═══
+ *
+ * Or: *"'the king is dead' in English is on RTL. Make sure all the English
+ * is LTR."*
+ *
+ * He is exactly right, and it is this line. The isolate above was written
+ * when every word on the canvas was Hebrew, and it does not ask what it is
+ * wrapping — so when the game went into English, "King down!" was laid out
+ * in a right-to-left paragraph and its exclamation mark came out on the
+ * LEFT, which is where a right-to-left line ends.
+ *
+ * The paragraph direction follows the GAME now, exactly as the DOM's `dir`
+ * does (lang.ts). Not the first-strong isolate U+2068, which was the
+ * tempting answer: that reads the direction off the text itself, and a
+ * Hebrew sentence that happens to open with a card's Latin name — "Choopy
+ * הורג את…" — would be laid out left-to-right by it. The language is the
+ * honest answer because it is the same one every other screen uses.
+ */
+const LTR_ISOLATE = "\u2066";
 const POP_ISOLATE = "\u2069";
 
-function rtl(text: string): string {
-  return RTL_ISOLATE + text + POP_ISOLATE;
+/**
+ * A string, in a paragraph that runs the way this game's words run.
+ *
+ * An ISOLATE rather than an embedding, so a Latin word inside a Hebrew line
+ * — or a Hebrew nickname inside an English one — cannot leak its direction
+ * out into whatever is drawn beside it.
+ */
+function bidi(text: string): string {
+  return (lang() === "en" ? LTR_ISOLATE : RTL_ISOLATE) + text + POP_ISOLATE;
 }
 
 /**
@@ -506,8 +535,8 @@ export function Arena({
       // print the file name. The series colour already runs along the top of
       // this plate and the card art sits right above it, so the name is enough.
       const label = new Text({
-        // A card name is Hebrew, and a canvas does not know that. See rtl().
-        text: rtl(name),
+        // A card name has a direction and a canvas does not know it. See bidi().
+        text: bidi(name),
         style: {
           fontFamily: "Segoe UI, sans-serif",
           fontSize,
@@ -1317,8 +1346,8 @@ export function Arena({
           const row = new Container();
           const label = new Text({
             // A nickname is whatever the player typed, in whichever
-            // direction they typed it. See rtl().
-            text: rtl(who?.nickname ?? fallback),
+            // direction they typed it. See bidi().
+            text: bidi(who?.nickname ?? fallback),
             style: {
               fontFamily: "Segoe UI, sans-serif",
               fontSize: 15,
@@ -1446,7 +1475,7 @@ export function Arena({
         const annFace = { fontFamily: "Rubik Beastly, Segoe UI, sans-serif", fontSize: annSize, fill: 0xffffff };
         const buildEnding = (): void => {
           const glow = new Text({
-            text: rtl(annWords),
+            text: bidi(annWords),
             style: {
               ...annFace,
               // Amanda's teal, at no distance and a wide blur: a glow, not a
@@ -1455,7 +1484,7 @@ export function Arena({
             },
           });
           const body = new Text({
-            text: rtl(annWords),
+            text: bidi(annWords),
             style: {
               ...annFace,
               dropShadow: { color: 0x05070d, alpha: 0.9, blur: 9, distance: 3, angle: Math.PI / 2 },

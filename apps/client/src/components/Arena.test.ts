@@ -45,12 +45,33 @@ describe("text drawn into the arena", () => {
     return esc.startsWith("\\u") ? parseInt(esc.slice(2), 16) : null;
   };
 
-  it("has a right-to-left isolate to wrap it in", () => {
-    // U+2067 opens an isolate and U+2069 closes it. An ISOLATE rather than an
-    // embedding, so a Latin word inside cannot leak its direction outward
-    // into whatever is drawn beside it.
+  it("has an isolate for each direction to wrap it in", () => {
+    /*
+     * U+2067 opens a right-to-left isolate, U+2066 a left-to-right one, and
+     * U+2069 closes either. ISOLATES rather than embeddings, so a Latin word
+     * inside a Hebrew line cannot leak its direction out into whatever is
+     * drawn beside it.
+     *
+     * There used to be only the first of the three, and that was the bug Or
+     * found: *"'the king is dead' in English is on RTL."* A canvas is told
+     * which way the PARAGRAPH runs, and it was always told Hebrew — so
+     * "King down!" came out with its exclamation mark on the left.
+     */
     expect(codePointOf("RTL_ISOLATE")).toBe(0x2067);
+    expect(codePointOf("LTR_ISOLATE")).toBe(0x2066);
     expect(codePointOf("POP_ISOLATE")).toBe(0x2069);
+  });
+
+  it("picks the direction from the language, like every other screen", () => {
+    /*
+     * NOT from the text. U+2068, the first-strong isolate, is the tempting
+     * answer and it is wrong here: a Hebrew sentence that opens with a
+     * card's Latin name — "Choopy הורג את…" — would be laid out
+     * left-to-right by it. The DOM sets `dir` from the language; so does
+     * this.
+     */
+    const fn = ARENA.slice(ARENA.indexOf("function bidi("), ARENA.indexOf("function bidi(") + 220);
+    expect(fn).toContain('lang() === "en" ? LTR_ISOLATE : RTL_ISOLATE');
   });
 
   /*
@@ -90,8 +111,10 @@ describe("text drawn into the arena", () => {
     for (const expr of texts) {
       // A template of digits, or an empty string, needs no direction.
       if (/^`?-?\$\{|^""$/.test(expr)) continue;
-      expect(expr, `${expr} is drawn without rtl() — a canvas will lay it out left-to-right`)
-        .toContain("rtl(");
+      expect(
+        expr,
+        `${expr} is drawn without bidi() — a canvas gets the paragraph direction wrong`,
+      ).toContain("bidi(");
     }
   });
 });
