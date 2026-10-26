@@ -93,6 +93,32 @@ export function Album({ account, onClose, onCardInfo, onChanged }: Props) {
    * back to seven closed packs is coming back to the shelf.
    */
   const [opened, setOpened] = useState<Set<string>>(new Set());
+  /*
+   * === TWO WAYS TO LOOK AT THE SAME SHELF ===
+   *
+   * Or: *"at the top make a switch between two views — album (like before:
+   * all the cards laid out in advance and stuck down) or packs (like it is
+   * now). And make a filter button that shows only stickers that are
+   * upgradeable."*
+   *
+   * They answer two different questions and that is why both are right.
+   * Packs is "what do I own" — a shelf of things, which is what made it
+   * worth opening. Album is "what is missing" — fifty-two slots with gaps
+   * in them, which is what a sticker album IS and what you cannot see at
+   * all while six of the seven families are shut.
+   *
+   * Neither is remembered between visits. Coming back to the album should
+   * be coming back to the shelf, the same way it closes its packs.
+   */
+  const [flat, setFlat] = useState(false);
+  /*
+   * And the filter, which is a third question again: *"what can I do right
+   * now"*. Or has asked about this before from the other end — *"Ice Dragon
+   * has already reached the 4 cards needed for an upgrade. The indicator
+   * needs to be clearer"* — and a player with forty cards cannot find the
+   * three that are ready by scrolling past the thirty-seven that are not.
+   */
+  const [onlyUp, setOnlyUp] = useState(false);
 
   /*
    * === THE PARTY STARTS ON THE PRESS, NOT ON THE REPLY ===
@@ -136,6 +162,20 @@ export function Album({ account, onClose, onCardInfo, onChanged }: Props) {
   }
 
   const album = account?.album;
+  /**
+   * Has this card got the copies for its next level?
+   *
+   * Deliberately NOT "and I can afford the diamonds": the filter answers
+   * "what have I collected enough of", and hiding a card because the purse
+   * is empty would make the list change when you spend money somewhere
+   * else. The button under the card is where affordability is said, in red.
+   */
+  const readyToLevel = (cardId: string): boolean => {
+    const mine = album?.get(cardId);
+    if (!mine || mine.level >= LEVELS.max) return false;
+    const card = CATALOG.get(cardId);
+    return !!card && mine.copies >= levelCost(card.rarity, mine.level);
+  };
   /*
    * Only cards that can be WON are counted or shown — the rule is in
    * @amanda/shared so the chest pool is answering the same question.
@@ -173,6 +213,40 @@ export function Album({ account, onClose, onCardInfo, onChanged }: Props) {
               </span>
             </>
           )}
+          {/*
+            Two chips, not a dropdown and not a sentence. Three words
+            between them, which is the rule for a control on a play screen.
+          */}
+          <div className="album__views" role="group">
+            <button
+              className={flat ? "" : "is-on"}
+              onClick={() => {
+                sfx.play("click");
+                setFlat(false);
+              }}
+            >
+              {t("sa1f7c40", "חפיסות")}
+            </button>
+            <button
+              className={flat ? "is-on" : ""}
+              onClick={() => {
+                sfx.play("click");
+                setFlat(true);
+              }}
+            >
+              {t("s9c2b1d4", "אלבום")}
+            </button>
+          </div>
+          <button
+            className={`album__chart${onlyUp ? " is-on" : ""}`}
+            onClick={() => {
+              sfx.play("click");
+              setOnlyUp((v) => !v);
+            }}
+            title={t("s3b8c7e1", "רק מה שאפשר לשדרג")}
+          >
+            <Icon name="plus" size={14} /> {t("s4f9261a", "לשדרוג")}
+          </button>
           <button className="album__chart" onClick={() => setChart(true)}>
             <Icon name="fire" size={15} /> {t("s063eb7a", "טבלת היסודות")}
           </button>
@@ -297,6 +371,11 @@ export function Album({ account, onClose, onCardInfo, onChanged }: Props) {
           shelf of seven packs fits on it at once, and a wall of fifty-two
           never could.
         */}
+        {/* Four words. A filter that hides everything and says nothing
+            reads as a broken screen. */}
+        {onlyUp && !collection.some((c) => readyToLevel(c.id)) && (
+          <p className="album__none">{t("s7d41a02", "אין כרגע מה לשדרג")}</p>
+        )}
         {SERIES.map((series) => {
           /*
            * A family with nothing to win in it is not shown at all. That is
@@ -304,17 +383,35 @@ export function Album({ account, onClose, onCardInfo, onChanged }: Props) {
            * a prize, so an empty row headed 0/0 would be a promise with
            * nothing behind it. It comes back by itself the day she does.
            */
-          const cards = collection.filter((c) => c.seriesId === series.id);
+          const all = collection.filter((c) => c.seriesId === series.id);
+          if (!all.length) return null;
+          // The filter narrows what is SHOWN, never what is counted: "3/10"
+          // has to go on meaning three of the family's ten.
+          const cards = onlyUp ? all.filter((c) => readyToLevel(c.id)) : all;
           if (!cards.length) return null;
-          const have = cards.filter((c) => album?.has(c.id)).length;
-          const open = opened.has(series.id);
+          const have = all.filter((c) => album?.has(c.id)).length;
+          /*
+           * Laid out in advance in the album view, and while the filter is
+           * on — a filter whose results are inside closed packs has found
+           * nothing as far as anybody can see.
+           */
+          const open = flat || onlyUp || opened.has(series.id);
           return (
             <section key={series.id} className={`album__series${open ? " is-open" : ""}`}>
               <button
                 type="button"
                 className="album__pack"
                 aria-expanded={open}
+                /*
+                 * `aria-disabled` and not `disabled`. A real disabled button
+                 * takes the browser's own grey for its text, which on this
+                 * dark panel made the family's NAME vanish — the one thing
+                 * the row exists to say. There is nothing to open here, so
+                 * it simply does not open.
+                 */
+                aria-disabled={flat || onlyUp}
                 onClick={() => {
+                  if (flat || onlyUp) return;
                   sfx.play(open ? "discard" : "draw");
                   setOpened((was) => {
                     const next = new Set(was);
@@ -332,7 +429,7 @@ export function Album({ account, onClose, onCardInfo, onChanged }: Props) {
                 </span>
                 <b className="album__series-name">{say(series.name)}</b>
                 <span className="album__series-count">
-                  {have}/{cards.length}
+                  {have}/{all.length}
                 </span>
                 {/* A disclosure triangle: the icon set has no chevron, and a
                     play arrow turned ninety degrees is the same shape. */}

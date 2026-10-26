@@ -151,3 +151,62 @@ describe("the card's own screen", () => {
     expect(MODAL, "the old sentence is gone").not.toContain("הרמה הבאה עולה");
   });
 });
+
+/**
+ * ═══ TWO VIEWS AND A FILTER ═══
+ *
+ * Or: *"at the top make a switch between two views — album (like before:
+ * all the cards laid out in advance and stuck down) or packs (like it is
+ * now). And make a filter button that shows only stickers that are
+ * upgradeable."*
+ *
+ * Three rules here that a later tidy-up would undo without noticing, and
+ * the first two are the ones that make the filter honest.
+ */
+describe("the album's two views", () => {
+  it("lays every pack open in the album view", () => {
+    expect(ALBUM).toContain("const open = flat || onlyUp || opened.has(series.id)");
+  });
+
+  it("opens them for the filter too", () => {
+    // A filter whose results are inside closed packs has found nothing as
+    // far as anybody can see. `onlyUp` is in the same expression for that
+    // reason, and the test is here so it stays there.
+    expect(ALBUM).toContain("onlyUp ||");
+  });
+
+  it("counts the whole family even while showing part of it", () => {
+    // "3/10" has to go on meaning three of the family's ten, however few
+    // of them are on screen. The filter narrows `cards`; the count reads
+    // `all`.
+    expect(ALBUM).toContain("const cards = onlyUp ? all.filter((c) => readyToLevel(c.id)) : all;");
+    expect(ALBUM).toContain("{have}/{all.length}");
+  });
+
+  it("calls a card ready on copies alone, not on the purse", () => {
+    /*
+     * Deliberate: the filter answers "what have I collected enough of".
+     * Hiding a card because the diamonds are gone would make the list
+     * change when you spend money somewhere else entirely — and the button
+     * under the card already says, in red, when you cannot afford it.
+     */
+    const ready = between(ALBUM, "const readyToLevel", "};");
+    expect(ready).toContain("mine.copies >= levelCost(card.rarity, mine.level)");
+    expect(ready, "nothing about diamonds").not.toContain("diamonds");
+  });
+
+  it("says something when the filter finds nothing", () => {
+    expect(ALBUM).toContain("onlyUp && !collection.some((c) => readyToLevel(c.id))");
+  });
+
+  it("does not disable the pack header, which would grey out its name", () => {
+    // A real `disabled` takes the browser's own grey for the text, and on
+    // this panel that made the family's NAME vanish — the one thing the
+    // row exists to say.
+    expect(ALBUM).toContain("aria-disabled={flat || onlyUp}");
+    // Not `toContain`: "aria-disabled={flat..." contains "disabled={flat..."
+    expect(ALBUM, "and nothing turned it back into a disabled attribute").not.toMatch(
+      /[\s{]disabled=\{flat/,
+    );
+  });
+});

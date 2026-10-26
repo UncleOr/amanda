@@ -1049,3 +1049,46 @@ html[dir="ltr"] .intro__wash {
   font-weight: 700;
   cursor: pointer;
 }
+
+/*
+ * === TWO VIEWS, AND A FILTER, IN THE HEADER ===
+ *
+ * Or: *"at the top make a switch between two views — album or packs — and a
+ * filter button that shows only stickers that are upgradeable."*
+ *
+ * A segmented pair rather than two loose chips: they are one choice with two
+ * answers, and a shared outline is what says so without a label above them.
+ * Built out of the chip that was already here so the row reads as one row.
+ */
+.album__views {
+  display: inline-flex;
+  border-radius: 999px;
+  border: 1px solid var(--line-lit);
+  overflow: hidden;
+}
+.album__views button {
+  padding: 3px 10px;
+  border: 0;
+  background: transparent;
+  /* --text, not --muted: this is a control's label and §3 of the UI rules
+     is explicit that grey is never that. The gold fill on the chosen one is
+     what tells them apart. */
+  color: var(--text);
+  font: inherit;
+  font-size: var(--t-2);
+  font-weight: 700;
+  cursor: pointer;
+}
+.album__views button.is-on {
+  background: var(--accent);
+  color: #241a05;
+}
+/* The filter is a switch too, so it has to look pressed when it is on. */
+.album__chart.is-on {
+  background: var(--accent);
+  border-color: var(--accent);
+  color: #241a05;
+}
+/* Nothing to open when every pack is already laid out. */
+.album__pack[aria-disabled="true"] { cursor: default; }
+.album__pack[aria-disabled="true"] .album__pack-mark { visibility: hidden; }
