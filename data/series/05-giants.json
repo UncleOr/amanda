@@ -17,7 +17,7 @@
     },
     "description": {
       "he": "שלושה צמודים מאותה סדרה מקבלים +20% עוצמה ו+20% חיים.",
-      "en": "Three touching cards of the same series get +20% power and +20% health."
+      "en": "Three of the family, touching: +20% power and health."
     },
     "ability": {
       "type": "statAura",
@@ -34,7 +34,7 @@
       "numberInSeries": 1,
       "name": {
         "he": "גולם אבן",
-        "en": "Stone Colossus"
+        "en": "Stone Golem"
       },
       "elements": [
         "earth"

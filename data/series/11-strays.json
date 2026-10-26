@@ -17,7 +17,7 @@
     },
     "description": {
       "he": "שלושה צמודים מאותה סדרה מקבלים +20% עוצמה ו+20% חיים.",
-      "en": "Three touching cards of the same series get +20% power and +20% health."
+      "en": "Three of the family, touching: +20% power and health."
     },
     "ability": {
       "type": "statAura",
@@ -43,7 +43,7 @@
       "stats": {
         "hp": 240,
         "power": 240,
-        "attackSpeed": 1.0,
+        "attackSpeed": 1,
         "moveSpeed": 2,
         "range": "melee"
       },
@@ -207,7 +207,7 @@
       "stats": {
         "hp": 380,
         "power": 300,
-        "attackSpeed": 2.0,
+        "attackSpeed": 2,
         "moveSpeed": 0,
         "range": "ranged"
       },
@@ -293,7 +293,7 @@
       "stats": {
         "hp": 620,
         "power": 380,
-        "attackSpeed": 2.0,
+        "attackSpeed": 2,
         "moveSpeed": 0,
         "range": "melee"
       },
@@ -379,7 +379,7 @@
       "stats": {
         "hp": 480,
         "power": 400,
-        "attackSpeed": 2.0,
+        "attackSpeed": 2,
         "moveSpeed": 0,
         "range": "melee"
       },

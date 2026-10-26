@@ -216,9 +216,9 @@ export const TUTORIAL_LINES: readonly TutorialLine[] = [
   },
   {
     id: "l1-bin",
-    he: t("s5e4cdb0", "קוביית ג'לי — קלף, אממ... לא משהו. בואו נזרוק אותו. יגיעו טובים יותר."),
+    he: t("s98b6f14", "הדרדר — קלף, אממ... לא משהו. בואו נזרוק אותו. יגיעו טובים יותר."),
     vars: [],
-    when: t("sb4d2832", "קוביית ג'לי ביד"),
+    when: t("s290b910", "הדרדר ביד"),
   },
   {
     id: "l1-unbin",
@@ -506,7 +506,7 @@ export const TUTORIAL_LINES: readonly TutorialLine[] = [
   },
   {
     id: "t2-bin",
-    he: t("sfd62b78", "קוביית ג'לי. לא משהו, בוא נזרוק אותה לפח."),
+    he: t("sc21399b", "הדרדר. לא משהו, בוא נזרוק אותו לפח."),
     vars: [],
     when: t("s3d1bcf9", "זורקת קלף לפח"),
   },

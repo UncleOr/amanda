@@ -195,6 +195,22 @@ describe("the album's two views", () => {
     expect(ready, "nothing about diamonds").not.toContain("diamonds");
   });
 
+  it("shows pictures rather than words for the two views", () => {
+    /*
+     * Or: *"on the packs/album view button use icons instead. In Hebrew
+     * and in English of course."* The header already carries a count,
+     * trophies, diamonds, the elements table and a way out; two more words
+     * in it is a row of words.
+     *
+     * The word survives as the accessible name, which is the one job a
+     * picture cannot do.
+     */
+    const views = between(ALBUM, 'className="album__views"', "</div>");
+    expect(views, "a stack for the packs").toContain('<Icon name="stacked"');
+    expect(views, "and a grid for the album").toContain('<Icon name="deck"');
+    expect(views.match(/aria-label=/g) ?? [], "both still say what they are").toHaveLength(2);
+  });
+
   it("says something when the filter finds nothing", () => {
     expect(ALBUM).toContain("onlyUp && !collection.some((c) => readyToLevel(c.id))");
   });

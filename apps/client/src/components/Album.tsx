@@ -214,38 +214,57 @@ export function Album({ account, onClose, onCardInfo, onChanged }: Props) {
             </>
           )}
           {/*
-            Two chips, not a dropdown and not a sentence. Three words
-            between them, which is the rule for a control on a play screen.
+            === PICTURES, NOT WORDS ===
+
+            Or: *"on the packs/album view button use icons instead. In
+            Hebrew and in English of course."*
+
+            He is right and the reason is the header rather than the
+            button: this row already carries a count, trophies, diamonds,
+            an elements table and a way out. Two more words in it is a row
+            of words. A stack and a grid say "packs" and "laid out" in any
+            language and in a quarter of the width.
+
+            The word survives as the title and the accessible name, which
+            is the only place it was doing work a picture cannot.
           */}
           <div className="album__views" role="group">
             <button
               className={flat ? "" : "is-on"}
+              title={t("s68be95c", "חפיסות")}
+              aria-label={t("s073c946", "חפיסות")}
+              aria-pressed={!flat}
               onClick={() => {
                 sfx.play("click");
                 setFlat(false);
               }}
             >
-              {t("sa1f7c40", "חפיסות")}
+              <Icon name="stacked" size={18} />
             </button>
             <button
               className={flat ? "is-on" : ""}
+              title={t("sc23b9cb", "אלבום")}
+              aria-label={t("s8633cf3", "אלבום")}
+              aria-pressed={flat}
               onClick={() => {
                 sfx.play("click");
                 setFlat(true);
               }}
             >
-              {t("s9c2b1d4", "אלבום")}
+              <Icon name="deck" size={18} />
             </button>
           </div>
           <button
-            className={`album__chart${onlyUp ? " is-on" : ""}`}
+            className={`album__chart album__only-up${onlyUp ? " is-on" : ""}`}
+            aria-pressed={onlyUp}
             onClick={() => {
               sfx.play("click");
               setOnlyUp((v) => !v);
             }}
-            title={t("s3b8c7e1", "רק מה שאפשר לשדרג")}
+            title={t("s16a87eb", "רק מה שאפשר לשדרג")}
+            aria-label={t("s4106d59", "רק מה שאפשר לשדרג")}
           >
-            <Icon name="plus" size={14} /> {t("s4f9261a", "לשדרוג")}
+            <Icon name="plus" size={14} />
           </button>
           <button className="album__chart" onClick={() => setChart(true)}>
             <Icon name="fire" size={15} /> {t("s063eb7a", "טבלת היסודות")}
@@ -374,7 +393,7 @@ export function Album({ account, onClose, onCardInfo, onChanged }: Props) {
         {/* Four words. A filter that hides everything and says nothing
             reads as a broken screen. */}
         {onlyUp && !collection.some((c) => readyToLevel(c.id)) && (
-          <p className="album__none">{t("s7d41a02", "אין כרגע מה לשדרג")}</p>
+          <p className="album__none">{t("sc956f43", "אין כרגע מה לשדרג")}</p>
         )}
         {SERIES.map((series) => {
           /*

@@ -17,7 +17,7 @@
     },
     "description": {
       "he": "שלושה צמודים מאותה סדרה מקבלים +20% עוצמה ו+20% חיים.",
-      "en": "Three touching cards of the same series get +20% power and +20% health."
+      "en": "Three of the family, touching: +20% power and health."
     },
     "ability": {
       "type": "statAura",
@@ -96,7 +96,7 @@
           },
           "description": {
             "he": "בולעת כל קלף אויב עם פחות חיים שעובר דרכה, ומוסיפה את החיים שלו לשלה.",
-            "en": "Swallows any enemy card with less Health passing through it and gains its Health."
+            "en": "Swallows any smaller card that walks into it, and keeps its health."
           }
         }
       ],
@@ -181,7 +181,7 @@
           },
           "description": {
             "he": "במוות נחתך לשני בלובים קטנים שקופצים לנתיבים הסמוכים וממשיכים להילחם.",
-            "en": "On death splits into two small blobs that leap to adjacent lanes and keep fighting."
+            "en": "Dies into two small blobs that hop sideways and carry on."
           }
         }
       ],
@@ -349,7 +349,7 @@
           "params": {},
           "description": {
             "he": "בפגיעה הראשונה מעתיק את האלמנט של היריב ומשתלב בסינרגיות.",
-            "en": "On its first hit copies the enemy's element, letting it slot into synergies."
+            "en": "Steals the element of the first thing it hits."
           }
         }
       ],
@@ -393,7 +393,7 @@
           },
           "description": {
             "he": "סופג חצי מהנזק שמופנה לקלפים הצמודים אליו מימין ומשמאל.",
-            "en": "Absorbs half the damage aimed at the cards directly to its left and right."
+            "en": "Takes half the damage aimed at the cards either side of it."
           }
         }
       ],
@@ -439,7 +439,7 @@
           },
           "description": {
             "he": "כל 6 שניות מושך את כל קלפי היריב המסתערים משבצת אחת פנימה למרכז ומשבש נתיבים.",
-            "en": "Every 3 seconds pulls all advancing enemy cards one slot inward, disrupting lanes."
+            "en": "Every 3 seconds, drags the advancing enemy one slot inward."
           }
         }
       ],

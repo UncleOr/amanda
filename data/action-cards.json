@@ -24,13 +24,13 @@
     "id": "radioactive_eraser",
     "name": {
       "he": "משמיד הקלפים",
-      "en": "Radioactive Eraser"
+      "en": "Destroyer"
     },
     "rarity": "rare",
     "copiesInPack": 8,
     "description": {
       "he": "מוחק קלף אחד של היריב (אי אפשר להפעיל על המלך).",
-      "en": "Erases one enemy card (if used on the King, deals heavy damage instead of erasing)."
+      "en": "Wipes out one enemy card. On the King it does heavy damage instead."
     },
     "effect": "eraseEnemyCard",
     "params": {
@@ -50,7 +50,7 @@
     "copiesInPack": 8,
     "description": {
       "he": "היריב לא יכול להדביק קלפים באלבום למשך 5 שניות",
-      "en": "Completely freezes the opponent's screen for 3 seconds."
+      "en": "They cannot place a card for 3 seconds."
     },
     "effect": "freezeEnemy",
     "params": {
@@ -71,7 +71,7 @@
     "copiesInPack": 8,
     "description": {
       "he": "מחליף מיקומים בין שני קלפים שכבר הנחת על הלוח שלך.",
-      "en": "Swaps the positions of two cards you have already placed on your board."
+      "en": "Swaps two cards you have already placed."
     },
     "effect": "swapOwnCards",
     "params": {},
@@ -90,7 +90,7 @@
     "copiesInPack": 7,
     "description": {
       "he": "חושף את כל הלוח של היריב (כולל שורת ההפתעה האחורית) למשך 5 שניות.",
-      "en": "Reveals the entire enemy board (including the back Surprise Row) for 5 seconds."
+      "en": "Shows the whole enemy board — back row included — for 5 seconds."
     },
     "effect": "revealBoard",
     "params": {
@@ -111,7 +111,7 @@
     "copiesInPack": 5,
     "description": {
       "he": "מאפשר להדביק קלף אחד על גבי קלף קיים. כשהעליון מת בקרב, התחתון נחשף.",
-      "en": "Lets you pick 4 slots and stack a card on top of another. When the top dies in battle, the bottom is revealed."
+      "en": "Stack a card on top of another, in 4 slots. When the top dies, the bottom appears."
     },
     "effect": "enableStacking",
     "params": {
@@ -131,7 +131,7 @@
     "copiesInPack": 5,
     "description": {
       "he": "מכפיל את החיים של כל הקלפים שמודבקים בפינות",
-      "en": "Automatically enables stacking a double card on all 4 outer corners of your board."
+      "en": "All four corners take a double card."
     },
     "effect": "autoStackCorners",
     "params": {},
@@ -149,7 +149,7 @@
     "copiesInPack": 5,
     "description": {
       "he": "מחליפה בין שני שומרי המלך של היריב, ובין שני הקלפים שבקצוות — השורה הקדמית נשארת, הסדר שלה לא.",
-      "en": "Swaps the enemy's two King guards with each other, and its two outer front cards with each other."
+      "en": "Swaps the enemy's two guards, and its two outer front cards."
     },
     "effect": "shuffleEnemyFrontRow",
     "params": {},
@@ -167,7 +167,7 @@
     "copiesInPack": 4,
     "description": {
       "he": "משדרג מיידית קלף שהנחת על הלוח לגרסה החזקה יותר שלו (רמה 2) למשך המשחקון.",
-      "en": "Instantly upgrades a placed card to its stronger version (level 2) for the match."
+      "en": "Upgrades a card you placed to level 2 for this match."
     },
     "effect": "upgradeCardTemp",
     "params": {
@@ -188,7 +188,7 @@
     "copiesInPack": 6,
     "description": {
       "he": "מאפשר לך להסיר קלף שכבר הדבקת ולפנות משבצת",
-      "en": "On use: pick a card you placed and remove it (its slot frees up). Undoes the glue."
+      "en": "Pick a card you placed and take it back. The slot frees up."
     },
     "effect": "removeCard",
     "params": {},
@@ -207,7 +207,7 @@
     "copiesInPack": 5,
     "description": {
       "he": "בסוף הבנייה ממלא עד 3 משבצות ריקות ב'לאבה' במיקומים אקראיים.",
-      "en": "Passive: at the end of building, fills up to 3 empty slots with Lava (instead of Crumb Demons) at random positions."
+      "en": "Passive: fills up to 3 empty slots with Lava when building ends."
     },
     "effect": "fillEmpty",
     "params": {
@@ -222,13 +222,13 @@
     "id": "fill_colossus",
     "name": {
       "he": "מילוי גולם אבן",
-      "en": "Stone Colossus Fill"
+      "en": "Stone Golem Fill"
     },
     "rarity": "epic",
     "copiesInPack": 5,
     "description": {
       "he": "פסיבי: בסוף הבנייה ממלא עד 3 משבצות ריקות ב'גולם אבן' במיקומים אקראיים.",
-      "en": "Passive: at the end of building, fills up to 3 empty slots with Stone Colossus at random positions."
+      "en": "Passive: fills up to 3 empty slots with a Stone Golem when building ends."
     },
     "effect": "fillEmpty",
     "params": {
@@ -249,7 +249,7 @@
     "copiesInPack": 5,
     "description": {
       "he": "פסיבי: בסוף הבנייה ממלא עד 3 משבצות ריקות ב'פליים דראגון' במיקומים אקראיים.",
-      "en": "Passive: at the end of building, fills up to 3 empty slots with Flame Dragon at random positions."
+      "en": "Passive: fills up to 3 empty slots with a Flame Dragon when building ends."
     },
     "effect": "fillEmpty",
     "params": {
@@ -270,7 +270,7 @@
     "copiesInPack": 5,
     "description": {
       "he": "פסיבי: בסוף הבנייה ממלא עד 3 משבצות ריקות ב'קוביית ג'לי' במיקומים אקראיים.",
-      "en": "Passive: at the end of building, fills up to 3 empty slots with Gelatinous Cube at random positions."
+      "en": "Passive: fills up to 3 empty slots with a Gelatinous Cube when building ends."
     },
     "effect": "fillEmpty",
     "params": {

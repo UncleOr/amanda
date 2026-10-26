@@ -1067,7 +1067,10 @@ html[dir="ltr"] .intro__wash {
   overflow: hidden;
 }
 .album__views button {
-  padding: 3px 10px;
+  display: inline-grid;
+  place-items: center;
+  /* A square, because what is in it is a picture now rather than a word. */
+  padding: 4px 10px;
   border: 0;
   background: transparent;
   /* --text, not --muted: this is a control's label and §3 of the UI rules
@@ -1083,7 +1086,11 @@ html[dir="ltr"] .intro__wash {
   background: var(--accent);
   color: #241a05;
 }
+/* A hairline between them, so the pair reads as two choices rather than as
+   one pill with a lump in it. */
+.album__views button + button { border-inline-start: 1px solid var(--line-lit); }
 /* The filter is a switch too, so it has to look pressed when it is on. */
+.album__only-up { padding-inline: 7px; }
 .album__chart.is-on {
   background: var(--accent);
   border-color: var(--accent);

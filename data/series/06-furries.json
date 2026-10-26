@@ -17,7 +17,7 @@
     },
     "description": {
       "he": "שלושה צמודים מאותה סדרה מקבלים +20% עוצמה ו+20% חיים.",
-      "en": "Three touching cards of the same series get +20% power and +20% health."
+      "en": "Three of the family, touching: +20% power and health."
     },
     "ability": {
       "type": "statAura",
@@ -34,7 +34,7 @@
       "numberInSeries": 1,
       "name": {
         "he": "צ'ופי",
-        "en": "Chuppy"
+        "en": "Choopy"
       },
       "elements": [
         "electric"
@@ -61,7 +61,7 @@
       ],
       "role": {
         "he": "החבר שלך מההתחלה. מכה חזק מרחוק ושובר שריון — אבל סופג כמעט כלום, אז הוא לא עומד בחזית.",
-        "en": "Your friend from the start. Hits hard at range and breaks armour, but takes almost nothing, so he does not belong in the front row."
+        "en": "Your friend from day one. Hits hard from range and breaks armour — and he is made of paper. Not a front-row card."
       },
       "art": {
         "placeholderColor": "#f5c21b",

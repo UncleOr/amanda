@@ -17,7 +17,7 @@
     },
     "description": {
       "he": "שלושה צמודים מאותה סדרה מקבלים +20% עוצמה ו+20% חיים.",
-      "en": "Three touching cards of the same series get +20% power and +20% health."
+      "en": "Three of the family, touching: +20% power and health."
     },
     "ability": {
       "type": "statAura",
@@ -105,7 +105,7 @@
           },
           "description": {
             "he": "כשהיא נשברת בוקע ממנה דרקון להבה צעיר, עף ומלא אנרגיה.",
-            "en": "When it breaks, a young Flame Dragon hatches out of it — flying, and almost as strong."
+            "en": "Break it, and a young Flame Dragon comes out of it. Flying."
           }
         }
       ],
@@ -143,7 +143,7 @@
       "abilities": [],
       "role": {
         "he": "יורה בקלף האויב האחרון בנתיב שלו, כל עוד יש לו קו ראייה פנוי.",
-        "en": "Shoots the last enemy card in its lane, as long as it has a clear line of sight"
+        "en": "Shoots the last card in its lane, if it can see it."
       },
       "art": {
         "placeholderColor": "#f2c530",
@@ -182,7 +182,7 @@
           },
           "description": {
             "he": "משאיר בנתיב שלו לבה רותחת, מי שנוגע בה נשרף ומאבד חיים",
-            "en": "Leaves a trail of molten lava in its lane. Enemies touching it burn and take damage"
+            "en": "Leaves molten lava behind it. Anything standing in it burns."
           }
         }
       ],
@@ -393,7 +393,7 @@
           },
           "description": {
             "he": "דוחף את היריב הצידה מעמודה לעמודה, מזיז צלפים מחוץ לנתיב.",
-            "en": "Pushes the enemy sideways between columns, moving snipers out of the lane."
+            "en": "Shoves the enemy sideways, out of the sniper's lane."
           }
         }
       ],

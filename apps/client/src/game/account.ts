@@ -1382,7 +1382,7 @@ export async function saveDeck(deck: Deck): Promise<Deck | string> {
   try {
     const { data: auth } = await sb.auth.getSession();
     const id = auth.session?.user.id;
-    if (!id) return t("s2a6031b", "אין חיבור לשרת");
+    if (!id) return t("sabc80dd", "אין חיבור לשרת");
     const row = { player_id: id, name: deck.name.trim(), cards: deck.cards, back: deck.back };
     const { data, error } =
       deck.id && deck.id !== "auto"

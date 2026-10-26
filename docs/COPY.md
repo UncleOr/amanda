@@ -1,6 +1,6 @@
 # הטקסטים של אמנדה
 
-כל טקסט שהשחקן רואה — 1150 במספר, 1150 מהם כבר באנגלית.
+כל טקסט שהשחקן רואה — 1316 במספר, 1316 מהם כבר באנגלית.
 
 ## איך עורכים
 
@@ -45,16 +45,16 @@
 | d708c394 | הדרקונים | | The Dragons |
 | dda5d4e9 | נזק אזורי ופצצות מתקתקות | | Area damage and ticking bombs |
 | dc64864a | קשקשי דרקון | | Dragon Scales |
-| da6ab0c0 | שלושה צמודים מאותה משפחה מקבלים +20% עוצמה ו+20% חיים. | | Three touching cards of the same family get +20% power and +20% health. |
+| d6223f77 | שלושה צמודים מאותה סדרה מקבלים +20% עוצמה ו+20% חיים. | | Three of the family, touching: +20% power and health. |
 | dd069f94 | פליים דראגון | | Flame Dragon |
 | d387c4a6 | צועד לתוך שטח היריב | | Advances into enemy territory |
 | ddfe4de4 | ביצת אובסידיאן | | Obsidian Egg |
-| d9a746c1 | אחרי 10 שניות בוקע ממנה דרקון עם +1500 עוצמה. | | Hatches a dragon with +1500 Power after 10 seconds |
-| dd171205 | פצצה מתקתקת לקומת קרקע: מניחים אותה למטה ומעליה טנק; עד שהטנק נפרץ הטיימר נגמר. | | Ground-floor ticking bomb: place it under a tank; by the time the tank breaks, its timer is up. |
+| d467b4f3 | כשהיא נשברת בוקע ממנה דרקון להבה צעיר, עף ומלא אנרגיה. | | Break it, and a young Flame Dragon comes out of it. Flying. |
+| d1d09559 | לא נלחמת. מחכה שישברו אותה. | | It does not fight. It waits to be broken. |
 | d1cdf43f | טורץ' | | Torch |
-| d0c38210 | יורה בקלף האויב האחרון בנתיב שלו, כל עוד יש לו קו ראייה פנוי. | | Shoots the last enemy card in its lane, as long as it has a clear line of sight |
+| d0c38210 | יורה בקלף האויב האחרון בנתיב שלו, כל עוד יש לו קו ראייה פנוי. | | Shoots the last card in its lane, if it can see it. |
 | d751bd5b | לאבה | | Lava |
-| dd201848 | משאיר בנתיב שלו לבה רותחת, מי שנוגע בה נשרף ומאבד חיים | | Leaves a trail of molten lava in its lane. Enemies touching it burn and take damage |
+| dd201848 | משאיר בנתיב שלו לבה רותחת, מי שנוגע בה נשרף ומאבד חיים | | Leaves molten lava behind it. Anything standing in it burns. |
 | d4c2a5cc | שליטת נתיבים / חסימת הסתערות עם נזק מתמשך. | | Lane control / advance-denial with damage over time. |
 | d20cc0d1 | ספייק | | Spike |
 | d4bceedb | מחזיר 30% מהנזק שספג, מצוין תחת קלף מתפוצץ. | | Returns 30% of damage taken, great under a bomb card. |
@@ -66,7 +66,7 @@
 | d634b55d | דרקון רפאים | | Ghost Dragon |
 | d016d527 | כשהוא מת - בוקעות ממנו 3 רוחות שממשיכות להסתער. | | When destroyed, spawns 3 spirits that charge forward. |
 | d330d7d5 | דרקון הטייפון | | Typhoon Dragon |
-| de90eb52 | דוחף את היריב הצידה מעמודה לעמודה, מזיז צלפים מחוץ לנתיב. | | Pushes the enemy sideways between columns, moving snipers out of the lane. |
+| de90eb52 | דוחף את היריב הצידה מעמודה לעמודה, מזיז צלפים מחוץ לנתיב. | | Shoves the enemy sideways, out of the sniper's lane. |
 | d0dd38e1 | שליטה מרחבית / הדף צדדי. | | Spatial control / lateral knockback. |
 | dbcd6ba4 | מלך השחקים | | Sky King |
 | d1cbbaba | מכת כנפיים לרוחב 3 נתיבים כל 5 שניות עם הדף. | | A wing sweep across 3 lanes every 5 seconds with knockback. |
@@ -78,8 +78,8 @@
 | d8c365e1 | הענקים | | The Giants |
 | d1b5fe74 | טנקים, התגרות והחזרת נזק | | Tanks, taunts and damage reflection |
 | d27e8948 | עור עבה | | Thick Hide |
-| d5da4e5e | שלושה צמודים מאותה משפחה מקבלים +20% עוצמה ו+20% חיים. | | Three touching cards of the same family get +20% power and +20% health. |
-| dbbaccd6 | גולם אבן | | Stone Colossus |
+| db4a90f7 | שלושה צמודים מאותה סדרה מקבלים +20% עוצמה ו+20% חיים. | | Three of the family, touching: +20% power and health. |
+| dbbaccd6 | גולם אבן | | Stone Golem |
 | d3694c8e | טנק הליכה שמחזיר נזק. | | A walking tank that reflects damage. |
 | dd07b195 | שומר הפלדה | | Steel Warden |
 | df53d12f | מעניק שריון לכל בעלי הברית סביבו. | | Grants armor to nearby allies. |
@@ -106,9 +106,9 @@
 | d2cdcd05 | הפרוותיים | | The Furries |
 | d85387a0 | מכות חשמל מהירות — מעט חיים, הרבה כוח | | Fast electric strikes — little health, a lot of power |
 | de4a1b06 | פרווה טעונה | | Charged Fur |
-| d512f04e | שלושה צמודים מאותה משפחה מקבלים +20% עוצמה ו+20% חיים. | | Three touching cards of the same family get +20% power and +20% health. |
-| d267c630 | צ'ופי | | Chuppy |
-| d8d0f124 | החבר שלך מההתחלה. מכה חזק מרחוק ושובר שריון — אבל סופג כמעט כלום, אז הוא לא עומד בחזית. | | Your friend from the start. Hits hard at range and breaks armour, but takes almost nothing, so he does not belong in the front row. |
+| dabfb712 | שלושה צמודים מאותה סדרה מקבלים +20% עוצמה ו+20% חיים. | | Three of the family, touching: +20% power and health. |
+| d267c630 | צ'ופי | | Choopy |
+| d8d0f124 | החבר שלך מההתחלה. מכה חזק מרחוק ושובר שריון — אבל סופג כמעט כלום, אז הוא לא עומד בחזית. | | Your friend from day one. Hits hard from range and breaks armour — and he is made of paper. Not a front-row card. |
 
 ## סדרה — החרקים
 
@@ -117,7 +117,7 @@
 | df172f20 | החרקים | | The Insects |
 | d0a8be11 | מלכודות, רעל ופגיעה ישירה במרכז | | Traps, poison and striking straight at the center |
 | db45ae8e | נחיל | | The Swarm |
-| d5df62d0 | שלושה צמודים מאותה משפחה מקבלים +20% עוצמה ו+20% חיים. | | Three touching cards of the same family get +20% power and +20% health. |
+| d3b3fd1c | שלושה צמודים מאותה סדרה מקבלים +20% עוצמה ו+20% חיים. | | Three of the family, touching: +20% power and health. |
 | d1e8dfab | חייל נמלה | | Ant Soldier |
 | daff27cb | מסתער מהיר וזול להצפת נתיבים. | | A cheap, fast rusher to flood lanes. |
 | d56e0c0e | מלכת הנמלים | | Ant Queen |
@@ -138,6 +138,45 @@
 | de11c8f1 | מתפוצץ במוות לשני חרקים קטנים. | | Explodes on death into two small bugs. |
 | d737d9d3 | קיסרית החרקים | | Insect Empress |
 
+## סדרה — חיות הרחוב
+
+| מזהה | טקסט נוכחי | טקסט חדש | אנגלית |
+| --- | --- | --- | --- |
+| d54add5c | חיות הרחוב | | The Strays |
+| db99cf3f | מהירות, קריעת שריון, ומי שנופל משאיר אחריו חבורה | | Speed, torn armour, and whoever falls leaves a gang behind |
+| db73bc15 | חבורה | | The Pack |
+| dfd692f7 | שלושה צמודים מאותה סדרה מקבלים +20% עוצמה ו+20% חיים. | | Three of the family, touching: +20% power and health. |
+| db9f8171 | חתול רחוב | | Street Cat |
+| d3669ac9 | הזול והמהיר. ממלא שורה קדמית ומגיע ראשון. | | Cheap and quick. Fills a front row and gets there first. |
+| dcba058a | תן | | Jackal |
+| d8bdcadc | מזרז את התוקפים לידו ב-20%. | | Speeds up attackers beside it by 20%. |
+| de78f90d | לא חזק לבד. שניים או שלושה ביחד הם חבורה. | | Weak alone. Two or three together are a pack. |
+| d2077a4d | חולדה | | Rat |
+| dc84b4e0 | כשהיא מתה, שלוש חולדות קטנות ממשיכות במקומה. | | When it dies, three small rats carry on in its place. |
+| df523605 | להרוג אותה זה לא להיפטר ממנה. | | Killing it is not the same as being rid of it. |
+| dda626ad | שק אשפה | | Rubbish Bag |
+| d68422e6 | מי שעומד מולו לא זז משם. | | Whatever stands in front of it does not move. |
+| dd26e5bb | לא תוקף כמעט. פשוט חוסם, וזה מספיק. | | Barely attacks. It blocks, and that is enough. |
+| d8c898d6 | פנס מהבהב | | Flickering Lamp |
+| d1227f0f | ההבהוב מקפיא את מי שנפגע לשנייה וחצי. | | The flicker freezes whatever it hits for a second and a half. |
+| d489b665 | לא הורג. עוצר. | | It does not kill. It stops. |
+| d57faa1c | צל | | Shadow |
+| da67659b | אחרי הריגה הוא ממשיך להתקדם באותו תור. | | After a kill it keeps advancing in the same turn. |
+| d22f8afd | הכי מסוכן מול שורה של קלפים חלשים. | | Most dangerous against a row of weak cards. |
+| d74f9e70 | כלב גרוטאות | | Scrap Dog |
+| dcb98687 | קורע שריון: מוריד 20% מהשריון של מי שהוא פוגע בו. | | Tears armour: takes 20% of the armour off whatever it hits. |
+| d2fb5318 | התשובה של הסמטה לענקים. | | The alley's answer to the giants. |
+| d5a6ba23 | מה שבפח | | The Thing in the Bin |
+| d65253df | לוקח את היסוד של הראשון שהוא פוגע בו. | | Takes the element of the first thing it hits. |
+| dc0167ea | אף פעם לא אותו דבר פעמיים. | | Never the same thing twice. |
+| dc9c728b | חתול זקן | | Old Tom |
+| d0dd947e | אוכל קלף שכן ומקבל 400 שריון. | | Eats a neighbouring card and gains 400 armour. |
+| d5bf34b6 | עולה קלף. שווה את זה רק ליד משהו שכבר נגמר. | | Costs a card. Worth it only beside something already spent. |
+| dfdf8cc8 | מלך הסמטה | | The Alley King |
+| d5c3557d | אחרי הריגה הוא ממשיך להתקדם. | | After a kill it keeps advancing. |
+| d66811df | כשהוא נופל, ארבעה מהחבורה שלו קמים. | | When it falls, four of its gang get up. |
+| d054091b | האפי של הסדרה: קשה להפיל, וגם כשהוא נופל הוא לא נגמר. | | The series' epic: hard to bring down, and not finished when it is. |
+
 ## סדרה — הצמחים
 
 | מזהה | טקסט נוכחי | טקסט חדש | אנגלית |
@@ -145,7 +184,7 @@
 | d5696dab | הצמחים | | The Plants |
 | d180cb32 | התפשטות על הלוח, צמיחה ותוספת חיים | | Spreading across the board, growth and added health |
 | d1c33c0c | פוטוסינתזה | | Photosynthesis |
-| d1c379cd | שלושה צמודים מאותה משפחה מקבלים +20% עוצמה ו+20% חיים. | | Three touching cards of the same family get +20% power and +20% health. |
+| d7fa1231 | שלושה צמודים מאותה סדרה מקבלים +20% עוצמה ו+20% חיים. | | Three of the family, touching: +20% power and health. |
 | dd730075 | הדרדר | | Thorn Sprout |
 | de22538b | מי שנוגע בו נדקר ומאבד חיים | | Thorns that prick whoever touches it. |
 | d1bc139b | העץ העתיק | | Ancient Tree |
@@ -174,16 +213,16 @@
 | dc1662ed | הדביקים | | The Slimes |
 | d477a268 | משאירים שובל ריר שמאט את היריב | | Leaving a slime trail that slows the enemy |
 | df041649 | דביקות | | Stickiness |
-| d45c17b6 | שלושה צמודים מאותה משפחה מקבלים +20% עוצמה ו+20% חיים. | | Three touching cards of the same family get +20% power and +20% health. |
+| db86ca05 | שלושה צמודים מאותה סדרה מקבלים +20% עוצמה ו+20% חיים. | | Three of the family, touching: +20% power and health. |
 | dd6d1363 | הסליים | | Slime |
 | dc8d5f0a | מי שעובר דרכו מאט | | Enemies passing through are Slowed |
 | d9dab6c4 | קוביית ג'לי | | Gelatinous Cube |
-| d9e3edc7 | בולעת כל קלף אויב עם פחות חיים שעובר דרכה, ומוסיפה את החיים שלו לשלה. | | Swallows any enemy card with less Health passing through it and gains its Health. |
+| d9e3edc7 | בולעת כל קלף אויב עם פחות חיים שעובר דרכה, ומוסיפה את החיים שלו לשלה. | | Swallows any smaller card that walks into it, and keeps its health. |
 | d16b90ad | חמוצי | | Acid Ooze |
 | d4bb1b7a | ממיסה במכה הראשונה  את שריון האויב, חזק ככל שיהיה | | First hit: Melts all enemy Armor, regardless of its strength |
 | d0855e04 | ממיס שריון. | | Armor melter. |
 | df582627 | בלוב | | Splitting Blob |
-| d26b185e | במוות נחתך לשני בלובים קטנים שקופצים לנתיבים הסמוכים וממשיכים להילחם. | | On death splits into two small blobs that leap to adjacent lanes and keep fighting. |
+| d26b185e | במוות נחתך לשני בלובים קטנים שקופצים לנתיבים הסמוכים וממשיכים להילחם. | | Dies into two small blobs that hop sideways and carry on. |
 | d414ebd5 | שטיח-דבק | | Sticky Rug |
 | df4c8192 | מדביק את היריב שמולו ומונע ממנו לזוז עד סוף הקרב. | | Glues the enemy in front so it cannot move for the rest of the battle. |
 | d0b30ec8 | מלכודת קומת-קרקע. | | Ground-floor trap. |
@@ -194,13 +233,13 @@
 | d920d13a | משדר פולסים חשמליים שמעניקים מהירות תקיפה למפלצות הסמוכות שלך | | Emits electric pulses, granting Attack Speed to your adjacent monsters |
 | d81d470f | באף אזורי. | | Area buffer. |
 | df2a4637 | מטמיע הצורות | | Assimilator |
-| d4b8587c | בפגיעה הראשונה מעתיק את האלמנט של היריב ומשתלב בסינרגיות. | | On its first hit copies the enemy's element, letting it slot into synergies. |
+| d4b8587c | בפגיעה הראשונה מעתיק את האלמנט של היריב ומשתלב בסינרגיות. | | Steals the element of the first thing it hits. |
 | da2bed0b | גנב אלמנטים. | | Element thief. |
 | d5ff14e8 | פודינג-מגן | | Pudding Shield |
-| d9ffeb46 | סופג חצי מהנזק שמופנה לקלפים הצמודים אליו מימין ומשמאל. | | Absorbs half the damage aimed at the cards directly to its left and right. |
+| d9ffeb46 | סופג חצי מהנזק שמופנה לקלפים הצמודים אליו מימין ומשמאל. | | Takes half the damage aimed at the cards either side of it. |
 | d59cfdc3 | הגנה היקפית / שומר ראש. | | Perimeter guard / bodyguard. |
 | de5bfdae | זליג הענק | | Zelig the Giant |
-| db20969f | כל 6 שניות מושך את כל קלפי היריב המסתערים משבצת אחת פנימה למרכז ומשבש נתיבים. | | Every 3 seconds pulls all advancing enemy cards one slot inward, disrupting lanes. |
+| db20969f | כל 6 שניות מושך את כל קלפי היריב המסתערים משבצת אחת פנימה למרכז ומשבש נתיבים. | | Every 3 seconds, drags the advancing enemy one slot inward. |
 
 ## סדרה — האגדיים
 
@@ -211,7 +250,7 @@
 | df6551b7 | תוהו | | Chaos |
 | d3dcebe0 | אין. הם לא באים בשלושה. | | None. They do not come in threes. |
 | da3285cd | אמנדה | | Amanda |
-| d48433be | המפלצת הכי חזקה באלבום. יורה רחוק וחזק ומרפאה את כל מי שסביבה. אף אחד עדיין לא ניצח אותה. אולי תהיו הראשונים. | | The strongest monster in the album. Shoots far and hard, and heals everyone around her. No one has beaten her yet. Maybe you’ll be the firs |
+| d48433be | המפלצת הכי חזקה באלבום. יורה רחוק וחזק ומרפאה את כל מי שסביבה. אף אחד עדיין לא ניצח אותה. אולי תהיו הראשונים. | | The strongest monster in the album. Shoots far, hits hard, heals everyone round her. Nobody has beaten her yet. Maybe you. |
 
 ## קלפי פעולה
 
@@ -219,29 +258,29 @@
 | --- | --- | --- | --- |
 | d8af9ed0 | בוסט אנרגיה | | Energy Boost |
 | d924260a | מעניק +50 עוצמה לכל הקלפים שמונחים כרגע על הלוח שלך. | | Grants +50 power to all cards currently on your board. |
-| d191f69c | משמיד הקלפים | | Radioactive Eraser |
-| d281179a | מוחק קלף אחד של היריב (אי אפשר להפעיל על המלך). | | Erases one enemy card (if used on the King, deals heavy damage instead of erasing). |
+| d191f69c | משמיד הקלפים | | Destroyer |
+| d281179a | מוחק קלף אחד של היריב (אי אפשר להפעיל על המלך). | | Wipes out one enemy card. On the King it does heavy damage instead. |
 | dcf7b540 | הפריזר | | Time Freeze |
-| dca2eedf | היריב לא יכול להדביק קלפים באלבום למשך 5 שניות | | Completely freezes the opponent's screen for 3 seconds. |
+| dca2eedf | היריב לא יכול להדביק קלפים באלבום למשך 5 שניות | | They cannot place a card for 3 seconds. |
 | d0014d6d | הסוויצ׳ר | | Swap Places |
-| d52f8ecc | מחליף מיקומים בין שני קלפים שכבר הנחת על הלוח שלך. | | Swaps the positions of two cards you have already placed on your board. |
+| d52f8ecc | מחליף מיקומים בין שני קלפים שכבר הנחת על הלוח שלך. | | Swaps two cards you have already placed. |
 | d6c5480b | רנטגן | | X-Ray |
-| d0c06a9b | חושף את כל הלוח של היריב (כולל שורת ההפתעה האחורית) למשך 5 שניות. | | Reveals the entire enemy board (including the back Surprise Row) for 5 seconds. |
+| d0c06a9b | חושף את כל הלוח של היריב (כולל שורת ההפתעה האחורית) למשך 5 שניות. | | Shows the whole enemy board — back row included — for 5 seconds. |
 | d8dd9d7a | קומת קרקע | | Ground Floor (Stacking) |
-| d393c007 | מאפשר להדביק קלף אחד על גבי קלף קיים. כשהעליון מת בקרב, התחתון נחשף. | | Lets you pick 4 slots and stack a card on top of another. When the top dies in battle, the bottom is revealed. |
+| d393c007 | מאפשר להדביק קלף אחד על גבי קלף קיים. כשהעליון מת בקרב, התחתון נחשף. | | Stack a card on top of another, in 4 slots. When the top dies, the bottom appears. |
 | d45d0447 | פינות אפלות | | Dark Corners |
-| d25f1f60 | מכפיל את החיים של כל הקלפים שמודבקים בפינות | | Automatically enables stacking a double card on all 4 outer corners of your board. |
+| d25f1f60 | מכפיל את החיים של כל הקלפים שמודבקים בפינות | | All four corners take a double card. |
 | d2af4555 | סופת חול | | Sandstorm |
-| dc311f15 | מחליפה בין שני שומרי המלך של היריב, ובין שני הקלפים שבקצוות — השורה הקדמית נשארת, הסדר שלה לא. | | Swaps the enemy's two King guards with each other, and its two outer front cards with each other. |
+| dc311f15 | מחליפה בין שני שומרי המלך של היריב, ובין שני הקלפים שבקצוות — השורה הקדמית נשארת, הסדר שלה לא. | | Swaps the enemy's two guards, and its two outer front cards. |
 | d2221bdb | תדלוק מלא | | Full Refuel |
-| daee0956 | משדרג מיידית קלף שהנחת על הלוח לגרסה החזקה יותר שלו (רמה 2) למשך המשחקון. | | Instantly upgrades a placed card to its stronger version (level 2) for the match. |
+| daee0956 | משדרג מיידית קלף שהנחת על הלוח לגרסה החזקה יותר שלו (רמה 2) למשך המשחקון. | | Upgrades a card you placed to level 2 for this match. |
 | d45ad227 | פינוי בינוי | | Recall Card |
-| d934ff11 | מאפשר לך להסיר קלף שכבר הדבקת ולפנות משבצת | | On use: pick a card you placed and remove it (its slot frees up). Undoes the glue. |
+| d934ff11 | מאפשר לך להסיר קלף שכבר הדבקת ולפנות משבצת | | Pick a card you placed and take it back. The slot frees up. |
 | d5bb37c6 | מילוי לאבה | | Lava Fill |
-| d71c0f77 | בסוף הבנייה ממלא עד 3 משבצות ריקות ב'לאבה' במיקומים אקראיים. | | Passive: at the end of building, fills up to 3 empty slots with Lava (instead of Crumb Demons) at random positions. |
+| d71c0f77 | בסוף הבנייה ממלא עד 3 משבצות ריקות ב'לאבה' במיקומים אקראיים. | | Passive: fills up to 3 empty slots with Lava when building ends. |
 | dc3fedf6 | מילוי גולם אבן | | Colossus Fill |
 | d20f47e3 | פסיבי: בסוף הבנייה ממלא עד 3 משבצות ריקות ב'גולם אבן' במיקומים אקראיים. | | Passive: at the end of building, fills up to 3 empty slots with Stone Colossus at random positions. |
-| db4905a9 | מילוי דרקון אש | | Flame Fill |
+| dd121d6c | מילוי פליים דראגון | | Flame Dragon Fill |
 | d598d611 | פסיבי: בסוף הבנייה ממלא עד 3 משבצות ריקות ב'פליים דראגון' במיקומים אקראיים. | | Passive: at the end of building, fills up to 3 empty slots with Flame Dragon at random positions. |
 | db55bdb5 | מילוי קוביית ג'לי | | Cube Fill |
 | d3c3107c | פסיבי: בסוף הבנייה ממלא עד 3 משבצות ריקות ב'קוביית ג'לי' במיקומים אקראיים. | | Passive: at the end of building, fills up to 3 empty slots with Gelatinous Cube at random positions. |
@@ -305,7 +344,7 @@
 | s43db7a1 | מחפשת לך יריב. סבלנות. | | Finding you an opponent. Patience. |
 | s95c7718 | מישהו יבוא. תמיד בא מישהו. | | Someone will come. Someone always comes. |
 | s4fa0459 | רגע, אני מסדרת לך משחק | | Hold on, I'm setting you up a game |
-| s50cc39e | קודם כול מלך. הוא לא זז, הוא חזק פי שלושה, ואם הוא נופל — נגמר. גרור מפלצת לאמצע. קלף פעולה ביד? לפח איתו. | | The King first. He doesn't move, he's three times as strong, and if he falls it's over. Drag a monster to the middle. Holding an action card? Throw it away. |
+| s50cc39e | קודם כול מלך. הוא לא זז, הוא חזק פי שלושה, ואם הוא נופל — נגמר. גרור מפלצת לאמצע. קלף פעולה ביד? לפח איתו. | | The King first. He never moves, he is three times as strong, and if he falls it is over. Drag one to the middle. |
 | s54b2c21 | שתי המשבצות האלה שומרות עליו. כל עוד מישהו עומד שם, אי אפשר לגעת בו. | | These two squares guard him. While somebody is standing there, nobody can touch him. |
 | s2e30355 | זה מה שיש לך ביד. לא מוצא חן בעיניך? לפח. אבל רק הקלף העליון חוזר, אז תחשוב. | | That's what's in your hand. Don't like it? Throw it away. But only the top card comes back, so think. |
 | sdc4abc1 | כל מה שאפשר למלא — למלא. מה שיישאר ריק אני אמלא, וזה לא יהיה נעים. | | Fill everything you can. Whatever you leave empty, I'll fill — and you won't enjoy it. |
@@ -329,27 +368,27 @@
 | --- | --- | --- | --- |
 | safa431d | לרוקן את {0} | | Empty {0} |
 | sdfa1c45 | נקה | | Clear |
-| sdfad51e | מתארגנת… | | Getting set up… |
-| s8da6ce3 | מחפשת לך יריב… | | Finding you an opponent… |
+| sdfad51e | מתארגנת… | | Setting up… |
+| s8da6ce3 | מחפשת לך יריב… | | Finding you someone… |
 | s7265e57 | נועלת לוחות… | | Locking the boards… |
 | s7b1e036 | זהו | | That's it |
 | sb472148 | רגע… | | One moment… |
 | s49e6902 | רגע… | | One moment… |
-| s1396b7a | סובב את המכשיר | | Turn your device |
-| sf038582 | אני משוחקת לרוחב, ילד. ככה אני רואה את שניכם. | | I am played sideways, kid. That is how I see you both. |
+| s1396b7a | סובב את המכשיר | | Turn your phone |
+| sf038582 | אני משוחקת לרוחב, ילד. ככה אני רואה את שניכם. | | I am played sideways, kid. That is how I watch you both. |
 | sbd466e9 | מחכה לחבר שלך… | | Waiting for your friend… |
 | sc18c32d | דק זהה | | Same deck |
 | se2c2032 | הפרופיל שלי | | My profile |
 | sda25897 | התחברות | | Sign in |
 | s1703f49 | הודעות | | Messages |
-| s460b8e8 | חזרה לתפריט | | Back to the menu |
+| s460b8e8 | חזרה לתפריט | | Menu |
 | s7ee96f5 | יציאה | | Leave |
 | s0dad0ff | הגדרות | | Settings |
-| s0eb9706 | יש עדכון שלא קראתם | | There is an update you have not read |
+| s0eb9706 | יש עדכון שלא קראתם | | Something new to read |
 | se65fa4a | השרת לא עונה | | The server is not answering |
 | sa759290 | מחכה לחבר שלך… | | Waiting for your friend… |
-| s70fb9fd | מחפשת לך יריב… | | Finding you an opponent… |
-| sbb39d20 | שלח את הקוד למי שבא לך לאכול: | | Send the code to whoever you feel like eating: |
+| s70fb9fd | מחפשת לך יריב… | | Finding you someone… |
+| sbb39d20 | שלח את הקוד למי שבא לך לאכול: | | Send the code to whoever you fancy eating: |
 | s8850299 | ✔ העתקתי | | ✔ Copied |
 | sb48d812 | ⧉ העתק הזמנה | | ⧉ Copy invitation |
 | s20677b2 | השרת לא עונה. אני פנויה. | | The server is not answering. I am free. |
@@ -360,59 +399,58 @@
 | sc84b632 | החצי שלך | | Your half |
 | s502312f | אתה | | You |
 | sa531737 | הידיים שלך קפואות | | Your hands are frozen |
-| s5d4a4e0 | לשלוף ולזרוק אפשר. להדביק — לא. | | You can draw and you can discard. Placing — no. |
+| s5d4a4e0 | לשלוף ולזרוק אפשר. להדביק — לא. | | Draw and bin, yes. Place, no. |
 | s138a2c6 | החצי שלך | | Your half |
 | sc8775fd | החצי של מי שאיתך | | Your teammate's half |
 | sfc83143 | הצד שמולך | | The side facing you |
 | s9d29f31 | אמנדה | | Amanda |
 | s52b9172 | היריב | | Opponent |
 | sf0485e7 | נחשף! | | Revealed! |
-| sbcd9db8 | בחר קלף אצל היריב | | Pick a card on the opponent's side |
-| s1445cf1 | ועכשיו את השני | | And now the second one |
-| s4106038 | בחר קלף על הלוח שלך | | Pick a card on your board |
+| sbcd9db8 | בחר קלף אצל היריב | | Pick one of theirs |
+| s1445cf1 | ועכשיו את השני | | Now the second |
+| s4106038 | בחר קלף על הלוח שלך | | Pick one of yours |
 | s8004b74 | עבור „{0}” | | for “{0}” |
 | s7ab31ff | ביטול | | Cancel |
 | se6dcc04 | קלפי פעולה | | Action cards |
-| s3cec9ca | מאוחר. תכננת גרוע. | | Too late. You planned badly. |
+| s3cec9ca | מאוחר. תכננת גרוע. | | Too late. Bad planning. |
 | sb9a31bf | פעיל ∞ | | Active ∞ |
 | s34ec88c | נוצל | | Used |
 | sa549a85 | מאוחר מדי | | Too late |
-| sf916188 | הפעל | | Use |
-| sdc8c744 | הסבר | | What it does |
-| s932d88e | גע בקלף על הלוח כדי להוריד אותו | | Touch a card on the board to take it off |
-| s3adfc6c | הבר מלא | | The bar is full |
-| s25edd89 | קח לפעולה | | Take it to the bar |
-| s8006c77 | הרץ קרב | | Run a battle |
+| s932d88e | גע בקלף על הלוח כדי להוריד אותו | | Tap a card to take it off |
+| s3adfc6c | הבר מלא | | Bar full |
+| s25edd89 | קח לפעולה | | To the bar |
+| s8006c77 | הרץ קרב | | Fight |
 | sb0d338c | אין קלף | | No card |
-| sba4d2ee | קלפים שנשארו בדק | | Cards left in the deck |
-| s6c4fc10 | קלפים בפח | | Cards in the trash |
-| s7aacede | הבר מלא | | The bar is full |
-| s9f032e5 | קח לפעולה | | Take it to the bar |
-| sd06d0bd | זרוק | | Discard |
-| s1bd8f04 | קח מהפח | | Take from the bin |
-| sfbeaf8c | אפשר להניח קלף על קלף שכבר הנחתם — נשארו {0} | | You can stack a card on one you already placed — {0} left |
-| sb28db8b | ארבע הפינות פתוחות להנחה כפולה | | All four corners are open for a double placement |
-| s4a9f52a | התחל קרב! | | Start the battle! |
+| sba4d2ee | קלפים שנשארו בדק | | Left in the deck |
+| s6c4fc10 | קלפים בפח | | In the bin |
+| s7aacede | הבר מלא | | Bar full |
+| s9f032e5 | קח לפעולה | | To the bar |
+| sd06d0bd | זרוק | | Bin it |
+| s1bd8f04 | קח מהפח | | From the bin |
+| sfbeaf8c | אפשר להניח קלף על קלף שכבר הנחתם — נשארו {0} | | Stack on a card you placed — {0} left |
+| sb28db8b | ארבע הפינות פתוחות להנחה כפולה | | All four corners take a double |
+| s4a9f52a | התחל קרב! | | Fight! |
 | s72c3f50 | מוכן — לחץ לביטול | | Ready — tap to undo |
-| sd693107 | אני מוכן | | I'm ready |
-| sa4fb281 | שניכם מוכנים — מתחילים | | You are both ready — here we go |
-| s0ecac63 | אתה מוכן. אפשר להמשיך לבנות עד שגם הוא יהיה. | | You are ready. You can keep building until your opponent is too. |
-| sabbc0bf | היריב מוכן. אתה עדיין יכול לבנות. | | Your opponent is ready. You can still build. |
-| seef7e51 | הלוח שלך נעול | | Your board is locked |
-| sc0930d9 | מחכה שהיריב יסיים… | | Waiting for the opponent to finish… |
-| s40977ec | ממלאת לך את החורים… | | Filling in your holes… |
-| s19395af | יפה. עכשיו משהו קצת יותר מתוחכם. | | Nice. Now something a little cleverer. |
-| s9b86633 | במשחק הבא יש ליריב לוח אמיתי — ולך יש בדיוק מה שמנצח אותו. | | In the next game your opponent has a real board — and you have exactly what beats it. |
-| se31bdcc | קדימה | | Go |
-| sb604bef | זהו, אתה יודע לשחק. | | That's it, you know how to play. |
-| s80f3ec6 | עכשיו לך תאסוף קלפים. אני רעבה. | | Now go and collect cards. I'm hungry. |
-| s8e26ffe | יאללה | | Let's go |
+| sd693107 | אני מוכן | | Ready |
+| sa4fb281 | שניכם מוכנים — מתחילים | | Both ready. Here we go. |
+| s0ecac63 | אתה מוכן. אפשר להמשיך לבנות עד שגם הוא יהיה. | | Ready. Keep building if you like. |
+| sabbc0bf | היריב מוכן. אתה עדיין יכול לבנות. | | They are ready. You still have time. |
+| seef7e51 | הלוח שלך נעול | | Board locked |
+| sc0930d9 | מחכה שהיריב יסיים… | | Waiting for them… |
+| s40977ec | ממלאת לך את החורים… | | Filling your gaps… |
+| s22c9ded | יפה. מוכן לשלב הבא? | | Nice. Next bit? |
+| sff1ea12 | לשלב הבא | | Next |
+| sd9b2943 | כבר לשחק | | Just play |
+| s6ae56df | זהו, הכנתי אותך לקרב. | | Right. You are ready for a fight. |
+| s75e24cb | מוזמן להתחיל לשחק ולהתאמן, או להיכנס למגרש המשחקים ולגלות את כל הקלפים והיכולות שלהם בלי לחץ. | | Go and play. Or take the playground and meet every card with nobody rushing you. |
+| s57066be | יאללה משחק אמיתי | | A real match |
+| s93b5f77 | חזרה לתפריט | | Menu |
 | s0e0ecca | סגירה | | Close |
 | sb3ce2e0 | סגירה | | Close |
 | scb3bea3 | הדקים שלי | | My decks |
 | s7347353 | {0} מזמין אותך למשחק | | {0} is inviting you to a match |
 | seaa865f | חבר | | Friend |
-| sa2adcdb | קדימה | | Go |
+| se31bdcc | קדימה | | Go |
 | sfe483c6 | אולי אחר כך | | Maybe later |
 
 ## דוח הקרב
@@ -510,23 +548,26 @@
 | מזהה | טקסט נוכחי | טקסט חדש | אנגלית |
 | --- | --- | --- | --- |
 | s2027844 | סגירה | | Close |
+| s39d10ba | מעופף | | Flies |
 | s461e043 | ענק אמצע | | Middle giant |
 | sf0837e4 | רמה {0} | | Level {0} |
 | se6317ab | רמה {0} | | Level {0} |
-| s50f1f7b | {0} עותקים | | {0} copies |
-| sad22ee6 | · הרמה הבאה עולה {0} | | · the next level costs {0} |
+| s9558b07 | לרמה הבאה | | Next level |
 | s512576d | · הגעת למקסימום | | · you have reached the maximum |
 | sa1b7d2c | חיים | | Health |
 | s4173ded | עוצמה | | Power |
 | s4763941 | קצב תקיפה | | Attack rate |
 | s26ebf92 | {0}ש׳ | | {0}s |
 | sefc23b0 | תנועה | | Movement |
-| s9546375 | {0}/ש׳ | | {0}/s |
+| s372d0ea | עף {0}/ש׳ | | Flies {0}/s |
+| s118277a | הולך {0}/ש׳ | | Walks {0}/s |
+| sb00a40a | מעופף, במקום | | Flies, stays put |
 | s60fd570 | סטטי | | Static |
 | sa3be69c | טווח | | Range |
+| sd4de546 | תוקף את השומרים שבדרך, ואז את המלך. | | Hits the guards on the way, then the King. |
+| sa8cdca7 | יורה באויב הרחוק ביותר בקו שלו. | | Shoots the furthest enemy in its lane. |
+| s7815a19 | תוקף את מי שמולו בקו שלו. | | Hits whatever stands in front of it. |
 | s8fa9cc4 | יכולות | | Abilities |
-| s8efe7ee | תפקיד | | Role |
-| s4261335 | סינרגיית סדרה: {0} | | Series synergy: {0} |
 
 ## חלון פרטי קלף פעולה
 
@@ -568,21 +609,23 @@
 
 | מזהה | טקסט נוכחי | טקסט חדש | אנגלית |
 | --- | --- | --- | --- |
-| s3ed5f40 | המלך | | The King |
-| s8845f5f | יש קלף מתחת. הוא יצוץ כשהעליון ייפול. | | There is a card underneath. It appears when the top one falls. |
-| s0e2bdac | משמר המלך. כאן עוצרים את מי שבא לאכול אותו. | | The King's guard. This is where you stop whoever comes to eat him. |
+| s3ed5f40 | המלך | | King |
+| s8845f5f | יש קלף מתחת. הוא יצוץ כשהעליון ייפול. | | A card waits underneath. It shows when the top one falls. |
+| s0e2bdac | משמר המלך. כאן עוצרים את מי שבא לאכול אותו. | | The King's guard. Stop them here. |
 
 ## זירת הקרב
 
 | מזהה | טקסט נוכחי | טקסט חדש | אנגלית |
 | --- | --- | --- | --- |
+| s687e265 | המלך מת! | | King down! |
+| sb67b6fd | נגמר הזמן! | | Time! |
+| s683d48d | דד אנד! | | Nobody can move! |
 | sb1bd099 | אתה | | You |
 | s8854c7a | היריב | | Opponent |
-| s25910a5 | ⏱ נגמר הזמן! | | ⏱ Time's up! |
-| sb672b2e | נתקע אחרי {0} שניות בלי ציור | | Stuck after {0} seconds with nothing drawn |
-| sbaf8bec | לא הצלחתי להראות לך את הקרב. | | I could not show you the battle. |
-| se051373 | הוא כבר הוכרע — אני לוקחת אותך לתוצאה. | | It has already been decided — I am taking you to the result. |
-| s54733fd | קדימה לתוצאה | | On to the result |
+| sb672b2e | נתקע אחרי {0} שניות בלי ציור | | Stuck for {0} seconds with nothing to hit |
+| sbaf8bec | לא הצלחתי להראות לך את הקרב. | | I could not show you that battle. |
+| se051373 | הוא כבר הוכרע — אני לוקחת אותך לתוצאה. | | It is already decided. Straight to the result. |
+| s54733fd | קדימה לתוצאה | | The result |
 
 ## גלריית קלפים (כלי פיתוח)
 
@@ -651,6 +694,7 @@
 | sfe07448 | הילת האטה | | Slowing aura |
 | s703d3b1 | הילת מהירות | | Speed aura |
 | sab709b3 | התמרה מושהית | | Delayed change |
+| s0ab9380 | בוקע במות | | Hatches on death |
 | s58ed0ca | נחיל במוות | | Swarm on death |
 | s42bf123 | פיצול במוות | | Split on death |
 | s5cbfbc5 | הקרבת בעל-ברית | | Sacrifice an ally |
@@ -675,7 +719,7 @@
 | sd1e2d62 | סגירה | | Close |
 | sc87eb06 | {0}: חפשו ביוטיוב | | {0}: search YouTube for |
 | s315003f | אם אתם מפחדים ממפלצות — המשחק הזה לא בשבילכם | | If monsters scare you, this game is not for you |
-| sb21002c | הכירו את אמנדה: המפלצת הכי חזקה באלבום המפלצות. דרקונים יורקי אש, ענקי אבן, אפילו צ'ופי המחשמל — כולם ניסו להילחם בה ונכשלו. אמנדה אכלה את כולם לארוחת ערב, והיא תשמח לאכול גם אתכם לקינוח. | | Meet Amanda: the strongest monster in the monster album. Fire-breathing dragons, stone giants, even Chuppy the Electric — every one of them tried to fight her, and every one of them lost. Amanda ate the lot for dinner, and she would be delighted to have you for dessert. |
+| sb21002c | הכירו את אמנדה: המפלצת הכי חזקה באלבום המפלצות. דרקונים יורקי אש, ענקי אבן, אפילו צ'ופי המחשמל — כולם ניסו להילחם בה ונכשלו. אמנדה אכלה את כולם לארוחת ערב, והיא תשמח לאכול גם אתכם לקינוח. | | Meet Amanda: the strongest monster in the album. Fire-breathing dragons, stone giants, even Choopy the Electric — they all had a go, and they all lost. Amanda ate the lot for dinner. You look like pudding. |
 | s00f650e | אבל זה לא אומר שאתם צריכים לוותר מראש. אם יש לכם סבלנות ומוח, אם אתם יודעים לאסוף את הקלפים הנכונים ולהשתמש בהם בתבונה, אם יש לכם חברים שיודעים לשחק טוב כמוכם ובעיקר — אם יש לכם אומץ להתמודד מול המפלצת החזקה מכולם — אולי תוכלו לנצח ולהיות מלכי המפלצות. | | That doesn't mean you should give up before you start. If you have patience and a brain, if you can collect the right cards and play them wisely, if you have friends who play as well as you do — and above all, if you have the nerve to stand in front of the strongest monster of them all — you might just win, and become king of the monsters. |
 | s7a86ff4 | המשחק נוצר על ידי הוד אסולין ואור אסולין, בהשראת הסרט שיצרנו יחד: “אמנדה — המפלצת מסונול כצנלסון”. מוזמנים לצפות בו ולהעלות לנו קצת את הצפיות. תיהנו! | | Made by Hod Asulin and Or Asulin, inspired by the film we made together: “Amanda — the Monster from the Sonol on Katznelson”. Go and watch it, and push our view count up a bit while you're there. Have fun! |
 | sf8961a7 | הסרט המלא | | The full film |
@@ -730,19 +774,34 @@
 
 | מזהה | טקסט נוכחי | טקסט חדש | אנגלית |
 | --- | --- | --- | --- |
+| s68be95c | חפיסות | | Packs |
+| s073c946 | חפיסות | | Packs |
+| sc23b9cb | אלבום | | Album |
+| s8633cf3 | אלבום | | Album |
+| s16a87eb | רק מה שאפשר לשדרג | | Ready to upgrade |
+| s4106d59 | רק מה שאפשר לשדרג | | Ready to upgrade |
+| s063eb7a | טבלת היסודות | | Elements |
 | sdf8896f | ← חזרה | | ← Back |
-| sfb0ff51 | אתה משחק מהדק המלא | | You are playing from the full deck |
+| sfb0ff51 | אתה משחק מהדק המלא | | You are playing the full deck |
 | s5c7bb8f | הקרבות שלך | | Your battles |
 | sf9d8dd4 | ניצחונות | | Wins |
 | s0ab9316 | {0} מתוך {1} | | {0} out of {1} |
 | s2fd7491 | שיא גביעים | | Best trophies |
-| s3cfae6d | הקרבות האחרונים, החדש ביותר ראשון | | Your most recent battles, newest first |
-| s176d067 | עותקים — כמה פעמים אפשר להניח אותו | | Copies — how many times you can place it |
+| s3cfae6d | הקרבות האחרונים, החדש ביותר ראשון | | Latest battles first |
+| sc956f43 | אין כרגע מה לשדרג | | Nothing to upgrade yet |
+| s176d067 | עותקים — כמה פעמים אפשר להניח אותו | | Copies — how many you can place |
 | s4308b06 | רמה {0} | | Level {0} |
 | s3e3750f | מקסימום | | Max |
-| s6c954dd | {0} מתוך {1} קלפים לשדרוג | | {0} of {1} cards to upgrade |
+| s6c954dd | {0} מתוך {1} קלפים לשדרוג | | {0} of {1} cards |
 | s15650ab | שדרוג לרמה {0} | | Upgrade to level {0} |
-| sac15acb | שדרוג | | Upgrade |
+| s4f9261a | לשדרוג | | Upgrade |
+
+## components/ArenaStory.tsx
+
+| מזהה | טקסט נוכחי | טקסט חדש | אנגלית |
+| --- | --- | --- | --- |
+| s910293a | סגירה | | Close |
+| sa8cfb6f | קלפים מסדרת {0} מקבלים {1} +{2}% עוצמה! | | {0} cards get +{2}% power {1}! |
 
 ## components/ArenaTrack.tsx
 
@@ -750,7 +809,7 @@
 | --- | --- | --- | --- |
 | s84b983e | כל הארנות | | All the arenas |
 | sbdb539a | {0} · עוד {1} | | {0} · {1} more |
-| s00844be | הגעת לסוף הדרך | | you reached the end of the road |
+| s00844be | הגעת לסוף הדרך | | the end of the road |
 | s92d6d79 | סגירה | | Close |
 | s474cafb | הדרך | | The road |
 | s2411278 | אתה כאן | | You are here |
@@ -759,17 +818,17 @@
 
 | מזהה | טקסט נוכחי | טקסט חדש | אנגלית |
 | --- | --- | --- | --- |
-| se7b9be7 | עלית ארנה | | Arena up! |
+| se7b9be7 | עלית ארנה | | New arena! |
 | s6a89081 | קדימה! | | Let's go! |
 
 ## components/BattleScreen.tsx
 
 | מזהה | טקסט נוכחי | טקסט חדש | אנגלית |
 | --- | --- | --- | --- |
-| s1a437d7 | שגיאה בהצגת הקרב | | Something went wrong showing the battle |
-| s3e7a5b3 | המשך לתוצאה | | On to the result |
+| s1a437d7 | שגיאה בהצגת הקרב | | That battle would not show |
+| s3e7a5b3 | המשך לתוצאה | | The result |
 | s0e0b682 | רגע… | | One moment… |
-| s84d910b | עצור וחזור ללוח | | Stop and go back to the board |
+| s84d910b | עצור וחזור ללוח | | Back to the board |
 
 ## components/BirthdayCard.tsx
 
@@ -805,9 +864,9 @@
 | sa1356f2 | עוד {0} ימים | | {0} days left |
 | se995a4a | אתגרים | | Challenges |
 | s4b399e6 | אתגרים | | Challenges |
-| s8037b61 | יש פרס לקחת | | There is a prize to collect |
-| sb752d13 | נלקח | | Collected |
-| s1d3665c | לקחת | | Collect |
+| s8037b61 | יש פרס לקחת | | A prize is waiting |
+| sb752d13 | נלקח | | Taken |
+| s1d3665c | לקחת | | Take it |
 | sac7fc13 | אתגרים | | Challenges |
 
 ## components/ChestReveal.tsx
@@ -821,16 +880,17 @@
 | sbcd9e71 | יפה | | Nice |
 | s297ce81 | {0} קלפים חדשים! | | {0} new cards! |
 | s605a181 | קלף חדש! | | A new card! |
+| s17781ba | לראות את הקלף | | See the card |
 | s340e045 | ועוד {0} | | and {0} more |
 | s70a58ef | איזה יופי | | Lovely |
-| sb0e2d63 | חדש אצלך | | New to you |
+| sb0e2d63 | חדש אצלך | | New! |
 
 ## components/ChestShelf.tsx
 
 | מזהה | טקסט נוכחי | טקסט חדש | אנגלית |
 | --- | --- | --- | --- |
-| sb1a59ea | תיבות שמחכות לך | | Chests waiting for you |
-| s97a626f | פתח | | Open |
+| sb1a59ea | תיבות שמחכות לך | | Chests waiting |
+| s97a626f | פתח | | Open it |
 
 ## components/DeckBuilder.tsx
 
@@ -839,7 +899,7 @@
 | sa92d994 | מחיר | | Price |
 | s57bf777 | עוצמה | | Power |
 | s1950df9 | חיים | | Health |
-| s39768fa | סדרה | | Family |
+| s39768fa | סדרה | | Series |
 | sa1cd05d | א-ב | | A–Z |
 | s7d2f2c0 | תנועה | | Movement |
 | s91ecd04 | זזים | | Moving |
@@ -853,7 +913,7 @@
 | s234a399 | מרפאים | | Healers |
 | s2c85215 | מחזירים נזק | | Returns damage |
 | s7966a9d | משוריינים | | Armoured |
-| sf621727 | משפחה | | Family |
+| s20dd468 | סדרה | | Series |
 | s0ce23c9 | שם לדק | | Name this deck |
 | sd87ddf0 | חזרה | | Back |
 | sd7b2e93 | גב הקלפים | | Card back |
@@ -863,11 +923,28 @@
 | sa0f9456 | סינון | | Filter |
 | se3355ce | לנקות | | Clear |
 | s3451fcc | מיון | | Sort |
+| s6502618 | טבלת היסודות | | Elements |
+| sfcb4f98 | לצאת בלי לשמור? | | Leave without saving? |
+| s6cc7a95 | השינויים בדק יימחקו. | | Your changes go. |
+| s04e6601 | לצאת | | Leave |
+| s7ff6276 | חזרה לדק | | Back to the deck |
 | s9db8c07 | האלבום שלי | | My album |
+| s6bed06a | צריך שם לדק | | Your deck needs a name |
 | scba3d8d | שמור | | Save |
 | se0c2a5c | מחק | | Delete |
 | sad4a141 | לערוך | | Edit |
 | s4a9e250 | דק {0} | | Deck {0} |
+
+## components/ElementsTable.tsx
+
+| מזהה | טקסט נוכחי | טקסט חדש | אנגלית |
+| --- | --- | --- | --- |
+| sb74f47e | סגירה | | Close |
+| s76b7982 | טבלת היסודות | | Elements |
+| sff81352 | מביס | | Beats |
+| s255633e | מפסיד ל | | Loses to |
+| sc07efac | כשקלף תוקף קלף שהוא מביס — הכוח שלו גדל ×{0} | | Hitting what it beats: power ×{0} |
+| sacd07c7 | כשהוא תוקף קלף שהוא מפסיד לו — הכוח שלו קטן ×{0} | | Hitting what beats it: power ×{0} |
 
 ## components/ErrorBoundary.tsx
 
@@ -920,17 +997,17 @@
 | מזהה | טקסט נוכחי | טקסט חדש | אנגלית |
 | --- | --- | --- | --- |
 | s5eb66c7 | קליל | | Easy |
-| s9251769 | לוח דליל, קלפים חלשים. מנצח ב-17% מהקרבות. | | A thin board, weak cards. Wins 17% of its battles. |
+| safec7e3 | לוח דליל, קלפים חלשים. בשביל ללמוד. | | Thin board, weak cards. For learning. |
 | s0c9f683 | רגיל | | Normal |
-| s901d39c | בונה כמו שהוא יודע. חצי-חצי. | | Builds as well as it knows how. Fifty-fifty. |
+| s685a0b6 | בונה כמו שהוא יודע, עם קלפים ברמה 2. | | Builds properly. Level 2 cards. |
 | sc93cdac | קשה | | Hard |
-| s62d48e5 | בוחר מתוך אוסף גדול בהרבה. מנצח בערך ב-58%. | | Picks from a much bigger collection. Wins about 58%. |
+| s2827bc7 | כל האוסף, וקלפים ברמה 6. מנצח 3 מתוך 4. | | The whole collection at level 6. Wins 3 in 4. |
 | sfd7535c | אמנדה | | Amanda |
 | s86247d1 | משחק קלפים מפלצתי | | Monster card game |
 | s0cadb17 | לשחק | | Play |
 | s066beed | כמה הבוט מתאמץ | | How hard the bot tries |
 | sb99e77d | לשחק עם בוט | | You vs. Bot |
-| s0443085 | לא בגרסה הזאת | | Not in this version |
+| s0443085 | לא בגרסה הזאת | | Not in this one |
 | sa6f7e6a | לשחק עם חברים | | You vs. Friends |
 | s665bc9f | לפתוח חדר | | Open a room |
 | s3ebc7cd | יש לי קוד | | I have a code |
@@ -939,24 +1016,24 @@
 | scf8cabd | קוד החדר | | Room code |
 | sd1f36fa | הצטרף | | Join |
 | s2c8e767 | עוד מודים | | More modes |
-| s1dda509 | בלי שעון, שני הצדדים שלך | | No clock, both sides are yours |
+| s1dda509 | בלי שעון, שני הצדדים שלך | | No clock. Both sides are yours. |
 | s77f529a | מגרש המשחקים | | The playground |
-| s48c712b | החשבון הזה מושעה עד {0}. אפשר לשחק נגד המחשב בינתיים. | | This account is suspended until {0}. You can play against the computer meanwhile. |
-| sd01b2d8 | אין חדר כזה. אולי המצאת אותו. | | No such room. Maybe you made it up. |
+| s48c712b | החשבון הזה מושעה עד {0}. אפשר לשחק נגד המחשב בינתיים. | | Suspended until {0}. The bot is still up for it. |
+| sd01b2d8 | אין חדר כזה. אולי המצאת אותו. | | No such room. Did you make it up? |
 | sf8d116e | זה הקוד שלך. אתה לא יכול לאכול את עצמך. | | That is your own code. You cannot eat yourself. |
-| s1f6e5ea | החדר מלא. שניים מספיקים לי. | | The room is full. Two is enough for me. |
-| sefa91e2 | ההתקדמות שלי | | My progress |
+| s1f6e5ea | החדר מלא. שניים מספיקים לי. | | Room is full. Two is plenty for me. |
+| sefa91e2 | ההתקדמות שלי | | Me |
 | s7c9dce4 | הדק שלי | | My deck |
 | sac17bac | האלבום שלי | | My album |
 | s3cd2566 | מה יש לך | | What you have |
-| s5d488a4 | האוסף שלי | | My collection |
+| s5d488a4 | האוסף שלי | | My cards |
 | s3fc668a | דק | | Deck |
 | sb1c5413 | האלבום | | The album |
 | s2706aa0 | חנות נוחות | | Corner Shop |
 | s26c5785 | חדש בחנות | | New in the shop |
 | s0cab6b9 | חברים | | Friends |
 | s44d803c | חברים | | Friends |
-| sd0647c4 | מישהו מחכה לתשובה | | Somebody is waiting for an answer |
+| sd0647c4 | מישהו מחכה לתשובה | | Someone is waiting |
 
 ## components/Inbox.tsx
 
@@ -983,7 +1060,7 @@
 | --- | --- | --- | --- |
 | sc54710e | שדרוג! | | Upgraded! |
 | s63923f0 | חזק ב-{0}% | | {0}% stronger |
-| sfe8cfe5 | מגניב! | | Cool! |
+| sfe8cfe5 | מגניב! | | Nice! |
 
 ## components/MatePeek.tsx
 
@@ -996,14 +1073,14 @@
 
 | מזהה | טקסט נוכחי | טקסט חדש | אנגלית |
 | --- | --- | --- | --- |
-| s4fc5b19 | אמנדה — הצצה | | Amanda — a peek |
-| s7767343 | מולה לבד. אי אפשר לנצח. | | Against her, on your own. You cannot win. |
+| s4fc5b19 | אמנדה — הצצה | | A peek at Amanda |
+| s7767343 | מולה לבד. אי אפשר לנצח. | | You, on your own, against her. You lose. |
 | s7c9fba9 | דק זהה | | Same deck |
-| secbb695 | אותם קלפים לשני הצדדים. | | The same cards for both sides. |
+| secbb695 | אותם קלפים לשני הצדדים. | | Same cards, both sides. |
 | se14e946 | 2 נגד 2 | | 2 against 2 |
-| sac17390 | שניים בונים לוח אחד. | | Two of you build one board. |
+| sac17390 | שניים בונים לוח אחד. | | Two of you, one board. |
 | se4e1ef0 | דראפט | | Draft |
-| s4b7da7f | מה שלא לקחת הולך ליריב. | | Whatever you do not take goes to your opponent. |
+| s4b7da7f | מה שלא לקחת הולך ליריב. | | What you leave, they get. |
 | sc4d6c42 | סגירה | | Close |
 | sa53602d | עוד מודים | | More modes |
 | sbdb5aac | בקרוב | | Soon |
@@ -1014,7 +1091,7 @@
 | מזהה | טקסט נוכחי | טקסט חדש | אנגלית |
 | --- | --- | --- | --- |
 | s90346fe | {0} נאצ'וס מתוך {1} לתיבה הבאה | | {0} nachos out of {1} to the next chest |
-| s65876b9 | כל משחק נותן נאצ'וס, לפי כמה טוב שיחקת | | Every game gives nachos, depending on how well you played |
+| s65876b9 | כל משחק נותן נאצ'וס, לפי כמה טוב שיחקת | | Every game pays nachos. Play well, get more. |
 
 ## components/Onboarding.tsx
 
@@ -1039,11 +1116,11 @@
 
 | מזהה | טקסט נוכחי | טקסט חדש | אנגלית |
 | --- | --- | --- | --- |
-| sedb65d6 | תיבה מחכה לך! | | A chest is waiting for you! |
-| s1b4740d | אתגר הושלם | | Challenge complete |
-| s440773f | {0} אתגרים הושלמו | | {0} challenges complete |
-| s854fe19 | מספיק גביעים מהבוט להיום — נאצ'וס ואתגרים ממשיכים | | Enough trophies from the bot for today — nachos and challenges carry on |
-| s937aed8 | עוד {0} נאצ'וס ותיבה | | {0} more nachos and a chest |
+| sedb65d6 | תיבה מחכה לך! | | A chest is waiting! |
+| s1b4740d | אתגר הושלם | | Challenge done |
+| s440773f | {0} אתגרים הושלמו | | {0} challenges done |
+| s854fe19 | מספיק גביעים מהבוט להיום — נאצ'וס ואתגרים ממשיכים | | No more bot trophies today. Nachos and challenges carry on. |
+| s937aed8 | עוד {0} נאצ'וס ותיבה | | {0} more nachos and a chest is yours |
 
 ## components/Profile.tsx
 
@@ -1104,19 +1181,19 @@
 | מזהה | טקסט נוכחי | טקסט חדש | אנגלית |
 | --- | --- | --- | --- |
 | sb73e6cd | הצד שלך החזיק | | Your side held |
-| sb66c1e6 | הצד שמולך החזיק | | The side facing you held |
+| sb66c1e6 | הצד שמולך החזיק | | Their side held |
 | s6832cda | {0}ש׳ | | {0}s |
 | sb4b2aa8 | {0} נפלו | | {0} fell |
 | s6052ae4 | מתחילים… | | Starting… |
-| s30a40da | מחכה ליריב… | | Waiting for the opponent… |
-| s21914e7 | רוצים עוד אחד! קדימה | | We want another one! Come on |
+| s30a40da | מחכה ליריב… | | Waiting for them… |
+| s21914e7 | רוצים עוד אחד! קדימה | | Again! Again! |
 | sab50205 | קרב חוזר | | Rematch |
-| s2d822f4 | ← חזרה ללוח | | ← Back to the board |
+| s2d822f4 | ← חזרה ללוח | | ← The board |
 | se3da978 | משחק חדש | | New game |
 | s28e9a18 | חזרה | | Back |
 | seb359d8 | דיווח על היריב | | Report your opponent |
 | s18fbbed | מספיק, הבנתי | | Enough, I get it |
-| se664893 | שאסביר לך מה קרה? | | Shall I explain what happened? |
+| se664893 | שאסביר לך מה קרה? | | Want to know what happened? |
 
 ## components/Say.tsx
 
@@ -1137,6 +1214,9 @@
 | מזהה | טקסט נוכחי | טקסט חדש | אנגלית |
 | --- | --- | --- | --- |
 | sbf142a2 | עברית | | Hebrew |
+| sd47ec51 | הלוח והמטרה | | The board and the point |
+| s3045ecd | איך תוקפים | | How to attack |
+| s2d735d3 | לשחק באמת | | Playing for real |
 | sc8369bd | עלינו | | About |
 | saf78986 | פרטיות | | Privacy |
 | sf13b7f5 | נגישות | | Accessibility |
@@ -1178,20 +1258,32 @@
 
 | מזהה | טקסט נוכחי | טקסט חדש | אנגלית |
 | --- | --- | --- | --- |
-| s509b97d | פרצופים | | Faces |
+| sfcbfca9 | אוואטרים | | Avatars |
 | sa52276e | מראה לקלפים | | Card looks |
 | s0185a61 | גב לקלפים | | Card backs |
 | s63ae982 | אימוג׳ים | | Emoji |
 | se3cd8fd | משפטי מחץ | | Catchphrases |
 | sd9e67b5 | תיבות | | Chests |
 | s26df959 | קלפים | | Cards |
+| s52f7e9a | מחר | | Tomorrow |
+| s1a96dcd | שלך | | Yours |
+| s9eddab1 | חינם | | Free |
 | s56fa87f | סגירה | | Close |
 | s4eef1f1 | חנות נוחות | | Corner Shop |
 | s0f95b79 | רגע… | | One moment… |
 | s947b31f | המדפים עוד ריקים. בקרוב. | | The shelves are still empty. Soon. |
-| s1a96dcd | שלך | | Yours |
-| s585947b | אין מספיק יהלומים | | Not enough diamonds |
-| s9eddab1 | חינם | | Free |
+| sf66666a | מבצעים | | Deals |
+
+## components/ShopDetail.tsx
+
+| מזהה | טקסט נוכחי | טקסט חדש | אנגלית |
+| --- | --- | --- | --- |
+| se2cc447 | סגירה | | Close |
+| s0ea3644 | יש לך {0} | | You have {0} |
+| saafa01a | כבר שלך | | Already yours |
+| s3df89df | לקחת היום. תחזור מחר | | Taken today. Back tomorrow |
+| s6508fa9 | קח בחינם | | Take it, free |
+| s02d239a | אין מספיק יהלומים | | Not enough diamonds |
 
 ## components/SignedInOnly.tsx
 
@@ -1213,7 +1305,6 @@
 | מזהה | טקסט נוכחי | טקסט חדש | אנגלית |
 | --- | --- | --- | --- |
 | sbecf213 | המשך ← | | Continue → |
-| s7955b5e | אני יודע לשחק | | I know how to play |
 
 ## components/Updates.tsx
 
@@ -1232,13 +1323,27 @@
 | s91836d5 | אני | | Me |
 | sb1bf590 | היריב | | Opponent |
 
+## data/deckNames.ts
+
+| מזהה | טקסט נוכחי | טקסט חדש | אנגלית |
+| --- | --- | --- | --- |
+| sf612dde | דק מטורף | | Crazy Deck |
+| s919090a | דק מפלצתי | | Monster Deck |
+| s2510797 | דק רעב | | Hungry Deck |
+| sb2e4117 | דק קוצני | | Spiky Deck |
+| sf6a4bd7 | דק רועם | | Thunder Deck |
+| s4cb7401 | דק חלקלק | | Slimy Deck |
+| s8494a17 | דק נוצץ | | Shiny Deck |
+| se602c97 | דק מאובק | | Dusty Deck |
+| s09a2e9f | דק מטורף | | Crazy Deck |
+
 ## data/tutorialLines.ts
 
 | מזהה | טקסט נוכחי | טקסט חדש | אנגלית |
 | --- | --- | --- | --- |
 | sec89d42 | היי, אני אמנדה. באת להילחם מולי, ילד? בוא נלמד איך עושים את זה. | | Hi, I'm Amanda. You came to fight me, kid? Let's learn how it's done. |
 | s9484b03 | ההקדמה, לפני שהיא מצביעה על משהו | | The introduction, before she points at anything |
-| sad8f4bf | אנחנו בחדר המשחקים. אם תנצח אותי פה תוכל להתקדם למקומות אחרים. זה האלבום שלי, זה האלבום שלך. אנחנו מדביקים מדבקות, ובסוף הן ילחמו. | | We are in the games room. Beat me here and you can move on to other places. This is my album, that one is yours. We stick stickers on, and in the end they fight. |
+| sad8f4bf | אנחנו בחדר המשחקים. אם תנצח אותי פה תוכל להתקדם למקומות אחרים. זה האלבום שלי, זה האלבום שלך. אנחנו מדביקים מדבקות, ובסוף הן ילחמו. | | We are in the games room. Beat me here and you move on. My album, your album. We stick cards on, then they fight. |
 | s6da50a2 | ההקדמה, שורה שנייה | | The introduction, second line |
 | sf6e019c | נתחיל בהדבקות. הנה הקלף הראשון — {card}. {trait}. {where}. | | Let's start sticking. Here is the first card — {card}. {trait}. {where}. |
 | s3b5a80d | הקלף הראשון, על לוח ריק | | The first card, on an empty board |
@@ -1246,18 +1351,18 @@
 | s8231a88 | הקלף השני | | The second card |
 | s267eda8 | ועכשיו המלך. הוא לא זז, הוא חזק פי שלושה, ואם הוא נופל — נגמר. | | And now the King. He does not move, he is three times as strong, and if he falls it is over. |
 | s5384124 | אחרי שני קלפים, כשאין עדיין מלך | | After two cards, when there is still no King |
-| s2e3ddc3 | {card}? סטטי, הרבה חיים. הוא לא ילך לשום מקום — שים אותו מול המלך, שם עוצרים את מי שבא אליו. | | {card}? Static, plenty of health. He is not going anywhere — put him in front of the King, that is where you stop whoever comes for him. |
+| s2e3ddc3 | {card}? סטטי, הרבה חיים. הוא לא ילך לשום מקום — שים אותו מול המלך, שם עוצרים את מי שבא אליו. | | {card}? Rooted, and plenty of health. In front of the King — that is where you stop them. |
 | scbdee8f | קלף כבד וסטטי ביד, אחרי שיש מלך | | A heavy static card in hand, once there is a King |
 | s5877095 | {card} {moves} — הוא לא צריך שהדרך תהיה פנויה. שים אותו מאחורה ושיירה משם. | | {card} {moves} — it does not need a clear path. Put it at the back and let it shoot from there. |
 | s9bfb295 | מעופף או צלף ביד | | A flier or a sniper in hand |
-| sc22b303 | קלף פעולה. לא מניחים אותו על הלוח — לוקחים אותו לבר ומפעילים כשצריך. | | An action card. You do not place it on the board — you take it to the bar and use it when you need it. |
+| sc22b303 | קלף פעולה. לא מניחים אותו על הלוח — לוקחים אותו לבר ומפעילים כשצריך. | | An action card. It does not go on the board — it goes to the bar, for when you need it. |
 | s17dc9b0 | קלף פעולה ביד, אחרי שיש מלך | | An action card in hand, once there is a King |
 | s21cb509 | כל קלף אחר ביד — שלא נאמר עליו משהו ספציפי יותר | | Any other card in hand, with nothing more specific to say about it |
-| sb3dff27 | זה קלף פעולה — הוא לא יושב על הלוח. קח אותו לבר שמתחת. | | This is an action card — it does not sit on the board. Take it to the bar below. |
+| sb3dff27 | זה קלף פעולה — הוא לא יושב על הלוח. קח אותו לבר שמתחת. | | Action card. Not for the board. It goes to the bar. |
 | s1643dc2 | קלף פעולה ביד לפני שיש מלך | | An action card in hand before there is a King |
 | se947507 | {card} חלש. יגיעו טובים יותר — לפח איתו. | | {card} is weak. Better ones will come — throw it away. |
 | s52db857 | קלף חלש משמעותית מהממוצע | | A card well below average |
-| sb491c42 | התחרטת? הקלף העליון בפח חוזר. רק הוא, ומה שתיתן במקומו נקבר. | | Changed your mind? The top card in the trash comes back. Only that one, and whatever you give in its place is buried. |
+| sb491c42 | התחרטת? הקלף העליון בפח חוזר. רק הוא, ומה שתיתן במקומו נקבר. | | Changed your mind? The top card in the bin comes back. Only that one, and whatever you swap in is buried. |
 | s2ca2d8b | אחרי שנזרק קלף ראשון לפח | | After the first card is thrown away |
 | s0f0bc4e | שלושה מאותה סדרה צמודים זה לזה — {bonus} נדלק. {what} | | Three from the same series touching each other — {bonus} lights up. {what} |
 | sfc7ee43 | כששלושה מאותה סדרה נוגעים זה בזה | | When three from the same series touch each other |
@@ -1265,25 +1370,25 @@
 | s2fae425 | בתחילת שלב הפאניקה | | At the start of the panic phase |
 | sfce8645 | יאללה, בוא נראה מה קורה. | | Come on then, let's see what happens. |
 | s2fe9cd5 | הדבר האחרון לפני הקרב | | The last thing before the battle |
-| sec0b1a9 | ל{enemy} יש ערימת חיים. {card} לא מנסה לנצח אותו במכות — הארס שלו מצטבר בכל פגיעה וממשיך לשרוף גם אחרי שהוא מת. שים אותו מולו. | | {enemy} has a pile of health. {card} does not try to beat it with blows — its venom stacks with every hit and keeps burning after it dies. Put it opposite. |
+| sec0b1a9 | ל{enemy} יש ערימת חיים. {card} לא מנסה לנצח אותו במכות — הארס שלו מצטבר בכל פגיעה וממשיך לשרוף גם אחרי שהוא מת. שים אותו מולו. | | {enemy} has a mountain of health. {card} does not out-punch it — the venom stacks and keeps burning. Put it opposite. |
 | s0a06b79 | ארס ביד מול קיר חיים של היריב | | Venom in hand against a wall of health |
-| sefad056 | הוא שם משהו שמתפצל כשהוא מת — תהרוג אחד ויהיו שניים. {card} מכה כמה נתיבים בבת אחת, וזה בדיוק מה שמבטל את זה. רק אל תשים אותו בקצה, שם חצי מהמכה הולכת לאוויר. | | They put down something that splits when it dies — kill one and there will be two. {card} hits several lanes at once, which is exactly what cancels that. Just do not put it at the edge, where half the blow goes into thin air. |
+| sefad056 | הוא שם משהו שמתפצל כשהוא מת — תהרוג אחד ויהיו שניים. {card} מכה כמה נתיבים בבת אחת, וזה בדיוק מה שמבטל את זה. רק אל תשים אותו בקצה, שם חצי מהמכה הולכת לאוויר. | | They played something that splits when it dies. {card} hits several lanes at once, which cancels that. Not at the edge, though — half the blow goes nowhere. |
 | sa0e51a2 | מכת רוחב ביד מול משהו שמתרבה | | An area strike in hand against something that multiplies |
-| se750bda | הוא ערם קלפים בטור אחד. {card} מבעיר את הנתיב שלפניו — כולם שם משלמים כל שנייה, ושריון לא עוזר. שים אותו מול הטור הזה. | | They stacked cards in one column. {card} sets the lane in front of it alight — everyone there pays every second, and armor does not help. Put it opposite that column. |
+| se750bda | הוא ערם קלפים בטור אחד. {card} מבעיר את הנתיב שלפניו — כולם שם משלמים כל שנייה, ושריון לא עוזר. שים אותו מול הטור הזה. | | They stacked one column. {card} sets that lane alight: everyone in it pays every second, armour or not. Opposite them. |
 | sf7d19d0 | הצתת נתיב ביד מול טור עמוס | | A lane burner in hand against a crowded column |
-| se17e5e8 | הוא בנה משהו שיורה מרחוק ולא מתקרב. {card} גורר את כל הקו שלו אליך — ישר לתוך הטווח של השומרים שלך. | | They built something that shoots from a distance and never comes close. {card} drags their whole line towards you — straight into range of your guards. |
+| se17e5e8 | הוא בנה משהו שיורה מרחוק ולא מתקרב. {card} גורר את כל הקו שלו אליך — ישר לתוך הטווח של השומרים שלך. | | They shoot from far away and never come close. {card} drags their line towards you, into your guards. |
 | s4c27fff | שואב ביד מול יריב ששומר מרחק | | A puller in hand against an opponent keeping their distance |
-| se565ab8 | {ally} מכה חזק ושובר בקלות. {card} סופג חצי מכל מכה שמכוונת לשכן שלו — שים אותו ממש לידו ותן לו לחיות קצת. | | {ally} hits hard and breaks easily. {card} soaks up half of every blow aimed at its neighbor — put it right beside it and let it live a little. |
+| se565ab8 | {ally} מכה חזק ושובר בקלות. {card} סופג חצי מכל מכה שמכוונת לשכן שלו — שים אותו ממש לידו ותן לו לחיות קצת. | | {ally} hits hard and breaks easily. {card} takes half of every blow aimed at it. Side by side, then. |
 | s5a0fcb1 | סופג ביד כשיש לך קלף שביר שמכה חזק | | A soaker in hand when you have a fragile card that hits hard |
 | sfbcc457 | היי, אני אמנדה. הגעת כדי להילחם מולי, {kid}? בכיף, אני אראה לך איך עושים את זה. | | Hi, I'm Amanda. Came to fight me, {kid}? Happily. I'll show you how it's done. |
 | sc39b53f | המשפט הראשון, לפני שהיא מצביעה על משהו | | the first line, before she points at anything |
 | sd9bc88a | אנחנו כרגע בחדר המשחקים. אם מנצחים פה — מתקדמים למקומות אחרים. | | We're in the games room. Win here and you move on to other places. |
 | s9e32cd7 | המשפט השני, עדיין באמצע המסך | | the second line, still in the middle of the screen |
-| sf961c72 | זה האלבום שלי, זה האלבום שלך. כל אחד מדביק עליהם את הקלפים שלו. כשייגמר הזמן — האלבומים נלחמים אחד בשני. | | That album is mine, this one is yours. Each of us sticks our own cards on. When the time is up — the albums fight each other. |
+| sf961c72 | זה האלבום שלי, זה האלבום שלך. כל אחד מדביק עליהם את הקלפים שלו. כשייגמר הזמן — האלבומים נלחמים אחד בשני. | | That album is mine, this one is yours. We both stick cards on. When the clock stops, the albums fight. |
 | s6a53354 | שני הלוחות מודגשים | | both boards highlighted |
-| s62d0dd0 | נתחיל בהדבקות. הנה הקלף הראשון: גולם אבן. קלף עם הרבה כוח ספיגה. נמקם אותו בעמדת השומר. | | Let's start sticking. Here is the first card: Stone Colossus. A card that soaks up a lot. We'll put it in the guard post. |
-| s42dbb6c | גולם אבן ביד, לוח ריק | | Stone Colossus in hand, empty board |
-| s4f0b0c7 | הקלף הבא: פליים דראגון — דרקון חזק. נמקם אותו מאחור. הוא יעופף מעל כולם ויתקוף את האויב. | | Next card: Flame Dragon — a strong dragon. We'll put him at the back. He'll fly over everyone and hit the enemy. |
+| s62d0dd0 | נתחיל בהדבקות. הנה הקלף הראשון: גולם אבן. קלף עם הרבה כוח ספיגה. נמקם אותו בעמדת השומר. | | Let's start sticking. First card: the Stone Golem. He soaks up a lot. Into the guard post. |
+| s42dbb6c | גולם אבן ביד, לוח ריק | | Stone Golem in hand, empty board |
+| s4f0b0c7 | הקלף הבא: פליים דראגון — דרקון חזק. נמקם אותו מאחור. הוא יעופף מעל כולם ויתקוף את האויב. | | Next: the Flame Dragon. Back row — he flies over everyone and lands on them. |
 | sdaca2bb | פליים דראגון ביד | | Flame Dragon in hand |
 | s195f0f7 | הקלף הבא: בוסט אנרגיה. זה קלף פעולה. ניקח אותו כדי להשתמש בו בהמשך. | | Next card: Energy Boost. That's an action card. We'll take it to use later. |
 | s37af730 | בוסט אנרגיה ביד | | Energy Boost in hand |
@@ -1291,23 +1396,23 @@
 | sedb61e0 | אחרי שהבוסט נכנס לבר | | after the boost reaches the bar |
 | sd597bbf | טוב, זה לאחר כך. בואו נמשיך. | | Right, that's for later. Let's carry on. |
 | s325b7db | מגירת קלפי הפעולה פתוחה | | the action card drawer is open |
-| s5e4cdb0 | קוביית ג'לי — קלף, אממ... לא משהו. בואו נזרוק אותו. יגיעו טובים יותר. | | Gelatinous Cube — a card that is, erm... not great. Let's bin it. Better ones are coming. |
-| sb4d2832 | קוביית ג'לי ביד | | Gelatinous Cube in hand |
-| s2bd7018 | בעצם — לא בטוח שיגיע משהו טוב יותר. מזל שאפשר להתחרט על הקלף האחרון שזרקתם. הנה, כאן. | | Actually — not sure anything better is coming. Lucky you can change your mind about the last card you binned. Here, this one. |
+| s98b6f14 | הדרדר — קלף, אממ... לא משהו. בואו נזרוק אותו. יגיעו טובים יותר. | | A Thorn Sprout — a card, erm... not up to much. Bin it. Better ones are coming. |
+| s290b910 | הדרדר ביד | | Thorn Sprout in hand |
+| s2bd7018 | בעצם — לא בטוח שיגיע משהו טוב יותר. מזל שאפשר להתחרט על הקלף האחרון שזרקתם. הנה, כאן. | | Actually — nothing better is coming. Lucky you can take back the last card you binned. Here. |
 | s31f77d0 | מיד אחרי הזריקה | | right after the bin |
-| sd4b3818 | אוקיי, קוביית הג'לי בולעת קלפי יריב. נמקם אותה כאן למעלה מאחורה. היא לא תחסום את הדרקון, הוא מעופף. | | Okay, the Gelatinous Cube swallows enemy cards. We'll put it up here at the back. It won't block the dragon, he flies. |
-| s253d8e7 | קוביית הג'לי חזרה מהפח | | the cube is back from the bin |
+| sd4b3818 | אוקיי, קוביית הג'לי בולעת קלפי יריב. נמקם אותה כאן למעלה מאחורה. היא לא תחסום את הדרקון, הוא מעופף. | | The Gelatinous Cube swallows enemy cards. Up the back. It will not block the dragon — he flies. |
+| s253d8e7 | קוביית הג'לי חזרה מהפח | | The cube is back from the bin |
 | s1ff71ce | הופה, אבי-הענקים. קלף ענק וחזק. מושלם למשבצת המלך. | | Oho, Titan King. A huge, strong card. Perfect for the King slot. |
 | s559179f | אבי-הענקים ביד | | Titan King in hand |
 | sd65daae | הכוח של קלף המלך גדל פי 3, וזה חשוב. אם הוא מת — הפסדתם. | | A King card hits three times harder, and that matters. If he dies — you lose. |
 | sb25f12e | מיד אחרי שהוכתר מלך | | right after a King is crowned |
 | s503c2fe | הופה, עוד ענק. טרול סלע, שמרפא את עצמו. נמקם אותו בעמדת השומר. | | Oho, another giant. Rock Troll, and he heals himself. We'll put him in the guard post. |
 | s856075f | טרול סלע ביד | | Rock Troll in hand |
-| see01751 | יש לך שני שומרים וזה חשוב מאוד! כל עוד השומרים חיים — המלך בלתי פגיע. | | You have two guards and that matters a lot! As long as the guards are alive — the King cannot be touched. |
+| see01751 | יש לך שני שומרים וזה חשוב מאוד! כל עוד השומרים חיים — המלך בלתי פגיע. | | Two guards, and that matters: while they live, nobody touches the King. |
 | s045e8b5 | שתי עמדות השומר תפוסות | | both guard posts are taken |
 | saa20106 | אוקיי, מספיק דיבורים. בואו ניגש לקרב ונראה מה קורה. | | Okay, enough talking. Let's get to the fight and see what happens. |
 | scb6277d | הכול בנוי, נשאר ללחוץ | | everything is built, all that is left is to press |
-| s408dcff | שימו לב — כל הריבועים הריקים מתמלאים במפלצות פירורים חלשות. כדאי למלא אותם בזמן! | | Watch out — every empty square fills up with weak crumb monsters. Worth filling them yourself while there's time! |
+| s408dcff | שימו לב — כל הריבועים הריקים מתמלאים במפלצות פירורים חלשות. כדאי למלא אותם בזמן! | | Careful — every empty square fills with crumb monsters. Fill them yourself while you can. |
 | sb842d99 | אחרי הלחיצה על התחל קרב, לפני הספירה | | after pressing start, before the countdown |
 | s4a756c9 | ניצחת! אבל זה היה קל, כי עזרתי. | | You won! But that was easy, because I helped. |
 | sb08f699 | מסך התוצאה של המשחק הראשון | | the result screen of the first match |
@@ -1325,17 +1430,17 @@
 | sd49b897 | עץ עתיק ביד | | Ancient Tree in hand |
 | s75ccaa2 | קקטוס: דוקר את מי שנוגע בו. לעמדת השומר השנייה, צמוד לעץ. | | Cactus: it pricks whatever touches it. Second guard post, right against the tree. |
 | s62b4ae3 | קקטוס ביד, אחרי שהעץ הונח | | Cactus in hand, after the tree is down |
-| s562a021 | מה יש לנו כאן? שני קלפים מאותה משפחה. רואה את צבע המסגרת? בוא נוסיף להם עוד אחד. | | What have we here? Two cards from the same family. See the colour of the frame? Let's give them a third. |
+| s669ccf5 | מה יש לנו כאן? שני קלפים מאותה סדרה. רואה את צבע המסגרת? בוא נוסיף להם עוד אחד. | | What's this? Two of the same family. See the frame? Give them a third. |
 | s16619e1 | שני צמחים צמודים על הלוח | | two plants touching on the board |
 | se1b06e1 | חמנייה. צמח. תדביק אותה צמוד לאחד מהם — לא באלכסון, צמוד ממש. | | Sunflower. A plant. Stick it against one of them — not corner to corner, properly touching. |
 | s3bb1a6a | חמנייה ביד | | Sunflower in hand |
-| s2fb50f7 | פוטוסינתזה! שלושה צמחים צמודים מקבלים +20% עוצמה ו+20% חיים. שווה לשים אותם יחד! | | Photosynthesis! Three plants touching get +20% power and +20% health. Worth keeping them together. |
+| s2fb50f7 | פוטוסינתזה! שלושה צמחים צמודים מקבלים +20% עוצמה ו+20% חיים. שווה לשים אותם יחד! | | Photosynthesis! Three plants touching: +20% power and health. Keep them together. |
 | sd356bf5 | ברגע שהשלישייה נדלקה | | the moment the trio lights up |
-| sa808c9e | צ'ופי! החבר הכי טוב, עם עוצמת חשמל אדירה — אבל כמעט בלי חיים. מקדימה הוא ימות ראשון. פה עדיף. | | Chuppy! Best friend you have, hits like lightning — and almost no health. At the front he dies first. Back here is better. |
-| s6d14c48 | צ'ופי ביד | | Chuppy in hand |
+| sa808c9e | צ'ופי! החבר הכי טוב, עם עוצמת חשמל אדירה — אבל כמעט בלי חיים. מקדימה הוא ימות ראשון. פה עדיף. | | Choopy! Best friend you have. Hits like lightning, made of paper. Up front he dies first — back here is better. |
+| s6d14c48 | צ'ופי ביד | | Choopy in hand |
 | s8e82b1e | אבי-הענקים. למשבצת המלך, כמו בפעם הקודמת. | | Titan King. Into the King slot, same as last time. |
 | s33be16b | אבי-הענקים ביד | | Titan King in hand |
-| scb28bb8 | בוסט אנרגיה — נותן כוח לכל מה שכבר על הלוח. רק לכל מה שכבר שם. אז לא נשתמש בו עכשיו. | | Energy Boost — it powers up everything already on the board. Only what is already there. So not yet. |
+| scb28bb8 | בוסט אנרגיה — נותן כוח לכל מה שכבר על הלוח. רק לכל מה שכבר שם. אז לא נשתמש בו עכשיו. | | Energy Boost powers up what is already on the board. Only that. So — not yet. |
 | sb32330d | בוסט אנרגיה נכנס לבר, הלוח עוד לא מלא | | Energy Boost reaches the bar, the board is not full yet |
 | s4f2f850 | עכשיו. הלוח שלך מלא. עכשיו תפעיל אותו. | | Now. Your board is full. Now play it. |
 | sceb7841 | הלוח מלא, הבוסט עדיין לא הופעל | | the board is full, the boost has not been played |
@@ -1349,6 +1454,80 @@
 | s5706d6f | הכול בנוי, נשאר ללחוץ | | everything is built, all that is left is to press |
 | s39b816e | ניצחת. והפעם לא עזרתי. | | You won. And this time I didn't help. |
 | s88efec6 | מסך התוצאה של המשחק השני | | the result screen of the second match |
+| s48f32cf | זה הלוח שלך, וזה שלי. כל אחד מדביק קלפים, ואז הם נלחמים לבד. | | That board is yours, this one is mine. We both stick cards down, then they fight on their own. |
+| s1f48200 | השלב הראשון נפתח | | Stage one opens |
+| sf6aa5f3 | המטרה פשוטה: להפיל את המלך שלי. זה כל המשחק. | | Simple: knock my King over. That is the whole game. |
+| sb195916 | מצביעה על המלך של היריב | | Pointing at my King |
+| s45d35b9 | נתחיל מהמלך שלך. הוא חזק פי שלושה — ואם הוא נופל, נגמר. שים אותו בכתר. | | Your King first. Three times as strong — and if he falls, it is over. Put him on the crown. |
+| s145b6f6 | מבקשת להניח מלך | | Asking for a King |
+| s7613642 | עכשיו שומר. גולם אבן סופג המון. שים אותו בריבוע שלפני המלך. | | Now a guard. The Stone Golem soaks up a lot. Put him in front of the King. |
+| s1cacba3 | השומר הראשון | | The first guard |
+| s731677a | ועוד אחד לידו. טרול סלע מרפא את עצמו. | | And one more beside him. The Rock Troll heals itself. |
+| sd9c70d7 | השומר השני | | The second guard |
+| s1d80306 | שני השומרים חוסמים את מי שבא על המלך, וגם יורים על מפלצות הפירורים שלי. | | The two of them block whoever comes for the King, and shoot my Crumb Demons on the way. |
+| s8a2b4ec | אחרי שני השומרים | | After both guards |
+| se8108d3 | זהו. לחץ 'התחל קרב' ונראה. | | That is it. Press Fight and we will see. |
+| s62770a8 | כפתור הקרב, סוף שלב ראשון | | The fight button, end of stage one |
+| sa49f3ac | את המלך והשומרים אתה כבר יודע. עכשיו נלמד לתקוף. | | You know the King and the guards. Now let us attack. |
+| s8604d73 | השלב השני נפתח | | Stage two opens |
+| s3119051 | קודם המלך, כמו קודם. | | The King first, same as before. |
+| s678842e | מלך בשלב שני | | The King in stage two |
+| s9fdd7dc | ושומר לפניו. | | And a guard in front of him. |
+| s8c6294d | שומר ראשון בשלב שני | | First guard in stage two |
+| sb472998 | ועוד אחד. | | And another. |
+| s1e9a54b | שומר שני בשלב שני | | Second guard in stage two |
+| se91ae1c | פליים דראגון לא נשאר במקום — הוא צועד לתוך השטח שלי. שים אותו מאחור. | | The Flame Dragon will not stay put — he walks into my half. Put him at the back. |
+| sfdab258 | הדרקון | | The dragon |
+| s69f9b3c | טורץ' הוא צלף. הוא לא זז בכלל, הוא יורה מרחוק על הקלף האחרון בשורה שלו. גם הוא מאחור. | | Torch is a sniper. Never moves, shoots the last card in his lane from across the board. Back row too. |
+| s679b01d | הצלף | | The sniper |
+| sc21399b | הדרדר. לא משהו, בוא נזרוק אותו לפח. | | A Thorn Sprout. Not up to much — bin it. |
+| s3d1bcf9 | זורקת קלף לפח | | Binning a card |
+| s0c79a14 | רגע — את הקלף האחרון שזרקת אפשר תמיד למשוך בחזרה. רק אותו. תלחץ. | | Wait — the last card you threw can always be pulled back. Only that one. Go on. |
+| s6413bda | מחזירה את הקלף מהפח | | Taking it back out of the bin |
+| s6b0febf | עכשיו יש לך אותה בחזרה. שים אותה מאחור, שלא תפריע. | | There, you have it back. Put it at the back where it cannot get in the way. |
+| s750d95f | מניחה את הקלף שחזר | | Placing the card that came back |
+| s5fe76fc | שני הריבועים האלה נשארו ריקים. אם לא תמלא אותם — כשהקרב מתחיל הם מתמלאים במפלצות פירורים. חלשות, אבל הן שלך. | | Two squares still empty. Leave them and crumb monsters move in. Weak ones, but yours. |
+| s5b0ba65 | מפלצות הפירורים | | The Crumb Demons |
+| s8960103 | קדימה, תלחץ. | | Go on. Press it. |
+| sa672d5e | כפתור הקרב, סוף שלב שני | | The fight button, end of stage two |
+| s204bf16 | עכשיו החלק המעניין: איך גורמים לקלפים לעבוד יחד. | | Now the good part: making cards work together. |
+| sb546dcf | השלב השלישי נפתח | | Stage three opens |
+| s5b520a1 | רואה את הזוהר סביבם? זאת הסדרה עובדת. פלוס עשרים אחוז עוצמה וחיים, לשלושתם. | | See the glow round them? That is the family working. Twenty per cent more power and health, to all three. |
+| sdcaf626 | הסינרגיה נדלקת | | The family bonus lights up |
+| sef79251 | מה יצא לנו? דרקון. נשים אותו מאחור — בהמשך יגיע מלך טוב יותר. | | What have we got? A dragon. Put it at the back — a better king will turn up. |
+| secf5187 | הקלף הראשון בשלב שלוש, לפני המלך | | The first card of stage three, in front of the King |
+| sc18e8de | חמנייה. יורה גרעינים ומתרפאת לבד. שים אותה בפינה. | | A sunflower. It fires seeds and heals itself. Pop it in the corner. |
+| s7cda2ee | הצמח הראשון | | The first plant |
+| s384e967 | הופה — מלך! אמרתי לך שיגיע. נשים אותו במיקום של המלך. | | Oho — a King! Told you one would turn up. On the crown he goes. |
+| s3a61d7f | המלך מגיע באמצע | | The King turns up halfway |
+| s1a2faf5 | העץ העתיק מרפא את עצמו בלי הפסקה. שומר מצוין — לפני המלך. | | The Ancient Tree heals itself without stopping. A fine guard — in front of the king. |
+| s35dabc9 | הצמח השומר | | The plant on guard |
+| s73ccdeb | ועוד שומר, הפעם ענק. טרול סלע, לריבוע השני. | | And another guard, a giant this time. Rock Troll, second square. |
+| se9f4c3a | הענק השומר | | The giant on guard |
+| sb8d8fbb | הופה, עוד צמח! הקקטוס מחזיר נזק לכל מי שנוגע בו. ושלושה צמחים צמודים — זאת שלישייה. | | Oho, another plant! The cactus hurts whoever touches it. And three plants together is a trio. |
+| s3b88bcc | הצמח השלישי, שסוגר שלישייה | | The third plant, which closes the trio |
+| sfa14a97 | ועוד דבר אחד: קלפי פעולה. רנטגן חושף את כל הלוח שלי. קח אותו. | | One more thing: action cards. X-Ray shows you my whole board. Take it. |
+| sa1a422a | לוקחת את קלף הפעולה | | Taking the action card |
+| s8fa9c1c | עכשיו תפעיל אותו ותראה מה מחכה לך. | | Now use it and see what is waiting for you. |
+| s7b899d3 | מפעילה את קלף הפעולה | | Using the action card |
+| s197432f | הנה. זה כל מה שמחכה לך בצד השני. עכשיו אתה יודע מול מה אתה בונה. | | There. Everything waiting on the other side. Now you know what you are building against. |
+| sa3a14f3 | אחרי הרנטגן, לוח היריב חשוף | | After the X-Ray, my board is showing |
+| s162b8ec | עוד קלף פעולה: בוסט אנרגיה. קח אותו — אבל אל תפעיל עדיין. נשמור אותו לאחר כך. | | Another action card: Energy Boost. Take it — but do not play it yet. We are saving this one. |
+| s96f711a | לוקחת את הבוסט ואומרת לשמור | | Taking the boost and telling you to keep it |
+| sd7becb5 | וטורץ' — צלף. הוא לא זז בכלל, רק יורה מרחוק על הקלף האחרון בשורה שלו. מאחור. | | And Thunderwing, a sniper. Never moves, shoots the last card in its lane. Back row. |
+| s5170753 | מניחה את הצלף | | Placing the sniper |
+| s60bdc25 | עכשיו, כשהלוח מלא — תפעיל את הבוסט. | | Now, with the board full — play the boost. |
+| s4c70a0f | מפעילה את הבוסט | | Using the boost |
+| sb3e0267 | רואה? כל מה שעל הלוח התחזק. בשביל זה שומרים אותו לסוף. | | See? Everything on the board got stronger. That is why you save it for last. |
+| sb193d58 | מראה שהכוח עלה | | Showing that the power went up |
+| s839328a | ועכשיו... שלב הפאניקה. | | And now... the panic phase. |
+| sa1d54bc | מכריזה על שלב הפאניקה | | Announcing the panic phase |
+| s279f1d6 | עד עכשיו ראית רק את השורה הראשונה שלי. עכשיו אתה רואה כמעט את כל הלוח — זה הזמן לקלפים האחרונים. | | You only saw my front row. Now you see nearly all of it — last cards, go. |
+| sdecdc77 | בתוך שלב הפאניקה | | Inside the panic phase |
+| s47be3b1 | הזמן נגמר. אין יותר שינויים בלוח. עכשיו הזמן של הלוחות להילחם. | | Time is up. No more changes to the board. Now it is the boards turn to fight. |
+| sf241d3c | הזמן נגמר, לפני הקרב | | Time is up, just before the battle |
+| s0c9e943 | זהו, אתה יודע לשחק. תלחץ. | | That is it. You can play. Press. |
+| sa19ff29 | כפתור הקרב, סוף שלב שלישי | | The fight button, end of stage three |
 
 ## data/updates.ts
 
@@ -1357,16 +1536,23 @@
 | s00ba05b | אוקטובר 2026 | | October 2026 |
 | s8e775e4 | חנות נוחות, חברים, ודיווח | | A corner shop, friends, and reporting |
 | sffee556 | נפתחה חנות נוחות — אווטארים, אימוג'ים וקלפים, הכל ביהלומים. | | A corner shop has opened — avatars, emoji and cards, all for diamonds. |
-| s945e9ab | אפשר להוסיף לחברים מישהו ששיחקתם מולו, לראות מי מחובר, ולהזמין אותו למשחק. | | You can add somebody you have played against as a friend, see who is online, and invite them to a game. |
-| s1f2e3f1 | אפשר להגיד ליריב ארבעה-עשר משפטים מוכנים, וגם לבחור לא לראות הודעות בכלל. | | You can say fourteen ready-made lines to your opponent, and you can also choose not to see messages at all. |
+| s945e9ab | אפשר להוסיף לחברים מישהו ששיחקתם מולו, לראות מי מחובר, ולהזמין אותו למשחק. | | Add anyone you have played, see who is online, invite them in. |
+| s1f2e3f1 | אפשר להגיד ליריב ארבעה-עשר משפטים מוכנים, וגם לבחור לא לראות הודעות בכלל. | | Fourteen ready-made lines to say. Or switch messages off entirely. |
 | sc99cf96 | יש כפתור לדווח על באג או על שחקן. | | There is a button for reporting a bug or a player. |
 | sb7b7b9a | אוקטובר 2026 | | October 2026 |
 | s9ff5891 | נאצ'וס, אתגרים, וחוגת קושי | | Nachos, challenges, and a difficulty dial |
-| s86e4a59 | כל משחק נותן נאצ'וס לפי כמה טוב שיחקתם — גם כשמפסידים. כל 5 נאצ'וס זו תיבה. | | Every game gives nachos according to how well you played — even when you lose. Every 5 nachos is a chest. |
+| s86e4a59 | כל משחק נותן נאצ'וס לפי כמה טוב שיחקתם — גם כשמפסידים. כל 5 נאצ'וס זו תיבה. | | Every game pays nachos, win or lose. Five nachos is a chest. |
 | s0dce83b | אתגרים יומיים, שבועיים וחודשיים, עם יהלומים ונאצ'וס בסוף. | | Daily, weekly and monthly challenges, with diamonds and nachos at the end. |
 | sa6c8b7d | לבוט יש עכשיו שלוש דרגות: קליל, רגיל וקשה. הקליל באמת קליל. | | The bot now has three settings: easy, normal and hard. The easy one really is easy. |
 | s37ceacb | ניצחון מול הבוט שווה גביעים — רגיל 8, קשה 12. | | Beating the bot is worth trophies — 8 on normal, 12 on hard. |
 | sc9e804b | בתיבות יש יותר קלפים שכבר יש לכם, כדי שיהיה אפשר לשדרג אותם. | | Chests now hold more cards you already have, so that you can upgrade them. |
+| sd3f570e | אוקטובר 2026 | | October 2026 |
+| s4adde6c | גב לקלפים, גביעים ברורים, וטוטריאל שמוביל | | Card backs, honest trophies, a tutorial that leads |
+| s1e3d3ef | אפשר לקנות גב לקלפים בחנות — ורואים אותו לפני הקרב. | | Buy a card back in the shop — and see it before the battle. |
+| s5197177 | גביעים לפי מי ששיחקתם מולו, ורואים גם כמה ירדו אחרי הפסד. | | Trophies now depend on who you beat, and a loss says what it cost. |
+| sda301f8 | נאצ'וס גם כשמפסידים לבן אדם. מול הבוט הקליל אין נאצ'וס בכלל. | | Nachos even when a person beats you. None at all off the easy bot. |
+| s89ed441 | הטוטריאל מוביל צעד-צעד — בכל שלב יש דבר אחד ללחוץ. | | The tutorial leads, step by step. One thing to press at a time. |
+| s2107a3e | התחברות עם גוגל שומרת את האלבום שלכם בכל טלפון. | | Sign in with Google and your album follows you to any phone. |
 
 ## game/account.ts
 
@@ -1399,11 +1585,12 @@
 | s2d85691 | אין חשבון | | No account |
 | s7a9bffc | לא הצליח | | That didn't work |
 | se7da992 | אין חיבור לשרת | | No connection to the server |
+| sb7305bc | אין חיבור לשרת | | No connection to the server |
 | sf5f2796 | צריך להתחיל לשחק קודם | | You have to start playing first |
 | s79d47ae | כבר מחובר | | Already signed in |
 | sd0c6462 | לא הצלחתי לשמור. נסה שוב. | | That did not save. Try again. |
-| sb7305bc | אין חיבור לשרת | | No connection to the server |
 | s2a6031b | אין חיבור לשרת | | No connection to the server |
+| sabc80dd | אין חיבור לשרת | | No connection |
 | s2c36448 | אפשר לשמור {0} דקים. תמחק אחד קודם. | | You can keep {0} decks. Delete one first. |
 | sb682ef4 | כבר יש לך דק בשם הזה. | | You already have a deck with that name. |
 
@@ -1429,6 +1616,9 @@
 | --- | --- | --- | --- |
 | s24e4af8 | משחק ראשון — איך בונים לוח | | First game — how to build a board |
 | s078dd87 | משחק שני — מה מנצח את מה | | Second game — what beats what |
+| s4d3f100 | שלב ראשון — הלוח והמטרה | | One — the board and the point |
+| sfd50f02 | שלב שני — איך תוקפים | | Two — how to attack |
+| s889ccf0 | שלב שלישי — לשחק באמת | | Three — playing for real |
 
 ## game/meta.ts
 
@@ -1469,6 +1659,7 @@
 | se01b086 | עוד לא. | | Not yet. |
 | s750dee1 | זה כבר נגמר. | | That one's over. |
 | s50f7dfe | זה כבר שלך. | | You already have it. |
+| se274fb0 | לקחת אחת היום. תחזור מחר. | | One a day. Back tomorrow. |
 | sc59543d | אין מספיק יהלומים. | | Not enough gems. |
 | s31caecc | חסרים {0} יהלומים. | | You're {0} gems short. |
 | s67fd1f6 | לא הצלחתי. נסה שוב. | | That didn't work. Try again. |
@@ -1488,6 +1679,6 @@
 | --- | --- | --- | --- |
 | s656f60c | של היריב | | Opponent's |
 | s42347b7 | שלך | | Yours |
-| s38e8e92 | המלך {0} נפל — הקרב הסתיים | | The {0} King fell — the battle is over |
-| sbc89487 | הזמן נגמר, הקרב הסתיים | | Time ran out and both kings survived — decided on king health: {0} yours against {1} theirs. |
-| s156d757 | הזמן נגמר, הקרב הסתיים. שניכם בתיקו מוחלט. הטלתי מטבע כדי לקבוע מי המנצח | | Time ran out and everything came out exactly equal — decided by a coin toss. |
+| s38e8e92 | המלך {0} נפל — הקרב הסתיים | | The {0} King fell. That is the battle. |
+| sbc89487 | הזמן נגמר, הקרב הסתיים | | Time ran out and both Kings lived. King health decided it: {0} to {1}. |
+| s156d757 | הזמן נגמר, הקרב הסתיים. שניכם בתיקו מוחלט. הטלתי מטבע כדי לקבוע מי המנצח | | Dead even. A coin decided it. |

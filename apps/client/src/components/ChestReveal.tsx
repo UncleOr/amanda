@@ -405,7 +405,7 @@ function NewCards({ ids, onClose }: { ids: string[]; onClose: () => void }) {
                 sfx.play("click");
                 setLooking(id);
               }}
-              title={t("s9e9b1f9", "לראות את הקלף")}
+              title={t("s17781ba", "לראות את הקלף")}
             >
               <img src={`${BASE}cards/${id}.webp`} alt="" />
               <span>{say(CATALOG.get(id)?.name ?? { he: "", en: "" })}</span>
