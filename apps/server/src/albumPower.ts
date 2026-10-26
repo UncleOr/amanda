@@ -19,7 +19,7 @@
  * total could not be written gets nothing, which is much worse.
  */
 import type { SupabaseClient } from "@supabase/supabase-js";
-import { albumPower, type OwnedCardRow } from "@amanda/shared";
+import { albumPower, isCollectable, type OwnedCardRow } from "@amanda/shared";
 import { CATALOG } from "./content.js";
 
 /** Work out one player's album power and store it. Returns what it stored. */
@@ -36,10 +36,28 @@ export async function refreshAlbumPower(
   const rows: OwnedCardRow[] = [];
   for (const r of data ?? []) {
     const card = CATALOG.get(r.card_id as string);
-    // A card id with no card behind it is an album entry for something that
-    // has been deleted from the catalogue. Counting it would be counting a
-    // card nobody can play.
-    if (!card || card.id === "crumb_demon") continue;
+    /*
+     * A card id with no card behind it is an album entry for something that
+     * has been deleted from the catalogue. Counting it would be counting a
+     * card nobody can play.
+     *
+     * === AND THE SAME GOES FOR ONE NOBODY IS SUPPOSED TO HAVE ===
+     *
+     * Or: *"how can I have cards from the Strays series if I have not
+     * reached the alley yet? That is a bug you need to deal with."*
+     *
+     * The draw is fixed (progress.ts) and the family is out of the album
+     * (isCollectable), but the rows the bug already wrote are still in the
+     * table — one of them, across 182 players. This screen does not show
+     * them and the album total does not count them, and until now THIS
+     * number did: so a card nobody could see was quietly making one
+     * player's album look bigger to the matchmaker.
+     *
+     * `isCollectable` rather than another list, because that is the one
+     * rule the pool, the album and the achievements all ask. The Crumb
+     * Demon is in it already — it is a `system` card.
+     */
+    if (!card || !isCollectable(card)) continue;
     rows.push({
       rarity: card.rarity,
       level: (r.level as number) ?? 1,
