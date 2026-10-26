@@ -1099,3 +1099,12 @@ html[dir="ltr"] .intro__wash {
 /* Nothing to open when every pack is already laid out. */
 .album__pack[aria-disabled="true"] { cursor: default; }
 .album__pack[aria-disabled="true"] .album__pack-mark { visibility: hidden; }
+
+
+/* An eye over the opponent's board, where the word "revealed" used to be.
+   Or: *"instead of REVEALED — an eye icon."* */
+.side__revealed {
+  display: inline-grid;
+  place-items: center;
+  line-height: 0;
+}

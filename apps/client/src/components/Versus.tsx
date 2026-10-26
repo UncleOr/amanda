@@ -2,6 +2,7 @@ import { DEFAULT_BACK, catchphraseById, phraseText, type PlayerCard } from "@ama
 import { Plaque } from "./Plaque";
 import { CardBack } from "./CardView";
 import { Icon } from "./Icon";
+import { lang } from "../game/lang";
 import { line as t } from "../game/copy";
 
 const BASE = import.meta.env.BASE_URL;
@@ -105,7 +106,8 @@ function Fighter({
   mine?: boolean;
 }) {
   const phrase = catchphraseById(who?.catchphrase);
-  const line = phraseText(who?.catchphrase, saidTo);
+  // The language is passed in: shared has no opinion about the browser.
+  const line = phraseText(who?.catchphrase, saidTo, lang());
 
   return (
     <div className={`versus__side${mine ? " versus__side--mine" : ""}`}>

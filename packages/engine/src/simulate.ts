@@ -229,6 +229,7 @@ export function runBattle(setup: BattleSetup): BattleResult {
         power: Math.round(u.power),
         alive: u.alive,
         isKing: u.isKing,
+        ...(u.flags.spawned ? { spawned: true } : {}),
       })),
     });
   }
@@ -236,8 +237,8 @@ export function runBattle(setup: BattleSetup): BattleResult {
   const spawnChild: BattleOps["spawnChild"] = (proto) => {
     const u: Unit = {
       uid: `u${state.nextUid++}`,
-      cardId: "__spawn__",
-      seriesId: "",
+      cardId: proto.cardId,
+      seriesId: proto.seriesId,
       owner: proto.owner,
       name: proto.name,
       elements: [proto.element],
@@ -266,7 +267,9 @@ export function runBattle(setup: BattleSetup): BattleResult {
       abilities: [],
       alive: true,
       below: null,
-      flags: {},
+      // The one thing that is not inherited: this is a PIECE of something,
+      // and the screen draws it smaller for it. See `spawned` in types.ts.
+      flags: { spawned: true },
     };
     state.units.push(u);
     state.events.push({

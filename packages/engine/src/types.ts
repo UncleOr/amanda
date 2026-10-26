@@ -159,6 +159,19 @@ export interface FrameUnit {
   power: number;
   alive: boolean;
   isKing: boolean;
+  /**
+   * A piece of something that died, rather than a card somebody placed.
+   *
+   * Or: *"there is some monster that splits into 4 small monsters — they
+   * look like little squares and they just move, with no motion of their
+   * own."* They carry the parent's CARD now, so they are drawn with its
+   * artwork and walk — and this is what still makes them read as pieces:
+   * the screen draws them small.
+   *
+   * On the frame rather than inferred, because nothing else in a snapshot
+   * can tell "a child of a slime" from "a slime on low health".
+   */
+  spawned?: boolean;
 }
 
 /** A snapshot of the whole arena at one tick. */

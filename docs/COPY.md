@@ -1,6 +1,6 @@
 # הטקסטים של אמנדה
 
-כל טקסט שהשחקן רואה — 1316 במספר, 1316 מהם כבר באנגלית.
+כל טקסט שהשחקן רואה — 1328 במספר, 1328 מהם כבר באנגלית.
 
 ## איך עורכים
 
@@ -333,7 +333,7 @@
 | s9175f67 | קדימה, ילדה | | Come on, kid |
 | s36e79b6 | קדימה לקרב! | | Into battle! |
 | sf842646 | ועכשיו: לקרב! | | And now: fight! |
-| sf43f6cb | בואו נלחם! | | Let's fight! |
+| sf43f6cb | בואו נלחם! | | Fight! |
 | sa21c01f | הקרב מתחיל, ילד | | The battle begins, kid |
 | sd988a9d | הקרב מתחיל, ילדה | | The battle begins, kid |
 | s647d2f6 | ועכשיו נראה מה בנית | | Now let's see what you built |
@@ -406,12 +406,12 @@
 | s9d29f31 | אמנדה | | Amanda |
 | s52b9172 | היריב | | Opponent |
 | sf0485e7 | נחשף! | | Revealed! |
+| sb9b9741 | נחשף! | | Revealed! |
 | sbcd9db8 | בחר קלף אצל היריב | | Pick one of theirs |
 | s1445cf1 | ועכשיו את השני | | Now the second |
 | s4106038 | בחר קלף על הלוח שלך | | Pick one of yours |
 | s8004b74 | עבור „{0}” | | for “{0}” |
 | s7ab31ff | ביטול | | Cancel |
-| se6dcc04 | קלפי פעולה | | Action cards |
 | s3cec9ca | מאוחר. תכננת גרוע. | | Too late. Bad planning. |
 | sb9a31bf | פעיל ∞ | | Active ∞ |
 | s34ec88c | נוצל | | Used |
@@ -419,17 +419,24 @@
 | s932d88e | גע בקלף על הלוח כדי להוריד אותו | | Tap a card to take it off |
 | s3adfc6c | הבר מלא | | Bar full |
 | s25edd89 | קח לפעולה | | To the bar |
+| s7aacede | הבר מלא | | Bar full |
+| s9f032e5 | קח לפעולה | | To the bar |
 | s8006c77 | הרץ קרב | | Fight |
 | sb0d338c | אין קלף | | No card |
 | sba4d2ee | קלפים שנשארו בדק | | Left in the deck |
 | s6c4fc10 | קלפים בפח | | In the bin |
-| s7aacede | הבר מלא | | Bar full |
-| s9f032e5 | קח לפעולה | | To the bar |
+| s6059231 | הבר מלא | | Bar full |
+| saef180f | קח לפעולה | | To the bar |
+| s51d05f3 | הבר מלא | | Bar full |
+| s156c5b9 | קח לפעולה | | To the bar |
 | sd06d0bd | זרוק | | Bin it |
+| s81312bd | זרוק | | Bin it |
 | s1bd8f04 | קח מהפח | | From the bin |
+| s026083c | קח מהפח | | From the bin |
 | sfbeaf8c | אפשר להניח קלף על קלף שכבר הנחתם — נשארו {0} | | Stack on a card you placed — {0} left |
 | sb28db8b | ארבע הפינות פתוחות להנחה כפולה | | All four corners take a double |
 | s4a9f52a | התחל קרב! | | Fight! |
+| saeb9b8c | התחל קרב! | | Fight! |
 | s72c3f50 | מוכן — לחץ לביטול | | Ready — tap to undo |
 | sd693107 | אני מוכן | | Ready |
 | sa4fb281 | שניכם מוכנים — מתחילים | | Both ready. Here we go. |
@@ -610,6 +617,7 @@
 | מזהה | טקסט נוכחי | טקסט חדש | אנגלית |
 | --- | --- | --- | --- |
 | s3ed5f40 | המלך | | King |
+| s913f43c | המלך | | King |
 | s8845f5f | יש קלף מתחת. הוא יצוץ כשהעליון ייפול. | | A card waits underneath. It shows when the top one falls. |
 | s0e2bdac | משמר המלך. כאן עוצרים את מי שבא לאכול אותו. | | The King's guard. Stop them here. |
 
@@ -809,7 +817,7 @@
 | --- | --- | --- | --- |
 | s84b983e | כל הארנות | | All the arenas |
 | sbdb539a | {0} · עוד {1} | | {0} · {1} more |
-| s00844be | הגעת לסוף הדרך | | the end of the road |
+| s8932508 | ארנות נוספות בקרוב | | More arenas soon |
 | s92d6d79 | סגירה | | Close |
 | s474cafb | הדרך | | The road |
 | s2411278 | אתה כאן | | You are here |
@@ -868,6 +876,7 @@
 | sb752d13 | נלקח | | Taken |
 | s1d3665c | לקחת | | Take it |
 | sac7fc13 | אתגרים | | Challenges |
+| sa70a8ac | אתגרים | | Challenges |
 
 ## components/ChestReveal.tsx
 
@@ -1005,10 +1014,12 @@
 | sfd7535c | אמנדה | | Amanda |
 | s86247d1 | משחק קלפים מפלצתי | | Monster card game |
 | s0cadb17 | לשחק | | Play |
-| s066beed | כמה הבוט מתאמץ | | How hard the bot tries |
 | sb99e77d | לשחק עם בוט | | You vs. Bot |
-| s0443085 | לא בגרסה הזאת | | Not in this one |
+| s3bf0b5c | לשחק עם בוט | | Play a bot |
+| s066beed | כמה הבוט מתאמץ | | How hard the bot tries |
 | sa6f7e6a | לשחק עם חברים | | You vs. Friends |
+| s0443085 | לא בגרסה הזאת | | Not in this one |
+| s0f6f774 | לשחק עם חברים | | Play a friend |
 | s665bc9f | לפתוח חדר | | Open a room |
 | s3ebc7cd | יש לי קוד | | I have a code |
 | saedd95d | מישהו אקראי | | Somebody random |
@@ -1016,8 +1027,9 @@
 | scf8cabd | קוד החדר | | Room code |
 | sd1f36fa | הצטרף | | Join |
 | s2c8e767 | עוד מודים | | More modes |
+| sb463163 | עוד מודים | | More modes |
 | s1dda509 | בלי שעון, שני הצדדים שלך | | No clock. Both sides are yours. |
-| s77f529a | מגרש המשחקים | | The playground |
+| s77f529a | מגרש המשחקים | | Playground |
 | s48c712b | החשבון הזה מושעה עד {0}. אפשר לשחק נגד המחשב בינתיים. | | Suspended until {0}. The bot is still up for it. |
 | sd01b2d8 | אין חדר כזה. אולי המצאת אותו. | | No such room. Did you make it up? |
 | sf8d116e | זה הקוד שלך. אתה לא יכול לאכול את עצמך. | | That is your own code. You cannot eat yourself. |
@@ -1028,7 +1040,7 @@
 | s3cd2566 | מה יש לך | | What you have |
 | s5d488a4 | האוסף שלי | | My cards |
 | s3fc668a | דק | | Deck |
-| sb1c5413 | האלבום | | The album |
+| sb1c5413 | האלבום | | Album |
 | s2706aa0 | חנות נוחות | | Corner Shop |
 | s26c5785 | חדש בחנות | | New in the shop |
 | s0cab6b9 | חברים | | Friends |
@@ -1193,7 +1205,7 @@
 | s28e9a18 | חזרה | | Back |
 | seb359d8 | דיווח על היריב | | Report your opponent |
 | s18fbbed | מספיק, הבנתי | | Enough, I get it |
-| se664893 | שאסביר לך מה קרה? | | Want to know what happened? |
+| se664893 | שאסביר לך מה קרה? | | What happened? |
 
 ## components/Say.tsx
 
@@ -1367,7 +1379,7 @@
 | s0f0bc4e | שלושה מאותה סדרה צמודים זה לזה — {bonus} נדלק. {what} | | Three from the same series touching each other — {bonus} lights up. {what} |
 | sfc7ee43 | כששלושה מאותה סדרה נוגעים זה בזה | | When three from the same series touch each other |
 | s658fd0b | נגמר הערפל — עכשיו רואים מה היריב שם. שינויים של הרגע האחרון? | | The fog is gone — now you can see what your opponent put down. Any last-minute changes? |
-| s2fae425 | בתחילת שלב הפאניקה | | At the start of the panic phase |
+| s2fae425 | בתחילת שלב הפאניקה | | At the start of panic |
 | sfce8645 | יאללה, בוא נראה מה קורה. | | Come on then, let's see what happens. |
 | s2fe9cd5 | הדבר האחרון לפני הקרב | | The last thing before the battle |
 | sec0b1a9 | ל{enemy} יש ערימת חיים. {card} לא מנסה לנצח אותו במכות — הארס שלו מצטבר בכל פגיעה וממשיך לשרוף גם אחרי שהוא מת. שים אותו מולו. | | {enemy} has a mountain of health. {card} does not out-punch it — the venom stacks and keeps burning. Put it opposite. |
@@ -1445,7 +1457,7 @@
 | s4f2f850 | עכשיו. הלוח שלך מלא. עכשיו תפעיל אותו. | | Now. Your board is full. Now play it. |
 | sceb7841 | הלוח מלא, הבוסט עדיין לא הופעל | | the board is full, the boost has not been played |
 | s8137a86 | פאניקה. עשר השניות האחרונות. תסתכל — המלך שלי נחשף. | | Panic. The last ten seconds. Look — my King is showing. |
-| se8e0990 | השנייה הראשונה של הפאניקה | | the first second of the panic phase |
+| se8e0990 | השנייה הראשונה של הפאניקה | | the first second of panic |
 | s7c44eb4 | אבל השורה האחורית שלי עדיין חשוכה. גם בפאניקה. בשביל זה היה שווה את הרנטגן. | | But my back row is still dark. Even in panic. That is what the X-Ray was worth. |
 | s7298202 | בפאניקה, על השורה האחורית המעורפלת | | in panic, on the fogged back row |
 | sb0dc9d8 | סופת חול. מערבבת לי את השורה הקדמית. בנית נתיב מול משהו? עכשיו הוא במקום אחר. | | Sandstorm. It shuffles my front row. Built a lane against something? It is somewhere else now. |
@@ -1520,10 +1532,10 @@
 | s4c70a0f | מפעילה את הבוסט | | Using the boost |
 | sb3e0267 | רואה? כל מה שעל הלוח התחזק. בשביל זה שומרים אותו לסוף. | | See? Everything on the board got stronger. That is why you save it for last. |
 | sb193d58 | מראה שהכוח עלה | | Showing that the power went up |
-| s839328a | ועכשיו... שלב הפאניקה. | | And now... the panic phase. |
-| sa1d54bc | מכריזה על שלב הפאניקה | | Announcing the panic phase |
+| s839328a | ועכשיו... שלב הפאניקה. | | And now... PANIC. |
+| sa1d54bc | מכריזה על שלב הפאניקה | | Announcing panic |
 | s279f1d6 | עד עכשיו ראית רק את השורה הראשונה שלי. עכשיו אתה רואה כמעט את כל הלוח — זה הזמן לקלפים האחרונים. | | You only saw my front row. Now you see nearly all of it — last cards, go. |
-| sdecdc77 | בתוך שלב הפאניקה | | Inside the panic phase |
+| sdecdc77 | בתוך שלב הפאניקה | | Inside panic |
 | s47be3b1 | הזמן נגמר. אין יותר שינויים בלוח. עכשיו הזמן של הלוחות להילחם. | | Time is up. No more changes to the board. Now it is the boards turn to fight. |
 | sf241d3c | הזמן נגמר, לפני הקרב | | Time is up, just before the battle |
 | s0c9e943 | זהו, אתה יודע לשחק. תלחץ. | | That is it. You can play. Press. |

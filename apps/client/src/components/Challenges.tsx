@@ -331,9 +331,18 @@ export function ChallengeButton({
   useEffect(() => watchChallenges((live) => setReady(count(live))), []); // eslint-disable-line react-hooks/exhaustive-deps
 
   return (
-    <button className="quests__open" onClick={onOpen}>
-      <Icon name="challenge" size={20} />
-      <span>{t("sac7fc13", "אתגרים")}</span>
+    /*
+     * Or: *"challenges — an icon."* The picture is a rosette and the badge
+     * on it is a number; between them they say "there are prizes in here"
+     * at a glance, which is more than the word ever did.
+     */
+    <button
+      className="quests__open"
+      onClick={onOpen}
+      title={t("sac7fc13", "אתגרים")}
+      aria-label={t("sa70a8ac", "אתגרים")}
+    >
+      <Icon name="challenge" size={26} />
       {ready > 0 && <i className="quests__dot quests__dot--big">{ready}</i>}
     </button>
   );

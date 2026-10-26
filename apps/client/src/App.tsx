@@ -1560,7 +1560,17 @@ function Game() {
                         )}
                       </span>
                     )}{" "}
-                    {m.phase !== "build" && <span className="side__revealed">{t("sf0485e7", "נחשף!")}</span>}
+                    {/* An eye, not the word. Or: *"instead of REVEALED — an
+                        eye icon."* */}
+                    {m.phase !== "build" && (
+                      <span
+                        className="side__revealed"
+                        title={t("sf0485e7", "נחשף!")}
+                        aria-label={t("sb9b9741", "נחשף!")}
+                      >
+                        <Icon name="eye" size={16} />
+                      </span>
+                    )}
                   </>
                 )}
               </div>
@@ -1663,7 +1673,7 @@ function Game() {
                 onClick={() => setActionsOpen((v) => !v)}
                 aria-expanded={actionsOpen}
               >
-                {actionsOpen ? "▾" : "▴"} {t("se6dcc04", "קלפי פעולה")}
+                {actionsOpen ? "▾" : "▴"} <Icon name="action" size={17} />
                 <b className="actions__handle-count">{m.actionBar.length}/3</b>
               </button>
               {/*
@@ -1779,14 +1789,14 @@ function Game() {
               </div>
               <div className="lab__buttons">
                 {m.handIsAction && (
-                  <button className="take-action" onClick={m.takeAction} disabled={m.barFull}>
-                    {m.barFull ? (
-                      t("s3adfc6c", "הבר מלא")
-                    ) : (
-                      <>
-                        <Icon name="plus" size={14} /> {t("s25edd89", "קח לפעולה")}
-                      </>
-                    )}
+                  <button
+                    className="take-action"
+                    onClick={m.takeAction}
+                    disabled={m.barFull}
+                    title={m.barFull ? t("s3adfc6c", "הבר מלא") : t("s25edd89", "קח לפעולה")}
+                    aria-label={m.barFull ? t("s7aacede", "הבר מלא") : t("s9f032e5", "קח לפעולה")}
+                  >
+                    <Icon name="action" size={19} />
                   </button>
                 )}
                 <button className="btn-fight" onClick={m.toBattle}>
@@ -1868,27 +1878,55 @@ function Game() {
               </div>
               <div className="hand__buttons">
                 {m.handIsAction && (
-                  <button className="take-action" onClick={m.takeAction} disabled={m.barFull}>
-                    {m.barFull ? (
-                      t("s7aacede", "הבר מלא")
-                    ) : (
-                      <>
-                        <Icon name="plus" size={14} /> {t("s9f032e5", "קח לפעולה")}
-                      </>
-                    )}
+                  <button
+                    className="take-action"
+                    onClick={m.takeAction}
+                    disabled={m.barFull}
+                    title={m.barFull ? t("s6059231", "הבר מלא") : t("saef180f", "קח לפעולה")}
+                    aria-label={m.barFull ? t("s51d05f3", "הבר מלא") : t("s156c5b9", "קח לפעולה")}
+                  >
+                    <Icon name="action" size={19} />
                   </button>
                 )}
                 {/* Named, so the walkthrough can point at them. A tutorial
                     step targets a CSS selector, and these two were the only
                     buttons on the screen without one — which is why the
                     first lesson could say "bin it" and ring nothing. */}
-                <button className="hand__discard" onClick={m.discardHand} disabled={m.hand === null}>
-                  {t("sd06d0bd", "זרוק")} <Icon name="discard" size={15} />
+                <button
+                  className="hand__discard"
+                  onClick={m.discardHand}
+                  disabled={m.hand === null}
+                  /*
+                   * ═══ A PICTURE, AND THE WORD BEHIND IT ═══
+                   *
+                   * Or: *"swap words for icons wherever you can — binning a
+                   * card, taking an action card, challenges, playground,
+                   * more modes… FIGHT, FROM THE BIN, ACTION CARDS can all
+                   * be icons. Got the idea? Like that on everything."*
+                   *
+                   * The bin is the clearest case in the game: the icon is
+                   * already in the button, beside a word that says what the
+                   * icon says. One of the two was always doing nothing.
+                   *
+                   * The word survives as the title and the accessible name
+                   * — that is the one job a picture cannot do, and it is
+                   * also how the tutorial still finds this button.
+                   */
+                  title={t("sd06d0bd", "זרוק")}
+                  aria-label={t("s81312bd", "זרוק")}
+                >
+                  <Icon name="discard" size={19} />
                 </button>
                 {/* One take-back a match. Once it is spent the button goes
                     out and stays out — see takeDiscard for why. */}
-                <button className="hand__bin" onClick={m.takeDiscard} disabled={!m.canTakeDiscard}>
-                  {t("s1bd8f04", "קח מהפח")} {m.canTakeDiscard && <Icon name="recycle" size={15} />}
+                <button
+                  className="hand__bin"
+                  onClick={m.takeDiscard}
+                  disabled={!m.canTakeDiscard}
+                  title={t("s1bd8f04", "קח מהפח")}
+                  aria-label={t("s026083c", "קח מהפח")}
+                >
+                  <Icon name="recycle" size={19} />
                 </button>
               </div>
               {m.stackSlots > 0 && (
@@ -1905,14 +1943,30 @@ function Game() {
               {/* No sentence here any more — the empty crown on the board
                   says it, and said it first. */}
               <button
-                className={`btn-fight${m.ready ? " btn-fight--ready" : ""}`}
+                className={`btn-fight${m.ready ? " btn-fight--ready" : ""}${
+                  !m.online ? " btn-fight--icon" : ""
+                }`}
                 onClick={m.online ? m.toggleReady : m.toBattle}
+                title={t("s4a9f52a", "התחל קרב!")}
+                aria-label={t("saeb9b8c", "התחל קרב!")}
               >
-                {!m.online
-                  ? t("s4a9f52a", "התחל קרב!")
-                  : m.ready
-                    ? t("s72c3f50", "מוכן — לחץ לביטול")
-                    : t("sd693107", "אני מוכן")}
+                {/*
+                  Or: *"you do not need a FIGHT button… it can be an icon."*
+                  Offline it is one: a big play triangle on the loudest
+                  button on the screen, which is the one gesture in this
+                  game nobody has ever had to read.
+
+                  Online it keeps its words, because those two are not an
+                  action — they are a STATE, "I am ready" and "no longer",
+                  and a picture of a state is a riddle.
+                */}
+                {!m.online ? (
+                  <Icon name="play" size={26} />
+                ) : m.ready ? (
+                  t("s72c3f50", "מוכן — לחץ לביטול")
+                ) : (
+                  t("sd693107", "אני מוכן")
+                )}
               </button>
               {m.online && (m.ready || m.oppReady) && (
                 <p className="hand__hint hand__hint--ready">

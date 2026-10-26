@@ -235,9 +235,21 @@ export function BoardGrid({
             onInfo={onCardInfo ? () => onCardInfo(king) : undefined}
           />
         ) : (
-          <span className="slot__hint slot__hint--king">
-            <Icon name="king" size={22} />
-            <b>{t("s3ed5f40", "המלך")}</b>
+          /*
+           * Or: *"on the King's square you do not need to write King. A
+           * crown image is enough. And not an emoji — the game's own
+           * icon."*
+           *
+           * It is the game's own icon and always was; what was beside it
+           * was the word, saying the thing the crown had already said.
+           * Bigger now, because it is on its own.
+           */
+          <span
+            className="slot__hint slot__hint--king"
+            title={t("s3ed5f40", "המלך")}
+            aria-label={t("s913f43c", "המלך")}
+          >
+            <Icon name="king" size={34} />
           </span>
         )}
       </div>

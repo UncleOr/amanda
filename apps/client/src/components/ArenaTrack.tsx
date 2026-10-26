@@ -91,7 +91,12 @@ export function ArenaTrack({
               </>
             ) : (
               <>
-                <Icon name="win" size={12} /> {trophies} · {t("s00844be", "הגעת לסוף הדרך")}
+                <Icon name="win" size={12} /> {trophies} · {/*
+                  Or: *"do not write on the Station that it is the end of the
+                  road. It is not — we will open it up soon. It is just that
+                  whoever reaches the end stops climbing."*
+                */}
+                {t("s8932508", "ארנות נוספות בקרוב")}
               </>
             )}
           </small>

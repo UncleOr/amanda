@@ -419,7 +419,25 @@ export function Arena({
       const container = new Container();
       const art = new Container();
       const look = combatLook(fu.cardId);
-      const w = (fu.isKing ? 2 : 1) * CELL * 0.88;
+      /*
+       * === A PIECE IS DRAWN AS A PIECE ===
+       *
+       * Or: *"there is some monster that splits into 4 small monsters —
+       * they look like little squares and they just move, with no motion
+       * of their own. Fix that."*
+       *
+       * Both halves had one cause. They were spawned with the card id
+       * "__spawn__", so there was no card behind them: no artwork, no
+       * element colour, no series ring, no name and — this is the "no
+       * motion of their own" — no WALK, because the walk is read off the
+       * card (arenaFx.ts). A grey box that slides.
+       *
+       * They carry the parent's card now (engine, ChildProto), so all of
+       * that arrives for free and a child of a slime wobbles like a slime.
+       * What is left is the size: three fifths, so four of them in a lane
+       * read as something that came apart rather than as four more cards.
+       */
+      const w = (fu.isKing ? 2 : fu.spawned ? 0.6 : 1) * CELL * 0.88;
 
       // The shadow and the aura ring lie on the ground under the unit, so
       // they must not inherit the lunge and shake that `art` carries.

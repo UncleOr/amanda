@@ -56,6 +56,21 @@ export interface Catchphrase {
   he: string;
   /** The same line said to a girl. Empty means "use `he`". */
   heF?: string;
+  /**
+   * === THE SAME LINE IN ENGLISH, AND NOT A TRANSLATION OF IT ===
+   *
+   * Or: *"the catchphrases — 'kid kid kid, come and fight' — are still in
+   * Hebrew even when the game is in English. They need translating."*
+   *
+   * They were never read: `phraseText` returned `he` whatever language was
+   * chosen, so an English player met one Hebrew sentence on the versus
+   * screen of every single match.
+   *
+   * Written rather than translated, which is this project's own rule for
+   * this voice: a line that goes word for word stops being the line.
+   * "אני אדיר, אני כביר, אני אדביק אותך לקיר" is a RHYME, and an English
+   * sentence that says the same thing without rhyming is a different line.
+   */
   en?: string;
   /** Everybody has it from the first match. */
   free?: boolean;
@@ -100,25 +115,25 @@ export const CATCHPHRASES: Catchphrase[] = [
   { id: NO_PHRASE, tone: "kind", he: "", free: true, style: "plain" },
 
   // ── the four you start with. Or's words. ──
-  { id: "phrase.fight", tone: "taunt", he: "ילד ילד ילד, בוא להילחם", free: true, style: "plain" },
+  { id: "phrase.fight", tone: "taunt", he: "ילד ילד ילד, בוא להילחם", en: "Kid. Kid. Kid. Come and fight.", free: true, style: "plain" },
   {
     id: "phrase.mighty",
     tone: "taunt",
-    he: "אני אדיר, אני כביר, אני אדביק אותך לקיר",
+    he: "אני אדיר, אני כביר, אני אדביק אותך לקיר", en: "I am mighty, I am tall, I will stick you to the wall.",
     free: true,
     style: "chalk",
   },
   {
     id: "phrase.onlyamanda",
     tone: "taunt",
-    he: "רק אמנדה יכולה לנצח אותי",
+    he: "רק אמנדה יכולה לנצח אותי", en: "Only Amanda beats me.",
     free: true,
     style: "ember",
   },
   {
     id: "phrase.appetite",
     tone: "taunt",
-    he: "בתיאבון, הארוחה מתחילה ילד",
+    he: "בתיאבון, הארוחה מתחילה ילד", en: "Bon appetit. Dinner is you.",
     free: true,
     style: "ice",
   },
@@ -127,22 +142,22 @@ export const CATCHPHRASES: Catchphrase[] = [
   {
     id: "phrase.danger",
     tone: "taunt",
-    he: "הופה, נהיה פה מסוכן",
+    he: "הופה, נהיה פה מסוכן", en: "Oho. It got dangerous in here.",
     style: "ember",
     item: "phrase.danger",
   },
-  { id: "phrase.clever", tone: "taunt", he: "חכם על חזקים", style: "slime", item: "phrase.clever" },
+  { id: "phrase.clever", tone: "taunt", he: "חכם על חזקים", en: "Clever beats strong.", style: "slime", item: "phrase.clever" },
   {
     id: "phrase.winner",
     tone: "taunt",
-    he: "המנצח בין השניים",
+    he: "המנצח בין השניים", en: "The better of the two.",
     style: "gold",
     item: "phrase.winner",
   },
   {
     id: "phrase.behindyou",
     tone: "taunt",
-    he: "זהירות, אמנדה מאחוריך!",
+    he: "זהירות, אמנדה מאחוריך!", en: "Careful — Amanda is behind you!",
     style: "shadow",
     item: "phrase.behindyou",
   },
@@ -162,25 +177,25 @@ export const CATCHPHRASES: Catchphrase[] = [
   {
     id: "phrase.goodluck",
     tone: "kind",
-    he: "בהצלחה לשנינו",
+    he: "בהצלחה לשנינו", en: "Good luck to both of us.",
     style: "ice",
     item: "phrase.goodluck",
   },
   {
     id: "phrase.goodgame",
     tone: "kind",
-    he: "שיהיה משחק טוב",
+    he: "שיהיה משחק טוב", en: "Have a good one.",
     style: "chalk",
     item: "phrase.goodgame",
   },
   {
     id: "phrase.friends",
     tone: "kind",
-    he: "באתי לשחק, לא לריב",
+    he: "באתי לשחק, לא לריב", en: "Here to play, not to fight.",
     style: "slime",
     item: "phrase.friends",
   },
-  { id: "phrase.learn", tone: "kind", he: "תלמד אותי משהו", style: "gold", item: "phrase.learn" },
+  { id: "phrase.learn", tone: "kind", he: "תלמד אותי משהו", en: "Teach me something.", style: "gold", item: "phrase.learn" },
 ];
 
 /** The lines of one kind, for the picker to group them. */
@@ -300,8 +315,15 @@ export function ownedCatchphrases(items: readonly string[]): Catchphrase[] {
 export function phraseText(
   id: string | null | undefined,
   saidTo: "boy" | "girl" | null = null,
+  /**
+   * Which language to say it in. Passed in rather than read here, because
+   * this package has no opinion about the browser — the choice lives in
+   * the client's lang.ts.
+   */
+  lang: "he" | "en" = "he",
 ): string | null {
   const phrase = catchphraseById(id);
   if (!phrase || !phrase.he) return null;
+  if (lang === "en") return phrase.en ?? phrase.he;
   return saidTo === "girl" && phrase.heF ? phrase.heF : phrase.he;
 }

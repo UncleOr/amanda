@@ -70,8 +70,19 @@ describe("core combat", () => {
     };
     const result = runBattle(setup);
     expect(result.events.some((e) => e.type === "split")).toBe(true);
-    const spawned = result.finalUnits.filter((u) => u.cardId === "__spawn__");
+    /*
+     * Marked by a FLAG, not by a fake card id. A child used to be given
+     * cardId "__spawn__", which meant the renderer found no card behind it
+     * and drew a grey box with no artwork, no name and no walk — Or: *"they
+     * look like little squares and they just move, with no motion of their
+     * own."*
+     *
+     * A child of a splitter is a smaller splitter, so it carries the
+     * parent's card and `flags.spawned` is what says it is a piece.
+     */
+    const spawned = result.finalUnits.filter((u) => u.flags.spawned);
     expect(spawned.length).toBe(2);
+    for (const child of spawned) expect(child.cardId, "drawn as its parent").toBe("splitter");
   });
 
   it("a revealed Ground-Floor card fights on after the top card dies", () => {

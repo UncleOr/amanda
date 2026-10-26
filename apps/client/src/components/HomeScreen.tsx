@@ -249,8 +249,36 @@ export function HomeScreen({
           */}
           {!friendOpen ? (
             <div className="pick">
-              <button className="pick__card" onClick={m.startMatch}>
+              <button
+                className="pick__card"
+                title={t("sb99e77d", "לשחק עם בוט")}
+                aria-label={t("s3bf0b5c", "לשחק עם בוט")}
+                onClick={m.startMatch}
+              >
                 <img src={`${BASE}brand/versus_robot.webp`} alt="" />
+                {/*
+                  ═══ A PLAY BADGE ON THE PICTURE ═══
+
+                  Or: *"'play with a friend' and 'play with a bot' do not
+                  need words either. Put a 'play' icon on a picture of a
+                  friend or of a robot and it is understood."*
+
+                  Pinned to the card's top corner, which is where the
+                  picture is — the image is the first thing in the card and
+                  everything under it is the difficulty bar. The opposite
+                  corner to the padlock on purpose, so a guest sees both.
+
+                  ⚠ Measured before settling here. In the flow, where the
+                  label used to be, it pushed the artwork down — at 832x384
+                  the whole card is 101px of content and the picture was
+                  sharing it with a line of text; giving that line to a 40px
+                  disc took the picture with it. Centred ON the card it
+                  landed on the face, because at that size the art is about
+                  fifty pixels tall. A corner costs the layout nothing.
+                */}
+                <span className="pick__go" aria-hidden="true">
+                  <Icon name="play" size={15} />
+                </span>
                 {/*
                   How hard it tries. Three settings, each one MEASURED over
                   900 battles rather than guessed — and measured twice, since
@@ -304,17 +332,57 @@ export function HomeScreen({
                     </span>
                   ))}
                 </span>
-                {/* Last, so `margin-top: auto` pins it to the card's bottom
-                    edge — the same line the friends card's label lands on. */}
-                <span>{t("sb99e77d", "לשחק עם בוט")}</span>
+                {/*
+                  ═══ A PLAY BADGE, NOT A SENTENCE ═══
+
+                  Or: *"'play with a friend' and 'play with a bot' do not
+                  need words either. Put a 'play' icon on a picture of a
+                  friend or of a robot and it is understood."*
+
+                  He is right, and the pictures were already doing the
+                  work: one is a robot and one is a person. The badge is
+                  what turns a picture into a button.
+
+                  The words stay as the title and the accessible name — the
+                  one job a picture cannot do.
+                */}
+
               </button>
               <button
                 className="pick__card"
                 onClick={gated(() => setFriendOpen(true))}
                 disabled={!m.onlineAvailable}
-                title={m.onlineAvailable ? "" : t("s0443085", "לא בגרסה הזאת")}
+                title={
+                  m.onlineAvailable
+                    ? t("sa6f7e6a", "לשחק עם חברים")
+                    : t("s0443085", "לא בגרסה הזאת")
+                }
+                aria-label={t("s0f6f774", "לשחק עם חברים")}
               >
                 <img src={`${BASE}brand/versus_player.webp`} alt="" />
+                {/*
+                  ═══ A PLAY BADGE ON THE PICTURE ═══
+
+                  Or: *"'play with a friend' and 'play with a bot' do not
+                  need words either. Put a 'play' icon on a picture of a
+                  friend or of a robot and it is understood."*
+
+                  Pinned to the card's top corner, which is where the
+                  picture is — the image is the first thing in the card and
+                  everything under it is the difficulty bar. The opposite
+                  corner to the padlock on purpose, so a guest sees both.
+
+                  ⚠ Measured before settling here. In the flow, where the
+                  label used to be, it pushed the artwork down — at 832x384
+                  the whole card is 101px of content and the picture was
+                  sharing it with a line of text; giving that line to a 40px
+                  disc took the picture with it. Centred ON the card it
+                  landed on the face, because at that size the art is about
+                  fifty pixels tall. A corner costs the layout nothing.
+                */}
+                <span className="pick__go" aria-hidden="true">
+                  <Icon name="play" size={15} />
+                </span>
                 {/*
                   ═══ A COPY OF THE DIFFICULTY BAR, WITH THE LIGHTS OFF ═══
 
@@ -353,7 +421,7 @@ export function HomeScreen({
                     <span key={lvl.id}>{say(lvl)}</span>
                   ))}
                 </span>
-                <span>{t("sa6f7e6a", "לשחק עם חברים")}</span>
+
                 {guest && <Lock />}
               </button>
             </div>
@@ -414,15 +482,21 @@ export function HomeScreen({
               the one thing here a guest may have: it saves nothing, so there
               is nothing to lose. */}
           <div className="extras">
-            <button className="btn-modes" onClick={() => panel.show("modes")}>
-              <Icon name="monster" size={18} /> {t("s2c8e767", "עוד מודים")}
+            <button
+              className="btn-modes"
+              onClick={() => panel.show("modes")}
+              title={t("s2c8e767", "עוד מודים")}
+              aria-label={t("sb463163", "עוד מודים")}
+            >
+              <Icon name="monster" size={20} />
             </button>
             <button
               className="btn-lab"
               onClick={m.startPlayground}
               title={t("s1dda509", "בלי שעון, שני הצדדים שלך")}
+              aria-label={t("s77f529a", "מגרש המשחקים")}
             >
-              <Icon name="stacked" size={15} /> {t("s77f529a", "מגרש המשחקים")}
+              <Icon name="stacked" size={20} />
             </button>
           </div>
           {/* Told, and told until when. */}

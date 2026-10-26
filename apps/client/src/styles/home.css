@@ -476,3 +476,154 @@
 @media (max-height: 460px) and (orientation: landscape) {
   .rail__promo-art { width: 32px; height: 32px; }
 }
+
+
+/*
+ * ═══ BUTTONS THAT ARE PICTURES ═══
+ *
+ * Or: *"swap words for icons wherever you can — binning a card, taking an
+ * action card, challenges, playground, more modes. 'Play with a friend' and
+ * 'play with a bot' do not need words either: put a play icon on a picture
+ * of a friend or a robot and it is understood. FIGHT, FROM THE BIN, ACTION
+ * CARDS can all be icons. Got the idea? Like that on everything."*
+ *
+ * Every one of these already HAD its icon sitting beside a word that said
+ * the same thing. What is here is only the shape they take once the word
+ * has gone: a square rather than a pill, and the glyph in the middle of it.
+ *
+ * Every one of them keeps a `title` and an `aria-label`, which is the one
+ * job a picture cannot do — and is also how the tutorial still finds them,
+ * since a lesson step points at a CSS selector.
+ */
+.hand__discard,
+.hand__bin {
+  display: inline-grid;
+  place-items: center;
+  padding: 7px 10px;
+  line-height: 0;
+}
+
+/* The loudest button on the build screen, with a triangle on it. */
+.btn-fight--icon {
+  display: inline-grid;
+  place-items: center;
+  padding: 9px 26px;
+  line-height: 0;
+}
+
+/*
+ * The play badge on the two cards you choose between.
+ *
+ * It is `margin-top: auto` for the same reason the label it replaced was:
+ * the two cards must put it on the same line, and the bot card's hidden
+ * difficulty bar is what makes their shapes match. See HomeScreen.tsx.
+ */
+/*
+ * ON the picture, not under it.
+ *
+ * It began as a row where the label used to be, and at 832x384 — the size
+ * this game is played at — a 40px disc beside a 44px avatar is a button
+ * with a portrait stuck to it. Measured there: the card is 101px of content
+ * and the avatar had been sharing it with a line of text; giving that line
+ * to a disc instead took the picture down with it.
+ *
+ * As a badge on the corner it costs the layout nothing, the picture goes
+ * back to its old size, and what it marks is the thing it sits on.
+ */
+.pick__go {
+  position: absolute;
+  top: var(--sp-2);
+  /* The corner the padlock does not use, so a guest sees both. */
+  inset-inline-start: var(--sp-2);
+  display: inline-grid;
+  place-items: center;
+  width: 26px;
+  height: 26px;
+  border-radius: 50%;
+  background: var(--accent);
+  color: #241a05;
+  box-shadow:
+    0 2px 10px rgba(0, 0, 0, 0.6),
+    0 0 0 2px rgba(4, 7, 14, 0.7);
+}
+.pick__card:hover .pick__go { transform: scale(1.1); }
+.pick__card:disabled .pick__go { opacity: 0.4; }
+
+/* The two doors under the cards. */
+.btn-lab,
+.btn-modes { line-height: 0; }
+
+/*
+ * ═══ AND IN ENGLISH THE WORDS THAT ARE LEFT SHOUT ═══
+ *
+ * Or: *"wherever there are buttons with words — make them all capitals in
+ * English, and in a more gamer-ish font."*
+ *
+ * English only, and it has to be: Rubik Beastly is the game's display face
+ * and `text-transform: uppercase` means nothing in Hebrew, which has no
+ * case. `html[lang]` is set by lang.ts, so this switches with the game.
+ *
+ * Applied to the buttons that still carry a word AFTER the icon pass above,
+ * which is a short list — the shelf of doors, the big fight button, taking
+ * a prize, upgrading a card. Not to body text and not to anything with a
+ * number in it: a tabular figure in a display face is unreadable.
+ */
+/*
+ * EVERY button, and Or means every one: *"a reminder that if it is a button
+ * it is WHAT HAPPENED — always capital."*
+ *
+ * So the rule is on the element rather than on a list of classes, which is
+ * the only version that cannot be forgotten the next time a button is
+ * added. English only, and it has to be: `text-transform` means nothing in
+ * Hebrew, which has no case, and `html[lang]` is set by lang.ts so this
+ * switches with the game.
+ */
+html[lang="en"] button {
+  text-transform: uppercase;
+  letter-spacing: 0.03em;
+}
+/*
+ * And a display face on the ones that are BUTTONS rather than rows of data.
+ *
+ * ⚠ Rubik Beastly was the obvious choice — it is the game's own title face
+ * — and it was tried first and is wrong. Its Latin glyphs are decorative
+ * and overlapping, and "CORNER SHOP" in it at 13px, in capitals, was a
+ * smudge. Bungee is a SIGNAGE face: drawn to be read small and in capitals,
+ * which is what a game button is.
+ *
+ * Not applied to everything the uppercase is, because a tabular number or a
+ * long sentence in a display face stops being readable, and several of
+ * these "buttons" are really list rows.
+ */
+html[lang="en"] .btn-fight,
+html[lang="en"] .rail__item > span,
+html[lang="en"] .quests__take,
+html[lang="en"] .album__up b,
+html[lang="en"] .album__chart,
+html[lang="en"] .btn-online,
+html[lang="en"] .btn-album,
+html[lang="en"] .take-action,
+html[lang="en"] .result__why,
+html[lang="en"] .modal__actions button {
+  font-family: "Bungee", "Segoe UI", system-ui, sans-serif;
+  /* Bungee runs wide and tall. A notch smaller keeps "CORNER SHOP" on one
+     line in the rail at 832px, which is the width this game is played at. */
+  font-size: var(--t-2);
+  letter-spacing: 0.01em;
+}
+/*
+ * The exceptions, and they are all the same exception: a button whose words
+ * are somebody's NAME. A card, a family, a player and a catchphrase are
+ * written the way they are written.
+ */
+html[lang="en"] .ground__card,
+html[lang="en"] .album__cell,
+html[lang="en"] .gallery__cap,
+html[lang="en"] .picker__card,
+html[lang="en"] .friend,
+html[lang="en"] .plaque,
+html[lang="en"] .card,
+html[lang="en"] .admin button {
+  text-transform: none;
+  letter-spacing: normal;
+}

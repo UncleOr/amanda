@@ -6,7 +6,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/index.html",
-   "line": 90
+   "line": 102
   }
  },
  {
@@ -16,7 +16,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/index.html",
-   "line": 91
+   "line": 103
   }
  },
  {
@@ -26,7 +26,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/index.html",
-   "line": 103
+   "line": 115
   }
  },
  {
@@ -4380,7 +4380,17 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/App.tsx",
-   "line": 1563
+   "line": 1568
+  }
+ },
+ {
+  "id": "sb9b9741",
+  "section": "מסכי המשחק — פתיחה, בנייה, קרב, תוצאה",
+  "text": "נחשף!",
+  "where": {
+   "kind": "source",
+   "file": "apps/client/src/App.tsx",
+   "line": 1569
   }
  },
  {
@@ -4390,7 +4400,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/App.tsx",
-   "line": 1621
+   "line": 1631
   }
  },
  {
@@ -4400,7 +4410,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/App.tsx",
-   "line": 1623
+   "line": 1633
   }
  },
  {
@@ -4410,7 +4420,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/App.tsx",
-   "line": 1624
+   "line": 1634
   }
  },
  {
@@ -4420,7 +4430,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/App.tsx",
-   "line": 1629
+   "line": 1639
   }
  },
  {
@@ -4430,17 +4440,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/App.tsx",
-   "line": 1632
-  }
- },
- {
-  "id": "se6dcc04",
-  "section": "מסכי המשחק — פתיחה, בנייה, קרב, תוצאה",
-  "text": "קלפי פעולה",
-  "where": {
-   "kind": "source",
-   "file": "apps/client/src/App.tsx",
-   "line": 1666
+   "line": 1642
   }
  },
  {
@@ -4450,7 +4450,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/App.tsx",
-   "line": 1701
+   "line": 1711
   }
  },
  {
@@ -4460,7 +4460,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/App.tsx",
-   "line": 1714
+   "line": 1724
   }
  },
  {
@@ -4470,7 +4470,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/App.tsx",
-   "line": 1716
+   "line": 1726
   }
  },
  {
@@ -4480,7 +4480,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/App.tsx",
-   "line": 1717
+   "line": 1727
   }
  },
  {
@@ -4490,7 +4490,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/App.tsx",
-   "line": 1775
+   "line": 1785
   }
  },
  {
@@ -4500,7 +4500,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/App.tsx",
-   "line": 1784
+   "line": 1796
   }
  },
  {
@@ -4510,47 +4510,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/App.tsx",
-   "line": 1787
-  }
- },
- {
-  "id": "s8006c77",
-  "section": "מסכי המשחק — פתיחה, בנייה, קרב, תוצאה",
-  "text": "הרץ קרב",
-  "where": {
-   "kind": "source",
-   "file": "apps/client/src/App.tsx",
-   "line": 1793
-  }
- },
- {
-  "id": "sb0d338c",
-  "section": "מסכי המשחק — פתיחה, בנייה, קרב, תוצאה",
-  "text": "אין קלף",
-  "where": {
-   "kind": "source",
-   "file": "apps/client/src/App.tsx",
-   "line": 1809
-  }
- },
- {
-  "id": "sba4d2ee",
-  "section": "מסכי המשחק — פתיחה, בנייה, קרב, תוצאה",
-  "text": "קלפים שנשארו בדק",
-  "where": {
-   "kind": "source",
-   "file": "apps/client/src/App.tsx",
-   "line": 1861
-  }
- },
- {
-  "id": "s6c4fc10",
-  "section": "מסכי המשחק — פתיחה, בנייה, קרב, תוצאה",
-  "text": "קלפים בפח",
-  "where": {
-   "kind": "source",
-   "file": "apps/client/src/App.tsx",
-   "line": 1865
+   "line": 1796
   }
  },
  {
@@ -4560,7 +4520,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/App.tsx",
-   "line": 1873
+   "line": 1797
   }
  },
  {
@@ -4570,7 +4530,87 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/App.tsx",
-   "line": 1876
+   "line": 1797
+  }
+ },
+ {
+  "id": "s8006c77",
+  "section": "מסכי המשחק — פתיחה, בנייה, קרב, תוצאה",
+  "text": "הרץ קרב",
+  "where": {
+   "kind": "source",
+   "file": "apps/client/src/App.tsx",
+   "line": 1803
+  }
+ },
+ {
+  "id": "sb0d338c",
+  "section": "מסכי המשחק — פתיחה, בנייה, קרב, תוצאה",
+  "text": "אין קלף",
+  "where": {
+   "kind": "source",
+   "file": "apps/client/src/App.tsx",
+   "line": 1819
+  }
+ },
+ {
+  "id": "sba4d2ee",
+  "section": "מסכי המשחק — פתיחה, בנייה, קרב, תוצאה",
+  "text": "קלפים שנשארו בדק",
+  "where": {
+   "kind": "source",
+   "file": "apps/client/src/App.tsx",
+   "line": 1871
+  }
+ },
+ {
+  "id": "s6c4fc10",
+  "section": "מסכי המשחק — פתיחה, בנייה, קרב, תוצאה",
+  "text": "קלפים בפח",
+  "where": {
+   "kind": "source",
+   "file": "apps/client/src/App.tsx",
+   "line": 1875
+  }
+ },
+ {
+  "id": "s6059231",
+  "section": "מסכי המשחק — פתיחה, בנייה, קרב, תוצאה",
+  "text": "הבר מלא",
+  "where": {
+   "kind": "source",
+   "file": "apps/client/src/App.tsx",
+   "line": 1885
+  }
+ },
+ {
+  "id": "saef180f",
+  "section": "מסכי המשחק — פתיחה, בנייה, קרב, תוצאה",
+  "text": "קח לפעולה",
+  "where": {
+   "kind": "source",
+   "file": "apps/client/src/App.tsx",
+   "line": 1885
+  }
+ },
+ {
+  "id": "s51d05f3",
+  "section": "מסכי המשחק — פתיחה, בנייה, קרב, תוצאה",
+  "text": "הבר מלא",
+  "where": {
+   "kind": "source",
+   "file": "apps/client/src/App.tsx",
+   "line": 1886
+  }
+ },
+ {
+  "id": "s156c5b9",
+  "section": "מסכי המשחק — פתיחה, בנייה, קרב, תוצאה",
+  "text": "קח לפעולה",
+  "where": {
+   "kind": "source",
+   "file": "apps/client/src/App.tsx",
+   "line": 1886
   }
  },
  {
@@ -4580,7 +4620,17 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/App.tsx",
-   "line": 1886
+   "line": 1915
+  }
+ },
+ {
+  "id": "s81312bd",
+  "section": "מסכי המשחק — פתיחה, בנייה, קרב, תוצאה",
+  "text": "זרוק",
+  "where": {
+   "kind": "source",
+   "file": "apps/client/src/App.tsx",
+   "line": 1916
   }
  },
  {
@@ -4590,7 +4640,17 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/App.tsx",
-   "line": 1891
+   "line": 1926
+  }
+ },
+ {
+  "id": "s026083c",
+  "section": "מסכי המשחק — פתיחה, בנייה, קרב, תוצאה",
+  "text": "קח מהפח",
+  "where": {
+   "kind": "source",
+   "file": "apps/client/src/App.tsx",
+   "line": 1927
   }
  },
  {
@@ -4600,7 +4660,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/App.tsx",
-   "line": 1897
+   "line": 1935
   }
  },
  {
@@ -4610,7 +4670,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/App.tsx",
-   "line": 1902
+   "line": 1940
   }
  },
  {
@@ -4620,7 +4680,17 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/App.tsx",
-   "line": 1912
+   "line": 1950
+  }
+ },
+ {
+  "id": "saeb9b8c",
+  "section": "מסכי המשחק — פתיחה, בנייה, קרב, תוצאה",
+  "text": "התחל קרב!",
+  "where": {
+   "kind": "source",
+   "file": "apps/client/src/App.tsx",
+   "line": 1951
   }
  },
  {
@@ -4630,7 +4700,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/App.tsx",
-   "line": 1914
+   "line": 1966
   }
  },
  {
@@ -4640,7 +4710,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/App.tsx",
-   "line": 1915
+   "line": 1968
   }
  },
  {
@@ -4650,7 +4720,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/App.tsx",
-   "line": 1920
+   "line": 1974
   }
  },
  {
@@ -4660,7 +4730,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/App.tsx",
-   "line": 1922
+   "line": 1976
   }
  },
  {
@@ -4670,7 +4740,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/App.tsx",
-   "line": 1923
+   "line": 1977
   }
  },
  {
@@ -4680,7 +4750,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/App.tsx",
-   "line": 1939
+   "line": 1993
   }
  },
  {
@@ -4690,7 +4760,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/App.tsx",
-   "line": 1943
+   "line": 1997
   }
  },
  {
@@ -4700,7 +4770,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/App.tsx",
-   "line": 1947
+   "line": 2001
   }
  },
  {
@@ -4710,7 +4780,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/App.tsx",
-   "line": 2242
+   "line": 2296
   }
  },
  {
@@ -4720,7 +4790,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/App.tsx",
-   "line": 2262
+   "line": 2316
   }
  },
  {
@@ -4730,7 +4800,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/App.tsx",
-   "line": 2275
+   "line": 2329
   }
  },
  {
@@ -4740,7 +4810,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/App.tsx",
-   "line": 2286
+   "line": 2340
   }
  },
  {
@@ -4750,7 +4820,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/App.tsx",
-   "line": 2290
+   "line": 2344
   }
  },
  {
@@ -4760,7 +4830,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/App.tsx",
-   "line": 2310
+   "line": 2364
   }
  },
  {
@@ -4770,7 +4840,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/App.tsx",
-   "line": 2324
+   "line": 2378
   }
  },
  {
@@ -4780,7 +4850,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/App.tsx",
-   "line": 2449
+   "line": 2503
   }
  },
  {
@@ -4790,7 +4860,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/App.tsx",
-   "line": 2525
+   "line": 2579
   }
  },
  {
@@ -4800,7 +4870,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/App.tsx",
-   "line": 2528
+   "line": 2582
   }
  },
  {
@@ -4810,7 +4880,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/App.tsx",
-   "line": 2648
+   "line": 2702
   }
  },
  {
@@ -4820,7 +4890,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/App.tsx",
-   "line": 2648
+   "line": 2702
   }
  },
  {
@@ -4830,7 +4900,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/App.tsx",
-   "line": 2651
+   "line": 2705
   }
  },
  {
@@ -4840,7 +4910,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/App.tsx",
-   "line": 2654
+   "line": 2708
   }
  },
  {
@@ -6120,7 +6190,17 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/components/BoardGrid.tsx",
-   "line": 240
+   "line": 249
+  }
+ },
+ {
+  "id": "s913f43c",
+  "section": "הלוח",
+  "text": "המלך",
+  "where": {
+   "kind": "source",
+   "file": "apps/client/src/components/BoardGrid.tsx",
+   "line": 250
   }
  },
  {
@@ -6130,7 +6210,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/components/BoardGrid.tsx",
-   "line": 283
+   "line": 295
   }
  },
  {
@@ -6140,7 +6220,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/components/BoardGrid.tsx",
-   "line": 288
+   "line": 300
   }
  },
  {
@@ -6180,7 +6260,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/components/Arena.tsx",
-   "line": 1339
+   "line": 1357
   }
  },
  {
@@ -6190,7 +6270,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/components/Arena.tsx",
-   "line": 1340
+   "line": 1358
   }
  },
  {
@@ -6200,7 +6280,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/components/Arena.tsx",
-   "line": 2255
+   "line": 2273
   }
  },
  {
@@ -6210,7 +6290,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/components/Arena.tsx",
-   "line": 2286
+   "line": 2304
   }
  },
  {
@@ -6220,7 +6300,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/components/Arena.tsx",
-   "line": 2287
+   "line": 2305
   }
  },
  {
@@ -6230,7 +6310,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/components/Arena.tsx",
-   "line": 2299
+   "line": 2317
   }
  },
  {
@@ -7714,13 +7794,13 @@
   }
  },
  {
-  "id": "s00844be",
+  "id": "s8932508",
   "section": "components/ArenaTrack.tsx",
-  "text": "הגעת לסוף הדרך",
+  "text": "ארנות נוספות בקרוב",
   "where": {
    "kind": "source",
    "file": "apps/client/src/components/ArenaTrack.tsx",
-   "line": 94
+   "line": 99
   }
  },
  {
@@ -7730,7 +7810,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/components/ArenaTrack.tsx",
-   "line": 104
+   "line": 109
   }
  },
  {
@@ -7740,7 +7820,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/components/ArenaTrack.tsx",
-   "line": 107
+   "line": 112
   }
  },
  {
@@ -7750,7 +7830,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/components/ArenaTrack.tsx",
-   "line": 141
+   "line": 146
   }
  },
  {
@@ -8050,7 +8130,17 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/components/Challenges.tsx",
-   "line": 336
+   "line": 342
+  }
+ },
+ {
+  "id": "sa70a8ac",
+  "section": "components/Challenges.tsx",
+  "text": "אתגרים",
+  "where": {
+   "kind": "source",
+   "file": "apps/client/src/components/Challenges.tsx",
+   "line": 343
   }
  },
  {
@@ -9074,33 +9164,33 @@
   }
  },
  {
-  "id": "s066beed",
-  "section": "components/HomeScreen.tsx",
-  "text": "כמה הבוט מתאמץ",
-  "where": {
-   "kind": "source",
-   "file": "apps/client/src/components/HomeScreen.tsx",
-   "line": 290
-  }
- },
- {
   "id": "sb99e77d",
   "section": "components/HomeScreen.tsx",
   "text": "לשחק עם בוט",
   "where": {
    "kind": "source",
    "file": "apps/client/src/components/HomeScreen.tsx",
-   "line": 309
+   "line": 254
   }
  },
  {
-  "id": "s0443085",
+  "id": "s3bf0b5c",
   "section": "components/HomeScreen.tsx",
-  "text": "לא בגרסה הזאת",
+  "text": "לשחק עם בוט",
   "where": {
    "kind": "source",
    "file": "apps/client/src/components/HomeScreen.tsx",
-   "line": 315
+   "line": 255
+  }
+ },
+ {
+  "id": "s066beed",
+  "section": "components/HomeScreen.tsx",
+  "text": "כמה הבוט מתאמץ",
+  "where": {
+   "kind": "source",
+   "file": "apps/client/src/components/HomeScreen.tsx",
+   "line": 318
   }
  },
  {
@@ -9110,7 +9200,27 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/components/HomeScreen.tsx",
-   "line": 356
+   "line": 357
+  }
+ },
+ {
+  "id": "s0443085",
+  "section": "components/HomeScreen.tsx",
+  "text": "לא בגרסה הזאת",
+  "where": {
+   "kind": "source",
+   "file": "apps/client/src/components/HomeScreen.tsx",
+   "line": 358
+  }
+ },
+ {
+  "id": "s0f6f774",
+  "section": "components/HomeScreen.tsx",
+  "text": "לשחק עם חברים",
+  "where": {
+   "kind": "source",
+   "file": "apps/client/src/components/HomeScreen.tsx",
+   "line": 360
   }
  },
  {
@@ -9120,7 +9230,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/components/HomeScreen.tsx",
-   "line": 363
+   "line": 431
   }
  },
  {
@@ -9130,7 +9240,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/components/HomeScreen.tsx",
-   "line": 366
+   "line": 434
   }
  },
  {
@@ -9140,7 +9250,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/components/HomeScreen.tsx",
-   "line": 369
+   "line": 437
   }
  },
  {
@@ -9150,7 +9260,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/components/HomeScreen.tsx",
-   "line": 385
+   "line": 453
   }
  },
  {
@@ -9160,7 +9270,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/components/HomeScreen.tsx",
-   "line": 401
+   "line": 469
   }
  },
  {
@@ -9170,7 +9280,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/components/HomeScreen.tsx",
-   "line": 407
+   "line": 475
   }
  },
  {
@@ -9180,7 +9290,17 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/components/HomeScreen.tsx",
-   "line": 418
+   "line": 488
+  }
+ },
+ {
+  "id": "sb463163",
+  "section": "components/HomeScreen.tsx",
+  "text": "עוד מודים",
+  "where": {
+   "kind": "source",
+   "file": "apps/client/src/components/HomeScreen.tsx",
+   "line": 489
   }
  },
  {
@@ -9190,7 +9310,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/components/HomeScreen.tsx",
-   "line": 423
+   "line": 496
   }
  },
  {
@@ -9200,7 +9320,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/components/HomeScreen.tsx",
-   "line": 425
+   "line": 497
   }
  },
  {
@@ -9210,7 +9330,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/components/HomeScreen.tsx",
-   "line": 436
+   "line": 510
   }
  },
  {
@@ -9220,7 +9340,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/components/HomeScreen.tsx",
-   "line": 448
+   "line": 522
   }
  },
  {
@@ -9230,7 +9350,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/components/HomeScreen.tsx",
-   "line": 450
+   "line": 524
   }
  },
  {
@@ -9240,7 +9360,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/components/HomeScreen.tsx",
-   "line": 451
+   "line": 525
   }
  },
  {
@@ -9250,7 +9370,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/components/HomeScreen.tsx",
-   "line": 465
+   "line": 539
   }
  },
  {
@@ -9260,7 +9380,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/components/HomeScreen.tsx",
-   "line": 503
+   "line": 577
   }
  },
  {
@@ -9270,7 +9390,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/components/HomeScreen.tsx",
-   "line": 506
+   "line": 580
   }
  },
  {
@@ -9280,7 +9400,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/components/HomeScreen.tsx",
-   "line": 564
+   "line": 638
   }
  },
  {
@@ -9290,7 +9410,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/components/HomeScreen.tsx",
-   "line": 609
+   "line": 683
   }
  },
  {
@@ -9300,7 +9420,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/components/HomeScreen.tsx",
-   "line": 646
+   "line": 720
   }
  },
  {
@@ -9310,7 +9430,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/components/HomeScreen.tsx",
-   "line": 650
+   "line": 724
   }
  },
  {
@@ -9320,7 +9440,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/components/HomeScreen.tsx",
-   "line": 656
+   "line": 730
   }
  },
  {
@@ -9330,7 +9450,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/components/HomeScreen.tsx",
-   "line": 670
+   "line": 744
   }
  },
  {
@@ -9340,7 +9460,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/components/HomeScreen.tsx",
-   "line": 691
+   "line": 765
   }
  },
  {
@@ -9350,7 +9470,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/components/HomeScreen.tsx",
-   "line": 694
+   "line": 768
   }
  },
  {
@@ -9360,7 +9480,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/components/HomeScreen.tsx",
-   "line": 702
+   "line": 776
   }
  },
  {
@@ -11271,7 +11391,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/components/Versus.tsx",
-   "line": 78
+   "line": 79
   }
  },
  {
@@ -11281,7 +11401,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/components/Versus.tsx",
-   "line": 134
+   "line": 136
   }
  },
  {
@@ -11291,7 +11411,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/components/Versus.tsx",
-   "line": 134
+   "line": 136
   }
  },
  {

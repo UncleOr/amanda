@@ -16,6 +16,25 @@ export interface BattleOps {
 }
 
 export interface ChildProto {
+  /**
+   * === WHAT IT CAME OUT OF ===
+   *
+   * Or: *"there is some monster that splits into 4 small monsters — they
+   * look like little squares and they just move, with no motion of their
+   * own. Fix that."*
+   *
+   * They were drawn as little squares because they WERE nothing: the
+   * engine gave every spawned child the card id "__spawn__", so the
+   * renderer found no card behind it, fell back to grey, and drew a blank
+   * box with no art, no series ring, no name and no walk.
+   *
+   * A child of a slime is a smaller slime. Carrying the parent's card
+   * gives it, for free, the parent's artwork, its element colour, its
+   * series ring and — the part Or is actually describing — its WALK,
+   * because that is derived from the card too (arenaFx.ts).
+   */
+  cardId: string;
+  seriesId: string;
   owner: Owner;
   facing: 1 | -1;
   col: number;
@@ -518,6 +537,9 @@ export function runOnDeath(state: BattleState, ops: BattleOps, u: Unit): void {
         // fan out into adjacent lanes: 0 -> same, then ±1, ±2 …
         const offset = i === 0 ? 0 : (i % 2 === 1 ? 1 : -1) * Math.ceil(i / 2);
         const child = ops.spawnChild({
+          // A smaller one of whatever just died. See ChildProto.
+          cardId: u.cardId,
+          seriesId: u.seriesId,
           owner: u.owner,
           facing: u.facing,
           col: u.col,

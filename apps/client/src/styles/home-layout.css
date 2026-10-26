@@ -2481,3 +2481,7 @@ html[dir="rtl"] .versus__side {
   .profile__identity > .profile__faces { margin-top: var(--sp-3); }
 }
 
+
+
+/* The challenges door is its rosette and the count on it, nothing else. */
+.quests__open { gap: 0; line-height: 0; }
