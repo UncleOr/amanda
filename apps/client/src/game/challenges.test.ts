@@ -210,6 +210,23 @@ describe("a challenge in English", () => {
     }
   });
 
+  /*
+   * === A NAME IS NOT ALWAYS A NAME ===
+   *
+   * Every English family is called "The" something — The Giants, The Slimes —
+   * and one template uses that name as an adjective. It read "Put a The
+   * Giants card in the back row", and it was found the way copy bugs are
+   * always found: on a screen, in a frame of the trailer.
+   */
+  it("never puts an article in front of an article", () => {
+    for (let d = 0; d < 365; d++) {
+      const day = new Date(Date.UTC(2026, 0, 1 + d, 12));
+      for (const c of challengesFor(POOLS, day)) {
+        expect(c.en, c.id).not.toMatch(/\b(a|an|the)\s+the\s/i);
+      }
+    }
+  });
+
   it("names the card or the family it is about", () => {
     // The two templates that take a name out of the pools must take the
     // ENGLISH one — the half of this that a `en: he` typo would pass.

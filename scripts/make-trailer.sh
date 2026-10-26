@@ -9,11 +9,29 @@
 # Four segments, built separately and then joined — and then the studio
 # ident is laid in front of the finished thing:
 #
-#   IDENT     the Asulins mark, with its own sting             3.0s
-#   OPENING   8 generated shots in a dark petrol station      11.2s
-#   CARDS     four cards drop onto black                       1.4s
-#   GAMEPLAY  Or's screen recording, cut down                 14.5s
-#   CLOSING   a win, then the end card                         5.2s
+#   IDENT     the Asulins mark, with its own sting             2.6s
+#   OPENING   7 generated shots in a dark petrol station       9.8s
+#   CARDS     four cards fall out of Amanda's light            1.4s
+#   GAMEPLAY  nine moments out of one recorded match          16.1s
+#   CLOSING   the end card                                     3.4s
+#
+# ═══ WHAT OR SAID ABOUT THE CUT BEFORE THIS ONE ═══
+#
+# *"Make it all look really good and not miserable like it is now. It should
+# look like a game you want to play."*
+#
+# The opening was never the problem — it is eight generated shots filling the
+# frame edge to edge. The problem was what came after it: the game arrived as
+# a small bright rectangle in a large black screen, because the recording it
+# was cut from was itself a window inside a capture, and it then got
+# letterboxed a second time on the way in. Half the height of the frame was
+# black, and the half that was not was a person thinking.
+#
+# Three things answer that, and two of them live in cut-gameplay.sh: the
+# picture fills the width now, and the cut is nine moments rather than four.
+# The third is here — the four cards that drop between the opening and the
+# game were 315px wide on a 1920px screen, which looked like a mistake. They
+# are 420 now and they land in the middle of the frame.
 #
 # ═══ WHY THE IDENT IS ADDED LAST AND NOT FIRST ═══
 #
@@ -25,22 +43,22 @@
 # So the trailer is finished, scored, and only then does the ident go on the
 # front with its own audio intact. The music starts when the trailer starts.
 #
-# ═══ TWO CUTS, AND ONLY THE END OF THEM DIFFERS ═══
+# ═══ TWO CUTS, AND ONLY THE LAST THREE SECONDS DIFFER ═══
 #
 # Or: *"I want us to make a Hebrew clip and an English clip."* Play takes one
 # promo video per listing language, so these are two uploads.
 #
-# Eleven of the sixteen seconds are identical between them — the opening is
-# four monsters in a petrol station and has no words in it at all. What
-# changes is the footage that shows the interface and the card that ends it:
+# They used to differ in their footage as well. They no longer do, because
+# Or decided it: *"for the ident, the trailer and the app screenshots we will
+# use English for everything, including the Amanda title."* So both cuts show
+# the same match in the same language, and what is left of the difference is
+# the end card — the wordmark and the line under it:
 #
-#   he   store/gameplay.mp4      store/screenshots/      אמנדה, in the wordmark
-#   en   store/gameplay-en.mp4   store/screenshots-en/   AMANDA
+#   he   אמנדה   משחק קלפים מפלצתי
+#   en   AMANDA    Monster card game
 #
-# The English captures do not exist yet — Or is re-recording them now that
-# the game speaks English. Until they do, this builds the English cut with
-# the Hebrew footage and says so loudly, because a cut that silently ships
-# Hebrew screenshots to an English listing is worse than one that refuses.
+# Which is the one thing a Hebrew listing should still say in Hebrew: what
+# the game is called.
 #
 # ═══ WHY SEGMENTS AND NOT ONE FILTER GRAPH ═══
 #
@@ -93,6 +111,19 @@ MUSIC="apps/client/public/music/track1.mp3"
 #
 # 1.8 dB across half a minute is a passage, not a change. The check further
 # down keeps the cut inside it.
+#
+# Re-measured when this cut got longer, because the number above is only
+# worth anything for the length it was measured at. Scanning again, with the
+# window set to 32, 34, 36 and 38 seconds, every one of them picks the same
+# stretch and the same spread -- the passage is wider than the trailer needs:
+#
+#   start 88   32s   spread 4.9 dB   largest jump 2.3 dB
+#   start 88   36s   spread 4.9 dB   largest jump 2.3 dB
+#   start 91   36s   spread 4.9 dB   largest jump 2.9 dB   <- 91 is late
+#
+# So the cut moved three seconds earlier and the window is still 32, which
+# is more than the 30.6 this now runs to. The jump is what to watch: at 91
+# a 36-second window starts to reach into the next passage.
 # ═══ NO loudnorm ON THE MUSIC. IT SKIPPED THREE SECONDS. ═══
 #
 # Or: *"something is wrong with the soundtrack. At second 16 there is some
@@ -107,7 +138,7 @@ MUSIC="apps/client/public/music/track1.mp3"
 # The file does not need it. make-music.sh already normalises both songs to
 # -17 LUFS, which is the level the game is tuned against; normalising a
 # second time was work that could only do harm, and did.
-MUSIC_START=91
+MUSIC_START=88
 MUSIC_WINDOW=32
 W=1920
 H=1080
@@ -186,7 +217,7 @@ OPEN_LEN=$(for s in "${SHOTS[@]}"; do set -- $s; echo "$2"; done | awk '{t+=$1} 
 OPEN_OUT=$(awk -v t="$OPEN_LEN" 'BEGIN{printf "%.2f", t-0.26}')
 
 ffmpeg -y -v error "${inputs[@]}" \
-  -filter_complex "$(IFS=';'; echo "${filters[*]}");${concat}concat=n=${i}:v=1:a=0,fade=t=in:st=0:d=0.7,fade=t=out:st=${OPEN_OUT}:d=0.26:color=${FLASH}[v]" \
+  -filter_complex "$(IFS=';'; echo "${filters[*]}");${concat}concat=n=${i}:v=1:a=0,fade=t=in:st=0:d=0.4,fade=t=out:st=${OPEN_OUT}:d=0.26:color=${FLASH}[v]" \
   -map "[v]" "${ENC[@]}" "$SEG/1-opening.mp4"
 
 # ── 2 · the cards ─────────────────────────────────────────────────────
@@ -200,12 +231,15 @@ ffmpeg -y -v error "${inputs[@]}" \
 # cinematic does not explain itself and there is no caption — four cards
 # fall out of her light, and the next thing on screen is a board of them.
 echo "  cards"
-CARD_H=420
-CARD_W=315          # the art is 384x512, so 3:4
-Y_END=330           # (1080-420)/2 — the row sits on the centre line
-Y_START=-470
-DROP=0.30           # seconds in the air
-HOLD=1.6
+# Or: *"not miserable."* These were 315 wide with 1380px of row on a 1920px
+# frame, which left the four of them floating in the middle of nothing. At
+# 420 the row is 1740 wide and the cards are the shot.
+CARD_H=560
+CARD_W=420          # the art is 384x512, so 3:4
+Y_END=260           # (1080-560)/2 — the row sits on the centre line
+Y_START=-620
+DROP=0.26           # seconds in the air
+HOLD=1.4
 SPEED=$(awk -v a="$Y_START" -v b="$Y_END" -v d="$DROP" 'BEGIN{printf "%.1f", (b-a)/d}')
 
 # ═══ THE FLASH IS A FADE, NOT AN OVERLAY ═══
@@ -222,12 +256,12 @@ prev="[0:v]"
 k=1
 for idx in "${!CARDS[@]}"; do
   cinputs+=(-i "${CARDS[$idx]}")
-  x=$((330 + idx * 345))
+  x=$((90 + idx * 440))
   # The art comes on backgrounds that do not match each other — the dragon on
   # black, the colossus on cream — so each gets the same thin dark edge and
   # the row reads as four cards instead of four pictures.
-  t0=$(awk -v i="$idx" 'BEGIN{printf "%.2f", 0.22 + i*0.12}')
-  cfilters+=("[${k}:v]scale=$((CARD_W - 12)):$((CARD_H - 16)),pad=${CARD_W}:${CARD_H}:6:8:color=0x16203a[c$idx]")
+  t0=$(awk -v i="$idx" 'BEGIN{printf "%.2f", 0.16 + i*0.10}')
+  cfilters+=("[${k}:v]scale=$((CARD_W - 16)):$((CARD_H - 22)),pad=${CARD_W}:${CARD_H}:8:11:color=0x16203a[c$idx]")
   cfilters+=("${prev}[c$idx]overlay=x=${x}:y='if(lt(t,${t0}),${Y_START},min(${Y_END},${Y_START}+(t-${t0})*${SPEED}))'[bg$idx]")
   prev="[bg$idx]"
   k=$((k + 1))
@@ -240,57 +274,37 @@ ffmpeg -y -v error "${cinputs[@]}" \
 #
 # Everything above this line is the same film in both cuts: four monsters in
 # a petrol station and four cards falling out of Amanda's light, with not one
-# word in any of it. Only the footage of the interface and the card at the
-# end have a language.
+# word in any of it. So, now, is the montage — see the note at the top about
+# Or choosing English for every store asset. The only thing left with a
+# language is the card at the end.
+
+# The cut is disposable: cut-gameplay.sh makes it from the recording in about
+# a minute. So a missing one is rebuilt rather than worked around — which is
+# what makes it safe to DELETE it when disk is short.
+GAMEPLAY=store/gameplay-en.mp4
+if [ ! -f "$GAMEPLAY" ]; then
+  echo "  montage missing — cutting it from the recording"
+  bash scripts/cut-gameplay.sh >/dev/null
+  [ -f "$GAMEPLAY" ] || { echo "  no montage, and nothing to cut one from" >&2; exit 1; }
+fi
+echo "  gameplay"
+ffmpeg -y -v error -i "$GAMEPLAY" -vf "$NORM" "${ENC[@]}" "$SEG/3-gameplay.mp4"
+
 for L in "${LANGS[@]}"; do
   echo
   echo "── ${L} ──"
 
   if [ "$L" = "he" ]; then
-    GAMEPLAY=store/gameplay.mp4
-    SHOTS_DIR=store/screenshots
     WORDMARK=apps/client/public/brand/wordmark.png
   else
-    GAMEPLAY=store/gameplay-en.mp4
-    SHOTS_DIR=store/screenshots-en
     WORDMARK=apps/client/public/brand/wordmark-en.png
   fi
 
-  # Or is re-recording the English captures now that the game speaks English.
-  # Until they land, fall back — but say it every time, because the whole
-  # point of an English cut is that an English speaker can read the screen.
-  FELLBACK=0
-  # The cut is disposable: cut-gameplay.sh makes it from the recording in
-  # about a minute. So a missing one is rebuilt rather than worked around —
-  # which is what makes it safe to DELETE the cuts when disk is short, and
-  # this branch is here because deleting them is exactly what found that the
-  # English side could not rebuild itself.
-  if [ ! -f "$GAMEPLAY" ]; then
-    if bash scripts/cut-gameplay.sh "$L" >/dev/null 2>&1 && [ -f "$GAMEPLAY" ]; then
-      echo "  gameplay cut missing — rebuilt it from the recording"
-    elif [ "$L" != "he" ] && [ -f store/gameplay.mp4 ]; then
-      GAMEPLAY=store/gameplay.mp4
-      FELLBACK=1
-    else
-      echo "  no gameplay for ${L}, and no recording to cut one from" >&2
-      exit 1
-    fi
-  fi
-  [ -d "$SHOTS_DIR" ] && [ -f "$SHOTS_DIR/03-win.png" ] || { SHOTS_DIR=store/screenshots; FELLBACK=1; }
   [ -f "$WORDMARK" ] || { echo "missing: $WORDMARK — run pnpm --filter @amanda/art exec tsx src/wordmarkEn.ts" >&2; exit 1; }
-  [ "$FELLBACK" = "0" ] || cat >&2 <<WARN
 
-  ⚠  The English cut is being built with HEBREW footage.
-     Needs store/gameplay-en.mp4 and store/screenshots-en/03-win.png.
-     Everything else — the opening and the end card — is English.
-WARN
-
-  echo "  gameplay"
-  ffmpeg -y -v error -i "$GAMEPLAY" -vf "$NORM" "${ENC[@]}" "$SEG/3-gameplay.mp4"
-
-  # ── closing ─────────────────────────────────────────────────────────
+  # ── closing ─────────────────────────────────────────
   #
-  # What winning looks like, and then the end card Or asked for:
+  # The end card Or asked for:
   #
   #     אמנדה                    the wordmark, which IS the name
   #     משחק קלפים מפלצתי        what it is
@@ -299,36 +313,19 @@ WARN
   # This is the only text in the whole trailer, and Play autoplays the first
   # thirty seconds MUTED, so it has to carry the pitch on its own in silence.
   #
-  # ═══ WHICH IS WHY THE WIN SHOT IS SHORT ═══
+  # ═══ IT IS ALONE NOW, AND THAT IS THE POINT ═══
   #
-  # First build of this card put it up at 28.4s. The whole cut is 31.4s and
-  # starts fading at 30.0 — so inside the window Play actually autoplays, the
-  # address was legible for 1.6 seconds. The win screenshot before it had
-  # 2.4. That is the wrong way round: the win is a picture and reads at a
-  # glance, the address is nine characters that have to be read and
-  # remembered.
-  #
-  # So the cut to the card comes 0.7s earlier and the card holds 0.7s longer.
-  # Same 31.4s total — the music window does not allow more — and the address
-  # now gets 2.3 seconds before the fade starts.
+  # This segment used to open on a screenshot of the win and dissolve to the
+  # card. The win is in the montage now, live, with the king going down three
+  # seconds before it — a better version of the same beat — which leaves the
+  # card the whole of the last three and a half seconds instead of sharing
+  # them with a screenshot of a three-week-old interface.
   #
   # Three tiers and they are not close: the mark is 760px wide, the tagline
   # is 54px and grey, the address is 56px and gold. Squint at it and the
   # name is what you see; look at it and the address is the only coloured
   # thing on the screen. The tagline sits between them because it explains,
   # and explaining is never the hero.
-  #
-  # ═══ THE ALBUM SHOT IS MISSING, DELIBERATELY ═══
-  #
-  # This closed on the album before the win, which is the right order — what
-  # you collect, then what it gets you. The album screenshot we have is from
-  # a brand new account: "0% הושלמו", four zeroes across the counters and a
-  # page of empty slots. As the last thing a viewer sees before the address,
-  # that is an argument against installing.
-  #
-  # It comes back the moment there is a played-in capture. Put one at
-  # store/screenshots/04-album.png and set ALBUM=1.
-  ALBUM=0
   echo "  closing"
 
   # Laid out from the top of the group so the three lines stay locked to each
@@ -356,32 +353,16 @@ WARN
     CARDTEXT=""
   fi
 
-  if [ "$ALBUM" = "1" ]; then
-    ffmpeg -y -v error \
-      -i "$SHOTS_DIR/04-album.png" \
-      -i "$SHOTS_DIR/03-win.png" \
-      -f lavfi -t 3.9 -i "color=${BG}:s=${W}x${H}:r=${FPS}" \
-      -i "$WORDMARK" \
-      -filter_complex "\
-[0:v]${NORM},zoompan=z='min(zoom+0.0009,1.1)':d=45:s=${W}x${H}:fps=${FPS}[a];\
-[1:v]${NORM},zoompan=z='if(eq(on,0),1.1,max(zoom-0.0009,1.0))':d=55:s=${W}x${H}:fps=${FPS}[b];\
-[3:v]scale=${WM_W}:-1[wm];\
-[2:v][wm]overlay=x=(W-w)/2:y=${WM_Y}${CARDTEXT},fade=t=in:st=0:d=0.4[c];\
-[a][b]xfade=transition=fade:duration=0.3:offset=1.5[ab];\
-[ab][c]xfade=transition=fade:duration=0.4:offset=2.6,format=yuv420p[v]" \
-      -map "[v]" "${ENC[@]}" "$SEG/4-closing.mp4"
-  else
-    ffmpeg -y -v error \
-      -i "$SHOTS_DIR/03-win.png" \
-      -f lavfi -t 4.1 -i "color=${BG}:s=${W}x${H}:r=${FPS}" \
-      -i "$WORDMARK" \
-      -filter_complex "\
-[0:v]${NORM},zoompan=z='if(eq(on,0),1.1,max(zoom-0.0008,1.0))':d=60:s=${W}x${H}:fps=${FPS}[b];\
-[2:v]scale=${WM_W}:-1[wm];\
-[1:v][wm]overlay=x=(W-w)/2:y=${WM_Y}${CARDTEXT},fade=t=in:st=0:d=0.4[c];\
-[b][c]xfade=transition=fade:duration=0.4:offset=1.3,format=yuv420p[v]" \
-      -map "[v]" "${ENC[@]}" "$SEG/4-closing.mp4"
-  fi
+  # The card comes up out of the dark rather than cutting in: the montage
+  # before it ends on a lit win screen, and a hard cut from that to a flat
+  # background reads as the file having stopped.
+  ffmpeg -y -v error \
+    -f lavfi -t 3.4 -i "color=${BG}:s=${W}x${H}:r=${FPS}" \
+    -i "$WORDMARK" \
+    -filter_complex "\
+[1:v]scale=${WM_W}:-1[wm];\
+[0:v][wm]overlay=x=(W-w)/2:y=${WM_Y}${CARDTEXT},fade=t=in:st=0:d=0.45,format=yuv420p[v]" \
+    -map "[v]" "${ENC[@]}" "$SEG/4-closing.mp4"
 
   # ── join, and lay the score over the whole thing ────────────────────
   echo "  joining"
@@ -402,11 +383,29 @@ WARN
     exit 1
   }
 
+  # ═══ AND THE GAME'S OWN SOUND, UNDER IT ═══
+  #
+  # The montage carries the audio off the recording — cards landing, hits,
+  # the countdown — and it is mixed in here at half rather than cut into
+  # the segments, for the same reason the ident goes on last: the music is
+  # laid across the whole join in one pass, and anything mixed before that
+  # would be balanced against a different thing.
+  #
+  # normalize=0 on the mix. amix divides by the number of inputs by
+  # default, so without it adding a quiet second layer makes the score six
+  # decibels quieter, which is the opposite of adding anything.
+  SFX_AT=$(for f in "$SEG"/1-opening.mp4 "$SEG"/2-cards.mp4; do
+    ffprobe -v error -show_entries format=duration -of csv=p=0 "$f"
+  done | awk '{t+=$1} END{printf "%d", t*1000}')
+
   ffmpeg -y -v warning -stats \
     -f concat -safe 0 -i "$SEG/list.txt" \
     -ss "$MUSIC_START" -i "$MUSIC" \
+    -i "$GAMEPLAY" \
     -filter_complex "[0:v]fade=t=out:st=${FADEOUT}:d=1.4[v];\
-[1:a]atrim=0:${TOTAL},afade=t=in:st=0:d=1.2,afade=t=out:st=${FADEOUT}:d=1.4[a]" \
+[1:a]atrim=0:${TOTAL},afade=t=in:st=0:d=1.2,afade=t=out:st=${FADEOUT}:d=1.4[m];\
+[2:a]volume=0.5,adelay=${SFX_AT}|${SFX_AT}[g];\
+[m][g]amix=inputs=2:duration=first:dropout_transition=0:normalize=0[a]" \
     -map "[v]" -map "[a]" \
     -c:v libx264 -preset slow -crf 19 -pix_fmt yuv420p -r "$FPS" \
     -c:a aac -b:a 192k -movflags +faststart \

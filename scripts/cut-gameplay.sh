@@ -1,121 +1,201 @@
 #!/usr/bin/env bash
 #
-# Cut Or's screen recording down to the part that belongs in the trailer.
+# The montage: the part of Or's screen recording that belongs in the trailer.
 #
-#   bash scripts/cut-gameplay.sh          → store/gameplay.mp4    (Hebrew)
-#   bash scripts/cut-gameplay.sh en       → store/gameplay-en.mp4 (English)
+#   bash scripts/cut-gameplay.sh        → store/gameplay-en.mp4
 #
-# ═══ TWO RECORDINGS, AND THE CUTS ARE NOT THE SAME NUMBERS ═══
+# ═══ WHAT WAS WRONG WITH THE OLD ONE ═══
 #
-# Or recorded the game again once it spoke English: *"I put a video in the
-# main folder."* It is a different session — 156 seconds against 83, and two
-# matches rather than one — so the four moments are at different times in it
-# and each list below was found by scanning the file rather than by adjusting
-# the old numbers.
+# Or, watching the cut it produced: *"make it all look really good and not
+# miserable like it is now. It should look like a game you want to play."*
 #
-# ═══ WHY FOUR PIECES AND NOT ONE ═══
+# He is right and the frames say why. The opening is eight generated shots
+# that fill 1920x1080 edge to edge, and then the game arrived as a small
+# bright box floating in the middle of a black screen — the recording it was
+# cut from was itself a window inside a larger capture, so by the time it had
+# been letterboxed a second time the game was about half the height of the
+# frame. A cinematic, and then a thumbnail of a game.
 #
-# Or: *"I put a screen recording of a battle in the folder. I think it's
-# worth taking only parts of it — say the beginning and the end — because
-# there's a bit of fumbling with action cards in the middle."*
+# Three things changed:
 #
-# He is right, and the recording says so plainly. It is 83 seconds of one
-# match: the board fills steadily for the first half minute, then two card
-# detail panels sit open from about 0:35 to 0:60 while he reads them, then
-# the countdown, the battle and the result. The middle is a person deciding.
-# Nobody watches a trailer to see someone decide.
+#   THE FRAME IS FULL      the new recording is edge to edge, and the top
+#                          strip with LEAVE and the settings cog is cropped
+#                          off, so what is on screen is the board
+#   THE BARS ARE NOT BLACK a 2.38:1 picture in a 16:9 frame leaves 137px top
+#                          and bottom; they carry a heavy blur of the frame
+#                          itself, so the picture bleeds into its own edge
+#                          instead of sitting in a box
+#   IT CUTS                nine pieces in sixteen seconds, hard cuts, no
+#                          dissolves. The old cut was four pieces crossfading
+#                          into each other, which reads as slow at any speed
 #
-# So four pieces, in the order they happened:
+# ═══ ONE RECORDING, NINE MOMENTS ═══
 #
-#   BUILD      a card lands, then another; the board fills
-#   COUNTDOWN  "ועכשיו נראה מה בנית" → 2 → 1 → "ועכשיו: לקרב!"
-#   BATTLE     both boards, damage numbers flying
-#   WIN        "טוב. באמת טוב."
+# Or: *"make sure you take only the cool parts from it."*
 #
-# The countdown is the piece worth protecting. It is the game's own writing
-# and it does the one job a cut between two phases usually needs a caption
-# for: it says the building is over and the fighting starts now.
+# The recording is one match end to end, 91 seconds, and most of it is a
+# person thinking. These are the nine moments where something HAPPENS, found
+# by walking the file at two and three frames a second and looking:
 #
-# ═══ THE BARS ARE NOT A MISTAKE ═══
+#   0:00  the home screen — Amanda, the wordmark, the way in
+#   0:01  the two catchphrases facing each other
+#   0:04  BUILD FRENZY, and the first card goes down
+#   0:33  three cards dragged onto a board that is already full
+#   0:36  that board, held for a second, because it is the thing you built
+#   0:47  the countdown: 2, 1, 0, INTO BATTLE!
+#   0:51  the clash, damage numbers coming off both sides
+#   1:16  KING DOWN!
+#   1:19  You won. I let you.
 #
-# The recording is 2340x1080 — a landscape phone, 2.17:1 — and the trailer
-# is 16:9. Scaling to fill would crop 210 pixels off each side, and both
-# edges carry interface: the card in your hand on the left, the opponent's
-# columns on the right. So it is padded instead, in the game's own
-# background colour, and the game keeps its real shape.
+# Three of them are held as stills with a slow push in — Or: *"screenshots
+# that arrive cool, with animations, mixed with cool building and battle
+# bits."* A still among moving pieces is a breath, and it is also the only
+# way a viewer reads a whole screen rather than watching one corner of it.
+#
+# ═══ THE PICTURE IS 848 WIDE AND THE TRAILER IS 1920 ═══
+#
+# This recording is 848x392 where the two before it were 2340x1080 off the
+# phone, so every piece here is blown up about two and a half times. It
+# survives it because the art is painted rather than ruled — there are no
+# thin lines in it to go soft — and because `unsharp` is run after the
+# scale, not before. A phone capture of the same match would be sharper; see
+# store/recordings/README.md.
 set -euo pipefail
 cd "$(dirname "$0")/.."
 
-LANG=${1:-he}
-if [ "$LANG" = "en" ]; then
-  SRC=store/recording-en.mp4
-  OUT=store/gameplay-en.mp4
-  # Found by contact sheet, second by second. The build piece is late in the
-  # match on purpose: the board is nearly full, which is what the game looks
-  # like when it is interesting rather than when it is starting.
-  PIECES=(
-    "47.0  4.0   build"
-    "56.6  3.4   countdown"
-    "71.0  5.2   battle"
-    "81.8  2.2   win"
-  )
-else
-  SRC="battel screenshot.mp4"
-  OUT=store/gameplay.mp4
-  PIECES=(
-    "5.0   4.0   build"
-    "65.4  3.9   countdown"
-    "69.3  5.2   battle"
-    "79.5  2.1   win"
-  )
-fi
+SRC=store/recordings/2026-10-26-match-en.mp4
+OUT=store/gameplay-en.mp4
+SEG=assets/raw/trailer/segments/montage
 W=1920
 H=1080
-BG=0x070a12
 FPS=25
-XF=0.25      # the crossfade between pieces
+
+# ── the cut ───────────────────────────────────────────────────────────
+#
+#   kind   start   length  crop-y  name
+#
+# CROP-Y is which 356 of the recording's 392 rows are kept. In a match the
+# top 36 are the LEAVE button and the cog, and they are the two things on
+# screen that are not the game, so they go. On the three SCREENS — home, the
+# catchphrases, the win — the top is the wordmark and the player's name, so
+# there the 356 rows are taken from the top and the bottom edge goes instead.
+#
+# Every piece ends up the same shape, which matters more than it sounds:
+# pieces of two different heights make the picture jump size at every cut.
+#
+# Two of the lengths were trimmed after watching the cut rather than when it
+# was planned, and both for the same reason — a stretch where nothing on
+# screen changes reads as long however short it is:
+#
+#   frenzy     2.0 -> 1.5   the banner is up over a board with two cards on
+#                           it, which is the emptiest the game ever looks
+#   countdown  2.8 -> 2.6   and starts 0.35s later: the game dims the board
+#                           under the numbers, so this is the darkest piece
+#                           in the montage and the part worth keeping is the
+#                           end of it, where INTO BATTLE! comes up bright
+#
+# The 0.7s they gave back went to `building`, which is three cards being
+# dragged onto a board that is already full of monsters.
+PIECES=(
+  "still   0.15  1.3   0   home"
+  "clip    0.75  1.2   0   catchphrases"
+  "clip    3.55  1.5  36   frenzy"
+  "clip   33.10  3.2  36   building"
+  "still  36.20  1.1  36   board"
+  "clip   47.65  2.6  36   countdown"
+  "clip   51.30  2.4  36   clash"
+  "clip   75.75  1.3  36   kingdown"
+  "still  79.60  1.3   0   won"
+)
 
 [ -f "$SRC" ] || { echo "no recording at: $SRC" >&2; exit 1; }
+rm -rf "$SEG"
+mkdir -p "$SEG" store
 
-inputs=()
-filters=()
+# The picture, and the bed it sits on.
+#
+# The bed is the same frame scaled to FILL 1920x1080, blurred to nothing and
+# pulled down two stops — so the colour above and below the picture is the
+# colour of the picture, moving with it. A flat background would be a box
+# drawn around the game; this is the game's own light spilling past its edge.
+BED="scale=${W}:${H}:force_original_aspect_ratio=increase:flags=bilinear,crop=${W}:${H},\
+gblur=sigma=50,eq=brightness=-0.40:saturation=0.5"
+# 806 = 1920 * 356/848. The 4px pad is a hairline the colour of the game's
+# own panel edges, so the picture has a lid and a floor rather than fading
+# into the blur.
+PIC_H=806
+LIP="pad=${W}:$((PIC_H + 8)):0:4:color=0x24375c"
+# ═══ THE GAME'S OWN SOUND COMES WITH IT ═══
+#
+# The recording has audio, and it is the app's rather than a microphone's:
+# at 1:26, sitting on the home screen, it measures -91 dB, which is digital
+# silence and not a room. So what is on it is card thumps, hits and the
+# countdown, and nobody talking.
+#
+# It rides UNDER the score — make-trailer.sh mixes it in at about half —
+# because the music is written and this is texture. But a card that lands
+# with a sound is the difference between footage of a game and a game.
+#
+# Every piece is encoded with the same audio settings, the silent ones
+# included: the concat demuxer is not re-encoding anything, and two
+# different AAC headers make a file that goes quiet halfway through.
+AENC=(-c:a aac -b:a 192k -ar 48000 -ac 2)
+ENC=(-c:v libx264 -preset slow -crf 19 -pix_fmt yuv420p -r "$FPS")
+
 i=0
 for p in "${PIECES[@]}"; do
-  read -r ss len _ <<<"$p"
-  # -ss BEFORE -i seeks fast; -t after it trims from there.
-  inputs+=(-ss "$ss" -t "$len" -i "$SRC")
-  filters+=(
-    "[$i:v]scale=${W}:${H}:force_original_aspect_ratio=decrease:flags=lanczos,\
-pad=${W}:${H}:(ow-iw)/2:(oh-ih)/2:color=${BG},fps=${FPS},setsar=1,format=yuv420p[p$i]"
-  )
+  read -r kind ss len cy name <<<"$p"
   i=$((i + 1))
+  out=$(printf '%s/%02d-%s.mp4' "$SEG" "$i" "$name")
+  printf '  %-13s %5ss  %ss\n' "$name" "$ss" "$len"
+
+  # Where the sound fades out, half a frame before the picture does.
+  fo=$(awk -v l="$len" 'BEGIN{printf "%.2f", l-0.06}')
+
+  if [ "$kind" = "clip" ]; then
+    ffmpeg -y -v error -ss "$ss" -t "$len" -i "$SRC" -filter_complex "\
+[0:v]crop=848:356:0:${cy},fps=${FPS},split=2[a][b];\
+[a]${BED}[bg];\
+[b]scale=${W}:-2:flags=lanczos,unsharp=5:5:0.75:5:5:0.0,${LIP}[fg];\
+[bg][fg]overlay=(W-w)/2:(H-h)/2,setsar=1,format=yuv420p[v];\
+[0:a]aresample=48000,aformat=channel_layouts=stereo,afade=t=in:st=0:d=0.06,\
+afade=t=out:st=${fo}:d=0.06[a]" \
+      -map "[v]" -map "[a]" -t "$len" "${ENC[@]}" "${AENC[@]}" "$out"
+  else
+    # ═══ A STILL IS A CLIP OF ONE FRAME, PUSHED INTO ═══
+    #
+    # zoompan turns a single input frame into N and crops a shrinking window
+    # out of it, which is the push. It only ever emits N frames from ONE
+    # frame, so the bed cannot come off the same input — it is the same file
+    # opened a second time with -loop, which is what the second -i is.
+    n=$(awk -v l="$len" -v f="$FPS" 'BEGIN{printf "%d", l*f}')
+    ffmpeg -y -v error -ss "$ss" -i "$SRC" -frames:v 1 "$SEG/.frame.png"
+    ffmpeg -y -v error -i "$SEG/.frame.png" -loop 1 -t "$len" -i "$SEG/.frame.png" \
+      -f lavfi -t "$len" -i anullsrc=r=48000:cl=stereo \
+      -filter_complex "\
+[0:v]crop=848:356:0:${cy},\
+zoompan=z='1.09-0.09*on/(${n}-1)':x='iw/2-(iw/zoom/2)':y='ih/2-(ih/zoom/2)'\
+:d=${n}:s=${W}x${PIC_H}:fps=${FPS},unsharp=5:5:0.75:5:5:0.0,${LIP}[fg];\
+[1:v]crop=848:356:0:${cy},fps=${FPS},${BED}[bg];\
+[bg][fg]overlay=(W-w)/2:(H-h)/2,setsar=1,format=yuv420p[v]" \
+      -map "[v]" -map 2:a -t "$len" "${ENC[@]}" "${AENC[@]}" "$out"
+  fi
+done
+rm -f "$SEG/.frame.png"
+
+# ── join ──────────────────────────────────────────────────────────────
+#
+# Hard cuts. Every piece is already the same size, rate and pixel format, so
+# the concat demuxer joins them without re-encoding and the cut lands on the
+# exact frame it was given.
+: > "$SEG/list.txt"
+for f in "$SEG"/[0-9][0-9]-*.mp4; do
+  echo "file '$(basename "$f")'" >> "$SEG/list.txt"
 done
 
-# Stitch, crossfading between pieces. Each xfade overlaps by XF, so the
-# running offset loses XF every time — the same arithmetic as make-trailer.sh.
-chain=""
-prev="[p0]"
-elapsed=0
-for ((j = 1; j < ${#PIECES[@]}; j++)); do
-  read -r _ len _ <<<"${PIECES[$((j - 1))]}"
-  elapsed=$(awk -v e="$elapsed" -v l="$len" -v f="$XF" 'BEGIN{printf "%.3f", e + l - f}')
-  chain+="${prev}[p$j]xfade=transition=fade:duration=${XF}:offset=${elapsed}[x$j];"
-  prev="[x$j]"
-done
-
-total=$(awk -v f="$XF" -v n="${#PIECES[@]}" 'BEGIN{t=0}
-  {t += $2} END{printf "%.3f", t - (n-1)*f}' <<<"$(printf '%s\n' "${PIECES[@]}")")
-
-chain+="${prev}fade=t=in:st=0:d=0.3,fade=t=out:st=$(awk -v t="$total" 'BEGIN{printf "%.3f", t-0.4}'):d=0.4[v]"
-
-mkdir -p store
-ffmpeg -y -v warning -stats \
-  "${inputs[@]}" \
-  -filter_complex "$(IFS=';'; echo "${filters[*]}");${chain}" \
-  -map "[v]" -an \
-  -c:v libx264 -preset slow -crf 19 -pix_fmt yuv420p -r "$FPS" -movflags +faststart \
-  "$OUT"
+ffmpeg -y -v error -f concat -safe 0 -i "$SEG/list.txt" -c copy -movflags +faststart "$OUT"
 
 echo
-echo "  $OUT"
-ffprobe -v error -show_entries format=duration:stream=width,height -of default=nw=1 "$OUT"
+printf '  %-24s ' "$OUT"
+ffprobe -v error -show_entries format=duration -show_entries stream=width,height -of csv=p=0 "$OUT" | tr '\n' ' '
+echo

@@ -41,14 +41,10 @@ soundtracks/
 # the compressed webp the game actually ships live in apps/client/public/cards
 assets/raw/
 
-# the loose copy of the source deck at the repo root; the filed copy under
-# assets/reference/ is the one that ships
-/קלפי מפלצות עם בליד.pdf
+# Anything dropped here to look at later and never shipped: the duplicate
+# copy of the source deck, skills Or downloaded to read. Nothing in the
+# game reads from it.
 .scratch/
-
-# Skills Or downloaded to look at — not part of the game.
-/SKILL.md
-/SKILL (1).md
 
 # The TWA wrapper's config IS committed — it is what makes a rebuild
 # reproducible. Everything else bubblewrap generates stays out, and two of
@@ -86,17 +82,17 @@ store/raw-en/
 store/preview/
 
 # Screen recordings. Source footage is tens of megabytes and this repo is
-# public; scripts/cut-gameplay.sh turns one into the few seconds that ship.
+# public; scripts/cut-gameplay.sh turns one into the seconds that ship.
+#
+# `/*.mp4` catches the next one dropped at the repo root, which is where a
+# phone capture lands; store/recordings/ is where it gets filed, and its
+# README is the only thing in there small enough to commit.
 /*.mp4
 /*.mov
 store/gameplay.mp4
 store/gameplay-en.mp4
-
-# And the screen recordings themselves. `/*.mp4` above only covers the repo
-# root, and the English one was filed into store/ where it is a 93MB source
-# that cut-gameplay.sh turns into four seconds. GitHub's own limit is 100MB
-# and a public repository is not a place to keep raw footage.
-store/recording-*.mp4
+store/recordings/*
+!store/recordings/README.md
 
 # Excel's lock file, created while a workbook is open
 ~$*.xlsx

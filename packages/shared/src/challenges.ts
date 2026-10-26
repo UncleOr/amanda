@@ -208,6 +208,21 @@ function oneOf<T>(pick: () => number, xs: ReadonlyArray<T>): T | undefined {
   return xs.length ? xs[Math.floor(pick() * xs.length) % xs.length] : undefined;
 }
 
+/**
+ * A series name with its article off, for when the name is used as an
+ * adjective rather than as a name.
+ *
+ * Every English series name begins with "The" — The Giants, The Slimes — which
+ * is right when the series is the subject and wrong the moment a card belongs
+ * to it: "Put a The Giants card in the back row" went out on a challenge and
+ * was read off the screen in a trailer frame. Hebrew does not have the problem,
+ * because there the name follows a preposition that already carries the
+ * article.
+ */
+function attr(name: string): string {
+  return name.replace(/^The\s+/i, "");
+}
+
 /*
  * The drafts below are mine; the words are Or's.
  *
@@ -244,8 +259,8 @@ const TEMPLATES: Template[] = [
         he: row === "front" ? `לשים קלף מ${s.he} בשורה הקדמית` : `לשים קלף מ${s.he} בשורה האחורית`,
         en:
           row === "front"
-            ? `Put a ${s.en} card in the front row`
-            : `Put a ${s.en} card in the back row`,
+            ? `Put a ${attr(s.en)} card in the front row`
+            : `Put a ${attr(s.en)} card in the back row`,
       };
     },
   },
