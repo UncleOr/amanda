@@ -1,6 +1,6 @@
 # הטקסטים של אמנדה
 
-כל טקסט שהשחקן רואה — 1322 במספר, 1322 מהם כבר באנגלית.
+כל טקסט שהשחקן רואה — 1328 במספר, 1328 מהם כבר באנגלית.
 
 ## איך עורכים
 
@@ -885,8 +885,11 @@
 | s605a181 | קלף חדש! | | A new card! |
 | s17781ba | לראות את הקלף | | See the card |
 | s340e045 | ועוד {0} | | and {0} more |
+| sdda6573 | להכניס לדק | | Put it in the deck |
 | s70a58ef | איזה יופי | | Lovely |
 | sb0e2d63 | חדש אצלך | | New! |
+| s8127023 | עליך עכשיו | | Equipped |
+| s540d1d7 | ללבוש עכשיו | | Wear it now |
 
 ## components/ChestShelf.tsx
 
@@ -1272,6 +1275,7 @@
 | sd9e67b5 | תיבות | | Chests |
 | s26df959 | קלפים | | Cards |
 | s52f7e9a | מחר | | Tomorrow |
+| s082b44c | עליך | | Equipped |
 | s1a96dcd | שלך | | Owned |
 | s9eddab1 | חינם | | Free |
 | s56fa87f | סגירה | | Close |
@@ -1286,6 +1290,8 @@
 | --- | --- | --- | --- |
 | se2cc447 | סגירה | | Close |
 | s0ea3644 | יש לך {0} | | You have {0} |
+| s957092b | עליך עכשיו | | Equipped |
+| s7aa7175 | ללבוש עכשיו | | Wear it now |
 | saafa01a | כבר שלך | | Owned |
 | s3df89df | לקחת היום. תחזור מחר | | Taken today. Back tomorrow |
 | s6508fa9 | קח בחינם | | Take it, free |

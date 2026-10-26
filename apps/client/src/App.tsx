@@ -19,6 +19,7 @@ import {
   markTutorialAt,
   openChest,
   saveDeck,
+  saveProfile,
   setActiveDeck,
   tutorialMark,
   unopenedChests,
@@ -32,6 +33,8 @@ import { line } from "./data/tutorialLines";
 import {
   ARENAS,
   COOP_LANES,
+  CARD_BACKS,
+  CATCHPHRASES,
   DEFAULT_BACK,
   PHASES,
   arenaFor,
@@ -972,6 +975,39 @@ function Game() {
   const [deckBusy, setDeckBusy] = useState(false);
   const [deckError, setDeckError] = useState<string | null>(null);
   const refreshDecks = useCallback(() => loadDecks().then(setShelf), []);
+  /** The deck being played, which is the one a card back belongs to. */
+  const activeDeck = shelf.decks.find((d) => d.id === shelf.activeId) ?? null;
+  /**
+   * Put a bought thing on.
+   *
+   * One function for three kinds because the player's side of it is one
+   * gesture — "use this now" — and only the place it is SAVED differs. A
+   * card back is a property of a deck, so wearing one without a deck to
+   * put it on is not possible; the button is simply not offered then.
+   */
+  const wearItem = useCallback(
+    (item: ShopItem) => {
+      const avatar = (item.grants as { avatar?: string } | undefined)?.avatar;
+      if (item.kind === "avatar" && avatar) {
+        void saveProfile({ avatar }).then(() => m.reloadAccount());
+        return;
+      }
+      if (item.kind === "phrase") {
+        const phrase = CATCHPHRASES.find((p) => p.item === item.id);
+        if (phrase) void saveProfile({ catchphrase: phrase.id }).then(() => m.reloadAccount());
+        return;
+      }
+      if (item.kind === "back") {
+        const back = CARD_BACKS.find((b) => b.item === item.id);
+        if (!back || !activeDeck) return;
+        void saveDeck({ ...activeDeck, back: back.id }).then(() => {
+          void refreshDecks();
+          m.reloadDecks();
+        });
+      }
+    },
+    [activeDeck, refreshDecks, m],
+  );
   useEffect(() => {
     if (m.phase !== "intro") return;
     void refreshDecks();
@@ -2257,6 +2293,31 @@ function Game() {
             setChest(null);
             m.reloadAccount();
           }}
+          /* A catchphrase won here can be said from here. See Prize. */
+          onWear={
+            m.account
+              ? (phraseId) =>
+                  void saveProfile({ catchphrase: phraseId }).then(() => m.reloadAccount())
+              : undefined
+          }
+          /*
+           * And a card won here has somewhere to go. Or: *"when you get a
+           * new card, give a 'put it in the deck' button — pressing it goes
+           * to the deck builder."* The chest is closed first, so what the
+           * player lands on is the builder and not the builder behind a
+           * celebration.
+           *
+           * Not gated on an account, unlike wearing a catchphrase: the deck
+           * builder is open to a guest — it is the one door on the home
+           * screen with no padlock on it — so a card won by a guest has
+           * somewhere to go too.
+           */
+          onToDeck={() => {
+            markChestSeen(chest.id);
+            setChest(null);
+            m.reloadAccount();
+            panel.show("decks");
+          }}
         />
       )}
 
@@ -2658,6 +2719,24 @@ function Game() {
           onClose={() => panel.close()}
           diamonds={m.account?.diamonds ?? 0}
           onBought={() => m.reloadAccount()}
+          /*
+           * ═══ WHAT IS ON YOU, AND PUTTING ON WHAT IS NOT ═══
+           *
+           * Or: *"yes, put a mark on the item that is equipped now. And
+           * when you get a new item, give the option to use it right
+           * away."*
+           *
+           * Three wearable kinds and they are kept in two places — the
+           * avatar and the catchphrase on the PLAYER, the card back on the
+           * DECK — which is why neither the shop nor the sheet works it
+           * out: this is the only component holding both.
+           */
+          worn={{
+            avatar: m.account?.avatar ?? null,
+            phrase: m.account?.catchphrase ?? null,
+            back: activeDeck?.back ?? DEFAULT_BACK,
+          }}
+          onWear={m.account ? wearItem : undefined}
         />
       )}
 

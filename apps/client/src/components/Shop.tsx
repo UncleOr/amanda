@@ -4,6 +4,9 @@ import { Plaque } from "./Plaque";
 import {
   CARD_BACKS,
   CATCHPHRASES,
+  isWearable,
+  isWearing,
+  type Wearing,
   EMOJI,
   SHOP_KINDS,
   levelCost,
@@ -145,6 +148,7 @@ function Good({
   item,
   mine,
   taken,
+  wearing,
   diamonds,
   onOpen,
 }: {
@@ -152,6 +156,8 @@ function Good({
   mine: boolean;
   /** Today's one has been had. Only a chest can be this; see the server. */
   taken: boolean;
+  /** The one in use, out of the ones you own. See `isWearing`. */
+  wearing: boolean;
   diamonds: number;
   onOpen: () => void;
 }) {
@@ -239,9 +245,20 @@ function Good({
         with a picture that is what is being sold.
       */}
       {mine || taken ? (
-        <span className="good__mine">
-          <Icon name={taken ? "chest" : "ready"} size={13} />{" "}
-          {taken ? t("s52f7e9a", "מחר") : t("s1a96dcd", "שלך")}
+        /*
+         * Owned, or — one of them — the one actually in use.
+         *
+         * Or: *"put a mark on the item that is equipped now."* A shelf of
+         * six avatars that all say "owned" leaves a player counting their
+         * own face to work out which one is on their chip.
+         */
+        <span className={`good__mine${wearing ? " good__mine--worn" : ""}`}>
+          <Icon name={taken ? "chest" : wearing ? "king" : "ready"} size={13} />{" "}
+          {taken
+            ? t("s52f7e9a", "מחר")
+            : wearing
+              ? t("s082b44c", "עליך")
+              : t("s1a96dcd", "שלך")}
         </span>
       ) : (
         <span
@@ -264,14 +281,41 @@ function Good({
   );
 }
 
+/**
+ * The two kinds matched by item id rather than by payload. Written once and
+ * passed to `isWearing`, which has no catalogue of its own on purpose —
+ * shared must not know what a card back looks like.
+ */
+const WEAR_LOOKUP = {
+  backOf: (itemId: string) => CARD_BACKS.find((b) => b.item === itemId)?.id ?? null,
+  phraseOf: (itemId: string) => CATCHPHRASES.find((p) => p.item === itemId)?.id ?? null,
+};
+
 export function Shop({
   onClose,
   diamonds,
   onBought,
+  worn,
+  onWear,
 }: {
   onClose: () => void;
   diamonds: number;
   onBought: () => void;
+  /**
+   * === WHAT THIS PLAYER IS ACTUALLY WEARING ===
+   *
+   * Or: *"yes, put a mark on the item that is equipped now. And when you
+   * get a new item, give the option to use it right away."*
+   *
+   * Owning and wearing come apart the moment you own two of a kind, which
+   * is the whole point of a shop that sells six avatars. Passed in rather
+   * than read here because the three live in two different places — the
+   * avatar and the catchphrase on the player, the card back on the deck —
+   * and App is the only thing that holds both.
+   */
+  worn: Wearing;
+  /** Put this one on. Absent while there is no account to put it on. */
+  onWear?: (item: ShopItem) => void;
 }) {
   const [items, setItems] = useState<ShopItem[] | null>(null);
   const [owned, setOwned] = useState<string[]>([]);
@@ -371,6 +415,7 @@ export function Shop({
                       item={item}
                       mine={owned.includes(item.id)}
                       taken={today.includes(item.id)}
+                      wearing={isWearing(item, worn, WEAR_LOOKUP)}
                       diamonds={diamonds}
                       onOpen={() => setLooking(item.id)}
                     />
@@ -392,6 +437,7 @@ export function Shop({
                         item={item}
                         mine={owned.includes(item.id)}
                         taken={today.includes(item.id)}
+                        wearing={isWearing(item, worn, WEAR_LOOKUP)}
                         diamonds={diamonds}
                         onOpen={() => setLooking(item.id)}
                       />
@@ -416,9 +462,20 @@ export function Shop({
               item={item}
               mine={owned.includes(item.id)}
               taken={today.includes(item.id)}
+              wearing={isWearing(item, worn, WEAR_LOOKUP)}
               diamonds={diamonds}
               busy={busy === item.id}
               onBuy={(count) => void take(item, count).then(() => setLooking(null))}
+              /* Only for something that CAN be worn and is not already on.
+                 The sheet never has to know what a kind means. */
+              onWear={
+                onWear && isWearable(item.kind) && !isWearing(item, worn, WEAR_LOOKUP)
+                  ? () => {
+                      onWear(item);
+                      setLooking(null);
+                    }
+                  : undefined
+              }
               onClose={() => setLooking(null)}
             />
           );

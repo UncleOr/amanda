@@ -576,3 +576,35 @@
   direction: ltr;
   text-align: left;
 }
+
+/*
+ * ═══ THE ONE YOU ARE WEARING ═══
+ *
+ * Or: *"put a mark on the item that is equipped now."* Owning and wearing
+ * come apart the moment you own two of a kind, which is what a shop selling
+ * six avatars is for — and a shelf where all six say "owned" leaves a player
+ * counting their own face to work out which one is on their chip.
+ *
+ * Gold rather than the quiet tick the owned ones carry, because this is the
+ * one of them that is doing something.
+ */
+.good__mine--worn,
+.deet__mine--worn { color: var(--accent); font-weight: 800; }
+.good.is-mine:has(.good__mine--worn) { border-color: var(--accent); }
+
+/* And the way to become that one. */
+.deet__wear {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  padding: 8px 18px;
+  border-radius: 999px;
+  border: 1px solid var(--accent);
+  background: transparent;
+  color: var(--text);
+  font: inherit;
+  font-size: var(--t-3);
+  font-weight: 800;
+  cursor: pointer;
+}
+.deet__wear:hover { background: rgba(255, 176, 32, 0.14); }

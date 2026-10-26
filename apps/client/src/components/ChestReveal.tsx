@@ -65,6 +65,10 @@ const BASE = import.meta.env.BASE_URL;
 interface Props {
   chest: Chest;
   onClose: () => void;
+  /** Put a won catchphrase on straight away. See Prize. */
+  onWear?: (phraseId: string) => void;
+  /** Take a won card to the deck builder. See NewCards. */
+  onToDeck?: () => void;
 }
 
 /**
@@ -78,7 +82,7 @@ const STAGES = 4;
 /** How long one stage holds. Four of these is 480ms, which is a flinch. */
 const STAGE_MS = 120;
 
-export function ChestReveal({ chest, onClose }: Props) {
+export function ChestReveal({ chest, onClose, onWear, onToDeck }: Props) {
   const [opened, setOpened] = useState(false);
   /** Which stage the lid is at. 0 before the tap, then 1..STAGES on a timer. */
   const [taps, setTaps] = useState(0);
@@ -277,7 +281,7 @@ export function ChestReveal({ chest, onClose }: Props) {
               thing in the chest and it should be the last thing you see, not
               one more tile in a row.
             */}
-            {allShown && chest.items?.map((id) => <Prize key={id} id={id} />)}
+            {allShown && chest.items?.map((id) => <Prize key={id} id={id} onWear={onWear} />)}
             {/*
               Hidden while the celebration is up.
               Or, with a screenshot of the two stacked: *"Lovely" above
@@ -332,7 +336,7 @@ export function ChestReveal({ chest, onClose }: Props) {
         )}
       </div>
 
-      {party && <NewCards ids={fresh} onClose={() => setParty(false)} />}
+      {party && <NewCards ids={fresh} onClose={() => setParty(false)} onToDeck={onToDeck} />}
     </div>
   );
 }
@@ -350,7 +354,29 @@ export function ChestReveal({ chest, onClose }: Props) {
  * a worse version of a loop. Everything else about them — the colours, the
  * arc, the fade — is in chests.css.
  */
-function NewCards({ ids, onClose }: { ids: string[]; onClose: () => void }) {
+function NewCards({
+  ids,
+  onClose,
+  onToDeck,
+}: {
+  ids: string[];
+  onClose: () => void;
+  /**
+   * === A NEW CARD HAS SOMEWHERE TO GO ===
+   *
+   * Or: *"and when you get a new card, give a 'put it in the deck' button
+   * — pressing it goes to the deck builder."*
+   *
+   * The celebration ended in "lovely" and dropped the player back on the
+   * home screen, and a card that is not in a deck is a card you never
+   * play. The one thing anybody wants to do with a card they have just
+   * won is the one thing this screen did not offer.
+   *
+   * Absent when there is nowhere to put it — a guest has no decks — and
+   * then the celebration is what it was.
+   */
+  onToDeck?: () => void;
+}) {
   /** The card whose full sheet is open over the celebration. */
   const [looking, setLooking] = useState<string | null>(null);
   const many = ids.length > 1;
@@ -418,9 +444,16 @@ function NewCards({ ids, onClose }: { ids: string[]; onClose: () => void }) {
         {ids.length > 3 && (
           <p className="newcard__more">{tf("s340e045", "ועוד {0}", ids.length - 3)}</p>
         )}
-        <button className="btn-fight" onClick={onClose}>
-          {t("s70a58ef", "איזה יופי")}
-        </button>
+        <div className="newcard__acts">
+          {onToDeck && (
+            <button className="btn-fight newcard__deck" onClick={onToDeck}>
+              <Icon name="deck" size={16} /> {t("sdda6573", "להכניס לדק")}
+            </button>
+          )}
+          <button className="btn-fight btn-ghost" onClick={onClose}>
+            {t("s70a58ef", "איזה יופי")}
+          </button>
+        </div>
       </div>
     </div>
   );
@@ -434,9 +467,11 @@ function NewCards({ ids, onClose }: { ids: string[]; onClose: () => void }) {
  * makes both of them worth owning is what they LOOK like — the same reason
  * they are worth buying (Or: "it is something you SEE").
  */
-function Prize({ id }: { id: string }) {
+function Prize({ id, onWear }: { id: string; onWear?: (phraseId: string) => void }) {
   const pack = EMOJI_PACKS.find((p) => p.id === id);
   const phrase = CATCHPHRASES.find((p) => p.item === id);
+  /** Said once, so the offer does not come back after it has been taken. */
+  const [wearing, setWearing] = useState(false);
   if (!pack && !phrase) return null;
 
   return (
@@ -453,6 +488,31 @@ function Prize({ id }: { id: string }) {
         </>
       ) : (
         <Plaque phrase={phrase!} size="big" />
+      )}
+      {/*
+        === AND YOU CAN PUT IT ON FROM HERE ===
+
+        Or: *"and when you get a new item, give the option to use it right
+        away."*
+
+        Winning a catchphrase and then having to go and find the profile to
+        say it is three screens between the prize and the point of it.
+
+        Only a catchphrase: an emoji pack is not WORN — owning it is what
+        makes its faces sendable, and there is nothing to choose.
+      */}
+      {phrase && onWear && (
+        <button
+          className={`chest__wear${wearing ? " is-on" : ""}`}
+          disabled={wearing}
+          onClick={() => {
+            setWearing(true);
+            onWear(phrase.id);
+          }}
+        >
+          <Icon name={wearing ? "king" : "ready"} size={14} />{" "}
+          {wearing ? t("s8127023", "עליך עכשיו") : t("s540d1d7", "ללבוש עכשיו")}
+        </button>
       )}
     </div>
   );

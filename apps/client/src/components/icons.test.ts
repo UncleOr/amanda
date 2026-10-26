@@ -146,3 +146,57 @@ describe("using an action card", () => {
     expect(APP, "the old button").not.toContain('className="take-action"');
   });
 });
+
+/**
+ * **What to do with what you just won.**
+ *
+ * Or: *"when you get a new item, give the option to use it right away. And
+ * when you get a new card, give a 'put it in the deck' button — pressing it
+ * goes to the deck builder."*
+ *
+ * Both are the same complaint: the celebration ended in "lovely" and put
+ * the player back on the home screen, and a card that is not in a deck is a
+ * card you never play.
+ *
+ * Three joins across two files, and the one worth pinning is the ORDER —
+ * the chest has to be closed before the builder opens, or what the player
+ * lands on is a builder behind a celebration.
+ */
+describe("the prize offers the next thing", () => {
+  const CHEST = read("./ChestReveal.tsx");
+
+  it("takes a new card to the deck", () => {
+    expect(CHEST).toContain("onToDeck");
+    expect(CHEST).toContain('className="btn-fight newcard__deck"');
+  });
+
+  it("closes the chest before it opens the builder", () => {
+    const at = APP.indexOf("onToDeck={");
+    expect(at, "App never wires it").toBeGreaterThan(-1);
+    const body = APP.slice(at, at + 400);
+    expect(body.indexOf("setChest(null)")).toBeLessThan(body.indexOf('panel.show("decks")'));
+  });
+
+  it("is offered to a guest too, because the deck builder is", () => {
+    /*
+     * The deck is the one door on the home screen with no padlock on it, so
+     * this must not be conditioned on having an account — only on there
+     * being a chest. (`m.reloadAccount()` INSIDE the handler is fine; what
+     * is forbidden is a `m.account ? … : undefined` around it.)
+     */
+    const at = APP.indexOf("onToDeck={");
+    expect(APP.slice(at, at + 400)).not.toContain("m.account ?");
+  });
+
+  it("offers to put a won catchphrase on", () => {
+    expect(CHEST).toContain('className={`chest__wear');
+    // And only a catchphrase: an emoji pack is not worn, it is owned.
+    const at = CHEST.indexOf("chest__wear");
+    expect(CHEST.slice(at - 300, at)).toContain("phrase && onWear");
+  });
+
+  it("does not offer it twice", () => {
+    const at = CHEST.indexOf('className={`chest__wear');
+    expect(CHEST.slice(at, at + 300)).toContain("disabled={wearing}");
+  });
+});

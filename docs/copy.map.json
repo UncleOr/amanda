@@ -3990,7 +3990,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/App.tsx",
-   "line": 140
+   "line": 143
   }
  },
  {
@@ -4000,7 +4000,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/App.tsx",
-   "line": 141
+   "line": 144
   }
  },
  {
@@ -4010,7 +4010,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/App.tsx",
-   "line": 159
+   "line": 162
   }
  },
  {
@@ -4020,7 +4020,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/App.tsx",
-   "line": 160
+   "line": 163
   }
  },
  {
@@ -4030,7 +4030,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/App.tsx",
-   "line": 163
+   "line": 166
   }
  },
  {
@@ -4040,7 +4040,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/App.tsx",
-   "line": 165
+   "line": 168
   }
  },
  {
@@ -4050,7 +4050,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/App.tsx",
-   "line": 247
+   "line": 250
   }
  },
  {
@@ -4060,7 +4060,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/App.tsx",
-   "line": 255
+   "line": 258
   }
  },
  {
@@ -4070,7 +4070,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/App.tsx",
-   "line": 1147
+   "line": 1183
   }
  },
  {
@@ -4080,7 +4080,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/App.tsx",
-   "line": 1148
+   "line": 1184
   }
  },
  {
@@ -4090,7 +4090,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/App.tsx",
-   "line": 1163
+   "line": 1199
   }
  },
  {
@@ -4100,7 +4100,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/App.tsx",
-   "line": 1185
+   "line": 1221
   }
  },
  {
@@ -4110,7 +4110,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/App.tsx",
-   "line": 1217
+   "line": 1260
   }
  },
  {
@@ -4120,7 +4120,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/App.tsx",
-   "line": 1217
+   "line": 1260
   }
  },
  {
@@ -4130,7 +4130,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/App.tsx",
-   "line": 1224
+   "line": 1267
   }
  },
  {
@@ -4140,7 +4140,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/App.tsx",
-   "line": 1234
+   "line": 1277
   }
  },
  {
@@ -4150,7 +4150,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/App.tsx",
-   "line": 1264
+   "line": 1307
   }
  },
  {
@@ -4160,7 +4160,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/App.tsx",
-   "line": 1287
+   "line": 1330
   }
  },
  {
@@ -4170,7 +4170,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/App.tsx",
-   "line": 1299
+   "line": 1342
   }
  },
  {
@@ -4180,7 +4180,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/App.tsx",
-   "line": 1339
+   "line": 1382
   }
  },
  {
@@ -4190,7 +4190,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/App.tsx",
-   "line": 1339
+   "line": 1382
   }
  },
  {
@@ -4200,7 +4200,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/App.tsx",
-   "line": 1339
+   "line": 1382
   }
  },
  {
@@ -4210,7 +4210,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/App.tsx",
-   "line": 1343
+   "line": 1386
   }
  },
  {
@@ -4220,7 +4220,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/App.tsx",
-   "line": 1355
+   "line": 1398
   }
  },
  {
@@ -4230,7 +4230,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/App.tsx",
-   "line": 1355
+   "line": 1398
   }
  },
  {
@@ -4240,7 +4240,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/App.tsx",
-   "line": 1361
+   "line": 1404
   }
  },
  {
@@ -4250,7 +4250,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/App.tsx",
-   "line": 1368
+   "line": 1411
   }
  },
  {
@@ -4260,7 +4260,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/App.tsx",
-   "line": 1372
+   "line": 1415
   }
  },
  {
@@ -4270,7 +4270,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/App.tsx",
-   "line": 1372
+   "line": 1415
   }
  },
  {
@@ -4280,7 +4280,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/App.tsx",
-   "line": 1418
+   "line": 1461
   }
  },
  {
@@ -4290,7 +4290,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/App.tsx",
-   "line": 1425
+   "line": 1468
   }
  },
  {
@@ -4300,7 +4300,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/App.tsx",
-   "line": 1425
+   "line": 1468
   }
  },
  {
@@ -4310,7 +4310,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/App.tsx",
-   "line": 1432
+   "line": 1475
   }
  },
  {
@@ -4320,7 +4320,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/App.tsx",
-   "line": 1434
+   "line": 1477
   }
  },
  {
@@ -4330,7 +4330,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/App.tsx",
-   "line": 1442
+   "line": 1485
   }
  },
  {
@@ -4340,7 +4340,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/App.tsx",
-   "line": 1505
+   "line": 1548
   }
  },
  {
@@ -4350,7 +4350,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/App.tsx",
-   "line": 1526
+   "line": 1569
   }
  },
  {
@@ -4360,7 +4360,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/App.tsx",
-   "line": 1545
+   "line": 1588
   }
  },
  {
@@ -4370,7 +4370,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/App.tsx",
-   "line": 1555
+   "line": 1598
   }
  },
  {
@@ -4380,7 +4380,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/App.tsx",
-   "line": 1568
+   "line": 1611
   }
  },
  {
@@ -4390,7 +4390,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/App.tsx",
-   "line": 1569
+   "line": 1612
   }
  },
  {
@@ -4400,7 +4400,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/App.tsx",
-   "line": 1631
+   "line": 1674
   }
  },
  {
@@ -4410,7 +4410,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/App.tsx",
-   "line": 1633
+   "line": 1676
   }
  },
  {
@@ -4420,7 +4420,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/App.tsx",
-   "line": 1634
+   "line": 1677
   }
  },
  {
@@ -4430,7 +4430,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/App.tsx",
-   "line": 1639
+   "line": 1682
   }
  },
  {
@@ -4440,7 +4440,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/App.tsx",
-   "line": 1642
+   "line": 1685
   }
  },
  {
@@ -4450,7 +4450,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/App.tsx",
-   "line": 1711
+   "line": 1754
   }
  },
  {
@@ -4460,7 +4460,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/App.tsx",
-   "line": 1724
+   "line": 1767
   }
  },
  {
@@ -4470,7 +4470,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/App.tsx",
-   "line": 1726
+   "line": 1769
   }
  },
  {
@@ -4480,7 +4480,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/App.tsx",
-   "line": 1727
+   "line": 1770
   }
  },
  {
@@ -4490,7 +4490,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/App.tsx",
-   "line": 1769
+   "line": 1812
   }
  },
  {
@@ -4500,7 +4500,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/App.tsx",
-   "line": 1789
+   "line": 1832
   }
  },
  {
@@ -4510,7 +4510,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/App.tsx",
-   "line": 1802
+   "line": 1845
   }
  },
  {
@@ -4520,7 +4520,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/App.tsx",
-   "line": 1818
+   "line": 1861
   }
  },
  {
@@ -4530,7 +4530,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/App.tsx",
-   "line": 1832
+   "line": 1875
   }
  },
  {
@@ -4540,7 +4540,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/App.tsx",
-   "line": 1872
+   "line": 1915
   }
  },
  {
@@ -4550,7 +4550,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/App.tsx",
-   "line": 1876
+   "line": 1919
   }
  },
  {
@@ -4560,7 +4560,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/App.tsx",
-   "line": 1905
+   "line": 1948
   }
  },
  {
@@ -4570,7 +4570,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/App.tsx",
-   "line": 1906
+   "line": 1949
   }
  },
  {
@@ -4580,7 +4580,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/App.tsx",
-   "line": 1916
+   "line": 1959
   }
  },
  {
@@ -4590,7 +4590,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/App.tsx",
-   "line": 1917
+   "line": 1960
   }
  },
  {
@@ -4600,7 +4600,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/App.tsx",
-   "line": 1925
+   "line": 1968
   }
  },
  {
@@ -4610,7 +4610,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/App.tsx",
-   "line": 1930
+   "line": 1973
   }
  },
  {
@@ -4620,7 +4620,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/App.tsx",
-   "line": 1940
+   "line": 1983
   }
  },
  {
@@ -4630,7 +4630,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/App.tsx",
-   "line": 1941
+   "line": 1984
   }
  },
  {
@@ -4640,7 +4640,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/App.tsx",
-   "line": 1956
+   "line": 1999
   }
  },
  {
@@ -4650,7 +4650,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/App.tsx",
-   "line": 1958
+   "line": 2001
   }
  },
  {
@@ -4660,7 +4660,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/App.tsx",
-   "line": 1964
+   "line": 2007
   }
  },
  {
@@ -4670,7 +4670,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/App.tsx",
-   "line": 1966
+   "line": 2009
   }
  },
  {
@@ -4680,7 +4680,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/App.tsx",
-   "line": 1967
+   "line": 2010
   }
  },
  {
@@ -4690,7 +4690,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/App.tsx",
-   "line": 1983
+   "line": 2026
   }
  },
  {
@@ -4700,7 +4700,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/App.tsx",
-   "line": 1987
+   "line": 2030
   }
  },
  {
@@ -4710,7 +4710,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/App.tsx",
-   "line": 1991
+   "line": 2034
   }
  },
  {
@@ -4720,7 +4720,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/App.tsx",
-   "line": 2286
+   "line": 2353
   }
  },
  {
@@ -4730,7 +4730,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/App.tsx",
-   "line": 2306
+   "line": 2373
   }
  },
  {
@@ -4740,7 +4740,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/App.tsx",
-   "line": 2319
+   "line": 2386
   }
  },
  {
@@ -4750,7 +4750,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/App.tsx",
-   "line": 2330
+   "line": 2397
   }
  },
  {
@@ -4760,7 +4760,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/App.tsx",
-   "line": 2334
+   "line": 2401
   }
  },
  {
@@ -4770,7 +4770,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/App.tsx",
-   "line": 2354
+   "line": 2421
   }
  },
  {
@@ -4780,7 +4780,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/App.tsx",
-   "line": 2368
+   "line": 2435
   }
  },
  {
@@ -4790,7 +4790,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/App.tsx",
-   "line": 2493
+   "line": 2560
   }
  },
  {
@@ -4800,7 +4800,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/App.tsx",
-   "line": 2569
+   "line": 2636
   }
  },
  {
@@ -4810,7 +4810,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/App.tsx",
-   "line": 2572
+   "line": 2639
   }
  },
  {
@@ -4820,7 +4820,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/App.tsx",
-   "line": 2692
+   "line": 2777
   }
  },
  {
@@ -4830,7 +4830,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/App.tsx",
-   "line": 2692
+   "line": 2777
   }
  },
  {
@@ -4840,7 +4840,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/App.tsx",
-   "line": 2695
+   "line": 2780
   }
  },
  {
@@ -4850,7 +4850,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/App.tsx",
-   "line": 2698
+   "line": 2783
   }
  },
  {
@@ -8120,7 +8120,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/components/ChestReveal.tsx",
-   "line": 245
+   "line": 249
   }
  },
  {
@@ -8130,7 +8130,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/components/ChestReveal.tsx",
-   "line": 328
+   "line": 332
   }
  },
  {
@@ -8140,7 +8140,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/components/ChestReveal.tsx",
-   "line": 375
+   "line": 401
   }
  },
  {
@@ -8150,7 +8150,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/components/ChestReveal.tsx",
-   "line": 375
+   "line": 401
   }
  },
  {
@@ -8160,7 +8160,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/components/ChestReveal.tsx",
-   "line": 408
+   "line": 434
   }
  },
  {
@@ -8170,7 +8170,17 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/components/ChestReveal.tsx",
-   "line": 419
+   "line": 445
+  }
+ },
+ {
+  "id": "sdda6573",
+  "section": "components/ChestReveal.tsx",
+  "text": "להכניס לדק",
+  "where": {
+   "kind": "source",
+   "file": "apps/client/src/components/ChestReveal.tsx",
+   "line": 450
   }
  },
  {
@@ -8180,7 +8190,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/components/ChestReveal.tsx",
-   "line": 422
+   "line": 454
   }
  },
  {
@@ -8190,7 +8200,27 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/components/ChestReveal.tsx",
-   "line": 444
+   "line": 479
+  }
+ },
+ {
+  "id": "s8127023",
+  "section": "components/ChestReveal.tsx",
+  "text": "עליך עכשיו",
+  "where": {
+   "kind": "source",
+   "file": "apps/client/src/components/ChestReveal.tsx",
+   "line": 514
+  }
+ },
+ {
+  "id": "s540d1d7",
+  "section": "components/ChestReveal.tsx",
+  "text": "ללבוש עכשיו",
+  "where": {
+   "kind": "source",
+   "file": "apps/client/src/components/ChestReveal.tsx",
+   "line": 514
   }
  },
  {
@@ -10971,7 +11001,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/components/Shop.tsx",
-   "line": 74
+   "line": 77
   }
  },
  {
@@ -10981,7 +11011,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/components/Shop.tsx",
-   "line": 75
+   "line": 78
   }
  },
  {
@@ -10991,7 +11021,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/components/Shop.tsx",
-   "line": 78
+   "line": 81
   }
  },
  {
@@ -11001,7 +11031,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/components/Shop.tsx",
-   "line": 79
+   "line": 82
   }
  },
  {
@@ -11011,7 +11041,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/components/Shop.tsx",
-   "line": 80
+   "line": 83
   }
  },
  {
@@ -11021,7 +11051,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/components/Shop.tsx",
-   "line": 81
+   "line": 84
   }
  },
  {
@@ -11031,7 +11061,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/components/Shop.tsx",
-   "line": 82
+   "line": 85
   }
  },
  {
@@ -11041,7 +11071,17 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/components/Shop.tsx",
-   "line": 244
+   "line": 258
+  }
+ },
+ {
+  "id": "s082b44c",
+  "section": "components/Shop.tsx",
+  "text": "עליך",
+  "where": {
+   "kind": "source",
+   "file": "apps/client/src/components/Shop.tsx",
+   "line": 260
   }
  },
  {
@@ -11051,7 +11091,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/components/Shop.tsx",
-   "line": 244
+   "line": 261
   }
  },
  {
@@ -11061,7 +11101,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/components/Shop.tsx",
-   "line": 255
+   "line": 272
   }
  },
  {
@@ -11071,7 +11111,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/components/Shop.tsx",
-   "line": 332
+   "line": 376
   }
  },
  {
@@ -11081,7 +11121,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/components/Shop.tsx",
-   "line": 338
+   "line": 382
   }
  },
  {
@@ -11091,7 +11131,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/components/Shop.tsx",
-   "line": 345
+   "line": 389
   }
  },
  {
@@ -11101,7 +11141,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/components/Shop.tsx",
-   "line": 347
+   "line": 391
   }
  },
  {
@@ -11111,7 +11151,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/components/Shop.tsx",
-   "line": 366
+   "line": 410
   }
  },
  {
@@ -11121,7 +11161,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/components/ShopDetail.tsx",
-   "line": 118
+   "line": 128
   }
  },
  {
@@ -11131,7 +11171,27 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/components/ShopDetail.tsx",
-   "line": 183
+   "line": 193
+  }
+ },
+ {
+  "id": "s957092b",
+  "section": "components/ShopDetail.tsx",
+  "text": "עליך עכשיו",
+  "where": {
+   "kind": "source",
+   "file": "apps/client/src/components/ShopDetail.tsx",
+   "line": 257
+  }
+ },
+ {
+  "id": "s7aa7175",
+  "section": "components/ShopDetail.tsx",
+  "text": "ללבוש עכשיו",
+  "where": {
+   "kind": "source",
+   "file": "apps/client/src/components/ShopDetail.tsx",
+   "line": 261
   }
  },
  {
@@ -11141,7 +11201,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/components/ShopDetail.tsx",
-   "line": 236
+   "line": 265
   }
  },
  {
@@ -11151,7 +11211,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/components/ShopDetail.tsx",
-   "line": 240
+   "line": 269
   }
  },
  {
@@ -11161,7 +11221,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/components/ShopDetail.tsx",
-   "line": 250
+   "line": 279
   }
  },
  {
@@ -11171,7 +11231,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/components/ShopDetail.tsx",
-   "line": 259
+   "line": 288
   }
  },
  {

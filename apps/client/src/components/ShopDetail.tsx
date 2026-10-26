@@ -67,13 +67,17 @@ export function ShopDetail({
   item,
   mine,
   taken,
+  wearing,
   diamonds,
   busy,
   onBuy,
+  onWear,
   onClose,
 }: {
   item: ShopItem;
   mine: boolean;
+  /** The one of its kind that is in use right now. See `isWearing`. */
+  wearing: boolean;
   /**
    * Today's one is already taken. Only a chest can be this: it is not a
    * thing you own, it is one a day — see REPEATABLE in apps/server/src/shop.ts.
@@ -83,6 +87,12 @@ export function ShopDetail({
   busy: boolean;
   /** Buy `count` of it. One, unless this is a card and a pack was picked. */
   onBuy: (count: number) => void;
+  /**
+   * Put it on. Only given for a thing that CAN be worn and is not already
+   * — see `isWearable` — so this component never has to decide what a kind
+   * means.
+   */
+  onWear?: () => void;
   onClose: () => void;
 }) {
   const phrase = CATCHPHRASES.find((p) => p.item === item.id);
@@ -231,7 +241,26 @@ export function ShopDetail({
           </div>
         )}
 
-        {mine ? (
+        {mine && wearing ? (
+          /*
+           * === OWNED, AND THE ONE IN USE ===
+           *
+           * Or: *"put a mark on the item that is equipped now. And when you
+           * get a new item, give the option to use it right away."*
+           *
+           * Three states where there were two. Owning and wearing come
+           * apart the moment you own two of a kind — which is what a shop
+           * selling six avatars is FOR — and the gap between them was a
+           * trip to the profile that nobody was told about.
+           */
+          <span className="deet__mine deet__mine--worn">
+            <Icon name="king" size={16} /> {t("s957092b", "עליך עכשיו")}
+          </span>
+        ) : mine && onWear ? (
+          <button className="deet__wear" onClick={() => onWear()}>
+            <Icon name="ready" size={16} /> {t("s7aa7175", "ללבוש עכשיו")}
+          </button>
+        ) : mine ? (
           <span className="deet__mine">
             <Icon name="ready" size={16} /> {t("saafa01a", "כבר שלך")}
           </span>

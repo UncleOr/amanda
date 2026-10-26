@@ -975,3 +975,48 @@
   .newcard__tag { animation: none; }
   .newcard__fw { display: none; }
 }
+
+/*
+ * ═══ WHAT TO DO WITH WHAT YOU JUST WON ═══
+ *
+ * Or: *"when you get a new item, give the option to use it right away. And
+ * when you get a new card, give a 'put it in the deck' button — pressing it
+ * goes to the deck builder."*
+ *
+ * Both are the same complaint: the celebration ended in "lovely" and put
+ * the player back on the home screen, and a card that is not in a deck is a
+ * card you never play. The thing you want to do next belongs ON the screen
+ * that just gave you the reason to want it.
+ */
+.newcard__acts {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: var(--sp-2);
+}
+.newcard__acts .btn-fight { margin-inline: 0; }
+/* The deck is the loud one: it is what you came for. */
+.newcard__deck { display: inline-flex; align-items: center; gap: 6px; }
+
+.chest__wear {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  margin-top: var(--sp-2);
+  padding: 5px 12px;
+  border-radius: 999px;
+  border: 1px solid var(--accent);
+  background: transparent;
+  color: var(--text);
+  font: inherit;
+  font-size: var(--t-2);
+  font-weight: 800;
+  cursor: pointer;
+}
+.chest__wear:hover { background: rgba(255, 176, 32, 0.14); }
+/* Said once. The offer does not come back after it has been taken. */
+.chest__wear.is-on {
+  border-color: var(--line-lit);
+  color: var(--accent);
+  cursor: default;
+}
