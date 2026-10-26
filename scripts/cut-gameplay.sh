@@ -37,7 +37,6 @@
 # person thinking. These are the nine moments where something HAPPENS, found
 # by walking the file at two and three frames a second and looking:
 #
-#   0:00  the home screen — Amanda, the wordmark, the way in
 #   0:01  the two catchphrases facing each other
 #   0:04  BUILD FRENZY, and the first card goes down
 #   0:33  three cards dragged onto a board that is already full
@@ -45,12 +44,21 @@
 #   0:47  the countdown: 2, 1, 0, INTO BATTLE!
 #   0:51  the clash, damage numbers coming off both sides
 #   1:16  KING DOWN!
-#   1:19  You won. I let you.
 #
-# Three of them are held as stills with a slow push in — Or: *"screenshots
-# that arrive cool, with animations, mixed with cool building and battle
-# bits."* A still among moving pieces is a breath, and it is also the only
-# way a viewer reads a whole screen rather than watching one corner of it.
+# ═══ TWO THAT WERE HERE AND ARE NOT ═══
+#
+# Or, watching the cut: *"these two look superfluous and drag it down."*
+#
+#   the home screen  it opened the montage; it opens the whole trailer now
+#                    instead, as one tile of the collage. Twice is once too
+#                    many, and the collage says more in the same second.
+#   You won.         a panel of text, held for a second and a half. KING
+#                    DOWN! three seconds earlier is the same news, in motion,
+#                    with monsters in it — and the trailer ends on the
+#                    wordmark, which is a better last frame than a dialog.
+#
+# The still that is left is a breath between moving pieces, and the only way
+# a viewer reads a whole screen rather than watching one corner of it.
 #
 # ═══ THE PICTURE IS 848 WIDE AND THE TRAILER IS 1920 ═══
 #
@@ -97,16 +105,29 @@ FPS=25
 # The 0.7s they gave back went to `building`, which is three cards being
 # dragged onto a board that is already full of monsters.
 PIECES=(
-  "still   0.15  1.3   0   home"
-  "clip    0.75  1.2   0   catchphrases"
+  "clip    0.75  1.5   0   catchphrases"
   "clip    3.55  1.5  36   frenzy"
-  "clip   33.10  3.2  36   building"
+  "clip   33.10  3.6  36   building"
   "still  36.20  1.1  36   board"
   "clip   47.65  2.6  36   countdown"
-  "clip   51.30  2.4  36   clash"
-  "clip   75.75  1.3  36   kingdown"
-  "still  79.60  1.3   0   won"
+  "clip   51.30  2.8  36   clash"
+  "clip   75.75  2.2  36   kingdown"
 )
+
+# ═══ HOW THE PIECES MEET ═══
+#
+# Or: *"and the transitions don't look good either."*
+#
+# They were hard cuts, and a hard cut between two shots of the same board a
+# few seconds apart does not read as an edit — it reads as the video having
+# skipped. The eye sees one picture twitch rather than two pictures.
+#
+# So each piece pushes the one before it off to the left. A slide says
+# "next" where the cut said nothing, it is the gesture a player makes going
+# through their own cards, and it keeps the montage moving even across the
+# still.
+XFADE=0.24
+TRANS=slideleft
 
 [ -f "$SRC" ] || { echo "no recording at: $SRC" >&2; exit 1; }
 rm -rf "$SEG"
@@ -183,17 +204,43 @@ zoompan=z='1.09-0.09*on/(${n}-1)':x='iw/2-(iw/zoom/2)':y='ih/2-(ih/zoom/2)'\
 done
 rm -f "$SEG/.frame.png"
 
-# ── join ──────────────────────────────────────────────────────────────
+# ── join ──────────────────────────────────────────────
 #
-# Hard cuts. Every piece is already the same size, rate and pixel format, so
-# the concat demuxer joins them without re-encoding and the cut lands on the
-# exact frame it was given.
-: > "$SEG/list.txt"
-for f in "$SEG"/[0-9][0-9]-*.mp4; do
-  echo "file '$(basename "$f")'" >> "$SEG/list.txt"
+# xfade wants every piece in one graph, and each transition's OFFSET is a
+# time on the RUNNING OUTPUT — every overlap shortens everything after it,
+# so the offsets accumulate rather than being summed off the list above.
+#
+# acrossfade mirrors it on the audio at the same duration, which is what
+# keeps a card's thump on the frame where the card lands.
+echo
+echo "  joining: ${TRANS} × ${XFADE}s"
+
+inputs=()
+vchain=""
+achain=""
+prev_v="[0:v]"
+prev_a="[0:a]"
+elapsed=0
+last=0
+i=0
+for p in "${PIECES[@]}"; do
+  read -r kind ss len cy name <<<"$p"
+  i=$((i + 1))
+  inputs+=(-i "$(printf '%s/%02d-%s.mp4' "$SEG" "$i" "$name")")
+  if [ "$i" -gt 1 ]; then
+    elapsed=$(awk -v e="$elapsed" -v l="$last" -v x="$XFADE" 'BEGIN{printf "%.3f", e + l - x}')
+    vchain+="${prev_v}[$((i - 1)):v]xfade=transition=${TRANS}:duration=${XFADE}:offset=${elapsed}[v$i];"
+    achain+="${prev_a}[$((i - 1)):a]acrossfade=d=${XFADE}:c1=tri:c2=tri[a$i];"
+    prev_v="[v$i]"
+    prev_a="[a$i]"
+  fi
+  last=$len
 done
 
-ffmpeg -y -v error -f concat -safe 0 -i "$SEG/list.txt" -c copy -movflags +faststart "$OUT"
+ffmpeg -y -v error "${inputs[@]}" \
+  -filter_complex "${vchain%;};${achain%;}" \
+  -map "${prev_v}" -map "${prev_a}" \
+  "${ENC[@]}" "${AENC[@]}" -movflags +faststart "$OUT"
 
 echo
 printf '  %-24s ' "$OUT"

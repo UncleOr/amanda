@@ -155,14 +155,6 @@ FLASH=0xdff6f2
 # for why 08-fold is not among them.
 . "$(dirname "$0")/trailer-shots.sh"
 
-# The four that drop. Amanda last, because she is who you just met.
-CARDS=(
-  apps/client/public/cards/dragons_01_flame_dragon.webp
-  apps/client/public/cards/giants_01_stone_colossus.webp
-  apps/client/public/cards/furries_01_chuppy.webp
-  apps/client/public/cards/legends_01_amanda.webp
-)
-
 # ═══ THE HEBREW ON THE END CARD IS LAID OUT BY ffmpeg, NOT BY ME ═══
 #
 # drawtext does not reorder text by itself, so the obvious move is to reverse
@@ -220,55 +212,110 @@ ffmpeg -y -v error "${inputs[@]}" \
   -filter_complex "$(IFS=';'; echo "${filters[*]}");${concat}concat=n=${i}:v=1:a=0,fade=t=in:st=0:d=0.4,fade=t=out:st=${OPEN_OUT}:d=0.26:color=${FLASH}[v]" \
   -map "[v]" "${ENC[@]}" "$SEG/1-opening.mp4"
 
-# ── 2 · the cards ─────────────────────────────────────────────────────
+# ── 2 · the collage ───────────────────────────────────
 #
-# The opening now ends on Amanda at her largest, fading up into her own
-# teal light. This picks that light up and lets the dark come up behind it,
-# and the four cards fall in staggered and land in a row.
+# Six screens flying in out of Amanda's light, and then the game.
 #
-# This is the beat Or asked for at the very start: *"and then they go into
-# the cards and you start seeing a screen recording of a battle."* The
-# cinematic does not explain itself and there is no caption — four cards
-# fall out of her light, and the next thing on screen is a board of them.
-echo "  cards"
-# Or: *"not miserable."* These were 315 wide with 1380px of row on a 1920px
-# frame, which left the four of them floating in the middle of nothing. At
-# 420 the row is 1740 wide and the cards are the shot.
-CARD_H=560
-CARD_W=420          # the art is 384x512, so 3:4
-Y_END=260           # (1080-560)/2 — the row sits on the centre line
-Y_START=-620
-DROP=0.26           # seconds in the air
-HOLD=1.4
-SPEED=$(awk -v a="$Y_START" -v b="$Y_END" -v d="$DROP" 'BEGIN{printf "%.1f", (b-a)/d}')
+# ═══ WHAT WAS HERE BEFORE, AND WHY IT WENT ═══
+#
+# Four cards falling onto black. Or, watching it: *"this looks superfluous
+# and drags it down."* He was right and the frame says why — four pieces of
+# artwork, no interface, nothing the game does, and a second and a half of a
+# viewer's attention spent on a picture of four monsters they have just spent
+# ten seconds watching move.
+#
+# Or: *"it would be worth taking more screenshots — of the album, of the
+# shop and so on, in English of course — and working them into nice
+# transitions, maybe some energetic collage."* So: six screens, each sliding
+# in from the edge it is nearest, a tenth of a second apart. It is the one
+# second in the trailer that says how much game there is.
+#
+# Four of the six are captures of the running game (store/raw-screens, made
+# with `?album=full` — see account.ts) and two are frames of the recording,
+# so the collage and the montage after it are the same session.
+#
+# The last second of it is a slow push in, because a grid that lands and
+# then stops is a photograph of a collage. `zoompan` with d=1 takes one
+# frame and gives one frame back, which is what makes it a zoom on a
+# moving picture rather than a Ken Burns on a still.
+echo "  collage"
+TILES=(
+  store/raw-screens/home.jpg
+  store/raw-screens/album.jpg
+  store/raw-screens/shop.jpg
+  store/raw-screens/deck.jpg
+  store/raw-screens/build.jpg
+  store/raw-screens/battle.jpg
+)
+# Which edge each one comes from. Nearest edge, so nothing crosses the frame
+# and nothing crosses anything else: six tiles arriving through each other
+# is not energy, it is a mess.
+FROM=(left top right left bottom right)
+
+COL_HOLD=2.6
+TILE_W=620
+TILE_H=286          # the game is 2.165:1, and 620/2.165 is 286
+GAP=12
+GRID_X=18           # (1920 - 3*620 - 2*12) / 2
+GRID_Y=248          # (1080 - 2*286 - 12) / 2
+FLY=0.28            # seconds in the air
+STEP=0.13           # between one tile leaving and the next
+
+for f in "${TILES[@]}"; do
+  [ -f "$f" ] || { echo "missing collage tile: $f" >&2; exit 1; }
+done
+
+tinputs=(-f lavfi -t "$COL_HOLD" -i "color=${BG}:s=${W}x${H}:r=${FPS}")
+tfilters=()
+prev="[0:v]"
+k=1
+for idx in "${!TILES[@]}"; do
+  tinputs+=(-i "${TILES[$idx]}")
+  col=$((idx % 3))
+  row=$((idx / 3))
+  xf=$((GRID_X + col * (TILE_W + GAP)))
+  yf=$((GRID_Y + row * (TILE_H + GAP)))
+  t0=$(awk -v i="$idx" -v s="$STEP" 'BEGIN{printf "%.2f", 0.08 + i*s}')
+
+  # A thin lid the colour of the game's own panel edges, so six pictures
+  # read as six screens.
+  tfilters+=("[${k}:v]scale=$((TILE_W - 6)):$((TILE_H - 6)):force_original_aspect_ratio=increase,\
+crop=$((TILE_W - 6)):$((TILE_H - 6)),unsharp=5:5:0.6:5:5:0.0,\
+pad=${TILE_W}:${TILE_H}:3:3:color=0x2a4269[c$idx]")
+
+  case "${FROM[$idx]}" in
+    left)
+      sp=$(awk -v a="-${TILE_W}" -v b="$xf" -v d="$FLY" 'BEGIN{printf "%.1f", (b-a)/d}')
+      xe="if(lt(t,${t0}),-${TILE_W},min(${xf},-${TILE_W}+(t-${t0})*${sp}))"; ye="$yf" ;;
+    right)
+      sp=$(awk -v a="$W" -v b="$xf" -v d="$FLY" 'BEGIN{printf "%.1f", (a-b)/d}')
+      xe="if(lt(t,${t0}),${W},max(${xf},${W}-(t-${t0})*${sp}))"; ye="$yf" ;;
+    top)
+      sp=$(awk -v a="-${TILE_H}" -v b="$yf" -v d="$FLY" 'BEGIN{printf "%.1f", (b-a)/d}')
+      xe="$xf"; ye="if(lt(t,${t0}),-${TILE_H},min(${yf},-${TILE_H}+(t-${t0})*${sp}))" ;;
+    *)
+      sp=$(awk -v a="$H" -v b="$yf" -v d="$FLY" 'BEGIN{printf "%.1f", (a-b)/d}')
+      xe="$xf"; ye="if(lt(t,${t0}),${H},max(${yf},${H}-(t-${t0})*${sp}))" ;;
+  esac
+
+  tfilters+=("${prev}[c$idx]overlay=x='${xe}':y='${ye}'[g$idx]")
+  prev="[g$idx]"
+  k=$((k + 1))
+done
 
 # ═══ THE FLASH IS A FADE, NOT AN OVERLAY ═══
 #
 # This was first built as a near-white layer composited on top and faded out
 # on its alpha channel. It came out a flat mid-grey: the colour source went
 # through yuva420p and the alpha fade, and what landed on screen was neither
-# the flash nor the cards. `fade=t=in` takes a COLOUR, so the whole effect is
-# one filter on the finished frame — it starts AT the ember colour and
-# reveals the cards out of it. Nothing to composite and nothing to go grey.
-cinputs=(-f lavfi -t "$HOLD" -i "color=${BG}:s=${W}x${H}:r=${FPS}")
-cfilters=()
-prev="[0:v]"
-k=1
-for idx in "${!CARDS[@]}"; do
-  cinputs+=(-i "${CARDS[$idx]}")
-  x=$((90 + idx * 440))
-  # The art comes on backgrounds that do not match each other — the dragon on
-  # black, the colossus on cream — so each gets the same thin dark edge and
-  # the row reads as four cards instead of four pictures.
-  t0=$(awk -v i="$idx" 'BEGIN{printf "%.2f", 0.16 + i*0.10}')
-  cfilters+=("[${k}:v]scale=$((CARD_W - 16)):$((CARD_H - 22)),pad=${CARD_W}:${CARD_H}:8:11:color=0x16203a[c$idx]")
-  cfilters+=("${prev}[c$idx]overlay=x=${x}:y='if(lt(t,${t0}),${Y_START},min(${Y_END},${Y_START}+(t-${t0})*${SPEED}))'[bg$idx]")
-  prev="[bg$idx]"
-  k=$((k + 1))
-done
-ffmpeg -y -v error "${cinputs[@]}" \
-  -filter_complex "$(IFS=';'; echo "${cfilters[*]}");${prev}fade=t=in:st=0:d=0.26:color=${FLASH},format=yuv420p[v]" \
-  -map "[v]" "${ENC[@]}" "$SEG/2-cards.mp4"
+# the flash nor what was under it. `fade=t=in` takes a COLOUR, so the whole
+# effect is one filter on the finished frame — it starts AT Amanda's light
+# and reveals the collage out of it. Nothing to composite, nothing to go grey.
+ffmpeg -y -v error "${tinputs[@]}" \
+  -filter_complex "$(IFS=';'; echo "${tfilters[*]}");${prev}fade=t=in:st=0:d=0.26:color=${FLASH},\
+zoompan=z='min(1+0.0011*on,1.055)':x='iw/2-(iw/zoom/2)':y='ih/2-(ih/zoom/2)':d=1:s=${W}x${H}:fps=${FPS},\
+format=yuv420p[v]" \
+  -map "[v]" "${ENC[@]}" "$SEG/2-collage.mp4"
 
 # ── 3 and 4, once per language ────────────────────────────────────────
 #
@@ -368,7 +415,7 @@ for L in "${LANGS[@]}"; do
   echo "  joining"
   OUT="store/trailer-${L}.mp4"
   : > "$SEG/list.txt"
-  for f in 1-opening 2-cards 3-gameplay 4-closing; do
+  for f in 1-opening 2-collage 3-gameplay 4-closing; do
     echo "file '${f}.mp4'" >> "$SEG/list.txt"
   done
 
@@ -394,7 +441,7 @@ for L in "${LANGS[@]}"; do
   # normalize=0 on the mix. amix divides by the number of inputs by
   # default, so without it adding a quiet second layer makes the score six
   # decibels quieter, which is the opposite of adding anything.
-  SFX_AT=$(for f in "$SEG"/1-opening.mp4 "$SEG"/2-cards.mp4; do
+  SFX_AT=$(for f in "$SEG"/1-opening.mp4 "$SEG"/2-collage.mp4; do
     ffprobe -v error -show_entries format=duration -of csv=p=0 "$f"
   done | awk '{t+=$1} END{printf "%d", t*1000}')
 

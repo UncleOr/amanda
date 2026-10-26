@@ -18,6 +18,7 @@ import { line as t, lineF as tf } from "./copy";
 import { serverError } from "./serverError";
 import { nativeRedirectTo } from "./nativeAuth";
 import { step } from "./achievements";
+import { collectable } from "../data/catalog";
 
 /**
  * Publishable, and meant to be: row level security is what protects the data,
@@ -42,6 +43,76 @@ export interface OwnedCard {
   /** How many you hold — and so how many times you may place it. */
   copies: number;
   level: number;
+}
+
+/**
+ * `?album=full` — every card in the album, for a photograph.
+ *
+ * The same kind of door as `?chest=gold` and `?amanda=solo` in App.tsx: a way
+ * into a screen that normal play puts a long way from the front.
+ *
+ * The album is the screen a store listing needs most and the hardest one to
+ * photograph. A fresh account owns nothing — 0/51 and a page of empty
+ * slots — and the only played-in album is on somebody's phone. So store
+ * captures were either an advertisement for an empty game or a message asking
+ * Or to record one.
+ *
+ * It builds the account IN THE CLIENT. Nothing is written, nothing is claimed of
+ * the server, the next match still deals from whatever the server says, and a
+ * reload without the parameter is an ordinary guest again.
+ */
+function albumDev(): boolean {
+  // Read when it is asked for, not when the module is loaded: the tests run
+  // in node, where `window` does not exist, and a module that touches it on
+  // the way in takes fifteen test files down with it.
+  return (
+    typeof window !== "undefined" &&
+    new URLSearchParams(window.location.search).get("album") === "full"
+  );
+}
+
+/**
+ * The album as it would look after a few hundred chests — every card held,
+ * and the copies and levels spread rather than flat, because a page where
+ * every card says the same number looks generated. The arithmetic is a
+ * standing pattern, not a random one, so two captures taken a week apart show
+ * the same album.
+ */
+function fullAlbum(): Map<string, OwnedCard> {
+  const album = new Map<string, OwnedCard>();
+  collectable().forEach((c, i) => {
+    album.set(c.id, { cardId: c.id, copies: 3 + ((i * 7) % 23), level: 1 + ((i * 3) % 5) });
+  });
+  return album;
+}
+
+/**
+ * The whole account, not only the album.
+ *
+ * It has to make one rather than fill one, because the guest it would have
+ * filled often has nothing to fill: the players row is written by a trigger
+ * on sign-up, so a browser that has been a guest since before that trigger
+ * existed has a session and no row, and `loadAccount` answers null for it.
+ *
+ * The numbers are the ones in the recording the trailer is cut from, so a
+ * collage of captures and footage reads as one session rather than two.
+ */
+function studioAccount(): Account {
+  return {
+    playerId: "studio",
+    trophies: 488,
+    bestTrophies: 488,
+    diamonds: 291,
+    nachos: 44,
+    tutorialDone: true,
+    nickname: "UncleOr",
+    avatar: null,
+    birthDate: null,
+    gender: null,
+    catchphrase: null,
+    linked: true,
+    album: fullAlbum(),
+  };
 }
 
 /** The youngest we let anyone play online. Mirrored by a CHECK on the row. */
@@ -231,6 +302,8 @@ function cleanOAuthFromUrl(): void {
  * to read about a network error, they need the game to start.
  */
 export async function loadAccount(): Promise<Account | null> {
+  // The screenshot door, before anything touches the network: see albumDev.
+  if (albumDev()) return studioAccount();
   const sb = db();
   if (!sb) return null;
   try {
@@ -693,6 +766,15 @@ export interface Stats {
  * nothing a client does can inflate it.
  */
 export async function loadStats(): Promise<Stats | null> {
+  // The same door, and for the same reason: a studio account has no match
+  // rows, and an album page headed "0% Wins" is an argument against the game.
+  if (albumDev())
+    return {
+      played: 64,
+      wins: 41,
+      recent: [true, true, false, true, true, true, false, true, true, true],
+      bestTrophies: 488,
+    };
   const sb = db();
   if (!sb) return null;
   try {
