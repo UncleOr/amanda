@@ -642,6 +642,25 @@ html[lang="en"] h4 {
  * the way they are written — which goes for a heading that IS one, like the
  * family name over a shelf in the album.
  */
+/*
+ * === A PERSON'S NAME IS WRITTEN HOW THEY WROTE IT ===
+ *
+ * Or: *"the username in particular should not be in capitals — camelCase
+ * should be possible."*
+ *
+ * He is UncleOr, with the O. Shouting it back as UNCLEOR loses the one
+ * thing a chosen name carries, and it is the same exception the card names
+ * already have: a NAME is not a label.
+ *
+ * All five places one can appear, because a nickname is the same nickname
+ * on the chip, in the profile, across the versus screen, in the friends
+ * list and on the friend's own board.
+ */
+html[lang="en"] .me__name[data-name],
+html[lang="en"] .profile__name,
+html[lang="en"] .versus__name,
+html[lang="en"] .fboard__name,
+html[lang="en"] .friend__name,
 html[lang="en"] .album__series-name,
 html[lang="en"] .ground__pack b,
 html[lang="en"] .chest__prize b,

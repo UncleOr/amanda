@@ -1212,7 +1212,14 @@ function Game() {
               ) : (
                 <Icon name="king" size={20} />
               )}
-              <span className="me__name">
+              {/*
+                `data-name` only when it IS a name. The chip shows a
+                nickname OR a label — "my profile", "sign in" — and Or's
+                rule is about the first: *"the username in particular should
+                not be in capitals, camelCase should be possible."* A label
+                is a label and shouts with the rest of them.
+              */}
+              <span className="me__name" data-name={m.me.nickname ? "" : undefined}>
                 {m.me.nickname ??
                   (m.account?.linked ? t("se2c2032", "הפרופיל שלי") : t("sda25897", "התחברות"))}
               </span>
@@ -1763,6 +1770,10 @@ function Game() {
                         size="large"
                         onClick={() => !dragging && setActionDetail(m.hand!)}
                         onInfo={() => setActionDetail(m.hand!)}
+                        /* The arrow that spends it, on the card itself. See
+                           the note by `onUse` in ActionCardView. */
+                        onUse={m.barFull ? undefined : m.takeAction}
+                        useLabel={t("s25edd89", "קח לפעולה")}
                       />
                     </div>
                   ) : (
@@ -1788,17 +1799,12 @@ function Game() {
                 )}
               </div>
               <div className="lab__buttons">
-                {m.handIsAction && (
-                  <button
-                    className="take-action"
-                    onClick={m.takeAction}
-                    disabled={m.barFull}
-                    title={m.barFull ? t("s3adfc6c", "הבר מלא") : t("s25edd89", "קח לפעולה")}
-                    aria-label={m.barFull ? t("s7aacede", "הבר מלא") : t("s9f032e5", "קח לפעולה")}
-                  >
-                    <Icon name="action" size={19} />
-                  </button>
-                )}
+                {/*
+                  No "take to the bar" button here any more: the arrow is on
+                  the card itself (ActionCardView, `onUse`). Or: *"put it on
+                  the card, a button with an arrow on it so it is understood
+                  that this is how you use it."*
+                */}
                 <button className="btn-fight" onClick={m.toBattle}>
                   <Icon name="play" size={15} /> {t("s8006c77", "הרץ קרב")}
                 </button>
@@ -1829,6 +1835,8 @@ function Game() {
                       size="large"
                       onClick={() => !dragging && setActionDetail(m.hand!)}
                       onInfo={() => setActionDetail(m.hand!)}
+                      onUse={m.barFull ? undefined : m.takeAction}
+                      useLabel={t("s9f032e5", "קח לפעולה")}
                     />
                   </div>
                 ) : (
@@ -1877,17 +1885,6 @@ function Game() {
                 </span>
               </div>
               <div className="hand__buttons">
-                {m.handIsAction && (
-                  <button
-                    className="take-action"
-                    onClick={m.takeAction}
-                    disabled={m.barFull}
-                    title={m.barFull ? t("s6059231", "הבר מלא") : t("saef180f", "קח לפעולה")}
-                    aria-label={m.barFull ? t("s51d05f3", "הבר מלא") : t("s156c5b9", "קח לפעולה")}
-                  >
-                    <Icon name="action" size={19} />
-                  </button>
-                )}
                 {/* Named, so the walkthrough can point at them. A tutorial
                     step targets a CSS selector, and these two were the only
                     buttons on the screen without one — which is why the

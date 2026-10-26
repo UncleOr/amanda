@@ -17,6 +17,24 @@ interface Props {
   onInfo?: () => void;
   /** Dim the face once a one-shot action has been spent. */
   used?: boolean;
+  /**
+   * === HOW YOU USE IT, ON THE THING YOU USE ===
+   *
+   * Or: *"and the button to use an action card — put it on the card
+   * itself, a button with an arrow on it so it is understood that this is
+   * how you use it."*
+   *
+   * It was a separate button sitting under the card, which is a second
+   * object to notice and to aim at. On the face there is no aiming: the
+   * card is the thing you want and the arrow on it is the way to spend it.
+   *
+   * Left out everywhere a card is only being LOOKED at — the album, the
+   * gallery, the detail sheet — so an arrow never appears on a card you
+   * cannot play right now.
+   */
+  onUse?: () => void;
+  /** What the arrow does, for a title and a screen reader. */
+  useLabel?: string;
 }
 
 /**
@@ -24,7 +42,15 @@ interface Props {
  * fixed top row, fixed name plate — but wears one shared gold identity colour so
  * the two kinds of card are never mistaken for one another.
  */
-export function ActionCardView({ actionId, size = "medium", onClick, onInfo, used }: Props) {
+export function ActionCardView({
+  actionId,
+  size = "medium",
+  onClick,
+  onInfo,
+  used,
+  onUse,
+  useLabel,
+}: Props) {
   const card = ACTIONS.get(actionId);
   if (!card) return null;
 
@@ -67,6 +93,22 @@ export function ActionCardView({ actionId, size = "medium", onClick, onInfo, use
           )}
         </span>
       </div>
+
+      {onUse && (
+        <button
+          type="button"
+          className="action-card__use"
+          title={useLabel}
+          aria-label={useLabel}
+          onClick={(e) => {
+            e.stopPropagation();
+            onUse();
+          }}
+          onPointerDown={(e) => e.stopPropagation()}
+        >
+          <Icon name="play" size={18} />
+        </button>
+      )}
 
       <div className="card__plate">
         <span className="card__name">{say(card.name)}</span>

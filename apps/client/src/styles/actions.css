@@ -165,3 +165,51 @@
   border-color: #5ad25a;
   color: #bff5bf;
 }
+
+/*
+ * ═══ THE ARROW THAT SPENDS THE CARD, ON THE CARD ═══
+ *
+ * Or: *"and the button to use an action card — put it on the card itself, a
+ * button with an arrow on it so it is understood that this is how you use
+ * it."*
+ *
+ * It used to be a separate button under the card, which is a second object
+ * to notice and a second thing to aim at. On the face there is nothing to
+ * aim at: the card is the thing you want, and the arrow on it is the way to
+ * spend it.
+ *
+ * Over the artwork and clear of both ends — the top row carries the rarity
+ * and the ℹ, the plate at the bottom carries the name — so it covers
+ * neither. Gold, because gold is this game's "press me", and the only other
+ * gold disc on a screen is the play badge on the two cards you choose
+ * between.
+ */
+.action-card__use {
+  position: absolute;
+  left: 50%;
+  bottom: 34%;
+  transform: translateX(-50%);
+  display: inline-grid;
+  place-items: center;
+  width: 36px;
+  height: 36px;
+  padding: 0;
+  border: 0;
+  border-radius: 50%;
+  background: var(--accent);
+  color: #241a05;
+  cursor: pointer;
+  box-shadow:
+    0 3px 12px rgba(0, 0, 0, 0.6),
+    0 0 0 3px rgba(4, 7, 14, 0.6);
+  /* The card under it is draggable; this is not a handle. */
+  touch-action: manipulation;
+}
+.action-card__use:hover { transform: translateX(-50%) scale(1.08); }
+.action-card__use:active { transform: translateX(-50%) scale(0.94); }
+/* A card being looked at rather than played never gets one — see `onUse`. */
+.card--small .action-card__use { width: 26px; height: 26px; }
+@media (prefers-reduced-motion: reduce) {
+  .action-card__use:hover,
+  .action-card__use:active { transform: translateX(-50%); }
+}

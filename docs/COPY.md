@@ -1,6 +1,6 @@
 # הטקסטים של אמנדה
 
-כל טקסט שהשחקן רואה — 1328 במספר, 1328 מהם כבר באנגלית.
+כל טקסט שהשחקן רואה — 1322 במספר, 1322 מהם כבר באנגלית.
 
 ## איך עורכים
 
@@ -416,19 +416,13 @@
 | sb9a31bf | פעיל ∞ | | Active ∞ |
 | s34ec88c | נוצל | | Used |
 | sa549a85 | מאוחר מדי | | Too late |
-| s932d88e | גע בקלף על הלוח כדי להוריד אותו | | Tap a card to take it off |
-| s3adfc6c | הבר מלא | | Bar full |
 | s25edd89 | קח לפעולה | | To the bar |
-| s7aacede | הבר מלא | | Bar full |
-| s9f032e5 | קח לפעולה | | To the bar |
+| s932d88e | גע בקלף על הלוח כדי להוריד אותו | | Tap a card to take it off |
 | s8006c77 | הרץ קרב | | Fight |
 | sb0d338c | אין קלף | | No card |
+| s9f032e5 | קח לפעולה | | To the bar |
 | sba4d2ee | קלפים שנשארו בדק | | Left in the deck |
 | s6c4fc10 | קלפים בפח | | In the bin |
-| s6059231 | הבר מלא | | Bar full |
-| saef180f | קח לפעולה | | To the bar |
-| s51d05f3 | הבר מלא | | Bar full |
-| s156c5b9 | קח לפעולה | | To the bar |
 | sd06d0bd | זרוק | | Bin it |
 | s81312bd | זרוק | | Bin it |
 | s1bd8f04 | קח מהפח | | From the bin |
@@ -1278,7 +1272,7 @@
 | sd9e67b5 | תיבות | | Chests |
 | s26df959 | קלפים | | Cards |
 | s52f7e9a | מחר | | Tomorrow |
-| s1a96dcd | שלך | | Yours |
+| s1a96dcd | שלך | | Owned |
 | s9eddab1 | חינם | | Free |
 | s56fa87f | סגירה | | Close |
 | s4eef1f1 | חנות נוחות | | Corner Shop |
@@ -1292,7 +1286,7 @@
 | --- | --- | --- | --- |
 | se2cc447 | סגירה | | Close |
 | s0ea3644 | יש לך {0} | | You have {0} |
-| saafa01a | כבר שלך | | Already yours |
+| saafa01a | כבר שלך | | Owned |
 | s3df89df | לקחת היום. תחזור מחר | | Taken today. Back tomorrow |
 | s6508fa9 | קח בחינם | | Take it, free |
 | s02d239a | אין מספיק יהלומים | | Not enough diamonds |

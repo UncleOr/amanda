@@ -77,7 +77,22 @@ export const ICON_LOOK: Record<string, string> = {
 
   // ── the hand ──
   deck: "a neat stack of face-down cards seen from the side, indigo with gold edges",
-  discard: "an open bin with a single card tipping out of it, grey steel and gold",
+  /*
+   * Or: *"the bin button does not look enough like a bin."*
+   *
+   * The first brief said "an open bin with a single card tipping out of
+   * it" and what came back was a CRATE — a square box with a lid, which at
+   * 19px in the hand reads as a chest. The word "bin" was carrying the
+   * whole shape, and it is a word with two meanings.
+   *
+   * So the shape is described instead of named: tapered, ridged, round
+   * lid. That silhouette is a waste bin and nothing else.
+   */
+  discard:
+    "a classic TAPERED CYLINDRICAL waste bin, narrower at the bottom than the top, " +
+    "with vertical ridges down its side and a round domed lid tipped open above it, " +
+    "one playing card falling in — unmistakably a rubbish bin, not a box and not a " +
+    "crate, grey steel with a gold card",
   recycle: "two arrows curving into a recycling loop around a card, bright green",
 
   // ── match state ──

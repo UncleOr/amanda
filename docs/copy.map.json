@@ -4484,53 +4484,23 @@
   }
  },
  {
-  "id": "s932d88e",
-  "section": "מסכי המשחק — פתיחה, בנייה, קרב, תוצאה",
-  "text": "גע בקלף על הלוח כדי להוריד אותו",
-  "where": {
-   "kind": "source",
-   "file": "apps/client/src/App.tsx",
-   "line": 1785
-  }
- },
- {
-  "id": "s3adfc6c",
-  "section": "מסכי המשחק — פתיחה, בנייה, קרב, תוצאה",
-  "text": "הבר מלא",
-  "where": {
-   "kind": "source",
-   "file": "apps/client/src/App.tsx",
-   "line": 1796
-  }
- },
- {
   "id": "s25edd89",
   "section": "מסכי המשחק — פתיחה, בנייה, קרב, תוצאה",
   "text": "קח לפעולה",
   "where": {
    "kind": "source",
    "file": "apps/client/src/App.tsx",
-   "line": 1796
+   "line": 1769
   }
  },
  {
-  "id": "s7aacede",
+  "id": "s932d88e",
   "section": "מסכי המשחק — פתיחה, בנייה, קרב, תוצאה",
-  "text": "הבר מלא",
+  "text": "גע בקלף על הלוח כדי להוריד אותו",
   "where": {
    "kind": "source",
    "file": "apps/client/src/App.tsx",
-   "line": 1797
-  }
- },
- {
-  "id": "s9f032e5",
-  "section": "מסכי המשחק — פתיחה, בנייה, קרב, תוצאה",
-  "text": "קח לפעולה",
-  "where": {
-   "kind": "source",
-   "file": "apps/client/src/App.tsx",
-   "line": 1797
+   "line": 1789
   }
  },
  {
@@ -4540,7 +4510,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/App.tsx",
-   "line": 1803
+   "line": 1802
   }
  },
  {
@@ -4550,7 +4520,17 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/App.tsx",
-   "line": 1819
+   "line": 1818
+  }
+ },
+ {
+  "id": "s9f032e5",
+  "section": "מסכי המשחק — פתיחה, בנייה, קרב, תוצאה",
+  "text": "קח לפעולה",
+  "where": {
+   "kind": "source",
+   "file": "apps/client/src/App.tsx",
+   "line": 1832
   }
  },
  {
@@ -4560,7 +4540,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/App.tsx",
-   "line": 1871
+   "line": 1872
   }
  },
  {
@@ -4570,47 +4550,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/App.tsx",
-   "line": 1875
-  }
- },
- {
-  "id": "s6059231",
-  "section": "מסכי המשחק — פתיחה, בנייה, קרב, תוצאה",
-  "text": "הבר מלא",
-  "where": {
-   "kind": "source",
-   "file": "apps/client/src/App.tsx",
-   "line": 1885
-  }
- },
- {
-  "id": "saef180f",
-  "section": "מסכי המשחק — פתיחה, בנייה, קרב, תוצאה",
-  "text": "קח לפעולה",
-  "where": {
-   "kind": "source",
-   "file": "apps/client/src/App.tsx",
-   "line": 1885
-  }
- },
- {
-  "id": "s51d05f3",
-  "section": "מסכי המשחק — פתיחה, בנייה, קרב, תוצאה",
-  "text": "הבר מלא",
-  "where": {
-   "kind": "source",
-   "file": "apps/client/src/App.tsx",
-   "line": 1886
-  }
- },
- {
-  "id": "s156c5b9",
-  "section": "מסכי המשחק — פתיחה, בנייה, קרב, תוצאה",
-  "text": "קח לפעולה",
-  "where": {
-   "kind": "source",
-   "file": "apps/client/src/App.tsx",
-   "line": 1886
+   "line": 1876
   }
  },
  {
@@ -4620,7 +4560,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/App.tsx",
-   "line": 1915
+   "line": 1905
   }
  },
  {
@@ -4630,7 +4570,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/App.tsx",
-   "line": 1916
+   "line": 1906
   }
  },
  {
@@ -4640,7 +4580,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/App.tsx",
-   "line": 1926
+   "line": 1916
   }
  },
  {
@@ -4650,7 +4590,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/App.tsx",
-   "line": 1927
+   "line": 1917
   }
  },
  {
@@ -4660,7 +4600,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/App.tsx",
-   "line": 1935
+   "line": 1925
   }
  },
  {
@@ -4670,7 +4610,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/App.tsx",
-   "line": 1940
+   "line": 1930
   }
  },
  {
@@ -4680,7 +4620,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/App.tsx",
-   "line": 1950
+   "line": 1940
   }
  },
  {
@@ -4690,7 +4630,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/App.tsx",
-   "line": 1951
+   "line": 1941
   }
  },
  {
@@ -4700,7 +4640,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/App.tsx",
-   "line": 1966
+   "line": 1956
   }
  },
  {
@@ -4710,7 +4650,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/App.tsx",
-   "line": 1968
+   "line": 1958
   }
  },
  {
@@ -4720,7 +4660,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/App.tsx",
-   "line": 1974
+   "line": 1964
   }
  },
  {
@@ -4730,7 +4670,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/App.tsx",
-   "line": 1976
+   "line": 1966
   }
  },
  {
@@ -4740,7 +4680,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/App.tsx",
-   "line": 1977
+   "line": 1967
   }
  },
  {
@@ -4750,7 +4690,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/App.tsx",
-   "line": 1993
+   "line": 1983
   }
  },
  {
@@ -4760,7 +4700,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/App.tsx",
-   "line": 1997
+   "line": 1987
   }
  },
  {
@@ -4770,7 +4710,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/App.tsx",
-   "line": 2001
+   "line": 1991
   }
  },
  {
@@ -4780,7 +4720,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/App.tsx",
-   "line": 2296
+   "line": 2286
   }
  },
  {
@@ -4790,7 +4730,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/App.tsx",
-   "line": 2316
+   "line": 2306
   }
  },
  {
@@ -4800,7 +4740,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/App.tsx",
-   "line": 2329
+   "line": 2319
   }
  },
  {
@@ -4810,7 +4750,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/App.tsx",
-   "line": 2340
+   "line": 2330
   }
  },
  {
@@ -4820,7 +4760,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/App.tsx",
-   "line": 2344
+   "line": 2334
   }
  },
  {
@@ -4830,7 +4770,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/App.tsx",
-   "line": 2364
+   "line": 2354
   }
  },
  {
@@ -4840,7 +4780,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/App.tsx",
-   "line": 2378
+   "line": 2368
   }
  },
  {
@@ -4850,7 +4790,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/App.tsx",
-   "line": 2503
+   "line": 2493
   }
  },
  {
@@ -4860,7 +4800,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/App.tsx",
-   "line": 2579
+   "line": 2569
   }
  },
  {
@@ -4870,7 +4810,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/App.tsx",
-   "line": 2582
+   "line": 2572
   }
  },
  {
@@ -4880,7 +4820,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/App.tsx",
-   "line": 2702
+   "line": 2692
   }
  },
  {
@@ -4890,7 +4830,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/App.tsx",
-   "line": 2702
+   "line": 2692
   }
  },
  {
@@ -4900,7 +4840,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/App.tsx",
-   "line": 2705
+   "line": 2695
   }
  },
  {
@@ -4910,7 +4850,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/App.tsx",
-   "line": 2708
+   "line": 2698
   }
  },
  {
@@ -6060,7 +6000,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/components/ActionCardView.tsx",
-   "line": 49
+   "line": 75
   }
  },
  {
@@ -6070,7 +6010,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/components/ActionCardView.tsx",
-   "line": 49
+   "line": 75
   }
  },
  {
@@ -6080,7 +6020,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/components/ActionCardView.tsx",
-   "line": 59
+   "line": 85
   }
  },
  {
@@ -6090,7 +6030,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/components/ActionCardView.tsx",
-   "line": 74
+   "line": 116
   }
  },
  {
@@ -6100,7 +6040,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/components/ActionCardView.tsx",
-   "line": 74
+   "line": 116
   }
  },
  {

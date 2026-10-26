@@ -104,3 +104,45 @@ describe("a button whose words became a picture", () => {
     }
   });
 });
+
+/**
+ * **The arrow that spends an action card is on the card.**
+ *
+ * Or: *"and the button to use an action card — put it on the card itself, a
+ * button with an arrow on it so it is understood that this is how you use
+ * it."*
+ *
+ * It was a separate button under the card, which is a second object to
+ * notice and a second thing to aim at. The risk in moving it onto the face
+ * is the one thing a screenshot will not show: the card UNDER it is
+ * draggable, so a press on the arrow must not also start a carry.
+ */
+describe("using an action card", () => {
+  const VIEW = read("./ActionCardView.tsx");
+
+  it("draws the arrow on the card", () => {
+    expect(VIEW).toContain('className="action-card__use"');
+    expect(VIEW).toContain('<Icon name="play"');
+  });
+
+  it("does not start a drag when you press it", () => {
+    const btn = VIEW.slice(VIEW.indexOf('className="action-card__use"'));
+    expect(btn.slice(0, 500), "the click does not reach the card").toContain(
+      "e.stopPropagation()",
+    );
+    expect(btn.slice(0, 500), "and neither does the press").toContain(
+      "onPointerDown={(e) => e.stopPropagation()}",
+    );
+  });
+
+  it("appears only where a card can actually be played", () => {
+    // `onUse` is optional and the album, the gallery and the detail sheet
+    // never pass it — an arrow on a card you cannot play is a promise.
+    expect(VIEW).toContain("onUse?: () => void;");
+    expect(VIEW).toContain("{onUse && (");
+  });
+
+  it("is gone from the hand as a separate button", () => {
+    expect(APP, "the old button").not.toContain('className="take-action"');
+  });
+});

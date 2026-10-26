@@ -286,7 +286,10 @@
   position: relative;
   width: 46px;
   height: 46px;
-  padding: 0;
+  /* Or: *"the icon needs to be bigger and fill the whole button."* The
+     padding is the only thing between the rosette and the edge now; the
+     picture sizes itself to what is left. */
+  padding: 5px;
   border-radius: 13px;
   border: 1px solid var(--line-lit);
   background: rgba(10, 14, 24, 0.72);
@@ -295,6 +298,9 @@
   cursor: pointer;
 }
 .quests__open:hover { border-color: var(--accent); }
+/* The rosette fills it. A 26px picture in a 46px box was a button with a
+   sticker on it; this is a button that IS the picture. */
+.quests__open .icon { width: 100%; height: 100%; object-fit: contain; }
 /* Something to take: the tile says so before the badge is read. */
 .quests__open:has(.quests__dot--big) {
   border-color: var(--accent);
@@ -1960,7 +1966,22 @@ html[dir="rtl"] .versus__side {
      applies — the cell decides. */
   .home__progress .nachos { grid-area: nachos; width: auto; }
   .home__progress .shelf { grid-area: shelf; }
-  .home__progress .quests__open { grid-area: quests; }
+  /*
+   * Or: *"the challenges button needs to be lined up with the chest
+   * button."*
+   *
+   * The row is `align-items: stretch`, so every cell in it is already the
+   * same height — and this one was opting out of that with a hard 46px,
+   * which is what left it sitting short beside the nacho bar and the
+   * chest. No height of its own, and a square from whatever the row gives
+   * it.
+   */
+  .home__progress .quests__open {
+    grid-area: quests;
+    width: auto;
+    height: auto;
+    aspect-ratio: 1;
+  }
   /*
    * The pips shrink with the screen. Five of them at 28px plus a chest is a
    * 207px bar, which is more than half the column on a small phone — and the
