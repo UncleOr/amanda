@@ -307,8 +307,79 @@ export function runBattle(setup: BattleSetup): BattleResult {
     runOnReveal(state, u);
   }
 
+  /**
+   * ═══ A SHELL IS NOT A CORPSE ═══
+   *
+   * Or: *"the Obsidian Egg — change its behaviour as well as its text. The
+   * text should say it becomes a Flame Dragon after it DIES. And the Flame
+   * Dragon itself can be a bit weaker than a normal one — a bit less health
+   * and a bit less power — but it still has to fly like a Flame Dragon."*
+   *
+   * So the egg no longer runs a ten-second timer that nobody could see. It
+   * waits to be broken, and breaking it is what lets the thing inside out —
+   * which is the version a seven-year-old can work out by watching, and the
+   * only version where attacking the egg is a DECISION rather than free
+   * damage.
+   *
+   * It is done here, in front of the death rather than after it, because
+   * everything downstream of this line is what happens to a corpse: the
+   * Ground Floor card comes up, the swarm abilities fire, a King's fall ends
+   * the battle. None of that should happen to an egg; the unit was never
+   * destroyed, it changed into something else in the same cell.
+   *
+   * Keeping the uid is the whole trick. The client follows a unit by uid and
+   * rebuilds it whenever its card changes, so a thing that was an egg last
+   * frame is drawn as a dragon this frame — wings, series ring, name and all
+   * — and the `transform` event, which the egg already used, gives it the
+   * shell coming apart and the dragon's own roar on top.
+   */
+  function hatch(u: Unit): boolean {
+    const ab = u.abilities.find((a) => a.type === "hatchOnDeath");
+    if (!ab || u.flags.transformed) return false;
+    const into = typeof ab.params.into === "string" ? ab.params.into : null;
+    const card = into ? catalog.get(into) : undefined;
+    if (!card) return false;
+
+    // Built through the same function every other unit is, so the hatchling
+    // is a Flame Dragon in every respect the engine knows about — it flies,
+    // it knocks back, it tramples — rather than an egg wearing its picture.
+    const born = createUnitFromCard(state, card, u.owner, {
+      col: u.col,
+      lanes: u.lanes,
+      width: u.width,
+      facing: u.facing,
+      isKing: u.isKing,
+      below: null,
+    });
+    const pct = (v: unknown, fallback: number) => (typeof v === "number" ? v : fallback) / 100;
+    born.maxHp = Math.max(1, Math.round(born.maxHp * pct(ab.params.hpPct, 75)));
+    born.power = Math.round(born.power * pct(ab.params.powerPct, 75));
+
+    // Everything about the card, nothing about the cell. uid, position and
+    // what is stacked under it belong to the thing that was already here.
+    Object.assign(u, born, {
+      uid: u.uid,
+      col: u.col,
+      lanes: u.lanes,
+      width: u.width,
+      facing: u.facing,
+      below: u.below,
+      hp: born.maxHp,
+      flags: { ...u.flags, transformed: true },
+    });
+    state.events.push({
+      tick: state.tick,
+      type: "transform",
+      uid: u.uid,
+      cardId: u.cardId,
+      owner: u.owner,
+    });
+    return true;
+  }
+
   const killUnit: BattleOps["killUnit"] = (u) => {
     if (!u.alive) return;
+    if (hatch(u)) return;
     u.alive = false;
     u.hp = 0;
     state.events.push({ tick: state.tick, type: "death", uid: u.uid });

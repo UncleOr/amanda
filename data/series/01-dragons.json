@@ -96,22 +96,22 @@
       "midBoss": false,
       "abilities": [
         {
-          "type": "delayedTransform",
-          "trigger": "delayed",
+          "type": "hatchOnDeath",
+          "trigger": "onDeath",
           "params": {
-            "afterSeconds": 10,
-            "powerBonus": 1500,
-            "into": "dragons_01_flame_dragon"
+            "into": "dragons_01_flame_dragon",
+            "hpPct": 75,
+            "powerPct": 75
           },
           "description": {
-            "he": "אחרי 10 שניות בוקע ממנה דרקון אש עם +1500 עוצמה.",
-            "en": "Hatches a Flame Dragon with +1500 Power after 10 seconds"
+            "he": "כשהיא נשברת בוקע ממנה דרקון להבה צעיר, עף ומלא אנרגיה.",
+            "en": "When it breaks, a young Flame Dragon hatches out of it — flying, and almost as strong."
           }
         }
       ],
       "role": {
-        "he": "פצצה מתקתקת לקומת קרקע: מניחים אותה למטה ומעליה טנק; עד שהטנק נפרץ הטיימר נגמר.",
-        "en": "Ground-floor ticking bomb: place it under a tank; by the time the tank breaks, its timer is up."
+        "he": "לא נלחמת. מחכה שישברו אותה.",
+        "en": "It does not fight. It waits to be broken."
       },
       "art": {
         "placeholderColor": "#8a6d3b",

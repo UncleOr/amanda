@@ -83,6 +83,7 @@ export const ABILITY_LABEL: Partial<Record<AbilityType, { he: string; en: string
   slowAura: { he: "הילת האטה", en: "Slowing aura" },
   attackSpeedAura: { he: "הילת מהירות", en: "Speed aura" },
   delayedTransform: { he: "התמרה מושהית", en: "Delayed change" },
+  hatchOnDeath: { he: "בוקע במות", en: "Hatches on death" },
   swarmOnDeath: { he: "נחיל במוות", en: "Swarm on death" },
   splitOnDeath: { he: "פיצול במוות", en: "Split on death" },
   sacrificeAdjacent: { he: "הקרבת בעל-ברית", en: "Sacrifice an ally" },

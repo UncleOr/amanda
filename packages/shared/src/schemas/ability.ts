@@ -66,6 +66,7 @@ export const ABILITY_TYPES = [
   "statAura", // +pct% power and +pct% max health, for a touching family
   // --- spawn / transform / death ---
   "delayedTransform", // after a delay, transform into a stronger form
+  "hatchOnDeath", // when it is destroyed it becomes another card
   "swarmOnDeath", // spawn small units on death
   "splitOnDeath", // split into smaller copies on death
   "sacrificeAdjacent", // consume an adjacent ally for a benefit
