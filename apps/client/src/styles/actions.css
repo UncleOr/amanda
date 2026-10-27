@@ -183,11 +183,55 @@
  * neither. Gold, because gold is this game's "press me", and the only other
  * gold disc on a screen is the play badge on the two cards you choose
  * between.
+ *
+ * ═══ AND "CLEAR OF BOTH ENDS" USED TO BE A GUESS ═══
+ *
+ * Or: *"sometimes the action card's name is too long and then the name
+ * covers the take button."*
+ *
+ * `bottom: 34%` was a percentage picked against a plate that was assumed to
+ * stay one line tall. The plate is absolutely positioned at the bottom and
+ * grows UPWARDS, and `.card--large .card__name` clamps to TWO lines — so a
+ * long name raised the plate into the arrow and nothing in the stylesheet
+ * knew.
+ *
+ * Measured rather than guessed, with the real stylesheet at the real sizes:
+ *
+ *   | where                | name                 | plate | arrow buried |
+ *   | battle hand 92×120   | one line             |  36px |      0       |
+ *   | battle hand 92×120   | "Radioactive Eraser" |  51px |     11px     |
+ *   | playground 46×60    | ANY name             |  51px |  31px of 36  |
+ *
+ * So it is two bugs with one cause, and the second is worse than the one
+ * reported: in the playground the arrow is three-quarters buried whatever
+ * the card is called, because every name wraps on a card that narrow.
+ *
+ * The fix is to stop guessing. The plate on an action card is a FIXED band
+ * — `--plate-h`, one line and an ellipsis, because the full name is one tap
+ * away on the detail sheet and a plate that grows is a plate that swallows
+ * the arrow. The arrow then sits a known distance above a known height,
+ * which is a thing CSS can be sure of rather than a percentage that happened
+ * to work on the card it was written against.
  */
+.action-card {
+  /* The one number the plate and the arrow both read. */
+  --plate-h: 36px;
+}
+.action-card .card__plate {
+  height: var(--plate-h);
+  justify-content: center;
+  overflow: hidden;
+}
+.action-card .card__name {
+  /* Overrides the two-line clamp `.card--large` gives every other card. */
+  white-space: nowrap;
+  -webkit-line-clamp: 1;
+  text-overflow: ellipsis;
+}
 .action-card__use {
   position: absolute;
   left: 50%;
-  bottom: 34%;
+  bottom: calc(var(--plate-h) + 8px);
   transform: translateX(-50%);
   display: inline-grid;
   place-items: center;
@@ -212,4 +256,51 @@
 @media (prefers-reduced-motion: reduce) {
   .action-card__use:hover,
   .action-card__use:active { transform: translateX(-50%); }
+}
+
+/*
+ * ═══ THE PLAYGROUND'S CARD IS 46×60, AND THAT IS TOO SMALL ═══
+ *
+ * Fixing the plate above takes the playground from 31px of the arrow buried
+ * to 15 — better, and still broken, because a 36px disc over a 36px plate
+ * needs more card than 60px of height. The top row ends at 21px and the
+ * plate would start at 24: three pixels of room.
+ *
+ * A container query rather than another breakpoint, because what matters is
+ * the size of THIS card and not the size of the phone — the same card is
+ * 104×135 on a wide screen and wants the full-size arrow there.
+ *
+ * The container itself is declared in lab.css, beside the three sizes it is
+ * asking about, because `.lab__held` belongs to that sheet. Declaring it
+ * here would put the same bare class in two stylesheets, which is what
+ * collisions.test.ts exists to catch — and did.
+ */
+@container (max-height: 100px) {
+  .action-card {
+    --plate-h: 20px;
+  }
+  .action-card .card__name { font-size: 10px; }
+  /* The word "action card" under the name is furniture the card has no room
+     for; the gold frame and the arrow already say what it is. */
+  .action-card__tag { display: none; }
+  .action-card__use {
+    width: 22px;
+    height: 22px;
+    bottom: calc(var(--plate-h) + 3px);
+  }
+  /*
+   * And the top row goes, because the card has room for the top row OR for
+   * the one control that does something, and not for both. Measured: with
+   * the ℹ hidden and the kind badge shrunk, a 22px arrow centred on a
+   * 46px-wide card still lands on the badge at one end and the rarity gem
+   * at the other — there is simply less than 22px of middle.
+   *
+   * Nothing in that row is load-bearing here. The ℹ duplicates a tap on
+   * the card (App.tsx, `onClick`), the gold frame already says "action
+   * card" louder than the ▶ does, and rarity is on the same card
+   * everywhere else in the game. What is left is art, arrow, name — which
+   * is the whole of what this card is for.
+   */
+  .action-card .card__top { display: none; }
+  .action-card__use { width: 26px; height: 26px; }
 }

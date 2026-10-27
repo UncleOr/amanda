@@ -85,6 +85,17 @@
   flex: none;
   width: 104px;
   height: 135px;
+  /*
+   * A size container, so the action card inside can ask how much room it
+   * actually has rather than how wide the phone is. At 46×60 — the size
+   * two breakpoints down — a full-size arrow over a full-size name plate
+   * does not fit, and the card sheds its top row to make room. See
+   * `@container (max-height: 100px)` in styles/actions.css.
+   *
+   * Safe because all three of its sizes are explicit pixels, right here:
+   * nothing about this box is measured from its contents.
+   */
+  container-type: size;
 }
 .lab__eraser {
   width: 100%;

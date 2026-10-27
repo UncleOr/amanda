@@ -2,7 +2,7 @@ import { useEffect, useRef, useState } from "react";
 import { spriteFor } from "../game/skins";
 import { looksLikeAMovedBuild, markStale } from "../game/staleBuild";
 import { Application, Assets, Container, Graphics, Sprite, Text, Texture } from "pixi.js";
-import { ARENA, SIMULATION, type PlayerCard } from "@amanda/shared";
+import { ARENA, PHASES, SIMULATION, type PlayerCard } from "@amanda/shared";
 import type { BattleResult, EndedBy, FrameUnit, Owner } from "@amanda/engine";
 import { cardColor, CATALOG } from "../data/catalog";
 import { seriesColor } from "../data/cardMeta";
@@ -1703,10 +1703,45 @@ export function Arena({
           clock += dt;
           const k = Math.min(1, dt / 90);
 
-          // The clock reads from the replay position, so it can never drift
-          // away from what is actually happening on the field.
-          const totalSec = frames.length / SIMULATION.ticksPerSecond;
-          const leftSec = Math.max(0, totalSec - elapsed / 1000);
+          /*
+           * ═══ THE CLOCK IS THE CLOCK, NOT THE LENGTH OF THE REPLAY ═══
+           *
+           * Or: *"when the king dies before the end of the battle time, the
+           * clock goes down automatically so the battle ends at 0 together
+           * with the king dying. That's weird. If the king dies the battle
+           * just ends, even if there are 23 seconds left on the clock and I
+           * didn't get the end-of-clock beep. That is completely fine by
+           * me."*
+           *
+           * This read `frames.length`, which is how long the battle ACTUALLY
+           * ran — the engine stops the moment a king falls (simulate.ts: the
+           * loop runs `while !ended && winner === null`). So a battle decided
+           * at 35 seconds produced 1,050 frames, and the clock was told it
+           * had 35 seconds to spend. It started at 35, not 58, and emptied
+           * exactly as the crown came down.
+           *
+           * Which looks like the clock chasing the battle, because it is.
+           *
+           * It counts the allowance now. A king who falls early leaves
+           * seconds on it and the replay simply ends, which is what he
+           * asked for and is also the truth: that time existed and was not
+           * needed.
+           *
+           * The beeps come free. They fire below WARN_AT, and a battle that
+           * ends at 35 never gets there — so "I didn't get the end-of-clock
+           * beep" stays true without a second rule saying so.
+           */
+          const totalSec = PHASES.battle.seconds;
+          /*
+           * ⚠ And it stops when the battle does. `elapsed` keeps climbing
+           * after the last frame — the ticker runs on through the
+           * announcement and the explosions — so reading it raw would have
+           * the clock carry on down from the 23 seconds the king left on
+           * it, and start beeping partway through the victory. Which is the
+           * reported bug again, arriving four seconds later.
+           */
+          const played = Math.min(elapsed, playbackMs);
+          const leftSec = Math.max(0, totalSec - played / 1000);
           const shown = Math.ceil(leftSec);
           if (clockText.text !== `${shown}s`) clockText.text = `${shown}s`;
           const warning = leftSec <= WARN_AT && leftSec > 0;
