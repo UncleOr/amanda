@@ -234,9 +234,9 @@ export const TUTORIAL_LINES: readonly TutorialLine[] = [
   },
   {
     id: "l1-king",
-    he: t("s1ff71ce", "הופה, אבי-הענקים. קלף ענק וחזק. מושלם למשבצת המלך."),
+    he: t("sb5b05c4", "הופה, מלך הטיטאנים. קלף ענק וחזק. מושלם למשבצת המלך."),
     vars: [],
-    when: t("s559179f", "אבי-הענקים ביד"),
+    when: t("s7f80400", "מלך הטיטאנים ביד"),
   },
   {
     id: "l1-king-why",
@@ -359,9 +359,9 @@ export const TUTORIAL_LINES: readonly TutorialLine[] = [
   },
   {
     id: "l2-king",
-    he: t("s8e82b1e", "אבי-הענקים. למשבצת המלך, כמו בפעם הקודמת."),
+    he: t("s9bc09d1", "מלך הטיטאנים. למשבצת המלך, כמו בפעם הקודמת."),
     vars: [],
-    when: t("s33be16b", "אבי-הענקים ביד"),
+    when: t("sccdcf9a", "מלך הטיטאנים ביד"),
   },
   {
     id: "l2-boost-wait",

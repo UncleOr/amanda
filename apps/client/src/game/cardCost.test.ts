@@ -75,6 +75,49 @@ describe("the override", () => {
     expect(cardCost({ stats: chuppy.stats })).toBe(5);
   });
 
+  /*
+   * ═══ AND IT IS WHAT KEPT THE DRAGONS AFFORDABLE ═══
+   *
+   * Or: *"the Flame Dragon and the dragons generally are too weak and die in
+   * a second. They need a bit more health."*
+   *
+   * Measured before changing anything: against the catalogue's median
+   * attacker — 157 damage a second — the dragons last a median of 3.3
+   * seconds, which is the same as the slimes. What makes Or right is where
+   * they spend those seconds: the dragons are the family that flies forward,
+   * and a flyer that crosses the line is answered by two or three cards at
+   * once. 433 health against three median attackers is nine tenths of a
+   * second, which is the thing he is describing.
+   *
+   * So health went up — about 45% on the ones that fly, 25% on the ones that
+   * hold a line — and the dragons now last a median of 4.2 seconds, between
+   * the plants and the giants.
+   *
+   * Health is half of `cardScore`, and six of the ten crossed a band on the
+   * way up. A price rise nobody asked for would have made legal decks
+   * illegal overnight, so those six carry an override at the price they
+   * already had. This is the test that says so: it is pinning the PRICES,
+   * not the health, and it goes red the day health moves again without
+   * somebody deciding what that should cost.
+   */
+  it("leaves every dragon at the price it was before its health went up", () => {
+    const was: Record<string, number> = {
+      dragons_01_flame_dragon: 5,
+      dragons_02_obsidian_egg: 1,
+      dragons_03_thunderwing: 3,
+      dragons_04_lava: 5,
+      dragons_05_spike: 2,
+      dragons_06_frost_breath: 2,
+      dragons_07_gold_horn: 4,
+      dragons_08_ghost_dragon: 4,
+      dragons_09_typhoon_dragon: 3,
+      dragons_10_sky_king: 5,
+    };
+    for (const [id, price] of Object.entries(was)) {
+      expect(cardCost(CATALOG.get(id)!), id).toBe(price);
+    }
+  });
+
   it("clamps a silly override rather than trusting it", () => {
     expect(cardCost({ stats: stats(100, 100, 1), cost: 99 })).toBe(COST_MAX);
     expect(cardCost({ stats: stats(100, 100, 1), cost: -4 })).toBe(COST_MIN);

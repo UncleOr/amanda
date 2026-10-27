@@ -33,6 +33,7 @@ import {
 import { LevelUp } from "./LevelUp";
 import { ElementsTable } from "./ElementsTable";
 import { line as t, lineF as tf } from "../game/copy";
+import { readyToLevel as readyToLevelIn } from "../game/upgradable";
 import { say } from "../game/lang";
 
 interface Props {
@@ -165,17 +166,11 @@ export function Album({ account, onClose, onCardInfo, onChanged }: Props) {
   /**
    * Has this card got the copies for its next level?
    *
-   * Deliberately NOT "and I can afford the diamonds": the filter answers
-   * "what have I collected enough of", and hiding a card because the purse
-   * is empty would make the list change when you spend money somewhere
-   * else. The button under the card is where affordability is said, in red.
+   * It lives in game/upgradable.ts now, because the home screen asks the
+   * same question to decide whether to put a dot on the album button, and a
+   * dot that disagreed with this filter would be worse than no dot.
    */
-  const readyToLevel = (cardId: string): boolean => {
-    const mine = album?.get(cardId);
-    if (!mine || mine.level >= LEVELS.max) return false;
-    const card = CATALOG.get(cardId);
-    return !!card && mine.copies >= levelCost(card.rarity, mine.level);
-  };
+  const readyToLevel = (cardId: string): boolean => readyToLevelIn(album, cardId);
   /*
    * Only cards that can be WON are counted or shown — the rule is in
    * @amanda/shared so the chest pool is answering the same question.

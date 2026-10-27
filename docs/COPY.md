@@ -97,7 +97,7 @@
 | dc28819c | מעניש כל מי שמעז לתקוף אותו. | | Punishes anyone who dares strike it. |
 | dc8d0506 | ענק הרעם | | Thunder Giant |
 | d0768b12 | מכת רעם שפוגעת בשני נתיבים. | | A thunderclap that strikes two lanes. |
-| d28e30a0 | אבי-הענקים | | Titan King |
+| d55f84c5 | מלך הטיטאנים | | Titan King |
 
 ## סדרה — הפרוותיים
 
@@ -1414,8 +1414,8 @@
 | s31f77d0 | מיד אחרי הזריקה | | right after the bin |
 | sd4b3818 | אוקיי, קוביית הג'לי בולעת קלפי יריב. נמקם אותה כאן למעלה מאחורה. היא לא תחסום את הדרקון, הוא מעופף. | | The Gelatinous Cube swallows enemy cards. Up the back. It will not block the dragon — he flies. |
 | s253d8e7 | קוביית הג'לי חזרה מהפח | | The cube is back from the bin |
-| s1ff71ce | הופה, אבי-הענקים. קלף ענק וחזק. מושלם למשבצת המלך. | | Oho, Titan King. A huge, strong card. Perfect for the King slot. |
-| s559179f | אבי-הענקים ביד | | Titan King in hand |
+| sb5b05c4 | הופה, מלך הטיטאנים. קלף ענק וחזק. מושלם למשבצת המלך. | | Oho, Titan King. A huge, strong card. Perfect for the King slot. |
+| s7f80400 | מלך הטיטאנים ביד | | Titan King in hand |
 | sd65daae | הכוח של קלף המלך גדל פי 3, וזה חשוב. אם הוא מת — הפסדתם. | | A King card hits three times harder, and that matters. If he dies — you lose. |
 | sb25f12e | מיד אחרי שהוכתר מלך | | right after a King is crowned |
 | s503c2fe | הופה, עוד ענק. טרול סלע, שמרפא את עצמו. נמקם אותו בעמדת השומר. | | Oho, another giant. Rock Troll, and he heals himself. We'll put him in the guard post. |
@@ -1450,8 +1450,8 @@
 | sd356bf5 | ברגע שהשלישייה נדלקה | | the moment the trio lights up |
 | sa808c9e | צ'ופי! החבר הכי טוב, עם עוצמת חשמל אדירה — אבל כמעט בלי חיים. מקדימה הוא ימות ראשון. פה עדיף. | | Choopy! Best friend you have. Hits like lightning, made of paper. Up front he dies first — back here is better. |
 | s6d14c48 | צ'ופי ביד | | Choopy in hand |
-| s8e82b1e | אבי-הענקים. למשבצת המלך, כמו בפעם הקודמת. | | Titan King. Into the King slot, same as last time. |
-| s33be16b | אבי-הענקים ביד | | Titan King in hand |
+| s9bc09d1 | מלך הטיטאנים. למשבצת המלך, כמו בפעם הקודמת. | | Titan King. Into the King slot, same as last time. |
+| sccdcf9a | מלך הטיטאנים ביד | | Titan King in hand |
 | scb28bb8 | בוסט אנרגיה — נותן כוח לכל מה שכבר על הלוח. רק לכל מה שכבר שם. אז לא נשתמש בו עכשיו. | | Energy Boost powers up what is already on the board. Only that. So — not yet. |
 | sb32330d | בוסט אנרגיה נכנס לבר, הלוח עוד לא מלא | | Energy Boost reaches the bar, the board is not full yet |
 | s4f2f850 | עכשיו. הלוח שלך מלא. עכשיו תפעיל אותו. | | Now. Your board is full. Now play it. |

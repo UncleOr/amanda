@@ -190,9 +190,23 @@ describe("the album's two views", () => {
      * change when you spend money somewhere else entirely — and the button
      * under the card already says, in red, when you cannot afford it.
      */
-    const ready = between(ALBUM, "const readyToLevel", "};");
+    /*
+     * It lives in game/upgradable.ts now rather than inside this component.
+     * Or: *"give me a small green mark on the album if I have cards that can
+     * be upgraded"* — and a dot on the home screen that disagreed with this
+     * screen's own filter would be worse than no dot, so there is one rule
+     * and two readers.
+     */
+    const rule = readFileSync(
+      fileURLToPath(new URL("../game/upgradable.ts", import.meta.url)),
+      "utf8",
+    );
+    const ready = between(rule, "export function readyToLevel", "}");
     expect(ready).toContain("mine.copies >= levelCost(card.rarity, mine.level)");
     expect(ready, "nothing about diamonds").not.toContain("diamonds");
+    expect(ALBUM, "and the album asks it rather than keeping its own").toContain(
+      "readyToLevelIn(album, cardId)",
+    );
   });
 
   it("shows pictures rather than words for the two views", () => {

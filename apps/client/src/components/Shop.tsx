@@ -16,6 +16,7 @@ import { CATALOG } from "../data/catalog";
 import { CardBack } from "./CardView";
 import { priceNow } from "../game/account";
 import { buyItem, loadShop, type ShopItem } from "../game/account";
+import { CHESTS_CHANGED } from "../game/meta";
 import { Overlay } from "./Overlay";
 import { ShopDetail } from "./ShopDetail";
 import { line as t } from "../game/copy";
@@ -368,6 +369,27 @@ export function Shop({
     await refresh();
     // The purse and the album both changed; whoever owns them should look again.
     onBought();
+    /*
+     * ═══ AND THE CHEST YOU JUST PAID FOR ═══
+     *
+     * Or: *"I bought a chest in the shop and never got it. It should pop up
+     * as a chest I can press and open, and it should also be kept for me in
+     * the chests place if I don't open it straight away."*
+     *
+     * The server had done its half correctly all along — shop.ts inserts
+     * the chest sealed, with its contents already rolled, exactly like one
+     * won in a match. What never happened was anybody telling the home
+     * screen. ChestShelf loads its list once and then listens for
+     * CHESTS_CHANGED, and a purchase did not fire it: the chest was sitting
+     * on the shelf behind the shop, and would appear the next time the game
+     * was opened. "Never got it" is what that looks like.
+     *
+     * So the event is fired on every purchase — a card pack can hand over a
+     * chest too — and a bought chest closes the shop, because the thing
+     * that was bought is on the screen behind it.
+     */
+    window.dispatchEvent(new Event(CHESTS_CHANGED));
+    if (item.kind === "chest") onClose();
   }
 
   return (

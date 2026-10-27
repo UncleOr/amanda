@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import { openChest, unopenedChests, type Chest } from "../game/account";
 import { CHESTS_CHANGED } from "../game/meta";
 import { Icon } from "./Icon";
@@ -37,10 +37,32 @@ export function ChestShelf({
 }) {
   const [chests, setChests] = useState<Chest[]>([]);
   const [busy, setBusy] = useState<string | null>(null);
+  /**
+   * Chests that were not here a moment ago.
+   *
+   * Or: *"it should POP UP as a chest I can press and open."* Arriving in a
+   * row of things that were already there is not popping up, so one that
+   * has just landed lands — see `shelf__chest--new`. Held in a ref rather
+   * than in state because it is read while rendering the list it describes,
+   * and a second render pass to say "and this one is new" would be a frame
+   * late every time.
+   */
+  const seen = useRef<Set<string>>(new Set());
+  const [fresh, setFresh] = useState<Set<string>>(new Set());
 
   const load = useCallback(() => {
     let alive = true;
-    void unopenedChests().then((list) => alive && setChests(list));
+    void unopenedChests().then((list) => {
+      if (!alive) return;
+      const now = new Set(list.map((c) => c.id));
+      // Only after the first load: on a cold start everything is "new", and
+      // four chests bouncing at a player who just opened the game is noise.
+      const first = seen.current.size === 0;
+      const added = first ? [] : list.filter((c) => !seen.current.has(c.id)).map((c) => c.id);
+      seen.current = now;
+      setChests(list);
+      if (added.length) setFresh(new Set(added));
+    });
     return () => {
       alive = false;
     };
@@ -68,7 +90,9 @@ export function ChestShelf({
       {chests.slice(0, 4).map((chest) => (
         <button
           key={chest.id}
-          className={`shelf__chest shelf__chest--${chest.kind}`}
+          className={`shelf__chest shelf__chest--${chest.kind}${
+            fresh.has(chest.id) ? " shelf__chest--new" : ""
+          }`}
           disabled={busy === chest.id}
           title={t("s97a626f", "פתח")}
           /*

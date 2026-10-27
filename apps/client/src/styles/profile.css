@@ -141,7 +141,30 @@
   overflow: hidden;
   transition: transform 140ms ease, border-color 140ms ease, box-shadow 140ms ease;
 }
-.pick__card img {
+/*
+ * ═══ `> img`, AND THE CHILD COMBINATOR IS THE WHOLE FIX ═══
+ *
+ * Or: *"the triangle and the circle don't look good, certainly not in
+ * Hebrew."*
+ *
+ * The circle is the gold disc of `.pick__go` and the triangle is the play
+ * mark inside it, and they looked like two separate shapes because they
+ * were: this rule says "the picture fills the card", it was written for the
+ * portrait, and it was matching the 15px icon in the badge as well. The
+ * icon got `width: 100%` of its disc and then a height from the phone rule
+ * in chests.css — 26 wide by 62 tall, hanging out of a 26px circle, with
+ * nothing clipping it.
+ *
+ * Measured in the browser at 848x392, which is where Or plays and where
+ * both rules apply: the icon computed to 26 x 62. On a tall desktop only
+ * the first of them matches, the icon comes out 26 x 26, and the badge
+ * looks like a badge — which is why this survived being looked at.
+ *
+ * The portrait is a direct child of the button and the icon is a
+ * grandchild, so `>` is the whole of the repair. The same correction is in
+ * chests.css twice, on the two height rules.
+ */
+.pick__card > img {
   display: block;
   width: 100%;
   aspect-ratio: 1;

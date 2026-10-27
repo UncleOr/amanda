@@ -215,7 +215,34 @@ export function runDamageOverTime(state: BattleState, ops: BattleOps): void {
     }
   }
 
-  // Stacks already on a unit keep burning; the poisoner does not have to live.
+  /*
+   * ═══ POISON WEARS OFF, AND UNTIL TODAY IT DID NOT ═══
+   *
+   * Or: *"and I don't know who is spreading poison, but it is at too high a
+   * spread and for too long. Every monster is poisoned the whole game —
+   * that is what the green bubbles on them mean, isn't it? Let's meter it."*
+   *
+   * It is, and he is describing the code exactly. `dotStacks` and `dotDps`
+   * were only ever added to: nothing anywhere decremented them, cleared
+   * them or timed them out. Six cards apply poison on hit, so anything they
+   * ever touched kept burning until the clock ran out fifty-eight seconds
+   * later — and the client draws the bubbles from health lost with no blow
+   * behind it, so the bubbles were telling the truth.
+   *
+   * It is a refreshing debuff now: every hit pushes the expiry out, and
+   * when the hitting stops the poison runs on for DOT_SECONDS and then
+   * ends. That keeps the half of it that is the point — a poisoner can die
+   * and still finish what it started — and loses the half that is a bug.
+   */
+  for (const u of state.units) {
+    if (num(u.flags.dotStacks, 0) <= 0) continue;
+    if (state.tick < num(u.flags.dotUntil, 0)) continue;
+    u.flags.dotStacks = 0;
+    u.flags.dotDps = 0;
+    u.flags.dotUntil = 0;
+  }
+
+  // Stacks still burning; the poisoner does not have to be alive for them.
   for (const u of state.units) {
     if (!u.alive) continue;
     const dps = num(u.flags.dotDps, 0);
@@ -227,16 +254,33 @@ export function runDamageOverTime(state: BattleState, ops: BattleOps): void {
   }
 }
 
-/** The most stacks one unit can be carrying. Enough to kill a King, not instantly. */
-const MAX_DOT_STACKS = 8;
+/**
+ * The most stacks one unit can be carrying, and how long they last.
+ *
+ * Eight stacks of up to 50 was 400 damage a second, for ever, on a
+ * catalogue whose middle card has 525 health — a second and a bit, and it
+ * could not be outrun because it never stopped. Five and five seconds.
+ *
+ * The seconds are counted from the LAST hit rather than the first, so a
+ * poisoner in a fight keeps its victim poisoned and one that walks away
+ * stops mattering. Five is measured against the thing it has to be able to
+ * do: the Venom Scorpion's whole job is killing a wall it cannot out-punch,
+ * and five stacks of 40 for five seconds after it dies is still a thousand
+ * damage arriving after the scorpion is gone.
+ */
+const MAX_DOT_STACKS = 5;
+const DOT_SECONDS = 5;
 
 /**
- * Add one poison stack to the target.
+ * Add one poison stack to the target, and push the expiry out.
  *
  * Stacks from different poisoners add together, which is the combo half of
- * Or's ask: two cheap insects do what neither of them can do alone.
+ * Or's ask: two cheap insects do what neither of them can do alone. The
+ * refresh is shared the same way — either of them hitting keeps all of it
+ * burning, which is what makes two of them worth more than one.
  */
-function addDotStack(target: Unit, perStack: number): void {
+function addDotStack(target: Unit, perStack: number, tick: number): void {
+  target.flags.dotUntil = tick + DOT_SECONDS * TPS;
   const stacks = num(target.flags.dotStacks, 0);
   if (stacks >= MAX_DOT_STACKS) return;
   target.flags.dotStacks = stacks + 1;
@@ -482,7 +526,7 @@ export function runOnHit(state: BattleState, attacker: Unit, target: Unit): void
       case "stackingDot":
         // The point of poison: it does not care about armor, and it does not
         // care how much health the thing in front of it has.
-        addDotStack(target, num(ab.params.dotPerStack, 40));
+        addDotStack(target, num(ab.params.dotPerStack, 40), state.tick);
         break;
       case "elementSteal":
         if (!attacker.flags.elementStolen) {

@@ -166,6 +166,9 @@
   gap: 8px;
   width: min(210px, 30vw);
 }
+/* A corner for the album's green upgrade dot to sit in. See btn-album__up. */
+.rail__item { position: relative; }
+
 .rail__item {
   display: flex;
   align-items: center;
@@ -548,6 +551,19 @@
 }
 .pick__card:hover .pick__go { transform: scale(1.1); }
 .pick__card:disabled .pick__go { opacity: 0.4; }
+/*
+ * And it points the way the screen is read.
+ *
+ * Or: *"the triangle and the circle don't look good, certainly not in
+ * Hebrew."* The badge sits in the leading corner, so in Hebrew it is the
+ * top RIGHT — and a triangle pointing right there points at the edge of the
+ * card and away from everything, which reads as "back".
+ *
+ * This is a GO mark and not a media player's play button: the thing it
+ * promises is the next screen, and a forward arrow is mirrored in a
+ * right-to-left interface for the same reason the layout is.
+ */
+html[dir="rtl"] .pick__go .icon { transform: scaleX(-1); }
 
 /* The two doors under the cards. */
 .btn-lab,

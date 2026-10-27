@@ -353,7 +353,7 @@
   /* the picture is still the button, just not half the screen tall */
   .pick { gap: 10px; }
   .pick__card { min-width: 104px; }
-  .pick__card img { aspect-ratio: auto; height: 74px; }
+  .pick__card > img { aspect-ratio: auto; height: 74px; }
   .pick__card span { padding: 6px 4px; font-size: 13px; }
 
   .btn-album { margin-top: 10px; padding: 9px 16px; font-size: 14px; }
@@ -369,7 +369,7 @@
    * off on a phone — it was simply gone. It shrinks instead; the room is there.
    */
   .intro__sub { font-size: 11px; margin: 0 0 7px; letter-spacing: 0; }
-  .pick__card img { height: 62px; }
+  .pick__card > img { height: 62px; }
   .me { top: 6px; padding: 3px 9px 3px 3px; }
   .me img { width: 24px; height: 24px; }
   .me__name { font-size: 12px; }
@@ -656,6 +656,32 @@
 
 /* the album is the second thing you might want, so it glows rather than moves */
 .btn-album { animation: album-glow 3.4s ease-in-out infinite alternate; }
+
+/*
+ * A card in there is ready to go up a level.
+ *
+ * Or: *"and give me a small green mark on the album if I have cards that can
+ * be upgraded."* Small is the word he used and the word this follows: 9px,
+ * on the corner, no number and no word. The challenges badge is gold and
+ * carries a count; two different promises should not look like one.
+ *
+ * `position: absolute` needs a corner to sit in, and `.btn-album` is a flex
+ * row with no positioning of its own, so it gets `relative` here rather than
+ * in the layout file — the dot is the only thing that ever needed it.
+ */
+.btn-album { position: relative; }
+.btn-album__up {
+  position: absolute;
+  top: 6px;
+  inset-inline-end: 8px;
+  width: 9px;
+  height: 9px;
+  border-radius: 50%;
+  background: #4ddc7a;
+  box-shadow:
+    0 0 0 2px rgba(4, 7, 14, 0.75),
+    0 0 10px rgba(77, 220, 122, 0.85);
+}
 @keyframes album-glow {
   from { box-shadow: 0 0 0 rgba(255, 176, 32, 0); }
   to { box-shadow: 0 0 22px rgba(255, 176, 32, 0.28); }

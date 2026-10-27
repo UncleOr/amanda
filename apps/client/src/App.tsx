@@ -1850,6 +1850,16 @@ function Game() {
                 picked={m.hand}
                 onPick={m.pickCard}
                 onInfo={(id) => (ACTIONS.has(id) ? setActionDetail(id) : openInfo(id))}
+                /*
+                 * The same drag the hand uses, armed from the rack. `onDrop`
+                 * reads the card out of `m.hand`, which `onPick` has just
+                 * set — both run on the same pointerdown, so the hand is
+                 * right long before the finger lifts.
+                 */
+                onDragOut={(id, e) => {
+                  if (!ACTIONS.has(id)) sfx.voice(voiceFor(id).name);
+                  startDrag(id, e);
+                }}
               />
             </aside>
           )}

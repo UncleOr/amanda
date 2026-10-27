@@ -41,7 +41,7 @@
       ],
       "rarity": "common",
       "stats": {
-        "hp": 433,
+        "hp": 630,
         "power": 1300,
         "attackSpeed": 1.5,
         "moveSpeed": 1.5,
@@ -131,8 +131,9 @@
         "electric"
       ],
       "rarity": "common",
+      "cost": 3,
       "stats": {
-        "hp": 350,
+        "hp": 510,
         "power": 900,
         "attackSpeed": 3,
         "moveSpeed": 0,
@@ -165,7 +166,7 @@
       ],
       "rarity": "common",
       "stats": {
-        "hp": 763,
+        "hp": 900,
         "power": 735,
         "attackSpeed": 1,
         "moveSpeed": 0,
@@ -208,8 +209,9 @@
         "earth"
       ],
       "rarity": "common",
+      "cost": 2,
       "stats": {
-        "hp": 550,
+        "hp": 690,
         "power": 300,
         "attackSpeed": 2,
         "moveSpeed": 0,
@@ -248,8 +250,9 @@
         "water"
       ],
       "rarity": "common",
+      "cost": 2,
       "stats": {
-        "hp": 500,
+        "hp": 630,
         "power": 400,
         "attackSpeed": 2.5,
         "moveSpeed": 0,
@@ -289,8 +292,9 @@
         "metal"
       ],
       "rarity": "rare",
+      "cost": 4,
       "stats": {
-        "hp": 600,
+        "hp": 750,
         "power": 600,
         "attackSpeed": 2,
         "moveSpeed": 1,
@@ -333,8 +337,9 @@
         "dark"
       ],
       "rarity": "rare",
+      "cost": 4,
       "stats": {
-        "hp": 250,
+        "hp": 400,
         "power": 850,
         "attackSpeed": 1.5,
         "moveSpeed": 2,
@@ -375,8 +380,9 @@
         "air"
       ],
       "rarity": "rare",
+      "cost": 3,
       "stats": {
-        "hp": 400,
+        "hp": 580,
         "power": 700,
         "attackSpeed": 3,
         "moveSpeed": 0,
@@ -421,7 +427,7 @@
       ],
       "rarity": "epic",
       "stats": {
-        "hp": 1200,
+        "hp": 1450,
         "power": 950,
         "attackSpeed": 5,
         "moveSpeed": 0,

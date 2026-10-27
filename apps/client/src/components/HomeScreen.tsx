@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import { Icon } from "./Icon";
+import { anyReadyToLevel } from "../game/upgradable";
 import { ArenaTrack } from "./ArenaTrack";
 import { ChestShelf } from "./ChestShelf";
 import { NachoBar } from "./NachoBar";
@@ -576,8 +577,29 @@ export function HomeScreen({
               <span className={`btn-deck__back back--${deckBack}`} aria-hidden="true" />
               {t("s7c9dce4", "הדק שלי")}
             </button>
+            {/*
+              ═══ AND A DOT WHEN SOMETHING IN THERE CAN GO UP ═══
+
+              Or: *"and give me a small green mark on the album if I have
+              cards that can be upgraded."*
+
+              An upgrade is the one thing in the album that EXPIRES in the
+              sense that matters: the copies are already won and the card is
+              already stronger, it just has not been told yet. Nothing on the
+              home screen said so, so the only way to find out was to open
+              the album and work the filter.
+
+              Green, where the challenges badge is gold — two different
+              promises should not look like the same one. It asks
+              `upgradable.ts`, which is the same rule the album's own "ready
+              to upgrade" filter asks, so the dot can never point at a screen
+              that then shows nothing.
+            */}
             <button className="btn-album" onClick={() => panel.show("album")}>
               <Icon name="deck" size={18} /> {t("sac17bac", "האלבום שלי")}
+              {anyReadyToLevel(m.account?.album) && (
+                <span className="btn-album__up" aria-hidden="true" />
+              )}
             </button>
           </div>
           <NachoBar nachos={m.account?.nachos ?? 0} />
@@ -719,9 +741,14 @@ export function HomeScreen({
                 <span className={`btn-deck__back back--${deckBack}`} aria-hidden="true" />
                 <span>{t("s3fc668a", "דק")}</span>
               </button>
+              {/* The same dot as on the wide layout's album button; this is
+                  the one a phone actually shows. See btn-album__up. */}
               <button className="rail__item" onClick={() => panel.show("album")}>
                 <Icon name="deck" size={19} />
                 <span>{t("sb1c5413", "האלבום")}</span>
+                {anyReadyToLevel(m.account?.album) && (
+                  <span className="btn-album__up" aria-hidden="true" />
+                )}
               </button>
             </>
           )}

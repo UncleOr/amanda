@@ -20,11 +20,30 @@ export function CardPicker({
   picked,
   onPick,
   onInfo,
+  onDragOut,
 }: {
   /** The card currently in hand, or null while the eraser is on. */
   picked: string | null;
   onPick: (cardId: string | null) => void;
   onInfo: (cardId: string) => void;
+  /**
+   * ═══ A CARD IS DRAGGED OUT OF THE RACK ITSELF ═══
+   *
+   * Or, for the second time: *"you still can't drag cards in the
+   * playground."*
+   *
+   * The first fix made the HELD card draggable, and it works — driven in
+   * the browser, a press on it and a move to a slot places the card. It is
+   * also not what anybody tries. The held card is a 46x60 thumbnail in the
+   * top corner; the cards you can see are these, forty of them filling the
+   * side of the screen, and the thing a person does with a wall of cards is
+   * pull one out of it.
+   *
+   * So a press here picks the card AND arms the same drag the hand uses.
+   * Tap still picks, exactly as before; the difference only shows up if the
+   * finger keeps going.
+   */
+  onDragOut?: (cardId: string, e: React.PointerEvent) => void;
 }) {
   const [query, setQuery] = useState("");
   const [openSeries, setOpenSeries] = useState<string>("all");
@@ -103,7 +122,14 @@ export function CardPicker({
                 <button
                   key={id}
                   className={`rack__card${picked === id ? " rack__card--on" : ""}`}
-                  onClick={() => onPick(id)}
+                  onPointerDown={(e) => {
+                    onPick(id);
+                    onDragOut?.(id, e);
+                  }}
+                  // Still here for the keyboard, where there is no pointer to
+                  // go down. Guarded so a mouse does not pick the same card
+                  // twice and say its name twice.
+                  onClick={() => picked === id || onPick(id)}
                   onDoubleClick={() => onInfo(id)}
                   title={CATALOG.get(id)?.name.he}
                 >
@@ -122,7 +148,11 @@ export function CardPicker({
                 <button
                   key={id}
                   className={`rack__card${picked === id ? " rack__card--on" : ""}`}
-                  onClick={() => onPick(id)}
+                  onPointerDown={(e) => {
+                    onPick(id);
+                    onDragOut?.(id, e);
+                  }}
+                  onClick={() => picked === id || onPick(id)}
                   onDoubleClick={() => onInfo(id)}
                   title={ACTIONS.get(id)?.name.he}
                 >
