@@ -1,6 +1,6 @@
 # הטקסטים של אמנדה
 
-כל טקסט שהשחקן רואה — 1328 במספר, 1328 מהם כבר באנגלית.
+כל טקסט שהשחקן רואה — 1356 במספר, 1356 מהם כבר באנגלית.
 
 ## איך עורכים
 
@@ -898,6 +898,28 @@
 | sb1a59ea | תיבות שמחכות לך | | Chests waiting |
 | s97a626f | פתח | | Open it |
 
+## components/Club.tsx
+
+| מזהה | טקסט נוכחי | טקסט חדש | אנגלית |
+| --- | --- | --- | --- |
+| s22400ab | סגירה | | Close |
+| s792effc | חברים | | Members |
+| sd3ccb21 | צ'אט | | Chat |
+| seeb4d7c | בקשות | | Requests |
+| se1bdd84 | אתגרים | | Goals |
+| s7b57db1 | שם המועדון | | Club name |
+| s525cb8b | קוד מועדון | | Club code |
+| s2a64db9 | סגירת המועדון | | Close the club |
+| s8b3b70f | העברת הבעלות | | Hand it over |
+| sc5257ed | דיווח | | Report |
+| sfc9e23a | יציאה מהמועדון | | Leave the club |
+| s1a1ea1b | כתוב משהו | | Say something |
+| sabda139 | בקשת קלף | | Ask for a card |
+| sb733665 | {0} נצחונות | | {0} wins |
+| sf7e2ddd | {0} גביעים | | {0} trophies |
+| s4fe4c14 | {0} קלפים | | {0} cards |
+| s47fdf22 | {0} קרבות פנימיים | | {0} club battles |
+
 ## components/DeckBuilder.tsx
 
 | מזהה | טקסט נוכחי | טקסט חדש | אנגלית |
@@ -1043,6 +1065,8 @@
 | s0cab6b9 | חברים | | Friends |
 | s44d803c | חברים | | Friends |
 | sd0647c4 | מישהו מחכה לתשובה | | Someone is waiting |
+| se8068ec | מועדון | | Club |
+| s565f283 | יש משהו חדש | | Something new |
 
 ## components/Inbox.tsx
 
@@ -1674,6 +1698,15 @@
 | se274fb0 | לקחת אחת היום. תחזור מחר. | | One a day. Back tomorrow. |
 | sc59543d | אין מספיק יהלומים. | | Not enough gems. |
 | s31caecc | חסרים {0} יהלומים. | | You're {0} gems short. |
+| s0a89ff9 | אין קוד כזה. | | No such code. |
+| se7ca89b | המועדון מלא. | | That club is full. |
+| s1b2d4f9 | השם הזה לא מתאים. | | That name will not do. |
+| s11a35c9 | כבר ביקשת קלף. תחזור עוד קצת. | | You asked for a card already. Come back a bit later. |
+| se6e16aa | אין לך עותק להעביר. | | You have no spare copy to give. |
+| s7f197f3 | כבר תרמת לבקשה הזאת. | | You already gave to this one. |
+| s28c35c2 | ההודעה שלך נמחקה בגלל מילים אסורות. זו אזהרה — בפעם הבאה תוצא מהמועדון מיד. | | Your message was deleted for banned words. This is a warning — next time you are out of the club immediately. |
+| s1cdcfe4 | ההודעה שלך נמחקה בגלל מילים אסורות. הוצאת מהמועדון. | | Your message was deleted for banned words. You have been removed from the club. |
+| s76508b2 | אי אפשר. | | No. |
 | s67fd1f6 | לא הצלחתי. נסה שוב. | | That didn't work. Try again. |
 | s25ffa6e | לא הצלחתי. נסה שוב. | | That didn't work. Try again. |
 

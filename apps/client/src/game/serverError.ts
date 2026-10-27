@@ -97,6 +97,33 @@ function words(code: ServerError, value: number | null): string {
         ? t("sc59543d", "אין מספיק יהלומים.")
         : tf("s31caecc", "חסרים {0} יהלומים.", value);
 
+    // ── clubs ──
+    //
+    // Or: *"you do not need to write all these explanations to the user.
+    // The user sees only buttons. Give messages only for critical things."*
+    //
+    // So the vocabulary is small rather than the words being vague: the
+    // refusals a child can actually ARRIVE at say what happened, and
+    // everything the popup offers no button for says the same short thing.
+    case "club.code":
+      return t("s0a89ff9", "אין קוד כזה.");
+    case "club.full":
+      return t("se7ca89b", "המועדון מלא.");
+    case "club.name":
+      return t("s1b2d4f9", "השם הזה לא מתאים.");
+    case "club.asked":
+      return t("s11a35c9", "כבר ביקשת קלף. תחזור עוד קצת.");
+    case "club.noSpare":
+      return t("se6e16aa", "אין לך עותק להעביר.");
+    case "club.gave":
+      return t("s7f197f3", "כבר תרמת לבקשה הזאת.");
+    case "club.warned":
+      return t("s28c35c2", "ההודעה שלך נמחקה בגלל מילים אסורות. זו אזהרה — בפעם הבאה תוצא מהמועדון מיד.");
+    case "club.removed":
+      return t("s1cdcfe4", "ההודעה שלך נמחקה בגלל מילים אסורות. הוצאת מהמועדון.");
+    case "club.no":
+      return t("s76508b2", "אי אפשר.");
+
     case "retry":
       return t("s67fd1f6", "לא הצלחתי. נסה שוב.");
   }

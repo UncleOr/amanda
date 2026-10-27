@@ -35,6 +35,7 @@ import { notify } from "./notify.js";
  * saving nothing — see supabase.ts.
  */
 import { CAN_SAVE, db } from "./supabase.js";
+import { creditClub, sameClub } from "./clubs.js";
 
 export const PROGRESS_ENABLED = CAN_SAVE;
 
@@ -310,6 +311,35 @@ async function grant(
  */
 export const saves = { attempted: 0, succeeded: 0, lastError: null as string | null };
 
+/**
+ * What a finished match is worth to the two players' clubs.
+ *
+ * `wins` to the winner, `battles` to both when they are in the SAME club
+ * (Or's *"there will also be challenges connected to that"*), and trophies
+ * are not counted here: the pile is moved by awardMeta, which knows the
+ * score and the opponent, and two places paying for one match is the bug
+ * recordMatch was already cleaned up to avoid.
+ */
+async function creditForClub(opts: {
+  a: string | null;
+  b: string | null;
+  winner: "A" | "B" | null;
+}): Promise<void> {
+  const sb = db();
+  if (!sb) return;
+  const { a, b, winner } = opts;
+  const winnerId = winner === "A" ? a : winner === "B" ? b : null;
+  try {
+    if (winnerId) await creditClub(sb, winnerId, "wins", 1);
+    if (a && b && (await sameClub(sb, a, b))) {
+      await creditClub(sb, a, "battles", 1);
+      await creditClub(sb, b, "battles", 1);
+    }
+  } catch {
+    /* a counter is never worth failing a match over */
+  }
+}
+
 export async function recordMatch(opts: {
   a: string | null;
   b: string | null;
@@ -317,6 +347,23 @@ export async function recordMatch(opts: {
 }): Promise<void> {
   const sb = db();
   if (!sb) return;
+  /*
+   * ═══ AND THE CLUB'S COUNTERS ═══
+   *
+   * Or: *"inside the club you also have the club's own challenges — reach
+   * X trophies, get X cards — weekly, daily, monthly."*
+   *
+   * Credited per MEMBER as well as per club, because the member's share is
+   * what decides who gets paid: a club of forty where six played pays six
+   * chests. That is the whole answer to his *"we need to decide how to do
+   * this cleverly so there are not too many prizes"*, and it lives in
+   * shared/clubs.ts beside the targets.
+   *
+   * Fired and not awaited — a slow counter must never hold up the result
+   * screen, and a club challenge that misses one match is a club challenge
+   * that finishes a match later.
+   */
+  void creditForClub(opts);
   saves.attempted++;
   const { a, b, winner } = opts;
   const winnerId = winner === "A" ? a : winner === "B" ? b : null;

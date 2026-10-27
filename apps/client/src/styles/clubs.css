@@ -1,0 +1,451 @@
+/*
+ * The club popup.
+ *
+ * One of fifteen stylesheets split out of a single 4,405-line styles.css.
+ * THE ORDER THEY ARE IMPORTED IN IS THE ORDER THEY WERE WRITTEN IN — see the
+ * note at the top of cards.css.
+ *
+ * ═══ EVERY NUMBER HERE COMES FROM THE SCALE ═══
+ *
+ * No hand-written font-size, no raw rgba panel, no sentence of prose. Those
+ * are the four numbers .claude/skills/amanda-ui/audit.sh counts and they must
+ * not go up — and this is a whole new screen, which is exactly where they
+ * used to go up.
+ *
+ * The screen's hero is THE PEOPLE: the member list is what opens, and the
+ * code to hand somebody sits in the header at a size meant to be read out
+ * across a room. The chat is a tab, not the front door — a club here is who
+ * you play with, not a place to be.
+ */
+
+.modal--club {
+  width: min(560px, 94vw);
+  max-height: 88dvh;
+  display: flex;
+  flex-direction: column;
+  gap: var(--sp-2);
+  padding: var(--sp-3);
+}
+
+/* ── the header: emblem, name, and the six digits ─────────────────── */
+
+.club__head {
+  display: flex;
+  align-items: center;
+  gap: var(--sp-2);
+  position: relative;
+  flex-wrap: wrap;
+}
+.club__emblem {
+  display: grid;
+  place-items: center;
+  width: 42px;
+  height: 42px;
+  flex: none;
+  border-radius: 50%;
+  background: var(--sur-1);
+  border: 1px solid var(--line);
+  color: var(--accent);
+}
+.club__id {
+  display: flex;
+  flex-direction: column;
+  gap: var(--sp-1);
+  min-width: 0;
+  flex: 1;
+}
+.club__id strong {
+  font-size: var(--t-4);
+  color: var(--text);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+/*
+ * The thing a child reads out to the child beside them, so it is the one
+ * number on this screen that is allowed to be big and spaced.
+ */
+.club__code {
+  font-size: var(--t-3);
+  font-weight: 800;
+  letter-spacing: 0.22em;
+  color: var(--accent);
+  font-variant-numeric: tabular-nums;
+}
+.club__gear {
+  flex: none;
+  background: var(--sur-1);
+  border: 1px solid var(--line);
+  border-radius: 10px;
+  color: var(--text);
+  padding: var(--sp-1) var(--sp-2);
+}
+
+.club__dress {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: var(--sp-2);
+  padding-block: var(--sp-2);
+  border-top: 1px solid var(--line);
+}
+.club__emblems {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--sp-1);
+}
+.club__pick {
+  display: grid;
+  place-items: center;
+  width: 36px;
+  height: 36px;
+  border-radius: 10px;
+  background: var(--sur-1);
+  border: 1px solid var(--line);
+  color: var(--text);
+}
+.club__pick--on {
+  background: var(--sur-lit);
+  border-color: var(--line-lit);
+  color: var(--accent);
+}
+/* Closing a club takes everybody's club away, so it does not look like the
+   other buttons. It is the only red thing on the screen. */
+.club__danger {
+  align-self: flex-start;
+  display: flex;
+  align-items: center;
+  gap: var(--sp-1);
+  font-size: var(--t-2);
+  color: #ff8b8b;
+  background: none;
+  border: 1px solid rgba(255, 139, 139, 0.4);
+  border-radius: 10px;
+  padding: var(--sp-1) var(--sp-2);
+}
+
+/* ── the tabs: four icons, no words ───────────────────────────────── */
+
+.club__tabs {
+  display: flex;
+  gap: var(--sp-1);
+  border-bottom: 1px solid var(--line);
+  padding-bottom: var(--sp-1);
+}
+.club__tab {
+  flex: 1;
+  display: grid;
+  place-items: center;
+  padding: var(--sp-2);
+  border: 0;
+  border-radius: 10px 10px 0 0;
+  background: none;
+  /* A control, so --text. The tab that is ON is told apart by its surface
+     and its accent, not by the other three being greyed out — §3. */
+  color: var(--text);
+}
+.club__tab--on {
+  background: var(--sur-1);
+  color: var(--accent);
+}
+
+/* ── lists ────────────────────────────────────────────────────────── */
+
+.club__list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: var(--sp-1);
+  overflow-y: auto;
+  min-height: 0;
+}
+.club__member,
+.club__ask,
+.club__goal {
+  display: flex;
+  align-items: center;
+  gap: var(--sp-2);
+  padding: var(--sp-2);
+  border-radius: 10px;
+  background: var(--sur-1);
+}
+.club__member > img,
+.club__ask > img {
+  width: 32px;
+  height: 32px;
+  flex: none;
+  border-radius: 8px;
+  object-fit: cover;
+}
+.club__who {
+  display: flex;
+  flex-direction: column;
+  gap: var(--sp-1);
+  min-width: 0;
+  flex: 1;
+}
+.club__who strong {
+  font-size: var(--t-3);
+  color: var(--text);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.club__who small {
+  display: flex;
+  align-items: center;
+  gap: var(--sp-1);
+  font-size: var(--t-2);
+  color: var(--muted);
+}
+/* The same green as every other "there is something here" in this game. */
+.club__on {
+  width: 7px;
+  height: 7px;
+  flex: none;
+  border-radius: 50%;
+  background: #4ade80;
+  box-shadow: 0 0 6px rgba(74, 222, 128, 0.85);
+}
+.club__go,
+.club__crown,
+.club__flag,
+.club__give {
+  flex: none;
+  display: grid;
+  place-items: center;
+  width: 30px;
+  height: 30px;
+  border-radius: 9px;
+  border: 1px solid var(--line);
+  background: var(--sur-1);
+  color: var(--text);
+}
+/* One click to play somebody who is online — the one gold thing in a row. */
+.club__go {
+  background: var(--sur-lit);
+  border-color: var(--line-lit);
+  color: var(--accent);
+}
+/* Both are controls. They are quieter than the gold "play" beside them
+   because they are smaller and plainer, which is how §3 says to do it. */
+.club__flag,
+.club__crown {
+  color: var(--text);
+  opacity: 0.75;
+}
+
+.club__leave {
+  display: flex;
+  justify-content: center;
+  padding-top: var(--sp-2);
+}
+.club__leave button {
+  display: flex;
+  align-items: center;
+  gap: var(--sp-1);
+  font-size: var(--t-2);
+  color: var(--text);
+  background: none;
+  border: 0;
+}
+
+/* ── the chat ─────────────────────────────────────────────────────── */
+
+.club__talk {
+  display: flex;
+  flex-direction: column;
+  gap: var(--sp-2);
+  min-height: 0;
+  flex: 1;
+}
+.club__chat {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: var(--sp-2);
+  overflow-y: auto;
+  min-height: 0;
+  flex: 1;
+}
+.club__chat li {
+  display: flex;
+  align-items: flex-start;
+  gap: var(--sp-2);
+}
+.club__chat img {
+  width: 26px;
+  height: 26px;
+  flex: none;
+  border-radius: 50%;
+  object-fit: cover;
+}
+.club__chat span {
+  display: flex;
+  flex-direction: column;
+  gap: var(--sp-1);
+  font-size: var(--t-3);
+  color: var(--text);
+  min-width: 0;
+  overflow-wrap: anywhere;
+}
+.club__chat strong {
+  font-size: var(--t-2);
+  color: var(--muted);
+}
+
+/* ── a row with a field and a button, used four times ─────────────── */
+
+.club__row {
+  display: flex;
+  gap: var(--sp-2);
+  align-items: center;
+}
+.club__row input {
+  flex: 1;
+  min-width: 0;
+  font-size: var(--t-3);
+  color: var(--text);
+  background: var(--sur-1);
+  border: 1px solid var(--line);
+  border-radius: 10px;
+  padding: var(--sp-2);
+}
+/*
+ * ⚠ `:not(.btn-fight)` is the whole of a bug caught in the browser. This
+ * stylesheet is imported after the one that defines `.btn-fight`, so a plain
+ * `.club__row button` rule won the cascade and painted the screen's ONE gold
+ * button the same 4%-white as the quiet one beside it — two peers where
+ * there should be a hero and a second way in. See §1 of the UI skill: if
+ * two siblings share a size AND a surface, one of them is in the wrong tier.
+ */
+.club__row button:not(.btn-fight) {
+  flex: none;
+  display: grid;
+  place-items: center;
+  width: 40px;
+  height: 40px;
+  border-radius: 10px;
+  border: 1px solid var(--line);
+  background: var(--sur-1);
+  color: var(--text);
+}
+.club__row .btn-fight {
+  flex: none;
+  display: grid;
+  place-items: center;
+  width: 40px;
+  height: 40px;
+  padding: 0;
+}
+.club__row button:disabled { opacity: 0.45; }
+
+.club__found {
+  display: flex;
+  flex-direction: column;
+  gap: var(--sp-3);
+  /* Clear of the close button, which is absolutely placed in the corner the
+     first field would otherwise run under. */
+  padding-block: var(--sp-4) var(--sp-2);
+}
+
+/* ── asking for a card ────────────────────────────────────────────── */
+
+.club__asks {
+  display: flex;
+  flex-direction: column;
+  gap: var(--sp-2);
+  min-height: 0;
+  flex: 1;
+}
+.club__wantbtn {
+  align-self: flex-start;
+  display: flex;
+  align-items: center;
+  gap: var(--sp-1);
+  font-size: var(--t-3);
+  color: var(--text);
+  background: var(--sur-1);
+  border: 1px solid var(--line);
+  border-radius: 10px;
+  padding: var(--sp-2) var(--sp-3);
+}
+.club__pickcards {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(54px, 1fr));
+  gap: var(--sp-1);
+  overflow-y: auto;
+  max-height: 34dvh;
+  min-height: 0;
+}
+.club__pickcards button {
+  padding: 0;
+  border: 0;
+  background: none;
+  border-radius: 8px;
+  overflow: hidden;
+}
+.club__pickcards img {
+  width: 100%;
+  aspect-ratio: 3 / 4;
+  object-fit: cover;
+  display: block;
+}
+
+/* ── the club's challenges ────────────────────────────────────────── */
+
+.club__bar {
+  display: block;
+  height: 6px;
+  border-radius: 999px;
+  background: var(--sur-1);
+  border: 1px solid var(--line);
+  overflow: hidden;
+}
+.club__bar i {
+  display: block;
+  height: 100%;
+  background: var(--accent);
+}
+.club__count {
+  flex: none;
+  font-size: var(--t-2);
+  color: var(--muted);
+  font-variant-numeric: tabular-nums;
+}
+.club__goal > svg,
+.club__goal > img {
+  flex: none;
+}
+
+/* ── the one message this feature is allowed to write ─────────────── */
+
+/*
+ * Or: *"give messages only for critical things (your message was deleted
+ * because of improper words. This is a warning, but next time will remove you
+ * from the club immediately)."*
+ *
+ * So it is the only sentence on the screen, and it looks like the only
+ * sentence on the screen: red, at the top, with a button to put it away.
+ */
+.club__notice {
+  display: flex;
+  align-items: center;
+  gap: var(--sp-2);
+  font-size: var(--t-2);
+  color: #ffd9d9;
+  background: rgba(220, 70, 70, 0.18);
+  border: 1px solid rgba(255, 139, 139, 0.45);
+  border-radius: 10px;
+  padding: var(--sp-2);
+}
+.club__notice button {
+  flex: none;
+  background: none;
+  border: 0;
+  color: inherit;
+}

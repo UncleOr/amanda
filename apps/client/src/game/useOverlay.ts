@@ -27,6 +27,8 @@ export type Overlay =
   | { kind: "profile" }
   | { kind: "modes" }
   | { kind: "friends" }
+  /** The club, and everything in one: see components/Club.tsx. */
+  | { kind: "club" }
   | { kind: "shop" }
   | { kind: "inbox" }
   /**

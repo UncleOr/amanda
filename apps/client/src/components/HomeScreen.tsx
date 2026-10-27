@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { Icon } from "./Icon";
 import { anyReadyToLevel } from "../game/upgradable";
+import { clubHasNews } from "../game/club";
 import { ArenaTrack } from "./ArenaTrack";
 import { ChestShelf } from "./ChestShelf";
 import { NachoBar } from "./NachoBar";
@@ -127,6 +128,27 @@ export function HomeScreen({
    * Only for a signed-in player — a guest has no friends list to count, and
    * the call would be a round trip to be told so.
    */
+  /*
+   * ═══ AND A GREEN DOT ON THE CLUB ═══
+   *
+   * Or: *"if there is a message or a challenge or something new in the club
+   * — there is a green dot next to it on the home screen."*
+   *
+   * One question, answered by the server because only the server knows what
+   * this player has already seen: a message newer than their last look, or a
+   * club challenge finished and unclaimed that they actually contributed to.
+   * Opening the popup moves `seen_at`, which is what puts the dot out.
+   */
+  const [clubNews, setClubNews] = useState(false);
+  useEffect(() => {
+    if (!signedIn) return;
+    let alive = true;
+    void clubHasNews().then((news) => alive && setClubNews(news));
+    return () => {
+      alive = false;
+    };
+  }, [signedIn, panel.open]);
+
   const [friends, setFriends] = useState<{ have: number; waiting: number } | null>(null);
   useEffect(() => {
     if (!signedIn) return;
@@ -801,6 +823,25 @@ export function HomeScreen({
                 something here" is the whole message. */}
             {friends && friends.waiting > 0 && (
               <i className="rail__dot" aria-label={t("sd0647c4", "מישהו מחכה לתשובה")} />
+            )}
+            {guest && <Lock />}
+          </button>
+
+          {/*
+            Or: *"make another button on the home board for 'Club'. Opens a
+            popup. An icon of course, and not text."*
+
+            The icon leads, as it does on every other button in this rail,
+            and the one word under it is there because its four neighbours
+            have one and a single unlabelled icon among them reads as
+            something broken rather than as something clean. One word is
+            already the minimum the rest of this screen keeps to.
+          */}
+          <button className="rail__item" onClick={gated(() => panel.show("club"))}>
+            <Icon name="flag" size={19} />
+            <span>{t("se8068ec", "מועדון")}</span>
+            {clubNews && (
+              <i className="rail__dot" aria-label={t("s565f283", "יש משהו חדש")} />
             )}
             {guest && <Lock />}
           </button>

@@ -87,6 +87,7 @@ import { birthdayShown, onBirthday, type BirthdayGift } from "./game/meta";
 import { Versus } from "./components/Versus";
 import { Report } from "./components/Report";
 import { Friends } from "./components/Friends";
+import { Club } from "./components/Club";
 import { Shop } from "./components/Shop";
 import { WhySignIn } from "./components/SignedInOnly";
 import { Inbox } from "./components/Inbox";
@@ -2761,6 +2762,27 @@ function Game() {
             else if (a === "friends") panel.show("friends");
             else if (a === "album") panel.show("album");
           }}
+        />
+      )}
+
+      {panel.is("club") && (
+        <Club
+          onClose={() => panel.close()}
+          /*
+           * Or: *"club members can have a battle in one click if both of
+           * them are connected."* It is the friend invitation underneath —
+           * the same room, the same accept — so there is no second way into
+           * a match to keep working. The server checks the club the same way
+           * it checks the friendship.
+           */
+          onBattle={
+            m.phase === "intro"
+              ? (id) => {
+                  panel.close();
+                  m.inviteFriend(id);
+                }
+              : undefined
+          }
         />
       )}
 

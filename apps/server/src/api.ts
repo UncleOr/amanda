@@ -14,7 +14,7 @@
 import type { IncomingMessage, ServerResponse } from "node:http";
 import { LEVELS, levelCost, levelDiamonds } from "@amanda/shared";
 import { CATALOG } from "./content.js";
-import { grantChest, saves } from "./progress.js";
+import { grantChest, rollChest, saves } from "./progress.js";
 import { fileReport, recentOpponents } from "./reports.js";
 import {
   acceptFriend,
@@ -26,6 +26,23 @@ import {
   removeFriend,
 } from "./friends.js";
 import { isOnline } from "./presence.js";
+import {
+  askForCard,
+  bequeathClub,
+  claimClubChest,
+  clubHasNews,
+  clubView,
+  closeClub,
+  createClub,
+  donateCard,
+  dressClub,
+  joinClub,
+  leaveClub,
+  markClubSeen,
+  ownsAClub,
+  postMessage,
+  reportMember,
+} from "./clubs.js";
 import { boughtToday, buy, ownedItems, shopWindow } from "./shop.js";
 import { cardsForSale } from "./cardShelf.js";
 import { offersFor } from "./offers.js";
@@ -397,6 +414,102 @@ async function handleReports(req: IncomingMessage, res: ServerResponse, path: st
   send(res, error ? 400 : 200, error ? { error } : { ok: true });
 }
 
+/**
+ * Clubs: the popup, and the nine things you can do in one.
+ *
+ * Or: *"make another button on the home board for 'Club'. Opens a popup."*
+ *
+ * Everything is one route family because it is one screen — `clubView` is a
+ * single read that fills the whole popup, and every action answers with the
+ * new view so the client never has to ask twice.
+ *
+ * `club.none` is not an error the player is shown. It is the answer to "what
+ * is my club" when they have not got one, and the popup draws its founding
+ * screen from exactly that.
+ */
+async function handleClub(req: IncomingMessage, res: ServerResponse, path: string): Promise<void> {
+  const sb = db();
+  if (!sb) return send(res, 503, { error: "no database" });
+  const playerId = await playerFrom(req);
+  if (!playerId) return send(res, 401, { error: "who are you" });
+
+  /** Every action answers with the club as it now stands. */
+  const view = async (extra: Record<string, unknown> = {}) =>
+    send(res, 200, { club: await clubView(sb, playerId, isOnline), ...extra });
+
+  if (path === "/api/club") {
+    // Opening the popup is what puts the green dot out.
+    await markClubSeen(sb, playerId);
+    return view();
+  }
+  if (path === "/api/club/news") {
+    return send(res, 200, { news: await clubHasNews(sb, playerId) });
+  }
+
+  const body = (await readBody(req)) as Record<string, unknown>;
+  const str = (k: string) => (typeof body[k] === "string" ? (body[k] as string) : "");
+
+  let error: string | null = null;
+  switch (path) {
+    case "/api/club/create":
+      error = await createClub(sb, playerId, str("name"));
+      break;
+    case "/api/club/join":
+      error = await joinClub(sb, playerId, str("code"));
+      break;
+    case "/api/club/leave":
+      error = await leaveClub(sb, playerId);
+      break;
+    case "/api/club/dress":
+      error = await dressClub(sb, playerId, {
+        ...(body.name === undefined ? {} : { name: str("name") }),
+        ...(body.emblem === undefined ? {} : { emblem: str("emblem") }),
+      });
+      break;
+    case "/api/club/bequeath":
+      error = await bequeathClub(sb, playerId, str("playerId"));
+      break;
+    case "/api/club/close":
+      error = await closeClub(sb, playerId);
+      break;
+    case "/api/club/ask":
+      error = await askForCard(sb, playerId, str("cardId"));
+      break;
+    case "/api/club/donate":
+      error = await donateCard(sb, playerId, Number(body.requestId));
+      break;
+    case "/api/club/report":
+      error = await reportMember(sb, playerId, str("playerId"), str("message"));
+      break;
+    case "/api/club/claim":
+      error = await claimClubChest(sb, playerId, str("challengeId"), (kind) =>
+        grantChest(sb, playerId, rollChest(0, kind)).then(() => undefined),
+      );
+      break;
+    case "/api/club/say": {
+      /*
+       * The one route that can answer with something a child must read.
+       *
+       * Or: *"give messages only on critical things (your message was
+       * deleted because of improper words. This is a warning, but next time
+       * will remove you from the club immediately)."* So `warned` and
+       * `removed` come back as their own flags rather than as an error
+       * string the popup would show in the usual quiet way.
+       */
+      const said = await postMessage(sb, playerId, str("body"));
+      if (said.error === "club.warned" || said.error === "club.removed") {
+        return view({ notice: said.error });
+      }
+      error = said.error;
+      break;
+    }
+    default:
+      error = "unknown route";
+  }
+  if (error) return send(res, 400, { error });
+  return view();
+}
+
 /** Friends: the list, who there is to add, and the three things you can do. */
 async function handleFriends(req: IncomingMessage, res: ServerResponse, path: string): Promise<void> {
   const sb = db();
@@ -476,12 +589,28 @@ async function handleShop(req: IncomingMessage, res: ServerResponse, path: strin
         ])
       : [[], [], []];
     /*
+     * ═══ EMBLEMS ARE FOR PEOPLE WHO HAVE SOMEWHERE TO PUT ONE ═══
+     *
+     * Or: *"and if you are the owner of a club, the option of club emblems
+     * in the shop opens up for you too."*
+     *
+     * shopWindow knows nothing about who is asking — it is a price list,
+     * drawn before anybody signs in — so the filter is here, where the
+     * player is known. A shelf of things you cannot use is worse than no
+     * shelf, and it is the only kind of item in the shop that is useless
+     * without something else being true.
+     */
+    const forMe =
+      playerId && (await ownsAClub(sb, playerId))
+        ? items
+        : items.filter((i) => i.kind !== "emblem");
+    /*
      * One thing from each shelf, cheaper, today. The sale fields are filled
      * in here and read by `priceNow` on both sides, so the strip at the top
      * of the shop and the till are looking at the same number — see
      * offers.ts.
      */
-    return send(res, 200, { items: offersFor([...items, ...cards]), owned, today });
+    return send(res, 200, { items: offersFor([...forMe, ...cards]), owned, today });
   }
 
   const playerId = await playerFrom(req);
@@ -818,6 +947,18 @@ export async function handleApi(req: IncomingMessage, res: ServerResponse): Prom
     }
     try {
       await handleMeta(req, res, path);
+    } catch (err) {
+      send(res, 500, { error: (err as Error).message });
+    }
+    return true;
+  }
+  if (path.startsWith("/api/club")) {
+    if (req.method === "OPTIONS") {
+      send(res, 204, {});
+      return true;
+    }
+    try {
+      await handleClub(req, res, path);
     } catch (err) {
       send(res, 500, { error: (err as Error).message });
     }

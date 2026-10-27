@@ -216,7 +216,7 @@ export const ACCOUNTS_AVAILABLE = Boolean(SUPABASE_URL && KEY);
  * The match server over plain HTTP, for the small API beside the socket.
  * Derived from the websocket URL so there is only one address to configure.
  */
-const SERVER_HTTP = (import.meta.env.VITE_SERVER_URL ?? (import.meta.env.DEV ? "ws://localhost:2567" : ""))
+export const SERVER_HTTP = (import.meta.env.VITE_SERVER_URL ?? (import.meta.env.DEV ? "ws://localhost:2567" : ""))
   .replace(/^ws:/, "http:")
   .replace(/^wss:/, "https:");
 

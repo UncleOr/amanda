@@ -10,6 +10,7 @@ import {
 import { Match } from "./match.js";
 import { arrived, deliver, left as presenceLeft, presenceCounts } from "./presence.js";
 import { areFriends } from "./friends.js";
+import { creditClub, sameClub } from "./clubs.js";
 import { PROGRESS_ENABLED, topLevel } from "./progress.js";
 import { handleApi } from "./api.js";
 import { cardOf, forget, loadProfile, profileOf } from "./profiles.js";
@@ -345,7 +346,21 @@ function handleLobby(ws: WebSocket, msg: ClientMessage): void {
       if (!me || !to || me === to) return;
       void (async () => {
         const sb = db();
-        if (!sb || !(await areFriends(sb, me, to))) return;
+        /*
+         * ═══ OR A CLUB MATE ═══
+         *
+         * Or: *"club members can have a battle in one click if both of them
+         * are connected."* Which is the same thing this already does for a
+         * friend, with the same check in front of it — the relationship is
+         * read from the database rather than trusted from the message,
+         * because otherwise this is a way to make any child's screen light
+         * up with an invitation from a stranger.
+         *
+         * Being in somebody's club IS the consent, exactly as accepting a
+         * friend request is: you joined with a code they gave you.
+         */
+        if (!sb) return;
+        if (!(await areFriends(sb, me, to)) && !(await sameClub(sb, me, to))) return;
         // Open the room first, so the code in the invitation is real.
         closeRoomOf(ws);
         const code = newRoomCode();

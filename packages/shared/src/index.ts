@@ -54,6 +54,7 @@ export * from "./grants.js";
 
 // Daily, weekly and monthly challenges, computed from the date
 export * from "./challenges.js";
+export * from "./clubs.js";
 
 // What beating the computer is worth, and what the board can vouch for
 export * from "./soloTrophies.js";

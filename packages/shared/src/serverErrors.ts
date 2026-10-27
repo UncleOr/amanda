@@ -89,6 +89,34 @@ export const SERVER_ERRORS = [
   /** Not enough diamonds. Carries `short`: how many are missing. */
   "shop.poor",
 
+  // ── clubs ──
+  //
+  // Nine codes, and that is deliberate. Most of what clubs.ts can refuse is
+  // a state the popup offers no button for — there is no "leave" when you
+  // are not in a club — and naming each of those would put a dozen lines a
+  // player can never read into the document Or edits by hand. They all
+  // answer `club.no`, and a failed write answers the `retry` below.
+  /** There is no club with that code — or there is, and it is not yours to
+   *  join. Deliberately the same answer either way, so the space of codes
+   *  cannot be walked to learn which are real. */
+  "club.code",
+  /** That club is full. */
+  "club.full",
+  /** The club name was empty, too long, or had words in it. */
+  "club.name",
+  /** You asked for a card recently. */
+  "club.asked",
+  /** You have no SPARE copy — one is never taken from the card you have. */
+  "club.noSpare",
+  /** You have already given to this request. */
+  "club.gave",
+  /** The message was refused, and this is the first time. */
+  "club.warned",
+  /** The message was refused, and it was not the first time. */
+  "club.removed",
+  /** Anything the popup does not offer a button for. */
+  "club.no",
+
   // ── anything that failed on the way to the database ──
   /** Nothing is wrong with the request; it just did not work. Try again. */
   "retry",
