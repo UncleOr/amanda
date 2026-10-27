@@ -6,8 +6,43 @@
  * Navigations go to the NETWORK first (so a new version always lands, falling
  * back to the cache only when offline); hashed assets and artwork are immutable,
  * so they come from the CACHE first.
+ *
+ * ═══ TWO CACHES, AND ONLY ONE OF THEM IS THROWN AWAY ═══
+ *
+ * Or: *"in places with no reception the game loads without pictures and it's
+ * rubbish."*
+ *
+ * Measured before changing anything. A cold home screen pulls 1.8MB of
+ * artwork; the whole library is 22MB. Two things were wrong, and the second
+ * one is why the first was never survivable:
+ *
+ *   1. A picture was kept only AFTER it had been seen once. A card you never
+ *      drew was never downloaded, so the album was full of holes by design.
+ *   2. Every deploy emptied the lot. BUILD below is stamped with the build
+ *      time (see vite.config.ts), and `activate` deletes every cache that is
+ *      not this exact build — so "seen once" reset on most days.
+ *
+ * And (2) is not a mistake, which is why it survived: `brand/wordmark.png`
+ * has a FIXED name, so a cache kept for ever once served a broken logo for
+ * days with nothing the player could do about it. The old design resolved
+ * "always fresh" against "always there" by throwing everything away.
+ *
+ * So there are two caches now, with different lifetimes:
+ *
+ *   BUILD  the page and the hashed code. Emptied every deploy, exactly as
+ *          before — that is the freshness guarantee and it is unchanged.
+ *   ART    pictures and sound. PERMANENT. Nothing empties it wholesale; a
+ *          single file is dropped only when `art.json` says its content hash
+ *          changed. That is what makes the wordmark fixable AND the album
+ *          survive a deploy, which the old shape could not do at once.
+ *
+ * After the first launch the game opens fully drawn in aeroplane mode, and
+ * stays that way across deploys.
  */
-const VERSION = "amanda-v5";
+const BUILD = "amanda-v5";
+
+/** Pictures and sound. Never emptied wholesale — pruned file by file. */
+const ART = "amanda-art";
 
 /*
  * The page itself: /play/, spelled out rather than left as "./".
@@ -19,6 +54,25 @@ const VERSION = "amanda-v5";
  */
 const SHELL = new URL("./", self.location).href;
 
+/**
+ * What the build says every picture currently contains.
+ *
+ * Written by the `art-manifest` plugin in vite.config.ts: every image, video
+ * and sound in the site, each with a hash of its contents, split into the set
+ * worth fetching up front and the set worth waiting for.
+ */
+const MANIFEST_URL = new URL("art.json", SHELL).href;
+
+/**
+ * Where the LAST manifest is kept, so this one can be compared against it.
+ *
+ * A synthetic key inside the art cache rather than IndexedDB: the cache is
+ * already open, it has exactly the right lifetime (it dies with the art it
+ * describes), and there is one less storage API to fail in a private window.
+ * The `#` makes it something no real request can collide with.
+ */
+const MANIFEST_KEY = SHELL + "#art-manifest";
+
 self.addEventListener("install", (event) => {
   // Take over as soon as this version is ready.
   self.skipWaiting();
@@ -26,7 +80,7 @@ self.addEventListener("install", (event) => {
    * ═══ AND KEEP THE SHELL, SO "FALLING BACK TO THE CACHE" IS NOT A LIE ═══
    *
    * Nothing used to be pre-cached, and `activate` deletes every cache that is
-   * not this exact VERSION — which is stamped with the build hash, so EVERY
+   * not this exact BUILD — which is stamped with the build time, so EVERY
    * deploy empties it. The fallback below therefore had nothing to fall back
    * to for most of the life of any install, and a single failed request at
    * launch went straight to the dead end.
@@ -55,7 +109,7 @@ self.addEventListener("install", (event) => {
  */
 async function precache() {
   try {
-    const cache = await caches.open(VERSION);
+    const cache = await caches.open(BUILD);
     const res = await fetch(new Request(SHELL, { cache: "reload" }));
     if (!res.ok || res.redirected) return;
     const html = await res.clone().text();
@@ -83,15 +137,123 @@ async function precache() {
 self.addEventListener("activate", (event) => {
   event.waitUntil(
     (async () => {
-      for (const key of await caches.keys()) if (key !== VERSION) await caches.delete(key);
+      // Every cache from an older build goes. ART is not one of them.
+      for (const key of await caches.keys()) {
+        if (key !== BUILD && key !== ART) await caches.delete(key);
+      }
+      /*
+       * Claim FIRST. Filling the art cache is 8MB of fetches and the page
+       * waiting to be controlled should not be behind them — `waitUntil`
+       * keeps the worker alive for the rest either way.
+       */
       await self.clients.claim();
+      const manifest = await pruneArt();
+      if (manifest) await fillArt(manifest);
     })(),
   );
 });
 
-/** Artwork, audio and build output — content that never changes in place. */
-function isImmutable(url) {
-  return /\/(assets|cards|arena|music|sfx)\//.test(url.pathname) || /\.(png|webp|mp3|ogg)$/.test(url.pathname);
+/**
+ * Drop the pictures whose contents changed, and nothing else.
+ *
+ * This is the half that replaces "delete everything". A file is removed from
+ * the art cache only when the new manifest gives it a different hash — or
+ * stops listing it at all — so a fixed wordmark reaches everybody on the next
+ * launch while 82 card portraits that did not change stay where they are.
+ *
+ * Returns the manifest, or null if there is nothing trustworthy to act on.
+ *
+ * ⚠ A FAILURE HERE MUST NEVER DELETE. Offline is exactly when the cache is
+ * the only thing standing between the player and a grey screen, and offline
+ * is also when this fetch fails. No manifest, no pruning, no filling — try
+ * again next launch.
+ */
+async function pruneArt() {
+  try {
+    const res = await fetch(new Request(MANIFEST_URL, { cache: "reload" }));
+    if (!res.ok) return null;
+    const fresh = await res.json();
+    if (!fresh || typeof fresh.all !== "object") return null;
+
+    const cache = await caches.open(ART);
+    const previous = await cache.match(MANIFEST_KEY, { ignoreVary: true });
+    if (previous) {
+      let old = null;
+      try {
+        old = await previous.json();
+      } catch {
+        /* a half-written manifest prunes nothing */
+      }
+      for (const path of Object.keys(old?.all ?? {})) {
+        if (old.all[path] === fresh.all[path]) continue;
+        await cache.delete(new URL(path, SHELL).href);
+      }
+    }
+    await cache.put(
+      MANIFEST_KEY,
+      new Response(JSON.stringify(fresh), {
+        headers: { "Content-Type": "application/json" },
+      }),
+    );
+    return fresh;
+  } catch {
+    return null;
+  }
+}
+
+/**
+ * Fetch the pictures the game needs to be whole, in the background.
+ *
+ * `eager` is the measured set: icons, card portraits, arena backdrops, sound
+ * effects and the brand furniture — about 8MB. Out of it on purpose are the
+ * two music tracks (5MB), the chest scenes (3.1MB) and the two opening films
+ * (3MB), which are big, arrive late in a session, and are kept for ever once
+ * they have been seen anyway.
+ *
+ * Three at a time. The page is loading over the same connection and the point
+ * is to be invisible; a hundred parallel fetches would make the first launch
+ * worse in order to make the second one better.
+ */
+async function fillArt(manifest) {
+  // A phone asking for less data gets less. It will still fill in as it plays.
+  if (self.navigator?.connection?.saveData) return;
+
+  const cache = await caches.open(ART);
+  const want = Object.keys(manifest.eager ?? {}).map((p) => new URL(p, SHELL).href);
+  let next = 0;
+  let stop = false;
+
+  const worker = async () => {
+    while (next < want.length && !stop) {
+      const url = want[next++];
+      try {
+        if (await cache.match(url, { ignoreVary: true })) continue;
+        const res = await fetch(url, { cache: "no-cache" });
+        if (res.ok) await cache.put(url, res);
+      } catch {
+        /*
+         * Out of network or out of room. Either way the right move is to
+         * stop the whole fill rather than grind through 200 more failures:
+         * what is already cached stays, and the next launch carries on from
+         * there because the loop skips what it finds.
+         */
+        stop = true;
+      }
+    }
+  };
+
+  await Promise.all([worker(), worker(), worker()]);
+}
+
+/** Artwork, audio and video — content kept in the permanent cache. */
+function isArt(url) {
+  if (/\/assets\//.test(url.pathname)) return false;
+  return /\.(png|webp|jpe?g|svg|mp3|ogg|mp4|webm)$/i.test(url.pathname);
+}
+
+/** Build output — hashed by Vite, and kept with the build that produced it. */
+function isBuild(url) {
+  return /\/assets\//.test(url.pathname);
 }
 
 /*
@@ -165,7 +327,7 @@ self.addEventListener("fetch", (event) => {
            * wiped.
            */
           if (!fresh.redirected) {
-            const cache = await caches.open(VERSION);
+            const cache = await caches.open(BUILD);
             cache.put(request, fresh.clone());
           }
           return fresh;
@@ -177,7 +339,25 @@ self.addEventListener("fetch", (event) => {
            * line of this function must always be reachable.
            */
           try {
-            const hit = (await caches.match(request)) ?? (await caches.match(SHELL));
+            /*
+             * ⚠ `ignoreVary` IS LOAD-BEARING, and it cost an offline test to
+             * find. The shell was in the cache, `caches.match` returned it
+             * from the page — and the worker still showed the "needs the
+             * internet" page.
+             *
+             * The server answers the HTML with `Vary: Origin`. A top-level
+             * NAVIGATION sends no Origin header; the `fetch()` in precache()
+             * above, made from inside a worker, sends one. So the Cache API
+             * was correctly refusing a match between two requests it had
+             * been told might differ — and the whole offline fallback was
+             * dead for a header nobody here chose.
+             *
+             * It is the same URL and the same single-page app either way.
+             * `ignoreSearch` for the same reason: a link with a `?utm=…` on
+             * it is still the game.
+             */
+            const opts = { ignoreVary: true, ignoreSearch: true };
+            const hit = (await caches.match(request, opts)) ?? (await caches.match(SHELL, opts));
             if (hit && !hit.redirected) return hit;
           } catch {
             /* a broken cache is not a reason to show the dead end */
@@ -204,15 +384,25 @@ self.addEventListener("fetch", (event) => {
     return;
   }
 
-  if (!isImmutable(new URL(request.url))) return;
+  const url = new URL(request.url);
+  const art = isArt(url);
+  if (!art && !isBuild(url)) return;
 
   event.respondWith(
     (async () => {
-      const hit = await caches.match(request);
+      // ignoreVary for the same reason as the navigation above: a CDN that
+      // answers artwork with `Vary: Accept-Encoding` would otherwise miss
+      // every picture it had already stored, which IS the reported bug.
+      const hit = await caches.match(request, { ignoreVary: true });
       if (hit) return hit;
       const fresh = await fetch(request);
       if (fresh.ok) {
-        const cache = await caches.open(VERSION);
+        /*
+         * Into the cache that matches how long it should live: a card goes
+         * in the permanent one and survives the next deploy, a hashed bundle
+         * goes in this build's and dies with it.
+         */
+        const cache = await caches.open(art ? ART : BUILD);
         cache.put(request, fresh.clone());
       }
       return fresh;
