@@ -116,16 +116,33 @@ export interface Arena {
    * advanced enough to get there anyway. When we are happy with what we
    * have we will work on new series and new modes."*
    *
-   * So these two are not a trophy wall that a good fortnight could climb:
-   * they are shut. Nothing promotes anybody into them, nothing promises a
-   * number of trophies to reach them, and the family one of them introduces
-   * is not in anybody's album - see isCollectable, which is what keeps the
-   * Strays out of chests, out of the album total and out of "collect them
-   * all" while their arena is closed.
+   * So a locked arena is not a trophy wall that a good fortnight could
+   * climb: it is shut. Nothing promotes anybody into it, nothing promises a
+   * number of trophies to reach it, and the family it introduces is in
+   * nobody's album - see isCollectable.
    *
    * They stay VISIBLE, because that was Or's rule for the locked ones from
    * the start: *"you should be able to see what arenas there are - dark and
    * locked - so there is something to aim for."*
+   *
+   * ⚠ AND NOTHING IS LOCKED TODAY. He asked why the two were still shut, and
+   * when the reasons were laid out none of them survived:
+   *
+   *   "no user advanced enough" is now the OPPOSITE of true. The reason they
+   *     were shut was that a fortnight's play reached them; on the ladder he
+   *     has just chosen they are 4,500 and 8,000, which is about a year.
+   *
+   *   The alley's family was the Strays, which was the real reason - an
+   *     unfinished family of mine. It is the Demons now, which is what his
+   *     own design document always said lives there.
+   *
+   *   And the Fuel Stop being shut made Amanda mode unreachable, which
+   *     directly contradicts the instruction that arrived the same hour:
+   *     *"Amanda is simply locked, with a small caption under the padlock
+   *     (opens at the Fuel Stop)."* A door that opens at a place nobody can
+   *     ever stand is a door that never opens.
+   *
+   * The flag stays, because the next unfinished thing will want it.
    */
   locked?: boolean;
 }
@@ -168,20 +185,31 @@ export const ARENA_POWER_BONUS = 0.2;
  * are nineteen and forty-four, and the top of the ladder is a season rather
  * than a fortnight.
  *
- * ⚠ AND TWO OF HIS NUMBERS MOVED TO MAKE ROOM, WHICH IS WORTH SAYING OUT
- * LOUD. The shape of this ladder is pinned by ladder.test.ts: every gap is
- * wider than the one below it, because the first promotion should arrive in
- * an evening and the last should be an ambition. Two new rungs do not fit
- * inside the 950 trophies between the Station and the Alley without making
- * that widening a formality — the gaps would have come out 310, 315, 325,
- * which passes the test and means nothing.
+ * ═══ AND THEN HE SLOWED THE WHOLE THING DOWN ON PURPOSE ═══
  *
- * So Fright Alley moved from 1400 to 2000 and the Fuel Stop from 3600 to
- * 4200, and the ladder is 0 · 150 · 450 · 800 · 1250 · 2000 · 4200 — gaps
- * of 150, 300, 350, 450, 750, 2200. Both of the ones that moved are LOCKED,
- * so nobody is standing on either, and both moved in the direction Or asked
- * for: *"the distance to Fright Alley needs to be bigger, and to the Fuel
- * Stop really big."* They are still his to put back.
+ * Or, a month in and standing at 551: *"notice that I reached the train
+ * station within a month of playing, which is good — it shows you progress
+ * and you get cards and it is fun. But in the next arenas and the next
+ * cards the progress needs to be much slower. The user is already in."*
+ *
+ * Which is the whole argument for a ladder in four sentences, and it is his.
+ * The first month is left exactly as it is, because it worked; everything
+ * above the Station roughly doubled.
+ *
+ *   0 · 150 · 450 · 1,200 · 2,400 · 4,500 · 8,000
+ *   gaps 150 · 300 · 750 · 1,200 · 2,100 · 3,500
+ *
+ * Measured against trophies.ts rather than guessed. His own month to the
+ * Station is about 110 trophies a week, and at that rate the climb from the
+ * Station up is 7 weeks, then 11, then 19, then 32 — about sixteen months to
+ * Amanda. In practice less: a win over a person is +30 where a win over the
+ * hard bot is +12, so the rate climbs as he plays more people.
+ *
+ * ⚠ THE SHAPE IS THE PART THAT IS PINNED, NOT THE NUMBERS. ladder.test.ts
+ * requires every gap to be wider than the one below it — the first promotion
+ * should arrive in an evening and the last should be an ambition — and that
+ * is the only constraint these four numbers have to satisfy. They are his to
+ * move again.
  */
 export const ARENAS: Arena[] = [
   {
@@ -267,7 +295,7 @@ export const ARENAS: Arena[] = [
     family: "machines",
     introduces: "machines",
     name: { he: "המוסך", en: "The Garage" },
-    from: 800,
+    from: 1200,
     tease: { he: "מישהו שכח לכבות את האור.", en: "Somebody left the light on." },
     story: {
       he: "ירדתם מהרכבת והמשכתם ברגל. מוסך, שתיים בלילה, התריס חצי סגור ובפנים עוד דולק אור. או שמישהו שכח לכבות, או שמישהו עוד עובד. הרצפה דביקה משמן והברגים מתגלגלים לכם מתחת לרגליים. ואז אחד הברגים קם. המכונות.",
@@ -279,7 +307,7 @@ export const ARENAS: Arena[] = [
     family: "sea",
     introduces: "sea",
     name: { he: "הבריכה", en: "The Pool" },
-    from: 1250,
+    from: 2400,
     tease: { he: "אל תיכנסו למים.", en: "Do not get in the water." },
     story: {
       he: "בריכה עירונית בלילה, בלי מציל ובלי אף אחד. את המים לא החליפו כבר הרבה זמן והריח מגיע עד הגדר. אתם אומרים לעצמכם שזה רק עלים. שזאת רק הרוח. ואז משהו זז מתחת לפני המים, וזה לא עלה וזאת לא הרוח. שוכני הים.",
@@ -310,9 +338,8 @@ export const ARENAS: Arena[] = [
      */
     family: "demons",
     introduces: "demons",
-    locked: true,
     name: { he: "סמטת האימה", en: "Fright Alley" },
-    from: 2000,
+    from: 4500,
     tease: { he: "אל תסתכל מה יש בפח.", en: "Don't look in the bin." },
     story: {
       he: "הצרצרים מצרצרים, התנים מייללים, הפנסים מהבהבים - ואתם פה לבד. כמה רחוק אתם מוכנים ללכת בשביל להשיג את אמנדה? מסתבר שלא מעט. אמאל'ה, מה זה הרעש הזה? אה, זה רק חתול.",
@@ -322,9 +349,8 @@ export const ARENAS: Arena[] = [
   {
     id: "fuel",
     family: "dragons",
-    locked: true,
     name: { he: "תחנת הדלק", en: "The Fuel Stop" },
-    from: 4200,
+    from: 8000,
     tease: { he: "הסוף. אל תדליק כאן גפרור.", en: "The end of the road. Don't strike a match." },
     story: {
       he: "זוהי התחנה הסופית. חשבתם למצוא פה מתדלק חייכן וחנות עם אייס קפה? תחשבו שוב. נראה שרגל אדם לא דרכה פה כבר שנים. רגע, אבל אם כן - מה זו טביעת הרגל הזאת פה? אה כן. זאת הרגל של אמנדה. מזל טוב. מצאתם אותה. או יותר נכון - היא מצאה אתכם. מקווים שלא תסיימו בצלחת שלה.",
@@ -363,6 +389,26 @@ export function atArena(name: string): string {
 /** ל, ב and ה: the article is swallowed by the preposition. */
 function prefixed(name: string, letter: string): string {
   return name.startsWith("ה") ? `${letter}${name.slice(1)}` : `${letter}${name}`;
+}
+
+/**
+ * Where a family sits in the order you MEET them.
+ *
+ * Or: *"in the album, sort the series by default in order of appearance."*
+ *
+ * Which is not the catalogue number and never was. The album was ordered by
+ * the number on the file — dragons, machines, furries, sea, giants, demons,
+ * insects, plants, slimes — so the second shelf a child opened held a family
+ * they cannot meet for four months, and the one they were handed on day one
+ * was third. The order of appearance is the trophies at which the arena that
+ * introduces them opens; a family nobody introduces was there from the start.
+ *
+ * Returns -1 for the starter families, so they lead, and they keep their
+ * catalogue order among themselves.
+ */
+export function metAt(seriesId: string): number {
+  const at = ARENAS.find((a) => a.introduces === seriesId);
+  return at ? at.from : -1;
 }
 
 /** The rungs that are actually on the ladder today. */

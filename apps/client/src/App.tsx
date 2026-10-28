@@ -2825,6 +2825,7 @@ function Game() {
           onClose={() => panel.close()}
           onAmandaSolo={m.startAmandaSolo}
           onMirror={m.startMirror}
+          best={m.account?.bestTrophies ?? 0}
         />
       )}
 

@@ -1,6 +1,7 @@
 import { describe, expect, it } from "vitest";
 import {
   AMANDA_CARD,
+  ARENAS,
   collectableCards,
   isCollectable,
   sealedFamilies,
@@ -97,12 +98,31 @@ describe("against the real card data", () => {
    * not count towards "41 of 51" or towards collecting them all — which is
    * the half that would otherwise make the album impossible to finish.
    */
+  /*
+   * ⚠ Shuts the door itself, for the same reason as arenas.test.ts: this
+   * asked the shipped ladder for a sealed family and had none the day Or
+   * unlocked the last two arenas.
+   */
   it("leaves a sealed family out of the album entirely", () => {
-    const sealed = sealedFamilies();
-    expect(sealed.size, "nothing to test if nothing is sealed").toBeGreaterThan(0);
-    for (const id of sealed) {
-      expect(SERIES_BY_ID.get(id)?.cards.length, `${id} should still exist as data`).toBeGreaterThan(0);
-      expect(collectableBySeries().get(id), `${id} is not winnable`).toBe(0);
+    const arena = ARENAS.find((a) => a.introduces && a.from > 0)!;
+    const before = arena.locked;
+    arena.locked = true;
+    try {
+      const sealed = sealedFamilies();
+      expect(sealed.size, "the arena was just shut, so something is sealed").toBeGreaterThan(0);
+      for (const id of sealed) {
+        expect(SERIES_BY_ID.get(id)?.cards.length, `${id} should still exist as data`).toBeGreaterThan(0);
+        expect(collectableBySeries().get(id), `${id} is not winnable`).toBe(0);
+      }
+    } finally {
+      arena.locked = before;
     }
+  });
+
+  it("and with every arena open, every family is winnable", () => {
+    expect(sealedFamilies().size).toBe(0);
+    for (const s of SERIES_BY_ID.values())
+      if (s.id !== "legends")
+        expect(collectableBySeries().get(s.id), `${s.id}`).toBeGreaterThan(0);
   });
 });

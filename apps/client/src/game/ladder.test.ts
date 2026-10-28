@@ -28,15 +28,27 @@ describe("the shape of the ladder", () => {
   });
 
   /*
-   * The two Or asked about. A win over a person is +30 and a loss −20
-   * (trophies.ts), so an evening of even matches is about +50 — these gaps
-   * are nineteen and forty-four such evenings, where they used to be nine
-   * and fourteen.
+   * The last climb is an ambition. A win over a person is +30 and a loss −20
+   * (trophies.ts), so an evening of even matches is about +50 — the top gap
+   * is seventy such evenings.
+   *
+   * ⚠ "AND MORE THAN TWICE THE ONE BEFORE IT" USED TO BE HERE AND IS GONE.
+   * It was true of a five-rung ladder whose top gap was a cliff (2,200 after
+   * 750). Or then chose the numbers himself — *"in the next arenas the
+   * progress needs to be much slower"* — and what he chose is a smooth
+   * curve: every gap is about 1.6 to 1.75 times the one below it, the top
+   * one included. That is a better shape than a cliff, so the assertion that
+   * demanded a cliff went rather than the ladder.
+   *
+   * What replaces it says the same thing without assuming where the steepness
+   * sits: the last climb on its own is longer than the whole first half of
+   * the ladder.
    */
-  it("makes the last climb the longest by a distance", () => {
+  it("makes the last climb an ambition", () => {
     const last = gaps[gaps.length - 1]!;
     expect(last).toBeGreaterThan(2000);
-    expect(last, "and more than twice the one before it").toBeGreaterThan(gaps[gaps.length - 2]! * 2);
+    const firstHalf = gaps.slice(0, Math.ceil(gaps.length / 2)).reduce((a, b) => a + b, 0);
+    expect(last, "longer than the whole first half of the climb").toBeGreaterThan(firstHalf);
   });
 
   it("still puts a player on the rung they have reached", () => {

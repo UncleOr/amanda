@@ -40,13 +40,29 @@ describe("the ladder", () => {
    * still in ARENAS — they are drawn, dark, on the ladder — so the only
    * thing standing between a player and a shut arena is this.
    */
+  /*
+   * ⚠ IT SHUTS THE DOOR ITSELF NOW. This read `ARENAS.filter(a => a.locked)`
+   * and was guarded by "nothing to test if nothing is locked" — which fired
+   * the day Or unlocked the last two. The rule is permanent; which arena is
+   * dark this week is not, so the test stopped depending on it.
+   */
   it("never puts anybody in a locked arena, however high they climb", () => {
-    const shut = ARENAS.filter((a) => a.locked);
-    expect(shut.length, "nothing to test if nothing is locked").toBeGreaterThan(0);
-    for (const a of shut) {
+    const a = ARENAS[ARENAS.length - 1]!;
+    const before = a.locked;
+    a.locked = true;
+    try {
       expect(arenaFor(a.from).id).not.toBe(a.id);
       expect(arenaFor(a.from + 100000).id).not.toBe(a.id);
+    } finally {
+      a.locked = before;
     }
+  });
+
+  it("and today there is nothing dark on the ladder", () => {
+    // Or: "why are Fright Alley and the Fuel Stop locked?" — they are not,
+    // any more. See the note on `locked` in arenas.ts for why each reason
+    // for shutting them had expired.
+    expect(ARENAS.filter((x) => x.locked)).toEqual([]);
   });
 
   it("progress stays between 0 and 1, and is full at the top", () => {

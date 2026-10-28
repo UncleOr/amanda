@@ -3644,7 +3644,7 @@
   "where": {
    "kind": "source",
    "file": "packages/shared/src/arenas.ts",
-   "line": 197
+   "line": 225
   },
   "en": "The Playroom"
  },
@@ -3655,7 +3655,7 @@
   "where": {
    "kind": "source",
    "file": "packages/shared/src/arenas.ts",
-   "line": 199
+   "line": 227
   },
   "en": "Everyone starts here. On the rug."
  },
@@ -3666,7 +3666,7 @@
   "where": {
    "kind": "source",
    "file": "packages/shared/src/arenas.ts",
-   "line": 201
+   "line": 229
   },
   "en": "Where it all starts. Children swapping monster cards on the rug, and still knowing that soon it ends and mum makes an omelette for dinner. You have somewhere to get to."
  },
@@ -3677,7 +3677,7 @@
   "where": {
    "kind": "source",
    "file": "packages/shared/src/arenas.ts",
-   "line": 209
+   "line": 237
   },
   "en": "The Court"
  },
@@ -3688,7 +3688,7 @@
   "where": {
    "kind": "source",
    "file": "packages/shared/src/arenas.ts",
-   "line": 211
+   "line": 239
   },
   "en": "Outside, on the asphalt, in front of everyone."
  },
@@ -3699,7 +3699,7 @@
   "where": {
    "kind": "source",
    "file": "packages/shared/src/arenas.ts",
-   "line": 213
+   "line": 241
   },
   "en": "Off you go, then. No way back now. Still on the asphalt down the road, still familiar faces — but hey, what is that on the ground? Monsters you have never seen. The Slimes. Yum."
  },
@@ -3710,7 +3710,7 @@
   "where": {
    "kind": "source",
    "file": "packages/shared/src/arenas.ts",
-   "line": 233
+   "line": 261
   },
   "en": "The Station"
  },
@@ -3721,7 +3721,7 @@
   "where": {
    "kind": "source",
    "file": "packages/shared/src/arenas.ts",
-   "line": 235
+   "line": 263
   },
   "en": "Nobody stops here. Except you."
  },
@@ -3732,7 +3732,7 @@
   "where": {
    "kind": "source",
    "file": "packages/shared/src/arenas.ts",
-   "line": 237
+   "line": 265
   },
   "en": "You bought a ticket, went through the barrier, and that is that — you are a long way from home. You are hungry, there is no signal, and that man on the bench is looking at you oddly. Nothing for it. You decided to be brave. Lucky you have a new family of monsters beside you: the Insects."
  },
@@ -3743,7 +3743,7 @@
   "where": {
    "kind": "source",
    "file": "packages/shared/src/arenas.ts",
-   "line": 269
+   "line": 297
   },
   "en": "The Garage"
  },
@@ -3754,7 +3754,7 @@
   "where": {
    "kind": "source",
    "file": "packages/shared/src/arenas.ts",
-   "line": 271
+   "line": 299
   },
   "en": "Somebody left the light on."
  },
@@ -3765,7 +3765,7 @@
   "where": {
    "kind": "source",
    "file": "packages/shared/src/arenas.ts",
-   "line": 273
+   "line": 301
   },
   "en": "You got off the train and kept walking. A garage, two in the morning, the shutter half down and a light still on inside. Either somebody forgot to turn it off, or somebody is still working. The floor is sticky with oil and the bolts roll under your feet. And then one of the bolts stands up. The Machines."
  },
@@ -3776,7 +3776,7 @@
   "where": {
    "kind": "source",
    "file": "packages/shared/src/arenas.ts",
-   "line": 281
+   "line": 309
   },
   "en": "The Pool"
  },
@@ -3787,7 +3787,7 @@
   "where": {
    "kind": "source",
    "file": "packages/shared/src/arenas.ts",
-   "line": 283
+   "line": 311
   },
   "en": "Do not get in the water."
  },
@@ -3798,7 +3798,7 @@
   "where": {
    "kind": "source",
    "file": "packages/shared/src/arenas.ts",
-   "line": 285
+   "line": 313
   },
   "en": "A municipal pool at night, no lifeguard and nobody about. The water has not been changed in a long time and you can smell it from the fence. You tell yourself it is only leaves. Only the wind. And then something moves under the surface, and it is not a leaf and it is not the wind. The Sea Dwellers."
  },
@@ -3809,7 +3809,7 @@
   "where": {
    "kind": "source",
    "file": "packages/shared/src/arenas.ts",
-   "line": 314
+   "line": 341
   },
   "en": "Fright Alley"
  },
@@ -3820,7 +3820,7 @@
   "where": {
    "kind": "source",
    "file": "packages/shared/src/arenas.ts",
-   "line": 316
+   "line": 343
   },
   "en": "Don"
  },
@@ -3831,7 +3831,7 @@
   "where": {
    "kind": "source",
    "file": "packages/shared/src/arenas.ts",
-   "line": 318
+   "line": 345
   },
   "en": "The crickets are going, the jackals are howling, the lamps are flickering — and you are here on your own. How far will you go to get Amanda? Quite far, it turns out. Blimey, what was that noise? Oh. Only a cat."
  },
@@ -3842,7 +3842,7 @@
   "where": {
    "kind": "source",
    "file": "packages/shared/src/arenas.ts",
-   "line": 326
+   "line": 352
   },
   "en": "The Fuel Stop"
  },
@@ -3853,7 +3853,7 @@
   "where": {
    "kind": "source",
    "file": "packages/shared/src/arenas.ts",
-   "line": 328
+   "line": 354
   },
   "en": "The end of the road. Don"
  },
@@ -3864,7 +3864,7 @@
   "where": {
    "kind": "source",
    "file": "packages/shared/src/arenas.ts",
-   "line": 330
+   "line": 356
   },
   "en": "The last stop. Expecting a cheerful pump attendant and a shop with iced coffee? Think again. Nobody has set foot here in years. Although — then whose footprint is that? Ah. Amanda"
  },
@@ -7494,7 +7494,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/data/catalog.ts",
-   "line": 106
+   "line": 123
   },
   "en": "Crumb Demon"
  },
@@ -10429,13 +10429,13 @@
   }
  },
  {
-  "id": "s4fc5b19",
+  "id": "s096f0c1",
   "section": "components/MoreModes.tsx",
-  "text": "אמנדה — הצצה",
+  "text": "אמנדה",
   "where": {
    "kind": "source",
    "file": "apps/client/src/components/MoreModes.tsx",
-   "line": 57
+   "line": 75
   }
  },
  {
@@ -10445,7 +10445,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/components/MoreModes.tsx",
-   "line": 58
+   "line": 76
   }
  },
  {
@@ -10455,7 +10455,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/components/MoreModes.tsx",
-   "line": 64
+   "line": 83
   }
  },
  {
@@ -10465,7 +10465,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/components/MoreModes.tsx",
-   "line": 65
+   "line": 84
   }
  },
  {
@@ -10475,7 +10475,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/components/MoreModes.tsx",
-   "line": 71
+   "line": 91
   }
  },
  {
@@ -10485,7 +10485,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/components/MoreModes.tsx",
-   "line": 72
+   "line": 92
   }
  },
  {
@@ -10495,7 +10495,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/components/MoreModes.tsx",
-   "line": 78
+   "line": 99
   }
  },
  {
@@ -10505,7 +10505,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/components/MoreModes.tsx",
-   "line": 79
+   "line": 100
   }
  },
  {
@@ -10515,7 +10515,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/components/MoreModes.tsx",
-   "line": 87
+   "line": 109
   }
  },
  {
@@ -10525,7 +10525,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/components/MoreModes.tsx",
-   "line": 90
+   "line": 112
   }
  },
  {
@@ -10535,7 +10535,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/components/MoreModes.tsx",
-   "line": 105
+   "line": 152
   }
  },
  {
@@ -10545,7 +10545,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/components/MoreModes.tsx",
-   "line": 114
+   "line": 161
   }
  },
  {

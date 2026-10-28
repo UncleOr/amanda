@@ -22,7 +22,7 @@
  * exceptions beside it.
  */
 import { describe, expect, it } from "vitest";
-import { albumPower, isCollectable, sealedFamilies, type OwnedCardRow } from "@amanda/shared";
+import { ARENAS, albumPower, isCollectable, sealedFamilies, type OwnedCardRow } from "@amanda/shared";
 import { CATALOG } from "./content.js";
 
 /** The filter albumPower.ts runs, applied to a list of card ids. */
@@ -49,25 +49,60 @@ describe("what an album is worth", () => {
     expect(counted(["no_such_card_at_all"])).toHaveLength(0);
   });
 
+  /*
+   * ⚠ THESE TWO USED TO READ THE SHIPPED ARENAS AND BROKE THE DAY NOTHING
+   * WAS LOCKED. They asked for a family that is sealed TODAY, guarded by
+   * "nothing to test if nothing is sealed" — which fired, correctly, the
+   * moment Or unlocked Fright Alley and the Fuel Stop.
+   *
+   * The rule did not change; what changed was the content the test was
+   * standing on. So it shuts a door itself now and opens it again after. The
+   * test is about the mechanism, which is permanent, rather than about which
+   * arena happens to be dark this week.
+   */
+  const shutTheAlley = (): (() => void) => {
+    const arena = ARENAS.find((a) => a.introduces && a.from > 0);
+    if (!arena) throw new Error("no arena introduces a family — nothing to seal");
+    const before = arena.locked;
+    arena.locked = true;
+    return () => {
+      arena.locked = before;
+    };
+  };
+
   it("does not count a family whose arena is shut", () => {
     /*
      * The one Or found. These rows exist on real accounts and cannot be
      * un-won; what they must not do is go on being worth something.
      */
-    const sealed = [...sealedFamilies()];
-    expect(sealed.length, "nothing to test if nothing is sealed").toBeGreaterThan(0);
-    const example = [...CATALOG.values()].find((c) => sealed.includes(c.seriesId));
-    expect(example, "a sealed family should still exist as data").toBeTruthy();
-    expect(counted([example!.id])).toHaveLength(0);
+    const open = shutTheAlley();
+    try {
+      const sealed = [...sealedFamilies()];
+      expect(sealed.length, "the arena was just shut, so something is sealed").toBeGreaterThan(0);
+      const example = [...CATALOG.values()].find((c) => sealed.includes(c.seriesId));
+      expect(example, "a sealed family should still exist as data").toBeTruthy();
+      expect(counted([example!.id])).toHaveLength(0);
+    } finally {
+      open();
+    }
   });
 
   it("and a thing it does not count is worth nothing, not a little", () => {
     // Belt and braces: the filter could pass and the weighting could still
     // give a zero-rarity row a floor.
-    const sealed = [...sealedFamilies()];
-    const example = [...CATALOG.values()].find((c) => sealed.includes(c.seriesId))!;
-    const withIt = albumPower(counted(["dragons_01_flame_dragon", example.id]));
-    const without = albumPower(counted(["dragons_01_flame_dragon"]));
-    expect(withIt).toBe(without);
+    const open = shutTheAlley();
+    try {
+      const sealed = [...sealedFamilies()];
+      const example = [...CATALOG.values()].find((c) => sealed.includes(c.seriesId))!;
+      const withIt = albumPower(counted(["dragons_01_flame_dragon", example.id]));
+      const without = albumPower(counted(["dragons_01_flame_dragon"]));
+      expect(withIt).toBe(without);
+    } finally {
+      open();
+    }
+  });
+
+  it("counts every family while every arena is open, which is today", () => {
+    expect([...sealedFamilies()]).toEqual([]);
   });
 });

@@ -6,6 +6,7 @@ import {
   type Card,
   collectableCards as pickCollectable,
   isCollectable,
+  metAt,
   type Series,
 } from "@amanda/shared";
 import actionsJson from "../../../../data/action-cards.json";
@@ -22,9 +23,25 @@ const seriesModules = import.meta.glob("../../../../data/series/*.json", {
   eager: true,
 }) as Record<string, { default: unknown }>;
 
+/**
+ * Every family, in the order a player MEETS them.
+ *
+ * Or: *"in the album, sort the series by default in order of appearance."*
+ *
+ * It was the order of the filenames, which is the catalogue number — so the
+ * album opened on the Dragons, then the Machines (four months away), then
+ * the Furries (handed to you on day one). `metAt` is the trophies at which
+ * the arena that introduces a family opens, and -1 for the ones that were
+ * always there, so the starter families lead and keep their own order.
+ *
+ * Sorted HERE rather than in the album, because every other list of families
+ * in the game reads from this one and they should all agree about what order
+ * families come in.
+ */
 export const SERIES: Series[] = Object.keys(seriesModules)
   .sort()
-  .map((path) => parseSeries(seriesModules[path]!.default));
+  .map((path) => parseSeries(seriesModules[path]!.default))
+  .sort((a, b) => metAt(a.id) - metAt(b.id));
 
 /** All series indexed by id, for lookups (synergy, detail view). */
 export const SERIES_BY_ID: Map<string, Series> = new Map(SERIES.map((s) => [s.id, s]));

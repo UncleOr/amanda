@@ -406,6 +406,21 @@
   font-size: var(--t-2);
   font-weight: 800;
 }
+/* A padlock with the place it opens at under it. The place is a label beside
+   a symbol, which is the one job --muted still has (§3). */
+.modes__shut {
+  flex: none;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--sp-1);
+  color: var(--muted);
+  min-width: 68px;
+}
+.modes__shut small {
+  font-size: var(--t-2);
+  white-space: nowrap;
+}
 
 /*
  * On a phone the bench puts the held card and its buttons side by side next

@@ -79,11 +79,22 @@ describe("which families a chest may draw from", () => {
     expect(drawn(at("court").from).has("insects")).toBe(false);
   });
 
+  /*
+   * ⚠ THIS USED TO POINT AT A LOCKED ARENA AND BROKE WHEN THERE WAS NONE.
+   * Fright Alley was shut, so "a family whose arena is shut" had a live
+   * example; Or unlocked it, and the assertion had nothing left to stand on.
+   * It shuts a door itself now, which is what it should always have done —
+   * the rule is permanent and the content is not.
+   */
   it("never gives a family whose arena is shut, to anybody", () => {
-    // The Demons live in Fright Alley and Fright Alley is locked, so there
-    // is no trophy count that unlocks them — which is the actual answer to
-    // the bug Or found. (It was the Strays here until he dropped them.)
-    expect(drawn(TOP, 400).has("demons")).toBe(false);
+    const arena = ARENAS.find((a) => a.introduces && a.from > 0)!;
+    const before = arena.locked;
+    arena.locked = true;
+    try {
+      expect(drawn(TOP, 400).has(arena.introduces!)).toBe(false);
+    } finally {
+      arena.locked = before;
+    }
   });
 
   it("adds the machines at the Garage, and not at the Station", () => {
@@ -100,6 +111,7 @@ describe("which families a chest may draw from", () => {
 
   it("still draws from everything that IS open at the top", () => {
     expect([...drawn(TOP)].sort()).toEqual([
+      "demons",
       "dragons",
       "furries",
       "giants",

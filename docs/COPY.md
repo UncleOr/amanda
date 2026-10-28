@@ -1171,7 +1171,7 @@
 
 | מזהה | טקסט נוכחי | טקסט חדש | אנגלית |
 | --- | --- | --- | --- |
-| s4fc5b19 | אמנדה — הצצה | | A peek at Amanda |
+| s096f0c1 | אמנדה | | Amanda |
 | s7767343 | מולה לבד. אי אפשר לנצח. | | You, on your own, against her. You lose. |
 | s7c9fba9 | דק זהה | | Same deck |
 | secbb695 | אותם קלפים לשני הצדדים. | | Same cards, both sides. |
