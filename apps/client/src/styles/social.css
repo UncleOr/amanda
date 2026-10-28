@@ -34,8 +34,21 @@
 .side--me.side--split .side__label { display: none; }
 .side--split .mate__label--mine { order: 0; }
 .side--split > .board { order: 1; }
-.side--split .mate--theirs { order: 2; }
-.side--low.side--split .mate--theirs { order: -2; }
+/*
+ * ⚠ `.mate` AND NOT `.mate--theirs`, WHICH IS A FIX AND NOT A TIDY-UP.
+ *
+ * MatePeek renders two different things: `mate mate--theirs` where there is
+ * room, and `mate mate--peek` on a phone — and these two rules named only
+ * the first. So on the 384-tall screen Or actually plays on, the partner's
+ * thumbnail took order 0, which is ABOVE the board at order 1, whichever
+ * half the server had given you. The caption "your half" sat over your
+ * partner's cards, which is the exact mistake the comment above says these
+ * rules exist to prevent.
+ *
+ * Found by building 2v2 on the same layout and looking at it.
+ */
+.side--split .mate { order: 2; }
+.side--low.side--split .mate { order: -2; }
 .side--low.side--split .mate__label--mine { order: -1; }
 .mate {
   display: flex;

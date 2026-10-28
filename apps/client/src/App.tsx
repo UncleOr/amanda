@@ -232,6 +232,9 @@ const CHEST_DEV = new URLSearchParams(location.search).get("chest");
  */
 const DRAFT_DEV = new URLSearchParams(location.search).has("draft");
 
+/** `?duo` — straight into a 2v2, for the same reason as ?draft. */
+const DUO_DEV = new URLSearchParams(location.search).has("duo");
+
 /**
  * `?legal=privacy` — a URL that lands on the privacy policy.
  *
@@ -919,6 +922,13 @@ function Game() {
     panel.show("draft");
   }, [panel]);
 
+  const duoRef = useRef(false);
+  useEffect(() => {
+    if (duoRef.current || !DUO_DEV) return;
+    duoRef.current = true;
+    m.startDuo();
+  }, [m]);
+
   // An invite link (?join=XXXX) joins that room on its own, so the person you
   // sent it to only has to open it.
   const invitedRef = useRef(false);
@@ -1602,7 +1612,7 @@ function Game() {
                       beside the label, not over the board.
                     */}
                     <span className="side__way">⟶</span>{" "}
-                    {m.coop ? (
+                    {m.coop && !m.duo ? (
                       t("s9d29f31", "אמנדה")
                     ) : (
                       <span className="side__who">
@@ -2095,7 +2105,7 @@ function Game() {
                 them={m.rival}
                 secondsLeft={m.timeLeft}
                 total={3}
-                joined={m.coop}
+                joined={m.coop && !m.duo}
               />
               <div className="overlay__label">{countdownLabel}</div>
             </div>
@@ -2843,6 +2853,10 @@ function Game() {
           onAmandaSolo={m.startAmandaSolo}
           onMirror={m.startMirror}
           onDraft={() => panel.show("draft")}
+          onDuo={() => {
+            panel.close();
+            m.startDuo();
+          }}
           best={m.account?.bestTrophies ?? 0}
         />
       )}

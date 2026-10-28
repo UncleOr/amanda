@@ -44,12 +44,14 @@ export function MoreModes({
   onAmandaSolo,
   onMirror,
   onDraft,
+  onDuo,
   best = 0,
 }: {
   onClose: () => void;
   onAmandaSolo: () => void;
   onMirror: () => void;
   onDraft: () => void;
+  onDuo: () => void;
   /** Best trophies ever, which is what an arena being "reached" means. */
   best?: number;
 }) {
@@ -79,7 +81,7 @@ export function MoreModes({
       title: t("se14e946", "2 נגד 2"),
       blurb: t("sac17390", "שניים בונים לוח אחד."),
       opensAt: "station",
-      soon: true,
+      start: onDuo,
     },
     {
       id: "mirror",

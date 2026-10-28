@@ -863,6 +863,16 @@ export interface MatchApi {
   /** Amanda mode: you share a side with the other player against her. */
   coop: boolean;
   /**
+   * 2v2 rather than Amanda.
+   *
+   * ⚠ Both are `coop` — one eight-lane side, a partner's half drawn under
+   * yours — and the screen had three places where `coop` was read as "this
+   * is Amanda": the opponent was labelled with her name, and the countdown
+   * said "together" over a card showing you against the enemy. One flag more
+   * is cheaper than three conditions that are nearly right.
+   */
+  duo: boolean;
+  /**
    * Amanda mode: your partner's half of your shared side, as it stands.
    *
    * Null until they place something. Not fogged — they are on your team, and
@@ -944,6 +954,8 @@ export interface MatchApi {
   startMirror: () => void;
   /** Draft: play the cards you took against the cards you passed on. */
   startDraft: (result: { mine: string[]; theirs: string[] }) => void;
+  /** 2 against 2: eight lanes a side, with a computer partner. */
+  startDuo: () => void;
   /**
    * Which tutorial match is running (1 or 2), or 0 for an ordinary game.
    *
@@ -1132,6 +1144,7 @@ export function useMatch(): MatchApi {
   }, []);
 
   const [coop, setCoop] = useState(false);
+  const [duo, setDuo] = useState(false);
   const [mate, setMate] = useState<BoardView | null>(null);
   const [heard, setHeard] = useState<{ id: string; at: number } | null>(null);
   const [rematchAsked, setRematchAsked] = useState(false);
@@ -1160,6 +1173,10 @@ export function useMatch(): MatchApi {
   const [myLane, setMyLane] = useState(0);
   /** True for the developer's solo Amanda preview (see startAmandaSolo). */
   const soloAmandaRef = useRef(false);
+  /** True in 2v2: eight lanes a side, and three of the four boards are the computer's. */
+  const duoRef = useRef(false);
+  /** 2v2: the partner's and the two enemy halves, decided before the countdown. */
+  const duoBoardsRef = useRef<{ mate: Placement[]; foes: Placement[] } | null>(null);
   /** The two boards of the match just fought, for reporting it. See startBattle. */
   const soloBoardsRef = useRef<{ mine: Placement[]; theirs: Placement[] } | null>(null);
   /**
@@ -2074,7 +2091,10 @@ export function useMatch(): MatchApi {
   const startBattle = useCallback(() => {
     const aiFull: BoardInput = soloAmandaRef.current
       ? { owner: "B", placements: buildAmandaBoard(CATALOG.values()) as Placement[] }
-      : { owner: "B", placements: fillCrumbs(aiPlanRef.current!) };
+      : duoRef.current
+        ? // Two opposing boards, one above the other, across eight lanes.
+          { owner: "B", placements: duoBoardsRef.current!.foes }
+        : { owner: "B", placements: fillCrumbs(aiPlanRef.current!) };
 
     let mine = buildPlayerBoard(
       gsRef.current,
@@ -2106,6 +2126,22 @@ export function useMatch(): MatchApi {
     }
 
     /*
+     * 2v2: your partner's four lanes, decided before the countdown.
+     *
+     * Taken from `duoBoardsRef` rather than generated here, because the half
+     * you looked at all through the build has to be the half that fights.
+     * Amanda mode had exactly that bug the other way round — Or: *"when the
+     * fog lifted, Amanda's King was the Insect Empress, and then in the
+     * battle itself it changed to Amanda."*
+     */
+    if (duoRef.current && duoBoardsRef.current) {
+      mine = {
+        ...mine,
+        placements: [...mine.placements, ...duoBoardsRef.current.mate],
+      };
+    }
+
+    /*
      * The two boards, kept for the server.
      *
      * A match against the bot is fought entirely in here and the server never
@@ -2127,7 +2163,7 @@ export function useMatch(): MatchApi {
       b: aiFull,
       recordFrames: true,
       ground: groundFor(accountRef.current?.trophies ?? 0),
-      ...(soloAmandaRef.current ? { lanes: COOP_LANES } : {}),
+      ...(soloAmandaRef.current || duoRef.current ? { lanes: COOP_LANES } : {}),
     });
     setResult(r);
     sfx.play("go");
@@ -2219,6 +2255,9 @@ export function useMatch(): MatchApi {
     setCoop(false);
     setMyLane(0);
     soloAmandaRef.current = false;
+    duoRef.current = false;
+    duoBoardsRef.current = null;
+    setDuo(false);
     setPlayground(false);
     setMirrorSeed(null);
     setLesson(0);
@@ -2563,6 +2602,63 @@ export function useMatch(): MatchApi {
    * here, and the thing that makes them different is the fifteen choices
    * somebody just made.
    */
+  /**
+   * 2 against 2: eight lanes a side, and you fill four of them.
+   *
+   * Or: *"2v2 — two build one board."* Which the board already knew how to
+   * be: Amanda mode is two players arranging one eight-lane side, and every
+   * piece of that — the split view, the partner's half drawn unfogged under
+   * yours, COOP_LANES in the engine — has been in the game since it shipped.
+   * This is that side with an ordinary pair of boards facing it instead of
+   * her, and winnable.
+   *
+   * ⚠ YOUR PARTNER IS THE COMPUTER, AND SO ARE BOTH OPPONENTS. A 2v2 with a
+   * real friend needs the server's Match to hold four sockets rather than
+   * two (apps/server/src/match.ts holds `a` and `b`, and co-op puts both of
+   * them on side A against Amanda). That is a real change and it is not this
+   * one. Flagged to Or rather than quietly shipped as "2v2".
+   *
+   * The three boards are decided HERE, before the countdown, so that the
+   * half you look at all through the build is the half that fights — the
+   * bug Amanda mode had the other way round.
+   */
+  const startDuo = useCallback(() => {
+    sfx.unlock();
+    sfx.play("click");
+    clearMatch();
+    faceTheBot();
+    setCoop(true);
+    setDuo(true);
+    duoRef.current = true;
+    setMyLane(0);
+
+    const level = botLevelRef.current;
+    const lower = (ps: Placement[]) => ps.map((p) => ({ ...p, y: (p.y ?? 0) + BOARD_SIZE }));
+    const mate = fillCrumbs(generateAiPlan(undefined, level));
+    const foes = [
+      ...fillCrumbs(generateAiPlan(undefined, level)),
+      ...lower(fillCrumbs(generateAiPlan(undefined, level))),
+    ];
+    duoBoardsRef.current = { mate: lower(mate), foes };
+
+    /*
+     * What the partner's half looks like while you build. The engine takes
+     * Placements; the screen takes a cell map, so this is the same board
+     * said the other way.
+     */
+    const view: Record<string, string> = {};
+    let mateKing: string | null = null;
+    for (const p of mate) {
+      if (p.king) mateKing = p.cardId;
+      else view[cellKey(p.x ?? 0, p.y ?? 0)] = p.cardId;
+    }
+    setMate({ placements: view, king: mateKing });
+
+    // Your own album and your own chosen deck, exactly as an ordinary match.
+    setGs(initialGameState(accountRef.current?.album, builtRef.current));
+    setPhase("countdown");
+  }, [clearMatch, faceTheBot]);
+
   const startDraft = useCallback(
     (result: { mine: string[]; theirs: string[] }) => {
       sfx.unlock();
@@ -3032,6 +3128,7 @@ export function useMatch(): MatchApi {
     mirrorSeed,
     startMirror,
     startDraft,
+    startDuo,
     lesson,
     startLesson,
     playground,
@@ -3053,6 +3150,7 @@ export function useMatch(): MatchApi {
     botLevel,
     setBotLevel,
     coop,
+    duo,
     mate,
     myLane,
     heard,

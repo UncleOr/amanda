@@ -2404,5 +2404,28 @@ export function Arena({
     );
   }
 
-  return <div className="arena" ref={hostRef} />;
+  /*
+   * ⚠ THE FRAME CARRIES THE SHAPE, BECAUSE A PERCENTAGE NEEDS SOMETHING TO
+   * BE A PERCENTAGE OF.
+   *
+   * `.arena canvas { max-height: 100% }` has been in battle.css since Or
+   * said *"I only saw my side of the fight"* about the co-op battle, and it
+   * never did anything: `.arena` is a content-sized box, so a percentage
+   * height inside it does not resolve and the canvas kept its intrinsic
+   * size. Measured on a 384-tall screen in 2v2 — the frame was correctly
+   * capped at 332px and the canvas inside it was 602, with 265 pixels of the
+   * battle below the bottom of the screen and clipped away.
+   *
+   * An aspect-ratio makes the frame's height DEFINITE (derived from its
+   * width), which is what the canvas's percentage needed all along. It is
+   * set here rather than in the sheet because only this component knows how
+   * many lanes this battle has.
+   */
+  return (
+    <div
+      className="arena"
+      ref={hostRef}
+      style={{ ["aspectRatio" as string]: `${W} / ${H}` }}
+    />
+  );
 }

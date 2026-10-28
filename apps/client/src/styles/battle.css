@@ -37,16 +37,25 @@
    * Fit BOTH axes, not just the width.
    *
    * Or, on the co-op battle: "I only saw my side of the fight." Amanda mode
-   * is eight lanes, so the canvas is twice as tall as a normal battle — and
-   * this rule only ever capped the width, so the bottom half (which is one of
-   * the two players) ran off the screen. Capping the height as well makes the
-   * whole arena fit, and the intrinsic size of the canvas keeps it in
-   * proportion while it shrinks.
+   * is eight lanes, so the canvas is twice as tall as a normal battle, and
+   * this rule only ever capped the width.
+   *
+   * ⚠ CAPPING THE HEIGHT WAS NOT ENOUGH EITHER, AND LOOKED AS IF IT WERE.
+   * `max-height: 100%` resolves against the parent's height, and `.arena` is
+   * content-sized — so there was nothing to take a percentage of and the
+   * canvas kept its intrinsic 602px inside a 332px frame, clipped. Arena.tsx
+   * gives the frame an `aspect-ratio` now, which makes its height definite.
+   *
+   * ⚠ AND `!important`, WHICH IS NOT LAZINESS. Pixi writes the canvas size
+   * onto the element's own style attribute — `width: 576px; height: 602.4px`
+   * — and an inline style beats a stylesheet whatever it says. So this rule
+   * has been inert since the day it was written FOR the co-op battle: the
+   * measurement that caught it is the canvas reporting 576×602 inside a
+   * frame of 318×332. The frame's aspect-ratio means 100% is the right
+   * shape, not a stretched one.
    */
-  max-width: 100%;
-  max-height: 100%;
-  width: auto;
-  height: auto;
+  width: 100% !important;
+  height: 100% !important;
   object-fit: contain;
 }
 
