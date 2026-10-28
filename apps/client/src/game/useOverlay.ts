@@ -26,6 +26,8 @@ export type Overlay =
   | { kind: "album" }
   | { kind: "profile" }
   | { kind: "modes" }
+  /** Picking the fifteen, two at a time: see components/Draft.tsx. */
+  | { kind: "draft" }
   | { kind: "friends" }
   /** The club, and everything in one: see components/Club.tsx. */
   | { kind: "club" }

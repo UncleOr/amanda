@@ -43,11 +43,13 @@ export function MoreModes({
   onClose,
   onAmandaSolo,
   onMirror,
+  onDraft,
   best = 0,
 }: {
   onClose: () => void;
   onAmandaSolo: () => void;
   onMirror: () => void;
+  onDraft: () => void;
   /** Best trophies ever, which is what an arena being "reached" means. */
   best?: number;
 }) {
@@ -69,7 +71,7 @@ export function MoreModes({
       title: t("se4e1ef0", "דראפט"),
       blurb: t("s4b7da7f", "מה שלא לקחת הולך ליריב."),
       opensAt: "court",
-      soon: true,
+      start: onDraft,
     },
     {
       id: "duo",

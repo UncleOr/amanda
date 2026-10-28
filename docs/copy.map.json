@@ -4595,7 +4595,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/App.tsx",
-   "line": 144
+   "line": 145
   }
  },
  {
@@ -4605,7 +4605,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/App.tsx",
-   "line": 145
+   "line": 146
   }
  },
  {
@@ -4615,7 +4615,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/App.tsx",
-   "line": 163
+   "line": 164
   }
  },
  {
@@ -4625,7 +4625,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/App.tsx",
-   "line": 164
+   "line": 165
   }
  },
  {
@@ -4635,7 +4635,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/App.tsx",
-   "line": 167
+   "line": 168
   }
  },
  {
@@ -4645,7 +4645,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/App.tsx",
-   "line": 169
+   "line": 170
   }
  },
  {
@@ -4655,7 +4655,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/App.tsx",
-   "line": 251
+   "line": 252
   }
  },
  {
@@ -4665,7 +4665,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/App.tsx",
-   "line": 259
+   "line": 260
   }
  },
  {
@@ -4675,7 +4675,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/App.tsx",
-   "line": 1184
+   "line": 1185
   }
  },
  {
@@ -4685,7 +4685,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/App.tsx",
-   "line": 1185
+   "line": 1186
   }
  },
  {
@@ -4695,7 +4695,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/App.tsx",
-   "line": 1200
+   "line": 1201
   }
  },
  {
@@ -4705,7 +4705,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/App.tsx",
-   "line": 1222
+   "line": 1223
   }
  },
  {
@@ -4715,7 +4715,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/App.tsx",
-   "line": 1261
+   "line": 1262
   }
  },
  {
@@ -4725,7 +4725,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/App.tsx",
-   "line": 1261
+   "line": 1262
   }
  },
  {
@@ -4735,7 +4735,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/App.tsx",
-   "line": 1268
+   "line": 1269
   }
  },
  {
@@ -4745,7 +4745,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/App.tsx",
-   "line": 1278
+   "line": 1279
   }
  },
  {
@@ -4755,7 +4755,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/App.tsx",
-   "line": 1308
+   "line": 1309
   }
  },
  {
@@ -4765,7 +4765,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/App.tsx",
-   "line": 1331
+   "line": 1332
   }
  },
  {
@@ -4775,7 +4775,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/App.tsx",
-   "line": 1343
+   "line": 1344
   }
  },
  {
@@ -4785,7 +4785,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/App.tsx",
-   "line": 1383
+   "line": 1384
   }
  },
  {
@@ -4795,7 +4795,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/App.tsx",
-   "line": 1383
+   "line": 1384
   }
  },
  {
@@ -4805,7 +4805,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/App.tsx",
-   "line": 1383
+   "line": 1384
   }
  },
  {
@@ -4815,7 +4815,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/App.tsx",
-   "line": 1387
+   "line": 1388
   }
  },
  {
@@ -4825,7 +4825,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/App.tsx",
-   "line": 1399
+   "line": 1400
   }
  },
  {
@@ -4835,7 +4835,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/App.tsx",
-   "line": 1399
+   "line": 1400
   }
  },
  {
@@ -4845,7 +4845,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/App.tsx",
-   "line": 1405
+   "line": 1406
   }
  },
  {
@@ -4855,7 +4855,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/App.tsx",
-   "line": 1412
+   "line": 1413
   }
  },
  {
@@ -4865,7 +4865,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/App.tsx",
-   "line": 1416
+   "line": 1417
   }
  },
  {
@@ -4875,7 +4875,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/App.tsx",
-   "line": 1416
+   "line": 1417
   }
  },
  {
@@ -4885,7 +4885,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/App.tsx",
-   "line": 1462
+   "line": 1463
   }
  },
  {
@@ -4895,7 +4895,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/App.tsx",
-   "line": 1469
+   "line": 1470
   }
  },
  {
@@ -4905,7 +4905,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/App.tsx",
-   "line": 1469
+   "line": 1470
   }
  },
  {
@@ -4915,7 +4915,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/App.tsx",
-   "line": 1476
+   "line": 1477
   }
  },
  {
@@ -4925,7 +4925,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/App.tsx",
-   "line": 1478
+   "line": 1479
   }
  },
  {
@@ -4935,7 +4935,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/App.tsx",
-   "line": 1486
+   "line": 1487
   }
  },
  {
@@ -4945,7 +4945,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/App.tsx",
-   "line": 1549
+   "line": 1550
   }
  },
  {
@@ -4955,7 +4955,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/App.tsx",
-   "line": 1570
+   "line": 1571
   }
  },
  {
@@ -4965,7 +4965,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/App.tsx",
-   "line": 1589
+   "line": 1590
   }
  },
  {
@@ -4975,7 +4975,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/App.tsx",
-   "line": 1599
+   "line": 1600
   }
  },
  {
@@ -4985,7 +4985,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/App.tsx",
-   "line": 1612
+   "line": 1613
   }
  },
  {
@@ -4995,7 +4995,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/App.tsx",
-   "line": 1613
+   "line": 1614
   }
  },
  {
@@ -5005,7 +5005,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/App.tsx",
-   "line": 1675
+   "line": 1676
   }
  },
  {
@@ -5015,7 +5015,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/App.tsx",
-   "line": 1677
+   "line": 1678
   }
  },
  {
@@ -5025,7 +5025,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/App.tsx",
-   "line": 1678
+   "line": 1679
   }
  },
  {
@@ -5035,7 +5035,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/App.tsx",
-   "line": 1683
+   "line": 1684
   }
  },
  {
@@ -5045,7 +5045,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/App.tsx",
-   "line": 1686
+   "line": 1687
   }
  },
  {
@@ -5055,7 +5055,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/App.tsx",
-   "line": 1755
+   "line": 1756
   }
  },
  {
@@ -5065,7 +5065,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/App.tsx",
-   "line": 1768
+   "line": 1769
   }
  },
  {
@@ -5075,7 +5075,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/App.tsx",
-   "line": 1770
+   "line": 1771
   }
  },
  {
@@ -5085,7 +5085,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/App.tsx",
-   "line": 1771
+   "line": 1772
   }
  },
  {
@@ -5095,7 +5095,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/App.tsx",
-   "line": 1813
+   "line": 1814
   }
  },
  {
@@ -5105,7 +5105,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/App.tsx",
-   "line": 1833
+   "line": 1834
   }
  },
  {
@@ -5115,7 +5115,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/App.tsx",
-   "line": 1846
+   "line": 1847
   }
  },
  {
@@ -5125,7 +5125,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/App.tsx",
-   "line": 1872
+   "line": 1873
   }
  },
  {
@@ -5135,7 +5135,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/App.tsx",
-   "line": 1886
+   "line": 1887
   }
  },
  {
@@ -5145,7 +5145,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/App.tsx",
-   "line": 1926
+   "line": 1927
   }
  },
  {
@@ -5155,7 +5155,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/App.tsx",
-   "line": 1930
+   "line": 1931
   }
  },
  {
@@ -5165,7 +5165,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/App.tsx",
-   "line": 1959
+   "line": 1960
   }
  },
  {
@@ -5175,7 +5175,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/App.tsx",
-   "line": 1960
+   "line": 1961
   }
  },
  {
@@ -5185,7 +5185,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/App.tsx",
-   "line": 1970
+   "line": 1971
   }
  },
  {
@@ -5195,7 +5195,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/App.tsx",
-   "line": 1971
+   "line": 1972
   }
  },
  {
@@ -5205,7 +5205,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/App.tsx",
-   "line": 1979
+   "line": 1980
   }
  },
  {
@@ -5215,7 +5215,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/App.tsx",
-   "line": 1984
+   "line": 1985
   }
  },
  {
@@ -5225,7 +5225,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/App.tsx",
-   "line": 1994
+   "line": 1995
   }
  },
  {
@@ -5235,7 +5235,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/App.tsx",
-   "line": 1995
+   "line": 1996
   }
  },
  {
@@ -5245,7 +5245,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/App.tsx",
-   "line": 2010
+   "line": 2011
   }
  },
  {
@@ -5255,7 +5255,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/App.tsx",
-   "line": 2012
+   "line": 2013
   }
  },
  {
@@ -5265,7 +5265,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/App.tsx",
-   "line": 2018
+   "line": 2019
   }
  },
  {
@@ -5275,7 +5275,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/App.tsx",
-   "line": 2020
+   "line": 2021
   }
  },
  {
@@ -5285,7 +5285,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/App.tsx",
-   "line": 2021
+   "line": 2022
   }
  },
  {
@@ -5295,7 +5295,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/App.tsx",
-   "line": 2037
+   "line": 2038
   }
  },
  {
@@ -5305,7 +5305,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/App.tsx",
-   "line": 2041
+   "line": 2042
   }
  },
  {
@@ -5315,7 +5315,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/App.tsx",
-   "line": 2045
+   "line": 2046
   }
  },
  {
@@ -5325,7 +5325,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/App.tsx",
-   "line": 2365
+   "line": 2366
   }
  },
  {
@@ -5335,7 +5335,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/App.tsx",
-   "line": 2385
+   "line": 2386
   }
  },
  {
@@ -5345,7 +5345,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/App.tsx",
-   "line": 2398
+   "line": 2399
   }
  },
  {
@@ -5355,7 +5355,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/App.tsx",
-   "line": 2409
+   "line": 2410
   }
  },
  {
@@ -5365,7 +5365,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/App.tsx",
-   "line": 2413
+   "line": 2414
   }
  },
  {
@@ -5375,7 +5375,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/App.tsx",
-   "line": 2433
+   "line": 2434
   }
  },
  {
@@ -5385,7 +5385,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/App.tsx",
-   "line": 2447
+   "line": 2448
   }
  },
  {
@@ -5395,7 +5395,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/App.tsx",
-   "line": 2572
+   "line": 2573
   }
  },
  {
@@ -5405,7 +5405,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/App.tsx",
-   "line": 2648
+   "line": 2649
   }
  },
  {
@@ -5415,7 +5415,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/App.tsx",
-   "line": 2651
+   "line": 2652
   }
  },
  {
@@ -5425,7 +5425,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/App.tsx",
-   "line": 2810
+   "line": 2811
   }
  },
  {
@@ -5435,7 +5435,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/App.tsx",
-   "line": 2810
+   "line": 2811
   }
  },
  {
@@ -5445,7 +5445,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/App.tsx",
-   "line": 2813
+   "line": 2814
   }
  },
  {
@@ -5455,7 +5455,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/App.tsx",
-   "line": 2816
+   "line": 2817
   }
  },
  {
@@ -9439,6 +9439,26 @@
   }
  },
  {
+  "id": "s6e44cc7",
+  "section": "components/Draft.tsx",
+  "text": "סגירה",
+  "where": {
+   "kind": "source",
+   "file": "apps/client/src/components/Draft.tsx",
+   "line": 69
+  }
+ },
+ {
+  "id": "sa74ea1d",
+  "section": "components/Draft.tsx",
+  "text": "{0} מתוך {1}",
+  "where": {
+   "kind": "source",
+   "file": "apps/client/src/components/Draft.tsx",
+   "line": 75
+  }
+ },
+ {
   "id": "sb74f47e",
   "section": "components/ElementsTable.tsx",
   "text": "סגירה",
@@ -10435,7 +10455,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/components/MoreModes.tsx",
-   "line": 69
+   "line": 71
   }
  },
  {
@@ -10445,7 +10465,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/components/MoreModes.tsx",
-   "line": 70
+   "line": 72
   }
  },
  {
@@ -10455,7 +10475,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/components/MoreModes.tsx",
-   "line": 77
+   "line": 79
   }
  },
  {
@@ -10465,7 +10485,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/components/MoreModes.tsx",
-   "line": 78
+   "line": 80
   }
  },
  {
@@ -10475,7 +10495,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/components/MoreModes.tsx",
-   "line": 85
+   "line": 87
   }
  },
  {
@@ -10485,7 +10505,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/components/MoreModes.tsx",
-   "line": 86
+   "line": 88
   }
  },
  {
@@ -10495,7 +10515,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/components/MoreModes.tsx",
-   "line": 116
+   "line": 118
   }
  },
  {
@@ -10505,7 +10525,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/components/MoreModes.tsx",
-   "line": 117
+   "line": 119
   }
  },
  {
@@ -10515,7 +10535,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/components/MoreModes.tsx",
-   "line": 126
+   "line": 128
   }
  },
  {
@@ -10525,7 +10545,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/components/MoreModes.tsx",
-   "line": 129
+   "line": 131
   }
  },
  {
@@ -10535,7 +10555,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/components/MoreModes.tsx",
-   "line": 169
+   "line": 171
   }
  },
  {
@@ -10545,7 +10565,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/components/MoreModes.tsx",
-   "line": 178
+   "line": 180
   }
  },
  {

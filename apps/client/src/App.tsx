@@ -108,6 +108,7 @@ const ArenaPreview = lazy(() =>
   import("./components/ArenaPreview").then((m) => ({ default: m.ArenaPreview })),
 );
 import { MoreModes } from "./components/MoreModes";
+import { Draft } from "./components/Draft";
 import { Overlay } from "./components/Overlay";
 import { lang, say, setLang } from "./game/lang";
 import { line as t, lineF as tf } from "./game/copy";
@@ -221,6 +222,15 @@ const AMANDA_DEV = new URLSearchParams(location.search).get("amanda");
  * as ?amanda=solo: a door for whoever is working on it.
  */
 const CHEST_DEV = new URLSearchParams(location.search).get("chest");
+
+/**
+ * `?draft` — go straight into a draft.
+ *
+ * Same spirit as the two above, and it earns its keep twice: the mode is
+ * behind the Court, so anybody working on it has to win a few matches first,
+ * and Or wants to put it in front of Hod without that.
+ */
+const DRAFT_DEV = new URLSearchParams(location.search).has("draft");
 
 /**
  * `?legal=privacy` — a URL that lands on the privacy policy.
@@ -901,6 +911,13 @@ function Game() {
     if (AMANDA_DEV === "solo") m.startAmandaSolo();
     else if (m.onlineAvailable) m.startAmanda();
   }, [m]);
+
+  const draftRef = useRef(false);
+  useEffect(() => {
+    if (draftRef.current || !DRAFT_DEV) return;
+    draftRef.current = true;
+    panel.show("draft");
+  }, [panel]);
 
   // An invite link (?join=XXXX) joins that room on its own, so the person you
   // sent it to only has to open it.
@@ -2825,7 +2842,18 @@ function Game() {
           onClose={() => panel.close()}
           onAmandaSolo={m.startAmandaSolo}
           onMirror={m.startMirror}
+          onDraft={() => panel.show("draft")}
           best={m.account?.bestTrophies ?? 0}
+        />
+      )}
+
+      {panel.is("draft") && (
+        <Draft
+          onClose={() => panel.close()}
+          onReady={(result) => {
+            panel.close();
+            m.startDraft(result);
+          }}
         />
       )}
 

@@ -942,6 +942,8 @@ export interface MatchApi {
   mirrorSeed: number | null;
   /** Start a mirror match against the computer. */
   startMirror: () => void;
+  /** Draft: play the cards you took against the cards you passed on. */
+  startDraft: (result: { mine: string[]; theirs: string[] }) => void;
   /**
    * Which tutorial match is running (1 or 2), or 0 for an ordinary game.
    *
@@ -2548,6 +2550,37 @@ export function useMatch(): MatchApi {
    * The computer is handed the very cards you were dealt, so the only thing
    * left to be better at is where you put them.
    */
+  /**
+   * Draft: the fifteen cards you took, against the fifteen you passed on.
+   *
+   * Or: *"what you don't take goes to the opponent."* Which the engine takes
+   * literally — the bot's board is planned from `theirs`, so every monster
+   * you refused is one you now have to beat. The action cards are dealt the
+   * usual way to both sides; see shared/draft.ts for why they are not
+   * drafted.
+   *
+   * No seed, unlike mirror mode: the two decks are deliberately DIFFERENT
+   * here, and the thing that makes them different is the fifteen choices
+   * somebody just made.
+   */
+  const startDraft = useCallback(
+    (result: { mine: string[]; theirs: string[] }) => {
+      sfx.unlock();
+      sfx.play("click");
+      clearMatch();
+      faceTheBot();
+      const actions = matchDeck(null, 1 + Math.floor(Math.random() * 2_000_000_000)).filter(
+        (id) => !CATALOG.has(id),
+      );
+      const deck = shuffle([...result.mine, ...actions]);
+      setGs({ deck, hand: null, discard: [], placements: {}, king: null });
+      // The cards you passed on, planned at the level you chose to play at.
+      aiPlanRef.current = generateAiPlan(result.theirs, botLevelRef.current);
+      setPhase("countdown");
+    },
+    [clearMatch, faceTheBot],
+  );
+
   const startMirror = useCallback(() => {
     sfx.unlock();
     sfx.play("click");
@@ -2998,6 +3031,7 @@ export function useMatch(): MatchApi {
     },
     mirrorSeed,
     startMirror,
+    startDraft,
     lesson,
     startLesson,
     playground,
