@@ -20,6 +20,8 @@ const BOX = read("./FixBox.tsx");
 const GHOST = read("./DragGhost.tsx");
 const APP = read("../App.tsx");
 const CSS = read("../admin.css");
+const PANEL = read("./Admin.tsx");
+const SFX = read("../game/sfx.ts");
 
 const note = (over: Partial<FixNote>): FixNote => ({
   id: "x",
@@ -143,6 +145,31 @@ describe("seeing, hearing and carrying a card", () => {
     expect(EDITOR).toContain("sfx.voice(voiceFor(draft.id).name)");
     expect(EDITOR, "the play button is back").not.toContain("ed__hear");
     expect((EDITOR.match(/sfx\.voice/g) ?? []).length).toBe(1);
+  });
+
+  /*
+   * ⚠ AND THE PANEL HAS TO UNLOCK THE AUDIO ITSELF, WHICH IT NEVER DID.
+   *
+   * Or: *"the sound does not work when you drag a card in the admin panel."*
+   * `sfx.unlock()` is what fetches and decodes every clip — it needs a user
+   * gesture to exist at all — and the only file that had ever called it was
+   * useMatch.ts, the GAME. In the panel the clip maps stayed empty for the
+   * life of the page, and `sfx.voice` is deliberately silent on a clip it
+   * does not hold, so the failure had no symptom beyond silence. Zero
+   * requests for anything under /sfx/, measured in the panel.
+   *
+   * On the FIRST press anywhere in the panel rather than on the press that
+   * starts a carry: decoding is not instant, so the gesture that unlocks is
+   * never the gesture that is heard.
+   */
+  it("unlocks the audio on the panel's first gesture", () => {
+    expect(PANEL).toContain('window.addEventListener("pointerdown", go, { once: true })');
+    expect(PANEL).toContain("sfx.unlock()");
+    // And the loading really does hang off unlock, which is the reason any
+    // of this is needed.
+    expect(SFX.slice(SFX.indexOf("unlock(): void {"), SFX.indexOf("play(name"))).toContain(
+      "loadClips()",
+    );
   });
 
   /*

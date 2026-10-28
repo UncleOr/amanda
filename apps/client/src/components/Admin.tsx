@@ -10,6 +10,7 @@ import { PlayerStats, StatsTab } from "./AdminStats";
 import { LiveTab } from "./AdminLive";
 import { CardEditor } from "./CardEditor";
 import type { FixNote } from "./FixBox";
+import { sfx } from "../game/sfx";
 // The panel's own sheet, loaded with the panel. It used to be in the entry
 // file, so every child downloaded the admin styles to play a card game.
 import "../admin.css";
@@ -184,6 +185,28 @@ export function Admin() {
   useEffect(() => {
     if (state === "in") void reloadNotes();
   }, [state, reloadNotes]);
+
+  /*
+   * ⚠ THE PANEL HAS TO UNLOCK THE AUDIO ITSELF.
+   *
+   * Or: *"the sound does not work when you drag a card in the admin panel."*
+   * And it never had: `sfx.unlock()` is what fetches and decodes every clip,
+   * it needs a user gesture to exist at all, and the only file that had ever
+   * called it was useMatch.ts — the GAME. In the panel the clip maps stayed
+   * empty for the life of the page, and `sfx.voice` is deliberately silent
+   * on a clip it does not hold (an oscillator impression of a dragon is
+   * worse than nothing), so the failure had no symptom beyond silence. Zero
+   * requests for anything under /sfx/, measured.
+   *
+   * On the first press anywhere in the panel, which is a gesture and is long
+   * before anybody has picked a card to drag.
+   */
+  useEffect(() => {
+    if (state !== "in") return;
+    const go = () => sfx.unlock();
+    window.addEventListener("pointerdown", go, { once: true });
+    return () => window.removeEventListener("pointerdown", go);
+  }, [state]);
 
   if (state === "checking") return <div className="admin admin--msg">רגע…</div>;
 

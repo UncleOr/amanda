@@ -431,6 +431,15 @@ export function CardEditor({ call, say, upload, notes, reloadNotes }: CardEditor
                 className="ed__stage"
                 onPointerDown={(e) => {
                   if (!CATALOG.has(draft.id)) return;
+                  /*
+                   * Idempotent, and here as well as in the panel's own
+                   * first-gesture listener because this component is also
+                   * rendered on its own in a harness. Decoding is not
+                   * instant, so the press that unlocks is not the press
+                   * that is heard — which is why the panel unlocks on its
+                   * first press and not on this one.
+                   */
+                  sfx.unlock();
                   sfx.voice(voiceFor(draft.id).name);
                   startDrag(draft.id, e);
                 }}
