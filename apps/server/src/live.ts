@@ -30,13 +30,20 @@
  * somebody did; there is no reason to ask the database every thirty seconds
  * whether it has happened yet. Same arrangement as cards.ts.
  */
-import { applyPhraseOverrides, applyTunables, type PhraseOverride } from "@amanda/shared";
+import {
+  applyArenaOverrides,
+  applyPhraseOverrides,
+  applyTunables,
+  type ArenaOverride,
+  type PhraseOverride,
+} from "@amanda/shared";
 import { db } from "./supabase.js";
 
 export const liveState = {
   phrases: 0,
   series: 0,
   tunables: 0,
+  arenas: 0,
   lastError: null as string | null,
   loadedAt: null as string | null,
 };
@@ -56,6 +63,20 @@ export function seriesOverrides(): SeriesOverride[] {
 let phraseRows: PhraseOverride[] = [];
 export function phraseOverrides(): PhraseOverride[] {
   return phraseRows;
+}
+
+/**
+ * The rungs, where Or has rewritten one.
+ *
+ * This process DOES need them, unlike the series rows: `familyOpen` decides
+ * which families a chest may contain and `groundFor` decides which family
+ * fights 20% harder in a match, and both read ARENAS. A server holding the
+ * shipped arenas while the browser holds Or's would pay out a card the album
+ * refuses to show.
+ */
+let arenaRows: ArenaOverride[] = [];
+export function arenaOverrides(): ArenaOverride[] {
+  return arenaRows;
 }
 
 let tunableRows: Record<string, number> = {};
@@ -88,11 +109,12 @@ export async function refreshLive(): Promise<void> {
   const sb = db();
   if (!sb) return;
   try {
-    const [phrases, series, tunables, tutorial] = await Promise.all([
+    const [phrases, series, tunables, tutorial, arenas] = await Promise.all([
       sb.from("phrase_overrides").select("id, active, data"),
       sb.from("series_overrides").select("id, active, data, sort").order("sort"),
       sb.from("tunables").select("id, value"),
       sb.from("tutorial_overrides").select("id, active, he"),
+      sb.from("arena_overrides").select("id, data"),
     ]);
 
     phraseRows = (phrases.data ?? []) as PhraseOverride[];
@@ -114,6 +136,9 @@ export async function refreshLive(): Promise<void> {
     tutorialRows = ((tutorial.data ?? []) as Array<{ id: string; active: boolean; he: string }>)
       .filter((r) => r.active !== false && typeof r.he === "string" && r.he.trim() !== "")
       .map((r) => ({ id: String(r.id), he: r.he }));
+
+    arenaRows = (arenas.data ?? []) as ArenaOverride[];
+    liveState.arenas = applyArenaOverrides(arenaRows);
 
     liveState.lastError = null;
     liveState.loadedAt = new Date().toISOString();

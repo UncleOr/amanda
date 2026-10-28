@@ -7494,7 +7494,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/data/catalog.ts",
-   "line": 126
+   "line": 138
   },
   "en": "Crumb Demon"
  },

@@ -56,7 +56,13 @@ import { soloResult } from "./solo.js";
 import { birthdayGift } from "./birthday.js";
 
 import { SUPABASE_URL as URL, db, keyHasWhitespace, keyLength, keyStartsWith } from "./supabase.js";
-import { phraseOverrides, seriesOverrides, tunableValues, tutorialOverrides } from "./live.js";
+import {
+  arenaOverrides,
+  phraseOverrides,
+  seriesOverrides,
+  tunableValues,
+  tutorialOverrides,
+} from "./live.js";
 import { MAX_EVENT_BYTES, track, type EventKind } from "./events.js";
 
 /**
@@ -947,6 +953,7 @@ export async function handleApi(req: IncomingMessage, res: ServerResponse): Prom
       series: seriesOverrides(),
       tunables: tunableValues(),
       tutorial: tutorialOverrides(),
+      arenas: arenaOverrides(),
     });
     return true;
   }

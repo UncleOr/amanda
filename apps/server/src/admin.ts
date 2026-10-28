@@ -27,11 +27,12 @@ import {
   type GrantGives,
 } from "@amanda/shared";
 import { cardState, refreshCards } from "./cards.js";
+import { SERIES_NAMES } from "./content.js";
 import { liveState, refreshLive } from "./live.js";
 import { aboutPlayer, overview } from "./stats.js";
 import { liveCounts, startedAt } from "./liveops.js";
 import { track } from "./events.js";
-import { STARTER_ALBUM, TUNABLES } from "@amanda/shared";
+import { ARENAS, STARTER_ALBUM, TUNABLES, atArena } from "@amanda/shared";
 import { listReports } from "./reports.js";
 import { audienceOf, deliver, runGrant } from "./shop.js";
 import { notify } from "./notify.js";
@@ -163,6 +164,7 @@ async function adminRoutes(
     "/api/admin/copy",
     "/api/admin/phrases",
     "/api/admin/series",
+    "/api/admin/arenas",
     "/api/admin/tunables",
     "/api/admin/stats",
     "/api/admin/stats/player",
@@ -912,6 +914,116 @@ async function adminRoutes(
       }
       await refreshLive();
       deps.send(res, 200, { ok: true, live: liveState });
+      return true;
+    }
+
+    /*
+     * ── the rungs of the ladder ────────────────────────────────────
+     *
+     * Or: *"give me an arena editor in the admin panel too — which pack
+     * opens in them (packs that are already in another arena are blocked),
+     * and a name and text in Hebrew and English."*
+     *
+     * The rows, and the ladder as this process currently holds it. Both,
+     * because the panel needs to draw an arena Or has NOT touched — and the
+     * one authority on what those say is the process that has already
+     * applied every row to them.
+     */
+    case "/api/admin/arenas": {
+      const { data, error } = await sb.from("arena_overrides").select("id, data, updated_at");
+      if (error) {
+        deps.send(res, 500, { error: error.message });
+        return true;
+      }
+      deps.send(res, 200, {
+        rows: data ?? [],
+        arenas: ARENAS.map((a) => ({
+          id: a.id,
+          name: a.name,
+          tease: a.tease,
+          story: a.story,
+          from: a.from,
+          family: a.family,
+          introduces: a.introduces ?? "",
+          locked: !!a.locked,
+        })),
+        series: [...SERIES_NAMES].map(([id, name]) => ({ id, name })),
+      });
+      return true;
+    }
+
+    case "/api/admin/arenas/save": {
+      const id = str("id").trim();
+      const arena = ARENAS.find((a) => a.id === id);
+      if (!arena) {
+        deps.send(res, 400, { error: "אין ארנה כזאת" });
+        return true;
+      }
+      const sent = (body.data as Record<string, unknown> | undefined) ?? {};
+      /*
+       * ⚠ ONE FAMILY, ONE ARENA — CHECKED HERE AS WELL AS DRAWN.
+       *
+       * The panel greys out the taken ones, which holds right up until two
+       * tabs are open on it. A clash is not cosmetic: `familyOpen` decides
+       * whether a child may own a card of that family at all, and it takes
+       * the FIRST arena that claims one, so the loser silently becomes a
+       * rung that says it introduces somebody and does not.
+       */
+      if ("introduces" in sent) {
+        const to = typeof sent.introduces === "string" ? sent.introduces.trim() : "";
+        if (to && !SERIES_NAMES.has(to)) {
+          deps.send(res, 400, { error: "אין סדרה כזאת" });
+          return true;
+        }
+        const taken = ARENAS.find((a) => a.id !== id && a.introduces === to);
+        if (to && taken) {
+          // `atArena`, and the family's Hebrew name rather than its id: ב and
+          // ה collapse ("בהמוסך" is not a word), and "machines כבר נפתחת" is
+          // not a sentence Or should be shown either.
+          const family = SERIES_NAMES.get(to)?.he ?? to;
+          deps.send(res, 400, { error: `${family} כבר ${atArena(taken.name.he)}` });
+          return true;
+        }
+      }
+      const { error } = await sb.from("arena_overrides").upsert(
+        {
+          id,
+          data: sent,
+          updated_at: new Date().toISOString(),
+          updated_by: userId,
+        },
+        { onConflict: "id" },
+      );
+      if (error) {
+        deps.send(res, 500, { error: error.message });
+        return true;
+      }
+      await refreshLive();
+      deps.send(res, 200, { ok: true, live: liveState });
+      return true;
+    }
+
+    /*
+     * Back to what the game ships with.
+     *
+     * ⚠ The row goes and this process reloads, but `applyArenaOverrides`
+     * writes into ARENAS in place, so THIS process is still holding the
+     * edited words until it restarts. Which is why the panel says to reload
+     * after a revert rather than pretending the screen is the truth.
+     */
+    case "/api/admin/arenas/revert": {
+      const id = str("id");
+      if (!id) {
+        deps.send(res, 400, { error: "איזו ארנה" });
+        return true;
+      }
+      const { error } = await sb.from("arena_overrides").delete().eq("id", id);
+      if (error) {
+        deps.send(res, 500, { error: error.message });
+        return true;
+      }
+      await refreshLive();
+      deps.send(res, 200, { ok: true, live: liveState, reload: true });
       return true;
     }
 

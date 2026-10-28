@@ -4,7 +4,7 @@ import { CATALOG, SERIES_BY_ID } from "../data/catalog";
 import { ABILITY_LABEL, ELEMENT_META, RANGE_META, RARITY_META } from "../data/cardMeta";
 import { LEVELS, RANGE_REACH, levelCost, levelDiamonds, levelMultiplier } from "@amanda/shared";
 import { Overlay } from "./Overlay";
-import { spriteFor } from "../game/skins";
+import { artUrl, spriteFor } from "../game/skins";
 import { say } from "../game/lang";
 import { line as t, lineF as tf } from "../game/copy";
 
@@ -31,7 +31,7 @@ export function CardDetailModal({
   // The same resolution CardView does, so a skin the player owns is the
   // picture here too rather than only on the board.
   const sprite = card.art.sprite ? spriteFor(card.id, card.art.sprite) : null;
-  const art = sprite ? `${import.meta.env.BASE_URL}${sprite}` : null;
+  const art = sprite ? artUrl(sprite) : null;
 
   return (
     <Overlay onClick={onClose}>

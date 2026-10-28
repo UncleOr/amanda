@@ -28,9 +28,15 @@
  * telling the same story. See packages/shared/src/tunables.ts for the much
  * sharper reason that the BATTLE maths is not on that list.
  */
-import { applyPhraseOverrides, applyTunables, type PhraseOverride } from "@amanda/shared";
+import {
+  applyArenaOverrides,
+  applyPhraseOverrides,
+  applyTunables,
+  type ArenaOverride,
+  type PhraseOverride,
+} from "@amanda/shared";
 import { setTutorialOverrides } from "../data/tutorialLines";
-import { SERIES } from "../data/catalog";
+import { SERIES, sortSeriesByAppearance } from "../data/catalog";
 
 const SERVER_HTTP = (
   import.meta.env.VITE_SERVER_URL ?? (import.meta.env.DEV ? "ws://localhost:2567" : "")
@@ -45,7 +51,7 @@ interface SeriesRow {
   sort: number | null;
 }
 
-export const liveState = { phrases: 0, series: 0, tunables: 0, loaded: false };
+export const liveState = { phrases: 0, series: 0, tunables: 0, arenas: 0, loaded: false };
 
 const listeners = new Set<() => void>();
 /** Told when something has actually changed, so the album can redraw. */
@@ -110,8 +116,18 @@ export async function loadLiveContent(): Promise<void> {
       series?: SeriesRow[];
       tunables?: Record<string, number>;
       tutorial?: Array<{ id: string; he: string }>;
+      arenas?: ArenaOverride[];
     };
     liveState.phrases = applyPhraseOverrides(body.phrases ?? []);
+    /*
+     * The arenas come FIRST of the two, and the album is re-sorted straight
+     * after them. `familyOrder` places a shelf by the arena that introduces
+     * its family, so a rung Or has moved changes the order of the album —
+     * and then applySeries runs, because an order he set by hand on the
+     * shelves themselves is the one that should win.
+     */
+    liveState.arenas = applyArenaOverrides(body.arenas ?? []);
+    if (liveState.arenas) sortSeriesByAppearance();
     liveState.series = applySeries(body.series ?? []);
     liveState.tunables = applyTunables(body.tunables ?? {});
     /*
@@ -121,7 +137,7 @@ export async function loadLiveContent(): Promise<void> {
      */
     setTutorialOverrides(body.tutorial ?? []);
     liveState.loaded = true;
-    if (liveState.phrases || liveState.series || liveState.tunables)
+    if (liveState.phrases || liveState.series || liveState.tunables || liveState.arenas)
       for (const fn of listeners) fn();
   } catch {
     // The game is complete without any of this. See the note at the top.

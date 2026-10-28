@@ -51,3 +51,25 @@ export function spriteFor(cardId: string, baseSprite: string, equipped?: string 
   const skin = SKINS[equipped];
   return skin && skin.cardId === cardId ? skin.sprite : baseSprite;
 }
+
+/**
+ * Where a card's picture actually is, as a URL a browser can load.
+ *
+ * Two kinds of sprite now, and the whole point of this function is that
+ * nothing drawing a card has to know which kind it is holding:
+ *
+ *   "cards/dragons_01_flame_dragon.webp"      shipped with the build, under
+ *                                             BASE_URL like every other asset
+ *   "https://…/card-art/giants_01-….webp"     uploaded from the admin panel,
+ *                                             already a whole address
+ *
+ * ⚠ The second kind arrived with the "replace the picture" button, and this
+ * is the line that keeps it from breaking everything else: a card whose art
+ * Or has replaced is drawn in a battle, in the album, in the log and in the
+ * detail modal, and every one of those used to write `BASE_URL + sprite` by
+ * hand. Prefixing an absolute URL produces /amanda/https://… — a grey box,
+ * in four places, with no error anywhere.
+ */
+export function artUrl(sprite: string): string {
+  return /^(https?:)?\/\//.test(sprite) ? sprite : `${import.meta.env.BASE_URL}${sprite}`;
+}

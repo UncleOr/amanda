@@ -504,3 +504,93 @@ export function arenaProgress(trophies: number): number {
   const span = next.from - here.from;
   return span <= 0 ? 1 : Math.min(1, Math.max(0, (trophies - here.from) / span));
 }
+
+/* ───────────────────── what Or can change without a deploy ───────────────────── */
+
+/**
+ * One row of the arena editor: an arena, and the parts of it that are his.
+ *
+ * `data` holds only what was changed. An absent key is "leave it as it
+ * ships", which is not the same as an empty one — clearing the family is
+ * done by sending `introduces: ""`, and that is a decision, not a silence.
+ */
+export interface ArenaOverride {
+  id: string;
+  data: {
+    name?: { he?: string; en?: string };
+    tease?: { he?: string; en?: string };
+    story?: { he?: string; en?: string };
+    /** The family you meet here. "" or null means you meet nobody new. */
+    introduces?: string | null;
+  } | null;
+}
+
+/** Take a he/en pair from a row, keeping whatever it did not say. */
+function worded(
+  was: { he: string; en: string },
+  said: { he?: string; en?: string } | undefined,
+): { he: string; en: string } {
+  if (!said) return was;
+  const he = typeof said.he === "string" && said.he.trim() ? said.he : was.he;
+  const en = typeof said.en === "string" && said.en.trim() ? said.en : was.en;
+  return { he, en };
+}
+
+/**
+ * Apply the arena rows, in the browser and in the server process alike.
+ *
+ * Or: *"give me an arena editor in the admin panel too — which pack opens in
+ * them (packs already in another arena are blocked), and a name and text in
+ * Hebrew and English."*
+ *
+ * ═══ ONE FAMILY, ONE ARENA — AND IT IS ENFORCED HERE, NOT ONLY DRAWN ═══
+ *
+ * His parenthesis is the whole rule, and a panel that merely greys out the
+ * taken ones is a rule that holds until two tabs are open. Two arenas
+ * claiming the Slimes is not a cosmetic muddle: `familyOrder` asks which
+ * arena introduces a family to place its shelf in the album, and
+ * `familyOpen` asks the same question to decide whether a child may own one
+ * of its cards at all. Both take the FIRST answer, so the loser of a clash
+ * would quietly become an arena that introduces nobody while still saying
+ * it does.
+ *
+ * So the families are resolved as a whole, in ladder order: each arena
+ * claims what it asked for if it is still free, and an arena whose family
+ * was taken introduces nobody. Resolving the set at once is also what lets
+ * Or SWAP two arenas' families in one save — row by row, the second half of
+ * a swap always looks like a clash with the half that has not moved yet.
+ *
+ * Returns how many arenas ended up changed, for the panel's "n applied".
+ */
+export function applyArenaOverrides(rows: readonly ArenaOverride[]): number {
+  const want = new Map(ARENAS.map((a) => [a.id, a.introduces ?? null]));
+  const changed = new Set<string>();
+
+  for (const row of rows) {
+    const arena = ARENAS.find((a) => a.id === row.id);
+    // An arena the files do not have is ignored rather than invented: a rung
+    // is a place with a backdrop and a trophy range, and a row cannot make
+    // either of those.
+    if (!arena || !row.data) continue;
+    const before = JSON.stringify([arena.name, arena.tease, arena.story]);
+    arena.name = worded(arena.name, row.data.name);
+    arena.tease = worded(arena.tease, row.data.tease);
+    arena.story = worded(arena.story, row.data.story);
+    if (before !== JSON.stringify([arena.name, arena.tease, arena.story])) changed.add(arena.id);
+    if ("introduces" in row.data) {
+      const to = typeof row.data.introduces === "string" ? row.data.introduces.trim() : "";
+      if ((want.get(arena.id) ?? null) !== (to || null)) changed.add(arena.id);
+      want.set(arena.id, to || null);
+    }
+  }
+
+  const claimed = new Set<string>();
+  for (const arena of ARENAS) {
+    const to = want.get(arena.id) ?? null;
+    const keep = to && !claimed.has(to) ? to : undefined;
+    if (keep) claimed.add(keep);
+    if ((arena.introduces ?? undefined) !== keep) changed.add(arena.id);
+    arena.introduces = keep;
+  }
+  return changed.size;
+}

@@ -5,6 +5,7 @@ import { GiftsTab } from "./AdminGifts";
 import { ShopTab } from "./AdminShop";
 import { DialsTab, PhrasesTab, SeriesTab } from "./AdminContent";
 import { TutorialTab } from "./AdminTutorial";
+import { ArenasTab } from "./AdminArenas";
 import { PlayerStats, StatsTab } from "./AdminStats";
 import { LiveTab } from "./AdminLive";
 import { CardEditor } from "./CardEditor";
@@ -35,6 +36,39 @@ const SERVER = (import.meta.env.VITE_SERVER_URL ?? (import.meta.env.DEV ? "ws://
   .replace(/^wss:/, "https:");
 
 const sb = createClient(URL, KEY, { auth: { persistSession: true } });
+
+/**
+ * Put a card's picture in the bucket, and give back the address to draw it.
+ *
+ * Or: *"and I need the picture for each one. With an option to replace the
+ * picture."*
+ *
+ * ═══ THE ONE WRITE THAT DOES NOT GO THROUGH THE SERVER ═══
+ *
+ * Everything else this panel changes is a POST the server authorises by
+ * reading the `admins` table. A picture cannot travel that way: `readBody`
+ * caps a request at 256KB and silently TRUNCATES anything bigger, so a photo
+ * sent as base64 would arrive cut in half and be parsed as an empty body —
+ * no error, nothing saved, no way to tell why. Raising that cap for one route
+ * would let every route be made to buffer megabytes.
+ *
+ * So this goes straight to storage, and the same question is asked by
+ * Postgres instead: the bucket's policy admits an INSERT only from somebody
+ * in that same `admins` table. See 20261028151914_admins_may_upload_card_art.
+ *
+ * A new name every time (the clock), rather than overwriting: a card's
+ * picture is cached hard by every browser and every CDN in between, and a
+ * replaced picture that keeps its address is a replaced picture nobody sees
+ * for a week.
+ */
+async function uploadArt(file: Blob, cardId: string): Promise<{ url?: string; error?: string }> {
+  const path = `${cardId}-${Date.now()}.webp`;
+  const { error } = await sb.storage
+    .from("card-art")
+    .upload(path, file, { contentType: "image/webp", cacheControl: "31536000" });
+  if (error) return { error: error.message };
+  return { url: sb.storage.from("card-art").getPublicUrl(path).data.publicUrl };
+}
 
 interface AdminUser {
   id: string;
@@ -96,6 +130,7 @@ export function Admin() {
     | "gifts"
     | "phrases"
     | "series"
+    | "arenas"
     | "tutorial"
     | "dials"
     | "stats"
@@ -220,6 +255,9 @@ export function Admin() {
           <button className={tab === "series" ? "on" : ""} onClick={() => setTab("series")}>
             סדרות
           </button>
+          <button className={tab === "arenas" ? "on" : ""} onClick={() => setTab("arenas")}>
+            ארנות
+          </button>
           <button className={tab === "tutorial" ? "on" : ""} onClick={() => setTab("tutorial")}>
             טוטוריאל
           </button>
@@ -241,7 +279,7 @@ export function Admin() {
       ) : tab === "stats" ? (
         <StatsTab call={call} />
       ) : tab === "cards" ? (
-        <CardEditor call={call} say={setNote} />
+        <CardEditor call={call} say={setNote} upload={uploadArt} />
       ) : tab === "copy" ? (
         <CopyTab say={setNote} />
       ) : tab === "reports" ? (
@@ -254,6 +292,8 @@ export function Admin() {
         <PhrasesTab call={call} say={setNote} />
       ) : tab === "series" ? (
         <SeriesTab call={call} say={setNote} />
+      ) : tab === "arenas" ? (
+        <ArenasTab call={call} say={setNote} />
       ) : tab === "tutorial" ? (
         <TutorialTab call={call} say={setNote} />
       ) : tab === "dials" ? (

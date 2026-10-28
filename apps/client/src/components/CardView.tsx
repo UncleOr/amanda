@@ -1,5 +1,5 @@
 import type { CSSProperties } from "react";
-import { spriteFor } from "../game/skins";
+import { artUrl, spriteFor } from "../game/skins";
 import { Icon } from "./Icon";
 import { KING, cardBack } from "@amanda/shared";
 import { CATALOG } from "../data/catalog";
@@ -120,7 +120,7 @@ export function CardView({
   const power = Math.round(basePower * (king ? KING.powerMultiplier : 1));
   const buffed = !!(b.powerAdd || b.powerMult || b.hpMult);
   const sprite = card.art.sprite ? spriteFor(card.id, card.art.sprite, skin) : null;
-  const art = sprite ? `${import.meta.env.BASE_URL}${sprite}` : null;
+  const art = sprite ? artUrl(sprite) : null;
 
   const style: CSSProperties = {
     "--card-color": card.art.placeholderColor,

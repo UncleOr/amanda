@@ -1,5 +1,7 @@
 import { describe, expect, it } from "vitest";
-import { SKINS, skinsFor, spriteFor, type Skin } from "./skins";
+import { readFileSync } from "node:fs";
+import { fileURLToPath } from "node:url";
+import { SKINS, artUrl, skinsFor, spriteFor, type Skin } from "./skins";
 
 /**
  * The rule that must survive every future skin: a skin changes how a card
@@ -41,5 +43,44 @@ describe("card skins", () => {
     expect(skinsFor("furries_01_chuppy")).toHaveLength(1);
     expect(skinsFor("dragons_01_flame_dragon")).toHaveLength(0);
     delete SKINS[vintage.id];
+  });
+});
+
+/**
+ * **A picture Or uploaded is a whole address; one that shipped is a path.**
+ *
+ * The "replace the picture" button in the admin panel puts the file in a
+ * Supabase bucket and writes `https://…` into `art.sprite`, where every other
+ * card holds `cards/whatever.webp`. Four places in this app used to turn a
+ * sprite into a URL by writing `BASE_URL + sprite` themselves.
+ */
+describe("where a card's picture is", () => {
+  it("puts a shipped path under the app's own base", () => {
+    expect(artUrl("cards/dragons_01_flame_dragon.webp")).toBe(
+      `${import.meta.env.BASE_URL}cards/dragons_01_flame_dragon.webp`,
+    );
+  });
+
+  it("leaves an uploaded picture exactly as it is", () => {
+    const up = "https://iiviygfltyrsonioyqxm.supabase.co/storage/v1/object/public/card-art/x.webp";
+    expect(artUrl(up)).toBe(up);
+    expect(artUrl("//cdn.example.com/x.webp")).toBe("//cdn.example.com/x.webp");
+  });
+
+  /*
+   * ⚠ THE ONE THAT WOULD BE SILENT. Prefixing an absolute URL produces
+   * "/amanda/https://…", which is a 404 drawn as a blank card — in the
+   * battle, the album, the log and the detail modal at once, with no error
+   * anywhere and nothing in the panel to suggest the upload went wrong. So
+   * the rule is not "artUrl exists", it is "nobody builds one by hand".
+   */
+  it("is the only way any of them builds a card's URL", () => {
+    const root = fileURLToPath(new URL("../components/", import.meta.url));
+    for (const file of ["Arena.tsx", "BattleLog.tsx", "CardDetailModal.tsx", "CardView.tsx"]) {
+      const src = readFileSync(root + file, "utf8");
+      const byHand = src.match(/BASE_URL\}\$\{(sprite|spriteFor)/g) ?? [];
+      expect(byHand, `${file} builds a sprite URL by hand`).toHaveLength(0);
+      expect(src, `${file} does not use artUrl`).toContain("artUrl(");
+    }
   });
 });

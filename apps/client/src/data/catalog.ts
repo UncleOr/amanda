@@ -43,8 +43,20 @@ const rank = (s: Series) => familyOrder(s, STARTER_ALBUM, isCollectable);
 
 export const SERIES: Series[] = Object.keys(seriesModules)
   .sort()
-  .map((path) => parseSeries(seriesModules[path]!.default))
-  .sort((a, b) => rank(a) - rank(b));
+  .map((path) => parseSeries(seriesModules[path]!.default));
+sortSeriesByAppearance();
+
+/**
+ * Put the shelves back in the order a player meets the families.
+ *
+ * Called once at load, and AGAIN whenever the arenas change — because what
+ * `familyOrder` reads is which arena introduces a family, and that is now a
+ * thing Or can change from the admin panel. Sorting only at load would leave
+ * the album showing the order the families were met in before he moved one.
+ */
+export function sortSeriesByAppearance(): void {
+  SERIES.sort((a, b) => rank(a) - rank(b));
+}
 
 /** All series indexed by id, for lookups (synergy, detail view). */
 export const SERIES_BY_ID: Map<string, Series> = new Map(SERIES.map((s) => [s.id, s]));

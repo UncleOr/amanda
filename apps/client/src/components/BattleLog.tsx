@@ -1,5 +1,5 @@
 import { useMemo, useState } from "react";
-import { spriteFor } from "../game/skins";
+import { artUrl, spriteFor } from "../game/skins";
 import { Icon, type IconName } from "./Icon";
 import { SIMULATION } from "@amanda/shared";
 import {
@@ -451,7 +451,7 @@ function UnitReportModal({
 }) {
   const card = CATALOG.get(unit.cardId);
   const art = card?.art.sprite
-    ? `${import.meta.env.BASE_URL}${spriteFor(card.id, card.art.sprite)}`
+    ? artUrl(spriteFor(card.id, card.art.sprite))
     : null;
   const sideTotal = Math.max(1, report.sides[unit.owner].damageDealt);
   const share = Math.round((unit.damageDealt / sideTotal) * 100);
