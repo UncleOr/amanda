@@ -35,45 +35,19 @@ export const CARD_LOOK: Record<string, string> = {
     "a broad armoured chest, enthroned on a bank of storm clouds, overwhelming majesty",
 
   /*
-   * ── The Strays — the alley at night ──
+   * ── Two survivors of a family Or dropped ──
    *
-   * Or: *"for the alley let's invent a new series that doesn't exist yet."*
-   * Two of these are lifted straight out of his alley story: the jackals
-   * howling, and "oh, it is only a cat".
-   *
-   * The silhouette rule matters more here than anywhere, because six of the
-   * ten are roughly "an animal in the dark" and would otherwise come back as
-   * six of the same animal. Each one leads with a different BODY.
+   * He on the Strays: *"that is something you invented and I did not like it
+   * much, sorry."* Fair. He kept two, and both moved house: the bin to the
+   * Slimes and the Alley King to the Demons, which is the family that now
+   * lives in Fright Alley. The briefs are unchanged — the pictures were
+   * never the problem.
    */
-  strays_01_street_cat:
-    "a lean half-starved alley cat arched high on long thin legs, ragged notched ears and a crooked tail, " +
-    "one eye scarred shut, patchy grey tabby fur under orange street light",
-  strays_02_jackal:
-    "a gaunt long-legged jackal with an oversized narrow head and enormous upright ears, " +
-    "head thrown back mid-howl, ribs showing through dusty sand-coloured fur, long bottlebrush tail",
-  strays_03_rat:
-    "a fat bristling sewer rat low to the ground on stubby legs, a very long bald pink tail curling behind it, " +
-    "huge yellow incisors and a twitching snout, wet matted brown fur",
-  strays_04_bin_bag:
-    "NOT an animal — a bulging torn black rubbish bag sitting in a puddle, no legs and no face, " +
-    "split seams leaking rubbish, a knotted neck at the top like a tied mouth, slick and wet",
-  strays_05_flicker_lamp:
-    "NOT a creature — a bent iron street lamp on a crooked post, its glass head cracked, " +
-    "the bulb flaring sodium orange mid-flicker, moths caught in the glare, wires hanging loose",
-  strays_06_shadow:
-    "a tall featureless silhouette of pure black with no face at all, long thin limbs, " +
-    "edges dissolving into smoke, only two faint pale eye-slits, cast across a brick wall",
-  strays_07_scrap_dog:
-    "a broad heavy dog built out of scavenged scrap metal, corrugated plates for ribs and a hubcap shoulder, " +
-    "a square welded jaw with mismatched teeth, bolts along its spine, rust and oil",
-  strays_08_thing_in_the_bin:
+  slimes_11_thing_in_the_bin:
     "a battered metal dustbin with its lid half lifted, and something unseen inside — " +
     "two glowing eyes and a mass of thin grasping fingers curling over the rim, nothing else visible",
-  strays_09_old_tom:
-    "an enormously fat ancient tomcat sitting heavily, jowls and a sagging belly, " +
-    "one torn ear and a flat scarred face, thick matted ginger fur, half-closed contemptuous eyes",
-  strays_10_alley_king:
-    "a colossal hulking stray beast standing upright at the end of an alley, part dog part something worse, " +
+  demons_01_alley_king:
+    "a colossal hulking beast standing upright at the end of an alley, part dog part something worse, " +
     "a mane of wire and rubbish, a crown of bent cutlery and bottle caps jammed on its head, " +
     "enormous shoulders, eyes glowing in the dark",
 

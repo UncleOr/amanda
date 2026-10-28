@@ -289,23 +289,27 @@ export const ARENAS: Arena[] = [
   {
     id: "alley",
     /*
-     * Or: *"for the alley let's invent a new series that doesn't exist
-     * yet."*
+     * ═══ THIS RUNG HAS HAD TWO FAMILIES, AND THE FIRST ONE WAS MINE ═══
      *
-     * Which solves the thing the station's move broke — two arenas cannot
-     * be the same family — and solves it better than shuffling the existing
-     * six, because his alley story was never really about insects. It is
-     * about what is out there at night: jackals, a flickering lamp, a bin
-     * you should not look in, and "oh, it is only a cat". That is a family,
-     * and now it is one. See data/series/11-strays.json.
+     * Or once said *"for the alley let's invent a new series that doesn't
+     * exist yet"*, and I built the Strays for it out of his own alley story
+     * — jackals, a flickering lamp, a bin you should not look in, "oh, it is
+     * only a cat".
      *
-     * It is also the first arena whose family exists BECAUSE of the arena
-     * rather than the other way round, which is what finally makes the
-     * ladder able to promise somebody new at a rung: see the note above
-     * about all six families being in the starter album.
+     * He looked at them and said: *"that is something you invented and I did
+     * not like it much, sorry."* Which is the correct way round, and the
+     * reason this note stays rather than being tidied away: the lesson is
+     * not that the family was bad, it is that I invented a family for a
+     * place instead of asking what lives there.
+     *
+     * What lives there is the Demons, which is what his own design document
+     * said from the first day — number 6, *"mind control, blindness and
+     * assassination"*. One card so far: the Alley King, who survived the cull
+     * and moved in. The arena is locked, so the family is sealed and he is
+     * in nobody's album until it opens.
      */
-    family: "strays",
-    introduces: "strays",
+    family: "demons",
+    introduces: "demons",
     locked: true,
     name: { he: "סמטת האימה", en: "Fright Alley" },
     from: 2000,

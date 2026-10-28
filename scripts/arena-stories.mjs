@@ -49,7 +49,6 @@ const FAMILY = {
   insects: "החרקים",
   machines: "המכונות",
   sea: "שוכני הים",
-  strays: "חיות הרחוב",
   foods: "המאכלים",
   galactics: "הגלקטיים",
   demons: "השדים",

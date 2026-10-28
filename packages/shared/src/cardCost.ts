@@ -47,12 +47,13 @@
  * ═══ AND TWENTY CARDS ARRIVED, AND THE BANDS DID NOT MOVE ═══
  *
  * The Machines and the Sea Dwellers took the catalogue from 51 collectable
- * cards to 71 — the biggest addition it has had. Re-measured afterwards,
+ * cards to 71, and then Or dropped the Strays and kept two of them, which
+ * left 72 — the biggest change it has had either way. Re-measured afterwards,
  * against these same four numbers:
  *
- *   cost 1  14 cards      cost 4  17 cards
+ *   cost 1  14 cards      cost 4  18 cards
  *   cost 2  14 cards      cost 5  13 cards
- *   cost 3  13 cards      average price 3.01
+ *   cost 3  13 cards      average price 3.03
  *
  * Which is exactly what the paragraph above promised, and the reason it is
  * written down: nobody's card was re-priced by somebody else's card being

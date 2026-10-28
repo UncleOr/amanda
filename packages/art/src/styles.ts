@@ -63,8 +63,8 @@ export const SERIES_TEMPLATE: Record<string, string> = {
   slimes: "translucent glossy gel body, wet highlights, acid green and aqua blue palette, drip shapes",
   plants: "verdant greens with flower-bright accents, leaf and vine shapes, soft organic silhouettes",
   insects: "chitinous exoskeleton sheen, amber and deep violet palette, sharp angular limbs",
-  // The alley at night: everything here is scavenged, lit by one bad lamp.
-  strays: "mangy matted fur and scavenged scrap, sodium-orange street light from one side, cold blue shadow on the other, grubby and lean",
+  // The alley at night, which is where the Demons live now.
+  demons: "deep violet and ink black with a single hot ember accent, smoke curling off the silhouette, long thin limbs",
   giants: "rough craggy stone and raw hammered metal, earthy grey-brown palette with warm mineral veins, massive heavy blocky silhouette",
 };
 

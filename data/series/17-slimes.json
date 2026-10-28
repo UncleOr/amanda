@@ -448,6 +448,48 @@
         "sprite": "cards/slimes_10_zelig_giant_ooze.webp"
       },
       "launch": true
+    },
+    {
+      "id": "slimes_11_thing_in_the_bin",
+      "seriesId": "slimes",
+      "numberInSeries": 11,
+      "name": {
+        "he": "מה שבפח",
+        "en": "The Thing in the Bin"
+      },
+      "elements": [
+        "variable"
+      ],
+      "rarity": "rare",
+      "stats": {
+        "hp": 520,
+        "power": 460,
+        "attackSpeed": 1.8,
+        "moveSpeed": 0,
+        "range": "melee"
+      },
+      "flying": false,
+      "midBoss": false,
+      "abilities": [
+        {
+          "type": "elementSteal",
+          "trigger": "onHit",
+          "params": {},
+          "description": {
+            "he": "לוקח את היסוד של הראשון שהוא פוגע בו.",
+            "en": "Takes the element of the first thing it hits."
+          }
+        }
+      ],
+      "role": {
+        "he": "אף פעם לא אותו דבר פעמיים.",
+        "en": "Never the same thing twice."
+      },
+      "art": {
+        "placeholderColor": "#4a4550",
+        "sprite": "cards/slimes_11_thing_in_the_bin.webp"
+      },
+      "launch": true
     }
   ]
 }

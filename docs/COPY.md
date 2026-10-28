@@ -1,6 +1,6 @@
 # הטקסטים של אמנדה
 
-כל טקסט שהשחקן רואה — 1429 במספר, 1429 מהם כבר באנגלית.
+כל טקסט שהשחקן רואה — 1406 במספר, 1406 מהם כבר באנגלית.
 
 ## איך עורכים
 
@@ -100,6 +100,17 @@
 | ddbe8bbb | אם־המכונה | | The Mother Machine |
 | d0219548 | משריינת את כל מי שסביבה, ומפילה ארבעה חדשים כשהיא נופלת. | | Armours everything around it, and drops four more when it falls. |
 
+## סדרה — הפרוותיים
+
+| מזהה | טקסט נוכחי | טקסט חדש | אנגלית |
+| --- | --- | --- | --- |
+| da38e006 | הפרוותיים | | The Furries |
+| d1b31dbe | מכות חשמל מהירות — מעט חיים, הרבה כוח | | Fast electric strikes — little health, a lot of power |
+| d8feed59 | פרווה טעונה | | Charged Fur |
+| dc948713 | שלושה צמודים מאותה סדרה מקבלים +20% עוצמה ו+20% חיים. | | Three of the family, touching: +20% power and health. |
+| d7e855a6 | צ'ופי | | Choopy |
+| de54292a | החבר שלך מההתחלה. מכה חזק מרחוק ושובר שריון — אבל סופג כמעט כלום, אז הוא לא עומד בחזית. | | Your friend from day one. Hits hard from range and breaks armour — and he is made of paper. Not a front-row card. |
+
 ## סדרה — שוכני הים
 
 | מזהה | טקסט נוכחי | טקסט חדש | אנגלית |
@@ -157,16 +168,18 @@
 | d0768b12 | מכת רעם שפוגעת בשני נתיבים. | | A thunderclap that strikes two lanes. |
 | d55f84c5 | מלך הטיטאנים | | Titan King |
 
-## סדרה — הפרוותיים
+## סדרה — השדים
 
 | מזהה | טקסט נוכחי | טקסט חדש | אנגלית |
 | --- | --- | --- | --- |
-| d2cdcd05 | הפרוותיים | | The Furries |
-| d85387a0 | מכות חשמל מהירות — מעט חיים, הרבה כוח | | Fast electric strikes — little health, a lot of power |
-| de4a1b06 | פרווה טעונה | | Charged Fur |
-| dabfb712 | שלושה צמודים מאותה סדרה מקבלים +20% עוצמה ו+20% חיים. | | Three of the family, touching: +20% power and health. |
-| d267c630 | צ'ופי | | Choopy |
-| d8d0f124 | החבר שלך מההתחלה. מכה חזק מרחוק ושובר שריון — אבל סופג כמעט כלום, אז הוא לא עומד בחזית. | | Your friend from day one. Hits hard from range and breaks armour — and he is made of paper. Not a front-row card. |
+| d3890c76 | השדים | | The Demons |
+| d1e968da | שליטה מנטלית, עיוורון והתנקשות | | Mind control, blindness and assassination |
+| dabf96e6 | האפלה | | The Dark |
+| d3b2f0ac | שלושה צמודים מאותה סדרה מקבלים +20% עוצמה ו+20% חיים. | | Three of the family, touching: +20% power and health. |
+| d4529c6d | מלך הסמטה | | The Alley King |
+| d069653d | אחרי הריגה הוא ממשיך להתקדם. | | After a kill it keeps advancing. |
+| d79fcc2c | כשהוא נופל, ארבעה מהחבורה שלו קמים. | | When it falls, four of its gang get up. |
+| d8bfda61 | האפי של הסדרה: קשה להפיל, וגם כשהוא נופל הוא לא נגמר. | | The series' epic: hard to bring down, and not finished when it is. |
 
 ## סדרה — החרקים
 
@@ -195,45 +208,6 @@
 | de11f78a | חרק פצצה | | Bombardier |
 | de11c8f1 | מתפוצץ במוות לשני חרקים קטנים. | | Explodes on death into two small bugs. |
 | d737d9d3 | קיסרית החרקים | | Insect Empress |
-
-## סדרה — חיות הרחוב
-
-| מזהה | טקסט נוכחי | טקסט חדש | אנגלית |
-| --- | --- | --- | --- |
-| d54add5c | חיות הרחוב | | The Strays |
-| db99cf3f | מהירות, קריעת שריון, ומי שנופל משאיר אחריו חבורה | | Speed, torn armour, and whoever falls leaves a gang behind |
-| db73bc15 | חבורה | | The Pack |
-| dfd692f7 | שלושה צמודים מאותה סדרה מקבלים +20% עוצמה ו+20% חיים. | | Three of the family, touching: +20% power and health. |
-| db9f8171 | חתול רחוב | | Street Cat |
-| d3669ac9 | הזול והמהיר. ממלא שורה קדמית ומגיע ראשון. | | Cheap and quick. Fills a front row and gets there first. |
-| dcba058a | תן | | Jackal |
-| d8bdcadc | מזרז את התוקפים לידו ב-20%. | | Speeds up attackers beside it by 20%. |
-| de78f90d | לא חזק לבד. שניים או שלושה ביחד הם חבורה. | | Weak alone. Two or three together are a pack. |
-| d2077a4d | חולדה | | Rat |
-| dc84b4e0 | כשהיא מתה, שלוש חולדות קטנות ממשיכות במקומה. | | When it dies, three small rats carry on in its place. |
-| df523605 | להרוג אותה זה לא להיפטר ממנה. | | Killing it is not the same as being rid of it. |
-| dda626ad | שק אשפה | | Rubbish Bag |
-| d68422e6 | מי שעומד מולו לא זז משם. | | Whatever stands in front of it does not move. |
-| dd26e5bb | לא תוקף כמעט. פשוט חוסם, וזה מספיק. | | Barely attacks. It blocks, and that is enough. |
-| d8c898d6 | פנס מהבהב | | Flickering Lamp |
-| d1227f0f | ההבהוב מקפיא את מי שנפגע לשנייה וחצי. | | The flicker freezes whatever it hits for a second and a half. |
-| d489b665 | לא הורג. עוצר. | | It does not kill. It stops. |
-| d57faa1c | צל | | Shadow |
-| da67659b | אחרי הריגה הוא ממשיך להתקדם באותו תור. | | After a kill it keeps advancing in the same turn. |
-| d22f8afd | הכי מסוכן מול שורה של קלפים חלשים. | | Most dangerous against a row of weak cards. |
-| d74f9e70 | כלב גרוטאות | | Scrap Dog |
-| dcb98687 | קורע שריון: מוריד 20% מהשריון של מי שהוא פוגע בו. | | Tears armour: takes 20% of the armour off whatever it hits. |
-| d2fb5318 | התשובה של הסמטה לענקים. | | The alley's answer to the giants. |
-| d5a6ba23 | מה שבפח | | The Thing in the Bin |
-| d65253df | לוקח את היסוד של הראשון שהוא פוגע בו. | | Takes the element of the first thing it hits. |
-| dc0167ea | אף פעם לא אותו דבר פעמיים. | | Never the same thing twice. |
-| dc9c728b | חתול זקן | | Old Tom |
-| d0dd947e | אוכל קלף שכן ומקבל 400 שריון. | | Eats a neighbouring card and gains 400 armour. |
-| d5bf34b6 | עולה קלף. שווה את זה רק ליד משהו שכבר נגמר. | | Costs a card. Worth it only beside something already spent. |
-| dfdf8cc8 | מלך הסמטה | | The Alley King |
-| d5c3557d | אחרי הריגה הוא ממשיך להתקדם. | | After a kill it keeps advancing. |
-| d66811df | כשהוא נופל, ארבעה מהחבורה שלו קמים. | | When it falls, four of its gang get up. |
-| d054091b | האפי של הסדרה: קשה להפיל, וגם כשהוא נופל הוא לא נגמר. | | The series' epic: hard to bring down, and not finished when it is. |
 
 ## סדרה — הצמחים
 
@@ -298,6 +272,9 @@
 | d59cfdc3 | הגנה היקפית / שומר ראש. | | Perimeter guard / bodyguard. |
 | de5bfdae | זליג הענק | | Zelig the Giant |
 | db20969f | כל 6 שניות מושך את כל קלפי היריב המסתערים משבצת אחת פנימה למרכז ומשבש נתיבים. | | Every 3 seconds, drags the advancing enemy one slot inward. |
+| d2493424 | מה שבפח | | The Thing in the Bin |
+| d85a53ea | לוקח את היסוד של הראשון שהוא פוגע בו. | | Takes the element of the first thing it hits. |
+| def6d41a | אף פעם לא אותו דבר פעמיים. | | Never the same thing twice. |
 
 ## סדרה — האגדיים
 

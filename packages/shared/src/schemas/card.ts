@@ -37,8 +37,19 @@ export const CardSchema = z.object({
   id: z.string().regex(/^[a-z0-9_]+$/),
   /** Owning series id (must match a SeriesDefinition.id). */
   seriesId: z.string(),
-  /** 1–10 position within the series. */
-  numberInSeries: z.number().int().min(1).max(10),
+  /**
+   * Position within the series.
+   *
+   * ⚠ THE CEILING IS A SANITY BOUND, NOT THE DESIGN. The GDD's shape is ten
+   * cards a family, and almost every family has exactly ten — but the Furries
+   * have one and the Legends have one, so this was never an invariant.
+   *
+   * It was raised from 10 the day Or kept one card out of a family he was
+   * dropping: *"leave the Thing in the Bin (slimes)"* — and the Slimes
+   * already held 1 through 10. The alternative was deleting a slime nobody
+   * asked me to delete, which is a worse answer than a family of eleven.
+   */
+  numberInSeries: z.number().int().min(1).max(12),
   name: LocalizedStringSchema,
   elements: ElementsSchema,
   rarity: RaritySchema.default("common"),

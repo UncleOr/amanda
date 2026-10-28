@@ -135,9 +135,11 @@ describe("which ground", () => {
      * nothing throws on an unknown seriesId, the units simply never match.
      *
      * The list used to be written out by hand, and it went stale the first
-     * time a series was added — the alley got a family of its own (the
-     * strays, data/series/11-strays.json) and this failed on a change that
-     * was entirely correct. Read from the same directory the game reads, it
+     * time a series was added — the alley got a family of its own — and
+     * this failed on a change that was entirely correct. It has since paid
+     * for itself twice more: the Machines and the Sea Dwellers arriving,
+     * and the alley's family being replaced outright. Read from the same
+     * directory the game reads, it
      * cannot say no to a real family or yes to a typo.
      */
     const dir = fileURLToPath(new URL("../../../data/series/", import.meta.url));

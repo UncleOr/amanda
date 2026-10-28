@@ -80,10 +80,10 @@ describe("which families a chest may draw from", () => {
   });
 
   it("never gives a family whose arena is shut, to anybody", () => {
-    // The Strays live in Fright Alley and Fright Alley is locked, so there
+    // The Demons live in Fright Alley and Fright Alley is locked, so there
     // is no trophy count that unlocks them — which is the actual answer to
-    // the bug Or found.
-    expect(drawn(TOP, 400).has("strays")).toBe(false);
+    // the bug Or found. (It was the Strays here until he dropped them.)
+    expect(drawn(TOP, 400).has("demons")).toBe(false);
   });
 
   it("adds the machines at the Garage, and not at the Station", () => {

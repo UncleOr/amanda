@@ -890,6 +890,96 @@
   "en": "Armours everything around it, and drops four more when it falls."
  },
  {
+  "id": "da38e006",
+  "section": "סדרה — הפרוותיים",
+  "text": "הפרוותיים",
+  "where": {
+   "kind": "json",
+   "file": "data/series/03-furries.json",
+   "path": [
+    "name",
+    "he"
+   ]
+  },
+  "en": "The Furries"
+ },
+ {
+  "id": "d1b31dbe",
+  "section": "סדרה — הפרוותיים",
+  "text": "מכות חשמל מהירות — מעט חיים, הרבה כוח",
+  "where": {
+   "kind": "json",
+   "file": "data/series/03-furries.json",
+   "path": [
+    "specialty",
+    "he"
+   ]
+  },
+  "en": "Fast electric strikes — little health, a lot of power"
+ },
+ {
+  "id": "d8feed59",
+  "section": "סדרה — הפרוותיים",
+  "text": "פרווה טעונה",
+  "where": {
+   "kind": "json",
+   "file": "data/series/03-furries.json",
+   "path": [
+    "synergy",
+    "name",
+    "he"
+   ]
+  },
+  "en": "Charged Fur"
+ },
+ {
+  "id": "dc948713",
+  "section": "סדרה — הפרוותיים",
+  "text": "שלושה צמודים מאותה סדרה מקבלים +20% עוצמה ו+20% חיים.",
+  "where": {
+   "kind": "json",
+   "file": "data/series/03-furries.json",
+   "path": [
+    "synergy",
+    "description",
+    "he"
+   ]
+  },
+  "en": "Three of the family, touching: +20% power and health."
+ },
+ {
+  "id": "d7e855a6",
+  "section": "סדרה — הפרוותיים",
+  "text": "צ'ופי",
+  "where": {
+   "kind": "json",
+   "file": "data/series/03-furries.json",
+   "path": [
+    "cards",
+    0,
+    "name",
+    "he"
+   ]
+  },
+  "en": "Choopy"
+ },
+ {
+  "id": "de54292a",
+  "section": "סדרה — הפרוותיים",
+  "text": "החבר שלך מההתחלה. מכה חזק מרחוק ושובר שריון — אבל סופג כמעט כלום, אז הוא לא עומד בחזית.",
+  "where": {
+   "kind": "json",
+   "file": "data/series/03-furries.json",
+   "path": [
+    "cards",
+    0,
+    "role",
+    "he"
+   ]
+  },
+  "en": "Your friend from day one. Hits hard from range and breaks armour — and he is made of paper. Not a front-row card."
+ },
+ {
   "id": "deb8c67a",
   "section": "סדרה — שוכני הים",
   "text": "שוכני הים",
@@ -1630,55 +1720,55 @@
   "en": "Titan King"
  },
  {
-  "id": "d2cdcd05",
-  "section": "סדרה — הפרוותיים",
-  "text": "הפרוותיים",
+  "id": "d3890c76",
+  "section": "סדרה — השדים",
+  "text": "השדים",
   "where": {
    "kind": "json",
-   "file": "data/series/06-furries.json",
+   "file": "data/series/06-demons.json",
    "path": [
     "name",
     "he"
    ]
   },
-  "en": "The Furries"
+  "en": "The Demons"
  },
  {
-  "id": "d85387a0",
-  "section": "סדרה — הפרוותיים",
-  "text": "מכות חשמל מהירות — מעט חיים, הרבה כוח",
+  "id": "d1e968da",
+  "section": "סדרה — השדים",
+  "text": "שליטה מנטלית, עיוורון והתנקשות",
   "where": {
    "kind": "json",
-   "file": "data/series/06-furries.json",
+   "file": "data/series/06-demons.json",
    "path": [
     "specialty",
     "he"
    ]
   },
-  "en": "Fast electric strikes — little health, a lot of power"
+  "en": "Mind control, blindness and assassination"
  },
  {
-  "id": "de4a1b06",
-  "section": "סדרה — הפרוותיים",
-  "text": "פרווה טעונה",
+  "id": "dabf96e6",
+  "section": "סדרה — השדים",
+  "text": "האפלה",
   "where": {
    "kind": "json",
-   "file": "data/series/06-furries.json",
+   "file": "data/series/06-demons.json",
    "path": [
     "synergy",
     "name",
     "he"
    ]
   },
-  "en": "Charged Fur"
+  "en": "The Dark"
  },
  {
-  "id": "dabfb712",
-  "section": "סדרה — הפרוותיים",
+  "id": "d3b2f0ac",
+  "section": "סדרה — השדים",
   "text": "שלושה צמודים מאותה סדרה מקבלים +20% עוצמה ו+20% חיים.",
   "where": {
    "kind": "json",
-   "file": "data/series/06-furries.json",
+   "file": "data/series/06-demons.json",
    "path": [
     "synergy",
     "description",
@@ -1688,12 +1778,12 @@
   "en": "Three of the family, touching: +20% power and health."
  },
  {
-  "id": "d267c630",
-  "section": "סדרה — הפרוותיים",
-  "text": "צ'ופי",
+  "id": "d4529c6d",
+  "section": "סדרה — השדים",
+  "text": "מלך הסמטה",
   "where": {
    "kind": "json",
-   "file": "data/series/06-furries.json",
+   "file": "data/series/06-demons.json",
    "path": [
     "cards",
     0,
@@ -1701,15 +1791,51 @@
     "he"
    ]
   },
-  "en": "Choopy"
+  "en": "The Alley King"
  },
  {
-  "id": "d8d0f124",
-  "section": "סדרה — הפרוותיים",
-  "text": "החבר שלך מההתחלה. מכה חזק מרחוק ושובר שריון — אבל סופג כמעט כלום, אז הוא לא עומד בחזית.",
+  "id": "d069653d",
+  "section": "סדרה — השדים",
+  "text": "אחרי הריגה הוא ממשיך להתקדם.",
   "where": {
    "kind": "json",
-   "file": "data/series/06-furries.json",
+   "file": "data/series/06-demons.json",
+   "path": [
+    "cards",
+    0,
+    "abilities",
+    0,
+    "description",
+    "he"
+   ]
+  },
+  "en": "After a kill it keeps advancing."
+ },
+ {
+  "id": "d79fcc2c",
+  "section": "סדרה — השדים",
+  "text": "כשהוא נופל, ארבעה מהחבורה שלו קמים.",
+  "where": {
+   "kind": "json",
+   "file": "data/series/06-demons.json",
+   "path": [
+    "cards",
+    0,
+    "abilities",
+    1,
+    "description",
+    "he"
+   ]
+  },
+  "en": "When it falls, four of its gang get up."
+ },
+ {
+  "id": "d8bfda61",
+  "section": "סדרה — השדים",
+  "text": "האפי של הסדרה: קשה להפיל, וגם כשהוא נופל הוא לא נגמר.",
+  "where": {
+   "kind": "json",
+   "file": "data/series/06-demons.json",
    "path": [
     "cards",
     0,
@@ -1717,7 +1843,7 @@
     "he"
    ]
   },
-  "en": "Your friend from day one. Hits hard from range and breaks armour — and he is made of paper. Not a front-row card."
+  "en": "The series' epic: hard to bring down, and not finished when it is."
  },
  {
   "id": "df172f20",
@@ -2080,564 +2206,6 @@
    ]
   },
   "en": "Insect Empress"
- },
- {
-  "id": "d54add5c",
-  "section": "סדרה — חיות הרחוב",
-  "text": "חיות הרחוב",
-  "where": {
-   "kind": "json",
-   "file": "data/series/11-strays.json",
-   "path": [
-    "name",
-    "he"
-   ]
-  },
-  "en": "The Strays"
- },
- {
-  "id": "db99cf3f",
-  "section": "סדרה — חיות הרחוב",
-  "text": "מהירות, קריעת שריון, ומי שנופל משאיר אחריו חבורה",
-  "where": {
-   "kind": "json",
-   "file": "data/series/11-strays.json",
-   "path": [
-    "specialty",
-    "he"
-   ]
-  },
-  "en": "Speed, torn armour, and whoever falls leaves a gang behind"
- },
- {
-  "id": "db73bc15",
-  "section": "סדרה — חיות הרחוב",
-  "text": "חבורה",
-  "where": {
-   "kind": "json",
-   "file": "data/series/11-strays.json",
-   "path": [
-    "synergy",
-    "name",
-    "he"
-   ]
-  },
-  "en": "The Pack"
- },
- {
-  "id": "dfd692f7",
-  "section": "סדרה — חיות הרחוב",
-  "text": "שלושה צמודים מאותה סדרה מקבלים +20% עוצמה ו+20% חיים.",
-  "where": {
-   "kind": "json",
-   "file": "data/series/11-strays.json",
-   "path": [
-    "synergy",
-    "description",
-    "he"
-   ]
-  },
-  "en": "Three of the family, touching: +20% power and health."
- },
- {
-  "id": "db9f8171",
-  "section": "סדרה — חיות הרחוב",
-  "text": "חתול רחוב",
-  "where": {
-   "kind": "json",
-   "file": "data/series/11-strays.json",
-   "path": [
-    "cards",
-    0,
-    "name",
-    "he"
-   ]
-  },
-  "en": "Street Cat"
- },
- {
-  "id": "d3669ac9",
-  "section": "סדרה — חיות הרחוב",
-  "text": "הזול והמהיר. ממלא שורה קדמית ומגיע ראשון.",
-  "where": {
-   "kind": "json",
-   "file": "data/series/11-strays.json",
-   "path": [
-    "cards",
-    0,
-    "role",
-    "he"
-   ]
-  },
-  "en": "Cheap and quick. Fills a front row and gets there first."
- },
- {
-  "id": "dcba058a",
-  "section": "סדרה — חיות הרחוב",
-  "text": "תן",
-  "where": {
-   "kind": "json",
-   "file": "data/series/11-strays.json",
-   "path": [
-    "cards",
-    1,
-    "name",
-    "he"
-   ]
-  },
-  "en": "Jackal"
- },
- {
-  "id": "d8bdcadc",
-  "section": "סדרה — חיות הרחוב",
-  "text": "מזרז את התוקפים לידו ב-20%.",
-  "where": {
-   "kind": "json",
-   "file": "data/series/11-strays.json",
-   "path": [
-    "cards",
-    1,
-    "abilities",
-    0,
-    "description",
-    "he"
-   ]
-  },
-  "en": "Speeds up attackers beside it by 20%."
- },
- {
-  "id": "de78f90d",
-  "section": "סדרה — חיות הרחוב",
-  "text": "לא חזק לבד. שניים או שלושה ביחד הם חבורה.",
-  "where": {
-   "kind": "json",
-   "file": "data/series/11-strays.json",
-   "path": [
-    "cards",
-    1,
-    "role",
-    "he"
-   ]
-  },
-  "en": "Weak alone. Two or three together are a pack."
- },
- {
-  "id": "d2077a4d",
-  "section": "סדרה — חיות הרחוב",
-  "text": "חולדה",
-  "where": {
-   "kind": "json",
-   "file": "data/series/11-strays.json",
-   "path": [
-    "cards",
-    2,
-    "name",
-    "he"
-   ]
-  },
-  "en": "Rat"
- },
- {
-  "id": "dc84b4e0",
-  "section": "סדרה — חיות הרחוב",
-  "text": "כשהיא מתה, שלוש חולדות קטנות ממשיכות במקומה.",
-  "where": {
-   "kind": "json",
-   "file": "data/series/11-strays.json",
-   "path": [
-    "cards",
-    2,
-    "abilities",
-    0,
-    "description",
-    "he"
-   ]
-  },
-  "en": "When it dies, three small rats carry on in its place."
- },
- {
-  "id": "df523605",
-  "section": "סדרה — חיות הרחוב",
-  "text": "להרוג אותה זה לא להיפטר ממנה.",
-  "where": {
-   "kind": "json",
-   "file": "data/series/11-strays.json",
-   "path": [
-    "cards",
-    2,
-    "role",
-    "he"
-   ]
-  },
-  "en": "Killing it is not the same as being rid of it."
- },
- {
-  "id": "dda626ad",
-  "section": "סדרה — חיות הרחוב",
-  "text": "שק אשפה",
-  "where": {
-   "kind": "json",
-   "file": "data/series/11-strays.json",
-   "path": [
-    "cards",
-    3,
-    "name",
-    "he"
-   ]
-  },
-  "en": "Rubbish Bag"
- },
- {
-  "id": "d68422e6",
-  "section": "סדרה — חיות הרחוב",
-  "text": "מי שעומד מולו לא זז משם.",
-  "where": {
-   "kind": "json",
-   "file": "data/series/11-strays.json",
-   "path": [
-    "cards",
-    3,
-    "abilities",
-    0,
-    "description",
-    "he"
-   ]
-  },
-  "en": "Whatever stands in front of it does not move."
- },
- {
-  "id": "dd26e5bb",
-  "section": "סדרה — חיות הרחוב",
-  "text": "לא תוקף כמעט. פשוט חוסם, וזה מספיק.",
-  "where": {
-   "kind": "json",
-   "file": "data/series/11-strays.json",
-   "path": [
-    "cards",
-    3,
-    "role",
-    "he"
-   ]
-  },
-  "en": "Barely attacks. It blocks, and that is enough."
- },
- {
-  "id": "d8c898d6",
-  "section": "סדרה — חיות הרחוב",
-  "text": "פנס מהבהב",
-  "where": {
-   "kind": "json",
-   "file": "data/series/11-strays.json",
-   "path": [
-    "cards",
-    4,
-    "name",
-    "he"
-   ]
-  },
-  "en": "Flickering Lamp"
- },
- {
-  "id": "d1227f0f",
-  "section": "סדרה — חיות הרחוב",
-  "text": "ההבהוב מקפיא את מי שנפגע לשנייה וחצי.",
-  "where": {
-   "kind": "json",
-   "file": "data/series/11-strays.json",
-   "path": [
-    "cards",
-    4,
-    "abilities",
-    0,
-    "description",
-    "he"
-   ]
-  },
-  "en": "The flicker freezes whatever it hits for a second and a half."
- },
- {
-  "id": "d489b665",
-  "section": "סדרה — חיות הרחוב",
-  "text": "לא הורג. עוצר.",
-  "where": {
-   "kind": "json",
-   "file": "data/series/11-strays.json",
-   "path": [
-    "cards",
-    4,
-    "role",
-    "he"
-   ]
-  },
-  "en": "It does not kill. It stops."
- },
- {
-  "id": "d57faa1c",
-  "section": "סדרה — חיות הרחוב",
-  "text": "צל",
-  "where": {
-   "kind": "json",
-   "file": "data/series/11-strays.json",
-   "path": [
-    "cards",
-    5,
-    "name",
-    "he"
-   ]
-  },
-  "en": "Shadow"
- },
- {
-  "id": "da67659b",
-  "section": "סדרה — חיות הרחוב",
-  "text": "אחרי הריגה הוא ממשיך להתקדם באותו תור.",
-  "where": {
-   "kind": "json",
-   "file": "data/series/11-strays.json",
-   "path": [
-    "cards",
-    5,
-    "abilities",
-    0,
-    "description",
-    "he"
-   ]
-  },
-  "en": "After a kill it keeps advancing in the same turn."
- },
- {
-  "id": "d22f8afd",
-  "section": "סדרה — חיות הרחוב",
-  "text": "הכי מסוכן מול שורה של קלפים חלשים.",
-  "where": {
-   "kind": "json",
-   "file": "data/series/11-strays.json",
-   "path": [
-    "cards",
-    5,
-    "role",
-    "he"
-   ]
-  },
-  "en": "Most dangerous against a row of weak cards."
- },
- {
-  "id": "d74f9e70",
-  "section": "סדרה — חיות הרחוב",
-  "text": "כלב גרוטאות",
-  "where": {
-   "kind": "json",
-   "file": "data/series/11-strays.json",
-   "path": [
-    "cards",
-    6,
-    "name",
-    "he"
-   ]
-  },
-  "en": "Scrap Dog"
- },
- {
-  "id": "dcb98687",
-  "section": "סדרה — חיות הרחוב",
-  "text": "קורע שריון: מוריד 20% מהשריון של מי שהוא פוגע בו.",
-  "where": {
-   "kind": "json",
-   "file": "data/series/11-strays.json",
-   "path": [
-    "cards",
-    6,
-    "abilities",
-    0,
-    "description",
-    "he"
-   ]
-  },
-  "en": "Tears armour: takes 20% of the armour off whatever it hits."
- },
- {
-  "id": "d2fb5318",
-  "section": "סדרה — חיות הרחוב",
-  "text": "התשובה של הסמטה לענקים.",
-  "where": {
-   "kind": "json",
-   "file": "data/series/11-strays.json",
-   "path": [
-    "cards",
-    6,
-    "role",
-    "he"
-   ]
-  },
-  "en": "The alley's answer to the giants."
- },
- {
-  "id": "d5a6ba23",
-  "section": "סדרה — חיות הרחוב",
-  "text": "מה שבפח",
-  "where": {
-   "kind": "json",
-   "file": "data/series/11-strays.json",
-   "path": [
-    "cards",
-    7,
-    "name",
-    "he"
-   ]
-  },
-  "en": "The Thing in the Bin"
- },
- {
-  "id": "d65253df",
-  "section": "סדרה — חיות הרחוב",
-  "text": "לוקח את היסוד של הראשון שהוא פוגע בו.",
-  "where": {
-   "kind": "json",
-   "file": "data/series/11-strays.json",
-   "path": [
-    "cards",
-    7,
-    "abilities",
-    0,
-    "description",
-    "he"
-   ]
-  },
-  "en": "Takes the element of the first thing it hits."
- },
- {
-  "id": "dc0167ea",
-  "section": "סדרה — חיות הרחוב",
-  "text": "אף פעם לא אותו דבר פעמיים.",
-  "where": {
-   "kind": "json",
-   "file": "data/series/11-strays.json",
-   "path": [
-    "cards",
-    7,
-    "role",
-    "he"
-   ]
-  },
-  "en": "Never the same thing twice."
- },
- {
-  "id": "dc9c728b",
-  "section": "סדרה — חיות הרחוב",
-  "text": "חתול זקן",
-  "where": {
-   "kind": "json",
-   "file": "data/series/11-strays.json",
-   "path": [
-    "cards",
-    8,
-    "name",
-    "he"
-   ]
-  },
-  "en": "Old Tom"
- },
- {
-  "id": "d0dd947e",
-  "section": "סדרה — חיות הרחוב",
-  "text": "אוכל קלף שכן ומקבל 400 שריון.",
-  "where": {
-   "kind": "json",
-   "file": "data/series/11-strays.json",
-   "path": [
-    "cards",
-    8,
-    "abilities",
-    0,
-    "description",
-    "he"
-   ]
-  },
-  "en": "Eats a neighbouring card and gains 400 armour."
- },
- {
-  "id": "d5bf34b6",
-  "section": "סדרה — חיות הרחוב",
-  "text": "עולה קלף. שווה את זה רק ליד משהו שכבר נגמר.",
-  "where": {
-   "kind": "json",
-   "file": "data/series/11-strays.json",
-   "path": [
-    "cards",
-    8,
-    "role",
-    "he"
-   ]
-  },
-  "en": "Costs a card. Worth it only beside something already spent."
- },
- {
-  "id": "dfdf8cc8",
-  "section": "סדרה — חיות הרחוב",
-  "text": "מלך הסמטה",
-  "where": {
-   "kind": "json",
-   "file": "data/series/11-strays.json",
-   "path": [
-    "cards",
-    9,
-    "name",
-    "he"
-   ]
-  },
-  "en": "The Alley King"
- },
- {
-  "id": "d5c3557d",
-  "section": "סדרה — חיות הרחוב",
-  "text": "אחרי הריגה הוא ממשיך להתקדם.",
-  "where": {
-   "kind": "json",
-   "file": "data/series/11-strays.json",
-   "path": [
-    "cards",
-    9,
-    "abilities",
-    0,
-    "description",
-    "he"
-   ]
-  },
-  "en": "After a kill it keeps advancing."
- },
- {
-  "id": "d66811df",
-  "section": "סדרה — חיות הרחוב",
-  "text": "כשהוא נופל, ארבעה מהחבורה שלו קמים.",
-  "where": {
-   "kind": "json",
-   "file": "data/series/11-strays.json",
-   "path": [
-    "cards",
-    9,
-    "abilities",
-    1,
-    "description",
-    "he"
-   ]
-  },
-  "en": "When it falls, four of its gang get up."
- },
- {
-  "id": "d054091b",
-  "section": "סדרה — חיות הרחוב",
-  "text": "האפי של הסדרה: קשה להפיל, וגם כשהוא נופל הוא לא נגמר.",
-  "where": {
-   "kind": "json",
-   "file": "data/series/11-strays.json",
-   "path": [
-    "cards",
-    9,
-    "role",
-    "he"
-   ]
-  },
-  "en": "The series' epic: hard to bring down, and not finished when it is."
  },
  {
   "id": "d5696dab",
@@ -3510,6 +3078,56 @@
   "en": "Every 3 seconds, drags the advancing enemy one slot inward."
  },
  {
+  "id": "d2493424",
+  "section": "סדרה — הדביקים",
+  "text": "מה שבפח",
+  "where": {
+   "kind": "json",
+   "file": "data/series/17-slimes.json",
+   "path": [
+    "cards",
+    10,
+    "name",
+    "he"
+   ]
+  },
+  "en": "The Thing in the Bin"
+ },
+ {
+  "id": "d85a53ea",
+  "section": "סדרה — הדביקים",
+  "text": "לוקח את היסוד של הראשון שהוא פוגע בו.",
+  "where": {
+   "kind": "json",
+   "file": "data/series/17-slimes.json",
+   "path": [
+    "cards",
+    10,
+    "abilities",
+    0,
+    "description",
+    "he"
+   ]
+  },
+  "en": "Takes the element of the first thing it hits."
+ },
+ {
+  "id": "def6d41a",
+  "section": "סדרה — הדביקים",
+  "text": "אף פעם לא אותו דבר פעמיים.",
+  "where": {
+   "kind": "json",
+   "file": "data/series/17-slimes.json",
+   "path": [
+    "cards",
+    10,
+    "role",
+    "he"
+   ]
+  },
+  "en": "Never the same thing twice."
+ },
+ {
   "id": "d2d5efb3",
   "section": "סדרה — האגדיים",
   "text": "האגדיים",
@@ -4191,7 +3809,7 @@
   "where": {
    "kind": "source",
    "file": "packages/shared/src/arenas.ts",
-   "line": 310
+   "line": 314
   },
   "en": "Fright Alley"
  },
@@ -4202,7 +3820,7 @@
   "where": {
    "kind": "source",
    "file": "packages/shared/src/arenas.ts",
-   "line": 312
+   "line": 316
   },
   "en": "Don"
  },
@@ -4213,7 +3831,7 @@
   "where": {
    "kind": "source",
    "file": "packages/shared/src/arenas.ts",
-   "line": 314
+   "line": 318
   },
   "en": "The crickets are going, the jackals are howling, the lamps are flickering — and you are here on your own. How far will you go to get Amanda? Quite far, it turns out. Blimey, what was that noise? Oh. Only a cat."
  },
@@ -4224,7 +3842,7 @@
   "where": {
    "kind": "source",
    "file": "packages/shared/src/arenas.ts",
-   "line": 322
+   "line": 326
   },
   "en": "The Fuel Stop"
  },
@@ -4235,7 +3853,7 @@
   "where": {
    "kind": "source",
    "file": "packages/shared/src/arenas.ts",
-   "line": 324
+   "line": 328
   },
   "en": "The end of the road. Don"
  },
@@ -4246,7 +3864,7 @@
   "where": {
    "kind": "source",
    "file": "packages/shared/src/arenas.ts",
-   "line": 326
+   "line": 330
   },
   "en": "The last stop. Expecting a cheerful pump attendant and a shop with iced coffee? Think again. Nobody has set foot here in years. Although — then whose footprint is that? Ah. Amanda"
  },
