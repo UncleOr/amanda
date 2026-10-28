@@ -32,6 +32,8 @@
     "art:scenes": "pnpm --filter @amanda/art scenes",
     "art:trailer": "pnpm --filter @amanda/art trailer",
     "copy:codemod": "node scripts/copy-codemod.mjs",
+    "arenas": "node scripts/arena-stories.mjs",
+    "arenas:apply": "node scripts/arena-stories.mjs --apply",
     "copy:verify": "node scripts/copy-verify.mjs",
     "art:voices": "pnpm --filter @amanda/art voices",
     "art:voices-process": "pnpm --filter @amanda/art voices-process"
