@@ -54,11 +54,12 @@ export interface ClubChallengeView {
 
 export interface Club {
   id: string;
-  code: string;
   name: string;
   emblem: string;
   owner: boolean;
   members: ClubMember[];
+  /** Who typed a live code and is waiting for the owner to say yes. */
+  waiting: ClubMember[];
   messages: ClubMessage[];
   requests: ClubRequest[];
   challenges: ClubChallengeView[];
@@ -67,6 +68,16 @@ export interface Club {
 
 export interface ClubAnswer {
   club: Club | null;
+  /**
+   * The club you are QUEUING at, when you are in none.
+   *
+   * Or: *"the manager will also have to approve their entry."* So between
+   * typing the six digits and being in a club there is a third state, and
+   * the popup has to be able to draw it: a name, a picture, and a way out.
+   */
+  waiting?: { name: string; emblem: string };
+  /** Six digits worth thirty seconds, for whoever pressed +. */
+  invite?: { code: string; until: string };
   error?: string;
   /**
    * The only thing in this whole feature a child is made to read.
@@ -100,7 +111,11 @@ async function ask(path: string, body?: Record<string, unknown>): Promise<ClubAn
 }
 
 export const loadClub = () => ask("/api/club");
-export const createClub = (name: string) => ask("/api/club/create", { name });
+export const createClub = (name: string, emblem?: string) =>
+  ask("/api/club/create", { name, ...(emblem ? { emblem } : {}) });
+export const inviteToClub = () => ask("/api/club/invite");
+export const answerAtDoor = (playerId: string, yes: boolean) =>
+  ask("/api/club/door", { playerId, yes });
 export const joinClub = (code: string) => ask("/api/club/join", { code });
 export const leaveClub = () => ask("/api/club/leave");
 export const closeClub = () => ask("/api/club/close");

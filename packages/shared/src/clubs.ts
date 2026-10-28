@@ -19,11 +19,17 @@
  *   refused unless the giver has a spare above what their current level
  *   needs, and can never reduce a card's level. See `canSpare`.
  *
- *   A CODE IS THE PERMISSION. Six digits, like the friend code: you cannot
- *   guess one and you cannot walk the space, so the only way to have a
- *   club's code is for somebody to have given it to you. That is the same
- *   consent the "you must have played them" rule stands in for everywhere
- *   else in this game, in a shape two children in one room can use.
+ *   A CODE IS THE PERMISSION, AND IT LASTS HALF A MINUTE. Or: *"the code
+ *   should be one-time — generated only on the members screen when you press
+ *   + (meaning, to add a new member), and that is the only way to add a
+ *   member. Valid for 30 seconds. Otherwise a load of bots will get in. And
+ *   the manager will also have to approve their entry."*
+ *
+ *   A permanent six-digit code is a million guesses away from every club in
+ *   the game, for ever, by anybody with a script. A code that exists for
+ *   thirty seconds, that somebody in the club had to press a button to make,
+ *   and that is then approved by a person, is three locks on the same door —
+ *   and the one a child uses is still "read six numbers out loud".
  *
  *   THE CHAT IS FILTERED BEFORE IT IS STORED. Or: *"swear words and rude
  *   words and sensitive words are deleted immediately, a second warning
@@ -56,6 +62,31 @@
 
 /** Six digits, said out loud across a room. */
 export const CLUB_CODE_LENGTH = 6;
+
+/**
+ * How long one of those six digits is worth anything.
+ *
+ * Or's number: *"valid for 30 seconds."* Short enough that the code cannot
+ * travel — it works for the person standing next to you and for nobody who
+ * is sent it later — and long enough to read six digits out and have them
+ * typed back.
+ *
+ * It is also what makes the million codes safe. A guesser gets one club's
+ * thirty-second window to find one live code in a million, and the prize for
+ * finding it is a seat in a queue that a person then says no to.
+ */
+export const INVITE_SECONDS = 30;
+
+/**
+ * Is this invitation still worth anything?
+ *
+ * Here rather than in the server, because the popup counts the same seconds
+ * down on screen and the two must not disagree about when the number on a
+ * child's screen stopped working.
+ */
+export function inviteLive(expiresAt: string | number | Date, now = Date.now()): boolean {
+  return new Date(expiresAt).getTime() > now;
+}
 
 /**
  * How many can be in one.

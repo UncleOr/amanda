@@ -1,5 +1,12 @@
 import { useCallback, useEffect, useRef, useState } from "react";
-import { CLUB_EMBLEMS, DONATIONS_PER_REQUEST } from "@amanda/shared";
+import {
+  CLUB_EMBLEMS,
+  CLUB_NAME_MAX,
+  DEFAULT_EMBLEM,
+  DONATIONS_PER_REQUEST,
+  INVITE_SECONDS,
+  inviteLive,
+} from "@amanda/shared";
 import { Icon, type IconName } from "./Icon";
 import { Overlay } from "./Overlay";
 import { line as t, lineF as tf } from "../game/copy";
@@ -7,6 +14,7 @@ import { serverError } from "../game/serverError";
 import { collectable } from "../data/catalog";
 import { say } from "../game/lang";
 import {
+  answerAtDoor,
   askForCard,
   bequeathClub,
   claimClubChest,
@@ -14,6 +22,7 @@ import {
   createClub,
   donateCard,
   dressClub,
+  inviteToClub,
   joinClub,
   leaveClub,
   loadClub,
@@ -59,6 +68,8 @@ const TAB_ICON: Record<Tab, IconName> = {
 
 export function Club({ onClose, onBattle }: { onClose: () => void; onBattle?: (id: string) => void }) {
   const [club, setClub] = useState<ClubData | null>(null);
+  /** The door you are standing at: not in a club, and not at the two doors. */
+  const [waiting, setWaiting] = useState<{ name: string; emblem: string } | null>(null);
   const [loading, setLoading] = useState(true);
   const [tab, setTab] = useState<Tab>("who");
   const [busy, setBusy] = useState(false);
@@ -72,6 +83,7 @@ export function Club({ onClose, onBattle }: { onClose: () => void; onBattle?: (i
 
   const take = useCallback((answer: ClubAnswer) => {
     setClub(answer.club);
+    setWaiting(answer.waiting ?? null);
     if (answer.notice) {
       /*
        * The words come from serverError.ts, where every other refusal the
@@ -89,6 +101,7 @@ export function Club({ onClose, onBattle }: { onClose: () => void; onBattle?: (i
     void loadClub().then((a) => {
       if (!alive) return;
       setClub(a.club);
+      setWaiting(a.waiting ?? null);
       setLoading(false);
     });
     return () => {
@@ -132,7 +145,11 @@ export function Club({ onClose, onBattle }: { onClose: () => void; onBattle?: (i
         )}
 
         {!club ? (
-          <Found busy={busy} run={run} />
+          waiting ? (
+            <Waiting at={waiting} busy={busy} run={run} />
+          ) : (
+            <Found busy={busy} run={run} />
+          )
         ) : (
           <>
             <ClubHead club={club} busy={busy} run={run} />
@@ -174,6 +191,24 @@ const TAB_WORD: Record<Tab, () => string> = {
 
 /* ───────────────────────── no club yet ───────────────────────── */
 
+/**
+ * ═══ TWO DOORS, AND YOU ARE THROUGH ONE OF THEM BEFORE YOU TYPE ═══
+ *
+ * Or: *"if I have no club I need two options: to join an existing club and
+ * to found a new one. (Join an existing club + icon) → opens a panel for
+ * writing a code. (Found a club + icon) → opens a panel for choosing a name
+ * and a picture. After that I am already in the club screen with all the
+ * options."*
+ *
+ * It was two text fields side by side with an icon button each, which asks a
+ * child to read two placeholders and work out which of them they are. Now
+ * the screen asks ONE question — which door — and each door is a screen with
+ * a single job, which is §1: a screen with two heroes has none.
+ *
+ * Joining is the gold one. Not because it matters more, but because it is
+ * the one somebody arrives holding something for: a friend read six digits
+ * out across a room. Founding is the other way, and it is plainer.
+ */
 function Found({
   busy,
   run,
@@ -181,45 +216,114 @@ function Found({
   busy: boolean;
   run: (fn: () => Promise<ClubAnswer>) => Promise<void>;
 }) {
+  const [door, setDoor] = useState<"join" | "make" | null>(null);
   const [name, setName] = useState("");
+  const [emblem, setEmblem] = useState<string>(DEFAULT_EMBLEM);
   const [code, setCode] = useState("");
+
+  if (door === null) {
+    return (
+      <div className="club__found">
+        <button className="club__door btn-fight" onClick={() => setDoor("join")}>
+          <Icon name="friend" size={20} />
+          {t("se3d7c79", "הצטרפות למועדון")}
+        </button>
+        <button className="club__door" onClick={() => setDoor("make")}>
+          <Icon name="flag" size={20} />
+          {t("scf325de", "הקמת מועדון")}
+        </button>
+      </div>
+    );
+  }
+
   return (
     <div className="club__found">
-      <form
-        className="club__row"
-        onSubmit={(e) => {
-          e.preventDefault();
-          if (name.trim()) void run(() => createClub(name));
-        }}
-      >
-        <input
-          value={name}
-          onChange={(e) => setName(e.target.value)}
-          maxLength={20}
-          placeholder={t("s7b57db1", "שם המועדון")}
-        />
-        <button className="btn-fight" disabled={busy || !name.trim()}>
-          <Icon name="plus" size={16} />
-        </button>
-      </form>
+      <button className="club__back" onClick={() => setDoor(null)}>
+        <Icon name="back" size={16} />
+      </button>
 
-      <form
-        className="club__row"
-        onSubmit={(e) => {
-          e.preventDefault();
-          if (code.length === 6) void run(() => joinClub(code));
-        }}
-      >
-        <input
-          value={code}
-          onChange={(e) => setCode(e.target.value.replace(/\D/g, "").slice(0, 6))}
-          inputMode="numeric"
-          placeholder={t("s525cb8b", "קוד מועדון")}
-        />
-        <button disabled={busy || code.length !== 6}>
-          <Icon name="again" size={16} />
-        </button>
-      </form>
+      {door === "join" ? (
+        <form
+          className="club__row"
+          onSubmit={(e) => {
+            e.preventDefault();
+            if (code.length === 6) void run(() => joinClub(code));
+          }}
+        >
+          <input
+            value={code}
+            onChange={(e) => setCode(e.target.value.replace(/\D/g, "").slice(0, 6))}
+            inputMode="numeric"
+            autoFocus
+            placeholder={t("s525cb8b", "קוד מועדון")}
+          />
+          <button className="btn-fight" disabled={busy || code.length !== 6}>
+            <Icon name="ready" size={16} />
+          </button>
+        </form>
+      ) : (
+        <form
+          className="club__row club__row--wrap"
+          onSubmit={(e) => {
+            e.preventDefault();
+            if (name.trim()) void run(() => createClub(name, emblem));
+          }}
+        >
+          <input
+            value={name}
+            onChange={(e) => setName(e.target.value)}
+            maxLength={CLUB_NAME_MAX}
+            autoFocus
+            placeholder={t("s7b57db1", "שם המועדון")}
+          />
+          <button className="btn-fight" disabled={busy || !name.trim()}>
+            <Icon name="ready" size={16} />
+          </button>
+          {/* The picture, chosen the same way the owner changes it later. */}
+          <div className="club__emblems">
+            {CLUB_EMBLEMS.map((id) => (
+              <button
+                key={id}
+                type="button"
+                className={`club__pick${id === emblem ? " club__pick--on" : ""}`}
+                onClick={() => setEmblem(id)}
+              >
+                <Icon name={id as IconName} size={18} />
+              </button>
+            ))}
+          </div>
+        </form>
+      )}
+    </div>
+  );
+}
+
+/**
+ * You typed the digits in time, and now somebody has to say yes.
+ *
+ * No sentence explaining that, because there is nothing a child can do about
+ * it: the club's own badge and name, dimmed, and the way back out. The green
+ * dot on the owner's home screen is what moves this along.
+ */
+function Waiting({
+  at,
+  busy,
+  run,
+}: {
+  at: { name: string; emblem: string };
+  busy: boolean;
+  run: (fn: () => Promise<ClubAnswer>) => Promise<void>;
+}) {
+  return (
+    <div className="club__found club__waiting">
+      <span className="club__emblem">
+        <Icon name={(at.emblem as IconName) ?? "flag"} size={26} />
+      </span>
+      <strong>{at.name}</strong>
+      <span className="club__knock" aria-hidden="true" />
+      <button className="club__back" onClick={() => void run(leaveClub)} disabled={busy}>
+        <Icon name="exit" size={16} />
+      </button>
     </div>
   );
 }
@@ -244,10 +348,13 @@ function ClubHead({
       <span className="club__emblem">
         <Icon name={(club.emblem as IconName) ?? "flag"} size={26} />
       </span>
+      {/*
+        The six digits used to live here, permanently. They are gone: a code
+        is made on purpose now, lives half a minute, and is shown in the
+        member list where the + that made it is. See Invite below.
+      */}
       <span className="club__id">
         <strong>{club.name}</strong>
-        {/* The thing you read out to somebody standing next to you. */}
-        <code className="club__code">{club.code}</code>
       </span>
       {club.owner && (
         <button className="club__gear" onClick={() => setDressing(!dressing)}>
@@ -305,6 +412,47 @@ function Members({
 }) {
   return (
     <ul className="club__list">
+      <li>
+        <Invite busy={busy} />
+      </li>
+
+      {/*
+        Or: *"the manager will also have to approve their entry."* Everybody
+        sees the queue — that is how whoever pressed + knows their friend got
+        the digits in — and only the owner is given the two answers.
+      */}
+      {club.waiting.map((m) => (
+        <li key={m.id} className="club__member club__member--knock">
+          <img src={`${BASE}brand/${m.avatar}.webp`} alt="" />
+          <span className="club__who">
+            <strong>{m.nickname}</strong>
+            <small>
+              <Icon name="win" size={11} /> {m.trophies}
+            </small>
+          </span>
+          {club.owner && (
+            <>
+              <button
+                className="club__go"
+                onClick={() => void run(() => answerAtDoor(m.id, true))}
+                disabled={busy}
+                title={t("s7063bf0", "אישור")}
+              >
+                <Icon name="ready" size={15} />
+              </button>
+              <button
+                className="club__flag"
+                onClick={() => void run(() => answerAtDoor(m.id, false))}
+                disabled={busy}
+                title={t("s7cf1d10", "דחייה")}
+              >
+                <Icon name="exit" size={13} />
+              </button>
+            </>
+          )}
+        </li>
+      ))}
+
       {club.members.map((m) => (
         <li key={m.id} className="club__member">
           <img src={`${BASE}brand/${m.avatar}.webp`} alt="" />
@@ -355,6 +503,63 @@ function Members({
         </button>
       </li>
     </ul>
+  );
+}
+
+/**
+ * Press +, read six digits out, watch them run out.
+ *
+ * Or: *"the code should be one-time — generated only on the members screen
+ * when you press + … valid for 30 seconds … otherwise a load of bots will get
+ * in."*
+ *
+ * The draining bar is the whole explanation. Nobody is told the code expires;
+ * they watch it expiring, which is the empty crown rule — if something needs
+ * explaining, the something is wrong.
+ */
+function Invite({ busy }: { busy: boolean }) {
+  const [invite, setInvite] = useState<{ code: string; until: string } | null>(null);
+  const [left, setLeft] = useState(0);
+  const [asking, setAsking] = useState(false);
+
+  useEffect(() => {
+    if (!invite) return;
+    const tick = () => {
+      const ms = new Date(invite.until).getTime() - Date.now();
+      setLeft(Math.max(0, ms));
+      // The same question the server asks, from the same function, so the
+      // number on screen and the number that works stop together.
+      if (!inviteLive(invite.until)) setInvite(null);
+    };
+    tick();
+    const id = window.setInterval(tick, 200);
+    return () => window.clearInterval(id);
+  }, [invite]);
+
+  if (!invite) {
+    return (
+      <button
+        className="club__add"
+        disabled={busy || asking}
+        onClick={() => {
+          setAsking(true);
+          void inviteToClub()
+            .then((a) => setInvite(a.invite ?? null))
+            .finally(() => setAsking(false));
+        }}
+      >
+        <Icon name="plus" size={18} />
+      </button>
+    );
+  }
+
+  return (
+    <div className="club__invite">
+      <code className="club__code">{invite.code}</code>
+      <span className="club__bar">
+        <i style={{ width: `${(left / (INVITE_SECONDS * 1000)) * 100}%` }} />
+      </span>
+    </div>
   );
 }
 

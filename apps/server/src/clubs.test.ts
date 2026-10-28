@@ -2,7 +2,8 @@ import { describe, expect, it } from "vitest";
 import { readFileSync } from "node:fs";
 import { fileURLToPath } from "node:url";
 import type { SupabaseClient } from "@supabase/supabase-js";
-import { donateCard, postMessage } from "./clubs.js";
+import { INVITE_SECONDS } from "@amanda/shared";
+import { answerAtDoor, donateCard, joinClub, makeInvite, postMessage } from "./clubs.js";
 
 /**
  * **The club rules that would be worth a bug report each.**
@@ -42,9 +43,21 @@ function fakeDb(tables: Record<string, unknown[]>, failing: string[] = []) {
       const out = { error, data: null };
       const after: Record<string, unknown> = {};
       for (const k of ["eq", "in", "or", "is", "match"]) after[k] = () => after;
-      after.select = () => ({
-        maybeSingle: () => Promise.resolve({ data: { id: "new" }, error }),
-      });
+      /*
+       * `.select()` after a write is both awaitable and single-able, because
+       * both are used: an insert reads back its new id, and a delete reads
+       * back the rows it actually removed — which is how "one-time" is
+       * decided, so the harness has to be able to say "none".
+       */
+      after.select = () => {
+        const rows = failing.includes(table) ? [] : [{ id: "new" }];
+        const out: Record<string, unknown> = {
+          maybeSingle: () => Promise.resolve({ data: rows[0] ?? null, error }),
+        };
+        for (const k of ["eq", "in", "or", "is", "match"]) out[k] = () => out;
+        out.then = (resolve: (v: unknown) => unknown) => resolve({ data: rows, error });
+        return out;
+      };
       after.then = (resolve: (v: unknown) => unknown) => resolve(out);
       return after;
     };
@@ -191,11 +204,125 @@ describe("donating a card", () => {
   });
 });
 
+/* ───────────────────────── getting in ───────────────────────── */
+
+describe("the only way through the door", () => {
+  const LIVE = [{ code: "123456", club_id: "c1" }];
+
+  it("refuses six digits that no live invitation matches", async () => {
+    // Nothing in club_invites: a wrong code, an expired one and one that was
+    // spent a second ago all arrive here, and all get the same answer.
+    const { sb, calls } = fakeDb({ club_invites: [] });
+    expect(await joinClub(sb, "p9", "123456")).toBe("club.code");
+    expect(calls.some((c) => c.table === "club_members")).toBe(false);
+  });
+
+  /*
+   * ⚠ The ordering IS the one-time promise. The invitation is deleted before
+   * the row that uses it exists, so two children typing the same six digits
+   * in the same second cannot both get in — the loser's delete removes
+   * nothing and is turned away. The same shape as a donation's claim.
+   */
+  it("spends the invitation before it seats anybody", async () => {
+    const { sb, calls } = fakeDb({ club_invites: LIVE });
+    expect(await joinClub(sb, "p9", "123456")).toBe(null);
+    const spent = calls.findIndex((c) => c.table === "club_invites" && c.op === "delete");
+    const seated = calls.findIndex((c) => c.table === "club_members");
+    expect(spent).toBeGreaterThanOrEqual(0);
+    expect(spent, "the invitation is spent first").toBeLessThan(seated);
+  });
+
+  it("seats them in the queue, not in the club", async () => {
+    // Or: "and the manager will also have to approve their entry."
+    const { sb, calls } = fakeDb({ club_invites: LIVE });
+    await joinClub(sb, "p9", "123456");
+    const row = calls.find((c) => c.table === "club_members")?.rows as Record<string, unknown>;
+    expect(row.state).toBe("pending");
+  });
+
+  it("turns away the loser of a race for the same code", async () => {
+    // The delete removed nothing, so somebody else had it.
+    const { sb, calls } = fakeDb({ club_invites: LIVE }, ["club_invites"]);
+    expect(await joinClub(sb, "p9", "123456")).toBe("club.code");
+    expect(calls.some((c) => c.table === "club_members")).toBe(false);
+  });
+
+  it("makes one code at a time, and kills the club's others first", async () => {
+    const { sb, calls } = fakeDb({ club_members: IN_A_CLUB, club_invites: [] });
+    const made = await makeInvite(sb, "p1");
+    expect(made.error).toBe(null);
+    expect(made.code).toMatch(/^\d{6}$/);
+    const killed = calls.findIndex((c) => c.table === "club_invites" && c.op === "delete");
+    const made_ = calls.findIndex((c) => c.table === "club_invites" && c.op === "insert");
+    expect(killed).toBeGreaterThanOrEqual(0);
+    expect(killed, "the old ones go before the new one arrives").toBeLessThan(made_);
+  });
+
+  it("gives it thirty seconds and not a day", async () => {
+    const { sb } = fakeDb({ club_members: IN_A_CLUB, club_invites: [] });
+    const made = await makeInvite(sb, "p1");
+    const left = new Date(made.until!).getTime() - Date.now();
+    expect(left).toBeGreaterThan(0);
+    expect(left).toBeLessThanOrEqual(INVITE_SECONDS * 1000 + 1000);
+  });
+
+  it("is refused to somebody with no club", async () => {
+    const { sb, calls } = fakeDb({ club_members: [] });
+    expect((await makeInvite(sb, "nobody")).error).toBe("club.no");
+    expect(calls.some((c) => c.table === "club_invites")).toBe(false);
+  });
+
+  it("lets the owner say yes", async () => {
+    const { sb, calls } = fakeDb({
+      club_members: IN_A_CLUB,
+      clubs: [{ id: "c1", owner_id: "p1" }],
+    });
+    expect(await answerAtDoor(sb, "p1", "p9", true)).toBe(null);
+    const seat = calls.find((c) => c.table === "club_members" && c.op === "update");
+    expect((seat?.rows as Record<string, unknown>).state).toBe("member");
+  });
+
+  it("and say no, which removes the row rather than keeping a refusal", async () => {
+    const { sb, calls } = fakeDb({
+      club_members: IN_A_CLUB,
+      clubs: [{ id: "c1", owner_id: "p1" }],
+    });
+    expect(await answerAtDoor(sb, "p1", "p9", false)).toBe(null);
+    expect(calls.some((c) => c.table === "club_members" && c.op === "delete")).toBe(true);
+  });
+
+  it("is nobody else's answer to give", async () => {
+    const { sb, calls } = fakeDb({
+      club_members: IN_A_CLUB,
+      clubs: [{ id: "c1", owner_id: "somebody-else" }],
+    });
+    expect(await answerAtDoor(sb, "p1", "p9", true)).toBe("club.no");
+    expect(calls.some((c) => c.op === "update")).toBe(false);
+  });
+});
+
 /* ───────────────────────── the shape of the module ───────────────────────── */
 
 const SRC = readFileSync(fileURLToPath(new URL("./clubs.ts", import.meta.url)), "utf8");
 
 describe("what the module refuses to know", () => {
+  /*
+   * The two filters a stand-in database cannot check, because the stand-in
+   * ignores every `.eq`. They are read out of the source instead, which is
+   * weaker than a behaviour and much stronger than nothing — both are one
+   * deleted line away from a club anybody can walk into.
+   */
+  it("only ever counts a live invitation", () => {
+    const join = SRC.slice(SRC.indexOf("export async function joinClub"));
+    const lookup = join.slice(join.indexOf('from("club_invites")'));
+    expect(lookup.slice(0, lookup.indexOf("maybeSingle"))).toContain('gt("expires_at"');
+  });
+
+  it("only ever counts a member as being in a club", () => {
+    const of = SRC.slice(SRC.indexOf("export async function membershipOf"));
+    expect(of.slice(0, of.indexOf("return data"))).toContain('eq("state", "member")');
+  });
+
   it("never reads or writes a card's level except to create one", () => {
     /*
      * The strongest way to say "a card is never downgraded" is that the

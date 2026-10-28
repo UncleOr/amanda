@@ -35,6 +35,14 @@
   gap: var(--sp-2);
   position: relative;
   flex-wrap: wrap;
+  /*
+   * ⚠ Or: *"the X is on top of the writing."* `.modal__close` is absolutely
+   * placed at `inset-inline-end: 10px`, 30px wide, and this header starts at
+   * the panel's own 14px padding — so the club's name ran straight under it
+   * and the owner's gear sat beneath it. The header keeps that corner clear
+   * for the one control that is not its own.
+   */
+  padding-inline-end: 34px;
 }
 .club__emblem {
   display: grid;
@@ -348,9 +356,137 @@
   display: flex;
   flex-direction: column;
   gap: var(--sp-3);
-  /* Clear of the close button, which is absolutely placed in the corner the
-     first field would otherwise run under. */
-  padding-block: var(--sp-4) var(--sp-2);
+  /*
+   * Clear of the close button, which is absolutely placed in the corner the
+   * first control would otherwise run under. MEASURED, not guessed: the X
+   * ends 40px below the panel's top and the panel's own padding is 14, so
+   * anything under 26px here leaves the first button's top edge buried —
+   * at --sp-4 alone it was buried by 4px.
+   */
+  padding-block: calc(var(--sp-4) + var(--sp-2)) var(--sp-2);
+}
+
+/*
+ * ── the two doors ────────────────────────────────────────────────
+ *
+ * Or: *"if I have no club I need two options: to join an existing club and
+ * to found a new one."* Both are icon AND word, which is what he asked for
+ * here by writing them that way — a wordless icon works for the four tabs
+ * because they sit in a row and explain each other, and does not work for
+ * two choices that are the whole screen.
+ *
+ * They are not peers. Joining is the gold one: it is what somebody arrives
+ * holding six digits for. §1 — two siblings may not share a size AND a
+ * surface AND a weight.
+ */
+.club__door {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--sp-2);
+  font-size: var(--t-4);
+  padding: var(--sp-3);
+  border-radius: 12px;
+}
+/*
+ * ⚠ `:not(.btn-fight)` again, and caught in the browser again — this sheet
+ * is imported after cards.css, so a plain `.club__door` background painted
+ * the gold button the same 4%-white as the quiet one beside it. Same bug as
+ * `.club__row button` last time; the second occurrence is why it is written
+ * down here rather than only fixed.
+ */
+.club__door:not(.btn-fight) {
+  color: var(--text);
+  background: var(--sur-1);
+  border: 1px solid var(--line);
+}
+/*
+ * And `.btn-fight` carries `margin-inline-start: auto`, which in a flex
+ * COLUMN stops the item stretching and pulls it to one side — the hero came
+ * out narrower than the quiet button under it, which is the hierarchy
+ * upside down.
+ */
+.club__door.btn-fight {
+  margin-inline: 0;
+  font-size: var(--t-4);
+}
+/* Back to the two doors. Small, in the corner, and the only way back. */
+.club__back {
+  align-self: flex-start;
+  display: grid;
+  place-items: center;
+  width: 32px;
+  height: 32px;
+  border-radius: 9px;
+  background: var(--sur-1);
+  border: 1px solid var(--line);
+  color: var(--text);
+}
+/* Founding wants a name AND a row of pictures, so that one row wraps. */
+.club__row--wrap {
+  flex-wrap: wrap;
+}
+.club__row--wrap .club__emblems {
+  width: 100%;
+}
+
+/* ── standing at the door ─────────────────────────────────────────── */
+
+.club__waiting {
+  align-items: center;
+  text-align: center;
+  gap: var(--sp-2);
+}
+.club__waiting .club__back {
+  align-self: center;
+}
+.club__waiting strong {
+  font-size: var(--t-4);
+  color: var(--text);
+}
+/* Three dots' worth of "somebody is looking at this", and no sentence. */
+.club__knock {
+  width: 42px;
+  height: 6px;
+  border-radius: 999px;
+  background: var(--accent);
+  opacity: 0.5;
+  animation: knock 1.4s ease-in-out infinite;
+}
+@keyframes knock {
+  0%, 100% { opacity: 0.25; transform: scaleX(0.6); }
+  50% { opacity: 0.8; transform: scaleX(1); }
+}
+
+/* ── the invitation: six digits worth thirty seconds ──────────────── */
+
+.club__add {
+  width: 100%;
+  display: grid;
+  place-items: center;
+  padding: var(--sp-2);
+  border-radius: 10px;
+  background: var(--sur-lit);
+  border: 1px dashed var(--line-lit);
+  color: var(--accent);
+}
+.club__invite {
+  display: flex;
+  align-items: center;
+  gap: var(--sp-2);
+  padding: var(--sp-2);
+  border-radius: 10px;
+  background: var(--sur-lit);
+  border: 1px solid var(--line-lit);
+}
+.club__invite .club__bar {
+  flex: 1;
+}
+/* Somebody is at the door and has not been answered: the row says so by
+   being the lit surface, not by a word. */
+.club__member--knock {
+  background: var(--sur-lit);
+  border: 1px solid var(--line-lit);
 }
 
 /* ── asking for a card ────────────────────────────────────────────── */

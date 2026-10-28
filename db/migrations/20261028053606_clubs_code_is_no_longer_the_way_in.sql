@@ -1,0 +1,17 @@
+-- The club's permanent six digits stop being the way in.
+--
+-- See 20261028053549_club_invites.sql: a code is made on purpose now, lives
+-- thirty seconds, and is spent the moment somebody uses it. Nothing reads
+-- `clubs.code` any more.
+--
+-- ⚠ DROPPED FROM THE CODE, NOT YET FROM THE TABLE. The column is only made
+-- nullable here, because a club founded today supplies no code and the
+-- NOT NULL would refuse the insert. The column itself still holds the one
+-- code that was issued before this change.
+--
+--   alter table public.clubs drop column code;
+--
+-- That line is the finish, and it is Or's to run when he is happy the
+-- invitations work — dropping a column is the one thing in this folder that
+-- cannot be undone by running the next migration.
+alter table public.clubs alter column code drop not null;

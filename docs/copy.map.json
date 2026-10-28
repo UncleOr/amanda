@@ -8250,7 +8250,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/components/Club.tsx",
-   "line": 121
+   "line": 134
   }
  },
  {
@@ -8260,7 +8260,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/components/Club.tsx",
-   "line": 169
+   "line": 186
   }
  },
  {
@@ -8270,7 +8270,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/components/Club.tsx",
-   "line": 170
+   "line": 187
   }
  },
  {
@@ -8280,7 +8280,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/components/Club.tsx",
-   "line": 171
+   "line": 188
   }
  },
  {
@@ -8290,17 +8290,27 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/components/Club.tsx",
-   "line": 172
+   "line": 189
   }
  },
  {
-  "id": "s7b57db1",
+  "id": "se3d7c79",
   "section": "components/Club.tsx",
-  "text": "שם המועדון",
+  "text": "הצטרפות למועדון",
   "where": {
    "kind": "source",
    "file": "apps/client/src/components/Club.tsx",
-   "line": 199
+   "line": 229
+  }
+ },
+ {
+  "id": "scf325de",
+  "section": "components/Club.tsx",
+  "text": "הקמת מועדון",
+  "where": {
+   "kind": "source",
+   "file": "apps/client/src/components/Club.tsx",
+   "line": 233
   }
  },
  {
@@ -8310,7 +8320,17 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/components/Club.tsx",
-   "line": 217
+   "line": 258
+  }
+ },
+ {
+  "id": "s7b57db1",
+  "section": "components/Club.tsx",
+  "text": "שם המועדון",
+  "where": {
+   "kind": "source",
+   "file": "apps/client/src/components/Club.tsx",
+   "line": 277
   }
  },
  {
@@ -8320,7 +8340,27 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/components/Club.tsx",
-   "line": 285
+   "line": 392
+  }
+ },
+ {
+  "id": "s7063bf0",
+  "section": "components/Club.tsx",
+  "text": "אישור",
+  "where": {
+   "kind": "source",
+   "file": "apps/client/src/components/Club.tsx",
+   "line": 439
+  }
+ },
+ {
+  "id": "s7cf1d10",
+  "section": "components/Club.tsx",
+  "text": "דחייה",
+  "where": {
+   "kind": "source",
+   "file": "apps/client/src/components/Club.tsx",
+   "line": 447
   }
  },
  {
@@ -8330,7 +8370,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/components/Club.tsx",
-   "line": 335
+   "line": 483
   }
  },
  {
@@ -8340,7 +8380,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/components/Club.tsx",
-   "line": 345
+   "line": 493
   }
  },
  {
@@ -8350,7 +8390,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/components/Club.tsx",
-   "line": 354
+   "line": 502
   }
  },
  {
@@ -8360,7 +8400,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/components/Club.tsx",
-   "line": 406
+   "line": 611
   }
  },
  {
@@ -8370,7 +8410,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/components/Club.tsx",
-   "line": 461
+   "line": 666
   }
  },
  {
@@ -8380,7 +8420,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/components/Club.tsx",
-   "line": 544
+   "line": 749
   }
  },
  {
@@ -8390,7 +8430,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/components/Club.tsx",
-   "line": 545
+   "line": 750
   }
  },
  {
@@ -8400,7 +8440,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/components/Club.tsx",
-   "line": 546
+   "line": 751
   }
  },
  {
@@ -8410,7 +8450,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/components/Club.tsx",
-   "line": 547
+   "line": 752
   }
  },
  {

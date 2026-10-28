@@ -27,6 +27,7 @@ import {
 } from "./friends.js";
 import { isOnline } from "./presence.js";
 import {
+  answerAtDoor,
   askForCard,
   bequeathClub,
   claimClubChest,
@@ -38,10 +39,12 @@ import {
   dressClub,
   joinClub,
   leaveClub,
+  makeInvite,
   markClubSeen,
   ownsAClub,
   postMessage,
   reportMember,
+  waitingAt,
 } from "./clubs.js";
 import { boughtToday, buy, ownedItems, shopWindow } from "./shop.js";
 import { cardsForSale } from "./cardShelf.js";
@@ -433,9 +436,18 @@ async function handleClub(req: IncomingMessage, res: ServerResponse, path: strin
   const playerId = await playerFrom(req);
   if (!playerId) return send(res, 401, { error: "who are you" });
 
-  /** Every action answers with the club as it now stands. */
-  const view = async (extra: Record<string, unknown> = {}) =>
-    send(res, 200, { club: await clubView(sb, playerId, isOnline), ...extra });
+  /**
+   * Every action answers with the club as it now stands.
+   *
+   * And with the club you are QUEUING at, when there is no club — those are
+   * the two things the popup can draw without asking anything else: the club
+   * you are in, or the door you are standing at.
+   */
+  const view = async (extra: Record<string, unknown> = {}) => {
+    const club = await clubView(sb, playerId, isOnline);
+    const waiting = club ? null : await waitingAt(sb, playerId);
+    return send(res, 200, { club, ...(waiting ? { waiting } : {}), ...extra });
+  };
 
   if (path === "/api/club") {
     // Opening the popup is what puts the green dot out.
@@ -449,10 +461,25 @@ async function handleClub(req: IncomingMessage, res: ServerResponse, path: strin
   const body = (await readBody(req)) as Record<string, unknown>;
   const str = (k: string) => (typeof body[k] === "string" ? (body[k] as string) : "");
 
+  /*
+   * The one route that answers with something other than the view alone:
+   * six digits that are worth thirty seconds. They are not part of the club
+   * — nobody else may see them — so they ride back beside it rather than in
+   * it.
+   */
+  if (path === "/api/club/invite") {
+    const made = await makeInvite(sb, playerId);
+    if (made.error) return send(res, 400, { error: made.error });
+    return view({ invite: { code: made.code, until: made.until } });
+  }
+
   let error: string | null = null;
   switch (path) {
     case "/api/club/create":
-      error = await createClub(sb, playerId, str("name"));
+      error = await createClub(sb, playerId, str("name"), str("emblem"));
+      break;
+    case "/api/club/door":
+      error = await answerAtDoor(sb, playerId, str("playerId"), body.yes === true);
       break;
     case "/api/club/join":
       error = await joinClub(sb, playerId, str("code"));

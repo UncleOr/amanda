@@ -1,6 +1,6 @@
 # הטקסטים של אמנדה
 
-כל טקסט שהשחקן רואה — 1356 במספר, 1356 מהם כבר באנגלית.
+כל טקסט שהשחקן רואה — 1360 במספר, 1360 מהם כבר באנגלית.
 
 ## איך עורכים
 
@@ -907,9 +907,13 @@
 | sd3ccb21 | צ'אט | | Chat |
 | seeb4d7c | בקשות | | Requests |
 | se1bdd84 | אתגרים | | Goals |
-| s7b57db1 | שם המועדון | | Club name |
+| se3d7c79 | הצטרפות למועדון | | Join a club |
+| scf325de | הקמת מועדון | | Start a club |
 | s525cb8b | קוד מועדון | | Club code |
+| s7b57db1 | שם המועדון | | Club name |
 | s2a64db9 | סגירת המועדון | | Close the club |
+| s7063bf0 | אישור | | Let in |
+| s7cf1d10 | דחייה | | Turn away |
 | s8b3b70f | העברת הבעלות | | Hand it over |
 | sc5257ed | דיווח | | Report |
 | sfc9e23a | יציאה מהמועדון | | Leave the club |

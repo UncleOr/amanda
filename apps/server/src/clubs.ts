@@ -31,6 +31,7 @@ import {
   CLUB_CODE_LENGTH,
   DEFAULT_EMBLEM,
   DONATIONS_PER_REQUEST,
+  INVITE_SECONDS,
   MAX_CLUB_MEMBERS,
   REQUEST_EVERY_HOURS,
   WARNINGS_BEFORE_REMOVAL,
@@ -93,11 +94,12 @@ export interface ClubChallengeRow extends ClubChallenge {
 
 export interface ClubView {
   id: string;
-  code: string;
   name: string;
   emblem: string;
   owner: boolean;
   members: ClubMemberRow[];
+  /** Who typed a live code and is waiting for the owner to say yes. */
+  waiting: ClubMemberRow[];
   messages: ClubMessageRow[];
   requests: ClubRequestRow[];
   challenges: ClubChallengeRow[];
@@ -113,7 +115,15 @@ interface Membership {
   seenAt: string;
 }
 
-/** Which club is this player in, if any? */
+/**
+ * Which club is this player IN, if any?
+ *
+ * `state = 'member'` is not a detail. Somebody who typed a live code is a row
+ * in this table whose owner has not said yes yet, and this one filter is what
+ * keeps them out of the chat, out of the donations, out of the one-click
+ * battle and out of the member count — everything in this file asks this
+ * question, so there is one place for the answer to be right.
+ */
 export async function membershipOf(
   sb: SupabaseClient,
   playerId: string,
@@ -122,10 +132,31 @@ export async function membershipOf(
     .from("club_members")
     .select("club_id, warnings, seen_at")
     .eq("player_id", playerId)
+    .eq("state", "member")
     .maybeSingle();
   return data
     ? { clubId: data.club_id as string, warnings: data.warnings as number, seenAt: data.seen_at as string }
     : null;
+}
+
+/** The club this player is QUEUING at, if any. Shown instead of the two doors. */
+export async function waitingAt(
+  sb: SupabaseClient,
+  playerId: string,
+): Promise<{ name: string; emblem: string } | null> {
+  const { data } = await sb
+    .from("club_members")
+    .select("club_id")
+    .eq("player_id", playerId)
+    .eq("state", "pending")
+    .maybeSingle();
+  if (!data) return null;
+  const { data: club } = await sb
+    .from("clubs")
+    .select("name, emblem")
+    .eq("id", data.club_id as string)
+    .maybeSingle();
+  return club ? { name: club.name as string, emblem: club.emblem as string } : null;
 }
 
 /**
@@ -145,6 +176,7 @@ export async function sameClub(
   const { data } = await sb
     .from("club_members")
     .select("player_id, club_id")
+    .eq("state", "member")
     .in("player_id", [playerId, otherId]);
   if ((data?.length ?? 0) !== 2) return false;
   return data![0]!.club_id === data![1]!.club_id;
@@ -159,11 +191,13 @@ export async function ownsAClub(sb: SupabaseClient, playerId: string): Promise<b
 /* ───────────────────────── founding and joining ───────────────────────── */
 
 /**
- * Six digits nobody has.
+ * Six digits nobody is currently holding.
  *
- * Tried rather than computed: a million codes against a handful of clubs
- * means the first pick is almost always free, and the loop is the honest way
- * to say "almost".
+ * Tried rather than computed: a million codes against the handful that are
+ * alive at any moment means the first pick is almost always free, and the
+ * loop is the honest way to say "almost". It is checked against LIVE
+ * invitations only — a code that expired this morning is free again, because
+ * it opens nothing.
  */
 async function freeCode(sb: SupabaseClient): Promise<string | null> {
   for (let i = 0; i < 12; i++) {
@@ -171,27 +205,77 @@ async function freeCode(sb: SupabaseClient): Promise<string | null> {
       CLUB_CODE_LENGTH,
       "0",
     );
-    const { data } = await sb.from("clubs").select("id").eq("code", code).maybeSingle();
+    const { data } = await sb
+      .from("club_invites")
+      .select("code")
+      .eq("code", code)
+      .gt("expires_at", new Date().toISOString())
+      .maybeSingle();
     if (!data) return code;
   }
   return null;
+}
+
+/**
+ * Press +, and for thirty seconds there is a way in.
+ *
+ * Or: *"generated only on the members screen when you press + … valid for 30
+ * seconds … and the manager will also have to approve their entry."*
+ *
+ * ⚠ ANY MEMBER MAY PRESS IT, not only the owner. The member list is a screen
+ * everybody in the club sees, "+" on it reads as "add somebody" to whoever is
+ * looking at it, and the owner's approval is the gate that makes that safe —
+ * if only the owner could make a code, the approval afterwards would be the
+ * same person agreeing with themselves. Or's call to narrow.
+ *
+ * Making one kills the club's other invitations. The code on screen is THE
+ * code, so nobody can stand there collecting a pocketful of live ones.
+ */
+export async function makeInvite(
+  sb: SupabaseClient,
+  playerId: string,
+): Promise<{ error: string | null; code?: string; until?: string }> {
+  const me = await membershipOf(sb, playerId);
+  if (!me) return { error: "club.no" };
+
+  const { count } = await sb
+    .from("club_members")
+    .select("player_id", { count: "exact", head: true })
+    .eq("club_id", me.clubId)
+    .eq("state", "member");
+  if ((count ?? 0) >= MAX_CLUB_MEMBERS) return { error: "club.full" };
+
+  await sb.from("club_invites").delete().eq("club_id", me.clubId);
+
+  const code = await freeCode(sb);
+  if (!code) return { error: "retry" };
+  const until = new Date(Date.now() + INVITE_SECONDS * 1000).toISOString();
+  const { error } = await sb
+    .from("club_invites")
+    .insert({ code, club_id: me.clubId, made_by: playerId, expires_at: until });
+  return error ? { error: "retry" } : { error: null, code, until };
 }
 
 export async function createClub(
   sb: SupabaseClient,
   playerId: string,
   name: string,
+  emblem?: string,
 ): Promise<string | null> {
   if (await membershipOf(sb, playerId)) return "club.no";
   const check = checkClubName(name);
   if (!check.ok) return "club.name";
 
-  const code = await freeCode(sb);
-  if (!code) return "retry";
+  /*
+   * Or: *"(Found a club + icon) → opens a panel for choosing a name and a
+   * picture."* Only a free emblem: the bought ones are unlocked BY owning a
+   * club, so at this moment nobody can have one.
+   */
+  const badge = emblem && isFreeEmblem(emblem) ? emblem : DEFAULT_EMBLEM;
 
   const { data, error } = await sb
     .from("clubs")
-    .insert({ code, name: name.trim(), emblem: DEFAULT_EMBLEM, owner_id: playerId })
+    .insert({ name: name.trim(), emblem: badge, owner_id: playerId })
     .select("id")
     .maybeSingle();
   if (error || !data) return "retry";
@@ -207,30 +291,97 @@ export async function createClub(
   return null;
 }
 
+/**
+ * Typing the six digits gets you into the QUEUE, not into the club.
+ *
+ * The invitation is deleted first, before anything else can go wrong. It is
+ * one-time, and the only way to be sure of that is for the row to be gone
+ * before the row that uses it exists — the same ordering as a donation,
+ * where the claim goes in before any card moves.
+ */
 export async function joinClub(
   sb: SupabaseClient,
   playerId: string,
   code: string,
 ): Promise<string | null> {
   if (await membershipOf(sb, playerId)) return "club.no";
+  if (await waitingAt(sb, playerId)) return "club.no";
   const clean = code.replace(/\D/g, "");
   if (clean.length !== CLUB_CODE_LENGTH) return "club.code";
 
-  const { data: club } = await sb.from("clubs").select("id").eq("code", clean).maybeSingle();
-  // Deliberately the same answer as a wrong code: a club that exists and a
-  // club that does not must be indistinguishable, or this is a way to walk
-  // the space and learn which codes are real.
-  if (!club) return "club.code";
+  const { data: invite } = await sb
+    .from("club_invites")
+    .select("code, club_id")
+    .eq("code", clean)
+    .gt("expires_at", new Date().toISOString())
+    .maybeSingle();
+  /*
+   * Deliberately the same answer for a wrong code, an expired one and one
+   * that was used a second ago: three different "no"s would tell a guesser
+   * which of a million numbers had ever been real.
+   */
+  if (!invite) return "club.code";
+
+  const spent = await sb.from("club_invites").delete().eq("code", clean).select("code");
+  // Somebody else typed it in the same second. Theirs, not ours.
+  if (spent.error || !spent.data?.length) return "club.code";
 
   const { count } = await sb
     .from("club_members")
     .select("player_id", { count: "exact", head: true })
-    .eq("club_id", club.id);
+    .eq("club_id", invite.club_id as string)
+    .eq("state", "member");
   if ((count ?? 0) >= MAX_CLUB_MEMBERS) return "club.full";
 
   const { error } = await sb
     .from("club_members")
-    .insert({ player_id: playerId, club_id: club.id });
+    .insert({ player_id: playerId, club_id: invite.club_id as string, state: "pending" });
+  return error ? "retry" : null;
+}
+
+/**
+ * The owner says yes, or no.
+ *
+ * Or: *"the manager will also have to approve their entry."* Both answers
+ * are the owner's alone, and both are one row: yes flips the state, no
+ * removes it and the person is back at the two doors.
+ */
+export async function answerAtDoor(
+  sb: SupabaseClient,
+  ownerId: string,
+  playerId: string,
+  yes: boolean,
+): Promise<string | null> {
+  const club = await ownedClub(sb, ownerId);
+  if (!club) return "club.no";
+
+  const { data: knock } = await sb
+    .from("club_members")
+    .select("player_id")
+    .eq("player_id", playerId)
+    .eq("club_id", club.id)
+    .eq("state", "pending")
+    .maybeSingle();
+  if (!knock) return "club.no";
+
+  if (!yes) {
+    const { error } = await sb.from("club_members").delete().eq("player_id", playerId);
+    return error ? "retry" : null;
+  }
+
+  // Checked again at the moment of the yes: the club may have filled up while
+  // this person was waiting, and the count at the door was a different minute.
+  const { count } = await sb
+    .from("club_members")
+    .select("player_id", { count: "exact", head: true })
+    .eq("club_id", club.id)
+    .eq("state", "member");
+  if ((count ?? 0) >= MAX_CLUB_MEMBERS) return "club.full";
+
+  const { error } = await sb
+    .from("club_members")
+    .update({ state: "member", joined_at: new Date().toISOString() })
+    .eq("player_id", playerId);
   return error ? "retry" : null;
 }
 
@@ -248,7 +399,14 @@ export async function joinClub(
  */
 export async function leaveClub(sb: SupabaseClient, playerId: string): Promise<string | null> {
   const me = await membershipOf(sb, playerId);
-  if (!me) return "club.no";
+  if (!me) {
+    // Still in the queue: the same button, and it means "never mind".
+    if (await waitingAt(sb, playerId)) {
+      const { error } = await sb.from("club_members").delete().eq("player_id", playerId);
+      return error ? "retry" : null;
+    }
+    return "club.no";
+  }
 
   const { data: club } = await sb
     .from("clubs")
@@ -279,7 +437,10 @@ async function highestTrophies(
   const { data: members } = await sb
     .from("club_members")
     .select("player_id")
-    .eq("club_id", clubId);
+    .eq("club_id", clubId)
+    // Never somebody still waiting at the door: a club cannot be inherited
+    // by a person its owner had not yet agreed to let in.
+    .eq("state", "member");
   const ids = (members ?? []).map((m) => m.player_id as string).filter((id) => id !== except);
   if (!ids.length) return null;
   const { data } = await sb
@@ -686,13 +847,13 @@ export async function clubView(
 
   const { data: club } = await sb
     .from("clubs")
-    .select("id, code, name, emblem, owner_id")
+    .select("id, name, emblem, owner_id")
     .eq("id", me.clubId)
     .maybeSingle();
   if (!club) return null;
 
   const [{ data: members }, { data: messages }, { data: requests }] = await Promise.all([
-    sb.from("club_members").select("player_id, joined_at").eq("club_id", club.id),
+    sb.from("club_members").select("player_id, joined_at, state").eq("club_id", club.id),
     sb
       .from("club_messages")
       .select("id, player_id, body, created_at")
@@ -708,11 +869,16 @@ export async function clubView(
       .limit(20),
   ]);
 
-  const ids = (members ?? []).map((m) => m.player_id as string);
+  const ids = (members ?? [])
+    .filter((m) => m.state !== "pending")
+    .map((m) => m.player_id as string);
+  const knocking = (members ?? [])
+    .filter((m) => m.state === "pending")
+    .map((m) => m.player_id as string);
   const { data: people } = await sb
     .from("players")
     .select("id, nickname, avatar, trophies")
-    .in("id", ids.length ? ids : ["-"]);
+    .in("id", ids.concat(knocking).length ? ids.concat(knocking) : ["-"]);
   const by = new Map(
     (people ?? []).map((p) => [
       p.id as string,
@@ -735,10 +901,20 @@ export async function clubView(
 
   return {
     id: club.id as string,
-    code: club.code as string,
     name: club.name as string,
     emblem: club.emblem as string,
     owner: club.owner_id === playerId,
+    /*
+     * Everybody can see who is at the door; only the owner is given the two
+     * buttons. A queue that is visible to the club is how the person who
+     * pressed + knows their friend got the digits in on time.
+     */
+    waiting: knocking.map((id) => ({
+      id,
+      ...who(id),
+      online: isOnline(id),
+      owner: false,
+    })),
     members: ids
       .map((id) => ({
         id,
@@ -835,6 +1011,26 @@ export async function clubHasNews(sb: SupabaseClient, playerId: string): Promise
     .eq("club_id", me.clubId)
     .gt("created_at", me.seenAt);
   if ((count ?? 0) > 0) return true;
+
+  /*
+   * Somebody is standing at the door. The dot matters more here than it does
+   * for a message: the person waiting cannot do anything until the owner
+   * looks, and nothing else on the home screen would tell them to.
+   */
+  const { data: owned } = await sb
+    .from("clubs")
+    .select("id")
+    .eq("id", me.clubId)
+    .eq("owner_id", playerId)
+    .maybeSingle();
+  if (owned) {
+    const { count: knocks } = await sb
+      .from("club_members")
+      .select("player_id", { count: "exact", head: true })
+      .eq("club_id", me.clubId)
+      .eq("state", "pending");
+    if ((knocks ?? 0) > 0) return true;
+  }
 
   const rows = await challengeRows(sb, me.clubId, playerId);
   return rows.some((r) => r.done && !r.claimed && r.contributed > 0);
