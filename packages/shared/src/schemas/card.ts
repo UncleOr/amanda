@@ -80,6 +80,23 @@ export const CardSchema = z.object({
   /** Design/tooltip text describing the card's role. Not read by the engine. */
   role: LocalizedStringSchema.optional(),
   /*
+   * One line about who this monster IS, shown under its name on the card.
+   *
+   * Or: *"add me an option to give every monster a 'story' too. Not all of
+   * them will have one, but some — mainly the ones with the name. The story
+   * appears in the card details under the name. Chuppy, for example: 'the
+   * loyal friend who is always with you'."*
+   *
+   * ⚠ NOT `role`, and the difference is who it is written for. `role` is a
+   * designer's note — the Obsidian Egg's reads like a strategy memo — and it
+   * was printed on cards once and taken straight back off (see
+   * CardDetailModal.tsx). This is the opposite: it is for the child holding
+   * the card, it says nothing about how to play it, and it is optional
+   * because a monster with nothing to say should say nothing rather than
+   * have a sentence invented for it.
+   */
+  story: LocalizedStringSchema.optional(),
+  /*
    * What this card costs in a deck, 1 to 5.
    *
    * Left out of almost every card on purpose: cardCost.ts works it out from

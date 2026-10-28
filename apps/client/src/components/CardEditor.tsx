@@ -289,6 +289,27 @@ export function CardEditor({ call, say, upload, notes, reloadNotes }: CardEditor
   const setStat = (key: keyof Card["stats"], value: number | string) =>
     setDraft((d) => (d ? { ...d, stats: { ...d.stats, [key]: value } } : d));
 
+  /*
+   * ⚠ THE SCHEMA WILL REFUSE HALF A STORY. `story` is a LocalizedString and
+   * both halves are `min(1)`, so a card with a Hebrew line and an empty
+   * English one fails validation on save — which would read as "the panel
+   * will not save my card" rather than as "you left a field empty". Typing
+   * in one box fills the other with the same words until it is overwritten,
+   * and clearing both drops the field entirely.
+   */
+  const setStory = (lang: "he" | "en", value: string) =>
+    setDraft((d) => {
+      if (!d) return d;
+      const other = lang === "he" ? "en" : "he";
+      const kept = d.story?.[other] ?? "";
+      const text = value.trim();
+      if (!text && !kept.trim()) {
+        const { story: _gone, ...rest } = d;
+        return rest as Card;
+      }
+      return { ...d, story: { he: "", en: "", ...d.story, [lang]: value, [other]: kept || value } };
+    });
+
   /** One choice for how a card gets about, written into the two fields it takes. */
   function setMove(to: Move) {
     setDraft((d) => {
@@ -416,15 +437,26 @@ export function CardEditor({ call, say, upload, notes, reloadNotes }: CardEditor
               >
                 <CardView cardId={CATALOG.has(draft.id) ? draft.id : "crumb_demon"} size="large" />
               </div>
-              <button
-                className="ed__hear"
-                disabled={!speaks}
-                title={speaks ? "" : "לקלף הזה אין עדיין הקלטה"}
-                onClick={() => sfx.voice(speaks)}
-              >
-                <Icon name="soundOn" size={14} /> {speaks ? "שמע את השם" : "אין קול"}
-              </button>
-              <small className="ed__stage-hint">גרור את הקלף כדי לראות איך הוא בא ליד.</small>
+              {/*
+                ⚠ AND NO "PLAY THE NAME" BUTTON. There was one for an hour.
+                Or: *"I do not need the play-the-name button, I am supposed
+                to hear it when I drag."* He is right twice over — the press
+                that starts a carry is the one gesture that says a card's
+                name in the game (App.tsx), so a button beside it would be a
+                second way to hear a thing that the panel is supposed to be
+                showing AS IT IS.
+
+                What the button did carry and a drag cannot is the silence:
+                nine of the sixteen names have no recording yet, and a card
+                that says nothing looks exactly like a card whose sound is
+                broken. So that one fact stays, as a line rather than a
+                control.
+              */}
+              <small className="ed__stage-hint">
+                {speaks
+                  ? "גרור את הקלף כדי לראות ולשמוע אותו."
+                  : "גרור כדי לראות איך הוא בא ליד. לשם שלו אין עדיין הקלטה."}
+              </small>
             </div>
             <div className="ed__headfields">
               <label className="ed__f">
@@ -443,6 +475,33 @@ export function CardEditor({ call, say, upload, notes, reloadNotes }: CardEditor
                 <input
                   value={draft.name.en}
                   onChange={(e) => set("name", { ...draft.name, en: e.target.value })}
+                />
+              </label>
+              {/*
+                Or: *"add me an option to give every monster a 'story' too.
+                Not all of them will have one, but some — mainly the ones
+                with the name."* Beside the names, because that is what it
+                belongs to: it is read under the name on the card and
+                nowhere else.
+
+                Empty is a real answer here and the commonest one, so there
+                is nothing to switch on — a card with no story simply shows
+                no story.
+              */}
+              <label className="ed__f">
+                סיפור (עברית)
+                <input
+                  value={draft.story?.he ?? ""}
+                  placeholder="החבר הנאמן שתמיד איתך"
+                  onChange={(e) => setStory("he", e.target.value)}
+                />
+              </label>
+              <label className="ed__f">
+                Story (English)
+                <input
+                  dir="ltr"
+                  value={draft.story?.en ?? ""}
+                  onChange={(e) => setStory("en", e.target.value)}
                 />
               </label>
               <label className="ed__f">

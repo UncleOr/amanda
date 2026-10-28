@@ -348,7 +348,39 @@ export function challengesIn(period: Period, key: string, pools: Pools): Challen
   return out;
 }
 
-/** Everything live right now: three daily, two weekly, one monthly. */
+/**
+ * Everything live right now: three daily, two weekly, one monthly.
+ *
+ * ═══ THE POOL IS PER PLAYER NOW; THE ID IS NOT ═══
+ *
+ * Or: *"the challenges have to match the arena I am in. I have a challenge
+ * to fight with the Leviathan and I have not even reached the Pool."*
+ *
+ * The same bug the bot decks had, in the last place that still drew from the
+ * whole catalogue: a challenge names a card, the pool of names was every
+ * launch card in the game, and `familyOpen` was never asked. So a player in
+ * the Games Room was sent after a card that cannot be in their album, cannot
+ * come out of their chests and cannot be fielded against them — an errand
+ * with no door.
+ *
+ * The CALLER now hands in a pool already filtered to the families this player
+ * has met (apps/server/src/meta.ts). The id deliberately does not say which
+ * pool it came from, and that is the decision worth writing down.
+ *
+ * ⚠ PUTTING THE RUNG IN THE ID COSTS A REWARD SOMEBODY EARNED. It is the
+ * tidier design — one id, one challenge, for ever — and it was written that
+ * way first. Then: `claim` finds a challenge by id in the player's current
+ * list, so a challenge finished at the Games Room and not yet claimed
+ * becomes "expired" the moment its owner reaches the Pitch. Early rungs come
+ * fast — 150 trophies is five wins — so that is not a rare day, it is the
+ * first evening.
+ *
+ * What the id costs instead: a slot can change which card it names while a
+ * player's progress stays on it, so climbing mid-period can leave a
+ * half-finished challenge pointing at a different monster. That errs
+ * GENEROUS — the task is still a real task and you are part way through it —
+ * and being generous on a rare edge beats taking back a prize that was won.
+ */
 export function challengesFor(pools: Pools, now: Date = new Date()): Challenge[] {
   return (["daily", "weekly", "monthly"] as Period[]).flatMap((p) =>
     challengesIn(p, periodKey(p, now), pools),

@@ -91,6 +91,19 @@
 }
 .modal__title h2 { margin: 0; font-size: 22px; }
 .modal__subtitle { margin: 2px 0 8px; color: var(--muted); font-size: 13px; }
+/*
+ * The one line on a card that is not a fact about a fight, so it is readable
+ * rather than grey: it is the thing a child reads, not a unit beside a
+ * number. Italic is the whole of the distinction from the name above it.
+ */
+.modal__story {
+  margin: 0 0 10px;
+  color: var(--text);
+  font-size: var(--t-3);
+  font-style: italic;
+  line-height: 1.5;
+  max-width: 34ch;
+}
 .modal__badges { display: flex; flex-wrap: wrap; gap: 6px; }
 .badge {
   font-size: 11px;

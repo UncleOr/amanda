@@ -23,7 +23,9 @@
  */
 import type { SupabaseClient } from "@supabase/supabase-js";
 import {
+  arenaFor,
   challengesFor,
+  familyOpen,
   isCollectable,
   israelDay,
   nachoChestKind,
@@ -41,7 +43,7 @@ import {
 } from "@amanda/shared";
 import { buildReport, type BattleResult, type Placement } from "@amanda/engine";
 import { CATALOG, SERIES_NAMES } from "./content.js";
-import { rollChest } from "./progress.js";
+import { bestTrophiesOf, rollChest } from "./progress.js";
 import { db } from "./supabase.js";
 import { track } from "./events.js";
 import { deliver } from "./shop.js";
@@ -51,14 +53,34 @@ const FRONT_X = 3;
 const BACK_X = 0;
 
 /**
- * The names a challenge may put in a sentence.
+ * The names a challenge may put in a sentence, for a player at one rung.
  *
- * Built once. The catalogue does not change while the process is up, and
- * `challengesFor` is called after every single match.
+ * ⚠ AND IT IS A RUNG AND NOT A PLAYER. Or: *"the challenges have to match
+ * the arena I am in. I have a challenge to fight with the Leviathan and I
+ * have not even reached the Pool."* The pool is filtered by `familyOpen` —
+ * the same gate the chests, the album and the bot's board already ask — so a
+ * challenge can only name a family you have been introduced to.
+ *
+ * Cached per ARENA rather than per player, which is both cheaper and more
+ * honest: what a challenge may mention changes seven times in the life of an
+ * account and not with every trophy. `challengesFor` runs after every single
+ * match, so building this each time would walk the catalogue for nothing.
  */
-const POOLS: Pools = (() => {
+const POOLS_AT = new Map<string, Pools>();
+
+function poolsFor(best: number): Pools {
+  const rung = arenaFor(best).id;
+  const had = POOLS_AT.get(rung);
+  if (had) return had;
+  const built = buildPools(best);
+  POOLS_AT.set(rung, built);
+  return built;
+}
+
+function buildPools(best: number): Pools {
   const playable = [...CATALOG.values()].filter(
-    (c) => c.id !== "crumb_demon" && c.launch && isCollectable(c),
+    (c) =>
+      c.id !== "crumb_demon" && c.launch && isCollectable(c) && familyOpen(c.seriesId, best),
   );
   /*
    * ═══ A FAMILY WITH NOTHING YOU CAN PLAY IS NOT A CHALLENGE ═══
@@ -81,11 +103,18 @@ const POOLS: Pools = (() => {
       .filter(([id]) => families.has(id))
       .map(([id, name]) => ({ id, ...name })),
   };
-})();
+}
 
-/** What is being asked of everybody today. */
-export function liveChallenges(now: Date = new Date()): Challenge[] {
-  return challengesFor(POOLS, now);
+/**
+ * What is being asked of a player who has climbed this far.
+ *
+ * `best` rather than current trophies, for the reason it is always best: a
+ * family you have met does not become unmet after a bad evening, and a
+ * challenge list that shrank on a loss would be the game taking something
+ * away twice.
+ */
+export function liveChallenges(now: Date = new Date(), best = 0): Challenge[] {
+  return challengesFor(poolsFor(best), now);
 }
 
 /**
@@ -425,7 +454,17 @@ async function advanceChallenges(
   facts: MatchFacts,
   now: Date,
 ): Promise<MetaAward["moved"]> {
-  const live = liveChallenges(now).filter((c) => progressFrom(c.goal, facts) > 0);
+  /*
+   * ⚠ THE SAME LIST THE PLAYER IS LOOKING AT. Now that a challenge depends
+   * on how far somebody has climbed, every one of the three places that
+   * touches challenges has to ask with the SAME rung — this one, the
+   * standings on the screen, and the claim. Advancing against a different
+   * list would credit a match to a goal the player cannot see, and the id is
+   * the only thing the two sides share.
+   */
+  const live = liveChallenges(now, await bestTrophiesOf(sb, playerId)).filter(
+    (c) => progressFrom(c.goal, facts) > 0,
+  );
   if (!live.length) return [];
 
   const { data } = await sb
@@ -484,7 +523,10 @@ export async function standings(
   playerId: string | null,
   now: Date = new Date(),
 ): Promise<ChallengeStanding[]> {
-  const live = liveChallenges(now);
+  // A guest has climbed nothing, which is the right list to show them: the
+  // four families of the Games Room, and nothing they cannot reach.
+  const best = playerId ? await bestTrophiesOf(sb, playerId) : 0;
+  const live = liveChallenges(now, best);
   if (!playerId) return live.map((c) => ({ ...c, progress: 0, done: false, claimed: false }));
   const { data } = await sb
     .from("player_challenges")
@@ -520,7 +562,9 @@ export async function claim(
 ): Promise<
   { ok: true; gave: Challenge["reward"]; chests: string[] } | { ok: false; why: string }
 > {
-  const challenge = liveChallenges(now).find((c) => c.id === challengeId);
+  const challenge = liveChallenges(now, await bestTrophiesOf(sb, playerId)).find(
+    (c) => c.id === challengeId,
+  );
   // Not live: either it has expired, or it was never real. Both are "no".
   if (!challenge) return { ok: false, why: "expired" };
 

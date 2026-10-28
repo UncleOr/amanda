@@ -76,12 +76,20 @@
   cursor: pointer;
 }
 
-.admin__body {
+/*
+ * The one scrolling box in the panel. See the note in Admin.tsx: every tab
+ * used to have to remember `.admin__body` to be scrollable at all, and most
+ * of them did not.
+ */
+.admin__page {
   flex: 1;
   min-height: 0;
   overflow-y: auto;
   padding: 14px 18px 60px;
 }
+
+/* Kept for the tabs that already wore it, now as layout rather than scroll. */
+.admin__body { min-height: 0; }
 
 .admin__tools {
   position: sticky;
@@ -395,14 +403,6 @@
   user-select: none;
 }
 .ed__stage:active { cursor: grabbing; }
-.ed__hear {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 6px;
-  width: 100%;
-}
-.ed__hear:disabled { opacity: 0.45; }
 .ed__stage-hint { color: var(--muted); font-size: 11px; line-height: 1.5; }
 .ed__row-fix { color: var(--accent); }
 

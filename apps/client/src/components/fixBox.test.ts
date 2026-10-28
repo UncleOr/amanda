@@ -132,9 +132,26 @@ describe("seeing, hearing and carrying a card", () => {
     expect(EDITOR).toContain("useDrag(() => {})");
   });
 
-  it("says the name on the press, and says so when there is no recording", () => {
+  /*
+   * ⚠ AND NOT FROM A BUTTON. There was a "play the name" button beside the
+   * card for an hour. Or: *"I do not need the play-the-name button, I am
+   * supposed to hear it when I drag."* The press that starts a carry is the
+   * one gesture that says a card's name in the game, so a button next to it
+   * is a second way to hear a thing the panel exists to show as it is.
+   */
+  it("says the name on the press that starts the carry, and from nowhere else", () => {
     expect(EDITOR).toContain("sfx.voice(voiceFor(draft.id).name)");
-    expect(EDITOR).toContain("disabled={!speaks}");
-    expect(EDITOR).toContain("לקלף הזה אין עדיין הקלטה");
+    expect(EDITOR, "the play button is back").not.toContain("ed__hear");
+    expect((EDITOR.match(/sfx\.voice/g) ?? []).length).toBe(1);
+  });
+
+  /*
+   * What the button did carry and a drag cannot is the SILENCE. Nine of the
+   * sixteen names have no recording yet, and a card that says nothing is
+   * indistinguishable from a card whose sound is broken — which is the
+   * failure this whole area is written to avoid.
+   */
+  it("still says out loud when a card has no recording", () => {
+    expect(EDITOR).toContain("לשם שלו אין עדיין הקלטה");
   });
 });

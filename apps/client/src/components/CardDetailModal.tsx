@@ -65,6 +65,24 @@ export function CardDetailModal({
           <div className="modal__title">
             <h2>{say(card.name)}</h2>
             <p className="modal__subtitle">{card.name.en}</p>
+            {/*
+              ═══ WHO THIS MONSTER IS ═══
+
+              Or: *"the story appears in the card details under the name.
+              Chuppy, for example: 'the loyal friend who is always with
+              you'."*
+
+              Under the name and above the badges, because it belongs to the
+              NAME and not to the numbers — it is the only line on this card
+              that is not a fact about a fight.
+
+              ⚠ And it is nothing like `role`, which lives two hundred lines
+              below in a comment explaining why it must never be shown. That
+              one is a note from a designer to a designer. This one is
+              written for the child holding the card, which is also why it is
+              optional: a monster with nothing to say says nothing.
+            */}
+            {card.story && <p className="modal__story">{say(card.story)}</p>}
             <div className="modal__badges">
               <span className="badge" style={{ borderColor: rarity.color, color: rarity.color }}>
                 {say(rarity)}

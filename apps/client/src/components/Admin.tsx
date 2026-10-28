@@ -294,6 +294,22 @@ export function Admin() {
           {note}
         </p>
       )}
+      {/*
+        ⚠ THE SCROLLER BELONGS TO THE PANEL, NOT TO EACH TAB.
+        
+        Or: *"the arena management does not scroll down."* It could not:
+        `.admin` is `overflow: hidden`, and the only element that scrolled was
+        `.admin__body` — a class each tab had to remember to put on its own
+        root. Three of them did. The rest (the arenas, the dials, the
+        phrases, the shelves, the tutorial, the gifts, the shop, the live
+        board) were simply cut off at the bottom of the window, and which
+        ones LOOKED broken depended only on how tall their content happened
+        to be. The arenas grew a fix box per rung today and crossed the line.
+        
+        One scroller here, around whatever tab is showing, and no tab can
+        forget it.
+      */}
+      <div className="admin__page">
       {tab === "live" ? (
         <LiveTab call={call} />
       ) : tab === "stats" ? (
@@ -327,6 +343,7 @@ export function Admin() {
       ) : (
         <UsersTab say={setNote} />
       )}
+      </div>
     </div>
   );
 }
