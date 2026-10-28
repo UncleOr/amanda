@@ -95,8 +95,16 @@ describe("meeting a family", () => {
     ] as const) {
       const owned = starter();
       owned.delete(only);
-      const runs = introductions(owned, 300).filter(([s]) => s === seriesId);
-      expect(runs.length, `${only} never came out of 300 gold chests`).toBeGreaterThan(1);
+      /*
+       * ⚠ A THOUSAND CHESTS, AND THE NUMBER IS NOT CAUTION. The Alley King
+       * is one epic card in a pool of seventy-five: about one draw in three
+       * hundred. At 300 chests this test failed roughly one run in ten —
+       * which is the worst kind of red, because it is red about nothing.
+       * Eight thousand draws puts the expected count near twenty-five, and
+       * the chance of seeing none past any number worth writing down.
+       */
+      const runs = introductions(owned, 1000).filter(([s]) => s === seriesId);
+      expect(runs.length, `${only} never came out of 1000 gold chests`).toBeGreaterThan(0);
       for (const [, ids] of runs) expect(ids[0]).toBe(only);
     }
   });

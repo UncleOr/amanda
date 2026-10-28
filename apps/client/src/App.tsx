@@ -868,17 +868,25 @@ function Game() {
     return () => window.removeEventListener("resize", onResize);
   }, []);
   /*
-   * Or: *"and they say their own name when you press them, in a fitting
-   * voice."* The match said it on the drag, which is the one place a child
-   * is not listening — they are aiming at a square. The place you tap a
-   * card in order to LOOK at it is the album, and that is this one door:
-   * the album, the deck builder, the rack and the hand all open a card
-   * through here.
+   * ⚠ THIS DOOR DOES NOT SPEAK, AND THAT IS THE DECISION.
+   *
+   * It did, for an afternoon: every screen that opens a card goes through
+   * here, so saying the name here reached the album, the deck builder, the
+   * rack and the hand in one line. Or took it straight back off:
+   *
+   *   *"the voice should be said when you press, before the drag. Not every
+   *   time you press it. That is just annoying. Trust me, that is how it is
+   *   in Marvel Snap and it is great."*
+   *
+   * And he is right about which moment it is. The name is the card picking
+   * ITSELF up — it belongs to the gesture that puts the card in your hand,
+   * once, and nowhere else. A card that announces itself every time you open
+   * it to read its numbers is a card you stop opening.
+   *
+   * So the voice lives on the pointerdown that arms the drag, in the rack
+   * and in the hand. See `onDragOut` below.
    */
-  const openInfo = (cardId: string) => {
-    sfx.voice(voiceFor(cardId).name);
-    setDetail(cardId);
-  };
+  const openInfo = (cardId: string) => setDetail(cardId);
 
   const showBoards = m.phase === "build" || m.phase === "panic" || m.phase === "prebattle";
   const interactive = m.phase === "build" || m.phase === "panic";

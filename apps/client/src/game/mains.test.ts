@@ -131,29 +131,41 @@ describe("saying its own name", () => {
 
 /* ───────────────────────── where it is heard ───────────────────────── */
 
-describe("tapping a card to hear it", () => {
+describe("when a card says its name", () => {
   const APP = readFileSync(fileURLToPath(new URL("../App.tsx", import.meta.url)), "utf8");
   const SFX = readFileSync(fileURLToPath(new URL("./sfx.ts", import.meta.url)), "utf8");
 
   /*
-   * ⚠ WHERE A CHILD ACTUALLY TAPS A CARD. The name was spoken on the drag,
-   * which is the one moment nobody is listening — the finger is already
-   * moving and the eye is on a square. Looking at a card is what the album
-   * is for, and every screen that opens a card goes through `openInfo`.
+   * ⚠ ONE GESTURE, AND IT IS NOT "OPENING THE CARD".
+   *
+   * `openInfo` is the one door every screen opens a card through, so putting
+   * the voice there is a single line that reaches the album, the deck
+   * builder, the rack and the hand. It was there for an afternoon. Or:
+   *
+   *   *"the voice should be said when you press, before the drag. Not every
+   *   time you press it. That is just annoying. Trust me, that is how it is
+   *   in Marvel Snap and it is great."*
+   *
+   * The convenient place and the right place are different places, and this
+   * is the kind of difference a test is for: the next person to want a card
+   * to speak will find the same one-line door and the same reason it looks
+   * right.
    */
-  it("says the name wherever a card is opened to be looked at", () => {
+  it("says it on the press that picks the card up", () => {
+    expect(APP).toContain("sfx.voice(voiceFor(m.hand!).name)");
+    expect(APP).toContain("if (!ACTIONS.has(id)) sfx.voice(voiceFor(id).name);");
+  });
+
+  it("says nothing when a card is merely opened to be read", () => {
     const door = APP.slice(APP.indexOf("const openInfo"), APP.indexOf("const showBoards"));
-    expect(door).toContain("sfx.voice(voiceFor(cardId).name)");
-    expect(door).toContain("setDetail(cardId)");
+    expect(door, "openInfo speaks again — see the comment above it").not.toContain("sfx.voice");
   });
 
   it("will not lay a voice over itself", () => {
-    // One tap is a pointerdown AND a click, and both have a reason to speak.
+    // Several cards of one element dying together share a cry, and two
+    // copies of one clip a tenth of a second apart do not sound like a
+    // stutter — they sound like a broken recording.
     expect(SFX).toContain("if (now - (spokenAt.get(slug) ?? -Infinity) < 350) return;");
-  });
-
-  it("still says it on the drag, which is where it started", () => {
-    expect(APP).toContain("sfx.voice(voiceFor(m.hand!).name)");
   });
 });
 
@@ -189,6 +201,41 @@ describe("the nine that still have to be recorded", () => {
       if (!want) continue;
       expect(want, `${cardId} is recorded as ${slug} and played as ${want}`).toBe(slug);
     }
+  });
+
+  /*
+   * Or, when the two-per-family pick was first reported back to him: *"hold
+   * on, did you cancel it? Because Mother Tree and Zelig also made sounds
+   * and that is great for me. I meant AT LEAST 2 voices."*
+   *
+   * So two is a floor and not a quota, and the pair in mains.ts is about
+   * which cards a family is MET through — a different question that happens
+   * to share an answer. Nothing stops a third card speaking, and three of
+   * them already do: Lava, the Titan King, Zelig and the Great Mother Tree
+   * are none of them mains.
+   *
+   * Pinned against the SPECS rather than the mp3s on disk, because the
+   * recordings are bought one run at a time and the plan should hold before
+   * the money is spent.
+   */
+  it("plans at least two voices for every family with two cards", () => {
+    const planned = new Map<string, number>();
+    for (const [, , cardId] of specs) {
+      const seriesId = card(cardId!)!.seriesId;
+      planned.set(seriesId, (planned.get(seriesId) ?? 0) + 1);
+    }
+    for (const s of SERIES) {
+      const playable = s.cards.filter(isCollectable).length;
+      if (playable < 2) continue; // the Furries and the Demons are one card
+      expect(planned.get(s.id) ?? 0, `${s.id} has ${playable} cards`).toBeGreaterThanOrEqual(2);
+    }
+  });
+
+  it("lets more than two of a family speak, which is the point of a floor", () => {
+    const extras = [...CATALOG.values()].filter((c) => voiceFor(c.id).name && !isMain(c.id));
+    expect(extras.map((c) => c.id).sort()).toContain("plants_10_great_mother_tree");
+    expect(extras.map((c) => c.id).sort()).toContain("slimes_10_zelig_giant_ooze");
+    expect(extras.length, "every voice in the game belongs to a main").toBeGreaterThan(2);
   });
 
   it("leaves exactly the unrecorded ones to pay for", () => {
