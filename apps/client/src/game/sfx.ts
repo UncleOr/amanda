@@ -342,6 +342,8 @@ const BASE = import.meta.env.BASE_URL;
 const buffers = new Map<SoundName, AudioBuffer>();
 /** The same, for card voices — where a miss means silence, not an oscillator. */
 const voices = new Map<string, AudioBuffer>();
+/** When each voice last started, so it cannot be laid over itself. */
+const spokenAt = new Map<string, number>();
 /** The looping layers of the card currently in hand. Empty the rest of the time. */
 const carried: Array<{ src: AudioBufferSourceNode; g: GainNode }> = [];
 let loading = false;
@@ -436,6 +438,23 @@ export const sfx = {
     if (c.state === "suspended") void c.resume();
     const buf = voices.get(slug);
     if (!buf) return; // not loaded, or there is no such clip. Say nothing.
+    /*
+     * ⚠ THE SAME CLIP ON TOP OF ITSELF, A TENTH OF A SECOND LATE.
+     *
+     * One tap on a card is two events — a pointerdown that arms the drag and
+     * a click that opens the card — and both of them have a reason to say
+     * the card's name. Two copies of one voice a hundred milliseconds apart
+     * do not sound like a stutter; they sound like a broken recording, and
+     * it is the kind of thing that is obvious on a phone and inaudible on a
+     * laptop. The same holds in a battle, where three earth cards dying
+     * together share one cry.
+     *
+     * So a voice will not start on top of itself. Different voices overlap
+     * freely — that is a crowd, and a crowd is fine.
+     */
+    const now = performance.now() + delayMs;
+    if (now - (spokenAt.get(slug) ?? -Infinity) < 350) return;
+    spokenAt.set(slug, now);
     try {
       const src = c.createBufferSource();
       src.buffer = buf;

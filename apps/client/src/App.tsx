@@ -867,7 +867,18 @@ function Game() {
     window.addEventListener("resize", onResize);
     return () => window.removeEventListener("resize", onResize);
   }, []);
-  const openInfo = (cardId: string) => setDetail(cardId);
+  /*
+   * Or: *"and they say their own name when you press them, in a fitting
+   * voice."* The match said it on the drag, which is the one place a child
+   * is not listening — they are aiming at a square. The place you tap a
+   * card in order to LOOK at it is the album, and that is this one door:
+   * the album, the deck builder, the rack and the hand all open a card
+   * through here.
+   */
+  const openInfo = (cardId: string) => {
+    sfx.voice(voiceFor(cardId).name);
+    setDetail(cardId);
+  };
 
   const showBoards = m.phase === "build" || m.phase === "panic" || m.phase === "prebattle";
   const interactive = m.phase === "build" || m.phase === "panic";

@@ -17,7 +17,7 @@
  *
  * ═══ THE SETTINGS ARE THE CHARACTER ═══
  *
- * Eleven cards saying eleven names in the default voice is one actor reading
+ * Twenty cards saying twenty names in the default voice is one actor reading
  * a list, and it would make every card sound like the same card — worse than
  * saying nothing. So each line below moves three dials: a voice, a pitch
  * (-12 to +12) and a speed (0.5 to 2). Those three are the whole brief.
@@ -210,6 +210,127 @@ export const VOICES: VoiceSpec[] = [
     speed: 0.55,
     emotion: "sad",
     why: "Old wood: as low and as slow as the model goes, and sad rather than wise.",
+  },
+
+  /* ═══ THE NINE MAINS WITH NO RECORDING YET ═══
+   *
+   * Or: *"pick which 2 from each series are the main ones, that are the
+   * first ones you get, and that also say their own name when you tap them,
+   * in a fitting voice."* The two per family are chosen in
+   * packages/shared/src/mains.ts; eleven of the twenty already had a clip,
+   * and these are the nine that did not.
+   *
+   * ⚠ WRITTEN BUT NOT RUN. `pnpm art:voices` skips anything already in
+   * assets/raw/voices, so one run makes exactly these nine — and that run
+   * spends Or's fal.ai credit, so it is his to start, not mine.
+   *
+   * ═══ FOUR VOICES, NINE CHARACTERS ═══
+   *
+   * Every id below is one of the four this project has already paid for and
+   * heard. Reaching for an unproven MiniMax voice would risk nine failed
+   * calls to find out a name was spelled wrong, and the file already says
+   * where the character actually comes from: the three dials. A Calm Woman
+   * nine semitones up at one and a half speed is not a calm woman.
+   */
+  {
+    id: "card-name-boltling",
+    cardId: "machines_01_boltling",
+    says: "Boltling",
+    voice: "Calm_Woman",
+    pitch: 9,
+    speed: 1.5,
+    emotion: "surprised",
+    why: "A screw with legs: the highest and quickest card, startled to be here.",
+  },
+  {
+    id: "card-name-mandroid",
+    cardId: "machines_06_mandroid",
+    says: "Mandroid",
+    voice: "Deep_Voice_Man",
+    pitch: -2,
+    speed: 1,
+    emotion: "neutral",
+    why: "A machine doing an impression of a man — every dial left exactly flat.",
+  },
+  {
+    id: "card-name-jellyfish",
+    cardId: "sea_02_jellyfish",
+    says: "Jellyfish",
+    voice: "Calm_Woman",
+    pitch: 6,
+    speed: 0.7,
+    emotion: "neutral",
+    why: "No bones and nowhere to be. High and slow is a thing that drifts.",
+  },
+  {
+    /*
+     * The one card in the game whose voice is what it DOES — a siren sings
+     * you onto the rocks. So it is the only one here that is pleasant on
+     * purpose, and the trap is overdoing it: shrill is a warning, and a
+     * warning is the opposite of a lure.
+     */
+    id: "card-name-siren",
+    cardId: "sea_07_siren",
+    says: "Siren",
+    voice: "Wise_Woman",
+    pitch: 3,
+    speed: 0.75,
+    emotion: "happy",
+    why: "Warm, unhurried and a little too pleased to see you.",
+  },
+  {
+    id: "card-name-iron-bulwark",
+    cardId: "giants_07_iron_bulwark",
+    says: "Iron Bulwark",
+    voice: "Deep_Voice_Man",
+    pitch: -8,
+    speed: 0.75,
+    emotion: "neutral",
+    why: "Two tons of door. Lower than the Stone Golem and not as slow-witted.",
+  },
+  {
+    id: "card-name-alley-king",
+    cardId: "demons_01_alley_king",
+    says: "The Alley King",
+    voice: "Deep_Voice_Man",
+    pitch: -4,
+    speed: 0.95,
+    emotion: "angry",
+    why: "Not big — dangerous. Quicker and less deep than the giants, and cross.",
+  },
+  {
+    id: "card-name-ant-queen",
+    cardId: "insects_02_ant_queen",
+    says: "Ant Queen",
+    voice: "Wise_Woman",
+    pitch: 0,
+    speed: 0.85,
+    emotion: "neutral",
+    why: "The one insect that does not hurry, said against a soldier who does.",
+  },
+  {
+    id: "card-name-thorn-sprout",
+    cardId: "plants_01_thorn_sprout",
+    says: "Thorn Sprout",
+    voice: "Friendly_Person",
+    pitch: 8,
+    speed: 1.3,
+    emotion: "angry",
+    why: "A very small plant that is very annoyed — the Healing Bloom inverted.",
+  },
+  {
+    id: "card-name-thing-in-the-bin",
+    cardId: "slimes_11_thing_in_the_bin",
+    says: "The Thing <#0.15#> in the Bin",
+    voice: "Deep_Voice_Man",
+    pitch: -4,
+    speed: 0.85,
+    emotion: "surprised",
+    /*
+     * The pause is the Titan King fix again: five words at 0.85 run into one
+     * another, and "Thing in" is exactly the join that disappears.
+     */
+    why: "Something that lives in a bin and did not expect the lid to come off.",
   },
 ];
 

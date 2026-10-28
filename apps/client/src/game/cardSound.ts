@@ -37,6 +37,7 @@
  * already written keeps overriding it.
  */
 
+import { ALL_MAINS } from "@amanda/shared";
 import { CATALOG } from "../data/catalog";
 
 /** One card's three moments. Every one of them is optional. */
@@ -107,23 +108,57 @@ const BY_SERIES: Record<string, CardVoice> = {
  * of a physical event; `card-healing-bloom` is built note by note, because
  * "spiritual and high" is a feeling and feelings are music. See
  * packages/art/src/sounds.ts and fanfare.ts.
+ *
+ * What is left here is the CRIES. A main's spoken name lives in MAIN_NAME
+ * below, in one table with the nine that are not recorded yet — two places
+ * holding the same card's name is how one of them goes stale.
  */
 const CARDS: Record<string, CardVoice> = {
-  dragons_01_flame_dragon: { name: "card-name-flame-dragon", cry: "card-flame-dragon" },
-  dragons_02_obsidian_egg: { name: "card-name-obsidian-egg", cry: "card-obsidian-egg" },
+  dragons_01_flame_dragon: { cry: "card-flame-dragon" },
+  dragons_02_obsidian_egg: { cry: "card-obsidian-egg" },
   dragons_04_lava: { name: "card-name-lava", cry: "card-lava" },
-  giants_01_stone_colossus: { name: "card-name-stone-golem", cry: "card-stone-golem" },
+  giants_01_stone_colossus: { cry: "card-stone-golem" },
   giants_10_titan_king: { name: "card-name-titan-king", cry: "card-titan-king" },
-  insects_01_ant_soldier: { name: "card-name-ant-soldier", cry: "card-ant-soldier" },
-  plants_03_healing_bloom: { name: "card-name-healing-bloom", cry: "card-healing-bloom" },
-  slimes_01_basic_slime: { name: "card-name-slime", cry: "card-slime" },
+  insects_01_ant_soldier: { cry: "card-ant-soldier" },
+  plants_03_healing_bloom: { cry: "card-healing-bloom" },
+  slimes_01_basic_slime: { cry: "card-slime" },
   /*
-   * Three more that say their name and have no sound of their own yet —
-   * the two Or named when the drag voices were first described, and Chuppy.
+   * Two that say their name and have no sound of their own yet. They are
+   * not mains — they are the biggest card in their family, which is a
+   * different reason to have a voice and a perfectly good one. Nothing
+   * about "the two you meet a family with" says nobody else may speak.
    */
-  furries_01_chuppy: { name: "card-name-chuppy" },
   slimes_10_zelig_giant_ooze: { name: "card-name-zelig" },
   plants_10_great_mother_tree: { name: "card-name-mother-tree" },
+  // Chuppy moved to MAIN_NAME, with the rest of the mains.
+};
+
+/**
+ * ═══ THE TWO FROM EACH FAMILY THAT SAY THEIR OWN NAME ═══
+ *
+ * Or: *"pick which 2 from each series are the main ones, that are the first
+ * ones you get, and that also say their own name when you tap them, in a
+ * fitting voice."*
+ *
+ * WHICH two is not decided here — it is decided once, in shared/mains.ts,
+ * because the same pair has to be the pair a chest hands you first. A card
+ * that introduces a family and a card that announces itself being two
+ * different cards is the bug this table exists to make impossible.
+ *
+ * ⚠ WHAT `null` MEANS, AND WHY IT IS WRITTEN DOWN RATHER THAN LEFT OUT.
+ * A clip is a recording; the nine below do not exist yet, and generating
+ * them costs money that is not mine to spend. `sfx.voice` is deliberately
+ * silent when a clip is missing, so a main left out of this table would be
+ * indistinguishable from a main whose recording never happened — and would
+ * stay that way until somebody tapped all twenty cards and listened. Named
+ * with `null`, the gap is a list anyone can read, mains.test.ts checks the
+ * list is complete, and recording one is one word of a change.
+ */
+const MAIN_NAME: Record<string, string | null> = {
+  dragons_01_flame_dragon: "card-name-flame-dragon",
+  dragons_02_obsidian_egg: "card-name-obsidian-egg",
+  machines_01_boltling: null,
+  machines_06_mandroid: null,
   /*
    * ⚠ Chuppy's voice had a constraint on it rather than just a
    * description. Or: *"Chuppy is too similar to Pikachu — he electrifies,
@@ -132,11 +167,28 @@ const CARDS: Record<string, CardVoice> = {
    *
    * Which rules out the obvious reading of "cute electric creature says its
    * own name" almost entirely: high, squeaky and two syllables IS the thing
-   * being avoided. Left empty rather than filled in with the first idea,
-   * because the brief here is mostly a list of what it must not be and that
-   * is worth getting right rather than quickly.
+   * being avoided. Worth re-reading before the nine below are recorded,
+   * because it is the only brief in this table written as a list of what
+   * the voice must NOT be.
    */
+  furries_01_chuppy: "card-name-chuppy",
+  sea_02_jellyfish: null,
+  sea_07_siren: null,
+  giants_01_stone_colossus: "card-name-stone-golem",
+  giants_07_iron_bulwark: null,
+  demons_01_alley_king: null,
+  insects_01_ant_soldier: "card-name-ant-soldier",
+  insects_02_ant_queen: null,
+  plants_01_thorn_sprout: null,
+  plants_03_healing_bloom: "card-name-healing-bloom",
+  slimes_01_basic_slime: "card-name-slime",
+  slimes_11_thing_in_the_bin: null,
 };
+
+/** The mains still waiting for a recording, in one line, for whoever runs it. */
+export const MAINS_WITHOUT_A_VOICE: readonly string[] = ALL_MAINS.filter(
+  (id) => !MAIN_NAME[id],
+);
 
 /* ═══ WHAT A CARD SOUNDS LIKE WHILE IT IS BEING CARRIED ═══
  *
@@ -263,7 +315,19 @@ export function voiceFor(cardId: string): CardVoice {
    * fine while nothing collides, and a bug the day something does.
    */
   const byElement = (card?.elements ?? []).map((el) => BY_ELEMENT[el]).find(Boolean) ?? {};
-  return { ...byElement, ...BY_SERIES[series], ...CARDS[cardId] };
+  /*
+   * A main's spoken name sits between the series and the card: wider than
+   * one entry, narrower than a family. CARDS still wins, so the day a main
+   * wants a different clip from the one the table gives it, one line there
+   * does it without this function learning a new rule.
+   */
+  const spoken = MAIN_NAME[cardId];
+  return {
+    ...byElement,
+    ...BY_SERIES[series],
+    ...(spoken ? { name: spoken } : {}),
+    ...CARDS[cardId],
+  };
 }
 
 /**
@@ -286,6 +350,9 @@ export const VOICE_CLIPS: string[] = [
       ...Object.values(BY_ELEMENT),
       ...Object.values(BY_SERIES),
       ...Object.values(CARDS),
+      // The mains that have been recorded. The nulls are the ones that
+      // have not, and they must not reach the loader as a 404.
+      ...Object.values(MAIN_NAME).map((name) => ({ ...(name ? { name } : {}) }) as CardVoice),
     ].flatMap((v) =>
       [v.name, v.drag, v.cry].filter((c): c is string => !!c),
     ),

@@ -39,6 +39,9 @@ export * from "./identity.js";
 // The decks you build, and what their cards look like from the back
 export * from "./cardBacks.js";
 export * from "./decks.js";
+// The two cards each family is met through — first out of a chest,
+// and the ones that say their own name on a tap.
+export * from "./mains.js";
 export * from "./draft.js";
 
 // The ladder of arenas, and which one a trophy count puts you in.

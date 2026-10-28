@@ -22,6 +22,7 @@ import {
   LEVELS,
   arenaFor,
   familyOpen,
+  mainsOf,
   TUNED,
   collectableCards as pickCollectable,
   type Card,
@@ -201,18 +202,62 @@ export function rollChest(
   const spec = CHESTS[kind] ?? CHESTS.wood!;
   const pool = poolFor(best);
   const cards: string[] = [];
+  const has = new Set(owned ?? []);
+  const met = new Set<string>();
+  for (const id of has) {
+    const c = CATALOG.get(id);
+    if (c) met.add(c.seriesId);
+  }
+
+  /**
+   * The card you MEET a family with.
+   *
+   * Or: *"the 2 main ones from each series, which are the first ones you
+   * get."* Reaching a new arena is the one moment in this game that is
+   * supposed to feel like an introduction, and a draw by rarity introduced
+   * the Sea Dwellers with whichever of ten fish the dice found — usually not
+   * one of the two that say their own name, and sometimes the Rock Clam,
+   * which does not move.
+   *
+   * So a draw that lands on a family this album has nothing from is handed
+   * back as one of that family's mains instead. It is a SWAP and not an
+   * extra card: the chest still holds what it says on the lid, and the
+   * rarity tilt is untouched for every family already met. By the third card
+   * out of a family the draw is ordinary again.
+   *
+   * Only when `owned` is given — a shop grant or a gift has no album to
+   * compare against and is not a reward for one (see the note on `owned`).
+   */
+  const introduce = (c: Card): Card => {
+    if (!owned || met.has(c.seriesId)) return c;
+    const next = mainsOf(c.seriesId).find((id) => !has.has(id));
+    return (next && pool.find((p) => p.id === next)) || c;
+  };
+
   if (spec.guarantees) {
-    // The promised rarity is drawn WITHOUT the album tilt. It is the part of
-    // the chest that is meant to be new; weighting it towards what you have
-    // would turn the guarantee into another duplicate.
+    /*
+     * The promised rarity is drawn WITHOUT the album tilt. It is the part of
+     * the chest that is meant to be new; weighting it towards what you have
+     * would turn the guarantee into another duplicate.
+     *
+     * ⚠ And it is drawn from the families you HAVE met, where that is
+     * possible — the one case where `introduce` cannot help. Swapping a
+     * guaranteed epic for a common main would break the promise on the lid;
+     * leaving it alone would let an epic be the first card you ever see from
+     * a family. Narrowing the pool keeps both: the guarantee is still a
+     * guarantee, and a family is still introduced by its own mains.
+     */
     const promised = pool.filter((c) => c.rarity === spec.guarantees);
-    const one = pickByRarity(promised.length ? promised : pool);
+    const known = promised.filter((c) => met.has(c.seriesId));
+    const one = pickByRarity(known.length ? known : promised.length ? promised : pool);
     if (one) cards.push(one.id);
   }
   while (cards.length < spec.cards) {
     const c = pickByRarity(pool, owned);
     if (!c) break;
-    cards.push(c.id);
+    const got = introduce(c);
+    cards.push(got.id);
+    has.add(got.id);
   }
   const treasure = treasureFor(spec, items);
   return { cards, diamonds: spec.diamonds, ...(treasure ? { items: [treasure] } : {}) };
