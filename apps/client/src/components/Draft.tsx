@@ -29,18 +29,30 @@ export function Draft({
   onClose,
   onReady,
   seed,
+  best,
 }: {
   onClose: () => void;
   onReady: (result: DraftResult) => void;
   /** Given so a draft can be replayed — see dealPacks. */
   seed?: number;
+  /**
+   * How far this player has climbed.
+   *
+   * A draft deals the cards for BOTH sides, so Or's rule about the bot's deck
+   * lands here harder than anywhere: *"if I am playing at the train station
+   * now, I should not be seeing Machines or Sea Dwellers on the other side."*
+   * Ungated, this screen would not only show him a family he has not met — it
+   * would ask him to choose it, and then hand the one he refused to the
+   * opponent.
+   */
+  best?: number;
 }) {
   const packs = useMemo(() => {
     /*
      * Monsters only. `cardPool` is what both boards are built from anyway, so
      * a draft cannot offer a card the game would not have dealt.
      */
-    const monsters = cardPool().filter((id) => CATALOG.has(id));
+    const monsters = cardPool(best).filter((id) => CATALOG.has(id));
     let s = seed ?? Math.floor(Math.random() * 2_000_000_000);
     const rnd = () => {
       // A small deterministic generator, so the same seed deals the same
@@ -49,7 +61,7 @@ export function Draft({
       return s / 2147483648;
     };
     return dealPacks(monsters, DRAFT_ROUNDS, rnd);
-  }, [seed]);
+  }, [seed, best]);
 
   const [picked, setPicked] = useState<string[]>([]);
   const pack = packs[picked.length];

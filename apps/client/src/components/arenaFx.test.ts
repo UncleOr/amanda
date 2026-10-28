@@ -117,12 +117,31 @@ describe("how a card walks", () => {
    * wall that walks away from the King is not a wall. Worth pinning, because
    * "nothing in the battle moves" would otherwise look like the walk code
    * being broken rather than like the cards being what they are.
+   *
+   * ⚠ This used to count the `rooted` STYLE and call that the measurement,
+   * which quietly stopped being the same question the day three families got
+   * a body of their own: a press with no wheels still idles, a clam still
+   * drifts in water, the Alley King still hovers. The fact being pinned is
+   * about the DATA, so it is read off the data now — and the second half
+   * says the other thing out loud, that standing still is no longer the same
+   * as being animated by nothing.
    */
-  it("leaves the majority rooted, which is what the cards say", () => {
+  it("leaves the majority standing still, which is what the cards say", () => {
+    const still = cardPool().filter((id) => CATALOG.get(id)!.stats.moveSpeed === 0);
+    expect(still.length).toBeGreaterThan(cardPool().length / 2);
     const walks = cardPool().map((id) => combatLook(id).walk);
-    expect(walks.filter((w) => w === "rooted").length).toBeGreaterThan(walks.length / 2);
     expect(new Set(walks).size, "and the ones that do move do not all move alike")
       .toBeGreaterThan(2);
+  });
+
+  it("still gives a motionless card a body where its family has one", () => {
+    // Or: *"the Machines sparks and wheels, the Sea Dwellers bubbles, the
+    // Demons a light flight and wind."* Half of those cards never move.
+    const still = cardPool().filter((id) => CATALOG.get(id)!.stats.moveSpeed === 0);
+    const withBody = still.filter((id) => combatLook(id).walk !== "rooted");
+    expect(withBody.length, "no motionless card has a family body").toBeGreaterThan(0);
+    for (const id of withBody)
+      expect(["roll", "swim", "drift"], id).toContain(combatLook(id).walk);
   });
 
   it("weighs every card between nothing and a Titan", () => {

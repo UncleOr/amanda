@@ -6805,7 +6805,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/components/Arena.tsx",
-   "line": 1406
+   "line": 1417
   }
  },
  {
@@ -6815,7 +6815,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/components/Arena.tsx",
-   "line": 1407
+   "line": 1418
   }
  },
  {
@@ -6825,7 +6825,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/components/Arena.tsx",
-   "line": 2357
+   "line": 2520
   }
  },
  {
@@ -6835,7 +6835,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/components/Arena.tsx",
-   "line": 2388
+   "line": 2551
   }
  },
  {
@@ -6845,7 +6845,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/components/Arena.tsx",
-   "line": 2389
+   "line": 2552
   }
  },
  {
@@ -6855,7 +6855,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/components/Arena.tsx",
-   "line": 2401
+   "line": 2564
   }
  },
  {
@@ -6895,7 +6895,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/components/ArenaPreview.tsx",
-   "line": 58
+   "line": 67
   }
  },
  {
@@ -6905,7 +6905,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/components/ArenaPreview.tsx",
-   "line": 60
+   "line": 69
   }
  },
  {
@@ -6915,7 +6915,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/components/ArenaPreview.tsx",
-   "line": 64
+   "line": 73
   }
  },
  {
@@ -6925,7 +6925,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/components/ArenaPreview.tsx",
-   "line": 70
+   "line": 79
   }
  },
  {
@@ -6935,7 +6935,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/components/ArenaPreview.tsx",
-   "line": 74
+   "line": 83
   }
  },
  {
@@ -6945,7 +6945,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/components/ArenaPreview.tsx",
-   "line": 79
+   "line": 88
   }
  },
  {
@@ -7494,7 +7494,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/data/catalog.ts",
-   "line": 138
+   "line": 139
   },
   "en": "Crumb Demon"
  },
@@ -8095,7 +8095,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/components/Album.tsx",
-   "line": 230
+   "line": 253
   }
  },
  {
@@ -8105,7 +8105,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/components/Album.tsx",
-   "line": 231
+   "line": 254
   }
  },
  {
@@ -8115,7 +8115,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/components/Album.tsx",
-   "line": 242
+   "line": 265
   }
  },
  {
@@ -8125,7 +8125,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/components/Album.tsx",
-   "line": 243
+   "line": 266
   }
  },
  {
@@ -8135,7 +8135,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/components/Album.tsx",
-   "line": 260
+   "line": 283
   }
  },
  {
@@ -8145,7 +8145,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/components/Album.tsx",
-   "line": 261
+   "line": 284
   }
  },
  {
@@ -8155,7 +8155,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/components/Album.tsx",
-   "line": 266
+   "line": 289
   }
  },
  {
@@ -8165,7 +8165,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/components/Album.tsx",
-   "line": 269
+   "line": 292
   }
  },
  {
@@ -8175,7 +8175,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/components/Album.tsx",
-   "line": 277
+   "line": 300
   }
  },
  {
@@ -8185,7 +8185,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/components/Album.tsx",
-   "line": 292
+   "line": 315
   }
  },
  {
@@ -8195,7 +8195,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/components/Album.tsx",
-   "line": 321
+   "line": 344
   }
  },
  {
@@ -8205,7 +8205,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/components/Album.tsx",
-   "line": 322
+   "line": 345
   }
  },
  {
@@ -8215,7 +8215,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/components/Album.tsx",
-   "line": 347
+   "line": 370
   }
  },
  {
@@ -8225,7 +8225,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/components/Album.tsx",
-   "line": 361
+   "line": 384
   }
  },
  {
@@ -8235,7 +8235,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/components/Album.tsx",
-   "line": 392
+   "line": 415
   }
  },
  {
@@ -8245,7 +8245,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/components/Album.tsx",
-   "line": 505
+   "line": 553
   }
  },
  {
@@ -8255,7 +8255,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/components/Album.tsx",
-   "line": 520
+   "line": 568
   }
  },
  {
@@ -8265,7 +8265,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/components/Album.tsx",
-   "line": 603
+   "line": 651
   }
  },
  {
@@ -8275,7 +8275,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/components/Album.tsx",
-   "line": 619
+   "line": 667
   }
  },
  {
@@ -8285,17 +8285,17 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/components/Album.tsx",
-   "line": 641
+   "line": 689
   }
  },
  {
-  "id": "s4f9261a",
+  "id": "sac15acb",
   "section": "components/Album.tsx",
-  "text": "לשדרוג",
+  "text": "שדרוג",
   "where": {
    "kind": "source",
    "file": "apps/client/src/components/Album.tsx",
-   "line": 647
+   "line": 697
   }
  },
  {
@@ -9445,7 +9445,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/components/Draft.tsx",
-   "line": 69
+   "line": 81
   }
  },
  {
@@ -9455,7 +9455,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/components/Draft.tsx",
-   "line": 75
+   "line": 87
   }
  },
  {
@@ -15386,7 +15386,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/game/useMatch.ts",
-   "line": 307
+   "line": 310
   }
  },
  {
@@ -15396,7 +15396,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/game/useMatch.ts",
-   "line": 319
+   "line": 322
   }
  },
  {
@@ -15406,7 +15406,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/game/useMatch.ts",
-   "line": 327
+   "line": 330
   }
  },
  {

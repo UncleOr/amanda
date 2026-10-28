@@ -155,7 +155,20 @@
   font-size: var(--t-4);
 }
 /* A count BESIDE the name it counts — the one shape --muted is for. */
-.album__series-count { color: var(--muted); font-size: var(--t-2); font-variant-numeric: tabular-nums; }
+.album__series-count {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  color: var(--muted);
+  font-size: var(--t-2);
+  font-variant-numeric: tabular-nums;
+}
+/*
+ * Where a locked shelf opens. Beside the padlock rather than under it: the
+ * row is one line tall and a second line would push every shelf down for the
+ * sake of five families out of nine.
+ */
+.album__series-at { font-size: var(--t-1); white-space: nowrap; }
 .album__grid {
   display: grid;
   /* roomy enough that a card's name and numbers are legible rather than

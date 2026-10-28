@@ -22,7 +22,15 @@ import { sfx } from "../game/sfx";
 import { pressed } from "../game/press";
 
 const BASE = import.meta.env.BASE_URL;
-import { LEVELS, levelCost, levelDiamonds, type Card } from "@amanda/shared";
+import {
+  ARENAS,
+  LEVELS,
+  atArena,
+  familyOpen,
+  levelCost,
+  levelDiamonds,
+  type Card,
+} from "@amanda/shared";
 import {
   levelUpCard,
   loadStats,
@@ -182,6 +190,21 @@ export function Album({ account, onClose, onCardInfo, onChanged }: Props) {
    * exists to answer could never reach its own maximum.
    */
   const collection = collectable();
+  /*
+   * ═══ HOW FAR HE HAS EVER CLIMBED ═══
+   *
+   * Or: *"the album needs a padlock on the series that have not opened yet
+   * too. Reminder that if I have already reached an arena, its series is
+   * open even if I have dropped back."*
+   *
+   * The second sentence is the whole of it and it is why this is
+   * `bestTrophies`. Trophies fall after a loss; a family you have met does
+   * not become unmet, and an album that re-locked the Insects because he
+   * had a bad evening would be punishing him twice for the same four
+   * matches. It is the same number `familyOpen` is written to and the same
+   * one the server pays chests against (progress.ts), so all three agree.
+   */
+  const climbed = account?.bestTrophies ?? account?.trophies ?? 0;
   const total = collection.length;
   const owned = collection.filter((c) => album?.has(c.id)).length;
 
@@ -415,7 +438,19 @@ export function Album({ account, onClose, onCardInfo, onChanged }: Props) {
             ? winnable
             : (SERIES_BY_ID.get(series.id)?.cards ?? []).filter((c) => !!c.art.sprite);
           if (!all.length) return null;
-          const toWin = winnable.length > 0;
+          /*
+           * ⚠ TWO DIFFERENT REASONS FOR A PADLOCK, AND ONE DRAWING OF IT.
+           *
+           * Amanda's shelf has nothing winnable on it ever; the Machines
+           * have everything winnable on them the moment he reaches the
+           * Garage. Both are "you cannot fill this yet", which is what the
+           * lock says — and neither is "0/10", which is what the shelf said
+           * before and which reads as a collection he is failing at.
+           */
+          const met = familyOpen(series.id, climbed);
+          const toWin = winnable.length > 0 && met;
+          // Where it opens, so the padlock is a destination and not a refusal.
+          const opensAt = met ? null : ARENAS.find((a) => a.introduces === series.id);
           // The filter narrows what is SHOWN, never what is counted: "3/10"
           // has to go on meaning three of the family's ten.
           const cards = onlyUp && toWin ? all.filter((c) => readyToLevel(c.id)) : all;
@@ -462,7 +497,20 @@ export function Album({ account, onClose, onCardInfo, onChanged }: Props) {
                 </span>
                 <b className="album__series-name">{say(series.name)}</b>
                 <span className="album__series-count">
-                  {toWin ? `${have}/${all.length}` : <Lock />}
+                  {toWin ? (
+                    `${have}/${all.length}`
+                  ) : (
+                    <>
+                      <Lock />
+                      {/* The one place a padlock in this game is allowed
+                          words: a lock with no destination is a door, and a
+                          lock with one is a rung. Same shape the extra modes
+                          got — see MoreModes. */}
+                      {opensAt && (
+                        <small className="album__series-at">{atArena(say(opensAt.name))}</small>
+                      )}
+                    </>
+                  )}
                 </span>
                 {/* A disclosure triangle: the icon set has no chevron, and a
                     play arrow turned ninety degrees is the same shape. */}
@@ -644,7 +692,9 @@ function Upgrade({
         onBuy(e.currentTarget);
       }}
     >
-      <b>{t("s4f9261a", "לשדרוג")}</b>
+      {/* Or: *"instead of 'לשדרוג' on a card write 'שדרוג'."* It is a
+          button, and a button says what it does. */}
+      <b>{t("sac15acb", "שדרוג")}</b>
       <span className={canPay ? "" : "is-poor"}>
         <Icon name="gem" size={11} /> {price}
       </span>

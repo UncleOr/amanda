@@ -857,7 +857,7 @@
 | s3e3750f | מקסימום | | Max |
 | s6c954dd | {0} מתוך {1} קלפים לשדרוג | | {0} of {1} cards |
 | s15650ab | שדרוג לרמה {0} | | Upgrade to level {0} |
-| s4f9261a | לשדרוג | | Upgrade |
+| sac15acb | שדרוג | | Upgrade |
 
 ## components/ArenaStory.tsx
 

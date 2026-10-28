@@ -2864,6 +2864,7 @@ function Game() {
       {panel.is("draft") && (
         <Draft
           onClose={() => panel.close()}
+          best={m.account?.bestTrophies ?? m.account?.trophies ?? 0}
           onReady={(result) => {
             panel.close();
             m.startDraft(result);

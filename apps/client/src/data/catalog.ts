@@ -7,6 +7,7 @@ import {
   collectableCards as pickCollectable,
   isCollectable,
   familyOrder,
+  familyOpen,
   STARTER_ALBUM,
   type Series,
 } from "@amanda/shared";
@@ -188,9 +189,32 @@ export function cardColor(cardId: string): string {
  * While artwork is still being produced we prefer illustrated cards, so a match
  * never mixes finished cards with placeholder colour blocks. Once every launch
  * card has art this is simply the whole roster.
+ *
+ * ═══ `best` IS THE LADDER, AND LEAVING IT OUT WAS A REAL BUG ═══
+ *
+ * Or: *"the bots' decks have to match mine. If I am playing at the train
+ * station now, I should not be seeing Machines or Sea Dwellers on the other
+ * side."*
+ *
+ * And he was: every board the bot built came from here, unfiltered, while
+ * the server's chest pool had been asking `familyOpen` since the day the
+ * ladder got families (progress.ts). So a child at 450 trophies could be
+ * SHOWN the Machines across the board four months before they could own one,
+ * which empties the arena that was meant to introduce them of the only thing
+ * it does. Meeting a family is supposed to happen TO you, once, somewhere.
+ *
+ * `best` is BEST trophies, never the current count — the same rule
+ * `familyOpen` is written to, and for the same reason: trophies fall after a
+ * loss, and a family you have met does not become unmet.
+ *
+ * Left out, this is the whole roster. That is the right answer for the two
+ * places that are not about one player's progress — the mirror mode's shared
+ * deal, and the dev chest door — and the wrong one everywhere else.
  */
-export function cardPool(): string[] {
-  const launch = [...CATALOG.values()].filter((c) => c.launch && inTheGame(c));
+export function cardPool(best?: number): string[] {
+  const launch = [...CATALOG.values()].filter(
+    (c) => c.launch && inTheGame(c) && (best === undefined || familyOpen(c.seriesId, best)),
+  );
   const illustrated = launch.filter((c) => c.art.sprite);
   // need a sensible deck's worth before we can restrict to illustrated cards
   const pool = illustrated.length >= 12 ? illustrated : launch;

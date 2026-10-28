@@ -1,6 +1,6 @@
 import { useMemo, useState } from "react";
 import { runBattle, type BoardInput, type Placement } from "@amanda/engine";
-import { CATALOG, SYNERGIES, cardPool } from "../data/catalog";
+import { CATALOG, SERIES, SYNERGIES, cardPool } from "../data/catalog";
 import { Arena } from "./Arena";
 import { line as t } from "../game/copy";
 
@@ -12,7 +12,16 @@ import { line as t } from "../game/copy";
  * playing a whole match first. Pick a series to field a full family of one kind
  * and watch just that family's attacks.
  */
-const SERIES_IDS = ["", "dragons", "giants", "insects", "plants", "slimes"] as const;
+/**
+ * Every family in the game, plus "" for a mixed board.
+ *
+ * ⚠ It was a hand-written list of five, which quietly stopped being every
+ * family the day a sixth was added — so the one workbench for judging battle
+ * animations could not show the three newest families at all, which is
+ * exactly when a workbench is needed. Derived now, like everything else: a
+ * family drawn tomorrow is in this menu tomorrow.
+ */
+const SERIES_IDS: readonly string[] = ["", ...SERIES.map((s) => s.id)];
 
 function pick(seriesId: string, count: number, offset: number): string[] {
   const pool = cardPool().filter((id) => !seriesId || CATALOG.get(id)?.seriesId === seriesId);

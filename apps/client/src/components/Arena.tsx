@@ -254,6 +254,15 @@ interface UnitGfx {
    * which did the second job and only that.
    */
   step: number;
+  /**
+   * Milliseconds until this unit throws its next family particle.
+   *
+   * Three families emit while they simply EXIST — a machine sparks, a sea
+   * dweller bubbles, a demon trails wind — so it cannot hang off an event.
+   * A countdown per unit rather than a shared clock, because twenty-six
+   * machines sparking on the same frame is a strobe, not a workshop.
+   */
+  emit: number;
   /** How fast it is travelling right now, in px per second. */
   speed: number;
   half: number;
@@ -607,6 +616,8 @@ export function Arena({
         toX: 0,
         toY: 0,
         step: Math.random() * 6,
+        // Scattered, so a family does not emit in unison on the first frame.
+        emit: Math.random() * 600,
         speed: 0,
         half: w / 2,
         owner: fu.owner,
@@ -1945,7 +1956,20 @@ export function Arena({
              */
             const dx = g.toX - g.container.x;
             const dy = g.toY - g.container.y;
-            const close = Math.min(1, k * 1.6);
+            /*
+             * Or: *"…and for the Sea Dwellers, bubbles and a bit of water
+             * resistance."*
+             *
+             * The resistance is HERE rather than in the walk cycle, and it
+             * is one number. The body chases its target with an exponential
+             * approach, so lowering the rate makes it lag going out and
+             * coast coming in — which is what moving through water is. A
+             * wobble added on top would have been a drawing of resistance;
+             * this is the thing itself, and it slows the walk cycle too
+             * because `speed` is measured from how far the body actually
+             * got.
+             */
+            const close = Math.min(1, k * (g.look.walk === "swim" ? 1 : 1.6));
             g.container.x += dx * close;
             g.container.y += dy * close;
             g.speed += (Math.min(1, Math.hypot(dx, dy) / 2.2) - g.speed) * Math.min(1, k * 0.6);
@@ -2037,6 +2061,145 @@ export function Arena({
                   g.step += dt * 0.011;
                   walkY = -Math.abs(Math.sin(g.step)) * 2.4;
                   tilt = Math.sin(g.step) * 0.04 * facing;
+                }
+                break;
+              }
+              /*
+               * ═══ THE MACHINES ═══
+               *
+               * Or: *"sparks flying, sounds, and the movement of wheels."*
+               *
+               * A wheel is the opposite of a foot and that is the whole
+               * animation. Every other walk here lifts the body — a step, a
+               * stomp, a scuttle all leave the ground and come back — and a
+               * thing on wheels never does. So this is the only gait in the
+               * set with almost no vertical travel: a fast, shallow judder
+               * (bad suspension on a hard floor) and a lean INTO the
+               * direction of travel, which is what torque looks like.
+               *
+               * And it never switches off. Half the Machines are bolted
+               * down; a press that stood there inert would read as a prop.
+               * Standing still it ticks over instead — a small sideways
+               * tremor, an engine running.
+               */
+              case "roll": {
+                if (g.look.flying) {
+                  // The Drone has no wheels. It holds station and trembles.
+                  g.step += dt * 0.0042;
+                  walkY = Math.sin(g.step) * (2 + g.speed * 2);
+                  walkX = Math.sin(g.step * 2.7) * 0.4;
+                } else if (walking) {
+                  g.step += dt * 0.026 * (0.6 + g.speed);
+                  walkY = -Math.abs(Math.sin(g.step)) * 0.9;
+                  walkX = Math.sin(g.step * 0.5) * 0.4;
+                  tilt = 0.05 * facing * Math.min(1, g.speed * 2);
+                } else {
+                  g.step += dt * 0.004;
+                  walkX = Math.sin(g.step * 3) * 0.35;
+                }
+                /*
+                 * The sparks. Thrown DOWNWARD-ish and given gravity, so they
+                 * arc off the chassis and die on the floor rather than
+                 * floating — a spark that drifts is an ember, and an ember
+                 * is a different machine entirely.
+                 */
+                g.emit -= dt * (walking ? 2.4 : 1);
+                if (g.emit <= 0) {
+                  g.emit = 170 + Math.random() * 320;
+                  spawnParticles(
+                    g.container.x + (Math.random() - 0.5) * g.half,
+                    g.container.y + g.half * 0.72,
+                    0xffd27a,
+                    2,
+                    0.1,
+                    {
+                      size: 1.5,
+                      gravity: 0.0009,
+                      shape: "streak",
+                      dir: -Math.PI / 2 - facing * 0.5,
+                      spread: 1.9,
+                    },
+                  );
+                }
+                break;
+              }
+              /*
+               * ═══ THE SEA DWELLERS ═══
+               *
+               * Or: *"bubbles and a bit of water resistance."*
+               *
+               * The resistance is the glide (see `close` above). This is the
+               * rest of it: a body in water is never quite still, so the
+               * sway runs whether or not the card is going anywhere — five
+               * of the ten never move, and an anchored clam that did not
+               * drift would be a rock on a floor rather than a rock under
+               * water.
+               */
+              case "swim": {
+                g.step += dt * 0.0035;
+                walkY = Math.sin(g.step) * 1.8;
+                walkX = Math.sin(g.step * 0.6) * 1.2;
+                if (walking) {
+                  // Under way it also undulates, which is how a thing with
+                  // no legs gets anywhere.
+                  const b = Math.sin(g.step * 2);
+                  tilt = Math.sin(g.step * 0.6) * 0.06;
+                  sy = 1 + b * 0.04;
+                  sx = 1 - b * 0.035;
+                }
+                /*
+                 * Bubbles: small, rising, and SLOWING as they go — negative
+                 * gravity against an upward launch is what makes them look
+                 * buoyant rather than fired.
+                 */
+                g.emit -= dt * (walking ? 1.8 : 1);
+                if (g.emit <= 0) {
+                  g.emit = 230 + Math.random() * 420;
+                  spawnParticles(
+                    g.container.x + (Math.random() - 0.5) * g.half * 0.8,
+                    g.container.y + g.half * 0.2,
+                    0xbfe9ff,
+                    2,
+                    0.028,
+                    { size: 2.2, gravity: -0.00022, dir: -Math.PI / 2, spread: 0.8 },
+                  );
+                }
+                break;
+              }
+              /*
+               * ═══ THE DEMONS ═══
+               *
+               * Or: *"a light flight and wind."*
+               *
+               * The family is one card today — the Alley King, `moveSpeed:
+               * 0` — so every part of this has to work on something that
+               * never goes anywhere. It hovers off the floor (which the
+               * shadow picks up for free: it shrinks as the body rises), it
+               * swings slowly, and the wind streams PAST it, backwards, the
+               * way wind reads on something that is holding its ground.
+               */
+              case "drift": {
+                g.step += dt * 0.0026;
+                walkY = Math.sin(g.step) * 3 - 1.5;
+                walkX = Math.sin(g.step * 0.43) * 1.6;
+                tilt = Math.sin(g.step * 0.43) * 0.05;
+                g.emit -= dt;
+                if (g.emit <= 0) {
+                  g.emit = 130 + Math.random() * 260;
+                  spawnParticles(
+                    g.container.x + facing * g.half * 0.5,
+                    g.container.y + (Math.random() - 0.5) * g.half * 1.4,
+                    0xa98fe0,
+                    1,
+                    0.16,
+                    {
+                      size: 1.3,
+                      gravity: -0.00004,
+                      shape: "streak",
+                      dir: facing > 0 ? Math.PI : 0,
+                      spread: 0.45,
+                    },
+                  );
                 }
                 break;
               }

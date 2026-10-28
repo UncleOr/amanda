@@ -88,7 +88,16 @@ const DEATH_BY_ELEMENT: Record<string, DeathStyle> = {
  * the card: whether it flies, whether it moves at all, how big it is and what
  * family it belongs to.
  */
-export type WalkStyle = "rooted" | "float" | "stomp" | "squish" | "scuttle" | "step";
+export type WalkStyle =
+  | "rooted"
+  | "float"
+  | "stomp"
+  | "squish"
+  | "scuttle"
+  | "step"
+  | "roll"
+  | "swim"
+  | "drift";
 
 /** Which supportive abilities deserve a permanent ring under the unit. */
 const AURA_BY_ABILITY: Partial<Record<AbilityType, AuraKind>> = {
@@ -153,6 +162,26 @@ const FALLBACK: CombatLook = {
  * The order is the priority: a thing that cannot move does not walk, a thing
  * that flies does not touch the ground, and after that it is the family and
  * the size. Nothing here is hand-written per card.
+ *
+ * ═══ THREE FAMILIES COME BEFORE "DOES IT MOVE AT ALL" ═══
+ *
+ * Or: *"and the Machines need animations too — sparks flying, sounds, wheel
+ * movement; the Sea Dwellers bubbles and a bit of water resistance; the
+ * Demons a light flight and wind."*
+ *
+ * Which is not a gait. A gait is what a body does while it is going
+ * somewhere, and `rooted` was the first test here, so a card that stands
+ * still got nothing at all. Measured against the data that matters: half
+ * the Machines are bolted down, five of the ten Sea Dwellers never move, and
+ * the Demons are ONE card — the Alley King, `moveSpeed: 0`. Leaving the
+ * families behind `rooted` would have shipped Or's three effects to a
+ * handful of cards and none of his demons.
+ *
+ * So these three are asked first, and each style decides for itself what a
+ * motionless one of its own does: a machine still idles, a sea dweller is
+ * still in water, a demon still hovers. The wheels, the swimming and the
+ * flight are the half that needs a direction; the sparks, the bubbles and
+ * the wind are the half that does not.
  */
 function walkOf(card: {
   stats: { hp: number; moveSpeed: number };
@@ -160,6 +189,9 @@ function walkOf(card: {
   flying: boolean;
   midBoss?: boolean;
 }): WalkStyle {
+  if (card.seriesId === "machines") return "roll";
+  if (card.seriesId === "sea") return "swim";
+  if (card.seriesId === "demons") return "drift";
   if (card.stats.moveSpeed === 0) return "rooted";
   if (card.flying) return "float";
   if (card.seriesId === "slimes") return "squish";

@@ -32,7 +32,6 @@ import {
   ACTION_DECK_COUNT,
   ACTION_SLOTS,
   CATALOG,
-  KING_CANDIDATES,
   ACTIVE_ACTIONS,
   FILL_CARDS_PER_DECK,
   GROUND_FLOOR_SLOTS,
@@ -122,9 +121,11 @@ function shuffle<T>(items: T[], rnd: () => number = Math.random): T[] {
  * no network, no keys) it stays what it always was: the whole catalog. The
  * game has to start either way.
  */
-function monsterPool(album?: Map<string, OwnedCard> | null): string[] {
+function monsterPool(album?: Map<string, OwnedCard> | null, best?: number): string[] {
   if (album && album.size) return albumToPool(album);
-  return cardPool();
+  // No album is a guest, or a phone with no signal. The ladder still applies:
+  // a first evening with no account should look like a first evening.
+  return cardPool(best);
 }
 
 /**
@@ -152,13 +153,15 @@ function matchDeck(
    * their collection — or now, their deck.
    */
   built?: readonly string[] | null,
+  /** How far this player has climbed — see cardPool. */
+  best?: number,
 ): string[] {
   const rng = seed === undefined ? null : createRng(seed);
   const rnd = rng ? () => rng.next() : Math.random;
   // An album smaller than a full deck is not padded. Running thin IS the game:
   // the gaps become Crumb Demons, and that is the reason to collect.
   const chosen = seed === undefined && built?.length ? built : null;
-  const pool = seed === undefined ? monsterPool(album) : cardPool();
+  const pool = seed === undefined ? monsterPool(album, best) : cardPool(best);
   /*
    * ═══ NOT ALL OF IT ARRIVES ═══
    *
@@ -383,11 +386,24 @@ const SKILL: Record<BotLevel, Skill> = {
   hard: { window: 1, fromWorst: false, sloppiness: 0, gaps: 0, draw: 0, level: 6 },
 };
 
-function generateAiPlan(deck?: string[], level: BotLevel = "normal"): Placement[] {
+/**
+ * A board for the computer to play.
+ *
+ * `best` is how far this player has climbed, and it is not optional in
+ * spirit. Or: *"the bots' decks have to match mine. If I am playing at the
+ * train station now, I should not be seeing Machines or Sea Dwellers on the
+ * other side."* Every board built from the pool rather than from a given
+ * deck goes through it — see cardPool.
+ *
+ * A `deck` skips it, because then the cards were already decided by
+ * something that knew what it was doing: the draft handed over the cards you
+ * passed on, and the mirror deals one deck to both sides.
+ */
+function generateAiPlan(deck?: string[], level: BotLevel = "normal", best?: number): Placement[] {
   const skill = SKILL[level] ?? SKILL.normal;
   const ids = deck
     ? deck.filter((id) => CATALOG.has(id))
-    : shuffle(cardPool()).slice(0, skill.draw || undefined);
+    : shuffle(cardPool(best)).slice(0, skill.draw || undefined);
   const pool = ids.map((id) => CATALOG.get(id)!).filter(Boolean);
   if (pool.length === 0) return [];
 
@@ -776,8 +792,15 @@ function fillGs(s: GameState, bar: string[], only?: ReadonlySet<string> | null):
 function initialGameState(
   album?: Map<string, OwnedCard> | null,
   built?: readonly string[] | null,
+  best?: number,
 ): GameState {
-  return { deck: matchDeck(album, undefined, built), hand: null, discard: [], placements: {}, king: null };
+  return {
+    deck: matchDeck(album, undefined, built, best),
+    hand: null,
+    discard: [],
+    placements: {},
+    king: null,
+  };
 }
 
 function drawIfEmpty(s: GameState): GameState {
@@ -1219,6 +1242,18 @@ export function useMatch(): MatchApi {
   const accountRef = useRef(account);
   accountRef.current = account;
   /**
+   * How far this player has ever climbed.
+   *
+   * BEST trophies and not the current count, the same rule `familyOpen` is
+   * written to: trophies fall after a loss, and a family you have met does
+   * not become unmet. Asked at the moment a board is built rather than held,
+   * because the account arrives after the first render.
+   */
+  const met = useCallback(
+    () => accountRef.current?.bestTrophies ?? accountRef.current?.trophies ?? 0,
+    [],
+  );
+  /**
    * A real match has been played and the account on screen is older than it.
    *
    * Cleared by whichever reload gets there first — the one chained off the
@@ -1400,7 +1435,7 @@ export function useMatch(): MatchApi {
       cur.hand === null &&
       cur.king === null &&
       Object.keys(cur.placements).length === 0
-        ? initialGameState(accountRef.current?.album, builtRef.current)
+        ? initialGameState(accountRef.current?.album, builtRef.current, met())
         : cur,
     );
   }, []);
@@ -1429,7 +1464,7 @@ export function useMatch(): MatchApi {
   const modsRef = useRef<BattleMods>({ boardPowerAdd: 0, boostedCells: {} });
   modsRef.current = { boardPowerAdd, boostedCells, kingWound };
   const aiPlanRef = useRef<Placement[] | null>(null);
-  if (!aiPlanRef.current) aiPlanRef.current = generateAiPlan(undefined, botLevelRef.current);
+  if (!aiPlanRef.current) aiPlanRef.current = generateAiPlan(undefined, botLevelRef.current, met());
 
   /** Refill the hand, preferring cards already drawn ahead by "triple draw". */
   const refill = useCallback((next: GameState): GameState => {
@@ -2118,7 +2153,7 @@ export function useMatch(): MatchApi {
      * is for.
      */
     if (soloAmandaRef.current) {
-      const partner = fillCrumbs(generateAiPlan()).map((p) => ({
+      const partner = fillCrumbs(generateAiPlan(undefined, "normal", met())).map((p) => ({
         ...p,
         y: (p.y ?? 0) + BOARD_SIZE,
       }));
@@ -2196,8 +2231,8 @@ export function useMatch(): MatchApi {
    * describes who you are connected to belongs in clearMatch below.
    */
   const clearRound = useCallback(() => {
-    aiPlanRef.current = generateAiPlan(undefined, botLevelRef.current);
-    setGs(initialGameState(accountRef.current?.album, builtRef.current));
+    aiPlanRef.current = generateAiPlan(undefined, botLevelRef.current, met());
+    setGs(initialGameState(accountRef.current?.album, builtRef.current, met()));
     setResult(null);
     setAward(null);
     setRival(null);
@@ -2230,7 +2265,7 @@ export function useMatch(): MatchApi {
     setRematchAsked(false);
     setRematchOffered(false);
     setTimeLeft(COUNTDOWN_SECONDS);
-  }, []);
+  }, [met]);
 
   const clearMatch = useCallback(() => {
     netRef.current?.close();
@@ -2634,10 +2669,11 @@ export function useMatch(): MatchApi {
 
     const level = botLevelRef.current;
     const lower = (ps: Placement[]) => ps.map((p) => ({ ...p, y: (p.y ?? 0) + BOARD_SIZE }));
-    const mate = fillCrumbs(generateAiPlan(undefined, level));
+    const climbed = met();
+    const mate = fillCrumbs(generateAiPlan(undefined, level, climbed));
     const foes = [
-      ...fillCrumbs(generateAiPlan(undefined, level)),
-      ...lower(fillCrumbs(generateAiPlan(undefined, level))),
+      ...fillCrumbs(generateAiPlan(undefined, level, climbed)),
+      ...lower(fillCrumbs(generateAiPlan(undefined, level, climbed))),
     ];
     duoBoardsRef.current = { mate: lower(mate), foes };
 
@@ -2655,9 +2691,9 @@ export function useMatch(): MatchApi {
     setMate({ placements: view, king: mateKing });
 
     // Your own album and your own chosen deck, exactly as an ordinary match.
-    setGs(initialGameState(accountRef.current?.album, builtRef.current));
+    setGs(initialGameState(accountRef.current?.album, builtRef.current, climbed));
     setPhase("countdown");
-  }, [clearMatch, faceTheBot]);
+  }, [clearMatch, faceTheBot, met]);
 
   const startDraft = useCallback(
     (result: { mine: string[]; theirs: string[] }) => {
@@ -2684,11 +2720,12 @@ export function useMatch(): MatchApi {
     faceTheBot();
     const seed = 1 + Math.floor(Math.random() * 2_000_000_000);
     setMirrorSeed(seed);
-    const deck = matchDeck(null, seed);
+    // One deal, both sides — and still only the families this player has met.
+    const deck = matchDeck(null, seed, null, met());
     setGs({ deck, hand: null, discard: [], placements: {}, king: null });
     aiPlanRef.current = generateAiPlan(deck, botLevelRef.current);
     setPhase("countdown");
-  }, [clearMatch]);
+  }, [clearMatch, met]);
 
   /**
    * The playground.

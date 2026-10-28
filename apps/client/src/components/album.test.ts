@@ -66,7 +66,10 @@ describe("the upgrade button", () => {
    */
   it("always shows the price, and reddens it when the purse is short", () => {
     const up = ALBUM.slice(ALBUM.indexOf("function Upgrade"));
-    expect(up).toContain('"לשדרוג"');
+    // Or: *"instead of 'לשדרוג' on a card write 'שדרוג'."* A button says
+    // what it does, and the preposition was doing nothing.
+    expect(up).toContain('"שדרוג"');
+    expect(up).not.toContain('"לשדרוג"');
     expect(up).toContain('<Icon name="gem"');
     expect(up).toContain('className={canPay ? "" : "is-poor"}');
     expect(up, "and it cannot be pressed").toContain("disabled={busy || !canPay}");
@@ -191,10 +194,38 @@ describe("the album's two views", () => {
    * because there is no number — a padlock.
    */
   it("shows the shelf you cannot win from, with a padlock instead of a count", () => {
-    expect(ALBUM).toContain("const toWin = winnable.length > 0;");
-    expect(ALBUM).toContain("{toWin ? `${have}/${all.length}` : <Lock />}");
+    expect(ALBUM).toContain("const toWin = winnable.length > 0 && met;");
+    expect(ALBUM).toContain("`${have}/${all.length}`");
+    expect(ALBUM).toContain("<Lock />");
     // And it is not in the upgrade filter, where every row is a thing to do.
     expect(ALBUM).toContain("if (onlyUp && !toWin) return null;");
+  });
+
+  /*
+   * Or: *"the album needs a padlock on the series that have not opened yet
+   * too. Reminder that if I have already reached an arena, its series is
+   * open even if I have dropped back."*
+   *
+   * Two rules in two sentences. The first is the lock; the second is which
+   * number it is read against, and it is the one that would have been got
+   * wrong — `trophies` falls after a loss, so an album written against it
+   * would RE-LOCK the Insects for a child who had a bad evening, taking a
+   * shelf away from them for losing four matches.
+   */
+  it("locks a family he has not reached yet", () => {
+    expect(ALBUM).toContain("const met = familyOpen(series.id, climbed);");
+  });
+
+  it("reads it against the high-water mark, so a bad evening takes nothing back", () => {
+    expect(ALBUM).toContain(
+      "const climbed = account?.bestTrophies ?? account?.trophies ?? 0;",
+    );
+  });
+
+  it("says where a locked shelf opens, in Hebrew somebody would say", () => {
+    // `atArena`, not "ב" + the name: ב and ה collapse (בהמוסך is not a word).
+    expect(ALBUM).toContain("const opensAt = met ? null : ARENAS.find((a) => a.introduces === series.id);");
+    expect(ALBUM).toContain("atArena(say(opensAt.name))");
   });
 
   it("calls a card ready on copies alone, not on the purse", () => {
