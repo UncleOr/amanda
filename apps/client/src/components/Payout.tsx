@@ -133,5 +133,11 @@ export function Payout({
 function NextChestHint({ award }: { award: Award }) {
   const bar = nachoBar(award.total);
   if (bar.toGo > 2) return null;
-  return <span className="payout__near">{tf("s937aed8", "עוד {0} נאצ'וס ותיבה", bar.toGo)}</span>;
+  /*
+   * ⚠ "לתיבה" and not "ותיבה". Or: *"an irritating wording change: עוד שני
+   * נאצ'וס לתיבה (with a ל)."* The ו read as "and a chest" — two things,
+   * one of which you are being given. The ל is "towards", which is what a
+   * bar two nachos from the end is actually saying.
+   */
+  return <span className="payout__near">{tf("s6ddcdaa", "עוד {0} נאצ'וס לתיבה", bar.toGo)}</span>;
 }

@@ -52,38 +52,24 @@ export function MoreModes({
   best?: number;
 }) {
   const modes: Mode[] = [
+    /*
+     * In the order they open, which is the order of the ladder.
+     *
+     * Or: *"and sort the modes by order of appearance."* The same
+     * instruction he gave the album an hour earlier, and the same reason:
+     * a shelf ordered by nothing in particular puts the one you can almost
+     * reach at the bottom and the one a year away at the top.
+     *
+     * Written out in order rather than sorted at runtime: four rows, and a
+     * sort would hide the order from the person reading the file.
+     */
     {
-      /*
-       * ═══ BEHIND "SOON", ON PURPOSE, FOR NOW ═══
-       *
-       * Or, the day before the testers arrive: *"Amanda mode looks awful. I
-       * suggest you put it behind 'soon' as well for now, so users have no
-       * access to it, and we'll work on it later. I don't want it to let
-       * down the first users."*
-       *
-       * It is eight lanes against four and the screen has not caught up:
-       * his screenshot has the teammate's half overlapping the board, a
-       * card's name spilling as "The", and the enemy's twelve slots drawn
-       * in a column that does not line up with anything.
-       *
-       * The mode itself still works and every line of it is still here —
-       * dropping `soon` and giving it back `start: onAmandaSolo` is the
-       * whole of switching it on again. This is a curtain, not a deletion.
-       */
-      id: "amanda",
-      icon: "king",
-      title: t("s096f0c1", "אמנדה"),
-      blurb: t("s7767343", "מולה לבד. אי אפשר לנצח."),
-      opensAt: "fuel",
-      start: onAmandaSolo,
-    },
-    {
-      id: "mirror",
-      icon: "deck",
-      title: t("s7c9fba9", "דק זהה"),
-      blurb: t("secbb695", "אותם קלפים לשני הצדדים."),
-      opensAt: "alley",
-      start: onMirror,
+      id: "draft",
+      icon: "discard",
+      title: t("se4e1ef0", "דראפט"),
+      blurb: t("s4b7da7f", "מה שלא לקחת הולך ליריב."),
+      opensAt: "court",
+      soon: true,
     },
     {
       id: "duo",
@@ -94,12 +80,43 @@ export function MoreModes({
       soon: true,
     },
     {
-      id: "draft",
-      icon: "discard",
-      title: t("se4e1ef0", "דראפט"),
-      blurb: t("s4b7da7f", "מה שלא לקחת הולך ליריב."),
-      opensAt: "court",
-      soon: true,
+      id: "mirror",
+      icon: "deck",
+      title: t("s7c9fba9", "דק זהה"),
+      blurb: t("secbb695", "אותם קלפים לשני הצדדים."),
+      // Or first said the alley, then moved it down: *"and fine, let mirror
+      // deck open at the garage."* Four thousand five hundred trophies was a
+      // year away from a mode that already works.
+      opensAt: "garage",
+      start: onMirror,
+    },
+    {
+      /*
+       * ═══ THE CURTAIN BECAME A DOOR ═══
+       *
+       * Or, the day before the testers arrived: *"Amanda mode looks awful.
+       * Put it behind 'soon' as well for now, so users have no access to
+       * it."* It is eight lanes against four and the screen had not caught
+       * up — the teammate's half overlapping the board, a card's name
+       * spilling as "The", the enemy's twelve slots in a column that lines
+       * up with nothing.
+       *
+       * It is not "soon" any more; it is the last thing on the ladder:
+       * *"Amanda is not a peek, she is simply locked, with a small caption
+       * under the padlock (opens at the Fuel Stop)."* Which is a better
+       * curtain than the word "soon" — it says WHEN.
+       *
+       * ⚠ AND THE SCREEN IS STILL NOT FIXED. The Fuel Stop is 8,000
+       * trophies away, so there is time; but the day somebody gets there
+       * this opens, and the layout has to be done before then rather than
+       * because of then.
+       */
+      id: "amanda",
+      icon: "king",
+      title: t("s096f0c1", "אמנדה"),
+      blurb: t("s7767343", "מולה לבד. אי אפשר לנצח."),
+      opensAt: "fuel",
+      start: onAmandaSolo,
     },
   ];
 

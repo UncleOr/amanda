@@ -395,20 +395,42 @@ function prefixed(name: string, letter: string): string {
  * Where a family sits in the order you MEET them.
  *
  * Or: *"in the album, sort the series by default in order of appearance."*
+ * Then, looking at the result: *"in the album the Furries should be first.
+ * And you forgot Amanda's series, the one with only Amanda in it — at the
+ * bottom of the album."*
  *
- * Which is not the catalogue number and never was. The album was ordered by
- * the number on the file — dragons, machines, furries, sea, giants, demons,
- * insects, plants, slimes — so the second shelf a child opened held a family
- * they cannot meet for four months, and the one they were handed on day one
- * was third. The order of appearance is the trophies at which the arena that
- * introduces them opens; a family nobody introduces was there from the start.
+ * Which is three rules, and none of them is the catalogue number. The album
+ * was ordered by the number on the file, so the second shelf a child opened
+ * held a family they cannot meet for four months, and the family they are
+ * HANDED on the first day was third.
  *
- * Returns -1 for the starter families, so they lead, and they keep their
- * catalogue order among themselves.
+ *   1. Amanda's family is the END of the game, so it is the last shelf.
+ *      Recognised rather than named: a family with nothing winnable in it is
+ *      not somewhere you are going, it is somewhere you are aiming.
+ *
+ *   2. The families you are handed come first, in the order STARTER_ALBUM
+ *      hands them — which is Chuppy first, because Chuppy is the friend you
+ *      are given. That list is already the order, so this reads it rather
+ *      than repeating it.
+ *
+ *   3. Everybody else by the trophies of the arena that introduces them.
+ *
+ * `starter` is passed in rather than imported because decks.ts imports this
+ * module, and a cycle between the two would be a strange way to find out
+ * that a constant moved.
  */
-export function metAt(seriesId: string): number {
-  const at = ARENAS.find((a) => a.introduces === seriesId);
-  return at ? at.from : -1;
+export function familyOrder(
+  series: { id: string; cards: readonly { id: string }[] },
+  starter: readonly string[],
+  winnable: (card: { id: string; seriesId: string }) => boolean,
+): number {
+  const cards = series.cards as readonly { id: string; seriesId: string }[];
+  if (!cards.some((c) => winnable(c))) return Number.POSITIVE_INFINITY;
+  const handed = starter.findIndex((id) => cards.some((c) => c.id === id));
+  if (handed >= 0) return handed;
+  const at = ARENAS.find((a) => a.introduces === series.id);
+  // Clear of every starter index, so a family you are handed always leads.
+  return 100 + (at ? at.from : 0);
 }
 
 /** The rungs that are actually on the ladder today. */

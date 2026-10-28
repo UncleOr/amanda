@@ -796,7 +796,6 @@
  "s340e045": "and {0} more",
  "s48c712b": "Suspended until {0}. The bot is still up for it.",
  "sbccb202": "To play against other people you have to be {0} or older. Against the bot — always.",
- "s937aed8": "{0} more nachos and a chest is yours",
  "sde6d97c": "Against people — age {0}+",
  "s6832cda": "{0}s",
  "sb4b2aa8": "{0} fell",
@@ -1291,5 +1290,6 @@
  "scf325de": "Start a club",
  "s7063bf0": "Let in",
  "s7cf1d10": "Turn away",
- "s096f0c1": "Amanda"
+ "s096f0c1": "Amanda",
+ "s6ddcdaa": "{0} more nachos to a chest"
 }

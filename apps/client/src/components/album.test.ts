@@ -179,8 +179,22 @@ describe("the album's two views", () => {
     // "3/10" has to go on meaning three of the family's ten, however few
     // of them are on screen. The filter narrows `cards`; the count reads
     // `all`.
-    expect(ALBUM).toContain("const cards = onlyUp ? all.filter((c) => readyToLevel(c.id)) : all;");
-    expect(ALBUM).toContain("{have}/{all.length}");
+    expect(ALBUM).toContain("const cards = onlyUp && toWin ? all.filter((c) => readyToLevel(c.id)) : all;");
+    expect(ALBUM).toContain("`${have}/${all.length}`");
+  });
+
+  /*
+   * Or: *"you forgot Amanda's series, the one with only Amanda in it — at
+   * the bottom of the album."* It was skipped because nothing in it can be
+   * won, and a shelf headed 0/0 looked like an empty promise. The answer is
+   * the one the arena ladder already uses for a shut door: no number,
+   * because there is no number — a padlock.
+   */
+  it("shows the shelf you cannot win from, with a padlock instead of a count", () => {
+    expect(ALBUM).toContain("const toWin = winnable.length > 0;");
+    expect(ALBUM).toContain("{toWin ? `${have}/${all.length}` : <Lock />}");
+    // And it is not in the upgrade filter, where every row is a thing to do.
+    expect(ALBUM).toContain("if (onlyUp && !toWin) return null;");
   });
 
   it("calls a card ready on copies alone, not on the purse", () => {

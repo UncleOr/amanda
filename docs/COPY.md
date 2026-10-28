@@ -1171,14 +1171,14 @@
 
 | מזהה | טקסט נוכחי | טקסט חדש | אנגלית |
 | --- | --- | --- | --- |
-| s096f0c1 | אמנדה | | Amanda |
-| s7767343 | מולה לבד. אי אפשר לנצח. | | You, on your own, against her. You lose. |
-| s7c9fba9 | דק זהה | | Same deck |
-| secbb695 | אותם קלפים לשני הצדדים. | | Same cards, both sides. |
-| se14e946 | 2 נגד 2 | | 2 against 2 |
-| sac17390 | שניים בונים לוח אחד. | | Two of you, one board. |
 | se4e1ef0 | דראפט | | Draft |
 | s4b7da7f | מה שלא לקחת הולך ליריב. | | What you leave, they get. |
+| se14e946 | 2 נגד 2 | | 2 against 2 |
+| sac17390 | שניים בונים לוח אחד. | | Two of you, one board. |
+| s7c9fba9 | דק זהה | | Same deck |
+| secbb695 | אותם קלפים לשני הצדדים. | | Same cards, both sides. |
+| s096f0c1 | אמנדה | | Amanda |
+| s7767343 | מולה לבד. אי אפשר לנצח. | | You, on your own, against her. You lose. |
 | sc4d6c42 | סגירה | | Close |
 | sa53602d | עוד מודים | | More modes |
 | sbdb5aac | בקרוב | | Soon |
@@ -1218,7 +1218,7 @@
 | s1b4740d | אתגר הושלם | | Challenge done |
 | s440773f | {0} אתגרים הושלמו | | {0} challenges done |
 | s854fe19 | מספיק גביעים מהבוט להיום — נאצ'וס ואתגרים ממשיכים | | No more bot trophies today. Nachos and challenges carry on. |
-| s937aed8 | עוד {0} נאצ'וס ותיבה | | {0} more nachos and a chest is yours |
+| s6ddcdaa | עוד {0} נאצ'וס לתיבה | | {0} more nachos to a chest |
 
 ## components/Profile.tsx
 

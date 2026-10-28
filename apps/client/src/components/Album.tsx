@@ -14,7 +14,7 @@
  * with gaps is the point — the empty slots are the reason to play another
  * match, and hiding them would hide the whole game.
  */
-import { CATALOG, SERIES, collectable } from "../data/catalog";
+import { CATALOG, SERIES, SERIES_BY_ID, collectable } from "../data/catalog";
 import { CardView } from "./CardView";
 import { Icon } from "./Icon";
 import { useEffect, useState } from "react";
@@ -30,6 +30,7 @@ import {
   type OwnedCard,
   type Stats,
 } from "../game/account";
+import { Lock } from "./SignedInOnly";
 import { LevelUp } from "./LevelUp";
 import { ElementsTable } from "./ElementsTable";
 import { line as t, lineF as tf } from "../game/copy";
@@ -392,17 +393,35 @@ export function Album({ account, onClose, onCardInfo, onChanged }: Props) {
         )}
         {SERIES.map((series) => {
           /*
-           * A family with nothing to win in it is not shown at all. That is
-           * the legends shelf today: Amanda is its only card and she is not
-           * a prize, so an empty row headed 0/0 would be a promise with
-           * nothing behind it. It comes back by itself the day she does.
+           * ═══ AMANDA'S SHELF IS SHOWN, AND IT IS THE LAST ONE ═══
+           *
+           * Or: *"you forgot Amanda's series, the one with only Amanda in
+           * it — at the bottom of the album."*
+           *
+           * It was hidden on purpose and the reasoning was wrong. A family
+           * with nothing winnable in it was skipped, because an empty row
+           * headed 0/0 looked like a promise with nothing behind it. But
+           * that is the same argument as hiding a locked arena, and his rule
+           * there has always been the opposite: *"you should be able to see
+           * what arenas there are — dark and locked — so there is something
+           * to aim for."* Amanda is the thing to aim for.
+           *
+           * So the shelf is drawn, with her card on it, and it carries a
+           * padlock instead of a count — no number, because there is no
+           * number. `familyOrder` puts it last.
            */
-          const all = collection.filter((c) => c.seriesId === series.id);
+          const winnable = collection.filter((c) => c.seriesId === series.id);
+          const all = winnable.length
+            ? winnable
+            : (SERIES_BY_ID.get(series.id)?.cards ?? []).filter((c) => !!c.art.sprite);
           if (!all.length) return null;
+          const toWin = winnable.length > 0;
           // The filter narrows what is SHOWN, never what is counted: "3/10"
           // has to go on meaning three of the family's ten.
-          const cards = onlyUp ? all.filter((c) => readyToLevel(c.id)) : all;
+          const cards = onlyUp && toWin ? all.filter((c) => readyToLevel(c.id)) : all;
           if (!cards.length) return null;
+          // A shelf you cannot win from is not in the upgrade filter at all.
+          if (onlyUp && !toWin) return null;
           const have = all.filter((c) => album?.has(c.id)).length;
           /*
            * Laid out in advance in the album view, and while the filter is
@@ -443,7 +462,7 @@ export function Album({ account, onClose, onCardInfo, onChanged }: Props) {
                 </span>
                 <b className="album__series-name">{say(series.name)}</b>
                 <span className="album__series-count">
-                  {have}/{all.length}
+                  {toWin ? `${have}/${all.length}` : <Lock />}
                 </span>
                 {/* A disclosure triangle: the icon set has no chevron, and a
                     play arrow turned ninety degrees is the same shape. */}

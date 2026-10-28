@@ -9,7 +9,8 @@ import { ARENAS } from "@amanda/shared";
  * Or named all four in one message: *"Amanda is not a peek, she is simply
  * locked, with a small caption under the padlock (opens at the Fuel Stop).
  * 2v2 we will open at the train station. Mirror deck at the alley. The draft
- * at the court."*
+ * at the court."* Then he moved one: *"and fine, let mirror deck open at the
+ * garage."*
  *
  * Which is the thing worth pinning, because it is the only reason the shelf
  * is not a list of promises: a mode is not "coming soon", it is somewhere you
@@ -36,10 +37,21 @@ describe("the shelf of extra modes", () => {
   it("opens each mode where Or said it opens", () => {
     expect(gates()).toEqual({
       amanda: "fuel",
-      mirror: "alley",
+      mirror: "garage",
       duo: "station",
       draft: "court",
     });
+  });
+
+  it("lists them in the order they open, like the album", () => {
+    // Or: *"and sort the modes by order of appearance."* The same rule the
+    // album got an hour earlier, and for the same reason: a shelf ordered by
+    // nothing in particular puts the one you can almost reach at the bottom.
+    const order = [...SRC.matchAll(/opensAt: "([a-z]+)"/g)].map((m) => m[1]!);
+    const at = (id: string) => ARENAS.find((a) => a.id === id)!.from;
+    for (let i = 1; i < order.length; i++)
+      expect(at(order[i]!), `${order[i]} should not come after ${order[i - 1]}`)
+        .toBeGreaterThanOrEqual(at(order[i - 1]!));
   });
 
   it("names only arenas that exist", () => {

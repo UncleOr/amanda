@@ -7494,7 +7494,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/data/catalog.ts",
-   "line": 123
+   "line": 126
   },
   "en": "Crumb Demon"
  },
@@ -8095,7 +8095,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/components/Album.tsx",
-   "line": 229
+   "line": 230
   }
  },
  {
@@ -8105,7 +8105,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/components/Album.tsx",
-   "line": 230
+   "line": 231
   }
  },
  {
@@ -8115,7 +8115,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/components/Album.tsx",
-   "line": 241
+   "line": 242
   }
  },
  {
@@ -8125,7 +8125,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/components/Album.tsx",
-   "line": 242
+   "line": 243
   }
  },
  {
@@ -8135,7 +8135,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/components/Album.tsx",
-   "line": 259
+   "line": 260
   }
  },
  {
@@ -8145,7 +8145,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/components/Album.tsx",
-   "line": 260
+   "line": 261
   }
  },
  {
@@ -8155,7 +8155,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/components/Album.tsx",
-   "line": 265
+   "line": 266
   }
  },
  {
@@ -8165,7 +8165,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/components/Album.tsx",
-   "line": 268
+   "line": 269
   }
  },
  {
@@ -8175,7 +8175,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/components/Album.tsx",
-   "line": 276
+   "line": 277
   }
  },
  {
@@ -8185,7 +8185,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/components/Album.tsx",
-   "line": 291
+   "line": 292
   }
  },
  {
@@ -8195,7 +8195,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/components/Album.tsx",
-   "line": 320
+   "line": 321
   }
  },
  {
@@ -8205,7 +8205,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/components/Album.tsx",
-   "line": 321
+   "line": 322
   }
  },
  {
@@ -8215,7 +8215,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/components/Album.tsx",
-   "line": 346
+   "line": 347
   }
  },
  {
@@ -8225,7 +8225,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/components/Album.tsx",
-   "line": 360
+   "line": 361
   }
  },
  {
@@ -8235,7 +8235,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/components/Album.tsx",
-   "line": 391
+   "line": 392
   }
  },
  {
@@ -8245,7 +8245,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/components/Album.tsx",
-   "line": 486
+   "line": 505
   }
  },
  {
@@ -8255,7 +8255,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/components/Album.tsx",
-   "line": 501
+   "line": 520
   }
  },
  {
@@ -8265,7 +8265,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/components/Album.tsx",
-   "line": 584
+   "line": 603
   }
  },
  {
@@ -8275,7 +8275,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/components/Album.tsx",
-   "line": 600
+   "line": 619
   }
  },
  {
@@ -8285,7 +8285,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/components/Album.tsx",
-   "line": 622
+   "line": 641
   }
  },
  {
@@ -8295,7 +8295,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/components/Album.tsx",
-   "line": 628
+   "line": 647
   }
  },
  {
@@ -10429,73 +10429,13 @@
   }
  },
  {
-  "id": "s096f0c1",
-  "section": "components/MoreModes.tsx",
-  "text": "אמנדה",
-  "where": {
-   "kind": "source",
-   "file": "apps/client/src/components/MoreModes.tsx",
-   "line": 75
-  }
- },
- {
-  "id": "s7767343",
-  "section": "components/MoreModes.tsx",
-  "text": "מולה לבד. אי אפשר לנצח.",
-  "where": {
-   "kind": "source",
-   "file": "apps/client/src/components/MoreModes.tsx",
-   "line": 76
-  }
- },
- {
-  "id": "s7c9fba9",
-  "section": "components/MoreModes.tsx",
-  "text": "דק זהה",
-  "where": {
-   "kind": "source",
-   "file": "apps/client/src/components/MoreModes.tsx",
-   "line": 83
-  }
- },
- {
-  "id": "secbb695",
-  "section": "components/MoreModes.tsx",
-  "text": "אותם קלפים לשני הצדדים.",
-  "where": {
-   "kind": "source",
-   "file": "apps/client/src/components/MoreModes.tsx",
-   "line": 84
-  }
- },
- {
-  "id": "se14e946",
-  "section": "components/MoreModes.tsx",
-  "text": "2 נגד 2",
-  "where": {
-   "kind": "source",
-   "file": "apps/client/src/components/MoreModes.tsx",
-   "line": 91
-  }
- },
- {
-  "id": "sac17390",
-  "section": "components/MoreModes.tsx",
-  "text": "שניים בונים לוח אחד.",
-  "where": {
-   "kind": "source",
-   "file": "apps/client/src/components/MoreModes.tsx",
-   "line": 92
-  }
- },
- {
   "id": "se4e1ef0",
   "section": "components/MoreModes.tsx",
   "text": "דראפט",
   "where": {
    "kind": "source",
    "file": "apps/client/src/components/MoreModes.tsx",
-   "line": 99
+   "line": 69
   }
  },
  {
@@ -10505,7 +10445,67 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/components/MoreModes.tsx",
-   "line": 100
+   "line": 70
+  }
+ },
+ {
+  "id": "se14e946",
+  "section": "components/MoreModes.tsx",
+  "text": "2 נגד 2",
+  "where": {
+   "kind": "source",
+   "file": "apps/client/src/components/MoreModes.tsx",
+   "line": 77
+  }
+ },
+ {
+  "id": "sac17390",
+  "section": "components/MoreModes.tsx",
+  "text": "שניים בונים לוח אחד.",
+  "where": {
+   "kind": "source",
+   "file": "apps/client/src/components/MoreModes.tsx",
+   "line": 78
+  }
+ },
+ {
+  "id": "s7c9fba9",
+  "section": "components/MoreModes.tsx",
+  "text": "דק זהה",
+  "where": {
+   "kind": "source",
+   "file": "apps/client/src/components/MoreModes.tsx",
+   "line": 85
+  }
+ },
+ {
+  "id": "secbb695",
+  "section": "components/MoreModes.tsx",
+  "text": "אותם קלפים לשני הצדדים.",
+  "where": {
+   "kind": "source",
+   "file": "apps/client/src/components/MoreModes.tsx",
+   "line": 86
+  }
+ },
+ {
+  "id": "s096f0c1",
+  "section": "components/MoreModes.tsx",
+  "text": "אמנדה",
+  "where": {
+   "kind": "source",
+   "file": "apps/client/src/components/MoreModes.tsx",
+   "line": 116
+  }
+ },
+ {
+  "id": "s7767343",
+  "section": "components/MoreModes.tsx",
+  "text": "מולה לבד. אי אפשר לנצח.",
+  "where": {
+   "kind": "source",
+   "file": "apps/client/src/components/MoreModes.tsx",
+   "line": 117
   }
  },
  {
@@ -10515,7 +10515,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/components/MoreModes.tsx",
-   "line": 109
+   "line": 126
   }
  },
  {
@@ -10525,7 +10525,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/components/MoreModes.tsx",
-   "line": 112
+   "line": 129
   }
  },
  {
@@ -10535,7 +10535,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/components/MoreModes.tsx",
-   "line": 152
+   "line": 169
   }
  },
  {
@@ -10545,7 +10545,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/components/MoreModes.tsx",
-   "line": 161
+   "line": 178
   }
  },
  {
@@ -10749,13 +10749,13 @@
   }
  },
  {
-  "id": "s937aed8",
+  "id": "s6ddcdaa",
   "section": "components/Payout.tsx",
-  "text": "עוד {0} נאצ'וס ותיבה",
+  "text": "עוד {0} נאצ'וס לתיבה",
   "where": {
    "kind": "source",
    "file": "apps/client/src/components/Payout.tsx",
-   "line": 136
+   "line": 142
   }
  },
  {
