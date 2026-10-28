@@ -170,6 +170,7 @@ async function adminRoutes(
     "/api/admin/stats/player",
     "/api/admin/live",
     "/api/admin/user/cards",
+    "/api/admin/notes",
   ]);
   if (!READ_ONLY.has(path)) {
     track(sb, userId, "admin", {
@@ -1100,6 +1101,108 @@ async function adminRoutes(
       }
       await refreshCards();
       deps.send(res, 200, { ok: true, cards: cardState });
+      return true;
+    }
+
+    /*
+     * ── the box, and what was done about what was in it ────────────
+     *
+     * Or: *"leave me a free box to leave you fixes in, in free language. I
+     * will tell you here in this chat to go over all the fixes I left you
+     * in the arenas and the cards, and you will go over them, fix them,
+     * report what was done, put it into the card's fix history in the admin
+     * interface, and clear the box for me."*
+     *
+     * Three endpoints and a straight line through them: `save` fills the
+     * box, `resolve` empties it into the history with a report attached,
+     * `drop` throws a note away unanswered. The game never reads any of it.
+     */
+    case "/api/admin/notes": {
+      /*
+       * EVERY note, for both kinds, in one request. There are tens of these
+       * and never thousands — the panel holds them and each editor picks out
+       * its own, which is also what makes "which cards have something
+       * waiting" a dot in a list rather than seventy-five requests.
+       */
+      const { data, error } = await sb
+        .from("fix_notes")
+        .select("id, scope, target, note, status, done_note, created_at, done_at")
+        .order("created_at", { ascending: false })
+        .limit(1000);
+      deps.send(res, error ? 500 : 200, error ? { error: error.message } : { rows: data ?? [] });
+      return true;
+    }
+
+    case "/api/admin/notes/save": {
+      const scope = str("scope");
+      const target = str("target").trim();
+      const note = str("note").trim();
+      if (scope !== "card" && scope !== "arena") {
+        deps.send(res, 400, { error: "על מה ההערה" });
+        return true;
+      }
+      if (!target) {
+        deps.send(res, 400, { error: "על מה ההערה" });
+        return true;
+      }
+      /*
+       * ⚠ AN EMPTY BOX IS NOT AN EMPTY NOTE. Clearing the text means "never
+       * mind", and it has to DELETE the open row rather than store a blank
+       * one — a blank open note is a thing that looks answered from the
+       * list and says nothing when you open it.
+       */
+      const open = await sb
+        .from("fix_notes")
+        .select("id")
+        .eq("scope", scope)
+        .eq("target", target)
+        .eq("status", "open")
+        .maybeSingle();
+      if (!note) {
+        if (open.data?.id) await sb.from("fix_notes").delete().eq("id", open.data.id);
+        deps.send(res, 200, { ok: true, cleared: true });
+        return true;
+      }
+      const { error } = open.data?.id
+        ? await sb.from("fix_notes").update({ note }).eq("id", open.data.id)
+        : await sb.from("fix_notes").insert({ scope, target, note, created_by: userId });
+      deps.send(res, error ? 500 : 200, error ? { error: error.message } : { ok: true });
+      return true;
+    }
+
+    /**
+     * Empty the box into the history, with the report attached.
+     *
+     * Called by whoever did the work — which today is me, from the session
+     * Or asks in, and tomorrow could be a button. `doneNote` is required on
+     * purpose: a note that moves to "done" with nothing written against it
+     * is the same as a note that was deleted, and the history is the half of
+     * this feature that is worth keeping.
+     */
+    case "/api/admin/notes/resolve": {
+      const id = str("id");
+      const doneNote = str("doneNote").trim();
+      if (!id || !doneNote) {
+        deps.send(res, 400, { error: "איזו הערה, ומה נעשה בה" });
+        return true;
+      }
+      const { error } = await sb
+        .from("fix_notes")
+        .update({ status: "done", done_note: doneNote, done_at: new Date().toISOString() })
+        .eq("id", id)
+        .eq("status", "open");
+      deps.send(res, error ? 500 : 200, error ? { error: error.message } : { ok: true });
+      return true;
+    }
+
+    case "/api/admin/notes/drop": {
+      const id = str("id");
+      if (!id) {
+        deps.send(res, 400, { error: "איזו הערה" });
+        return true;
+      }
+      const { error } = await sb.from("fix_notes").delete().eq("id", id);
+      deps.send(res, error ? 500 : 200, error ? { error: error.message } : { ok: true });
       return true;
     }
 

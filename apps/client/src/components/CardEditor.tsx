@@ -9,7 +9,12 @@ import {
 } from "@amanda/shared";
 import { CATALOG, SERIES } from "../data/catalog";
 import { artUrl } from "../game/skins";
+import { voiceFor } from "../game/cardSound";
+import { sfx } from "../game/sfx";
+import { useDrag } from "../game/useDrag";
 import { CardView } from "./CardView";
+import { DragGhost } from "./DragGhost";
+import { FixBox, notesFor, type FixNote } from "./FixBox";
 import { Icon } from "./Icon";
 
 /**
@@ -46,6 +51,9 @@ export interface CardEditorDeps {
   say: (s: string) => void;
   /** Put a picture in the bucket. Also the panel's, for the same reason. */
   upload: (file: Blob, cardId: string) => Promise<{ url?: string; error?: string }>;
+  /** Every fix note in the panel; this editor picks out the ones about cards. */
+  notes: readonly FixNote[];
+  reloadNotes: () => void | Promise<void>;
 }
 
 interface OverrideRow {
@@ -118,7 +126,7 @@ async function toCardArt(file: File): Promise<Blob> {
   );
 }
 
-export function CardEditor({ call, say, upload }: CardEditorDeps) {
+export function CardEditor({ call, say, upload, notes, reloadNotes }: CardEditorDeps) {
   const [overrides, setOverrides] = useState<Record<string, OverrideRow>>({});
   const [picked, setPicked] = useState<string | null>(null);
   const [draft, setDraft] = useState<Card | null>(null);
@@ -128,6 +136,15 @@ export function CardEditor({ call, say, upload }: CardEditorDeps) {
   const [busy, setBusy] = useState(false);
   const [shut, setShut] = useState<Record<string, boolean>>({});
   const file = useRef<HTMLInputElement>(null);
+  /*
+   * The same carry the game uses, with nowhere to drop.
+   *
+   * `useDrag` reports a target by hit-testing `[data-drop]` under the
+   * pointer, and the panel has none — so every drag here ends in a release
+   * with nothing to do, which is exactly the right behaviour for a stage.
+   * Nothing is placed, nothing is saved, and the card springs back.
+   */
+  const { drag, start: startDrag } = useDrag(() => {});
   /*
    * The pace this card had before it was made still.
    *
@@ -305,9 +322,11 @@ export function CardEditor({ call, say, upload }: CardEditorDeps) {
 
   const move = draft ? moveOf(draft) : "still";
   const inStarter = !!draft && (STARTER_ALBUM as readonly string[]).includes(draft.id);
+  const speaks = draft ? voiceFor(draft.id).name : undefined;
 
   return (
     <div className="admin__body ed">
+      <DragGhost drag={drag} />
       <div className="ed__list">
         <input
           className="ed__search"
@@ -347,6 +366,15 @@ export function CardEditor({ call, say, upload }: CardEditorDeps) {
                     )}
                     <span className="ed__row-name">{e.card.name.he}</span>
                     <span className="ed__row-tags">
+                      {/* A note waiting on this card. The whole reason the
+                        panel holds every note at once: without it, "which
+                        cards did I leave something on" is a screen of its
+                        own that nobody opens. */}
+                      {notesFor(notes, "card", e.card.id).open && (
+                        <b className="ed__row-fix" title="יש תיקון שממתין">
+                          ✎
+                        </b>
+                      )}
                       {e.edited && <b title="נערך">●</b>}
                       {e.hidden && <i title="מוסתר מהמשחק">כבוי</i>}
                     </span>
@@ -362,8 +390,41 @@ export function CardEditor({ call, say, upload }: CardEditorDeps) {
       ) : (
         <div className="ed__form">
           <div className="ed__head">
+            {/*
+              Or: *"let me also see the card in the panel and hear its voice,
+              and maybe drag it and see how it looks."* Three different
+              questions about one card, and none of them is answerable from
+              a form: what it LOOKS like, what it SOUNDS like, and how it
+              behaves in a hand — which is a spring, a tilt and whatever its
+              family throws off while it moves.
+
+              ⚠ All three are the game's own code, not a drawing of it. The
+              card is <CardView>, the carry is <DragGhost> — the same
+              component App.tsx renders over the board — and the voice is the
+              same clip the same way. A preview that is written separately is
+              a preview that disagrees with the game, and it disagrees
+              quietly.
+            */}
             <div className="ed__preview">
-              <CardView cardId={CATALOG.has(draft.id) ? draft.id : "crumb_demon"} size="large" />
+              <div
+                className="ed__stage"
+                onPointerDown={(e) => {
+                  if (!CATALOG.has(draft.id)) return;
+                  sfx.voice(voiceFor(draft.id).name);
+                  startDrag(draft.id, e);
+                }}
+              >
+                <CardView cardId={CATALOG.has(draft.id) ? draft.id : "crumb_demon"} size="large" />
+              </div>
+              <button
+                className="ed__hear"
+                disabled={!speaks}
+                title={speaks ? "" : "לקלף הזה אין עדיין הקלטה"}
+                onClick={() => sfx.voice(speaks)}
+              >
+                <Icon name="soundOn" size={14} /> {speaks ? "שמע את השם" : "אין קול"}
+              </button>
+              <small className="ed__stage-hint">גרור את הקלף כדי לראות איך הוא בא ליד.</small>
             </div>
             <div className="ed__headfields">
               <label className="ed__f">
@@ -691,6 +752,15 @@ export function CardEditor({ call, say, upload }: CardEditorDeps) {
               </label>
             </div>
           </div>
+
+          <FixBox
+            scope="card"
+            target={draft.id}
+            notes={notes}
+            call={call}
+            say={say}
+            reload={reloadNotes}
+          />
 
           <div className="ed__actions">
             <button className="btn-fight" disabled={busy} onClick={() => void save()}>

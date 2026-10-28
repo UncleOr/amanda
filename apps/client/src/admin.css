@@ -365,7 +365,89 @@
 .ed__empty { padding-top: 40px; }
 .ed__form { min-width: 0; padding-bottom: 60px; }
 .ed__head { display: flex; gap: 18px; align-items: flex-start; flex-wrap: wrap; }
-.ed__preview { width: 150px; flex: none; }
+.ed__preview { width: 150px; flex: none; display: flex; flex-direction: column; gap: 8px; }
+
+/*
+  The stage. Or: *"maybe drag it and see how it looks."* `useDrag` only
+  starts a carry once the pointer has actually travelled, so a press here is
+  still a press — which is what lets the same gesture say the card's name
+  and then, if the finger keeps going, pick it up.
+
+  `touch-action: none` is not decoration: without it a touch drag scrolls the
+  panel instead of lifting the card, and on a desktop that is invisible.
+*/
+/*
+  ⚠ AND IT HAS TO HAVE A HEIGHT. `.card` is `height: 100%`, and the preview
+  column had no height of its own — so the "picture of the card" at the top
+  of this editor was a THREE PIXEL sliver of border, and had been for as long
+  as the editor existed. It looked like an empty gap rather than like a
+  broken card, which is why nobody reported it as one; Or asked to "see the
+  card in the panel", which is the same report in the words of somebody who
+  had no reason to think it was already supposed to be there.
+
+  3/4 is what a card is everywhere else (album.css, builder.css).
+*/
+.ed__stage {
+  width: 100%;
+  aspect-ratio: 3 / 4;
+  cursor: grab;
+  touch-action: none;
+  user-select: none;
+}
+.ed__stage:active { cursor: grabbing; }
+.ed__hear {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  width: 100%;
+}
+.ed__hear:disabled { opacity: 0.45; }
+.ed__stage-hint { color: var(--muted); font-size: 11px; line-height: 1.5; }
+.ed__row-fix { color: var(--accent); }
+
+/*
+  ═══ THE BOX, AND WHAT WAS DONE ABOUT WHAT WAS IN IT ═══
+
+  Or: *"leave me a free box to leave you fixes in, in free language."* It
+  sits at the bottom of the thing it is about, above the save row, so it is
+  the last thing read on the way out of a card.
+*/
+.fix { margin-top: 26px; border-top: 1px solid var(--line); padding-top: 4px; }
+.fix__box {
+  width: 100%;
+  min-height: 84px;
+  resize: vertical;
+  line-height: 1.6;
+}
+.fix__actions { display: flex; align-items: center; gap: 12px; margin-top: 8px; }
+.fix__since { color: var(--muted); font-size: 11px; }
+.fix__log { margin-top: 14px; }
+.fix__log-head {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  width: 100%;
+  justify-content: flex-start;
+}
+.fix__log-head i { color: var(--muted); font-style: normal; }
+.fix__item {
+  margin-top: 10px;
+  padding: 10px 12px;
+  background: var(--sur-1);
+  border-radius: 10px;
+}
+/* What was asked, then what was done. The second is the answer, so it is
+   the one that is readable; the first is the question and may be grey. */
+.fix__asked { margin: 0; color: var(--muted); font-size: 12px; line-height: 1.6; }
+.fix__did {
+  margin: 6px 0 0;
+  color: var(--text);
+  font-size: 13px;
+  line-height: 1.6;
+  white-space: pre-wrap;
+}
+.fix__when { display: block; margin-top: 6px; color: var(--muted); font-size: 11px; }
 .ed__headfields { flex: 1; min-width: 220px; display: flex; flex-direction: column; gap: 8px; }
 
 .ed__h {

@@ -9,6 +9,7 @@ import { ArenasTab } from "./AdminArenas";
 import { PlayerStats, StatsTab } from "./AdminStats";
 import { LiveTab } from "./AdminLive";
 import { CardEditor } from "./CardEditor";
+import type { FixNote } from "./FixBox";
 // The panel's own sheet, loaded with the panel. It used to be in the entry
 // file, so every child downloaded the admin styles to play a card game.
 import "../admin.css";
@@ -140,6 +141,20 @@ export function Admin() {
   >("live");
   const [note, setNote] = useState<string | null>(null);
 
+  /*
+   * The fix notes, loaded ONCE for the whole panel rather than per editor.
+   *
+   * There are tens of these and never thousands, and holding them here is
+   * what lets a list of seventy-five cards show which ones have something
+   * waiting — a dot beside a name, instead of seventy-five requests or a
+   * separate screen nobody opens. See FixBox.tsx.
+   */
+  const [notes, setNotes] = useState<FixNote[]>([]);
+  const reloadNotes = useCallback(async () => {
+    const r = await call("/api/admin/notes");
+    if (Array.isArray(r.rows)) setNotes(r.rows as FixNote[]);
+  }, []);
+
   const check = useCallback(async () => {
     const { data } = await sb.auth.getSession();
     /*
@@ -164,6 +179,11 @@ export function Admin() {
     const { data } = sb.auth.onAuthStateChange(() => void check());
     return () => data.subscription.unsubscribe();
   }, [check]);
+
+  // Only once the door has opened: the endpoint is an admin endpoint.
+  useEffect(() => {
+    if (state === "in") void reloadNotes();
+  }, [state, reloadNotes]);
 
   if (state === "checking") return <div className="admin admin--msg">רגע…</div>;
 
@@ -279,7 +299,13 @@ export function Admin() {
       ) : tab === "stats" ? (
         <StatsTab call={call} />
       ) : tab === "cards" ? (
-        <CardEditor call={call} say={setNote} upload={uploadArt} />
+        <CardEditor
+          call={call}
+          say={setNote}
+          upload={uploadArt}
+          notes={notes}
+          reloadNotes={reloadNotes}
+        />
       ) : tab === "copy" ? (
         <CopyTab say={setNote} />
       ) : tab === "reports" ? (
@@ -293,7 +319,7 @@ export function Admin() {
       ) : tab === "series" ? (
         <SeriesTab call={call} say={setNote} />
       ) : tab === "arenas" ? (
-        <ArenasTab call={call} say={setNote} />
+        <ArenasTab call={call} say={setNote} notes={notes} reloadNotes={reloadNotes} />
       ) : tab === "tutorial" ? (
         <TutorialTab call={call} say={setNote} />
       ) : tab === "dials" ? (

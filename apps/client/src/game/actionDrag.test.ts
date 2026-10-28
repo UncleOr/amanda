@@ -20,6 +20,10 @@ import { fileURLToPath } from "node:url";
 
 const APP = readFileSync(fileURLToPath(new URL("../App.tsx", import.meta.url)), "utf8");
 const DRAG = readFileSync(fileURLToPath(new URL("./useDrag.ts", import.meta.url)), "utf8");
+const GHOST = readFileSync(
+  fileURLToPath(new URL("../components/DragGhost.tsx", import.meta.url)),
+  "utf8",
+);
 
 describe("dragging an action card to the bar", () => {
   it("makes the bar a drop target, and only when it can take one", () => {
@@ -48,8 +52,8 @@ describe("dragging an action card to the bar", () => {
   it("draws the thing being carried as an action card", () => {
     // `.card` and an action chip are different components; the ghost drew
     // every dragged id as a monster, which for an action card is a blank.
-    expect(APP).toContain("ACTIONS.has(drag.cardId)");
-    expect(APP).toContain("<ActionCardView actionId={drag.cardId}");
+    expect(GHOST).toContain("ACTIONS.has(drag.cardId)");
+    expect(GHOST).toContain("<ActionCardView actionId={drag.cardId}");
   });
 
   it("still resolves a target from whatever is under the pointer", () => {

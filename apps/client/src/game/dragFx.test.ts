@@ -8,7 +8,7 @@
  *
  * Six of those pictures and five of those feelings now exist. This is a
  * checklist, and it is written as one on purpose: the parts live in three
- * places — a style in carry.ts, a block of markup in App.tsx, a block of
+ * places — a style in carry.ts, the markup in DragGhost.tsx, a block of
  * CSS in board.css — and a missing third of any one of them is an effect
  * that silently does nothing.
  */
@@ -18,7 +18,7 @@ import { fileURLToPath } from "node:url";
 import { carryOf } from "./carry";
 
 const read = (rel: string) => readFileSync(fileURLToPath(new URL(rel, import.meta.url)), "utf8");
-const APP = read("../App.tsx");
+const GHOST = read("../components/DragGhost.tsx");
 const CSS = read("../styles/board.css");
 
 /** style → the class the ghost hangs its furniture on. */
@@ -36,7 +36,7 @@ describe("what a dragged card throws off", () => {
   for (const [style, cls, cardId] of FURNITURE) {
     it(`gives ${cardId} its ${style} ${cls.replace("drag-ghost__", "")}`, () => {
       expect(carryOf(cardId).style, "the style is derived from the card").toBe(style);
-      expect(APP, "and the ghost draws it").toContain(cls);
+      expect(GHOST, "and the ghost draws it").toContain(cls);
       expect(CSS, "and the stylesheet knows what it looks like").toContain(`.${cls}`);
       expect(CSS, "and it moves").toMatch(new RegExp(`\.${cls}[^{]*\{[^}]*animation`));
     });
@@ -50,8 +50,8 @@ describe("what a dragged card throws off", () => {
      * One element doing both is how the second request quietly becomes the
      * first one again.
      */
-    expect(APP).toContain("drag-ghost__arc");
-    expect(APP).toContain("drag-ghost__bolt");
+    expect(GHOST).toContain("drag-ghost__arc");
+    expect(GHOST).toContain("drag-ghost__bolt");
     expect(CSS).toContain("arc-spin");
     expect(CSS).toContain("bolt-strike");
   });

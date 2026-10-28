@@ -1,6 +1,7 @@
 import { useCallback, useEffect, useMemo, useState } from "react";
 import { ARENAS, applyArenaOverrides, atArena, type Arena } from "@amanda/shared";
 import { SERIES, sortSeriesByAppearance } from "../data/catalog";
+import { FixBox, notesFor, type FixNote } from "./FixBox";
 
 /**
  * Editing the rungs of the ladder.
@@ -62,7 +63,17 @@ function draftOf(arena: Arena) {
 
 type Draft = ReturnType<typeof draftOf>;
 
-export function ArenasTab({ call, say }: { call: Call; say: Say }) {
+export function ArenasTab({
+  call,
+  say,
+  notes,
+  reloadNotes,
+}: {
+  call: Call;
+  say: Say;
+  notes: readonly FixNote[];
+  reloadNotes: () => void | Promise<void>;
+}) {
   const [rows, setRows] = useState<Row[]>([]);
   const [drafts, setDrafts] = useState<Record<string, Draft>>(() =>
     Object.fromEntries(ARENAS.map((a) => [a.id, draftOf(a)])),
@@ -150,6 +161,11 @@ export function ArenasTab({ call, say }: { call: Call; say: Say }) {
               <article className="arn" key={arena.id}>
                 <header className="arn__head">
                   <b className="arn__name">{arena.name.he}</b>
+                  {notesFor(notes, "arena", arena.id).open && (
+                    <b className="ed__row-fix" title="יש תיקון שממתין">
+                      ✎
+                    </b>
+                  )}
                   <span className="arn__from">{arena.from} גביעים</span>
                   {edited.has(arena.id) && <b className="admin__badge">נערך</b>}
                   {arena.locked && <b className="admin__badge">נעולה</b>}
@@ -218,6 +234,15 @@ export function ArenasTab({ call, say }: { call: Call; say: Say }) {
                     </label>
                   </div>
                 ))}
+
+                <FixBox
+                  scope="arena"
+                  target={arena.id}
+                  notes={notes}
+                  call={call}
+                  say={say}
+                  reload={reloadNotes}
+                />
 
                 <div className="admin__row-actions">
                   <button
