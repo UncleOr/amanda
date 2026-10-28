@@ -71,14 +71,17 @@ export interface Arena {
    * the tutorial, so by the time anybody reaches the station the family is
    * an old acquaintance rather than the thing that lives there.
    *
-   * Worth writing down, because it is bigger than the Giants: ALL SIX
-   * collectable families are in the starter album (one card each, see
-   * STARTER_ALBUM), so no arena can honestly promise a family nobody has
-   * met. What an arena's family is TODAY is the one that fights harder on
-   * its own ground. Making it also mean "and here is where you first meet
-   * them" needs the starter album to be thinner, or more families than
-   * there are arenas — which is the conversation Or parked: *"later we will
-   * add more series and more arenas, and then we will work on it together."*
+   * Worth writing down, because it is bigger than the Giants: every family
+   * that existed when this was written was in the starter album (one card
+   * each, see STARTER_ALBUM), so no arena could honestly promise a family
+   * nobody had met. What an arena's family meant was only "the one that
+   * fights harder on its own ground".
+   *
+   * ⚠ THAT IS NO LONGER THE WHOLE STORY. The starter album was thinned to
+   * the games room's four, and then the Machines and the Sea Dwellers were
+   * built — two families in nobody's album, each with a rung of its own. So
+   * the Garage and the Pool below are the first arenas where `family` and
+   * `introduces` are both true of a family you really have not met.
    */
   family: string;
   /**
@@ -164,6 +167,21 @@ export const ARENA_POWER_BONUS = 0.2;
  * about +50. The old gaps were nine and fourteen such evenings. The new ones
  * are nineteen and forty-four, and the top of the ladder is a season rather
  * than a fortnight.
+ *
+ * ⚠ AND TWO OF HIS NUMBERS MOVED TO MAKE ROOM, WHICH IS WORTH SAYING OUT
+ * LOUD. The shape of this ladder is pinned by ladder.test.ts: every gap is
+ * wider than the one below it, because the first promotion should arrive in
+ * an evening and the last should be an ambition. Two new rungs do not fit
+ * inside the 950 trophies between the Station and the Alley without making
+ * that widening a formality — the gaps would have come out 310, 315, 325,
+ * which passes the test and means nothing.
+ *
+ * So Fright Alley moved from 1400 to 2000 and the Fuel Stop from 3600 to
+ * 4200, and the ladder is 0 · 150 · 450 · 800 · 1250 · 2000 · 4200 — gaps
+ * of 150, 300, 350, 450, 750, 2200. Both of the ones that moved are LOCKED,
+ * so nobody is standing on either, and both moved in the direction Or asked
+ * for: *"the distance to Fright Alley needs to be bigger, and to the Fuel
+ * Stop really big."* They are still his to put back.
  */
 export const ARENAS: Arena[] = [
   {
@@ -220,6 +238,54 @@ export const ARENAS: Arena[] = [
       en: "You bought a ticket, went through the barrier, and that is that — you are a long way from home. You are hungry, there is no signal, and that man on the bench is looking at you oddly. Nothing for it. You decided to be brave. Lucky you have a new family of monsters beside you: the Insects.",
     },
   },
+  /*
+   * ═══ THE TWO RUNGS IN THE MIDDLE OF THE LADDER ═══
+   *
+   * Or: *"go on, start with the Machines and the Sea Dwellers."*
+   *
+   * They are here rather than at the top because of where he actually is.
+   * The open ladder was 0 · 150 · 450 and then nothing — the Alley is shut —
+   * so a new arena above the Fuel Stop would have been a rung nobody can see
+   * the bottom of. Measured against trophies.ts, where an evening of even
+   * matches is about +50: the Garage is six evenings past the Station and
+   * the Pool is six past the Garage.
+   *
+   * AND THEY ARE WHY THE SERIES EXIST. Until today every collectable family
+   * was in the starter album, so no arena could honestly promise one — see
+   * the note on `introduces` above, and Or parking it: *"later we will add
+   * more series and more arenas, and then we will work on it together."*
+   * These two families are in nobody's starter album, so these two rungs are
+   * the first in the game where "this is where you meet them" is true.
+   *
+   * The places are the journey carrying on. A garage with the shutter half
+   * down is where machines live, and the one body of water a child in a city
+   * actually stands beside at night is a municipal pool nobody is swimming
+   * in. Or's to rename, like every other name here.
+   */
+  {
+    id: "garage",
+    family: "machines",
+    introduces: "machines",
+    name: { he: "המוסך", en: "The Garage" },
+    from: 800,
+    tease: { he: "מישהו שכח לכבות את האור.", en: "Somebody left the light on." },
+    story: {
+      he: "ירדתם מהרכבת והמשכתם ברגל. מוסך, שתיים בלילה, התריס חצי סגור ובפנים עוד דולק אור. או שמישהו שכח לכבות, או שמישהו עוד עובד. הרצפה דביקה משמן והברגים מתגלגלים לכם מתחת לרגליים. ואז אחד הברגים קם. המכונות.",
+      en: "You got off the train and kept walking. A garage, two in the morning, the shutter half down and a light still on inside. Either somebody forgot to turn it off, or somebody is still working. The floor is sticky with oil and the bolts roll under your feet. And then one of the bolts stands up. The Machines.",
+    },
+  },
+  {
+    id: "pool",
+    family: "sea",
+    introduces: "sea",
+    name: { he: "הבריכה", en: "The Pool" },
+    from: 1250,
+    tease: { he: "אל תיכנסו למים.", en: "Do not get in the water." },
+    story: {
+      he: "בריכה עירונית בלילה, בלי מציל ובלי אף אחד. את המים לא החליפו כבר הרבה זמן והריח מגיע עד הגדר. אתם אומרים לעצמכם שזה רק עלים. שזאת רק הרוח. ואז משהו זז מתחת לפני המים, וזה לא עלה וזאת לא הרוח. שוכני הים.",
+      en: "A municipal pool at night, no lifeguard and nobody about. The water has not been changed in a long time and you can smell it from the fence. You tell yourself it is only leaves. Only the wind. And then something moves under the surface, and it is not a leaf and it is not the wind. The Sea Dwellers.",
+    },
+  },
   {
     id: "alley",
     /*
@@ -242,7 +308,7 @@ export const ARENAS: Arena[] = [
     introduces: "strays",
     locked: true,
     name: { he: "סמטת האימה", en: "Fright Alley" },
-    from: 1400,
+    from: 2000,
     tease: { he: "אל תסתכל מה יש בפח.", en: "Don't look in the bin." },
     story: {
       he: "הצרצרים מצרצרים, התנים מייללים, הפנסים מהבהבים - ואתם פה לבד. כמה רחוק אתם מוכנים ללכת בשביל להשיג את אמנדה? מסתבר שלא מעט. אמאל'ה, מה זה הרעש הזה? אה, זה רק חתול.",
@@ -254,7 +320,7 @@ export const ARENAS: Arena[] = [
     family: "dragons",
     locked: true,
     name: { he: "תחנת הדלק", en: "The Fuel Stop" },
-    from: 3600,
+    from: 4200,
     tease: { he: "הסוף. אל תדליק כאן גפרור.", en: "The end of the road. Don't strike a match." },
     story: {
       he: "זוהי התחנה הסופית. חשבתם למצוא פה מתדלק חייכן וחנות עם אייס קפה? תחשבו שוב. נראה שרגל אדם לא דרכה פה כבר שנים. רגע, אבל אם כן - מה זו טביעת הרגל הזאת פה? אה כן. זאת הרגל של אמנדה. מזל טוב. מצאתם אותה. או יותר נכון - היא מצאה אתכם. מקווים שלא תסיימו בצלחת שלה.",

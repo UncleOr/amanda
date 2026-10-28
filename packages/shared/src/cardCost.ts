@@ -43,6 +43,23 @@
  * When Or adds enough cards that the spread no longer fits these, the fix is
  * to edit these four numbers deliberately — and `cardCost.test.ts` prints
  * the distribution so the day that happens is visible.
+ *
+ * ═══ AND TWENTY CARDS ARRIVED, AND THE BANDS DID NOT MOVE ═══
+ *
+ * The Machines and the Sea Dwellers took the catalogue from 51 collectable
+ * cards to 71 — the biggest addition it has had. Re-measured afterwards,
+ * against these same four numbers:
+ *
+ *   cost 1  14 cards      cost 4  17 cards
+ *   cost 2  14 cards      cost 5  13 cards
+ *   cost 3  13 cards      average price 3.01
+ *
+ * Which is exactly what the paragraph above promised, and the reason it is
+ * written down: nobody's card was re-priced by somebody else's card being
+ * drawn. The twenty new cards were tuned to FIT these bands rather than the
+ * bands moved to fit them — see `pnpm --filter @amanda/engine duels`, which
+ * checks the thing a price band actually promises: that the average win rate
+ * climbs with the price (19 · 35 · 46 · 61 · 85 per cent).
  */
 import type { Card } from "./schemas/card.js";
 

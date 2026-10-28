@@ -1,0 +1,434 @@
+{
+  "id": "sea",
+  "seriesNumber": 4,
+  "name": {
+    "he": "שוכני הים",
+    "en": "The Sea Dwellers"
+  },
+  "specialty": {
+    "he": "שליטה בתנועה, משיכה והדיפה",
+    "en": "Movement control, pulling and pushing"
+  },
+  "synergy": {
+    "threshold": 3,
+    "name": {
+      "he": "הזרם",
+      "en": "The Current"
+    },
+    "description": {
+      "he": "שלושה צמודים מאותה סדרה מקבלים +20% עוצמה ו+20% חיים.",
+      "en": "Three of the family, touching: +20% power and health."
+    },
+    "ability": {
+      "type": "statAura",
+      "trigger": "aura",
+      "params": {
+        "pct": 20
+      }
+    }
+  },
+  "cards": [
+    {
+      "id": "sea_01_minnow",
+      "seriesId": "sea",
+      "numberInSeries": 1,
+      "name": {
+        "he": "דגיג",
+        "en": "Minnow"
+      },
+      "elements": [
+        "water"
+      ],
+      "rarity": "common",
+      "stats": {
+        "hp": 250,
+        "power": 180,
+        "attackSpeed": 1.2,
+        "moveSpeed": 2,
+        "range": "melee"
+      },
+      "flying": false,
+      "midBoss": false,
+      "abilities": [],
+      "role": {
+        "he": "קטן, מהיר, ואף פעם לא לבד.",
+        "en": "Small, quick, and never on its own."
+      },
+      "art": {
+        "placeholderColor": "#2f7fe2",
+        "sprite": "cards/sea_01_minnow.webp"
+      },
+      "launch": true
+    },
+    {
+      "id": "sea_02_jellyfish",
+      "seriesId": "sea",
+      "numberInSeries": 2,
+      "name": {
+        "he": "מדוזה",
+        "en": "Jellyfish"
+      },
+      "elements": [
+        "water"
+      ],
+      "rarity": "common",
+      "stats": {
+        "hp": 340,
+        "power": 170,
+        "attackSpeed": 2,
+        "moveSpeed": 0,
+        "range": "melee"
+      },
+      "flying": false,
+      "midBoss": false,
+      "abilities": [
+        {
+          "type": "slowAura",
+          "trigger": "aura",
+          "params": {
+            "pct": 30
+          }
+        }
+      ],
+      "role": {
+        "he": "המים סביבה כבדים. כולם זזים לאט.",
+        "en": "The water around it is heavy. Everything moves slower."
+      },
+      "art": {
+        "placeholderColor": "#2f7fe2",
+        "sprite": "cards/sea_02_jellyfish.webp"
+      },
+      "launch": true
+    },
+    {
+      "id": "sea_03_rock_clam",
+      "seriesId": "sea",
+      "numberInSeries": 3,
+      "name": {
+        "he": "צדפת הסלע",
+        "en": "Rock Clam"
+      },
+      "elements": [
+        "earth",
+        "water"
+      ],
+      "rarity": "common",
+      "stats": {
+        "hp": 1700,
+        "power": 200,
+        "attackSpeed": 3.5,
+        "moveSpeed": 0,
+        "range": "melee"
+      },
+      "flying": false,
+      "midBoss": false,
+      "abilities": [
+        {
+          "type": "knockbackImmune",
+          "trigger": "passive",
+          "params": {}
+        }
+      ],
+      "role": {
+        "he": "לא זזה ואי אפשר להזיז אותה.",
+        "en": "Does not move, and cannot be moved."
+      },
+      "art": {
+        "placeholderColor": "#8a6d3b",
+        "sprite": "cards/sea_03_rock_clam.webp"
+      },
+      "launch": true
+    },
+    {
+      "id": "sea_04_squid",
+      "seriesId": "sea",
+      "numberInSeries": 4,
+      "name": {
+        "he": "דיונון",
+        "en": "Squid"
+      },
+      "elements": [
+        "water",
+        "dark"
+      ],
+      "rarity": "common",
+      "stats": {
+        "hp": 560,
+        "power": 400,
+        "attackSpeed": 2.4,
+        "moveSpeed": 1,
+        "range": "melee"
+      },
+      "flying": false,
+      "midBoss": false,
+      "abilities": [
+        {
+          "type": "sideKnockback",
+          "trigger": "onHit",
+          "params": {
+            "columns": 1
+          }
+        }
+      ],
+      "role": {
+        "he": "לא מפיל אותך אחורה — מושך אותך הצידה, לנתיב אחר.",
+        "en": "Does not knock you back — drags you sideways into another lane."
+      },
+      "art": {
+        "placeholderColor": "#2f7fe2",
+        "sprite": "cards/sea_04_squid.webp"
+      },
+      "launch": true
+    },
+    {
+      "id": "sea_05_surge",
+      "seriesId": "sea",
+      "numberInSeries": 5,
+      "name": {
+        "he": "הנחשול",
+        "en": "The Surge"
+      },
+      "elements": [
+        "water"
+      ],
+      "rarity": "rare",
+      "stats": {
+        "hp": 520,
+        "power": 300,
+        "attackSpeed": 2,
+        "moveSpeed": 2,
+        "range": "melee"
+      },
+      "flying": false,
+      "midBoss": false,
+      "abilities": [
+        {
+          "type": "knockback",
+          "trigger": "onHit",
+          "params": {
+            "slots": 2
+          }
+        }
+      ],
+      "role": {
+        "he": "לא הורג, דוחף. שתי משבצות אחורה בכל מכה.",
+        "en": "Does not kill — pushes. Two slots back with every blow."
+      },
+      "art": {
+        "placeholderColor": "#2f7fe2",
+        "sprite": "cards/sea_05_surge.webp"
+      },
+      "launch": true
+    },
+    {
+      "id": "sea_06_frozen",
+      "seriesId": "sea",
+      "numberInSeries": 6,
+      "name": {
+        "he": "פרוזן",
+        "en": "Frozen"
+      },
+      "elements": [
+        "water",
+        "electric"
+      ],
+      "rarity": "rare",
+      "stats": {
+        "hp": 420,
+        "power": 760,
+        "attackSpeed": 1.5,
+        "moveSpeed": 2,
+        "range": "melee"
+      },
+      "flying": false,
+      "midBoss": false,
+      "abilities": [
+        {
+          "type": "freezeOnHit",
+          "trigger": "onHit",
+          "params": {
+            "freezeSeconds": 2,
+            "resetCooldown": true
+          }
+        }
+      ],
+      "role": {
+        "he": "נחשול מחשמל. מי שחוטף עוצר, וגם מתחיל את ההתקפה שלו מחדש.",
+        "en": "An electric surge. Whatever it hits stops, and starts its attack over."
+      },
+      "art": {
+        "placeholderColor": "#2f7fe2",
+        "sprite": "cards/sea_06_frozen.webp"
+      },
+      "launch": true
+    },
+    {
+      "id": "sea_07_siren",
+      "seriesId": "sea",
+      "numberInSeries": 7,
+      "name": {
+        "he": "סירנה",
+        "en": "Siren"
+      },
+      "elements": [
+        "water",
+        "dark"
+      ],
+      "rarity": "rare",
+      "stats": {
+        "hp": 510,
+        "power": 720,
+        "attackSpeed": 1.8,
+        "moveSpeed": 0,
+        "range": "melee"
+      },
+      "flying": false,
+      "midBoss": false,
+      "abilities": [
+        {
+          "type": "absorbOnCollision",
+          "trigger": "onCollision",
+          "params": {
+            "stunSeconds": 3
+          }
+        }
+      ],
+      "role": {
+        "he": "שירת המוות. מי שנתקל בה נעצר במקום שלוש שניות.",
+        "en": "The death song. Whatever meets her is held for three seconds."
+      },
+      "art": {
+        "placeholderColor": "#2f7fe2",
+        "sprite": "cards/sea_07_siren.webp"
+      },
+      "launch": true
+    },
+    {
+      "id": "sea_08_ocean",
+      "seriesId": "sea",
+      "numberInSeries": 8,
+      "name": {
+        "he": "אושן",
+        "en": "Ocean"
+      },
+      "elements": [
+        "water"
+      ],
+      "rarity": "rare",
+      "stats": {
+        "hp": 760,
+        "power": 773,
+        "attackSpeed": 3,
+        "moveSpeed": 0,
+        "range": "ranged"
+      },
+      "flying": false,
+      "midBoss": false,
+      "abilities": [
+        {
+          "type": "pullVacuum",
+          "trigger": "onAttack",
+          "params": {
+            "everySeconds": 5,
+            "slots": 1
+          }
+        }
+      ],
+      "role": {
+        "he": "מערבולת. מושכת את הקו של היריב צעד קדימה, לתוך הקרב.",
+        "en": "A whirlpool. Drags the enemy line a step forward, into the fight."
+      },
+      "art": {
+        "placeholderColor": "#2f7fe2",
+        "sprite": "cards/sea_08_ocean.webp"
+      },
+      "launch": true
+    },
+    {
+      "id": "sea_09_shark",
+      "seriesId": "sea",
+      "numberInSeries": 9,
+      "name": {
+        "he": "כריש",
+        "en": "Shark"
+      },
+      "elements": [
+        "water"
+      ],
+      "rarity": "epic",
+      "stats": {
+        "hp": 640,
+        "power": 900,
+        "attackSpeed": 1.2,
+        "moveSpeed": 2.5,
+        "range": "melee"
+      },
+      "flying": false,
+      "midBoss": false,
+      "targeting": "king",
+      "abilities": [
+        {
+          "type": "trample",
+          "trigger": "onKill",
+          "params": {}
+        }
+      ],
+      "role": {
+        "he": "הורג וממשיך לנוע. הולך על המלך.",
+        "en": "Kills and keeps going. It is after the King."
+      },
+      "art": {
+        "placeholderColor": "#2f7fe2",
+        "sprite": "cards/sea_09_shark.webp"
+      },
+      "launch": true
+    },
+    {
+      "id": "sea_10_leviathan",
+      "seriesId": "sea",
+      "numberInSeries": 10,
+      "name": {
+        "he": "לווייתן",
+        "en": "Leviathan"
+      },
+      "elements": [
+        "water"
+      ],
+      "rarity": "epic",
+      "stats": {
+        "hp": 2200,
+        "power": 760,
+        "attackSpeed": 4,
+        "moveSpeed": 0,
+        "range": "melee"
+      },
+      "flying": false,
+      "midBoss": true,
+      "abilities": [
+        {
+          "type": "aoeRowAttack",
+          "trigger": "onAttack",
+          "params": {
+            "lanes": 3
+          }
+        },
+        {
+          "type": "knockback",
+          "trigger": "onHit",
+          "params": {
+            "slots": 1
+          }
+        }
+      ],
+      "role": {
+        "he": "מכה שלושה נתיבים בבת אחת, וכל מכה מרחיקה.",
+        "en": "Hits three lanes at once, and every blow pushes them back."
+      },
+      "art": {
+        "placeholderColor": "#2f7fe2",
+        "sprite": "cards/sea_10_leviathan.webp"
+      },
+      "launch": true
+    }
+  ]
+}

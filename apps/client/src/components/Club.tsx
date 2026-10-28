@@ -59,9 +59,15 @@ const BASE = import.meta.env.BASE_URL;
 /** The four things a club is. Tabs, because they are peers. */
 type Tab = "who" | "talk" | "ask" | "goals";
 
+/*
+ * Or: *"the chat icon in the club should be a chat."* It was `info`, because
+ * there was no chat icon in the set — which is not a reason, it is a
+ * shortcut, and an ⓘ above a list of messages tells a child the wrong thing.
+ * There is a chat icon now (iconLooks.ts).
+ */
 const TAB_ICON: Record<Tab, IconName> = {
   who: "friend",
-  talk: "info",
+  talk: "chat",
   ask: "deck",
   goals: "challenge",
 };

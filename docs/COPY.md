@@ -1,6 +1,6 @@
 # הטקסטים של אמנדה
 
-כל טקסט שהשחקן רואה — 1360 במספר, 1360 מהם כבר באנגלית.
+כל טקסט שהשחקן רואה — 1429 במספר, 1429 מהם כבר באנגלית.
 
 ## איך עורכים
 
@@ -70,6 +70,64 @@
 | d0dd38e1 | שליטה מרחבית / הדף צדדי. | | Spatial control / lateral knockback. |
 | dbcd6ba4 | מלך השחקים | | Sky King |
 | d1cbbaba | מכת כנפיים לרוחב 3 נתיבים כל 5 שניות עם הדף. | | A wing sweep across 3 lanes every 5 seconds with knockback. |
+
+## סדרה — המכונות
+
+| מזהה | טקסט נוכחי | טקסט חדש | אנגלית |
+| --- | --- | --- | --- |
+| d9b12957 | המכונות | | The Machines |
+| d34fe2f0 | הקרבה, ייצור נחילים ושחיקה | | Sacrifice, swarm production and attrition |
+| d75c3090 | קו הייצור | | The Production Line |
+| d9b601ee | שלושה צמודים מאותה סדרה מקבלים +20% עוצמה ו+20% חיים. | | Three of the family, touching: +20% power and health. |
+| ddff3163 | בורגון | | Boltling |
+| d2424377 | הקטן והזול. המשפחה בנויה סביב זה שיש הרבה כאלה. | | The small cheap one. The family is built on there being plenty. |
+| d540afff | רחפון | | Drone |
+| d8221a90 | עף מעל הכל ומגיע ראשון. | | Flies over everything and gets there first. |
+| d8b72be9 | מוקש הברגים | | Bolt Mine |
+| dbc6010d | לא זז, רק מחכה. נשבר לשני מוקשים קטנים. | | Does not move, only waits. Breaks into two smaller mines. |
+| ded7e13d | פס הייצור | | The Assembly Line |
+| d0a1f9af | לא זז, כמעט לא מכה — וכשהוא נשבר יוצאים ממנו שלושה. | | Does not move, barely hits — and when it breaks, three come out. |
+| d2ab1e68 | מכונת התיקון | | The Repair Rig |
+| dcc77d6d | מתקנת את מי שלידה, ואת עצמה. | | Mends whoever stands beside it, and itself. |
+| de31dbda | מאנדרואיד | | Mandroid |
+| ddc276b6 | קרן צללים שמפרקת שריון. מה שחטף ממנו כבר לא מוגן. | | A shadow beam that strips armour. What it hits is not protected any more. |
+| d7236863 | מגנטרוס | | Magnetros |
+| dadf3fa6 | שדה מגנטי. גורר את כל מי שמנסה לשמור מרחק. | | A magnetic field. Drags in anybody trying to keep their distance. |
+| d42a117e | המרסק | | The Crusher |
+| d5d48f38 | מוחץ מכונה אחת משלו כדי להתחיל את הקרב משוריין. | | Crushes one of its own to start the battle armoured. |
+| daa3fbd9 | פלדובוט | | Steelbot |
+| dc362321 | מטח ניטרונים — מכה שלושה נתיבים בבת אחת. | | A neutron volley — hits three lanes at once. |
+| ddbe8bbb | אם־המכונה | | The Mother Machine |
+| d0219548 | משריינת את כל מי שסביבה, ומפילה ארבעה חדשים כשהיא נופלת. | | Armours everything around it, and drops four more when it falls. |
+
+## סדרה — שוכני הים
+
+| מזהה | טקסט נוכחי | טקסט חדש | אנגלית |
+| --- | --- | --- | --- |
+| deb8c67a | שוכני הים | | The Sea Dwellers |
+| dd4ca0ae | שליטה בתנועה, משיכה והדיפה | | Movement control, pulling and pushing |
+| d1a38510 | הזרם | | The Current |
+| d01b27a1 | שלושה צמודים מאותה סדרה מקבלים +20% עוצמה ו+20% חיים. | | Three of the family, touching: +20% power and health. |
+| d7443bed | דגיג | | Minnow |
+| dc746db4 | קטן, מהיר, ואף פעם לא לבד. | | Small, quick, and never on its own. |
+| d2dba1fb | מדוזה | | Jellyfish |
+| d41af31a | המים סביבה כבדים. כולם זזים לאט. | | The water around it is heavy. Everything moves slower. |
+| d751def7 | צדפת הסלע | | Rock Clam |
+| d8ba953a | לא זזה ואי אפשר להזיז אותה. | | Does not move, and cannot be moved. |
+| d08a0e28 | דיונון | | Squid |
+| d794e058 | לא מפיל אותך אחורה — מושך אותך הצידה, לנתיב אחר. | | Does not knock you back — drags you sideways into another lane. |
+| d011eba9 | הנחשול | | The Surge |
+| dcfb6195 | לא הורג, דוחף. שתי משבצות אחורה בכל מכה. | | Does not kill — pushes. Two slots back with every blow. |
+| dd675ba8 | פרוזן | | Frozen |
+| d69e8f29 | נחשול מחשמל. מי שחוטף עוצר, וגם מתחיל את ההתקפה שלו מחדש. | | An electric surge. Whatever it hits stops, and starts its attack over. |
+| dd632bbc | סירנה | | Siren |
+| d3c6e2d2 | שירת המוות. מי שנתקל בה נעצר במקום שלוש שניות. | | The death song. Whatever meets her is held for three seconds. |
+| dfa5ea9c | אושן | | Ocean |
+| d0dc4a64 | מערבולת. מושכת את הקו של היריב צעד קדימה, לתוך הקרב. | | A whirlpool. Drags the enemy line a step forward, into the fight. |
+| d49cee89 | כריש | | Shark |
+| d66d6953 | הורג וממשיך לנוע. הולך על המלך. | | Kills and keeps going. It is after the King. |
+| d80b914f | לווייתן | | Leviathan |
+| d77fe2ae | מכה שלושה נתיבים בבת אחת, וכל מכה מרחיקה. | | Hits three lanes at once, and every blow pushes them back. |
 
 ## סדרה — הענקים
 
@@ -284,6 +342,32 @@
 | d598d611 | פסיבי: בסוף הבנייה ממלא עד 3 משבצות ריקות ב'פליים דראגון' במיקומים אקראיים. | | Passive: at the end of building, fills up to 3 empty slots with Flame Dragon at random positions. |
 | db55bdb5 | מילוי קוביית ג'לי | | Cube Fill |
 | d3c3107c | פסיבי: בסוף הבנייה ממלא עד 3 משבצות ריקות ב'קוביית ג'לי' במיקומים אקראיים. | | Passive: at the end of building, fills up to 3 empty slots with Gelatinous Cube at random positions. |
+
+## הארנות — שמות, רמזים וסיפורים
+
+| מזהה | טקסט נוכחי | טקסט חדש | אנגלית |
+| --- | --- | --- | --- |
+| a592d187 | חדר המשחקים | | The Playroom |
+| a94a7529 | כאן כולם מתחילים. על השטיח. | | Everyone starts here. On the rug. |
+| a2cfa115 | כאן הכל מתחיל. המקום שבו ילדים יושבים ומחליפים קלפי מפלצות, אבל עדיין יודעים שתכף הכל ייגמר ואמא תכין לכם חביתה לארוחת ערב. יש לכם עוד לאן לשאוף. | | Where it all starts. Children swapping monster cards on the rug, and still knowing that soon it ends and mum makes an omelette for dinner. You have somewhere to get to. |
+| a5bfdbcd | המגרש | | The Court |
+| a79c0ff9 | בחוץ, על האספלט, מול כולם. | | Outside, on the asphalt, in front of everyone. |
+| ac493da4 | הופה, יצאתם למסע. זהו, אין כבר דרך חזרה. אתם עדיין על האספלט בשכונה, פוגשים פרצופים מוכרים אבל היי - מה זה שם על הרצפה? מפלצות חדשות שלא ראיתם מעולם. סדרת הריריים. יאמי. | | Off you go, then. No way back now. Still on the asphalt down the road, still familiar faces — but hey, what is that on the ground? Monsters you have never seen. The Slimes. Yum. |
+| a9049a24 | תחנת הרכבת | | The Station |
+| ac78a749 | אף אחד לא עוצר פה. חוץ ממך. | | Nobody stops here. Except you. |
+| a8e2fe9e | קניתם כרטיס, עברתם את המחסום וזהו - אתם כבר רחוקים מאוד מהבית. אתם רעבים, אין לכם קליטה והאיש הזה שם בספסל מסתכל עליכם מוזר. אין מה לעשות. החלטתם להיות אמיצים. מזל שיש לצדכם סדרת מפלצות חדשה: החרקים. | | You bought a ticket, went through the barrier, and that is that — you are a long way from home. You are hungry, there is no signal, and that man on the bench is looking at you oddly. Nothing for it. You decided to be brave. Lucky you have a new family of monsters beside you: the Insects. |
+| a5b596bd | המוסך | | The Garage |
+| a6f6844f | מישהו שכח לכבות את האור. | | Somebody left the light on. |
+| a80b1a0a | ירדתם מהרכבת והמשכתם ברגל. מוסך, שתיים בלילה, התריס חצי סגור ובפנים עוד דולק אור. או שמישהו שכח לכבות, או שמישהו עוד עובד. הרצפה דביקה משמן והברגים מתגלגלים לכם מתחת לרגליים. ואז אחד הברגים קם. המכונות. | | You got off the train and kept walking. A garage, two in the morning, the shutter half down and a light still on inside. Either somebody forgot to turn it off, or somebody is still working. The floor is sticky with oil and the bolts roll under your feet. And then one of the bolts stands up. The Machines. |
+| a05a758e | הבריכה | | The Pool |
+| a321522c | אל תיכנסו למים. | | Do not get in the water. |
+| adca9e8c | בריכה עירונית בלילה, בלי מציל ובלי אף אחד. את המים לא החליפו כבר הרבה זמן והריח מגיע עד הגדר. אתם אומרים לעצמכם שזה רק עלים. שזאת רק הרוח. ואז משהו זז מתחת לפני המים, וזה לא עלה וזאת לא הרוח. שוכני הים. | | A municipal pool at night, no lifeguard and nobody about. The water has not been changed in a long time and you can smell it from the fence. You tell yourself it is only leaves. Only the wind. And then something moves under the surface, and it is not a leaf and it is not the wind. The Sea Dwellers. |
+| aa4f084d | סמטת האימה | | Fright Alley |
+| ae2f223c | אל תסתכל מה יש בפח. | | Don |
+| a34276b1 | הצרצרים מצרצרים, התנים מייללים, הפנסים מהבהבים - ואתם פה לבד. כמה רחוק אתם מוכנים ללכת בשביל להשיג את אמנדה? מסתבר שלא מעט. אמאל'ה, מה זה הרעש הזה? אה, זה רק חתול. | | The crickets are going, the jackals are howling, the lamps are flickering — and you are here on your own. How far will you go to get Amanda? Quite far, it turns out. Blimey, what was that noise? Oh. Only a cat. |
+| a8e9a644 | תחנת הדלק | | The Fuel Stop |
+| ab7dc60e | הסוף. אל תדליק כאן גפרור. | | The end of the road. Don |
+| a5a35a7f | זוהי התחנה הסופית. חשבתם למצוא פה מתדלק חייכן וחנות עם אייס קפה? תחשבו שוב. נראה שרגל אדם לא דרכה פה כבר שנים. רגע, אבל אם כן - מה זו טביעת הרגל הזאת פה? אה כן. זאת הרגל של אמנדה. מזל טוב. מצאתם אותה. או יותר נכון - היא מצאה אתכם. מקווים שלא תסיימו בצלחת שלה. | | The last stop. Expecting a cheerful pump attendant and a shop with iced coffee? Think again. Nobody has set foot here in years. Although — then whose footprint is that? Ah. Amanda |
 
 ## הקול של אמנדה — שורות מתחלפות (כמה גרסאות לכל רגע)
 

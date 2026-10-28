@@ -1,0 +1,441 @@
+{
+  "id": "machines",
+  "seriesNumber": 2,
+  "name": {
+    "he": "המכונות",
+    "en": "The Machines"
+  },
+  "specialty": {
+    "he": "הקרבה, ייצור נחילים ושחיקה",
+    "en": "Sacrifice, swarm production and attrition"
+  },
+  "synergy": {
+    "threshold": 3,
+    "name": {
+      "he": "קו הייצור",
+      "en": "The Production Line"
+    },
+    "description": {
+      "he": "שלושה צמודים מאותה סדרה מקבלים +20% עוצמה ו+20% חיים.",
+      "en": "Three of the family, touching: +20% power and health."
+    },
+    "ability": {
+      "type": "statAura",
+      "trigger": "aura",
+      "params": {
+        "pct": 20
+      }
+    }
+  },
+  "cards": [
+    {
+      "id": "machines_01_boltling",
+      "seriesId": "machines",
+      "numberInSeries": 1,
+      "name": {
+        "he": "בורגון",
+        "en": "Boltling"
+      },
+      "elements": [
+        "metal"
+      ],
+      "rarity": "common",
+      "stats": {
+        "hp": 260,
+        "power": 180,
+        "attackSpeed": 1.2,
+        "moveSpeed": 2,
+        "range": "melee"
+      },
+      "flying": false,
+      "midBoss": false,
+      "abilities": [],
+      "role": {
+        "he": "הקטן והזול. המשפחה בנויה סביב זה שיש הרבה כאלה.",
+        "en": "The small cheap one. The family is built on there being plenty."
+      },
+      "art": {
+        "placeholderColor": "#9aa4ad",
+        "sprite": "cards/machines_01_boltling.webp"
+      },
+      "launch": true
+    },
+    {
+      "id": "machines_02_drone",
+      "seriesId": "machines",
+      "numberInSeries": 2,
+      "name": {
+        "he": "רחפון",
+        "en": "Drone"
+      },
+      "elements": [
+        "metal",
+        "air"
+      ],
+      "rarity": "common",
+      "stats": {
+        "hp": 210,
+        "power": 240,
+        "attackSpeed": 1.2,
+        "moveSpeed": 2.5,
+        "range": "melee"
+      },
+      "flying": true,
+      "midBoss": false,
+      "abilities": [],
+      "role": {
+        "he": "עף מעל הכל ומגיע ראשון.",
+        "en": "Flies over everything and gets there first."
+      },
+      "art": {
+        "placeholderColor": "#9aa4ad",
+        "sprite": "cards/machines_02_drone.webp"
+      },
+      "launch": true
+    },
+    {
+      "id": "machines_03_bolt_mine",
+      "seriesId": "machines",
+      "numberInSeries": 3,
+      "name": {
+        "he": "מוקש הברגים",
+        "en": "Bolt Mine"
+      },
+      "elements": [
+        "metal",
+        "fire"
+      ],
+      "rarity": "common",
+      "stats": {
+        "hp": 320,
+        "power": 360,
+        "attackSpeed": 1.8,
+        "moveSpeed": 0,
+        "range": "melee"
+      },
+      "flying": false,
+      "midBoss": false,
+      "abilities": [
+        {
+          "type": "splitOnDeath",
+          "trigger": "onDeath",
+          "params": {
+            "count": 2,
+            "childHp": 140,
+            "childPower": 200
+          }
+        }
+      ],
+      "role": {
+        "he": "לא זז, רק מחכה. נשבר לשני מוקשים קטנים.",
+        "en": "Does not move, only waits. Breaks into two smaller mines."
+      },
+      "art": {
+        "placeholderColor": "#9aa4ad",
+        "sprite": "cards/machines_03_bolt_mine.webp"
+      },
+      "launch": true
+    },
+    {
+      "id": "machines_04_assembly_line",
+      "seriesId": "machines",
+      "numberInSeries": 4,
+      "name": {
+        "he": "פס הייצור",
+        "en": "The Assembly Line"
+      },
+      "elements": [
+        "metal"
+      ],
+      "rarity": "rare",
+      "stats": {
+        "hp": 1300,
+        "power": 210,
+        "attackSpeed": 3,
+        "moveSpeed": 0,
+        "range": "melee"
+      },
+      "flying": false,
+      "midBoss": false,
+      "abilities": [
+        {
+          "type": "swarmOnDeath",
+          "trigger": "onDeath",
+          "params": {
+            "count": 3,
+            "spiritHp": 260,
+            "spiritPower": 180
+          }
+        }
+      ],
+      "role": {
+        "he": "לא זז, כמעט לא מכה — וכשהוא נשבר יוצאים ממנו שלושה.",
+        "en": "Does not move, barely hits — and when it breaks, three come out."
+      },
+      "art": {
+        "placeholderColor": "#9aa4ad",
+        "sprite": "cards/machines_04_assembly_line.webp"
+      },
+      "launch": true
+    },
+    {
+      "id": "machines_05_repair_rig",
+      "seriesId": "machines",
+      "numberInSeries": 5,
+      "name": {
+        "he": "מכונת התיקון",
+        "en": "The Repair Rig"
+      },
+      "elements": [
+        "metal",
+        "light"
+      ],
+      "rarity": "rare",
+      "stats": {
+        "hp": 820,
+        "power": 260,
+        "attackSpeed": 2.5,
+        "moveSpeed": 0,
+        "range": "melee"
+      },
+      "flying": false,
+      "midBoss": false,
+      "abilities": [
+        {
+          "type": "healAura",
+          "trigger": "aura",
+          "params": {
+            "hpPerSecond": 45
+          }
+        },
+        {
+          "type": "regen",
+          "trigger": "passive",
+          "params": {
+            "hpPerSecond": 30
+          }
+        }
+      ],
+      "role": {
+        "he": "מתקנת את מי שלידה, ואת עצמה.",
+        "en": "Mends whoever stands beside it, and itself."
+      },
+      "art": {
+        "placeholderColor": "#9aa4ad",
+        "sprite": "cards/machines_05_repair_rig.webp"
+      },
+      "launch": true
+    },
+    {
+      "id": "machines_06_mandroid",
+      "seriesId": "machines",
+      "numberInSeries": 6,
+      "name": {
+        "he": "מאנדרואיד",
+        "en": "Mandroid"
+      },
+      "elements": [
+        "metal",
+        "dark"
+      ],
+      "rarity": "rare",
+      "stats": {
+        "hp": 545,
+        "power": 800,
+        "attackSpeed": 2.2,
+        "moveSpeed": 1.5,
+        "range": "melee"
+      },
+      "flying": false,
+      "midBoss": false,
+      "abilities": [
+        {
+          "type": "armorBreak",
+          "trigger": "onHit",
+          "params": {}
+        }
+      ],
+      "role": {
+        "he": "קרן צללים שמפרקת שריון. מה שחטף ממנו כבר לא מוגן.",
+        "en": "A shadow beam that strips armour. What it hits is not protected any more."
+      },
+      "art": {
+        "placeholderColor": "#9aa4ad",
+        "sprite": "cards/machines_06_mandroid.webp"
+      },
+      "launch": true
+    },
+    {
+      "id": "machines_07_magnetros",
+      "seriesId": "machines",
+      "numberInSeries": 7,
+      "name": {
+        "he": "מגנטרוס",
+        "en": "Magnetros"
+      },
+      "elements": [
+        "metal",
+        "electric"
+      ],
+      "rarity": "rare",
+      "stats": {
+        "hp": 820,
+        "power": 580,
+        "attackSpeed": 4,
+        "moveSpeed": 0,
+        "range": "ranged"
+      },
+      "flying": false,
+      "midBoss": false,
+      "abilities": [
+        {
+          "type": "pullVacuum",
+          "trigger": "onAttack",
+          "params": {
+            "everySeconds": 6,
+            "slots": 1
+          }
+        }
+      ],
+      "role": {
+        "he": "שדה מגנטי. גורר את כל מי שמנסה לשמור מרחק.",
+        "en": "A magnetic field. Drags in anybody trying to keep their distance."
+      },
+      "art": {
+        "placeholderColor": "#9aa4ad",
+        "sprite": "cards/machines_07_magnetros.webp"
+      },
+      "launch": true
+    },
+    {
+      "id": "machines_08_crusher",
+      "seriesId": "machines",
+      "numberInSeries": 8,
+      "name": {
+        "he": "המרסק",
+        "en": "The Crusher"
+      },
+      "elements": [
+        "metal"
+      ],
+      "rarity": "rare",
+      "stats": {
+        "hp": 1150,
+        "power": 700,
+        "attackSpeed": 3.8,
+        "moveSpeed": 0,
+        "range": "melee"
+      },
+      "flying": false,
+      "midBoss": false,
+      "abilities": [
+        {
+          "type": "sacrificeAdjacent",
+          "trigger": "onSpawn",
+          "params": {
+            "armorGain": 350
+          }
+        }
+      ],
+      "role": {
+        "he": "מוחץ מכונה אחת משלו כדי להתחיל את הקרב משוריין.",
+        "en": "Crushes one of its own to start the battle armoured."
+      },
+      "art": {
+        "placeholderColor": "#9aa4ad",
+        "sprite": "cards/machines_08_crusher.webp"
+      },
+      "launch": true
+    },
+    {
+      "id": "machines_09_steelbot",
+      "seriesId": "machines",
+      "numberInSeries": 9,
+      "name": {
+        "he": "פלדובוט",
+        "en": "Steelbot"
+      },
+      "elements": [
+        "metal"
+      ],
+      "rarity": "epic",
+      "stats": {
+        "hp": 680,
+        "power": 940,
+        "attackSpeed": 2,
+        "moveSpeed": 1,
+        "range": "melee"
+      },
+      "flying": false,
+      "midBoss": false,
+      "abilities": [
+        {
+          "type": "aoeRowAttack",
+          "trigger": "onAttack",
+          "params": {
+            "lanes": 3
+          }
+        }
+      ],
+      "role": {
+        "he": "מטח ניטרונים — מכה שלושה נתיבים בבת אחת.",
+        "en": "A neutron volley — hits three lanes at once."
+      },
+      "art": {
+        "placeholderColor": "#9aa4ad",
+        "sprite": "cards/machines_09_steelbot.webp"
+      },
+      "launch": true
+    },
+    {
+      "id": "machines_10_mother_machine",
+      "seriesId": "machines",
+      "numberInSeries": 10,
+      "name": {
+        "he": "אם־המכונה",
+        "en": "The Mother Machine"
+      },
+      "elements": [
+        "metal",
+        "electric"
+      ],
+      "rarity": "epic",
+      "stats": {
+        "hp": 1900,
+        "power": 620,
+        "attackSpeed": 3.5,
+        "moveSpeed": 0,
+        "range": "ranged"
+      },
+      "flying": false,
+      "midBoss": true,
+      "abilities": [
+        {
+          "type": "armorAura",
+          "trigger": "aura",
+          "params": {
+            "armor": 150
+          }
+        },
+        {
+          "type": "swarmOnDeath",
+          "trigger": "onDeath",
+          "params": {
+            "count": 4,
+            "spiritHp": 260,
+            "spiritPower": 180
+          }
+        }
+      ],
+      "role": {
+        "he": "משריינת את כל מי שסביבה, ומפילה ארבעה חדשים כשהיא נופלת.",
+        "en": "Armours everything around it, and drops four more when it falls."
+      },
+      "art": {
+        "placeholderColor": "#9aa4ad",
+        "sprite": "cards/machines_10_mother_machine.webp"
+      },
+      "launch": true
+    }
+  ]
+}

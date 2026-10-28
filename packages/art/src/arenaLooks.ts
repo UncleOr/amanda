@@ -73,6 +73,35 @@ export const ARENA_LOOKS: ArenaLook[] = [
       "of the forecourt is bare.",
   },
 
+  /*
+   * ── the two rungs added with the Machines and the Sea Dwellers ──
+   *
+   * Same rule as the rest and it matters more here, because both of these
+   * places are visually busy in life: a garage floor is a mess and a pool is
+   * a bright blue rectangle. Both briefs flatten them — the mess is pushed to
+   * the edges and the blue is drained to a cold teal — so the cards still read.
+   */
+  {
+    id: "garage",
+    he: "המוסך",
+    brief:
+      "A garage workshop floor seen from directly above at night: stained oil-dark " +
+      "concrete, a narrow drainage channel down one side, faded painted bay lines, " +
+      "scattered bolts and a dropped spanner pushed to the far edges, one strip light " +
+      "reflecting in the wet patches. Desaturated grey-green and rust. The middle of " +
+      "the floor is bare concrete.",
+  },
+  {
+    id: "pool",
+    he: "הבריכה",
+    brief:
+      "A municipal swimming pool seen from directly above at night: still dark green " +
+      "water, the tiled bottom and the black lane lines showing faintly through it, " +
+      "a ladder rail and gathered leaves at the far edges, one floodlight laid flat " +
+      "across the surface. Cold desaturated teal. The middle of the pool is plain " +
+      "unbroken water.",
+  },
+
   {
     id: "rift",
     he: "בקע הלבה",

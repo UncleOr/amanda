@@ -306,6 +306,18 @@ function fromLines(entries, relFile, lines, section, prefix) {
       if (/[<>]|=\{/.test(text)) continue;
 
       /*
+       * A single Hebrew letter is grammar, not copy.
+       *
+       * arenas.ts collapses the preposition into the article — "ל" + "המגרש"
+       * is "למגרש" and not "להמגרש" — so the letters ל, ב and ה are written
+       * as strings there. They came into the document as three rows asking
+       * Or to translate one letter. Nothing in this game has a one-character
+       * line, so the rule is safe everywhere and is written here rather than
+       * for one file.
+       */
+      if (text.trim().length <= 1) continue;
+
+      /*
        * A template literal shows its slots, not its expressions.
        *
        * `${e.actor} הפיל את ${e.target}` is listed as `{0} הפיל את {1}`,
@@ -323,7 +335,15 @@ function fromLines(entries, relFile, lines, section, prefix) {
        * them as untranslated and ask for English that is already two columns
        * to the right in the source.
        */
-      const twin = line.match(
+      /*
+       * …and its twin may be on the NEXT line, which the one-line version of
+       * this missed. cardMeta.ts writes the pair inline; arenas.ts writes a
+       * paragraph, so its `he:` and `en:` are a line apart — and ten arena
+       * stories arrived in the document asking Or to translate English that
+       * was already sitting underneath them in the source. `\s` matches a
+       * newline, so the pattern itself needed nothing: only the haystack did.
+       */
+      const twin = (line + "\n" + (lines[i + 1] ?? "")).match(
         new RegExp(escapeRe(text) + "[\"'`]\\s*,\\s*en:\\s*[\"'`]([^\"'`]+)"),
       );
 
@@ -346,6 +366,20 @@ function fromLines(entries, relFile, lines, section, prefix) {
 }
 
 function collectSource(entries) {
+  /*
+   * The arenas live in the shared package, so the walk below has never seen
+   * them — and that meant the one screen whose words are entirely Or's, the
+   * story you are given when you reach a new place, was the only copy in the
+   * game he could not edit from his own document. Two new arenas made that
+   * worse rather than better, which is what finally fixed it.
+   */
+  fromLines(
+    entries,
+    "packages/shared/src/arenas.ts",
+    readFileSync(join(ROOT, "packages", "shared", "src", "arenas.ts"), "utf8").split(/\r?\n/),
+    "הארנות — שמות, רמזים וסיפורים",
+    "a",
+  );
   const files = walk(SRC);
   const byRel = new Map(files.map((f) => [relative(SRC, f).replace(/\\/g, "/"), f]));
   const ordered = [

@@ -156,4 +156,102 @@ export const CARD_LOOK: Record<string, string> = {
   slimes_10_zelig_giant_ooze:
     "a colossal towering ooze with a swirling WHIRLPOOL VORTEX opening in the centre of its chest " +
     "pulling debris inward, long heavy dripping arms, deep teal and toxic green",
+
+  /*
+   * ── The Machines — a family of robots is the hardest one to keep apart ──
+   *
+   * Three of these are Or's own album cards and are described to match them:
+   * Steelbot's orange visor slit, Magnetros's horseshoe magnet and molten
+   * chest, Mandroid's red circuitry under grey skin. The other seven lead
+   * with a body plan that is NOT a humanoid robot, because seven humanoid
+   * robots is one humanoid robot seven times.
+   */
+  machines_01_boltling:
+    "NOT a humanoid robot — a tiny creature made of one fat hexagonal bolt standing on two bent wire legs, " +
+    "no head at all, a single narrow glowing slot across the top of the bolt for an eye, " +
+    "stubby pincer arms, oily grey steel, barely knee high and plainly disposable",
+  machines_02_drone:
+    "a small four-rotor quadcopter drone hovering, blurred propellers at the corners of an X frame, " +
+    "a boxy body slung underneath with one round camera lens staring straight down, thin landing skids, " +
+    "a blinking red light, matte white and grey",
+  machines_03_bolt_mine:
+    "NOT a creature — a squat iron disc mine sitting flat on the ground, bristling with short blunt spikes, " +
+    "a red lamp pulsing in a recessed well at its centre, loose bolts scattered around its rim, " +
+    "no face and no limbs, rust and old grease",
+  machines_04_assembly_line:
+    "NOT a creature — a short section of factory conveyor belt on heavy steel legs, " +
+    "a folded hydraulic arm poised above it, two half-finished little robots lying on the belt, " +
+    "yellow and black warning stripes along the frame, no face at all, oil-stained industrial grey",
+  machines_05_repair_rig:
+    "a stumpy welding robot with NO legs on a wheeled base, three articulated arms ending in " +
+    "a torch, a clamp and a wire spool, a bright blue-white welding flare lighting its own chest, " +
+    "a small visor turned toward its work, clean workshop white",
+  machines_06_mandroid:
+    "a lean grey-skinned humanoid android with a smooth bald head and burning orange eyes, " +
+    "cracked red circuitry glowing through its skin like veins across the chest and arms, " +
+    "bare mechanical torso, standing still in cold mist, desaturated blue-grey",
+  machines_07_magnetros:
+    "a blocky riveted iron robot holding an enormous red horseshoe magnet up in one hand, " +
+    "a molten orange crack splitting its chest open, heavy square shoulders and a small boxy head " +
+    "with round glowing eyes, dark gunmetal and red",
+  machines_08_crusher:
+    "NOT humanoid — an enormous hydraulic press on caterpillar tracks, a flat crushing plate lowered " +
+    "over a squat body where a head would be, thick pistons down both sides, no arms, " +
+    "dented yellow paint and black grease",
+  machines_09_steelbot:
+    "a heavy military mech standing square on two thick piston legs, a narrow orange visor slit " +
+    "glowing across a boxy armoured head, broad shoulder plates and blocky fists, " +
+    "weathered green-grey steel, industrial and solid",
+  machines_10_mother_machine:
+    "a colossal factory machine fused into the floor, a wide furnace mouth glowing orange at its base, " +
+    "many thin articulated arms spreading from both sides like a spider, one huge lens high on its front, " +
+    "thick cables and pipes feeding into it, overwhelming and immobile",
+
+  /*
+   * ── The Sea Dwellers — the same trap: ten fish ──
+   *
+   * Frozen, Siren and Ocean come from the album and are described to match
+   * it. Of the other seven, three are not animals at all (a wave, a clam, a
+   * jellyfish with no face), which is what keeps the family readable at card
+   * size.
+   */
+  sea_01_minnow:
+    "a tiny sardine-like fish with oversized round eyes, a translucent silver body with a visible spine, " +
+    "a single quick flick of the tail, small enough to sit in a palm, pale blue and silver",
+  sea_02_jellyfish:
+    "NOT a face — a glowing bell-shaped jellyfish hanging motionless in dark water, " +
+    "a translucent dome lit from inside, long trailing stinging tendrils hanging straight down, " +
+    "soft violet and deep blue, no eyes and no mouth",
+  sea_03_rock_clam:
+    "NOT an animal with a face — an enormous barnacle-crusted clam shell half open on the sea floor, " +
+    "thick heavily ridged shell, a faint pale light between the two halves, weed and grit around its base, " +
+    "squat and plainly immovable, grey-brown and chalk",
+  sea_04_squid:
+    "a squid with a long pointed mantle and eight thrashing arms plus two longer hunting tentacles, " +
+    "one huge intelligent eye, a cloud of ink spreading in the water behind it, " +
+    "deep purple shading to black",
+  sea_05_surge:
+    "NOT a creature — a towering curling wave of water rearing up, a hollow barrel beneath it and " +
+    "white foam torn along its crest, spray flying forward, no face and no limbs, " +
+    "blue-green and white",
+  sea_06_frozen:
+    "a long serpentine ice dragon with NO wings and NO legs, a ribbon-like coiling body of translucent " +
+    "blue ice, a wide fanged mouth open mid-strike, crystal spines running down its back, " +
+    "pale ice blue and white, lit from within",
+  sea_07_siren:
+    "a dark mermaid rising out of black water, very long trailing black hair, a pale narrow face with " +
+    "hollow eyes and a faint smile, clawed arms spread wide, her tail lost in the shadow below, " +
+    "deep teal and near-black, almost monochrome",
+  sea_08_ocean:
+    "a stout sea dragon with a big round head and bright yellow eyes, short clawed forearms raised, " +
+    "a coiling scaly body rising out of a churning whirlpool of white water, " +
+    "bright turquoise and teal, bold and friendly",
+  sea_09_shark:
+    "a lean torpedo-shaped great white shark mid-lunge, jaws wide open showing rows of teeth, " +
+    "a tall triangular dorsal fin and a stiff crescent tail, grey above and white below, " +
+    "water streaming off its back",
+  sea_10_leviathan:
+    "a colossal whale-like leviathan surfacing, a vast ridged head and a cavernous mouth, " +
+    "barnacles and old harpoon scars across its back, one tiny eye low on the side of its head, " +
+    "slate grey and deep blue, immense",
 };

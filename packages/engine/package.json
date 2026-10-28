@@ -14,6 +14,7 @@
     "test:watch": "vitest",
     "demo": "tsx scripts/demo-battle.ts",
     "measure": "tsx scripts/measure.ts",
+    "duels": "tsx scripts/duels.ts",
     "typecheck": "tsc --noEmit",
     "amanda": "tsx scripts/amanda-mode.ts"
   },

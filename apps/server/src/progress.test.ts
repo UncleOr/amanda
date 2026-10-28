@@ -86,13 +86,27 @@ describe("which families a chest may draw from", () => {
     expect(drawn(TOP, 400).has("strays")).toBe(false);
   });
 
+  it("adds the machines at the Garage, and not at the Station", () => {
+    // The first family in the game that is in nobody's starter album, so
+    // this is the first rung where "here is where you meet them" is true.
+    expect(drawn(at("garage").from).has("machines")).toBe(true);
+    expect(drawn(at("station").from).has("machines")).toBe(false);
+  });
+
+  it("adds the sea dwellers at the Pool, and not at the Garage", () => {
+    expect(drawn(at("pool").from).has("sea")).toBe(true);
+    expect(drawn(at("garage").from).has("sea")).toBe(false);
+  });
+
   it("still draws from everything that IS open at the top", () => {
     expect([...drawn(TOP)].sort()).toEqual([
       "dragons",
       "furries",
       "giants",
       "insects",
+      "machines",
       "plants",
+      "sea",
       "slimes",
     ]);
   });

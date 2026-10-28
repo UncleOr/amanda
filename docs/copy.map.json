@@ -512,6 +512,762 @@
   "en": "A wing sweep across 3 lanes every 5 seconds with knockback."
  },
  {
+  "id": "d9b12957",
+  "section": "סדרה — המכונות",
+  "text": "המכונות",
+  "where": {
+   "kind": "json",
+   "file": "data/series/02-machines.json",
+   "path": [
+    "name",
+    "he"
+   ]
+  },
+  "en": "The Machines"
+ },
+ {
+  "id": "d34fe2f0",
+  "section": "סדרה — המכונות",
+  "text": "הקרבה, ייצור נחילים ושחיקה",
+  "where": {
+   "kind": "json",
+   "file": "data/series/02-machines.json",
+   "path": [
+    "specialty",
+    "he"
+   ]
+  },
+  "en": "Sacrifice, swarm production and attrition"
+ },
+ {
+  "id": "d75c3090",
+  "section": "סדרה — המכונות",
+  "text": "קו הייצור",
+  "where": {
+   "kind": "json",
+   "file": "data/series/02-machines.json",
+   "path": [
+    "synergy",
+    "name",
+    "he"
+   ]
+  },
+  "en": "The Production Line"
+ },
+ {
+  "id": "d9b601ee",
+  "section": "סדרה — המכונות",
+  "text": "שלושה צמודים מאותה סדרה מקבלים +20% עוצמה ו+20% חיים.",
+  "where": {
+   "kind": "json",
+   "file": "data/series/02-machines.json",
+   "path": [
+    "synergy",
+    "description",
+    "he"
+   ]
+  },
+  "en": "Three of the family, touching: +20% power and health."
+ },
+ {
+  "id": "ddff3163",
+  "section": "סדרה — המכונות",
+  "text": "בורגון",
+  "where": {
+   "kind": "json",
+   "file": "data/series/02-machines.json",
+   "path": [
+    "cards",
+    0,
+    "name",
+    "he"
+   ]
+  },
+  "en": "Boltling"
+ },
+ {
+  "id": "d2424377",
+  "section": "סדרה — המכונות",
+  "text": "הקטן והזול. המשפחה בנויה סביב זה שיש הרבה כאלה.",
+  "where": {
+   "kind": "json",
+   "file": "data/series/02-machines.json",
+   "path": [
+    "cards",
+    0,
+    "role",
+    "he"
+   ]
+  },
+  "en": "The small cheap one. The family is built on there being plenty."
+ },
+ {
+  "id": "d540afff",
+  "section": "סדרה — המכונות",
+  "text": "רחפון",
+  "where": {
+   "kind": "json",
+   "file": "data/series/02-machines.json",
+   "path": [
+    "cards",
+    1,
+    "name",
+    "he"
+   ]
+  },
+  "en": "Drone"
+ },
+ {
+  "id": "d8221a90",
+  "section": "סדרה — המכונות",
+  "text": "עף מעל הכל ומגיע ראשון.",
+  "where": {
+   "kind": "json",
+   "file": "data/series/02-machines.json",
+   "path": [
+    "cards",
+    1,
+    "role",
+    "he"
+   ]
+  },
+  "en": "Flies over everything and gets there first."
+ },
+ {
+  "id": "d8b72be9",
+  "section": "סדרה — המכונות",
+  "text": "מוקש הברגים",
+  "where": {
+   "kind": "json",
+   "file": "data/series/02-machines.json",
+   "path": [
+    "cards",
+    2,
+    "name",
+    "he"
+   ]
+  },
+  "en": "Bolt Mine"
+ },
+ {
+  "id": "dbc6010d",
+  "section": "סדרה — המכונות",
+  "text": "לא זז, רק מחכה. נשבר לשני מוקשים קטנים.",
+  "where": {
+   "kind": "json",
+   "file": "data/series/02-machines.json",
+   "path": [
+    "cards",
+    2,
+    "role",
+    "he"
+   ]
+  },
+  "en": "Does not move, only waits. Breaks into two smaller mines."
+ },
+ {
+  "id": "ded7e13d",
+  "section": "סדרה — המכונות",
+  "text": "פס הייצור",
+  "where": {
+   "kind": "json",
+   "file": "data/series/02-machines.json",
+   "path": [
+    "cards",
+    3,
+    "name",
+    "he"
+   ]
+  },
+  "en": "The Assembly Line"
+ },
+ {
+  "id": "d0a1f9af",
+  "section": "סדרה — המכונות",
+  "text": "לא זז, כמעט לא מכה — וכשהוא נשבר יוצאים ממנו שלושה.",
+  "where": {
+   "kind": "json",
+   "file": "data/series/02-machines.json",
+   "path": [
+    "cards",
+    3,
+    "role",
+    "he"
+   ]
+  },
+  "en": "Does not move, barely hits — and when it breaks, three come out."
+ },
+ {
+  "id": "d2ab1e68",
+  "section": "סדרה — המכונות",
+  "text": "מכונת התיקון",
+  "where": {
+   "kind": "json",
+   "file": "data/series/02-machines.json",
+   "path": [
+    "cards",
+    4,
+    "name",
+    "he"
+   ]
+  },
+  "en": "The Repair Rig"
+ },
+ {
+  "id": "dcc77d6d",
+  "section": "סדרה — המכונות",
+  "text": "מתקנת את מי שלידה, ואת עצמה.",
+  "where": {
+   "kind": "json",
+   "file": "data/series/02-machines.json",
+   "path": [
+    "cards",
+    4,
+    "role",
+    "he"
+   ]
+  },
+  "en": "Mends whoever stands beside it, and itself."
+ },
+ {
+  "id": "de31dbda",
+  "section": "סדרה — המכונות",
+  "text": "מאנדרואיד",
+  "where": {
+   "kind": "json",
+   "file": "data/series/02-machines.json",
+   "path": [
+    "cards",
+    5,
+    "name",
+    "he"
+   ]
+  },
+  "en": "Mandroid"
+ },
+ {
+  "id": "ddc276b6",
+  "section": "סדרה — המכונות",
+  "text": "קרן צללים שמפרקת שריון. מה שחטף ממנו כבר לא מוגן.",
+  "where": {
+   "kind": "json",
+   "file": "data/series/02-machines.json",
+   "path": [
+    "cards",
+    5,
+    "role",
+    "he"
+   ]
+  },
+  "en": "A shadow beam that strips armour. What it hits is not protected any more."
+ },
+ {
+  "id": "d7236863",
+  "section": "סדרה — המכונות",
+  "text": "מגנטרוס",
+  "where": {
+   "kind": "json",
+   "file": "data/series/02-machines.json",
+   "path": [
+    "cards",
+    6,
+    "name",
+    "he"
+   ]
+  },
+  "en": "Magnetros"
+ },
+ {
+  "id": "dadf3fa6",
+  "section": "סדרה — המכונות",
+  "text": "שדה מגנטי. גורר את כל מי שמנסה לשמור מרחק.",
+  "where": {
+   "kind": "json",
+   "file": "data/series/02-machines.json",
+   "path": [
+    "cards",
+    6,
+    "role",
+    "he"
+   ]
+  },
+  "en": "A magnetic field. Drags in anybody trying to keep their distance."
+ },
+ {
+  "id": "d42a117e",
+  "section": "סדרה — המכונות",
+  "text": "המרסק",
+  "where": {
+   "kind": "json",
+   "file": "data/series/02-machines.json",
+   "path": [
+    "cards",
+    7,
+    "name",
+    "he"
+   ]
+  },
+  "en": "The Crusher"
+ },
+ {
+  "id": "d5d48f38",
+  "section": "סדרה — המכונות",
+  "text": "מוחץ מכונה אחת משלו כדי להתחיל את הקרב משוריין.",
+  "where": {
+   "kind": "json",
+   "file": "data/series/02-machines.json",
+   "path": [
+    "cards",
+    7,
+    "role",
+    "he"
+   ]
+  },
+  "en": "Crushes one of its own to start the battle armoured."
+ },
+ {
+  "id": "daa3fbd9",
+  "section": "סדרה — המכונות",
+  "text": "פלדובוט",
+  "where": {
+   "kind": "json",
+   "file": "data/series/02-machines.json",
+   "path": [
+    "cards",
+    8,
+    "name",
+    "he"
+   ]
+  },
+  "en": "Steelbot"
+ },
+ {
+  "id": "dc362321",
+  "section": "סדרה — המכונות",
+  "text": "מטח ניטרונים — מכה שלושה נתיבים בבת אחת.",
+  "where": {
+   "kind": "json",
+   "file": "data/series/02-machines.json",
+   "path": [
+    "cards",
+    8,
+    "role",
+    "he"
+   ]
+  },
+  "en": "A neutron volley — hits three lanes at once."
+ },
+ {
+  "id": "ddbe8bbb",
+  "section": "סדרה — המכונות",
+  "text": "אם־המכונה",
+  "where": {
+   "kind": "json",
+   "file": "data/series/02-machines.json",
+   "path": [
+    "cards",
+    9,
+    "name",
+    "he"
+   ]
+  },
+  "en": "The Mother Machine"
+ },
+ {
+  "id": "d0219548",
+  "section": "סדרה — המכונות",
+  "text": "משריינת את כל מי שסביבה, ומפילה ארבעה חדשים כשהיא נופלת.",
+  "where": {
+   "kind": "json",
+   "file": "data/series/02-machines.json",
+   "path": [
+    "cards",
+    9,
+    "role",
+    "he"
+   ]
+  },
+  "en": "Armours everything around it, and drops four more when it falls."
+ },
+ {
+  "id": "deb8c67a",
+  "section": "סדרה — שוכני הים",
+  "text": "שוכני הים",
+  "where": {
+   "kind": "json",
+   "file": "data/series/04-sea.json",
+   "path": [
+    "name",
+    "he"
+   ]
+  },
+  "en": "The Sea Dwellers"
+ },
+ {
+  "id": "dd4ca0ae",
+  "section": "סדרה — שוכני הים",
+  "text": "שליטה בתנועה, משיכה והדיפה",
+  "where": {
+   "kind": "json",
+   "file": "data/series/04-sea.json",
+   "path": [
+    "specialty",
+    "he"
+   ]
+  },
+  "en": "Movement control, pulling and pushing"
+ },
+ {
+  "id": "d1a38510",
+  "section": "סדרה — שוכני הים",
+  "text": "הזרם",
+  "where": {
+   "kind": "json",
+   "file": "data/series/04-sea.json",
+   "path": [
+    "synergy",
+    "name",
+    "he"
+   ]
+  },
+  "en": "The Current"
+ },
+ {
+  "id": "d01b27a1",
+  "section": "סדרה — שוכני הים",
+  "text": "שלושה צמודים מאותה סדרה מקבלים +20% עוצמה ו+20% חיים.",
+  "where": {
+   "kind": "json",
+   "file": "data/series/04-sea.json",
+   "path": [
+    "synergy",
+    "description",
+    "he"
+   ]
+  },
+  "en": "Three of the family, touching: +20% power and health."
+ },
+ {
+  "id": "d7443bed",
+  "section": "סדרה — שוכני הים",
+  "text": "דגיג",
+  "where": {
+   "kind": "json",
+   "file": "data/series/04-sea.json",
+   "path": [
+    "cards",
+    0,
+    "name",
+    "he"
+   ]
+  },
+  "en": "Minnow"
+ },
+ {
+  "id": "dc746db4",
+  "section": "סדרה — שוכני הים",
+  "text": "קטן, מהיר, ואף פעם לא לבד.",
+  "where": {
+   "kind": "json",
+   "file": "data/series/04-sea.json",
+   "path": [
+    "cards",
+    0,
+    "role",
+    "he"
+   ]
+  },
+  "en": "Small, quick, and never on its own."
+ },
+ {
+  "id": "d2dba1fb",
+  "section": "סדרה — שוכני הים",
+  "text": "מדוזה",
+  "where": {
+   "kind": "json",
+   "file": "data/series/04-sea.json",
+   "path": [
+    "cards",
+    1,
+    "name",
+    "he"
+   ]
+  },
+  "en": "Jellyfish"
+ },
+ {
+  "id": "d41af31a",
+  "section": "סדרה — שוכני הים",
+  "text": "המים סביבה כבדים. כולם זזים לאט.",
+  "where": {
+   "kind": "json",
+   "file": "data/series/04-sea.json",
+   "path": [
+    "cards",
+    1,
+    "role",
+    "he"
+   ]
+  },
+  "en": "The water around it is heavy. Everything moves slower."
+ },
+ {
+  "id": "d751def7",
+  "section": "סדרה — שוכני הים",
+  "text": "צדפת הסלע",
+  "where": {
+   "kind": "json",
+   "file": "data/series/04-sea.json",
+   "path": [
+    "cards",
+    2,
+    "name",
+    "he"
+   ]
+  },
+  "en": "Rock Clam"
+ },
+ {
+  "id": "d8ba953a",
+  "section": "סדרה — שוכני הים",
+  "text": "לא זזה ואי אפשר להזיז אותה.",
+  "where": {
+   "kind": "json",
+   "file": "data/series/04-sea.json",
+   "path": [
+    "cards",
+    2,
+    "role",
+    "he"
+   ]
+  },
+  "en": "Does not move, and cannot be moved."
+ },
+ {
+  "id": "d08a0e28",
+  "section": "סדרה — שוכני הים",
+  "text": "דיונון",
+  "where": {
+   "kind": "json",
+   "file": "data/series/04-sea.json",
+   "path": [
+    "cards",
+    3,
+    "name",
+    "he"
+   ]
+  },
+  "en": "Squid"
+ },
+ {
+  "id": "d794e058",
+  "section": "סדרה — שוכני הים",
+  "text": "לא מפיל אותך אחורה — מושך אותך הצידה, לנתיב אחר.",
+  "where": {
+   "kind": "json",
+   "file": "data/series/04-sea.json",
+   "path": [
+    "cards",
+    3,
+    "role",
+    "he"
+   ]
+  },
+  "en": "Does not knock you back — drags you sideways into another lane."
+ },
+ {
+  "id": "d011eba9",
+  "section": "סדרה — שוכני הים",
+  "text": "הנחשול",
+  "where": {
+   "kind": "json",
+   "file": "data/series/04-sea.json",
+   "path": [
+    "cards",
+    4,
+    "name",
+    "he"
+   ]
+  },
+  "en": "The Surge"
+ },
+ {
+  "id": "dcfb6195",
+  "section": "סדרה — שוכני הים",
+  "text": "לא הורג, דוחף. שתי משבצות אחורה בכל מכה.",
+  "where": {
+   "kind": "json",
+   "file": "data/series/04-sea.json",
+   "path": [
+    "cards",
+    4,
+    "role",
+    "he"
+   ]
+  },
+  "en": "Does not kill — pushes. Two slots back with every blow."
+ },
+ {
+  "id": "dd675ba8",
+  "section": "סדרה — שוכני הים",
+  "text": "פרוזן",
+  "where": {
+   "kind": "json",
+   "file": "data/series/04-sea.json",
+   "path": [
+    "cards",
+    5,
+    "name",
+    "he"
+   ]
+  },
+  "en": "Frozen"
+ },
+ {
+  "id": "d69e8f29",
+  "section": "סדרה — שוכני הים",
+  "text": "נחשול מחשמל. מי שחוטף עוצר, וגם מתחיל את ההתקפה שלו מחדש.",
+  "where": {
+   "kind": "json",
+   "file": "data/series/04-sea.json",
+   "path": [
+    "cards",
+    5,
+    "role",
+    "he"
+   ]
+  },
+  "en": "An electric surge. Whatever it hits stops, and starts its attack over."
+ },
+ {
+  "id": "dd632bbc",
+  "section": "סדרה — שוכני הים",
+  "text": "סירנה",
+  "where": {
+   "kind": "json",
+   "file": "data/series/04-sea.json",
+   "path": [
+    "cards",
+    6,
+    "name",
+    "he"
+   ]
+  },
+  "en": "Siren"
+ },
+ {
+  "id": "d3c6e2d2",
+  "section": "סדרה — שוכני הים",
+  "text": "שירת המוות. מי שנתקל בה נעצר במקום שלוש שניות.",
+  "where": {
+   "kind": "json",
+   "file": "data/series/04-sea.json",
+   "path": [
+    "cards",
+    6,
+    "role",
+    "he"
+   ]
+  },
+  "en": "The death song. Whatever meets her is held for three seconds."
+ },
+ {
+  "id": "dfa5ea9c",
+  "section": "סדרה — שוכני הים",
+  "text": "אושן",
+  "where": {
+   "kind": "json",
+   "file": "data/series/04-sea.json",
+   "path": [
+    "cards",
+    7,
+    "name",
+    "he"
+   ]
+  },
+  "en": "Ocean"
+ },
+ {
+  "id": "d0dc4a64",
+  "section": "סדרה — שוכני הים",
+  "text": "מערבולת. מושכת את הקו של היריב צעד קדימה, לתוך הקרב.",
+  "where": {
+   "kind": "json",
+   "file": "data/series/04-sea.json",
+   "path": [
+    "cards",
+    7,
+    "role",
+    "he"
+   ]
+  },
+  "en": "A whirlpool. Drags the enemy line a step forward, into the fight."
+ },
+ {
+  "id": "d49cee89",
+  "section": "סדרה — שוכני הים",
+  "text": "כריש",
+  "where": {
+   "kind": "json",
+   "file": "data/series/04-sea.json",
+   "path": [
+    "cards",
+    8,
+    "name",
+    "he"
+   ]
+  },
+  "en": "Shark"
+ },
+ {
+  "id": "d66d6953",
+  "section": "סדרה — שוכני הים",
+  "text": "הורג וממשיך לנוע. הולך על המלך.",
+  "where": {
+   "kind": "json",
+   "file": "data/series/04-sea.json",
+   "path": [
+    "cards",
+    8,
+    "role",
+    "he"
+   ]
+  },
+  "en": "Kills and keeps going. It is after the King."
+ },
+ {
+  "id": "d80b914f",
+  "section": "סדרה — שוכני הים",
+  "text": "לווייתן",
+  "where": {
+   "kind": "json",
+   "file": "data/series/04-sea.json",
+   "path": [
+    "cards",
+    9,
+    "name",
+    "he"
+   ]
+  },
+  "en": "Leviathan"
+ },
+ {
+  "id": "d77fe2ae",
+  "section": "סדרה — שוכני הים",
+  "text": "מכה שלושה נתיבים בבת אחת, וכל מכה מרחיקה.",
+  "where": {
+   "kind": "json",
+   "file": "data/series/04-sea.json",
+   "path": [
+    "cards",
+    9,
+    "role",
+    "he"
+   ]
+  },
+  "en": "Hits three lanes at once, and every blow pushes them back."
+ },
+ {
   "id": "d8c365e1",
   "section": "סדרה — הענקים",
   "text": "הענקים",
@@ -3262,6 +4018,237 @@
    ]
   },
   "en": "Passive: fills up to 3 empty slots with a Gelatinous Cube when building ends."
+ },
+ {
+  "id": "a592d187",
+  "section": "הארנות — שמות, רמזים וסיפורים",
+  "text": "חדר המשחקים",
+  "where": {
+   "kind": "source",
+   "file": "packages/shared/src/arenas.ts",
+   "line": 197
+  },
+  "en": "The Playroom"
+ },
+ {
+  "id": "a94a7529",
+  "section": "הארנות — שמות, רמזים וסיפורים",
+  "text": "כאן כולם מתחילים. על השטיח.",
+  "where": {
+   "kind": "source",
+   "file": "packages/shared/src/arenas.ts",
+   "line": 199
+  },
+  "en": "Everyone starts here. On the rug."
+ },
+ {
+  "id": "a2cfa115",
+  "section": "הארנות — שמות, רמזים וסיפורים",
+  "text": "כאן הכל מתחיל. המקום שבו ילדים יושבים ומחליפים קלפי מפלצות, אבל עדיין יודעים שתכף הכל ייגמר ואמא תכין לכם חביתה לארוחת ערב. יש לכם עוד לאן לשאוף.",
+  "where": {
+   "kind": "source",
+   "file": "packages/shared/src/arenas.ts",
+   "line": 201
+  },
+  "en": "Where it all starts. Children swapping monster cards on the rug, and still knowing that soon it ends and mum makes an omelette for dinner. You have somewhere to get to."
+ },
+ {
+  "id": "a5bfdbcd",
+  "section": "הארנות — שמות, רמזים וסיפורים",
+  "text": "המגרש",
+  "where": {
+   "kind": "source",
+   "file": "packages/shared/src/arenas.ts",
+   "line": 209
+  },
+  "en": "The Court"
+ },
+ {
+  "id": "a79c0ff9",
+  "section": "הארנות — שמות, רמזים וסיפורים",
+  "text": "בחוץ, על האספלט, מול כולם.",
+  "where": {
+   "kind": "source",
+   "file": "packages/shared/src/arenas.ts",
+   "line": 211
+  },
+  "en": "Outside, on the asphalt, in front of everyone."
+ },
+ {
+  "id": "ac493da4",
+  "section": "הארנות — שמות, רמזים וסיפורים",
+  "text": "הופה, יצאתם למסע. זהו, אין כבר דרך חזרה. אתם עדיין על האספלט בשכונה, פוגשים פרצופים מוכרים אבל היי - מה זה שם על הרצפה? מפלצות חדשות שלא ראיתם מעולם. סדרת הריריים. יאמי.",
+  "where": {
+   "kind": "source",
+   "file": "packages/shared/src/arenas.ts",
+   "line": 213
+  },
+  "en": "Off you go, then. No way back now. Still on the asphalt down the road, still familiar faces — but hey, what is that on the ground? Monsters you have never seen. The Slimes. Yum."
+ },
+ {
+  "id": "a9049a24",
+  "section": "הארנות — שמות, רמזים וסיפורים",
+  "text": "תחנת הרכבת",
+  "where": {
+   "kind": "source",
+   "file": "packages/shared/src/arenas.ts",
+   "line": 233
+  },
+  "en": "The Station"
+ },
+ {
+  "id": "ac78a749",
+  "section": "הארנות — שמות, רמזים וסיפורים",
+  "text": "אף אחד לא עוצר פה. חוץ ממך.",
+  "where": {
+   "kind": "source",
+   "file": "packages/shared/src/arenas.ts",
+   "line": 235
+  },
+  "en": "Nobody stops here. Except you."
+ },
+ {
+  "id": "a8e2fe9e",
+  "section": "הארנות — שמות, רמזים וסיפורים",
+  "text": "קניתם כרטיס, עברתם את המחסום וזהו - אתם כבר רחוקים מאוד מהבית. אתם רעבים, אין לכם קליטה והאיש הזה שם בספסל מסתכל עליכם מוזר. אין מה לעשות. החלטתם להיות אמיצים. מזל שיש לצדכם סדרת מפלצות חדשה: החרקים.",
+  "where": {
+   "kind": "source",
+   "file": "packages/shared/src/arenas.ts",
+   "line": 237
+  },
+  "en": "You bought a ticket, went through the barrier, and that is that — you are a long way from home. You are hungry, there is no signal, and that man on the bench is looking at you oddly. Nothing for it. You decided to be brave. Lucky you have a new family of monsters beside you: the Insects."
+ },
+ {
+  "id": "a5b596bd",
+  "section": "הארנות — שמות, רמזים וסיפורים",
+  "text": "המוסך",
+  "where": {
+   "kind": "source",
+   "file": "packages/shared/src/arenas.ts",
+   "line": 269
+  },
+  "en": "The Garage"
+ },
+ {
+  "id": "a6f6844f",
+  "section": "הארנות — שמות, רמזים וסיפורים",
+  "text": "מישהו שכח לכבות את האור.",
+  "where": {
+   "kind": "source",
+   "file": "packages/shared/src/arenas.ts",
+   "line": 271
+  },
+  "en": "Somebody left the light on."
+ },
+ {
+  "id": "a80b1a0a",
+  "section": "הארנות — שמות, רמזים וסיפורים",
+  "text": "ירדתם מהרכבת והמשכתם ברגל. מוסך, שתיים בלילה, התריס חצי סגור ובפנים עוד דולק אור. או שמישהו שכח לכבות, או שמישהו עוד עובד. הרצפה דביקה משמן והברגים מתגלגלים לכם מתחת לרגליים. ואז אחד הברגים קם. המכונות.",
+  "where": {
+   "kind": "source",
+   "file": "packages/shared/src/arenas.ts",
+   "line": 273
+  },
+  "en": "You got off the train and kept walking. A garage, two in the morning, the shutter half down and a light still on inside. Either somebody forgot to turn it off, or somebody is still working. The floor is sticky with oil and the bolts roll under your feet. And then one of the bolts stands up. The Machines."
+ },
+ {
+  "id": "a05a758e",
+  "section": "הארנות — שמות, רמזים וסיפורים",
+  "text": "הבריכה",
+  "where": {
+   "kind": "source",
+   "file": "packages/shared/src/arenas.ts",
+   "line": 281
+  },
+  "en": "The Pool"
+ },
+ {
+  "id": "a321522c",
+  "section": "הארנות — שמות, רמזים וסיפורים",
+  "text": "אל תיכנסו למים.",
+  "where": {
+   "kind": "source",
+   "file": "packages/shared/src/arenas.ts",
+   "line": 283
+  },
+  "en": "Do not get in the water."
+ },
+ {
+  "id": "adca9e8c",
+  "section": "הארנות — שמות, רמזים וסיפורים",
+  "text": "בריכה עירונית בלילה, בלי מציל ובלי אף אחד. את המים לא החליפו כבר הרבה זמן והריח מגיע עד הגדר. אתם אומרים לעצמכם שזה רק עלים. שזאת רק הרוח. ואז משהו זז מתחת לפני המים, וזה לא עלה וזאת לא הרוח. שוכני הים.",
+  "where": {
+   "kind": "source",
+   "file": "packages/shared/src/arenas.ts",
+   "line": 285
+  },
+  "en": "A municipal pool at night, no lifeguard and nobody about. The water has not been changed in a long time and you can smell it from the fence. You tell yourself it is only leaves. Only the wind. And then something moves under the surface, and it is not a leaf and it is not the wind. The Sea Dwellers."
+ },
+ {
+  "id": "aa4f084d",
+  "section": "הארנות — שמות, רמזים וסיפורים",
+  "text": "סמטת האימה",
+  "where": {
+   "kind": "source",
+   "file": "packages/shared/src/arenas.ts",
+   "line": 310
+  },
+  "en": "Fright Alley"
+ },
+ {
+  "id": "ae2f223c",
+  "section": "הארנות — שמות, רמזים וסיפורים",
+  "text": "אל תסתכל מה יש בפח.",
+  "where": {
+   "kind": "source",
+   "file": "packages/shared/src/arenas.ts",
+   "line": 312
+  },
+  "en": "Don"
+ },
+ {
+  "id": "a34276b1",
+  "section": "הארנות — שמות, רמזים וסיפורים",
+  "text": "הצרצרים מצרצרים, התנים מייללים, הפנסים מהבהבים - ואתם פה לבד. כמה רחוק אתם מוכנים ללכת בשביל להשיג את אמנדה? מסתבר שלא מעט. אמאל'ה, מה זה הרעש הזה? אה, זה רק חתול.",
+  "where": {
+   "kind": "source",
+   "file": "packages/shared/src/arenas.ts",
+   "line": 314
+  },
+  "en": "The crickets are going, the jackals are howling, the lamps are flickering — and you are here on your own. How far will you go to get Amanda? Quite far, it turns out. Blimey, what was that noise? Oh. Only a cat."
+ },
+ {
+  "id": "a8e9a644",
+  "section": "הארנות — שמות, רמזים וסיפורים",
+  "text": "תחנת הדלק",
+  "where": {
+   "kind": "source",
+   "file": "packages/shared/src/arenas.ts",
+   "line": 322
+  },
+  "en": "The Fuel Stop"
+ },
+ {
+  "id": "ab7dc60e",
+  "section": "הארנות — שמות, רמזים וסיפורים",
+  "text": "הסוף. אל תדליק כאן גפרור.",
+  "where": {
+   "kind": "source",
+   "file": "packages/shared/src/arenas.ts",
+   "line": 324
+  },
+  "en": "The end of the road. Don"
+ },
+ {
+  "id": "a5a35a7f",
+  "section": "הארנות — שמות, רמזים וסיפורים",
+  "text": "זוהי התחנה הסופית. חשבתם למצוא פה מתדלק חייכן וחנות עם אייס קפה? תחשבו שוב. נראה שרגל אדם לא דרכה פה כבר שנים. רגע, אבל אם כן - מה זו טביעת הרגל הזאת פה? אה כן. זאת הרגל של אמנדה. מזל טוב. מצאתם אותה. או יותר נכון - היא מצאה אתכם. מקווים שלא תסיימו בצלחת שלה.",
+  "where": {
+   "kind": "source",
+   "file": "packages/shared/src/arenas.ts",
+   "line": 326
+  },
+  "en": "The last stop. Expecting a cheerful pump attendant and a shop with iced coffee? Think again. Nobody has set foot here in years. Although — then whose footprint is that? Ah. Amanda"
  },
  {
   "id": "s09c9dbd",
@@ -8250,7 +9237,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/components/Club.tsx",
-   "line": 134
+   "line": 140
   }
  },
  {
@@ -8260,7 +9247,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/components/Club.tsx",
-   "line": 186
+   "line": 192
   }
  },
  {
@@ -8270,7 +9257,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/components/Club.tsx",
-   "line": 187
+   "line": 193
   }
  },
  {
@@ -8280,7 +9267,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/components/Club.tsx",
-   "line": 188
+   "line": 194
   }
  },
  {
@@ -8290,7 +9277,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/components/Club.tsx",
-   "line": 189
+   "line": 195
   }
  },
  {
@@ -8300,7 +9287,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/components/Club.tsx",
-   "line": 229
+   "line": 235
   }
  },
  {
@@ -8310,7 +9297,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/components/Club.tsx",
-   "line": 233
+   "line": 239
   }
  },
  {
@@ -8320,7 +9307,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/components/Club.tsx",
-   "line": 258
+   "line": 264
   }
  },
  {
@@ -8330,7 +9317,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/components/Club.tsx",
-   "line": 277
+   "line": 283
   }
  },
  {
@@ -8340,7 +9327,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/components/Club.tsx",
-   "line": 392
+   "line": 398
   }
  },
  {
@@ -8350,7 +9337,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/components/Club.tsx",
-   "line": 439
+   "line": 445
   }
  },
  {
@@ -8360,7 +9347,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/components/Club.tsx",
-   "line": 447
+   "line": 453
   }
  },
  {
@@ -8370,7 +9357,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/components/Club.tsx",
-   "line": 483
+   "line": 489
   }
  },
  {
@@ -8380,7 +9367,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/components/Club.tsx",
-   "line": 493
+   "line": 499
   }
  },
  {
@@ -8390,7 +9377,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/components/Club.tsx",
-   "line": 502
+   "line": 508
   }
  },
  {
@@ -8400,7 +9387,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/components/Club.tsx",
-   "line": 611
+   "line": 617
   }
  },
  {
@@ -8410,7 +9397,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/components/Club.tsx",
-   "line": 666
+   "line": 672
   }
  },
  {
@@ -8420,7 +9407,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/components/Club.tsx",
-   "line": 749
+   "line": 755
   }
  },
  {
@@ -8430,7 +9417,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/components/Club.tsx",
-   "line": 750
+   "line": 756
   }
  },
  {
@@ -8440,7 +9427,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/components/Club.tsx",
-   "line": 751
+   "line": 757
   }
  },
  {
@@ -8450,7 +9437,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/components/Club.tsx",
-   "line": 752
+   "line": 758
   }
  },
  {

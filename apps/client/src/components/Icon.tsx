@@ -77,6 +77,7 @@ export type IconName =
   | "challenge"
   | "robot"
   | "friend"
+  | "chat"
   | "online"
   | "unplugged"
   | "phone";

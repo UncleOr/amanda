@@ -168,6 +168,9 @@ export const ICON_LOOK: Record<string, string> = {
   online: "a globe with a bold meridian and a signal arc beside it, deep blue and cream",
   unplugged: "a power plug pulled out of its socket with the cable curling, grey and red",
   phone: "a phone held upright with a curved rotate arrow around it, steel and gold",
+  // Or: "the chat icon in the club should be a chat." It was the info icon,
+  // because there was no chat icon — which is not a reason, it is a shortcut.
+  chat: "two overlapping rounded speech bubbles, the front one teal and the one behind it cream",
 };
 
 export function buildIconPrompt(id: string, styleBrief: string): string {
