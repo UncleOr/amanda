@@ -267,7 +267,21 @@ describe("a burning lane is the answer to a stacked lane", () => {
     // Counting corpses is the wrong measure here and it hid the effect: both
     // sides killed two, while the third ant finished on 53hp against the lava
     // and on a full 900 against the plain card. The bill is what matters.
-    expect(healthLeft(burning)).toBeLessThan(healthLeft(plain) / 2);
+    /*
+     * ⚠ THE MARGIN MOVED WHEN THE KING LEARNED TO SWING, and it is worth
+     * saying why rather than quietly lowering a number. This said "less
+     * than half" and measured 53 against 900. A King now has a reach floor
+     * (KING.minReach — Or: *"the King needs to attack too"*), so in BOTH
+     * runs the defending King kills the queue faster and the battle is
+     * over sooner, which leaves the burn less time to bill anybody: 647
+     * against 900 now.
+     *
+     * The claim this file is really making is the one below — that the
+     * burn is the difference between winning and losing the lane — and it
+     * still passes untouched. This one keeps a margin big enough to mean
+     * something: a quarter of a card's health, for standing in the fire.
+     */
+    expect(healthLeft(plain) - healthLeft(burning)).toBeGreaterThan(200);
   });
 
   it("and the burn is the difference between winning and losing that lane", () => {

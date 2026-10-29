@@ -71,7 +71,7 @@ const card = (
     abilities: [],
   }) as unknown as Card;
 
-const MODES = ["lane", "avenger", "champion", "sniperHunter", "wallbreaker", "invader"] as const;
+const MODES = ["lane", "king", "avenger", "champion", "sniperHunter", "wallbreaker", "invader"] as const;
 
 /**
  * The hunters, and everything one of them might choose between.
@@ -101,6 +101,8 @@ const CATALOG = new Map<string, Card>([
   ["bait", card("bait")],
   /** A crown, for the two modes that must not count one. */
   ["crown", card("crown", { power: 100 })],
+  /** A bodyguard: it stands still, right in front of its King. */
+  ["guard", card("guard", { hp: 400000 })],
 ]);
 
 /** Run one battle and count the hunter's blows, by who took them. */
@@ -265,5 +267,64 @@ describe("שומר הגבול — the one that goes for whoever crossed", () => 
     // Without them this is "whoever is closest", which the game already had.
     const tally = hits("invader", [{ cardId: "walker", x: NEAR, y: 0 }]);
     expect(chosen(tally)).toBe("walker");
+  });
+});
+
+/**
+ * ═══ HOD SAW CHUPPY HIT THE KING WITH A GUARD STILL ALIVE ═══
+ *
+ * Or, passing it on: *"Hod claims he saw Chuppy attack the King even though
+ * one of the guards was still alive. Check that this does not happen."*
+ *
+ * It did happen. Measured over 200 full battles of real cards: 43 of 873
+ * blows chosen against a King had one of that King's own standing in front
+ * of it, in the attacker's own lane — and Chuppy was one of the examples.
+ *
+ * ═══ WHY, AND IT IS THE KING'S SHOULDERS ═══
+ *
+ * `gapAhead` measures edge to edge, and a King is TWO columns wide, so its
+ * near edge reaches half a column further forward than any guard's. Chuppy
+ * at column 4, the King centred on 1.5 with its edge at 2.5, the Flame
+ * Dragon guarding at 1.85 with its edge at 2.35: by edges the King was
+ * NEARER than the card standing in front of it — 1.0 against 1.15 — so the
+ * shield test said there was no shield.
+ *
+ * The board below is that shape, exactly, with the numbers rounded to where
+ * cards are actually placed.
+ */
+describe("the King behind its guard", () => {
+  const theirBoard: BoardInput["placements"] = [
+    { cardId: "crown", x: 1, y: 1, king: true },
+    { cardId: "guard", x: 2, y: 1 },
+  ];
+
+  /** Every blow this attacker chose, by what it chose it against. */
+  function blows(mode: Targeting) {
+    const hunter = `hunter_${mode}`;
+    const r = runBattle({
+      // Facing the King down its own lane, with the guard in between.
+      a: { owner: "A", placements: theirBoard },
+      b: { owner: "B", placements: [{ cardId: hunter, x: 3, y: 1 }] },
+      seed: 1,
+      catalog: CATALOG,
+      synergies: [],
+    });
+    const me = r.finalUnits.find((u) => u.cardId === hunter)!;
+    const byId = new Map<string, string>(r.finalUnits.map((u) => [u.uid, u.cardId] as const));
+    return r.events
+      .filter((e) => e.type === "attack" && e.uid === me.uid)
+      .map((e) => (e.targetUid && byId.get(e.targetUid)) || "?");
+  }
+
+  it("is never the one that gets hit while the guard stands", () => {
+    const chosen = blows("lane");
+    expect(chosen.length, "it is fighting something").toBeGreaterThan(5);
+    expect(new Set(chosen), "and that something is the guard").toEqual(new Set(["guard"]));
+  });
+
+  it("and a King-hunter will not walk past the guard either", () => {
+    const chosen = blows("king");
+    expect(chosen.length).toBeGreaterThan(5);
+    expect(new Set(chosen)).toEqual(new Set(["guard"]));
   });
 });

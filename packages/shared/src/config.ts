@@ -40,6 +40,26 @@ export const KING = {
   hpPerAccountLevel: 100,
   /** Instant-kill effects deal this flat damage to the King instead of erasing it. */
   instantKillFlatDamage: 2000,
+  /**
+   * ═══ THE KING SWINGS AT WHATEVER IS STANDING BY IT ═══
+   *
+   * Or: *"and the King needs to attack too, even if at short range and
+   * forwards."*
+   *
+   * It did not. Measured over 200 full battles: 24 of 64 Kings never swung
+   * once, and every single one of them was a MELEE card. A King cannot
+   * move — the King's Trap — so a melee King can only ever hit something
+   * that walks right into it, and a ranged attacker stops three columns
+   * short and shoots it to death from there. The nearest living enemy of a
+   * silent King was one or two columns away in 19 of those 24 cases.
+   *
+   * So a King gets a floor under its reach, whatever is on its card. It is
+   * a floor and not a replacement: a sniper King keeps its six. Two columns
+   * is deliberately less than a ranged card's three — Or's "short range" —
+   * and it is what turns "the enemy is standing on my doorstep" into a
+   * fight.
+   */
+  minReach: 1.5,
 } as const;
 
 /**

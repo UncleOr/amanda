@@ -92,9 +92,36 @@ export const ABILITY_TYPES = [
   "silenceHeal", // the card it hits stops healing — its regen and its heal aura
   "silenceArmor", // the card it hits loses its armour and stops granting any
   "silencePoison", // the card it hits stops poisoning — its dot and its lane
+  /*
+   * ═══ GOING ROUND THE BACK ═══
+   *
+   * Or: *"I want another movement ability too: dive / teleport / burrow
+   * (it is the same thing, but one for the machines and one for the sea
+   * creatures and one for the plants). It basically bypasses everyone and
+   * reaches the back part of the board, and then turns around and attacks
+   * backwards."*
+   *
+   * One mechanic, three names, and the names are the point: a machine that
+   * BURROWS is wrong and a plant that TELEPORTS is wrong, and a card whose
+   * ability does not fit the creature is a card a child stops believing.
+   * The engine treats all three identically.
+   *
+   * It happens at spawn, so the card is simply standing at the far end when
+   * the battle begins — no walk across, nothing to intercept, which is what
+   * "bypasses everyone" means. And then it is facing the other way, with
+   * the enemy's back row and its King's back in front of it.
+   */
+  "dive", // the sea
+  "teleport", // the machines
+  "burrow", // the plants
 ] as const;
+
+
 export const AbilityTypeSchema = z.enum(ABILITY_TYPES);
 export type AbilityType = z.infer<typeof AbilityTypeSchema>;
+
+/** The three that go round the back — one mechanic under three names. */
+export const ROUND_THE_BACK: readonly AbilityType[] = ["dive", "teleport", "burrow"];
 
 /**
  * A single data-driven behavior. `params` is an open bag of numbers/strings so

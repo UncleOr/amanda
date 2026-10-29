@@ -261,13 +261,30 @@ describe("the buffs on a reported board", () => {
   });
 
   it("change who wins, which is the whole point", () => {
-    // The same two boards, and the only difference is the levels the player
-    // actually fought with. This is the match Or saw one of.
-    const plain = soloResult({ seed: 11, mine: weak, theirs: strong });
+    /*
+     * The same two boards, and the only difference is the levels the player
+     * actually fought with. This is the match Or saw one of.
+     *
+     * ⚠ THE FIXTURE CHANGED THE DAY THE KING LEARNED TO SWING, and the
+     * reason is worth keeping. It used to be a board of Obsidian Eggs
+     * against the Colossi: an egg has 50 power and strikes once every ten
+     * seconds, so that board never won by FIGHTING — it survived to the
+     * clock and took the total-health tiebreak. Giving Kings a reach floor
+     * (KING.minReach) ends battles instead of letting them run out, so the
+     * egg board now loses at any multiplier at all, ×8 included. Measured.
+     *
+     * Colossi against Lava Dragons is a matchup where both sides actually
+     * fight, so the levels decide it — which is the thing this test is
+     * about. Over the whole catalogue the change is small: 300 varied
+     * boards, A wins 52% before and 54% after.
+     */
+    const mine = boardOf(GIANT);
+    const theirs = boardOf("dragons_04_lava");
+    const plain = soloResult({ seed: 11, mine, theirs });
     const levelled = soloResult({
       seed: 11,
-      mine: buffed(weak, { powerMult: 2.8, hpMult: 2.8 }),
-      theirs: strong,
+      mine: buffed(mine, { powerMult: 2.8, hpMult: 2.8 }),
+      theirs,
     });
     if ("error" in plain || "error" in levelled) throw new Error("should have replayed");
     expect(plain.result.winner).toBe("B");

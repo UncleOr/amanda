@@ -106,6 +106,12 @@ export interface BattleEvent {
     | "reveal"
     /** A delayed transform came due: this unit is now a different card. */
     | "transform"
+    /**
+     * It went round the back — dived, teleported or burrowed — and is
+     * standing at the far end of the enemy's board facing the other way.
+     * Fires once, at spawn. `col` is where it came up.
+     */
+    | "dig"
     | "win";
   /** Acting unit. */
   uid?: string;

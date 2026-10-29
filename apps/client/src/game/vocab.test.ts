@@ -28,6 +28,7 @@ import {
   ELEMENTS,
   RANGES,
   RARITIES,
+  ROUND_THE_BACK,
   type AbilityTrigger,
   type AbilityType,
   type CarryStyle,
@@ -119,7 +120,11 @@ describe("what the engine really does", () => {
     const handles = (t: string): boolean =>
       ENGINE.includes(`case "${t}"`) ||
       ENGINE.includes(`.type === "${t}"`) ||
-      ENGINE.includes(`.type !== "${t}"`);
+      ENGINE.includes(`.type !== "${t}"`) ||
+      // Or a named group the engine dispatches on as a set — dive, teleport
+      // and burrow are one mechanic under three names and are handled by
+      // `ROUND_THE_BACK.includes(...)` rather than by three identical cases.
+      (ROUND_THE_BACK.includes(t as AbilityType) && ENGINE.includes("ROUND_THE_BACK.includes"));
     const unhandled = ABILITY_TYPES.filter((t) => !handles(t));
     const marked = ABILITY_TYPES.filter((t) => EFFECT_HE[t].dead);
     expect(unhandled).toEqual(marked);

@@ -1,4 +1,4 @@
-import { ARENA, BOARD, SIMULATION } from "@amanda/shared";
+import { ARENA, BOARD, ROUND_THE_BACK, SIMULATION } from "@amanda/shared";
 import type { AbilityType, Element, LocalizedString } from "@amanda/shared";
 import { isAhead, sharesLane } from "./combat.js";
 import type { BattleState, Owner, Unit } from "./types.js";
@@ -477,6 +477,30 @@ export function runOnSpawn(state: BattleState, ops: BattleOps): void {
     if (!u.alive) continue;
     for (const ab of u.abilities) {
       if (ab.trigger !== "onSpawn") continue;
+
+      /*
+       * ═══ ROUND THE BACK ═══
+       *
+       * Or: *"it basically bypasses everyone and reaches the back part of
+       * the board, and then turns around and attacks backwards."*
+       *
+       * Two lines, and the second one is the whole card: it is put at the
+       * far end of the enemy's board and TURNED. Everything else follows
+       * from the turn — what counts as "ahead" of it is now the enemy's
+       * back row, their King's back, and the whole board between it and
+       * home. It walks toward its own side eating its way out.
+       *
+       * At spawn, so it is already there when the battle starts: nothing to
+       * intercept, which is what "bypasses everyone" has to mean on a board
+       * where every other card has to walk.
+       */
+      if (ROUND_THE_BACK.includes(ab.type) && !u.flags.dug) {
+        u.col = u.facing > 0 ? ARENA.width - 1 : 0;
+        u.facing = u.facing > 0 ? -1 : 1;
+        u.flags.dug = true;
+        state.events.push({ tick: state.tick, type: "dig", uid: u.uid, col: u.col });
+      }
+
       if (ab.type === "sacrificeAdjacent") {
         // The weakest adjacent ally of the same side — but never the King,
         // and never a guard. See guardsTheKing below for why not.

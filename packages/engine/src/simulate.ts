@@ -1,4 +1,4 @@
-import { ARENA, COMBAT, RANGE_REACH, SIMULATION, SUDDEN_DEATH, type Targeting } from "@amanda/shared";
+import { ARENA, COMBAT, KING, RANGE_REACH, SIMULATION, SUDDEN_DEATH, type Targeting } from "@amanda/shared";
 import {
   damageSharer,
   rowAttackTargets,
@@ -53,13 +53,38 @@ interface TargetPick {
 }
 
 /**
+ * How far ahead of `u` the CENTRE of `other` sits. Negative is behind.
+ *
+ * ⚠ CENTRES, AND NOT `gapAhead`, FOR DECIDING WHO IS IN THE WAY. Hod, after
+ * a match: *"he saw Chuppy attack the King even though one of the guards was
+ * still alive."* He had. Measured over 200 battles: 43 of 873 blows chosen
+ * against a King had one of the King's own standing in front of it, in the
+ * attacker's own lane.
+ *
+ * The cause is the King's body. `gapAhead` measures edge to edge and a King
+ * is TWO columns wide, so its near edge reaches a whole half-column further
+ * forward than a guard's does. Chuppy at column 4, the King centred at 1.5
+ * (its edge at 2.5), the Flame Dragon guarding at 1.85 (its edge at 2.35):
+ * by edges the King is NEARER than the thing standing in front of it — 1.0
+ * against 1.15 — so the shield test said there was no shield.
+ *
+ * Centres have no such problem, and they are also what the rule means: a
+ * guard standing in front of the King is in the way, whatever the King's
+ * shoulders are doing.
+ */
+function aheadBy(u: Unit, other: Unit): number {
+  return (other.col - u.col) * u.facing;
+}
+
+/**
  * Who is standing between an attacker and the enemy King — the King's actual
  * bodyguards, whatever lane they happen to be in.
  */
 function guardsOf(state: BattleState, u: Unit, king: Unit): Unit[] {
-  const kingGap = gapAhead(u, king);
+  const kingAt = aheadBy(u, king);
   return state.units.filter(
-    (e) => e.alive && e.owner === king.owner && !e.isKing && isAhead(u, e) && gapAhead(u, e) < kingGap,
+    (e) =>
+      e.alive && e.owner === king.owner && !e.isKing && isAhead(u, e) && aheadBy(u, e) < kingAt,
   );
 }
 
@@ -234,7 +259,22 @@ function huntPrey(u: Unit, enemies: Unit[]): TargetPick | null {
  * happens when there is nothing left in the lane to be disciplined about.
  */
 function pickTarget(state: BattleState, u: Unit): TargetPick | null {
-  const enemies = state.units.filter((e) => e.alive && e.owner !== u.owner && isAhead(u, e));
+  /*
+   * ⚠ A CARD THAT CAME UP AMONG THEM CAN HIT WHAT IT IS STANDING NEXT TO.
+   *
+   * `isAhead` is strict, and the far end of the board is also where the
+   * enemy's back row sits — so a diver landing there would come up level
+   * with that whole row and be unable to touch any of it, which is the one
+   * row the ability exists to get at. While it is still turned round, level
+   * counts as in front.
+   */
+  const level = 0.01;
+  const enemies = state.units.filter(
+    (e) =>
+      e.alive &&
+      e.owner !== u.owner &&
+      (isAhead(u, e) || (u.flags.dug === true && Math.abs(e.col - u.col) < level)),
+  );
   if (enemies.length === 0) return null;
 
   if (u.targeting === "king") {
@@ -268,8 +308,8 @@ function pickTarget(state: BattleState, u: Unit): TargetPick | null {
   // sent attackers walking straight past that King to go and kill it.
   const theirKing = ahead.find((e) => e.isKing);
   if (theirKing) {
-    const kingGap = gapAhead(u, theirKing);
-    const shielded = ahead.some((e) => !e.isKing && gapAhead(u, e) < kingGap);
+    const kingAt = aheadBy(u, theirKing);
+    const shielded = ahead.some((e) => !e.isKing && aheadBy(u, e) < kingAt);
     if (shielded) ahead = ahead.filter((e) => !e.isKing);
   }
   /*
@@ -300,7 +340,10 @@ function inAttackRange(u: Unit, gap: number): boolean {
   // Melee must be in contact; everything else has a reach in columns (see
   // RANGE_REACH). The epsilon absorbs float rounding when a unit halts exactly
   // at the edge of its reach.
-  const reach = u.range === "melee" ? MELEE_REACH : RANGE_REACH[u.range];
+  const own = u.range === "melee" ? MELEE_REACH : RANGE_REACH[u.range];
+  // A King cannot step forward, so a melee one could never answer anything
+  // that stopped short of it. See KING.minReach for the measurement.
+  const reach = u.isKing ? Math.max(own, KING.minReach) : own;
   return gap <= reach + 1e-6;
 }
 
@@ -746,7 +789,23 @@ export function runBattle(setup: BattleSetup): BattleResult {
       u.attackCooldown = Math.max(0, u.attackCooldown - DT);
       if (state.tick < u.stunnedUntil) continue; // frozen / stunned
 
-      const picked = pickTarget(state, u);
+      let picked = pickTarget(state, u);
+      /*
+       * ⚠ AND IT TURNS ROUND AGAIN WHEN IT HAS EATEN ITS WAY OUT.
+       *
+       * A card that went round the back is facing home, so once it has
+       * cleared everything between itself and its own board there is
+       * nothing "ahead" of it at all — and a unit with no target walks to
+       * the wall and stands there, which is the stall Or found the first
+       * time: *"all the attackers in a straight line reaching the end and
+       * attacking nothing."* It faces about ONCE, and is an ordinary card
+       * from then on, so it cannot oscillate.
+       */
+      if (!picked && u.flags.dug && state.units.some((e) => e.alive && e.owner !== u.owner)) {
+        u.facing = u.facing > 0 ? -1 : 1;
+        u.flags.dug = false;
+        picked = pickTarget(state, u);
+      }
       /*
        * A unit fighting outside its own lane has to WALK there.
        *

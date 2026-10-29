@@ -245,4 +245,17 @@ export const EFFECT_HE: Record<AbilityType, Effect> = {
   silenceHeal: { he: "מנטרל ריפוי", note: "מי שהוא פוגע בו מפסיק לרפא — את עצמו ואת החברים. לתמיד" },
   silenceArmor: { he: "מנטרל שריון", note: "מוריד את כל השריון של מי שהוא פוגע בו, והוא לא חוזר" },
   silencePoison: { he: "מנטרל רעל", note: "מי שהוא פוגע בו מפסיק להרעיל. לתמיד" },
+
+  /*
+   * ── יכולת תנועה: מסביב לגב ──
+   *
+   * Or: *"it is the same thing, but one for the machines and one for the sea
+   * creatures and one for the plants."* So the note is identical on all
+   * three and the NAME is what fits the creature — a machine that burrows
+   * is wrong, and a card whose ability does not fit the monster is a card a
+   * child stops believing.
+   */
+  dive: { he: "צלילה", note: "מתחיל בקצה האחורי של הלוח של היריב, מסתובב ותוקף אחורה. ליצורי ים" },
+  teleport: { he: "טלפורטציה", note: "מתחיל בקצה האחורי של הלוח של היריב, מסתובב ותוקף אחורה. למכונות" },
+  burrow: { he: "חפירה", note: "מתחיל בקצה האחורי של הלוח של היריב, מסתובב ותוקף אחורה. לצמחים" },
 };

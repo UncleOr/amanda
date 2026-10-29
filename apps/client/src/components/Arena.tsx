@@ -1700,6 +1700,18 @@ export function Arena({
               spawnRing(fx(ev.col), cy(laneCenter(ev.lanes)), 0xffd36b, 6, CELL * 0.7, 3);
               return;
             }
+            /*
+             * It dived, teleported or burrowed and came up at the far end of
+             * the enemy's board. It fires on the first tick, so the card is
+             * simply standing back there when the battle opens — the ring is
+             * what says it ARRIVED rather than that somebody put it there.
+             */
+            case "dig": {
+              if (!actor) return;
+              spawnRing(actor.container.x, actor.container.y, 0x9ad7ff, 4, CELL * 1.1, 4, 520);
+              spawnRing(actor.container.x, actor.container.y, 0xffffff, 2, CELL * 0.6, 3);
+              return;
+            }
             default:
               return;
           }
