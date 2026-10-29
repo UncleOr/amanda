@@ -32,9 +32,8 @@
  * below are mostly under a second, and why the prompts keep saying "no music"
  * and "no reverb" to a model that loves adding both.
  */
-import { existsSync } from "node:fs";
+import { existsSync, mkdirSync, rmSync, statSync } from "node:fs";
 import { execFileSync, spawnSync } from "node:child_process";
-import { mkdirSync } from "node:fs";
 import { join } from "node:path";
 import { download, sound } from "./fal.js";
 import { REPO_ROOT } from "./catalog.js";
@@ -110,7 +109,37 @@ export interface SoundSpec {
   generate?: number;
   /** Peak level in the client copy, 0–1. The quiet ones play constantly. */
   level: number;
+  /**
+   * ═══ THIS ONE IS PLAYED ON A LOOP, SO IT IS CUT DIFFERENTLY ═══
+   *
+   * The drag ingredients are not events, they are textures: `sfx.drag` sets
+   * `loop = true` and runs them for as long as a finger is down. Two things
+   * in the ordinary treatment are wrong for that, and both of them make a
+   * texture PULSE once per cycle instead of running:
+   *
+   *   THE FADE-OUT. 50ms of silence at the end is how you stop a one-shot
+   *   clicking. On a loop it is a hole, every 2.2 seconds, forever.
+   *
+   *   THE ENDS NOT MATCHING. Measured on the ten generated on 2026-10-29:
+   *   `ing-chains` opened at -47.7dB against a body of -24.7, and
+   *   `ing-wind` at -35.9 against -19.8. Over 2.2 seconds that is not a
+   *   texture, it is a wave. A stricter noise gate was the obvious answer
+   *   and it was wrong — see the comment on the gate itself — so the clip
+   *   is folded over its own start instead.
+   *
+   * Checked by ear is not available to me; checked by measuring the first
+   * and last 150ms of each file is, and they should match within a few dB.
+   */
+  loop?: true;
 }
+
+/**
+ * How much of a looping clip is folded back over its own start.
+ *
+ * Long enough to hide a join in a noise texture, short enough that a clip
+ * does not lose a tenth of what it is.
+ */
+const LOOP_XFADE = 0.3;
 
 export const SOUNDS: SoundSpec[] = [
   {
@@ -560,6 +589,7 @@ export const SOUNDS: SoundSpec[] = [
     generate: 4,
     seconds: 2.2,
     level: 0.5,
+    loop: true,
   },
   {
     id: "ing-wings-insect",
@@ -568,6 +598,7 @@ export const SOUNDS: SoundSpec[] = [
     generate: 4,
     seconds: 2.2,
     level: 0.5,
+    loop: true,
   },
   {
     id: "ing-flame",
@@ -576,6 +607,7 @@ export const SOUNDS: SoundSpec[] = [
     generate: 4,
     seconds: 2.2,
     level: 0.5,
+    loop: true,
   },
   {
     id: "ing-ice",
@@ -584,6 +616,7 @@ export const SOUNDS: SoundSpec[] = [
     generate: 4,
     seconds: 2.2,
     level: 0.5,
+    loop: true,
   },
   {
     id: "ing-stone",
@@ -592,6 +625,7 @@ export const SOUNDS: SoundSpec[] = [
     generate: 4,
     seconds: 2.2,
     level: 0.5,
+    loop: true,
   },
   {
     id: "ing-slime",
@@ -600,6 +634,7 @@ export const SOUNDS: SoundSpec[] = [
     generate: 4,
     seconds: 2.2,
     level: 0.5,
+    loop: true,
   },
   {
     id: "ing-spark",
@@ -608,6 +643,7 @@ export const SOUNDS: SoundSpec[] = [
     generate: 4,
     seconds: 2.2,
     level: 0.5,
+    loop: true,
   },
   {
     id: "ing-skitter",
@@ -616,6 +652,7 @@ export const SOUNDS: SoundSpec[] = [
     generate: 4,
     seconds: 2.2,
     level: 0.5,
+    loop: true,
   },
   /*
    * ═══ TEN MORE INGREDIENTS ═══
@@ -640,6 +677,7 @@ export const SOUNDS: SoundSpec[] = [
     generate: 4,
     seconds: 2.2,
     level: 0.5,
+    loop: true,
   },
   {
     id: "ing-bubbles",
@@ -648,6 +686,7 @@ export const SOUNDS: SoundSpec[] = [
     generate: 4,
     seconds: 2.2,
     level: 0.5,
+    loop: true,
   },
   {
     id: "ing-gears",
@@ -656,6 +695,7 @@ export const SOUNDS: SoundSpec[] = [
     generate: 4,
     seconds: 2.2,
     level: 0.5,
+    loop: true,
   },
   {
     id: "ing-steam",
@@ -664,6 +704,7 @@ export const SOUNDS: SoundSpec[] = [
     generate: 4,
     seconds: 2.2,
     level: 0.5,
+    loop: true,
   },
   {
     id: "ing-leaves",
@@ -672,6 +713,7 @@ export const SOUNDS: SoundSpec[] = [
     generate: 4,
     seconds: 2.2,
     level: 0.5,
+    loop: true,
   },
   {
     id: "ing-sand",
@@ -680,6 +722,7 @@ export const SOUNDS: SoundSpec[] = [
     generate: 4,
     seconds: 2.2,
     level: 0.5,
+    loop: true,
   },
   {
     id: "ing-growl",
@@ -688,6 +731,7 @@ export const SOUNDS: SoundSpec[] = [
     generate: 4,
     seconds: 2.2,
     level: 0.5,
+    loop: true,
   },
   {
     id: "ing-chains",
@@ -696,6 +740,7 @@ export const SOUNDS: SoundSpec[] = [
     generate: 4,
     seconds: 2.2,
     level: 0.5,
+    loop: true,
   },
   {
     id: "ing-heartbeat",
@@ -704,6 +749,7 @@ export const SOUNDS: SoundSpec[] = [
     generate: 4,
     seconds: 2.2,
     level: 0.5,
+    loop: true,
   },
   {
     id: "ing-magic",
@@ -712,6 +758,7 @@ export const SOUNDS: SoundSpec[] = [
     generate: 4,
     seconds: 2.2,
     level: 0.5,
+    loop: true,
   },
 ];
 
@@ -841,32 +888,129 @@ export function processSounds(): void {
     }
 
     const dest = join(OUT, `${spec.id}.mp3`);
-    execFileSync(
-      bin,
-      [
-        "-y",
-        "-i",
-        src,
-        "-af",
+    const clean = [
+      /*
+       * ⚠ -50dB AND NOT A DECIBEL HIGHER, FOR ANYTHING.
+       *
+       * A stricter gate was tried here for the looping textures, to cut the
+       * quiet lead-in that makes a loop pulse. At -35dB it deleted three
+       * clips outright: `ing-gears` is a generation whose LOUDEST sample is
+       * -43.7dBFS, so the whole file is "silence" to that gate, and skitter
+       * and leaves went the same way at -53 and -54dB mean. This number is
+       * guarding against a model that hands back wildly different levels,
+       * not against a lead-in — the lead-in is answered by folding the loop
+       * over itself below, which costs nothing and cannot delete anything.
+       */
+      `silenceremove=start_periods=1:start_threshold=-50dB:start_silence=0`,
+      `atrim=0:${spec.seconds}`,
+      "loudnorm=I=-16:TP=-1.5:LRA=11",
+      `volume=${spec.level}`,
+    ];
+    const encode = ["-ac", "1", "-ar", "44100", "-b:a", "96k"];
+
+    if (!spec.loop) {
+      execFileSync(
+        bin,
         [
-          "silenceremove=start_periods=1:start_threshold=-50dB:start_silence=0",
-          `atrim=0:${spec.seconds}`,
-          "loudnorm=I=-16:TP=-1.5:LRA=11",
-          `volume=${spec.level}`,
-          "afade=t=out:st=" +
-            Math.max(0, spec.seconds - 0.05).toFixed(2) +
-            ":d=0.05",
-        ].join(","),
-        "-ac",
-        "1",
-        "-ar",
-        "44100",
-        "-b:a",
-        "96k",
-        dest,
-      ],
-      { stdio: "ignore" },
-    );
+          "-y",
+          "-i",
+          src,
+          "-af",
+          // A one-shot is faded so it cannot click.
+          [...clean, `afade=t=out:st=${Math.max(0, spec.seconds - 0.05).toFixed(2)}:d=0.05`].join(","),
+          ...encode,
+          dest,
+        ],
+        { stdio: "ignore" },
+      );
+    } else {
+      /*
+       * ═══ A LOOP IS JOINED TO ITSELF ═══
+       *
+       * Trimming and gating gets the ENDS of a texture close; it cannot make
+       * them match, because the model does not know it is writing something
+       * that will be played end to end forever. The ten made on 2026-10-29
+       * came back between 10 and 20dB louder at one end than the other,
+       * which over 2.2 seconds is not a texture, it is a wave.
+       *
+       * So the last LOOP_XFADE is crossfaded over the clip's own first
+       * LOOP_XFADE. The join then exists INSIDE the file and the two ends
+       * are the same sound by construction — measured on the wind: 12.0dB
+       * apart before, 0.3dB after, overall level unmoved.
+       *
+       * ⚠ IN TWO PASSES, AND THAT IS NOT TIDINESS. Doing it in one filter
+       * graph means trimming at `spec.seconds` — a number the GATED audio
+       * may never reach. `ing-gears` gated down to 1.89s, the second trim
+       * asked for 1.9→2.2 of a 1.89s stream, got nothing, and ffmpeg wrote
+       * a 358-byte mp3 that no decoder will open. It did that to three
+       * clips, silently, one of which had been fine for a fortnight — the
+       * same 358 bytes this file already has a warning about further up.
+       * So the real length is measured first, and a clip too short to fold
+       * is simply not folded.
+       */
+      /*
+       * ⚠ MONO AND FLOAT, OR THE WHOLE CLIP COMES OUT 3dB QUIETER.
+       *
+       * The single pass this replaced downmixed to mono at the encoder,
+       * AFTER loudnorm. An intermediate left in stereo gets downmixed one
+       * step later instead, and averaging two uncorrelated channels loses
+       * about 3dB — measured on the flame: -31.8dB through the old chain,
+       * -34.9 through a stereo intermediate, -31.7 through this one. Float
+       * so that nothing is quantised twice on the way.
+       */
+      const mid = join(RAW, `.loop-${spec.id}.wav`);
+      execFileSync(
+        bin,
+        ["-y", "-i", src, "-af", clean.join(","), "-ac", "1", "-ar", "44100", "-c:a", "pcm_f32le", mid],
+        { stdio: "ignore" },
+      );
+      const real = Number(
+        execFileSync(ffprobe(), [
+          "-v", "error",
+          "-show_entries", "format=duration",
+          "-of", "default=nw=1:nk=1",
+          mid,
+        ]).toString().trim(),
+      );
+      if (!Number.isFinite(real) || real < LOOP_XFADE * 3) {
+        console.log(`   ⚠     ${spec.id}: only ${real.toFixed(2)}s after trimming — not folded.`);
+        execFileSync(bin, ["-y", "-i", mid, ...encode, dest], { stdio: "ignore" });
+      } else {
+        const body = real - LOOP_XFADE;
+        execFileSync(
+          bin,
+          [
+            "-y",
+            "-i",
+            mid,
+            "-filter_complex",
+            [
+              `[0:a]asplit=2[c1][c2]`,
+              `[c1]atrim=0:${body.toFixed(3)},asetpts=N/SR/TB[a]`,
+              `[c2]atrim=${body.toFixed(3)}:${real.toFixed(3)},asetpts=N/SR/TB[b]`,
+              // Equal power, not linear: these are noise textures, and two
+              // uncorrelated halves faded linearly dip in the middle.
+              `[b][a]acrossfade=d=${LOOP_XFADE}:c1=qsin:c2=qsin[out]`,
+            ].join(";"),
+            "-map",
+            "[out]",
+            ...encode,
+            dest,
+          ],
+          { stdio: "ignore" },
+        );
+      }
+      rmSync(mid, { force: true });
+    }
+
+    /*
+     * ⚠ AND LOOK AT WHAT CAME OUT. Every failure this file has had ended as
+     * a small file that everything downstream accepted: a 358-byte mp3 is
+     * what ffmpeg writes when a filter graph produced no audio, and the only
+     * stage that can notice is this one.
+     */
+    if (statSync(dest).size < 2048)
+      console.log(`   ⚠     ${spec.id}: wrote ${statSync(dest).size} bytes — that is not audio.`);
     console.log(`   ok    ${spec.id}`);
     done++;
   }

@@ -242,17 +242,30 @@ describe("choosing a sound", () => {
     }
   });
 
-  it("has a spec waiting for every one that is not recorded", () => {
-    // Or runs one command and the ten arrive. A name on the list with no
-    // prompt behind it is a name that never becomes a sound.
+  it("can be remade from the sound desk, every one of them", () => {
+    /*
+     * The clips are in git and the raw generations are not, so a fresh
+     * clone has the mp3s and no way back to them. Every ingredient must
+     * therefore still have its spec — the prompt it was made from — or it
+     * is a sound nobody can ever regenerate or improve.
+     *
+     * ⚠ This also covers the list that is empty today: a name added to
+     * DRAG_SOUNDS_TO_RECORD with no prompt behind it is a sound that never
+     * arrives, and `pnpm art:sounds` would not even know it was asked for.
+     */
     const specs = readFileSync(
       fileURLToPath(new URL("../../../../packages/art/src/sounds.ts", import.meta.url)),
       "utf8",
     );
-    for (const id of DRAG_SOUNDS_TO_RECORD)
+    const ingredients = DRAG_SOUNDS.filter((id) => DRAG_SOUND_CLIP[id]?.startsWith("ing-"));
+    expect(ingredients.length).toBeGreaterThan(15);
+    for (const id of [...ingredients, ...DRAG_SOUNDS_TO_RECORD])
       expect(specs, `${id} has no prompt in the sound desk`).toContain(
         `id: "${DRAG_SOUND_CLIP[id]}"`,
       );
+    // And a looping texture is cut as one — see `loop` in sounds.ts.
+    expect(specs).toContain("loop: true,");
+    expect(specs).toContain("acrossfade=d=${LOOP_XFADE}");
   });
 });
 

@@ -294,16 +294,13 @@ export const DRAG_SOUND_CLIP: Record<DragSound, string | null> = {
  * of the game.
  */
 export const DRAG_SOUNDS_TO_RECORD: readonly DragSound[] = [
-  "wind",
-  "bubbles",
-  "gears",
-  "steam",
-  "leaves",
-  "sand",
-  "growl",
-  "chains",
-  "heartbeat",
-  "magic",
+  /*
+   * Empty since 2026-10-29, when Or said *"run art:sounds"* and the ten
+   * arrived. The list stays because the mechanism is the point: the next
+   * sound somebody names goes here until it exists, and the test below
+   * refuses to let this disagree with the files on disk in either
+   * direction.
+   */
 ];
 
 /** Is there a recording behind this name yet? */
