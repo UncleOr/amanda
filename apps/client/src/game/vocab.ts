@@ -62,6 +62,17 @@ export const FX_HE: Record<DragFx, Named> = {
   drips: { he: "טפטוף ריר", note: "נוטף מהתחתית" },
   soil: { he: "אדמה עפה", note: "רגבים ואבק — משהו שנתלש" },
   rubble: { he: "אבנים ואבק", note: "נושרות מלמטה" },
+  // ── the ten Or asked for, tied to no family ──
+  embers: { he: "גיצים", note: "ניצוצות אדומים שעולים ונכבים" },
+  bubbles: { he: "בועות", note: "עולות וגדלות ומתפוצצות" },
+  frost: { he: "רסיסי קרח", note: "נופלים ומנצנצים" },
+  leaves: { he: "עלים", note: "מסתחררים למטה" },
+  smoke: { he: "עשן", note: "תימרות אפורות שמתפשטות" },
+  gears: { he: "גלגלי שיניים", note: "ברגים קטנים שמסתובבים" },
+  fluff: { he: "פלומה", note: "נוצות קטנות שמרחפות לאט" },
+  venom: { he: "ענן רעל", note: "ירוק וסמיך, עולה מהקלף" },
+  stars: { he: "ניצוצות זהב", note: "כוכבים שנדלקים ונכבים" },
+  sand: { he: "חול", note: "זורם למטה בלי הפסקה" },
 };
 
 /**
@@ -81,6 +92,17 @@ export const SOUND_HE: Record<DragSound, Named> = {
   dragonWings: { he: "כנפי דרקון" },
   insectWings: { he: "כנפי חרק" },
   egg: { he: "ביצה נסדקת" },
+  // ── the ten ──
+  wind: { he: "רוח" },
+  bubbles: { he: "בועות מים" },
+  gears: { he: "גלגלי שיניים" },
+  steam: { he: "קיטור" },
+  leaves: { he: "רשרוש עלים" },
+  sand: { he: "חול נשפך" },
+  growl: { he: "נהמה" },
+  chains: { he: "שרשראות" },
+  heartbeat: { he: "פעימות לב" },
+  magic: { he: "זמזום קסם" },
 };
 
 /* ───────────────────────── what a card is ───────────────────────── */

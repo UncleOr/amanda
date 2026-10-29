@@ -696,6 +696,278 @@
   100% { opacity: 0; transform: translate(-9px, 18px) rotate(220deg); }
 }
 
+/*
+ * ═══════════════ THE TEN ═══════════════
+ *
+ * Or: *"and you need to invent another ten sounds and ten animations."*
+ *
+ * None of these is derived from anything. The six above exist because a
+ * carry style implies them — a flier has wings, a slime drips — and that is
+ * exactly why ten more were wanted: the derivation can only ever produce
+ * what the card already says about itself, and Or wants to be able to say
+ * something it does not.
+ *
+ * All ten follow the house rules the six established:
+ *   · absolutely positioned <i>s inside one <span>, no images;
+ *   · each piece on its own clock, so they never flash in unison;
+ *   · transform and opacity only, so the compositor does all of it;
+ *   · and every one of them switched off under prefers-reduced-motion.
+ */
+
+/* ── גיצים — embers ── */
+.drag-ghost__ember i {
+  position: absolute;
+  bottom: 14%;
+  width: 4px;
+  height: 4px;
+  border-radius: 50%;
+  background: radial-gradient(circle at 40% 35%, #fff0c2, #ffa23d 55%, #e2492f);
+  box-shadow: 0 0 6px 2px rgba(255, 140, 60, 0.75);
+  animation: ember-rise 1.25s ease-out infinite;
+}
+.drag-ghost__ember i:nth-child(1) { left: 14%; animation-delay: 0s; }
+.drag-ghost__ember i:nth-child(2) { left: 36%; animation-delay: 0.29s; }
+.drag-ghost__ember i:nth-child(3) { left: 58%; animation-delay: 0.54s; }
+.drag-ghost__ember i:nth-child(4) { left: 78%; animation-delay: 0.81s; }
+.drag-ghost__ember i:nth-child(5) { left: 48%; animation-delay: 1.03s; }
+/* Up and sideways, shrinking — an ember dies by going out, not by landing. */
+@keyframes ember-rise {
+  0% { opacity: 0; transform: translate(0, 0) scale(1); }
+  15% { opacity: 1; }
+  100% { opacity: 0; transform: translate(9px, -40px) scale(0.3); }
+}
+
+/* ── בועות — bubbles ── */
+.drag-ghost__bubble i {
+  position: absolute;
+  bottom: 8%;
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  border: 1px solid rgba(214, 243, 255, 0.9);
+  background: radial-gradient(circle at 32% 28%, rgba(255, 255, 255, 0.85), rgba(150, 215, 245, 0.25) 60%, rgba(120, 190, 230, 0.1));
+  animation: bubble-rise 1.5s ease-in-out infinite;
+}
+.drag-ghost__bubble i:nth-child(1) { left: 18%; animation-delay: 0s; }
+.drag-ghost__bubble i:nth-child(2) { left: 38%; animation-delay: 0.33s; }
+.drag-ghost__bubble i:nth-child(3) { left: 60%; animation-delay: 0.61s; }
+.drag-ghost__bubble i:nth-child(4) { left: 80%; animation-delay: 0.92s; }
+.drag-ghost__bubble i:nth-child(5) { left: 28%; animation-delay: 1.2s; }
+/* It grows on the way up and then pops: gone at full size, not faded out. */
+@keyframes bubble-rise {
+  0% { opacity: 0; transform: translate(0, 0) scale(0.5); }
+  12% { opacity: 0.95; }
+  85% { opacity: 0.95; transform: translate(-6px, -44px) scale(1.15); }
+  93% { opacity: 0.6; transform: translate(-6px, -47px) scale(1.4); }
+  100% { opacity: 0; transform: translate(-6px, -48px) scale(1.5); }
+}
+
+/* ── רסיסי קרח — frost ── */
+.drag-ghost__frost i {
+  position: absolute;
+  top: 16%;
+  width: 7px;
+  height: 11px;
+  background: linear-gradient(170deg, #ffffff, #cfeaff 45%, rgba(130, 196, 235, 0.65));
+  clip-path: polygon(50% 0%, 100% 38%, 72% 100%, 28% 100%, 0% 38%);
+  filter: drop-shadow(0 0 4px rgba(190, 232, 255, 0.85));
+  animation: frost-fall 1.05s ease-in infinite;
+}
+.drag-ghost__frost i:nth-child(1) { left: 16%; animation-delay: 0s; }
+.drag-ghost__frost i:nth-child(2) { left: 42%; animation-delay: 0.27s; }
+.drag-ghost__frost i:nth-child(3) { left: 66%; animation-delay: 0.5s; }
+.drag-ghost__frost i:nth-child(4) { left: 86%; animation-delay: 0.76s; }
+@keyframes frost-fall {
+  0% { opacity: 0; transform: translate(0, -8px) rotate(-20deg); }
+  20% { opacity: 1; }
+  100% { opacity: 0; transform: translate(-5px, 44px) rotate(40deg); }
+}
+
+/* ── עלים — leaves ── */
+.drag-ghost__leaf i {
+  position: absolute;
+  top: 10%;
+  width: 9px;
+  height: 6px;
+  /* A leaf is a pointed oval; two opposite corners do the whole job. */
+  border-radius: 100% 0 100% 0;
+  background: linear-gradient(130deg, #8fd06a, #4f9440 70%);
+  box-shadow: inset 0 0 0 0.5px rgba(30, 70, 25, 0.35);
+  animation: leaf-fall 1.6s linear infinite;
+}
+.drag-ghost__leaf i:nth-child(1) { left: 12%; animation-delay: 0s; }
+.drag-ghost__leaf i:nth-child(2) { left: 40%; animation-delay: 0.42s; }
+.drag-ghost__leaf i:nth-child(3) { left: 64%; animation-delay: 0.83s; }
+.drag-ghost__leaf i:nth-child(4) { left: 86%; animation-delay: 1.22s; }
+/* It tumbles rather than drops: a leaf falls sideways twice on the way. */
+@keyframes leaf-fall {
+  0% { opacity: 0; transform: translate(0, -6px) rotate(0deg); }
+  15% { opacity: 1; }
+  40% { transform: translate(-9px, 14px) rotate(140deg); }
+  70% { transform: translate(5px, 30px) rotate(250deg); }
+  100% { opacity: 0; transform: translate(-4px, 48px) rotate(390deg); }
+}
+
+/* ── עשן — smoke ── */
+.drag-ghost__smoke i {
+  position: absolute;
+  bottom: 18%;
+  width: 16px;
+  height: 16px;
+  border-radius: 50%;
+  background: radial-gradient(circle at 50% 55%, rgba(176, 178, 190, 0.45), rgba(120, 122, 136, 0.18) 60%, transparent 75%);
+  animation: smoke-rise 2s ease-out infinite;
+}
+.drag-ghost__smoke i:nth-child(1) { left: 22%; animation-delay: 0s; }
+.drag-ghost__smoke i:nth-child(2) { left: 46%; animation-delay: 0.66s; }
+.drag-ghost__smoke i:nth-child(3) { left: 68%; animation-delay: 1.3s; }
+/* Smoke thins as it spreads — it must never read as a solid grey ball. */
+@keyframes smoke-rise {
+  0% { opacity: 0; transform: translate(0, 0) scale(0.45); }
+  20% { opacity: 0.8; }
+  100% { opacity: 0; transform: translate(7px, -42px) scale(2.1); }
+}
+
+/* ── גלגלי שיניים — gears ── */
+.drag-ghost__gear i {
+  position: absolute;
+  bottom: 16%;
+  width: 9px;
+  height: 9px;
+  border-radius: 2px;
+  background: #aab4c4;
+  /* The teeth: four studs on the diagonals, which is enough at 9px. */
+  box-shadow:
+    0 0 0 1px rgba(20, 24, 34, 0.55),
+    4px 4px 0 -2px #aab4c4,
+    -4px 4px 0 -2px #aab4c4,
+    4px -4px 0 -2px #aab4c4,
+    -4px -4px 0 -2px #aab4c4;
+  animation: gear-tumble 1.1s linear infinite;
+}
+.drag-ghost__gear i:nth-child(1) { left: 20%; animation-delay: 0s; }
+.drag-ghost__gear i:nth-child(2) { left: 52%; animation-delay: 0.37s; }
+.drag-ghost__gear i:nth-child(3) { left: 76%; animation-delay: 0.71s; }
+@keyframes gear-tumble {
+  0% { opacity: 0; transform: translate(0, -4px) rotate(0deg); }
+  18% { opacity: 1; }
+  100% { opacity: 0; transform: translate(-8px, 30px) rotate(300deg); }
+}
+
+/* ── פלומה — fluff ── */
+.drag-ghost__fluff i {
+  position: absolute;
+  top: 30%;
+  width: 7px;
+  height: 7px;
+  border-radius: 60% 40% 55% 45%;
+  background: radial-gradient(circle at 40% 35%, rgba(255, 252, 240, 0.95), rgba(240, 226, 198, 0.5) 65%, transparent);
+  animation: fluff-float 2.4s ease-in-out infinite;
+}
+.drag-ghost__fluff i:nth-child(1) { left: 10%; animation-delay: 0s; }
+.drag-ghost__fluff i:nth-child(2) { left: 34%; animation-delay: 0.5s; }
+.drag-ghost__fluff i:nth-child(3) { left: 56%; animation-delay: 1s; }
+.drag-ghost__fluff i:nth-child(4) { left: 78%; animation-delay: 1.5s; }
+.drag-ghost__fluff i:nth-child(5) { left: 44%; animation-delay: 1.95s; }
+/* Slow and wandering. Fluff has almost no weight, so it must not fall
+   straight — it is the only one of the ten that drifts BOTH ways. */
+@keyframes fluff-float {
+  0% { opacity: 0; transform: translate(0, 0); }
+  15% { opacity: 0.9; }
+  40% { transform: translate(-7px, 10px); }
+  70% { transform: translate(6px, 20px); }
+  100% { opacity: 0; transform: translate(-3px, 32px); }
+}
+
+/* ── ענן רעל — venom ── */
+.drag-ghost__venom i {
+  position: absolute;
+  bottom: 20%;
+  width: 14px;
+  height: 12px;
+  border-radius: 55% 45% 48% 52% / 50% 55% 45% 50%;
+  background: radial-gradient(circle at 45% 45%, rgba(170, 240, 110, 0.55), rgba(96, 180, 60, 0.28) 60%, transparent 78%);
+  animation: venom-creep 1.9s ease-out infinite;
+}
+.drag-ghost__venom i:nth-child(1) { left: 20%; animation-delay: 0s; }
+.drag-ghost__venom i:nth-child(2) { left: 48%; animation-delay: 0.63s; }
+.drag-ghost__venom i:nth-child(3) { left: 72%; animation-delay: 1.24s; }
+@keyframes venom-creep {
+  0% { opacity: 0; transform: translate(0, 0) scale(0.5); }
+  22% { opacity: 0.85; }
+  100% { opacity: 0; transform: translate(-6px, -34px) scale(1.8); }
+}
+
+/* ── ניצוצות זהב — stars ── */
+.drag-ghost__star i {
+  position: absolute;
+  width: 10px;
+  height: 10px;
+  background: #ffeaa0;
+  /* A four-pointed sparkle, not a five-pointed star: the long thin arms are
+     what makes it read as a glint rather than as a sticker. */
+  clip-path: polygon(50% 0%, 58% 42%, 100% 50%, 58% 58%, 50% 100%, 42% 58%, 0% 50%, 42% 42%);
+  filter: drop-shadow(0 0 4px rgba(255, 215, 110, 0.9));
+  opacity: 0;
+  animation: star-twinkle 1.4s ease-in-out infinite;
+}
+.drag-ghost__star i:nth-child(1) { left: 6%; top: 20%; animation-delay: 0s; }
+.drag-ghost__star i:nth-child(2) { right: 4%; top: 46%; animation-delay: 0.38s; }
+.drag-ghost__star i:nth-child(3) { left: 40%; bottom: 2%; animation-delay: 0.74s; }
+.drag-ghost__star i:nth-child(4) { left: 68%; top: 8%; animation-delay: 1.05s; }
+/* It stays dark most of its cycle. A sparkle that is always lit is a lamp. */
+@keyframes star-twinkle {
+  0%, 70%, 100% { opacity: 0; transform: scale(0.3) rotate(0deg); }
+  12% { opacity: 1; transform: scale(1.15) rotate(35deg); }
+  30% { opacity: 0.2; transform: scale(0.7) rotate(60deg); }
+}
+
+/* ── חול — sand ── */
+.drag-ghost__sand i {
+  position: absolute;
+  bottom: 10%;
+  width: 2px;
+  height: 3px;
+  border-radius: 1px;
+  background: #d9c08a;
+  animation: sand-stream 0.66s linear infinite;
+}
+.drag-ghost__sand i:nth-child(1) { left: 16%; animation-delay: 0s; }
+.drag-ghost__sand i:nth-child(2) { left: 29%; animation-delay: 0.11s; }
+.drag-ghost__sand i:nth-child(3) { left: 43%; animation-delay: 0.22s; }
+.drag-ghost__sand i:nth-child(4) { left: 57%; animation-delay: 0.33s; }
+.drag-ghost__sand i:nth-child(5) { left: 71%; animation-delay: 0.44s; }
+.drag-ghost__sand i:nth-child(6) { left: 85%; animation-delay: 0.55s; }
+/* Fast, short and never-ending: sand is the only one here that is a STREAM
+   rather than a set of events, so the cycle is under a second and the
+   grains are almost on top of each other. */
+@keyframes sand-stream {
+  0% { opacity: 0; transform: translate(0, -4px); }
+  20% { opacity: 1; }
+  80% { opacity: 1; }
+  100% { opacity: 0; transform: translate(-2px, 26px); }
+}
+
+/*
+ * And all ten stop for anybody who asked for less motion, on the same terms
+ * as the six before them: the spring still runs, the decoration does not.
+ */
+@media (prefers-reduced-motion: reduce) {
+  .drag-ghost__ember i,
+  .drag-ghost__bubble i,
+  .drag-ghost__frost i,
+  .drag-ghost__leaf i,
+  .drag-ghost__smoke i,
+  .drag-ghost__gear i,
+  .drag-ghost__fluff i,
+  .drag-ghost__venom i,
+  .drag-ghost__star i,
+  .drag-ghost__sand i {
+    animation: none;
+    opacity: 0;
+  }
+}
+
 @media (prefers-reduced-motion: reduce) {
   .drag-ghost--ooze,
   .drag-ghost--root,

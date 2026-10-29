@@ -15,7 +15,7 @@ import {
 } from "@amanda/shared";
 import { CATALOG, SERIES } from "../data/catalog";
 import { artUrl } from "../game/skins";
-import { DRAG_SOUND_CLIP, dragMixOf, voiceFor } from "../game/cardSound";
+import { DRAG_SOUND_CLIP, dragMixOf, dragSoundExists, voiceFor } from "../game/cardSound";
 import { styleFor } from "../game/carry";
 import { FX_FOR_STYLE } from "../game/dragFx";
 import { setPreviewCard } from "../game/preview";
@@ -632,7 +632,82 @@ export function CardEditor({ call, say, upload, notes, reloadNotes }: CardEditor
               </label>
             </div>
 
-            {/* ───────────── 2. תמונה ───────────── */}
+            {/* ───────────── 2. ביד ───────────── */}
+            {/*
+              Or: *"let me choose, for every monster: a drag movement out of
+              a list of movements, a drag sound out of a list of sounds, a
+              drag animation out of a list of animations."*
+
+              ⚠ EMPTY IS THE NORMAL STATE AND IT IS NOT A BLANK. Every one of
+              these is worked out from the card itself, and that has to keep
+              being true — a card invented in this panel tomorrow must behave
+              like something without anybody choosing for it. So "automatic"
+              is an option with the DERIVED answer printed in it, and
+              choosing it again removes the field (schemas/drag.ts).
+            */}
+            <h4 className="ed__h">
+              ביד
+              <small>מה קורה כשמרימים את הקלף. גרור את הקלף שלמעלה כדי לבדוק.</small>
+            </h4>
+            <div className="ed__grid">
+              <label className="ed__f">
+                תנועה בגרירה
+                <select
+                  value={draft.drag?.move ?? ""}
+                  onChange={(e) => setDrag("move", e.target.value)}
+                >
+                  <option value="">אוטומטי — {CARRY_HE[autoMove].he}</option>
+                  {CARRY_STYLES.map((id) => (
+                    <option key={id} value={id}>
+                      {CARRY_HE[id].he}
+                    </option>
+                  ))}
+                </select>
+              </label>
+              <label className="ed__f">
+                אנימציה בגרירה
+                <select value={draft.drag?.fx ?? ""} onChange={(e) => setDrag("fx", e.target.value)}>
+                  <option value="">אוטומטי — {FX_HE[autoFx].he}</option>
+                  {DRAG_FX.map((id) => (
+                    <option key={id} value={id}>
+                      {FX_HE[id].he}
+                    </option>
+                  ))}
+                </select>
+              </label>
+              <label className="ed__f">
+                צליל בגרירה
+                <select
+                  value={draft.drag?.sound ?? ""}
+                  onChange={(e) => setDrag("sound", e.target.value)}
+                >
+                  <option value="">אוטומטי — תערובת</option>
+                  {/*
+                    ⚠ TEN OF THESE HAVE NO RECORDING YET, and a sound with no
+                    file is silent — which looks exactly like a card that was
+                    given no sound at all. Said in the row rather than left to
+                    be discovered by choosing it and hearing nothing.
+                  */}
+                  {DRAG_SOUNDS.map((id) => (
+                    <option key={id} value={id}>
+                      {SOUND_HE[id].he}
+                      {dragSoundExists(id) ? "" : " (אין עוד הקלטה)"}
+                    </option>
+                  ))}
+                </select>
+              </label>
+            </div>
+            {/*
+              What the three of them come out as, in words, for the card as it
+              is right now — including the automatic ones. A dropdown that
+              says "automatic" and nothing else is a dropdown you have to
+              drag the card to understand.
+            */}
+            <small className="dim">תנועה — {CARRY_HE[nowMove].he}: {CARRY_HE[nowMove].note}</small>
+            <small className="dim">אנימציה — {FX_HE[nowFx].he}: {FX_HE[nowFx].note}</small>
+            <small className="dim">צליל — {nowSound}</small>
+
+            {/* ───────────── 3. תמונה ───────────── */}
             <h4 className="ed__h">
               תמונה
               <small>קובץ מהמחשב. מוקטן ל־768 פיקסל ונשמר כ־webp.</small>
@@ -690,7 +765,7 @@ export function CardEditor({ call, say, upload, notes, reloadNotes }: CardEditor
               </div>
             </div>
 
-            {/* ───────────── 3. יסודות ───────────── */}
+            {/* ───────────── 4. יסודות ───────────── */}
             {/*
               ⚠ THIS HEADING SAID "POWERS" AND EXPLAINED LEVELS. Two
               mistakes in one line: these are the ELEMENTS, and the sentence
@@ -720,7 +795,7 @@ export function CardEditor({ call, say, upload, notes, reloadNotes }: CardEditor
               ))}
             </div>
 
-            {/* ───────────── 4. יכולות ───────────── */}
+            {/* ───────────── 5. יכולות ───────────── */}
             {/*
               Or: *"give the behaviours normal names so I understand what is
               going on there, preferably in Hebrew."* He was reading
@@ -811,7 +886,7 @@ export function CardEditor({ call, say, upload, notes, reloadNotes }: CardEditor
               + יכולת
             </button>
 
-            {/* ───────────── 5. מספרים ───────────── */}
+            {/* ───────────── 6. מספרים ───────────── */}
             <h4 className="ed__h">
               מספרים
               <small>אלה מספרי רמה 1. כל רמה מוסיפה אותו אחוז לחיים ולעוצמה, לכל הקלפים.</small>
@@ -895,7 +970,7 @@ export function CardEditor({ call, say, upload, notes, reloadNotes }: CardEditor
               </label>
             </div>
 
-            {/* ───────────── 6. תנועה בקרב ───────────── */}
+            {/* ───────────── 7. תנועה בקרב ───────────── */}
             <h4 className="ed__h">
               תנועה בקרב
               <small>איך הקלף מתקדם על הלוח, ובאיזה קצב.</small>
@@ -927,74 +1002,6 @@ export function CardEditor({ call, say, upload, notes, reloadNotes }: CardEditor
                 />
               </label>
             )}
-
-            {/* ───────────── 7. ביד ───────────── */}
-            {/*
-              Or: *"let me choose, for every monster: a drag movement out of
-              a list of movements, a drag sound out of a list of sounds, a
-              drag animation out of a list of animations."*
-
-              ⚠ EMPTY IS THE NORMAL STATE AND IT IS NOT A BLANK. Every one of
-              these is worked out from the card itself, and that has to keep
-              being true — a card invented in this panel tomorrow must behave
-              like something without anybody choosing for it. So "automatic"
-              is an option with the DERIVED answer printed in it, and
-              choosing it again removes the field (schemas/drag.ts).
-            */}
-            <h4 className="ed__h">
-              ביד
-              <small>מה קורה כשמרימים את הקלף. גרור את הקלף שלמעלה כדי לבדוק.</small>
-            </h4>
-            <div className="ed__grid">
-              <label className="ed__f">
-                תנועה בגרירה
-                <select
-                  value={draft.drag?.move ?? ""}
-                  onChange={(e) => setDrag("move", e.target.value)}
-                >
-                  <option value="">אוטומטי — {CARRY_HE[autoMove].he}</option>
-                  {CARRY_STYLES.map((id) => (
-                    <option key={id} value={id}>
-                      {CARRY_HE[id].he}
-                    </option>
-                  ))}
-                </select>
-              </label>
-              <label className="ed__f">
-                אנימציה בגרירה
-                <select value={draft.drag?.fx ?? ""} onChange={(e) => setDrag("fx", e.target.value)}>
-                  <option value="">אוטומטי — {FX_HE[autoFx].he}</option>
-                  {DRAG_FX.map((id) => (
-                    <option key={id} value={id}>
-                      {FX_HE[id].he}
-                    </option>
-                  ))}
-                </select>
-              </label>
-              <label className="ed__f">
-                צליל בגרירה
-                <select
-                  value={draft.drag?.sound ?? ""}
-                  onChange={(e) => setDrag("sound", e.target.value)}
-                >
-                  <option value="">אוטומטי — תערובת</option>
-                  {DRAG_SOUNDS.map((id) => (
-                    <option key={id} value={id}>
-                      {SOUND_HE[id].he}
-                    </option>
-                  ))}
-                </select>
-              </label>
-            </div>
-            {/*
-              What the three of them come out as, in words, for the card as it
-              is right now — including the automatic ones. A dropdown that
-              says "automatic" and nothing else is a dropdown you have to
-              drag the card to understand.
-            */}
-            <small className="dim">תנועה — {CARRY_HE[nowMove].he}: {CARRY_HE[nowMove].note}</small>
-            <small className="dim">אנימציה — {FX_HE[nowFx].he}: {FX_HE[nowFx].note}</small>
-            <small className="dim">צליל — {nowSound}</small>
 
             {/* ───────────── 8. במשחק ───────────── */}
             <h4 className="ed__h">

@@ -40,7 +40,16 @@ export const CARRY_STYLES = [
 export const CarryStyleSchema = z.enum(CARRY_STYLES);
 export type CarryStyle = z.infer<typeof CarryStyleSchema>;
 
-/** What comes off the card while it is in the air. */
+/**
+ * What comes off the card while it is in the air.
+ *
+ * Six of these are the ones the game already had, one per carry style. The
+ * other ten are Or's: *"and you need to invent another ten sounds and ten
+ * animations."* They are not tied to a style and never will be — the point
+ * of a list you choose from is that it is longer than the thing that derives
+ * it, so the Mandroid can shed bolts and the Siren can trail bubbles without
+ * either of them becoming a new kind of carry.
+ */
 export const DRAG_FX = [
   "none",
   "wings",
@@ -49,6 +58,17 @@ export const DRAG_FX = [
   "drips",
   "soil",
   "rubble",
+  // ── the ten ──
+  "embers",
+  "bubbles",
+  "frost",
+  "leaves",
+  "smoke",
+  "gears",
+  "fluff",
+  "venom",
+  "stars",
+  "sand",
 ] as const;
 export const DragFxSchema = z.enum(DRAG_FX);
 export type DragFx = z.infer<typeof DragFxSchema>;
@@ -72,6 +92,30 @@ export const DRAG_SOUNDS = [
   "dragonWings",
   "insectWings",
   "egg",
+  /*
+   * ── the ten ──
+   *
+   * Or: *"and you need to invent another ten sounds and ten animations."*
+   * Chosen to be what the eight above cannot be mixed into: the mixer can
+   * already say fire, ice, stone, slime, electricity, skittering and two
+   * kinds of wing, and has no way at all to say wind, water, machinery, a
+   * voice, or anything with a pulse.
+   *
+   * ⚠ Written here before they are recorded, on purpose, and the editor says
+   * which ones are still silent — see DRAG_SOUNDS_TO_RECORD in the client.
+   * The specs are in packages/art/src/sounds.ts and `pnpm art:sounds` makes
+   * exactly the missing ones; it costs money, so it is Or's to run.
+   */
+  "wind",
+  "bubbles",
+  "gears",
+  "steam",
+  "leaves",
+  "sand",
+  "growl",
+  "chains",
+  "heartbeat",
+  "magic",
 ] as const;
 export const DragSoundSchema = z.enum(DRAG_SOUNDS);
 export type DragSound = z.infer<typeof DragSoundSchema>;

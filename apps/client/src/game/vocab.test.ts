@@ -37,6 +37,7 @@ import {
   type Range,
   type Rarity,
 } from "@amanda/shared";
+import { CATALOG } from "../data/catalog";
 import {
   CARRY_HE,
   EFFECT_HE,
@@ -125,6 +126,43 @@ describe("what the engine really does", () => {
         );
       }
     }
+  });
+
+  /*
+   * ═══ AND THE NUMBERS ALREADY WRITTEN ON THE CARDS ═══
+   *
+   * The line under each ability made one of these visible the first time it
+   * was drawn: Chuppy carried `{ pct: 20 }` on "breaks armour", and that
+   * handler is two lines long — `target.armor = 0` — and reads nothing. Or:
+   * *"you can delete the number."*
+   *
+   * A dead param is not harmless. It reads as a dial, so the next person to
+   * balance the card turns it and nothing happens; and `amount: 30` on
+   * Amanda's heal is worse than nothing, because the engine reads
+   * `hpPerSecond` and falls back to 50 — the card says 30 and heals 50.
+   *
+   * The allowed list can only shrink. A new one fails here.
+   */
+  it("finds no number on a card that its own effect never reads", () => {
+    const KNOWN = [
+      // Three cards whose row attack carries a `knockback` that the row
+      // attack does not read. Left alone because taking it off is a change
+      // to Or's balance data and it is his to make, not a tidy-up.
+      "dragons_10_sky_king aoeRowAttack knockback",
+      "giants_09_thunder_giant aoeRowAttack knockback",
+      "giants_10_titan_king aoeRowAttack knockback",
+      // ⚠ Amanda heals 50/s, not 30. Renaming this to `hpPerSecond` would
+      // be a nerf of forty per cent, so it is a question for Or.
+      "legends_01_amanda healAura amount",
+    ];
+    const dead: string[] = [];
+    for (const card of CATALOG.values())
+      for (const ab of card.abilities) {
+        const reads = (EFFECT_HE[ab.type].params ?? "").split(",").map((p) => p.trim());
+        for (const key of Object.keys(ab.params ?? {}))
+          if (!reads.includes(key)) dead.push(`${card.id} ${ab.type} ${key}`);
+      }
+    expect(dead.sort()).toEqual([...KNOWN].sort());
   });
 
   it("gives a number to every effect that takes one", () => {

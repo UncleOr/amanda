@@ -264,7 +264,52 @@ export const DRAG_SOUND_CLIP: Record<DragSound, string | null> = {
   dragonWings: "ing-wings-dragon",
   insectWings: "ing-wings-insect",
   egg: "card-obsidian-egg",
+  // ── the ten, specced in packages/art/src/sounds.ts ──
+  wind: "ing-wind",
+  bubbles: "ing-bubbles",
+  gears: "ing-gears",
+  steam: "ing-steam",
+  leaves: "ing-leaves",
+  sand: "ing-sand",
+  growl: "ing-growl",
+  chains: "ing-chains",
+  heartbeat: "ing-heartbeat",
+  magic: "ing-magic",
 };
+
+/**
+ * ═══ THE ONES THAT ARE NAMED AND NOT YET RECORDED ═══
+ *
+ * Exactly the same arrangement as the nine main cards still waiting for a
+ * voice, and for the same reason, written out there at length: a sound with
+ * no file is SILENT, and silent is also what "this card has no drag sound"
+ * looks like. Left out of the list, the gap would only be found by choosing
+ * all twenty and listening; named here, it is a list anyone can read, the
+ * editor prints it beside the option, and dragChoice.test.ts checks this
+ * list against what is actually on disk — so recording one is a one-word
+ * change and forgetting to remove it fails a test.
+ *
+ * ⚠ AND THEY MUST NOT REACH THE LOADER. `loadClips` fetches everything in
+ * VOICE_CLIPS at unlock; a name with no file is ten 404s on the first press
+ * of the game.
+ */
+export const DRAG_SOUNDS_TO_RECORD: readonly DragSound[] = [
+  "wind",
+  "bubbles",
+  "gears",
+  "steam",
+  "leaves",
+  "sand",
+  "growl",
+  "chains",
+  "heartbeat",
+  "magic",
+];
+
+/** Is there a recording behind this name yet? */
+export function dragSoundExists(id: DragSound): boolean {
+  return !DRAG_SOUNDS_TO_RECORD.includes(id);
+}
 
 /** What the card is made of, as a layer. One per card, the first that hits. */
 const BY_MATERIAL: Array<[string, string, number]> = [
@@ -398,8 +443,11 @@ export const VOICE_CLIPS: string[] = [
     [
       // The drag ingredients, which are asked for mid-gesture and so cannot
       // be fetched when they are wanted. Read off the list the panel offers,
-      // so a sound Or can choose is a sound that has been decoded.
-      ...Object.values(DRAG_SOUND_CLIP).map((clip) => ({ ...(clip ? { drag: clip } : {}) }) as CardVoice),
+      // so a sound Or can choose is a sound that has been decoded — minus
+      // the ten that have not been recorded, which would be ten 404s.
+      ...(Object.entries(DRAG_SOUND_CLIP) as Array<[DragSound, string | null]>)
+        .filter(([id, clip]) => clip && dragSoundExists(id))
+        .map(([, clip]) => ({ drag: clip! }) as CardVoice),
       ...Object.values(OWN_DRAG).map((clip) => ({ drag: clip }) as CardVoice),
       ...Object.values(BY_ELEMENT),
       ...Object.values(BY_SERIES),

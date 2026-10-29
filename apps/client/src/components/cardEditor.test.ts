@@ -191,12 +191,23 @@ describe("the order of the form", () => {
 
   it("goes from who it is to what it does to how it is tuned", () => {
     expect(headings).toEqual([
+      /*
+       * ⚠ "ביד" IS SECOND, AND IT WAS SEVENTH. Or, looking at the panel
+       * after it shipped: *"I do not see a choice of movement and animation
+       * and sound."* It was there — measured in the deployed bundle — and
+       * it was under the numbers and the board movement, which is a long
+       * way down a form on a 390px-tall screen.
+       *
+       * It belongs beside the card anyway: it is the only section you check
+       * by DRAGGING the thing in the sticky column, so it goes where the
+       * column is. The tuning follows after.
+       */
+      "ביד",
       "תמונה",
       "יסודות",
       "יכולות",
       "מספרים",
       "תנועה בקרב",
-      "ביד",
       "במשחק",
     ]);
   });

@@ -617,6 +617,102 @@ export const SOUNDS: SoundSpec[] = [
     seconds: 2.2,
     level: 0.5,
   },
+  /*
+   * ═══ TEN MORE INGREDIENTS ═══
+   *
+   * Or: *"and you need to invent another ten sounds and ten animations."*
+   *
+   * The ten animations cost nothing and shipped with the request. These cost
+   * money and are therefore his to start — `pnpm art:sounds` makes only what
+   * is missing, so running it with these added makes exactly these ten.
+   *
+   * They are chosen to be the things the eight above CANNOT be mixed into.
+   * The mixer already covers fire, ice, stone, slime, electricity, skittering
+   * and two kinds of wing; what it has no way to say is wind, water, machinery,
+   * a voice, or anything with a pulse. Every one below is a texture that loops
+   * — the same brief as the eight: short, dry, close, continuous, no music and
+   * no room.
+   */
+  {
+    id: "ing-wind",
+    what: "wind, while it is carried",
+    prompt: `A steady close wind rushing past, continuous and even with no gusts. Airy and dry and constant. No howling, no whistling through gaps, no leaves, no rain, no music. ${DRY}`,
+    generate: 4,
+    seconds: 2.2,
+    level: 0.5,
+  },
+  {
+    id: "ing-bubbles",
+    what: "water, while it is carried",
+    prompt: `Continuous small bubbles rising through water very close to the microphone — soft wet blips and gurgles without pause. No splashing, no pouring, no drain, no music. ${DRY}`,
+    generate: 4,
+    seconds: 2.2,
+    level: 0.5,
+  },
+  {
+    id: "ing-gears",
+    what: "machinery, while it is carried",
+    prompt: `Small metal gears turning continuously — a dry mechanical clicking and ratcheting, close and even. No engine, no motor hum, no clock tick melody, no music. ${DRY}`,
+    generate: 4,
+    seconds: 2.2,
+    level: 0.5,
+  },
+  {
+    id: "ing-steam",
+    what: "steam, while it is carried",
+    prompt: `A continuous close hiss of escaping steam under pressure, even and unbroken. Dry and white and constant. No kettle whistle, no explosion, no water, no music. ${DRY}`,
+    generate: 4,
+    seconds: 2.2,
+    level: 0.5,
+  },
+  {
+    id: "ing-leaves",
+    what: "leaves, while it is carried",
+    prompt: `Dry leaves rustling continuously very close to the microphone, a light papery shuffling without pause. No footsteps, no wind, no branches breaking, no music. ${DRY}`,
+    generate: 4,
+    seconds: 2.2,
+    level: 0.5,
+  },
+  {
+    id: "ing-sand",
+    what: "sand, while it is carried",
+    prompt: `Fine dry sand pouring continuously onto sand, a soft grainy hiss very close. Even and unbroken. No wind, no water, no footsteps, no music. ${DRY}`,
+    generate: 4,
+    seconds: 2.2,
+    level: 0.5,
+  },
+  {
+    id: "ing-growl",
+    what: "a low growl, while it is carried",
+    prompt: `A low continuous animal growl deep in the throat, rumbling and even, close to the microphone. Threatening but quiet. No roar, no bark, no human voice, no words, no music. ${DRY}`,
+    generate: 4,
+    seconds: 2.2,
+    level: 0.5,
+  },
+  {
+    id: "ing-chains",
+    what: "chains, while it is carried",
+    prompt: `Heavy iron chain links dragging and clinking continuously, dull metal on metal, close and dry. No bell, no keys, no sword, no echo, no music. ${DRY}`,
+    generate: 4,
+    seconds: 2.2,
+    level: 0.5,
+  },
+  {
+    id: "ing-heartbeat",
+    what: "a heartbeat, while it is carried",
+    prompt: `A slow steady heartbeat, two dull low thumps per beat, close and muffled as if heard through a chest. Even tempo, no acceleration. No drum kit, no bass line, no music. ${DRY}`,
+    generate: 4,
+    seconds: 2.2,
+    level: 0.5,
+  },
+  {
+    id: "ing-magic",
+    what: "magic, while it is carried",
+    prompt: `A continuous soft shimmering magical hum, high and airy with a faint glassy sparkle, even and unbroken. No melody, no notes, no chord, no choir, no music. ${DRY}`,
+    generate: 4,
+    seconds: 2.2,
+    level: 0.5,
+  },
 ];
 
 /** Generate the missing ones (or the named ones) into assets/raw/sfx. */

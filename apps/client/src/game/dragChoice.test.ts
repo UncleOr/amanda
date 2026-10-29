@@ -21,7 +21,13 @@ import { fileURLToPath } from "node:url";
 import { CARRY_STYLES, DRAG_FX, DRAG_SOUNDS, type Card } from "@amanda/shared";
 import { CATALOG, cardPool } from "../data/catalog";
 import { carryOf, styleFor } from "./carry";
-import { DRAG_SOUND_CLIP, VOICE_CLIPS, dragMixOf } from "./cardSound";
+import {
+  DRAG_SOUNDS_TO_RECORD,
+  DRAG_SOUND_CLIP,
+  VOICE_CLIPS,
+  dragMixOf,
+  dragSoundExists,
+} from "./cardSound";
 import { FX_FOR_STYLE, fxOf } from "./dragFx";
 import { setPreviewCard } from "./preview";
 
@@ -128,16 +134,39 @@ describe("choosing an animation", () => {
       wings: "drag-ghost__wings",
       wingsBig: "drag-ghost__wings",
       lightning: "drag-ghost__bolt",
-      drips: "drag-ghost__drip",
       soil: "drag-ghost__soil",
       rubble: "drag-ghost__rubble",
+      drips: "drag-ghost__drip",
+      // ── the ten ──
+      embers: "drag-ghost__ember",
+      bubbles: "drag-ghost__bubble",
+      frost: "drag-ghost__frost",
+      leaves: "drag-ghost__leaf",
+      smoke: "drag-ghost__smoke",
+      gears: "drag-ghost__gear",
+      fluff: "drag-ghost__fluff",
+      venom: "drag-ghost__venom",
+      stars: "drag-ghost__star",
+      sand: "drag-ghost__sand",
     };
     for (const fx of DRAG_FX) {
       if (fx === "none") continue;
-      const cls = ELEMENT[fx]!;
-      expect(GHOST, `${fx} is not drawn`).toContain(`fx === "${fx}"`);
-      expect(GHOST, `${fx} has no element`).toContain(cls);
+      const cls = ELEMENT[fx];
+      expect(cls, `${fx} is in the list and this test does not know it`).toBeTruthy();
+      // Drawn either by its own branch (the four odd ones) or by the table.
+      expect(GHOST, `${fx} is not drawn`).toMatch(
+        new RegExp(`(fx === "${fx}"|\\n  ${fx}: \\[)`),
+      );
+      expect(GHOST, `${fx} has no element`).toContain(cls!);
       expect(CSS, `${fx} has no look`).toMatch(new RegExp(`\\.${cls}[^{]*\\{[^}]*animation`));
+      /*
+       * ⚠ And it stops for anybody who asked for less motion. Every one of
+       * these is decoration; a player who turned motion down asked for
+       * exactly this to stop, and a new effect that misses the block is an
+       * effect that keeps moving for them alone.
+       */
+      const quiet = CSS.match(/@media \(prefers-reduced-motion: reduce\)[\s\S]*/g)!.join("");
+      expect(quiet, `${fx} keeps moving under reduced motion`).toContain(cls!);
     }
   });
 
@@ -170,7 +199,24 @@ describe("choosing a sound", () => {
     expect(dragMixOf(big)[0]!.rate).toBeLessThan(dragMixOf(small)[0]!.rate);
   });
 
-  it("offers only sounds that exist, and that are loaded before they are wanted", () => {
+  it("knows exactly which of them have been recorded", () => {
+    /*
+     * ⚠ THE LIST AND THE DISK, MEASURED AGAINST EACH OTHER. Ten of the
+     * twenty are named and not yet made (packages/art/src/sounds.ts, Or's
+     * command to run because it costs money). A name with no file is
+     * SILENT, and silent is also what "no drag sound" sounds like — so the
+     * only thing that can keep the two lists honest is this.
+     *
+     * Record one and forget to take it off the list: fails here. Add a name
+     * and forget to spec it: fails here.
+     */
+    const missing = DRAG_SOUNDS.filter(
+      (id) => id !== "none" && !existsSync(`${SFX}${DRAG_SOUND_CLIP[id]}.mp3`),
+    );
+    expect(missing.sort()).toEqual([...DRAG_SOUNDS_TO_RECORD].sort());
+  });
+
+  it("offers only sounds that exist, and loads them before they are wanted", () => {
     for (const id of DRAG_SOUNDS) {
       const clip = DRAG_SOUND_CLIP[id];
       if (id === "none") {
@@ -178,13 +224,35 @@ describe("choosing a sound", () => {
         continue;
       }
       expect(clip, `${id} has no clip`).toBeTruthy();
+      if (!dragSoundExists(id)) {
+        /*
+         * ⚠ And it must NOT be preloaded. `loadClips` fetches everything in
+         * VOICE_CLIPS on the first press of the game; ten names with no
+         * files there are ten 404s in a child's face.
+         */
+        expect(VOICE_CLIPS, `${clip} has no file and is being fetched`).not.toContain(clip);
+        continue;
+      }
       expect(existsSync(`${SFX}${clip}.mp3`), `public/sfx/${clip}.mp3 is missing`).toBe(true);
       /*
-       * ⚠ A clip asked for mid-gesture that was never decoded arrives after
+       * A clip asked for mid-gesture that was never decoded arrives after
        * the gesture that wanted it, which is not a sound, it is lag.
        */
       expect(VOICE_CLIPS, `${clip} is not preloaded`).toContain(clip);
     }
+  });
+
+  it("has a spec waiting for every one that is not recorded", () => {
+    // Or runs one command and the ten arrive. A name on the list with no
+    // prompt behind it is a name that never becomes a sound.
+    const specs = readFileSync(
+      fileURLToPath(new URL("../../../../packages/art/src/sounds.ts", import.meta.url)),
+      "utf8",
+    );
+    for (const id of DRAG_SOUNDS_TO_RECORD)
+      expect(specs, `${id} has no prompt in the sound desk`).toContain(
+        `id: "${DRAG_SOUND_CLIP[id]}"`,
+      );
   });
 });
 

@@ -1,3 +1,4 @@
+import type { DragFx } from "@amanda/shared";
 import type { DragState } from "../game/useDrag";
 import { carryOf } from "../game/carry";
 import { fxOf } from "../game/dragFx";
@@ -16,8 +17,7 @@ import { CardView } from "./CardView";
  * It follows the CARD, not the pointer — they are different places now
  * (useDrag), and the gap between them is the whole effect. The tilt is
  * the direction it is travelling, so a card thrown left leans left
- * without anybody writing a keyframe for it, and the class is what
- * gives the fliers their wingbeat and the electric ones their crackle.
+ * without anybody writing a keyframe for it.
  *
  * ═══ WHY THIS IS A COMPONENT AND NOT STILL IN App.tsx ═══
  *
@@ -31,16 +31,53 @@ import { CardView } from "./CardView";
  * So there is one of these, App.tsx renders it over the board and the card
  * editor renders it over its own little stage, and neither of them knows
  * what a flier looks like.
+ *
+ * ═══ AND THE EFFECT IS NOT THE CARRY ═══
+ *
+ * It used to be: `carry.style` chose both how the card moved and what came
+ * off it. Or asked for them as two separate choices, so the furniture is
+ * keyed on `fxOf` now (game/dragFx.ts) and the ghost carries both classes.
  */
+
+/**
+ * The effects that are simply N identical pieces, drawn over the card.
+ *
+ * Sixteen of these as sixteen hand-written blocks would be the thing this
+ * file was extracted to avoid. The four below the table are the ones that
+ * genuinely are not alike: wings go BEHIND the card, lightning is three
+ * layers at once, and the two that tear at the ground share the dust.
+ */
+const PIECES: Partial<Record<DragFx, [cls: string, count: number]>> = {
+  drips: ["drag-ghost__drip", 5],
+  embers: ["drag-ghost__ember", 5],
+  bubbles: ["drag-ghost__bubble", 5],
+  frost: ["drag-ghost__frost", 4],
+  leaves: ["drag-ghost__leaf", 4],
+  smoke: ["drag-ghost__smoke", 3],
+  gears: ["drag-ghost__gear", 3],
+  fluff: ["drag-ghost__fluff", 5],
+  venom: ["drag-ghost__venom", 3],
+  stars: ["drag-ghost__star", 4],
+  sand: ["drag-ghost__sand", 6],
+};
+
+function Pieces({ fx }: { fx: DragFx }) {
+  const piece = PIECES[fx];
+  if (!piece) return null;
+  const [cls, count] = piece;
+  return (
+    <span className={cls} aria-hidden="true">
+      {Array.from({ length: count }, (_, i) => (
+        <i key={i} />
+      ))}
+    </span>
+  );
+}
+
 export function DragGhost({ drag }: { drag: DragState }) {
   if (!drag.cardId) return null;
 
   const carry = carryOf(drag.cardId);
-  /*
-   * How it MOVES and what it THROWS OFF are two questions now — Or asked to
-   * choose them separately per card (dragFx.ts). They agree unless somebody
-   * said otherwise, so every card that looked right still does.
-   */
   const fx = fxOf(drag.cardId);
   // It leans into its own movement, and a flier runs ahead of your
   // thumb rather than trailing it.
@@ -106,22 +143,6 @@ export function DragGhost({ drag }: { drag: DragState }) {
         </>
       )}
       {/*
-        Jelly, for anything with no bones in it. Or: *"jelly/slime
-        splatter"*. Five drips on their own clocks, leaving from
-        different points along the bottom edge — a blob stretches,
-        lets go and falls, which is the one thing that says a thing
-        is WET rather than merely green.
-      */}
-      {fx === "drips" && (
-        <span className="drag-ghost__drip" aria-hidden="true">
-          <i />
-          <i />
-          <i />
-          <i />
-          <i />
-        </span>
-      )}
-      {/*
         And earth, for anything being pulled out of the ground. Or:
         *"flying earth"* — which belongs to the card that RESISTS,
         because the thing that throws soil is something coming up by
@@ -148,6 +169,13 @@ export function DragGhost({ drag }: { drag: DragState }) {
           <span className="drag-ghost__dust" aria-hidden="true" />
         </>
       )}
+      {/*
+        Jelly, for anything with no bones in it — Or: *"jelly/slime
+        splatter"* — and the ten he asked for afterwards. A blob stretches,
+        lets go and falls, which is the one thing that says a thing is WET
+        rather than merely green; the other ten are in board.css beside it.
+      */}
+      <Pieces fx={fx} />
     </div>
   );
 }
