@@ -71,6 +71,27 @@ export const ABILITY_TYPES = [
   "splitOnDeath", // split into smaller copies on death
   "sacrificeAdjacent", // consume an adjacent ally for a benefit
   "elementSteal", // copy the element of the first enemy hit
+  /*
+   * ═══ NEUTRALISING, WHICH IS NOT DAMAGE ═══
+   *
+   * Or: *"and give me the option to add neutralising abilities to cards:
+   * when it hits a healer — it damages the healing ability; when it hits
+   * armour — it cancels the armour; when it hits a poison-spitter — it
+   * cancels its abilities. (Each one separately, of course. There is a card
+   * with heal-neutralising and a different card with armour-neutralising.)"*
+   *
+   * Three types rather than one with a parameter, exactly as he says: a card
+   * carries ONE of them, and which one is the card's character. It is also
+   * the difference between a dropdown you can read and a dropdown with a
+   * JSON box you have to be told about.
+   *
+   * They fire `onHit` and they are PERMANENT — the healer that has been hit
+   * does not heal again this battle. A timer would be a second number on
+   * every card for a thing that is supposed to read as "he broke it".
+   */
+  "silenceHeal", // the card it hits stops healing — its regen and its heal aura
+  "silenceArmor", // the card it hits loses its armour and stops granting any
+  "silencePoison", // the card it hits stops poisoning — its dot and its lane
 ] as const;
 export const AbilityTypeSchema = z.enum(ABILITY_TYPES);
 export type AbilityType = z.infer<typeof AbilityTypeSchema>;

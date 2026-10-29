@@ -208,6 +208,13 @@ describe("the order of the form", () => {
       "יכולות",
       "מספרים",
       "תנועה בקרב",
+      /*
+       * "מטרה" was two options in the middle of the numbers grid, which is
+       * where a dial goes when nobody has decided it is a decision. Or made
+       * it one — *"open me up more options in the cards' preferred
+       * target"* — so it is a section, beside the movement it belongs with.
+       */
+      "מטרה",
       "במשחק",
     ]);
   });

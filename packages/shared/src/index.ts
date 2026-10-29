@@ -10,6 +10,8 @@ export * from "./schemas/elements.js";
 export * from "./schemas/ability.js";
 // How a card behaves in your hand — the three lists the panel chooses from
 export * from "./schemas/drag.js";
+// Who a card goes after — seven answers, not two
+export * from "./schemas/targeting.js";
 export * from "./schemas/card.js";
 export * from "./schemas/series.js";
 export * from "./schemas/actionCard.js";

@@ -1,5 +1,5 @@
 import { ARENA, BOARD, SIMULATION } from "@amanda/shared";
-import type { Element, LocalizedString } from "@amanda/shared";
+import type { AbilityType, Element, LocalizedString } from "@amanda/shared";
 import { isAhead, sharesLane } from "./combat.js";
 import type { BattleState, Owner, Unit } from "./types.js";
 
@@ -66,6 +66,35 @@ function clampLane(state: BattleState, lane: number): number {
  * Recompute every unit's aura-derived multipliers from scratch. Called each
  * tick, so auras are stateless and deterministic.
  */
+/**
+ * ═══ WHAT A NEUTRALISER SWITCHES OFF ═══
+ *
+ * Or: *"when it hits a healer — it damages the healing ability; when it hits
+ * armour — it cancels the armour; when it hits a poison-spitter — it cancels
+ * its abilities."*
+ *
+ * Three separate cards, so three separate types — but one mechanism, because
+ * "this ability no longer fires" is the same sentence three times. A flag is
+ * set on the card that was HIT, and every place an ability fires asks first.
+ *
+ * ⚠ ASKED AT THE FIRING SITE, NOT AT THE HIT. Switching an ability off by
+ * deleting it from `u.abilities` would be one line here and a lie everywhere
+ * else: the card's details screen reads that array, the report reads it, and
+ * a monster whose card stops saying what it is is a monster the child cannot
+ * reason about. It keeps the ability and the ability stops working.
+ */
+const SILENCED_BY: Record<string, AbilityType[]> = {
+  silencedHeal: ["regen", "healAura"],
+  silencedArmor: ["armorAura", "armorGain"],
+  silencedPoison: ["stackingDot", "lineDenialDot"],
+};
+
+/** Has this card had that ability of its broken? */
+export function silenced(u: Unit, type: AbilityType): boolean {
+  for (const flag in SILENCED_BY) if (u.flags[flag] && SILENCED_BY[flag]!.includes(type)) return true;
+  return false;
+}
+
 export function runAuras(state: BattleState): void {
   for (const u of state.units) {
     if (!u.alive) continue;
@@ -78,6 +107,7 @@ export function runAuras(state: BattleState): void {
     if (!src.alive) continue;
     for (const ab of src.abilities) {
       if (ab.trigger !== "aura") continue;
+      if (silenced(src, ab.type)) continue;
       const pct = num(ab.params.pct);
       switch (ab.type) {
         case "damageReductionAura":
@@ -120,7 +150,12 @@ export function runAuras(state: BattleState): void {
     }
     // Self-sustain (regen) also recomputed per tick.
     for (const ab of src.abilities) {
-      if (ab.trigger === "passive" && ab.type === "regen" && src.hp < src.maxHp) {
+      if (
+        ab.trigger === "passive" &&
+        ab.type === "regen" &&
+        !silenced(src, "regen") &&
+        src.hp < src.maxHp
+      ) {
         src.hp = Math.min(src.maxHp, src.hp + num(ab.params.hpPerSecond, 40) / TPS);
       }
     }
@@ -174,6 +209,22 @@ export function runAuras(state: BattleState): void {
       }
     }
   }
+
+  /*
+   * ⚠ AND THE LAST WORD ON ARMOUR BELONGS TO THE NEUTRALISER.
+   *
+   * Or: *"when it hits armour — it cancels the armour."* Cancelling it at
+   * the moment of the blow is not enough: `auraArmor` is rebuilt from
+   * scratch every tick by whatever allies are standing nearby, so a card
+   * whose armour had been broken would be wearing it again a thirtieth of a
+   * second later and the ability would read as doing nothing at all. This
+   * runs after every source and every synergy has had its say.
+   */
+  for (const u of state.units) {
+    if (!u.alive || !u.flags.silencedArmor) continue;
+    u.armor = 0;
+    u.auraArmor = 0;
+  }
 }
 
 /**
@@ -205,7 +256,7 @@ export function runDamageOverTime(state: BattleState, ops: BattleOps): void {
   for (const src of state.units) {
     if (!src.alive) continue;
     for (const ab of src.abilities) {
-      if (ab.type !== "lineDenialDot") continue;
+      if (ab.type !== "lineDenialDot" || silenced(src, ab.type)) continue;
       const dps = num(ab.params.dps, 100);
       for (const enemy of state.units) {
         if (!enemy.alive || enemy.owner === src.owner) continue;
@@ -498,6 +549,7 @@ export function runDelayed(state: BattleState, u: Unit): void {
 export function runOnHit(state: BattleState, attacker: Unit, target: Unit): void {
   for (const ab of attacker.abilities) {
     if (ab.trigger !== "onHit") continue;
+    if (silenced(attacker, ab.type)) continue;
     switch (ab.type) {
       case "knockback":
         if (!target.knockbackImmune) {
@@ -522,6 +574,27 @@ export function runOnHit(state: BattleState, attacker: Unit, target: Unit): void
       }
       case "armorBreak":
         target.armor = 0;
+        break;
+      /*
+       * The three neutralisers. Each one is a flag on the card that was hit
+       * and nothing else — see SILENCED_BY above for what each switches off.
+       *
+       * `silenceArmor` is the one that also does something immediately: an
+       * armour that is cancelled has to GO, not stop being topped up, or a
+       * card that had already banked 300 armour keeps every point of it and
+       * the ability reads as doing nothing. It is `armorBreak` plus "and it
+       * does not come back", which is exactly what Or described.
+       */
+      case "silenceHeal":
+        target.flags.silencedHeal = true;
+        break;
+      case "silenceArmor":
+        target.flags.silencedArmor = true;
+        target.armor = 0;
+        target.auraArmor = 0;
+        break;
+      case "silencePoison":
+        target.flags.silencedPoison = true;
         break;
       case "stackingDot":
         // The point of poison: it does not care about armor, and it does not

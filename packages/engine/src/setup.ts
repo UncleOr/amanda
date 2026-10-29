@@ -133,6 +133,8 @@ export function createUnitFromCard(
     alive: true,
     below: p.below ? { cardId: p.below } : null,
     flags: {},
+    lastHitBy: null,
+    hasAttacked: false,
   };
 }
 

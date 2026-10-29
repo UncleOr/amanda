@@ -9,6 +9,7 @@ import {
   RANGES,
   RARITIES,
   STARTER_ALBUM,
+  TARGETINGS,
   type Ability,
   type AbilityType,
   type Card,
@@ -26,6 +27,7 @@ import {
   FX_HE,
   RANGE_HE,
   RARITY_HE,
+  TARGETING_HE,
   SOUND_HE,
   TRIGGER_HE,
 } from "../game/vocab";
@@ -950,16 +952,6 @@ export function CardEditor({ call, say, upload, notes, reloadNotes }: CardEditor
                   ))}
                 </select>
               </label>
-              <label className="ed__f">
-                על מי הולך
-                <select
-                  value={draft.targeting}
-                  onChange={(e) => set("targeting", e.target.value as Card["targeting"])}
-                >
-                  <option value="lane">מי שמולו</option>
-                  <option value="king">המלך</option>
-                </select>
-              </label>
               <label className="ed__f ed__f--check">
                 <input
                   type="checkbox"
@@ -1003,7 +995,33 @@ export function CardEditor({ call, say, upload, notes, reloadNotes }: CardEditor
               </label>
             )}
 
-            {/* ───────────── 8. במשחק ───────────── */}
+            {/* ───────────── 8. מטרה ───────────── */}
+            {/*
+              Or: *"open me up more options in the cards' preferred target…
+              give each one a catchy name."* It was two options in the middle
+              of the numbers grid, which is where a dial goes when nobody has
+              decided it is a decision. Seven of them, with what each one
+              means underneath, is a decision.
+            */}
+            <h4 className="ed__h">
+              מטרה
+              <small>על מי הקלף הולך. אם מה שהוא מחפש לא על הלוח — הוא נלחם כמו קלף רגיל.</small>
+            </h4>
+            <div className="ed__moves">
+              {TARGETINGS.map((id) => (
+                <button
+                  key={id}
+                  className={draft.targeting === id ? "is-on" : ""}
+                  title={TARGETING_HE[id].note}
+                  onClick={() => set("targeting", id)}
+                >
+                  {TARGETING_HE[id].he}
+                </button>
+              ))}
+            </div>
+            <small className="dim">{TARGETING_HE[draft.targeting].note}.</small>
+
+            {/* ───────────── 9. במשחק ───────────── */}
             <h4 className="ed__h">
               במשחק
               <small>האם הקלף קיים, ולמי הוא מגיע.</small>

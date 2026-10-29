@@ -3,6 +3,7 @@ import { LocalizedStringSchema, ArtSchema } from "./common.js";
 import { ElementsSchema } from "./elements.js";
 import { AbilitySchema } from "./ability.js";
 import { DragChoiceSchema } from "./drag.js";
+import { TargetingSchema } from "./targeting.js";
 
 /** Attack range archetypes (from GDD §11). */
 export const RANGES = ["melee", "ranged", "sniper"] as const;
@@ -58,17 +59,16 @@ export const CardSchema = z.object({
   /** Aerial/hovering units can pass over ground obstacles. */
   flying: z.boolean().default(false),
   /**
-   * Who this card goes after.
+   * Who this card goes after. The whole list, and what each one means, is in
+   * schemas/targeting.ts — seven of them since Or asked for more than
+   * "forwards" and "the crown".
    *
-   * "lane"  — the nearest enemy straight ahead, the ordinary soldier.
-   * "king"  — it hunts the enemy King, across lanes if it has to. While the
-   *           King is shielded it works on the guards standing in the way.
-   *
-   * A ranged "king" card shoots over the lanes from where it stands; a walker
-   * crosses toward the King only when its way is clear; a flyer crosses
-   * regardless.
+   * A ranged card shoots its pick over the lanes from where it stands; a
+   * walker crosses toward it only when its way is clear; a flyer crosses
+   * regardless. And every mode falls back to `lane` when what it is looking
+   * for is not on the board.
    */
-  targeting: z.enum(["lane", "king"]).default("lane"),
+  targeting: TargetingSchema.default("lane"),
   /** Designed as a mid-boss for the 2×2 King slot (informational; any card is legal there). */
   midBoss: z.boolean().default(false),
   /**

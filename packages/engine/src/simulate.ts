@@ -1,4 +1,4 @@
-import { ARENA, COMBAT, RANGE_REACH, SIMULATION, SUDDEN_DEATH } from "@amanda/shared";
+import { ARENA, COMBAT, RANGE_REACH, SIMULATION, SUDDEN_DEATH, type Targeting } from "@amanda/shared";
 import {
   damageSharer,
   rowAttackTargets,
@@ -121,6 +121,93 @@ function nearestAnywhere(u: Unit, enemies: Unit[]): TargetPick | null {
 }
 
 /**
+ * ═══ THE FIVE THAT HUNT SOMETHING IN PARTICULAR ═══
+ *
+ * Or: *"open me up more options in the cards' preferred target: cards that
+ * shoot straight, cards that shoot whoever attacks them, cards that shoot
+ * the strongest card at any given moment, cards that shoot snipers, cards
+ * that shoot static cards, cards that shoot cards that crossed the line and
+ * are attacking."*
+ *
+ * Two of those were already here (straight ahead, and the crown). The other
+ * five all have the same shape — a predicate over the enemies in front, then
+ * the nearest match — so they are a table rather than five branches, and the
+ * one that is NOT that shape (the strongest, which wants the biggest rather
+ * than the nearest) says so by being written out.
+ *
+ * ⚠ ALL OF THEM CROSS LANES, and that is the whole point: "the strongest
+ * card on the board" is not a position, so a card that could only look down
+ * its own lane would be a lane card with extra words. Crossing has a cost
+ * the engine already charges — see `crossLane`, which makes a walker WALK
+ * there before it may swing.
+ */
+const PREY: Partial<Record<Targeting, (e: Unit, u: Unit) => boolean>> = {
+  avenger: (e, u) => e.uid === u.lastHitBy,
+  // Not the King: it is static by rule (King's Trap), so a wall-breaker that
+  // counted it would hunt the crown and nothing else, every game.
+  wallbreaker: (e) => e.moveSpeed === 0 && !e.isKing,
+  sniperHunter: (e) => e.range === "sniper",
+  invader: (e, u) => e.hasAttacked && hasCrossed(u, e),
+};
+
+/**
+ * Has this enemy come at me — reached my front line or stepped past it?
+ *
+ * The arena is two boards laid end to end and the front rows touch in the
+ * middle (config.ts: width 8, the rows meet at columns 3 and 4). A owns the
+ * low half, B the high one.
+ *
+ * ⚠ "AT OR PAST THE LINE", NOT "PAST IT", AND THAT IS NOT A ROUNDING
+ * CHOICE. `gapAhead` measures edge to edge, so two width-1 units in columns
+ * 3 and 4 are already touching: a melee attacker walking at your front row
+ * STOPS on the line and fights from there. Measured — a crosser given a
+ * speed of 1.6 and something to kill finished the battle at column 4.00,
+ * having attacked all the way through it. Under the strict reading the
+ * border guard would have hunted almost nothing in almost every match,
+ * which is the "card that quietly does nothing" failure wearing a rule.
+ */
+function hasCrossed(u: Unit, e: Unit): boolean {
+  const mid = ARENA.width / 2;
+  return u.facing > 0 ? e.col <= mid : e.col >= mid - 1;
+}
+
+/** The nearest enemy this unit's targeting is actually looking for. */
+function huntPrey(u: Unit, enemies: Unit[]): TargetPick | null {
+  /*
+   * The strongest thing out there, recomputed every tick — so it changes
+   * target the moment something bigger arrives, which is what Or asked for
+   * ("at any given moment") and is also what makes it dangerous to play
+   * against rather than merely efficient.
+   *
+   * Power, with health as the tie-break: power is what the card DOES, and
+   * two cards of equal power are told apart by which one will be there
+   * longer. Excluding the King — see schemas/targeting.ts.
+   */
+  if (u.targeting === "champion") {
+    let best: Unit | undefined;
+    for (const e of enemies) {
+      if (e.isKing) continue;
+      if (!best || e.power > best.power || (e.power === best.power && e.hp > best.hp)) best = e;
+    }
+    return best ? { unit: best, gap: gapAhead(u, best), crossLane: true } : null;
+  }
+
+  const wanted = PREY[u.targeting];
+  if (!wanted) return null;
+  let best: Unit | undefined;
+  let bestGap = Infinity;
+  for (const e of enemies) {
+    if (!wanted(e, u)) continue;
+    const g = gapAhead(u, e);
+    if (g < bestGap) {
+      best = e;
+      bestGap = g;
+    }
+  }
+  return best ? { unit: best, gap: bestGap, crossLane: true } : null;
+}
+
+/**
  * Choose what a unit is attacking.
  *
  * An ordinary card fights whatever is in front of it, in its own lane. A card
@@ -154,6 +241,24 @@ function pickTarget(state: BattleState, u: Unit): TargetPick | null {
     const hunted = huntKing(state, u, enemies);
     if (hunted) return hunted;
     // No King left to hunt: fall through and fight like anything else.
+  }
+
+  /*
+   * ⚠ AND THE SAME FALL-THROUGH FOR THE OTHER FIVE, FOR THE SAME REASON.
+   * Or found the version of this bug that already existed — *"all the
+   * attackers in a straight line reaching the end and attacking nothing"* —
+   * and a sniper hunter on a board with no snipers is that bug wearing a new
+   * name. Nothing of the kind it wants means it fights like anything else.
+   */
+  /*
+   * ⚠ The guard is a string compare and it is here for a reason: this runs
+   * for every unit on every tick, and the tutorial's 300-battle check went
+   * over its five-second budget the day a map lookup and a call were added
+   * to that path for the benefit of the two modes that never use them.
+   */
+  if (u.targeting !== "lane") {
+    const prey = huntPrey(u, enemies);
+    if (prey) return prey;
   }
 
   let ahead = enemies.filter((e) => sharesLane(e, u));
@@ -267,6 +372,8 @@ export function runBattle(setup: BattleSetup): BattleResult {
       abilities: [],
       alive: true,
       below: null,
+      lastHitBy: null,
+      hasAttacked: false,
       // The one thing that is not inherited: this is a PIECE of something,
       // and the screen draws it smaller for it. See `spawned` in types.ts.
       flags: { spawned: true },
@@ -426,6 +533,14 @@ export function runBattle(setup: BattleSetup): BattleResult {
 
   function performAttack(u: Unit, target: Unit): void {
     state.events.push({ tick: state.tick, type: "attack", uid: u.uid, targetUid: target.uid });
+    /*
+     * The two facts the new targeting modes are made of, recorded in the one
+     * place where one unit actually hits another. Here rather than in
+     * `pickTarget`, because what matters is the blow that LANDED — a card
+     * that aimed at you and died on the way has not attacked you.
+     */
+    u.hasAttacked = true;
+    target.lastHitBy = u.uid;
     // Fires as the swing starts, before anything lands: a vacuum drags the
     // line in, a gelatinous cube swallows what walked into it.
     runOnAttack(state, u, target);

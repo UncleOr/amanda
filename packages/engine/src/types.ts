@@ -1,4 +1,4 @@
-import type { Ability, Element, LocalizedString, Range } from "@amanda/shared";
+import type { Ability, Element, LocalizedString, Range, Targeting } from "@amanda/shared";
 import type { Rng } from "./rng.js";
 
 /** Which side of the arena a unit belongs to. */
@@ -35,8 +35,8 @@ export interface Unit {
   moveSpeed: number;
   range: Range;
   flying: boolean;
-  /** "lane" fights whatever is in front; "king" hunts the enemy King. */
-  targeting: "lane" | "king";
+  /** Who it goes after. Seven answers — see schemas/targeting.ts. */
+  targeting: Targeting;
   isKing: boolean;
 
   // --- spatial (arena space: col 0..7, lanes are rows 0..3) ---
@@ -73,6 +73,19 @@ export interface Unit {
   below: StackedCard | null;
   /** Runtime flags used by ability handlers (e.g. rooted, elementStolen). */
   flags: Record<string, boolean | number>;
+
+  /*
+   * ── the two facts a card needs about the battle so far ──
+   *
+   * Neither is a stat and neither is a flag: they are what the `avenger` and
+   * `invader` targeting modes are ABOUT, and a mode that had to guess them
+   * from the board would guess wrong. `flags` is typed boolean | number and
+   * a uid is a string, which is the other half of why they live here.
+   */
+  /** uid of whatever hit it last, for as long as that is true. */
+  lastHitBy: string | null;
+  /** Has it swung at anything yet? Sticky — it never goes back to false. */
+  hasAttacked: boolean;
 }
 
 /** A card sitting under another via the Stacking / "Ground Floor" mechanic. */

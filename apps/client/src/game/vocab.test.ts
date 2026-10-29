@@ -108,7 +108,19 @@ describe("what the engine really does", () => {
    * warning off.
    */
   it("marks exactly the effects nothing in the engine answers to", () => {
-    const unhandled = ABILITY_TYPES.filter((t) => !ENGINE.includes(`"${t}"`));
+    /*
+     * ⚠ A HANDLER, NOT A MENTION. This asked whether the name appeared in
+     * the engine's source at all, and the day `armorGain` was listed inside
+     * a table of "abilities a neutraliser switches off" the test decided it
+     * had grown a handler. The shapes below are the three ways the engine
+     * actually dispatches on a type — a `case`, or a comparison — and
+     * nothing else counts.
+     */
+    const handles = (t: string): boolean =>
+      ENGINE.includes(`case "${t}"`) ||
+      ENGINE.includes(`.type === "${t}"`) ||
+      ENGINE.includes(`.type !== "${t}"`);
+    const unhandled = ABILITY_TYPES.filter((t) => !handles(t));
     const marked = ABILITY_TYPES.filter((t) => EFFECT_HE[t].dead);
     expect(unhandled).toEqual(marked);
     expect(unhandled, "nothing marked — did ABILITY_TYPES change shape?").toContain("armorGain");

@@ -238,9 +238,15 @@ describe("the nine that still have to be recorded", () => {
     expect(extras.length, "every voice in the game belongs to a main").toBeGreaterThan(2);
   });
 
-  it("leaves exactly the unrecorded ones to pay for", () => {
-    // The list Or is quoted a price for. If this number moves without a
-    // recording run, something was wired to a clip that does not exist.
-    expect(MAINS_WITHOUT_A_VOICE.length).toBe(9);
+  it("leaves nothing to pay for — all sixteen say their name", () => {
+    /*
+     * This said 9 for a fortnight: the list Or was quoted a price for. He
+     * said *"run art:voices"* on 2026-10-29 and the nine arrived, so the
+     * number is zero and the measurement is now the other way round — if
+     * one reappears, somebody wired a main to a clip that does not exist,
+     * and the only symptom would be a card that stopped speaking.
+     */
+    expect(MAINS_WITHOUT_A_VOICE).toEqual([]);
+    for (const id of ALL_MAINS) expect(voiceFor(id).name, `${id} is silent`).toBeTruthy();
   });
 });

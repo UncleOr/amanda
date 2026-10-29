@@ -85,12 +85,15 @@ describe("the tutorial matches are won", () => {
   it("lesson one: the opponent loses however the cards are dropped", () => {
     const losses = playLesson(0, 300);
     expect(losses.slice(0, 5)).toEqual([]);
-  });
+    // 300 real battles. It fits in five seconds on an idle machine and does
+    // not when the other 87 files are running beside it, which is a flake
+    // rather than a failure — so the budget is stated instead of assumed.
+  }, 30000);
 
   it("lesson two: the same, against a board with a real shape", () => {
     const losses = playLesson(1, 300);
     expect(losses.slice(0, 5)).toEqual([]);
-  });
+  }, 30000);
 
   it("every card a lesson deals actually exists", () => {
     for (const lesson of LESSONS)

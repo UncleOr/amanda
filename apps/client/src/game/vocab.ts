@@ -32,6 +32,7 @@ import type {
   Element,
   Range,
   Rarity,
+  Targeting,
 } from "@amanda/shared";
 
 /** A name a person would say, and optionally what it means. */
@@ -126,6 +127,30 @@ export const RANGE_HE: Record<Range, Named> = {
   sniper: { he: "צלף", note: "יורה רחוק ומהר" },
 };
 
+/**
+ * ═══ WHO A CARD GOES AFTER ═══
+ *
+ * Or: *"give each one a catchy name."* They are names rather than
+ * descriptions on purpose — a seven-year-old picking a card off a shelf
+ * should be able to say what it DOES in one word, and "shoots whoever
+ * attacked it" is not a word. The sentence under it is for the adult
+ * turning the dial.
+ *
+ * ⚠ And every one of them falls back to `lane` when what it hunts is not on
+ * the board — which the panel says out loud, because a card that quietly
+ * does nothing in half of all matches is the thing Or would find by playing
+ * and I would not find at all.
+ */
+export const TARGETING_HE: Record<Targeting, Named> = {
+  lane: { he: "ישר קדימה", note: "מי שעומד מולו במסלול שלו" },
+  king: { he: "ציד המלך", note: "חוצה מסלולים אל הכתר, ועובר דרך השומרים בדרך" },
+  avenger: { he: "נוקם", note: "יורה במי שפגע בו אחרון, כל עוד הוא חי ולפניו" },
+  champion: { he: "צייד אלופים", note: "המפלצת הכי חזקה על הלוח, בכל רגע מחדש. לא המלך" },
+  sniperHunter: { he: "צייד צלפים", note: "הולך על מי שיורה מהמרחק הכי גדול" },
+  wallbreaker: { he: "שובר חומות", note: "הולך על מי שלא זז — קירות, מגדלים, מה שחונה" },
+  invader: { he: "שומר הגבול", note: "על מי שהגיע לקו שלך וכבר התחיל להילחם" },
+};
+
 export const RARITY_HE: Record<Rarity, string> = {
   common: "רגיל",
   rare: "נדיר",
@@ -207,4 +232,17 @@ export const EFFECT_HE: Record<AbilityType, Effect> = {
   splitOnDeath: { he: "מתפצל לקטנים כשהוא מת", params: "count, childHp, childPower" },
   sacrificeAdjacent: { he: "מקריב חבר צמוד ומתחזק", params: "armorGain" },
   elementSteal: { he: "גונב את היסוד של האויב הראשון" },
+
+  /*
+   * ── the neutralisers ──
+   *
+   * Or: *"when it hits a healer — it damages the healing ability; when it
+   * hits armour — it cancels the armour; when it hits a poison-spitter — it
+   * cancels its abilities."* Each one is its own card, so each one is its
+   * own line — and all three are permanent, which the note says, because
+   * "cancels" and "cancels for four seconds" are different cards.
+   */
+  silenceHeal: { he: "מנטרל ריפוי", note: "מי שהוא פוגע בו מפסיק לרפא — את עצמו ואת החברים. לתמיד" },
+  silenceArmor: { he: "מנטרל שריון", note: "מוריד את כל השריון של מי שהוא פוגע בו, והוא לא חוזר" },
+  silencePoison: { he: "מנטרל רעל", note: "מי שהוא פוגע בו מפסיק להרעיל. לתמיד" },
 };

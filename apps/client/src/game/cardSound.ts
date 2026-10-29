@@ -157,8 +157,8 @@ const CARDS: Record<string, CardVoice> = {
 const MAIN_NAME: Record<string, string | null> = {
   dragons_01_flame_dragon: "card-name-flame-dragon",
   dragons_02_obsidian_egg: "card-name-obsidian-egg",
-  machines_01_boltling: null,
-  machines_06_mandroid: null,
+  machines_01_boltling: "card-name-boltling",
+  machines_06_mandroid: "card-name-mandroid",
   /*
    * ⚠ Chuppy's voice had a constraint on it rather than just a
    * description. Or: *"Chuppy is too similar to Pikachu — he electrifies,
@@ -172,17 +172,17 @@ const MAIN_NAME: Record<string, string | null> = {
    * the voice must NOT be.
    */
   furries_01_chuppy: "card-name-chuppy",
-  sea_02_jellyfish: null,
-  sea_07_siren: null,
+  sea_02_jellyfish: "card-name-jellyfish",
+  sea_07_siren: "card-name-siren",
   giants_01_stone_colossus: "card-name-stone-golem",
-  giants_07_iron_bulwark: null,
-  demons_01_alley_king: null,
+  giants_07_iron_bulwark: "card-name-iron-bulwark",
+  demons_01_alley_king: "card-name-alley-king",
   insects_01_ant_soldier: "card-name-ant-soldier",
-  insects_02_ant_queen: null,
-  plants_01_thorn_sprout: null,
+  insects_02_ant_queen: "card-name-ant-queen",
+  plants_01_thorn_sprout: "card-name-thorn-sprout",
   plants_03_healing_bloom: "card-name-healing-bloom",
   slimes_01_basic_slime: "card-name-slime",
-  slimes_11_thing_in_the_bin: null,
+  slimes_11_thing_in_the_bin: "card-name-thing-in-the-bin",
 };
 
 /** The mains still waiting for a recording, in one line, for whoever runs it. */
