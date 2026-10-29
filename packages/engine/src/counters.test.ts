@@ -379,8 +379,22 @@ describe("a swallow holds what walked into it", () => {
   const VICTIM = card("victim", 700, 400);
 
   it("stuns the first thing it meets, once", () => {
+    /*
+     * ⚠ ONCE PER VICTIM, which is what the handler promises and what this
+     * has always been about — not once per battle.
+     *
+     * It counted blows and got away with it while the blob died before it
+     * could meet anything else. It now meets something else: a King that
+     * cannot move fires at whatever is already inside its reach, so this
+     * King helps kill the victim, the blob lives long enough to cross to
+     * the enemy King, and swallows that too. Two swallows, two victims,
+     * and the rule the test exists for is untouched — restated rather than
+     * relaxed, and it still fails if a victim is swallowed twice.
+     */
     const r = fight(arena([BLOB, VICTIM]), "blob", "victim");
     const stuns = r.events.filter((e) => e.type === "stun");
-    expect(stuns.length).toBe(1);
+    expect(stuns.length).toBeGreaterThan(0);
+    const victims = stuns.map((e) => (e as { targetUid: string }).targetUid);
+    expect(new Set(victims).size).toBe(victims.length);
   });
 });

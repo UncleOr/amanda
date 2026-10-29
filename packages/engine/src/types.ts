@@ -191,6 +191,20 @@ export interface FrameUnit {
    * can tell "a child of a slime" from "a slime on low health".
    */
   spawned?: boolean;
+  /**
+   * It is fighting the other way round.
+   *
+   * A card that went round the back starts this way, and any card that has
+   * cleared everything in front of it and found something behind turns to
+   * face it (see simulate.ts). Everything else on the screen takes its
+   * direction from which side it belongs to — the artwork, the walk cycle,
+   * the death throw — so without this a unit under attack from behind is
+   * drawn facing the empty board in front of it.
+   *
+   * Absent on all but a handful of units in a battle, so it is written only
+   * when true rather than carried on every unit of every frame.
+   */
+  turned?: boolean;
 }
 
 /** A snapshot of the whole arena at one tick. */

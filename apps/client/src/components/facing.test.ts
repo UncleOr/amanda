@@ -22,7 +22,21 @@ const ARENA = readFileSync(fileURLToPath(new URL("./Arena.tsx", import.meta.url)
 
 describe("a unit's artwork", () => {
   it("is mirrored for the side that attacks leftwards", () => {
-    expect(ARENA).toContain('sprite.scale.set(fu.owner === "A" ? s : -s, s)');
+    /*
+     * Through `facingOf`, which is the same rule with one card's worth of
+     * exception: a unit that went round the back, or that cleared its own
+     * front and turned on something behind it, fights the other way. That is
+     * read off the frame (`turned`) rather than off the side it belongs to.
+     */
+    expect(ARENA).toMatch(/const facingOf = \(fu: FrameUnit\): number =>/);
+    expect(ARENA).toContain('(fu.owner === "A" ? 1 : -1) * (fu.turned ? -1 : 1)');
+    expect(ARENA).toContain("sprite.scale.set(facingOf(fu) * s, s)");
+  });
+
+  it("turns round with the unit, not once when it is built", () => {
+    // A unit is drawn once and then only updated per frame, so a flip that
+    // lives in drawUnit alone is a flip that never happens mid-battle.
+    expect(ARENA).toContain("g.sprite.scale.x = facingOf(fu) * g.spriteScale");
   });
 
   it("is flipped on the sprite, not on the thing that lunges", () => {

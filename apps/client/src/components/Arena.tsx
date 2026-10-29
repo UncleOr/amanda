@@ -231,6 +231,13 @@ interface UnitGfx {
   shadow: Graphics;
   /** Frost ring + orbiting shards while the unit is frozen. */
   stun: Graphics;
+  /**
+   * The card's artwork, kept so that a unit which turns round mid-battle can
+   * be turned round on the screen too. Null when the art has not loaded.
+   */
+  sprite: Sprite | null;
+  /** The scale the artwork was fitted at, so a flip can keep its size. */
+  spriteScale: number;
   look: CombatLook;
   targetAlpha: number;
   pulse: number;
@@ -453,6 +460,16 @@ export function Arena({
     const localTint = flip ? OWNER_TINT.B : OWNER_TINT.A;
     const oppTint = flip ? OWNER_TINT.A : OWNER_TINT.B;
 
+    /**
+     * Which way this unit is looking: -1 is left.
+     *
+     * The side it belongs to, unless it has turned round — a card that went
+     * round the back, or one that cleared its front and found something
+     * behind it. See `turned` on FrameUnit.
+     */
+    const facingOf = (fu: FrameUnit): number =>
+      (fu.owner === "A" ? 1 : -1) * (fu.turned ? -1 : 1);
+
     function drawUnit(fu: FrameUnit): UnitGfx {
       const container = new Container();
       const art = new Container();
@@ -496,6 +513,8 @@ export function Arena({
       art.addChild(body);
 
       // Card artwork, cover-fitted into the unit box and rounded off.
+      let drawn: Sprite | null = null;
+      let drawnScale = 1;
       const url = artUrlOf(fu.cardId);
       if (url && Assets.cache.has(url)) {
         const tex = Texture.from(url);
@@ -522,10 +541,12 @@ export function Arena({
          * `art`, which the lunge and the shake write to every frame.
          */
         const s = w / tex.width; // portrait art → fills width, top-aligned
-        sprite.scale.set(fu.owner === "A" ? s : -s, s);
+        sprite.scale.set(facingOf(fu) * s, s);
         const mask = new Graphics().roundRect(-w / 2, -w / 2, w, w, 10).fill(0xffffff);
         sprite.mask = mask;
         art.addChild(mask, sprite);
+        drawn = sprite;
+        drawnScale = s;
       }
 
       // Double frame: the outer ring says whose unit it is, the inner ring says
@@ -623,6 +644,8 @@ export function Arena({
         owner: fu.owner,
         maxHp: fu.maxHp,
         cardId: fu.cardId,
+        sprite: drawn,
+        spriteScale: drawnScale,
       };
       gfxByUid.set(fu.uid, g);
       uidByGfx.set(g, fu.uid);
@@ -681,6 +704,9 @@ export function Arena({
         }
         g.toX = nx;
         g.toY = ny;
+        // Turning round happens mid-battle, so the artwork is told every
+        // frame rather than once when the unit was built.
+        if (g.sprite) g.sprite.scale.x = facingOf(fu) * g.spriteScale;
         g.targetAlpha = fu.alive ? 1 : 0;
         const ratio = Math.max(0, Math.min(1, fu.hp / fu.maxHp));
         g.life = ratio;

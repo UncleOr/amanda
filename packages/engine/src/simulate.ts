@@ -347,6 +347,47 @@ function inAttackRange(u: Unit, gap: number): boolean {
   return gap <= reach + 1e-6;
 }
 
+/**
+ * ═══ A CARD THAT CANNOT GO ANYWHERE CAN STILL FIRE ═══
+ *
+ * Or, turning down the obvious fix for the queue — letting a blocked card
+ * step sideways into a free lane: *"No. Part of the wisdom is building the
+ * board so that you do not put someone walking behind someone static. That is
+ * fine. But they can still shoot even if they do not move. Say it has a range
+ * of 2 — it should shoot at someone approaching it. Your shots always 'go
+ * round' a friend on the way to the enemy."*
+ *
+ * Shots already went round their own: targeting never looked at allies, and a
+ * shooter standing behind a wall of its own has always fired over it. What it
+ * could not do was LOOK SIDEWAYS. Lane discipline is only relaxed when the
+ * lane is EMPTY, so a card whose own lane held something far away — out of
+ * reach, and with no way to close the distance because it is static, rooted,
+ * or queued behind one of its own — stood there aiming at the thing it could
+ * not hit while an enemy walked past inside its reach.
+ *
+ * Measured over 60 battles of the real catalogue: 21,961 of 281,570
+ * living-unit ticks were exactly that. Roughly a third of them belonged to
+ * static shooters — cards whose entire job is to fire.
+ *
+ * So this is the shot of last resort: the nearest enemy it can hit from
+ * precisely where it stands, in any lane. It is only ever reached by a unit
+ * that is neither attacking nor moving this tick, which is what keeps lane
+ * discipline intact — an advancing card is busy advancing.
+ */
+function freeShot(state: BattleState, u: Unit): Unit | null {
+  let best: Unit | null = null;
+  let bestGap = Infinity;
+  for (const e of state.units) {
+    if (!e.alive || e.owner === u.owner || !isAhead(u, e)) continue;
+    const gap = gapAhead(u, e);
+    if (gap < bestGap) {
+      best = e;
+      bestGap = gap;
+    }
+  }
+  return best && inAttackRange(u, bestGap) ? best : null;
+}
+
 function effectiveMoveSpeed(u: Unit): number {
   if (u.flags.rooted) return 0;
   return u.moveSpeed * u.moveSlowMult;
@@ -378,6 +419,7 @@ export function runBattle(setup: BattleSetup): BattleResult {
         alive: u.alive,
         isKing: u.isKing,
         ...(u.flags.spawned ? { spawned: true } : {}),
+        ...(u.facing !== (u.owner === "A" ? 1 : -1) ? { turned: true } : {}),
       })),
     });
   }
@@ -791,18 +833,31 @@ export function runBattle(setup: BattleSetup): BattleResult {
 
       let picked = pickTarget(state, u);
       /*
-       * ⚠ AND IT TURNS ROUND AGAIN WHEN IT HAS EATEN ITS WAY OUT.
+       * ⚠ NOTHING IN FRONT, SOMETHING BEHIND: TURN ROUND AND FIGHT IT.
        *
-       * A card that went round the back is facing home, so once it has
-       * cleared everything between itself and its own board there is
-       * nothing "ahead" of it at all — and a unit with no target walks to
-       * the wall and stands there, which is the stall Or found the first
-       * time: *"all the attackers in a straight line reaching the end and
-       * attacking nothing."* It faces about ONCE, and is an ordinary card
-       * from then on, so it cannot oscillate.
+       * This began as the diver's own rule — a card that went round the back
+       * is facing home, and once it has eaten through everything between
+       * itself and its own board there is nothing "ahead" of it at all, so it
+       * would walk to the wall and stand there. That is the stall Or found
+       * the first time: *"all the attackers in a straight line reaching the
+       * end and attacking nothing."*
+       *
+       * It belongs to everybody, and the measurement that proved it is the
+       * diver seen from the other side. Every unit picks its target from what
+       * is IN FRONT of it, so a card that surfaced behind the enemy line was
+       * not merely hard to answer, it was unanswerable: a diver sent at four
+       * cards that could all shoot finished the battle on 10,000 health of
+       * 10,000, having killed three of them, while an identical card without
+       * the ability died. Nothing could turn round, so nothing did.
+       *
+       * It cannot oscillate: a unit only turns when there is something
+       * strictly behind it and nothing at all in front, and after turning
+       * that something is in front.
        */
-      if (!picked && u.flags.dug && state.units.some((e) => e.alive && e.owner !== u.owner)) {
+      if (!picked && state.units.some((e) => e.alive && e.owner !== u.owner && aheadBy(u, e) < 0)) {
         u.facing = u.facing > 0 ? -1 : 1;
+        // Turned round, it is an ordinary card again — including the rule
+        // that let it hit what it came up level with. See pickTarget.
         u.flags.dug = false;
         picked = pickTarget(state, u);
       }
@@ -825,8 +880,21 @@ export function runBattle(setup: BattleSetup): BattleResult {
           performAttack(u, picked.unit);
           u.attackCooldown = effectiveCooldown(u);
         }
-      } else if (effectiveMoveSpeed(u) > 0) {
-        moveUnit(u, picked?.unit ?? null);
+      } else {
+        const stood = u.col;
+        if (effectiveMoveSpeed(u) > 0) moveUnit(u, picked?.unit ?? null);
+        /*
+         * It got no nearer. Static, rooted, at the wall, or queued behind one
+         * of its own — and in every one of those cases it can still fire at
+         * whatever it can already reach. See `freeShot`.
+         */
+        if (u.col === stood && u.attackCooldown <= 0 && u.power > 0) {
+          const shot = freeShot(state, u);
+          if (shot) {
+            performAttack(u, shot);
+            u.attackCooldown = effectiveCooldown(u);
+          }
+        }
       }
     }
   }
