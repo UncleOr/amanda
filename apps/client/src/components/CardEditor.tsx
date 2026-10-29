@@ -2,14 +2,33 @@ import { useEffect, useMemo, useRef, useState } from "react";
 import {
   ABILITY_TRIGGERS,
   ABILITY_TYPES,
+  CARRY_STYLES,
+  DRAG_FX,
+  DRAG_SOUNDS,
   ELEMENTS,
+  RANGES,
+  RARITIES,
   STARTER_ALBUM,
   type Ability,
+  type AbilityType,
   type Card,
 } from "@amanda/shared";
 import { CATALOG, SERIES } from "../data/catalog";
 import { artUrl } from "../game/skins";
-import { voiceFor } from "../game/cardSound";
+import { DRAG_SOUND_CLIP, dragMixOf, voiceFor } from "../game/cardSound";
+import { styleFor } from "../game/carry";
+import { FX_FOR_STYLE } from "../game/dragFx";
+import { setPreviewCard } from "../game/preview";
+import {
+  CARRY_HE,
+  EFFECT_HE,
+  ELEMENT_HE,
+  FX_HE,
+  RANGE_HE,
+  RARITY_HE,
+  SOUND_HE,
+  TRIGGER_HE,
+} from "../game/vocab";
 import { sfx } from "../game/sfx";
 import { useDrag } from "../game/useDrag";
 import { CardView } from "./CardView";
@@ -100,6 +119,27 @@ function moveOf(card: Card): Move {
 
 /** The pace a card gets when it starts moving and has never had one. */
 const DEFAULT_PACE = { walks: 1, flies: 1.5 } as const;
+
+/* ───────────────────────── the card in your hand ───────────────────────── */
+
+/** clip → the name Or picked it by, for describing a mix he did not choose. */
+const CLIP_HE = new Map(
+  Object.entries(DRAG_SOUND_CLIP)
+    .filter(([, clip]) => clip)
+    .map(([id, clip]) => [clip!, SOUND_HE[id as keyof typeof SOUND_HE].he]),
+);
+
+/**
+ * The numbers an effect reads, as a line under the row.
+ *
+ * Taken out of the engine's own handlers (see vocab.ts). "No numbers" is
+ * worth saying too: an empty params box on an effect that takes none is
+ * finished, and an empty one on `knockback` is a card that pushes nobody.
+ */
+function paramHint(type: AbilityType): string {
+  const p = EFFECT_HE[type].params;
+  return p ? `מספרים: ${p}` : "בלי מספרים";
+}
 
 /* ───────────────────────── the picture ───────────────────────── */
 
@@ -310,6 +350,28 @@ export function CardEditor({ call, say, upload, notes, reloadNotes }: CardEditor
       return { ...d, story: { he: "", en: "", ...d.story, [lang]: value, [other]: kept || value } };
     });
 
+  /**
+   * One of the three choices about the card in your hand.
+   *
+   * ⚠ "Automatic" is the ABSENCE of the field, not a value in it. An empty
+   * string writes nothing and an all-empty object removes `drag` entirely —
+   * otherwise a card Or opened, looked at and left alone saves as edited,
+   * and `{ drag: {} }` and no drag at all become two states that mean the
+   * same thing and compare as different.
+   */
+  const setDrag = (key: "move" | "fx" | "sound", value: string) =>
+    setDraft((d) => {
+      if (!d) return d;
+      const next: Record<string, string> = { ...d.drag };
+      if (value) next[key] = value;
+      else delete next[key];
+      if (!Object.keys(next).length) {
+        const { drag: _gone, ...rest } = d;
+        return rest as Card;
+      }
+      return { ...d, drag: next as Card["drag"] };
+    });
+
   /** One choice for how a card gets about, written into the two fields it takes. */
   function setMove(to: Move) {
     setDraft((d) => {
@@ -341,9 +403,40 @@ export function CardEditor({ call, say, upload, notes, reloadNotes }: CardEditor
     }
   }
 
+  /*
+   * The stage shows the DRAFT, not the shipped card.
+   *
+   * <CardView>, <DragGhost>, the spring and the sounds all look a card up by
+   * id, and without this they would look up what the build shipped with —
+   * so a movement Or had just chosen would do nothing until he saved,
+   * reloaded the panel and came back. See game/preview.ts; nothing in the
+   * game ever sets this.
+   */
+  useEffect(() => {
+    setPreviewCard(draft);
+    return () => setPreviewCard(null);
+  }, [draft]);
+
   const move = draft ? moveOf(draft) : "still";
   const inStarter = !!draft && (STARTER_ALBUM as readonly string[]).includes(draft.id);
   const speaks = draft ? voiceFor(draft.id).name : undefined;
+
+  /*
+   * What the three "automatic"s would answer for this card as it stands, and
+   * what it actually comes out as. Read off the DRAFT rather than through
+   * the preview seam, which is one render behind it — change an element and
+   * the sound line has to say so on the same keystroke, or it is describing
+   * the card you had a moment ago.
+   */
+  const autoMove = draft ? styleFor(draft) : "steady";
+  const nowMove = draft?.drag?.move ?? autoMove;
+  const autoFx = FX_FOR_STYLE[nowMove];
+  const nowFx = draft?.drag?.fx ?? autoFx;
+  const nowSound = draft
+    ? dragMixOf(draft)
+        .map((layer) => CLIP_HE.get(layer.clip) ?? layer.clip)
+        .join(" + ") || SOUND_HE.none.he
+    : "";
 
   return (
     <div className="admin__body ed">
@@ -410,68 +503,72 @@ export function CardEditor({ call, say, upload, notes, reloadNotes }: CardEditor
         <p className="admin__hint ed__empty">בחר קלף מהרשימה.</p>
       ) : (
         <div className="ed__form">
-          <div className="ed__head">
-            {/*
-              Or: *"let me also see the card in the panel and hear its voice,
-              and maybe drag it and see how it looks."* Three different
-              questions about one card, and none of them is answerable from
-              a form: what it LOOKS like, what it SOUNDS like, and how it
-              behaves in a hand — which is a spring, a tilt and whatever its
-              family throws off while it moves.
+          {/*
+            Or: *"let me also see the card in the panel and hear its voice,
+            and maybe drag it and see how it looks."* Three different
+            questions about one card, and none of them is answerable from a
+            form: what it LOOKS like, what it SOUNDS like, and how it behaves
+            in a hand — which is a spring, a tilt and whatever it throws off
+            while it moves.
 
-              ⚠ All three are the game's own code, not a drawing of it. The
-              card is <CardView>, the carry is <DragGhost> — the same
-              component App.tsx renders over the board — and the voice is the
-              same clip the same way. A preview that is written separately is
-              a preview that disagrees with the game, and it disagrees
-              quietly.
-            */}
-            <div className="ed__preview">
-              <div
-                className="ed__stage"
-                onPointerDown={(e) => {
-                  if (!CATALOG.has(draft.id)) return;
-                  /*
-                   * Idempotent, and here as well as in the panel's own
-                   * first-gesture listener because this component is also
-                   * rendered on its own in a harness. Decoding is not
-                   * instant, so the press that unlocks is not the press
-                   * that is heard — which is why the panel unlocks on its
-                   * first press and not on this one.
-                   */
-                  sfx.unlock();
-                  sfx.voice(voiceFor(draft.id).name);
-                  startDrag(draft.id, e);
-                }}
-              >
-                <CardView cardId={CATALOG.has(draft.id) ? draft.id : "crumb_demon"} size="large" />
-              </div>
-              {/*
-                ⚠ AND NO "PLAY THE NAME" BUTTON. There was one for an hour.
-                Or: *"I do not need the play-the-name button, I am supposed
-                to hear it when I drag."* He is right twice over — the press
-                that starts a carry is the one gesture that says a card's
-                name in the game (App.tsx), so a button beside it would be a
-                second way to hear a thing that the panel is supposed to be
-                showing AS IT IS.
+            ⚠ All three are the game's own code, not a drawing of it. The
+            card is <CardView>, the carry is <DragGhost> — the same component
+            App.tsx renders over the board — and the voice is the same clip
+            the same way. A preview that is written separately is a preview
+            that disagrees with the game, and it disagrees quietly.
 
-                What the button did carry and a drag cannot is the silence:
-                nine of the sixteen names have no recording yet, and a card
-                that says nothing looks exactly like a card whose sound is
-                broken. So that one fact stays, as a line rather than a
-                control.
-              */}
-              <small className="ed__stage-hint">
-                {speaks
-                  ? "גרור את הקלף כדי לראות ולשמוע אותו."
-                  : "גרור כדי לראות איך הוא בא ליד. לשם שלו אין עדיין הקלטה."}
-              </small>
+            ⚠ AND IT STAYS ON THE SCREEN NOW. Or: *"tidy it into a sensible,
+            comfortable order so I can go over them with Hod."* The form is
+            long and the card scrolled off the top of it, so by the time you
+            reached the numbers the thing you were talking about was the one
+            thing not on the screen. It is a sticky column: every section
+            below is read beside the card it is about.
+          */}
+          <div className="ed__preview">
+            <div
+              className="ed__stage"
+              onPointerDown={(e) => {
+                if (!CATALOG.has(draft.id)) return;
+                /*
+                 * Idempotent, and here as well as in the panel's own
+                 * first-gesture listener because this component is also
+                 * rendered on its own in a harness. Decoding is not
+                 * instant, so the press that unlocks is not the press
+                 * that is heard — which is why the panel unlocks on its
+                 * first press and not on this one.
+                 */
+                sfx.unlock();
+                sfx.voice(voiceFor(draft.id).name);
+                startDrag(draft.id, e);
+              }}
+            >
+              <CardView cardId={CATALOG.has(draft.id) ? draft.id : "crumb_demon"} size="large" />
             </div>
+            {/*
+              ⚠ AND NO "PLAY THE NAME" BUTTON. There was one for an hour.
+              Or: *"I do not need the play-the-name button, I am supposed
+              to hear it when I drag."* He is right twice over — the press
+              that starts a carry is the one gesture that says a card's
+              name in the game (App.tsx), so a button beside it would be a
+              second way to hear a thing that the panel is supposed to be
+              showing AS IT IS.
+
+              What the button did carry and a drag cannot is the silence:
+              nine of the sixteen names have no recording yet, and a card
+              that says nothing looks exactly like a card whose sound is
+              broken. So that one fact stays, as a line rather than a
+              control.
+            */}
+            <small className="ed__stage-hint">
+              {speaks
+                ? "גרור את הקלף כדי לראות ולשמוע אותו."
+                : "גרור כדי לראות איך הוא בא ליד. לשם שלו אין עדיין הקלטה."}
+            </small>
+          </div>
+
+          <div className="ed__fields">
+            {/* ───────────── 1. מי זה ───────────── */}
             <div className="ed__headfields">
-              <label className="ed__f">
-                מזהה
-                <input value={draft.id} onChange={(e) => set("id", e.target.value)} />
-              </label>
               <label className="ed__f">
                 שם (עברית)
                 <input
@@ -482,6 +579,7 @@ export function CardEditor({ call, say, upload, notes, reloadNotes }: CardEditor
               <label className="ed__f">
                 Name (English)
                 <input
+                  dir="ltr"
                   value={draft.name.en}
                   onChange={(e) => set("name", { ...draft.name, en: e.target.value })}
                 />
@@ -494,8 +592,7 @@ export function CardEditor({ call, say, upload, notes, reloadNotes }: CardEditor
                 nowhere else.
 
                 Empty is a real answer here and the commonest one, so there
-                is nothing to switch on — a card with no story simply shows
-                no story.
+                is nothing to switch on — a card with no story shows none.
               */}
               <label className="ed__f">
                 סיפור (עברית)
@@ -523,6 +620,388 @@ export function CardEditor({ call, say, upload, notes, reloadNotes }: CardEditor
                   ))}
                 </select>
               </label>
+              {/*
+                Last, and small. It is the card's address — the name the
+                save, the picture and every other table use for it — and it
+                is the one field on this screen that is not for reading with
+                a seven-year-old.
+              */}
+              <label className="ed__f">
+                מזהה — באנגלית, בלי רווחים
+                <input dir="ltr" value={draft.id} onChange={(e) => set("id", e.target.value)} />
+              </label>
+            </div>
+
+            {/* ───────────── 2. תמונה ───────────── */}
+            <h4 className="ed__h">
+              תמונה
+              <small>קובץ מהמחשב. מוקטן ל־768 פיקסל ונשמר כ־webp.</small>
+            </h4>
+            <div className="ed__art">
+              {draft.art.sprite ? (
+                <img className="ed__sprite" src={artUrl(draft.art.sprite)} alt="" />
+              ) : (
+                <span
+                  className="ed__sprite ed__sprite--blank"
+                  style={{ background: draft.art.placeholderColor }}
+                />
+              )}
+              <div className="ed__art-side">
+                <input
+                  ref={file}
+                  type="file"
+                  accept="image/*"
+                  hidden
+                  onChange={(e) => {
+                    const chosen = e.target.files?.[0];
+                    if (chosen) void replaceArt(chosen);
+                  }}
+                />
+                <button disabled={busy} onClick={() => file.current?.click()}>
+                  {busy ? "מעלה…" : draft.art.sprite ? "החלף תמונה" : "העלה תמונה"}
+                </button>
+                {draft.art.sprite && (
+                  <button
+                    className="admin__danger"
+                    onClick={() => set("art", { ...draft.art, sprite: null })}
+                  >
+                    הסר תמונה
+                  </button>
+                )}
+                <label className="ed__f">
+                  נתיב
+                  <input
+                    dir="ltr"
+                    value={draft.art.sprite ?? ""}
+                    placeholder="cards/dragons_01_flame_dragon.webp"
+                    onChange={(e) =>
+                      set("art", { ...draft.art, sprite: e.target.value.trim() || null })
+                    }
+                  />
+                </label>
+                <label className="ed__f">
+                  צבע בלי תמונה
+                  <input
+                    type="color"
+                    value={draft.art.placeholderColor}
+                    onChange={(e) => set("art", { ...draft.art, placeholderColor: e.target.value })}
+                  />
+                </label>
+              </div>
+            </div>
+
+            {/* ───────────── 3. יסודות ───────────── */}
+            {/*
+              ⚠ THIS HEADING SAID "POWERS" AND EXPLAINED LEVELS. Two
+              mistakes in one line: these are the ELEMENTS, and the sentence
+              under them was about what a level-up adds — which is a fact
+              about the numbers, and has now gone to sit over the numbers.
+            */}
+            <h4 className="ed__h">
+              יסודות
+              <small>ממה הוא עשוי. הראשון הוא זה שקובע חזק או חלש מול יסודות אחרים.</small>
+            </h4>
+            <div className="ed__elements">
+              {ELEMENTS.map((el) => (
+                <button
+                  key={el}
+                  className={draft.elements.includes(el) ? "is-on" : ""}
+                  onClick={() =>
+                    set(
+                      "elements",
+                      draft.elements.includes(el)
+                        ? draft.elements.filter((x) => x !== el)
+                        : [...draft.elements, el],
+                    )
+                  }
+                >
+                  <Icon name={el as never} size={15} /> {ELEMENT_HE[el]}
+                </button>
+              ))}
+            </div>
+
+            {/* ───────────── 4. יכולות ───────────── */}
+            {/*
+              Or: *"give the behaviours normal names so I understand what is
+              going on there, preferably in Hebrew."* He was reading
+              `sideKnockback` and `onCollision` off a dropdown. The engine's
+              names are what gets saved and matched, so they are still the
+              values — only what is PRINTED changed (game/vocab.ts), and the
+              line under each row says which numbers that effect reads,
+              because a JSON box with no idea what goes in it is a box you
+              type `{}` into forever.
+            */}
+            <h4 className="ed__h">
+              יכולות
+              <small>מתי קורה מה. הרשימות הן בדיוק מה שהמנוע יודע לבצע.</small>
+            </h4>
+            {draft.abilities.map((ab, i) => (
+              <div key={i} className="ed__ability">
+                <select
+                  value={ab.trigger}
+                  onChange={(e) => {
+                    const next = [...draft.abilities];
+                    next[i] = { ...ab, trigger: e.target.value as Ability["trigger"] };
+                    set("abilities", next);
+                  }}
+                >
+                  {ABILITY_TRIGGERS.map((t) => (
+                    <option key={t} value={t}>
+                      {TRIGGER_HE[t].he}
+                    </option>
+                  ))}
+                </select>
+                <select
+                  value={ab.type}
+                  onChange={(e) => {
+                    const next = [...draft.abilities];
+                    next[i] = { ...ab, type: e.target.value as Ability["type"] };
+                    set("abilities", next);
+                  }}
+                >
+                  {ABILITY_TYPES.map((t) => (
+                    <option key={t} value={t}>
+                      {EFFECT_HE[t].he}
+                    </option>
+                  ))}
+                </select>
+                <input
+                  className="ed__params"
+                  dir="ltr"
+                  value={JSON.stringify(ab.params ?? {})}
+                  title={paramHint(ab.type)}
+                  onChange={(e) => {
+                    try {
+                      const params = JSON.parse(e.target.value) as Ability["params"];
+                      const next = [...draft.abilities];
+                      next[i] = { ...ab, params };
+                      set("abilities", next);
+                    } catch {
+                      /* half-typed JSON is not an error, it is half-typed */
+                    }
+                  }}
+                />
+                <button
+                  className="admin__danger"
+                  onClick={() =>
+                    set(
+                      "abilities",
+                      draft.abilities.filter((_, j) => j !== i),
+                    )
+                  }
+                >
+                  הסר
+                </button>
+                <small className="ed__ability-note">
+                  {EFFECT_HE[ab.type].note ? `${EFFECT_HE[ab.type].note}. ` : ""}
+                  {paramHint(ab.type)}
+                  {EFFECT_HE[ab.type].dead ? " ⚠ המנוע עדיין לא מבצע את היכולת הזאת." : ""}
+                </small>
+              </div>
+            ))}
+            <button
+              className="admin__add"
+              onClick={() =>
+                set("abilities", [
+                  ...draft.abilities,
+                  { type: "regen", trigger: "passive", params: {} } as Ability,
+                ])
+              }
+            >
+              + יכולת
+            </button>
+
+            {/* ───────────── 5. מספרים ───────────── */}
+            <h4 className="ed__h">
+              מספרים
+              <small>אלה מספרי רמה 1. כל רמה מוסיפה אותו אחוז לחיים ולעוצמה, לכל הקלפים.</small>
+            </h4>
+            <div className="ed__grid">
+              <label className="ed__f">
+                חיים
+                <input
+                  type="number"
+                  value={draft.stats.hp}
+                  onChange={(e) => setStat("hp", Number(e.target.value))}
+                />
+              </label>
+              <label className="ed__f">
+                עוצמה
+                <input
+                  type="number"
+                  value={draft.stats.power}
+                  onChange={(e) => setStat("power", Number(e.target.value))}
+                />
+              </label>
+              {/*
+                ⚠ The label used to say only "attack rate", and the number is
+                SECONDS BETWEEN BLOWS — so raising it makes a card slower,
+                which is the opposite of what "rate" reads as. A dial that
+                does the reverse of what it is called is how a card gets
+                nerfed by somebody trying to buff it.
+              */}
+              <label className="ed__f">
+                קצב תקיפה — שניות בין מכות
+                <input
+                  type="number"
+                  step="0.1"
+                  value={draft.stats.attackSpeed}
+                  onChange={(e) => setStat("attackSpeed", Number(e.target.value))}
+                />
+              </label>
+              <label className="ed__f">
+                טווח
+                <select
+                  value={draft.stats.range}
+                  onChange={(e) => setStat("range", e.target.value)}
+                >
+                  {RANGES.map((r) => (
+                    <option key={r} value={r}>
+                      {RANGE_HE[r].he}
+                    </option>
+                  ))}
+                </select>
+              </label>
+              <label className="ed__f">
+                נדירות
+                <select
+                  value={draft.rarity}
+                  onChange={(e) => set("rarity", e.target.value as Card["rarity"])}
+                >
+                  {RARITIES.map((r) => (
+                    <option key={r} value={r}>
+                      {RARITY_HE[r]}
+                    </option>
+                  ))}
+                </select>
+              </label>
+              <label className="ed__f">
+                על מי הולך
+                <select
+                  value={draft.targeting}
+                  onChange={(e) => set("targeting", e.target.value as Card["targeting"])}
+                >
+                  <option value="lane">מי שמולו</option>
+                  <option value="king">המלך</option>
+                </select>
+              </label>
+              <label className="ed__f ed__f--check">
+                <input
+                  type="checkbox"
+                  checked={draft.midBoss}
+                  onChange={(e) => set("midBoss", e.target.checked)}
+                />
+                מתאים למלך
+              </label>
+            </div>
+
+            {/* ───────────── 6. תנועה בקרב ───────────── */}
+            <h4 className="ed__h">
+              תנועה בקרב
+              <small>איך הקלף מתקדם על הלוח, ובאיזה קצב.</small>
+            </h4>
+            <div className="ed__moves">
+              {MOVES.map((m) => (
+                <button
+                  key={m.id}
+                  className={move === m.id ? "is-on" : ""}
+                  title={m.note}
+                  onClick={() => setMove(m.id)}
+                >
+                  {m.he}
+                </button>
+              ))}
+            </div>
+            {move === "still" ? (
+              <small className="dim">{MOVES[0].note}.</small>
+            ) : (
+              <label className="ed__f ed__pace">
+                קצב — {draft.stats.moveSpeed} משבצות בשנייה
+                <input
+                  type="range"
+                  min={0.25}
+                  max={3}
+                  step={0.25}
+                  value={draft.stats.moveSpeed}
+                  onChange={(e) => setStat("moveSpeed", Number(e.target.value))}
+                />
+              </label>
+            )}
+
+            {/* ───────────── 7. ביד ───────────── */}
+            {/*
+              Or: *"let me choose, for every monster: a drag movement out of
+              a list of movements, a drag sound out of a list of sounds, a
+              drag animation out of a list of animations."*
+
+              ⚠ EMPTY IS THE NORMAL STATE AND IT IS NOT A BLANK. Every one of
+              these is worked out from the card itself, and that has to keep
+              being true — a card invented in this panel tomorrow must behave
+              like something without anybody choosing for it. So "automatic"
+              is an option with the DERIVED answer printed in it, and
+              choosing it again removes the field (schemas/drag.ts).
+            */}
+            <h4 className="ed__h">
+              ביד
+              <small>מה קורה כשמרימים את הקלף. גרור את הקלף שלמעלה כדי לבדוק.</small>
+            </h4>
+            <div className="ed__grid">
+              <label className="ed__f">
+                תנועה בגרירה
+                <select
+                  value={draft.drag?.move ?? ""}
+                  onChange={(e) => setDrag("move", e.target.value)}
+                >
+                  <option value="">אוטומטי — {CARRY_HE[autoMove].he}</option>
+                  {CARRY_STYLES.map((id) => (
+                    <option key={id} value={id}>
+                      {CARRY_HE[id].he}
+                    </option>
+                  ))}
+                </select>
+              </label>
+              <label className="ed__f">
+                אנימציה בגרירה
+                <select value={draft.drag?.fx ?? ""} onChange={(e) => setDrag("fx", e.target.value)}>
+                  <option value="">אוטומטי — {FX_HE[autoFx].he}</option>
+                  {DRAG_FX.map((id) => (
+                    <option key={id} value={id}>
+                      {FX_HE[id].he}
+                    </option>
+                  ))}
+                </select>
+              </label>
+              <label className="ed__f">
+                צליל בגרירה
+                <select
+                  value={draft.drag?.sound ?? ""}
+                  onChange={(e) => setDrag("sound", e.target.value)}
+                >
+                  <option value="">אוטומטי — תערובת</option>
+                  {DRAG_SOUNDS.map((id) => (
+                    <option key={id} value={id}>
+                      {SOUND_HE[id].he}
+                    </option>
+                  ))}
+                </select>
+              </label>
+            </div>
+            {/*
+              What the three of them come out as, in words, for the card as it
+              is right now — including the automatic ones. A dropdown that
+              says "automatic" and nothing else is a dropdown you have to
+              drag the card to understand.
+            */}
+            <small className="dim">תנועה — {CARRY_HE[nowMove].he}: {CARRY_HE[nowMove].note}</small>
+            <small className="dim">אנימציה — {FX_HE[nowFx].he}: {FX_HE[nowFx].note}</small>
+            <small className="dim">צליל — {nowSound}</small>
+
+            {/* ───────────── 8. במשחק ───────────── */}
+            <h4 className="ed__h">
+              במשחק
+              <small>האם הקלף קיים, ולמי הוא מגיע.</small>
+            </h4>
+            <div className="ed__grid">
               <label className="ed__f ed__f--check">
                 <input
                   type="checkbox"
@@ -531,320 +1010,60 @@ export function CardEditor({ call, say, upload, notes, reloadNotes }: CardEditor
                 />
                 קיים במשחק
               </label>
+              {/*
+                ⚠ THE LABEL ON THIS ONE WAS SIMPLY WRONG, AND OR CAUGHT IT.
+                He: *"in the starter pack — why is the Leviathan ticked?"* It
+                said "in the starter pack" and the field is `launch`, which is
+                the curated roster — every card the game actually deals. The
+                Leviathan is ticked because it is in the game, not because a
+                seven-year-old opens with a sea monster the size of the board.
+                The starter pack is a fixed list, and it is not a per-card
+                tick at all.
+              */}
+              <label className="ed__f ed__f--check">
+                <input
+                  type="checkbox"
+                  checked={draft.launch}
+                  onChange={(e) => set("launch", e.target.checked)}
+                />
+                מחולק במשחק
+              </label>
             </div>
-          </div>
+            <small className="dim">
+              &quot;מחולק במשחק&quot; — הקלף מגיע לדקים, לתיבות ולבוטים. קלף בלי הסימון נשאר בנתונים
+              ולא מגיע לאף אחד.
+            </small>
+            <small className="dim">
+              חבילת הפתיחה של שחקן חדש: {inStarter ? "הקלף הזה בפנים" : "הקלף הזה לא בפנים"}. זו
+              רשימה קבועה של {STARTER_ALBUM.length} קלפים (decks.ts) ולא תכונה של קלף — תקציב הדק של
+              מתחיל תלוי בה, ולכן היא לא נערכת כאן.
+            </small>
 
-          <h4 className="ed__h">
-            תנועה
-            <small>איך הקלף מתקדם על הלוח, ובאיזה קצב.</small>
-          </h4>
-          <div className="ed__moves">
-            {MOVES.map((m) => (
-              <button
-                key={m.id}
-                className={move === m.id ? "is-on" : ""}
-                title={m.note}
-                onClick={() => setMove(m.id)}
-              >
-                {m.he}
+            <FixBox
+              scope="card"
+              target={draft.id}
+              notes={notes}
+              call={call}
+              say={say}
+              reload={reloadNotes}
+            />
+
+            <div className="ed__actions">
+              <button className="btn-fight" disabled={busy} onClick={() => void save()}>
+                {busy ? "שומר…" : "שמירה"}
               </button>
-            ))}
-          </div>
-          {move === "still" ? (
-            <small className="dim">{MOVES[0].note}.</small>
-          ) : (
-            <label className="ed__f ed__pace">
-              קצב — {draft.stats.moveSpeed} משבצות בשנייה
-              <input
-                type="range"
-                min={0.25}
-                max={3}
-                step={0.25}
-                value={draft.stats.moveSpeed}
-                onChange={(e) => setStat("moveSpeed", Number(e.target.value))}
-              />
-            </label>
-          )}
-
-          <h4 className="ed__h">מספרים</h4>
-          <div className="ed__grid">
-            <label className="ed__f">
-              חיים
-              <input
-                type="number"
-                value={draft.stats.hp}
-                onChange={(e) => setStat("hp", Number(e.target.value))}
-              />
-            </label>
-            <label className="ed__f">
-              עוצמה
-              <input
-                type="number"
-                value={draft.stats.power}
-                onChange={(e) => setStat("power", Number(e.target.value))}
-              />
-            </label>
-            {/*
-              ⚠ The label used to say only "attack rate", and the number is
-              SECONDS BETWEEN BLOWS — so raising it makes a card slower, which
-              is the opposite of what "rate" reads as. A dial that does the
-              reverse of what it is called is how a card gets nerfed by
-              somebody trying to buff it.
-            */}
-            <label className="ed__f">
-              קצב תקיפה — שניות בין מכות
-              <input
-                type="number"
-                step="0.1"
-                value={draft.stats.attackSpeed}
-                onChange={(e) => setStat("attackSpeed", Number(e.target.value))}
-              />
-            </label>
-            <label className="ed__f">
-              טווח
-              <select value={draft.stats.range} onChange={(e) => setStat("range", e.target.value)}>
-                {["melee", "ranged", "sniper"].map((r) => (
-                  <option key={r} value={r}>
-                    {r}
-                  </option>
-                ))}
-              </select>
-            </label>
-            <label className="ed__f">
-              נדירות
-              <select
-                value={draft.rarity}
-                onChange={(e) => set("rarity", e.target.value as Card["rarity"])}
-              >
-                {["common", "rare", "epic", "legendary"].map((r) => (
-                  <option key={r} value={r}>
-                    {r}
-                  </option>
-                ))}
-              </select>
-            </label>
-            <label className="ed__f">
-              על מי הולך
-              <select
-                value={draft.targeting}
-                onChange={(e) => set("targeting", e.target.value as Card["targeting"])}
-              >
-                <option value="lane">מי שמולו</option>
-                <option value="king">המלך</option>
-              </select>
-            </label>
-            <label className="ed__f ed__f--check">
-              <input
-                type="checkbox"
-                checked={draft.midBoss}
-                onChange={(e) => set("midBoss", e.target.checked)}
-              />
-              מתאים למלך
-            </label>
-            {/*
-              ⚠ THE LABEL ON THIS ONE WAS SIMPLY WRONG, AND OR CAUGHT IT.
-              He: *"in the starter pack — why is the Leviathan ticked?"* It
-              said "in the starter pack" and the field is `launch`, which is
-              the curated roster — every card the game actually deals. The
-              Leviathan is ticked because it is in the game, not because a
-              seven-year-old opens with a sea monster the size of the board.
-              The starter pack is the eight cards below, and it is not a
-              per-card tick at all.
-            */}
-            <label className="ed__f ed__f--check">
-              <input
-                type="checkbox"
-                checked={draft.launch}
-                onChange={(e) => set("launch", e.target.checked)}
-              />
-              מחולק במשחק
-            </label>
-          </div>
-          <small className="dim">
-            &quot;מחולק במשחק&quot; — הקלף מגיע לדקים, לתיבות ולבוטים. קלף בלי הסימון נשאר בנתונים
-            ולא מגיע לאף אחד.
-          </small>
-          <small className="dim">
-            חבילת הפתיחה של שחקן חדש: {inStarter ? "הקלף הזה בפנים" : "הקלף הזה לא בפנים"}. זו רשימה
-            קבועה של {STARTER_ALBUM.length} קלפים (decks.ts) ולא תכונה של קלף — תקציב הדק של מתחיל
-            תלוי בה, ולכן היא לא נערכת כאן.
-          </small>
-
-          <h4 className="ed__h">
-            כוחות
-            <small>כל רמה מוסיפה אחוז קבוע לחיים ולעוצמה — אותו אחוז לכל הקלפים.</small>
-          </h4>
-          <div className="ed__elements">
-            {ELEMENTS.map((el) => (
-              <button
-                key={el}
-                className={draft.elements.includes(el) ? "is-on" : ""}
-                onClick={() =>
-                  set(
-                    "elements",
-                    draft.elements.includes(el)
-                      ? draft.elements.filter((x) => x !== el)
-                      : [...draft.elements, el],
-                  )
-                }
-              >
-                <Icon name={el as never} size={15} /> {el}
+              <button disabled={busy} onClick={duplicate}>
+                שכפול
               </button>
-            ))}
-          </div>
-
-          <h4 className="ed__h">
-            יכולות
-            <small>מתי קורה מה. הרשימות הן מה שהמנוע באמת יודע לבצע.</small>
-          </h4>
-          {draft.abilities.map((ab, i) => (
-            <div key={i} className="ed__ability">
-              <select
-                value={ab.trigger}
-                onChange={(e) => {
-                  const next = [...draft.abilities];
-                  next[i] = { ...ab, trigger: e.target.value as Ability["trigger"] };
-                  set("abilities", next);
-                }}
-              >
-                {ABILITY_TRIGGERS.map((t) => (
-                  <option key={t} value={t}>
-                    {t}
-                  </option>
-                ))}
-              </select>
-              <select
-                value={ab.type}
-                onChange={(e) => {
-                  const next = [...draft.abilities];
-                  next[i] = { ...ab, type: e.target.value as Ability["type"] };
-                  set("abilities", next);
-                }}
-              >
-                {ABILITY_TYPES.map((t) => (
-                  <option key={t} value={t}>
-                    {t}
-                  </option>
-                ))}
-              </select>
-              <input
-                className="ed__params"
-                value={JSON.stringify(ab.params ?? {})}
-                title="מספרים ליכולת, למשל { pct: 20 }"
-                onChange={(e) => {
-                  try {
-                    const params = JSON.parse(e.target.value) as Ability["params"];
-                    const next = [...draft.abilities];
-                    next[i] = { ...ab, params };
-                    set("abilities", next);
-                  } catch {
-                    /* half-typed JSON is not an error, it is half-typed */
-                  }
-                }}
-              />
               <button
                 className="admin__danger"
-                onClick={() =>
-                  set(
-                    "abilities",
-                    draft.abilities.filter((_, j) => j !== i),
-                  )
-                }
+                disabled={busy || !overrides[draft.id]}
+                title={overrides[draft.id] ? "" : "אין מה להחזיר — הקלף לא נערך"}
+                onClick={() => void revert()}
               >
-                הסר
+                החזר למקור
               </button>
             </div>
-          ))}
-          <button
-            className="admin__add"
-            onClick={() =>
-              set("abilities", [
-                ...draft.abilities,
-                { type: "regen", trigger: "passive", params: {} } as Ability,
-              ])
-            }
-          >
-            + יכולת
-          </button>
-
-          <h4 className="ed__h">
-            תמונה
-            <small>קובץ מהמחשב. מוקטן ל־768 פיקסל ונשמר כ־webp.</small>
-          </h4>
-          <div className="ed__art">
-            {draft.art.sprite ? (
-              <img className="ed__sprite" src={artUrl(draft.art.sprite)} alt="" />
-            ) : (
-              <span
-                className="ed__sprite ed__sprite--blank"
-                style={{ background: draft.art.placeholderColor }}
-              />
-            )}
-            <div className="ed__art-side">
-              <input
-                ref={file}
-                type="file"
-                accept="image/*"
-                hidden
-                onChange={(e) => {
-                  const chosen = e.target.files?.[0];
-                  if (chosen) void replaceArt(chosen);
-                }}
-              />
-              <button disabled={busy} onClick={() => file.current?.click()}>
-                {busy ? "מעלה…" : draft.art.sprite ? "החלף תמונה" : "העלה תמונה"}
-              </button>
-              {draft.art.sprite && (
-                <button
-                  className="admin__danger"
-                  onClick={() => set("art", { ...draft.art, sprite: null })}
-                >
-                  הסר תמונה
-                </button>
-              )}
-              <label className="ed__f">
-                נתיב
-                <input
-                  value={draft.art.sprite ?? ""}
-                  placeholder="cards/dragons_01_flame_dragon.webp"
-                  onChange={(e) => set("art", { ...draft.art, sprite: e.target.value.trim() || null })}
-                />
-              </label>
-              <label className="ed__f">
-                צבע בלי תמונה
-                <input
-                  type="color"
-                  value={draft.art.placeholderColor}
-                  onChange={(e) => set("art", { ...draft.art, placeholderColor: e.target.value })}
-                />
-              </label>
-            </div>
-          </div>
-
-          <FixBox
-            scope="card"
-            target={draft.id}
-            notes={notes}
-            call={call}
-            say={say}
-            reload={reloadNotes}
-          />
-
-          <div className="ed__actions">
-            <button className="btn-fight" disabled={busy} onClick={() => void save()}>
-              {busy ? "שומר…" : "שמירה"}
-            </button>
-            <button disabled={busy} onClick={duplicate}>
-              שכפול
-            </button>
-            <button
-              className="admin__danger"
-              disabled={busy || !overrides[draft.id]}
-              title={overrides[draft.id] ? "" : "אין מה להחזיר — הקלף לא נערך"}
-              onClick={() => void revert()}
-            >
-              החזר למקור
-            </button>
           </div>
         </div>
       )}

@@ -167,3 +167,189 @@ describe("the picture", () => {
     expect(SRC).toContain("upload: (file: Blob, cardId: string)");
   });
 });
+
+/**
+ * ═══ AND THEN OR LOOKED AT THE WHOLE SCREEN ═══
+ *
+ * *"And in general it has become a mess in the character editing interface,
+ * so tidy it a bit into a sensible, comfortable order so I can go over them
+ * with Hod."*
+ *
+ * The mess was real and it was mostly ORDER: the picture at the bottom and
+ * the preview at the top, the "is it in the game" tick buried in the middle
+ * of the numbers with two paragraphs after it, and a heading that said
+ * "powers" over the elements while explaining what a level-up adds.
+ *
+ * An order cannot be measured for being sensible. What it can be held to is
+ * being THE ONE THAT WAS AGREED — so it is written down here, and a section
+ * that wanders has to wander past this test.
+ */
+describe("the order of the form", () => {
+  const headings = [...SRC.matchAll(/<h4 className="ed__h">\s*\n\s*([^\n<]+)/g)].map((m) =>
+    m[1]!.trim(),
+  );
+
+  it("goes from who it is to what it does to how it is tuned", () => {
+    expect(headings).toEqual([
+      "תמונה",
+      "יסודות",
+      "יכולות",
+      "מספרים",
+      "תנועה בקרב",
+      "ביד",
+      "במשחק",
+    ]);
+  });
+
+  it("opens with the card itself and the words on it", () => {
+    // Name, story and family before any of the headings above — this is the
+    // part he reads out loud with a seven-year-old.
+    const first = SRC.indexOf('<h4 className="ed__h">');
+    const head = SRC.slice(0, first);
+    for (const field of ["שם (עברית)", "סיפור (עברית)", "סדרה"])
+      expect(head, `${field} is not in the opening block`).toContain(field);
+  });
+
+  it("keeps the card on the screen beside all of it", () => {
+    /*
+     * The preview was the first row of a column, so by the time you reached
+     * the numbers — or the three lists about the feel of the card in your
+     * hand — the card had scrolled off the top. It is a sticky column now.
+     */
+    expect(SRC).toContain('<div className="ed__fields">');
+    const css = readFileSync(fileURLToPath(new URL("../admin.css", import.meta.url)), "utf8");
+    const form = css.slice(css.indexOf(".ed__form {"), css.indexOf(".ed__fields {"));
+    expect(form).toContain("display: grid");
+    const preview = css.slice(css.indexOf(".ed__preview {"));
+    expect(preview.slice(0, preview.indexOf("}"))).toContain("position: sticky");
+    /*
+     * ⚠ AND THE WRAPPER MUST NOT BE A SCROLL CONTAINER. `.ed` said
+     * `overflow: hidden`, which makes it the scrolling ancestor every sticky
+     * inside it sticks to — a box that never scrolls. Measured at 1100x740:
+     * the card sat 886px above the top of the screen. The card LIST has been
+     * written sticky since it was built and was broken the same way, unseen,
+     * from the day the panel started scrolling.
+     */
+    const ed = css
+      .slice(css.indexOf(".ed {"), css.indexOf(".ed__list {"))
+      .replace(/\/\*[\s\S]*?\*\//g, ""); // the comment explaining it says it too
+    expect(ed).toContain("overflow-x: clip");
+    expect(ed, "a hidden overflow kills every sticky below it").not.toContain("overflow: hidden");
+  });
+
+  it("keeps an ability row inside the screen Or actually uses", () => {
+    /*
+     * Measured at 844px — the landscape phone — before it was fixed: a 367px
+     * row whose last control started 224px off the left edge, clipped and
+     * unreachable. `1fr` cannot go below min-content, and the min-content of
+     * these selects grew the day their options were written in Hebrew.
+     */
+    const css = readFileSync(fileURLToPath(new URL("../admin.css", import.meta.url)), "utf8");
+    const row = css.slice(css.indexOf(".ed__ability {"), css.indexOf(".ed__ability-note"));
+    expect(row).toContain("minmax(0, 1fr)");
+    expect(css).toContain(".ed__ability { grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); }");
+  });
+
+  it("puts the switch that makes a card real next to the save button", () => {
+    const live = SRC.indexOf("במשחק\n");
+    expect(SRC.indexOf("קיים במשחק")).toBeGreaterThan(live);
+    expect(SRC.indexOf("מחולק במשחק")).toBeGreaterThan(live);
+    expect(SRC.indexOf('className="ed__actions"')).toBeGreaterThan(SRC.indexOf("מחולק במשחק"));
+  });
+});
+
+/**
+ * ═══ NAMES A PERSON WOULD SAY ═══
+ *
+ * Or: *"give the behaviours normal names so I understand what is going on
+ * there, preferably in Hebrew."* He was choosing between `sideKnockback` and
+ * `absorbOnCollision` in a dropdown, in English, in camelCase.
+ *
+ * The engine's names are still the VALUES — they are what is saved into the
+ * card and matched by `switch (ab.type)` — so what these check is that
+ * nothing is PRINTED raw any more. The names themselves are in game/vocab.ts
+ * and vocab.test.ts measures them against the engine.
+ */
+describe("the lists are in Hebrew", () => {
+  it("prints a name for the trigger and the effect, not the id", () => {
+    expect(SRC).toContain("{TRIGGER_HE[t].he}");
+    expect(SRC).toContain("{EFFECT_HE[t].he}");
+    // The old rows, which printed the enum member itself.
+    expect(SRC).not.toMatch(/<option key=\{t\} value=\{t\}>\s*\n\s*\{t\}/);
+  });
+
+  it("says under each ability which numbers it reads", () => {
+    // A JSON box with no idea what goes in it is a box you type `{}` into
+    // forever. The names come out of the engine's own handlers.
+    expect(SRC).toContain("function paramHint");
+    expect(SRC).toContain('className="ed__ability-note"');
+  });
+
+  it("names the elements, the range and the rarity too", () => {
+    expect(SRC).toContain("{ELEMENT_HE[el]}");
+    expect(SRC).toContain("{RANGE_HE[r].he}");
+    expect(SRC).toContain("{RARITY_HE[r]}");
+    // And takes the lists from the engine rather than retyping them.
+    expect(SRC).not.toContain('{["melee", "ranged", "sniper"]');
+    expect(SRC).not.toContain('{["common", "rare", "epic", "legendary"]');
+  });
+});
+
+/**
+ * ═══ THE THREE CHOICES ABOUT THE CARD IN YOUR HAND ═══
+ *
+ * Or: *"let me choose, for every monster: a drag movement out of a list of
+ * movements, a drag sound out of a list of sounds, a drag animation out of a
+ * list of animations."*
+ *
+ * What they DO is measured in game/dragChoice.test.ts. What is here is the
+ * panel's half: that all three are offered, that "automatic" is a real row
+ * rather than a blank, and that choosing it again leaves no trace.
+ */
+describe("choosing how a card is carried", () => {
+  it("offers all three, by the names he asked for", () => {
+    for (const label of ["תנועה בגרירה", "אנימציה בגרירה", "צליל בגרירה"])
+      expect(SRC, label).toContain(label);
+    expect(SRC).toContain("CARRY_STYLES.map");
+    expect(SRC).toContain("DRAG_FX.map");
+    expect(SRC).toContain("DRAG_SOUNDS.map");
+  });
+
+  it("says what automatic came out as, rather than showing a blank", () => {
+    expect(SRC).toContain('<option value="">אוטומטי — {CARRY_HE[autoMove].he}</option>');
+    expect(SRC).toContain('<option value="">אוטומטי — {FX_HE[autoFx].he}</option>');
+    expect(SRC).toContain('<option value="">אוטומטי — תערובת</option>');
+  });
+
+  /*
+   * ⚠ AUTOMATIC IS THE ABSENCE OF THE FIELD. `{ drag: {} }` and no `drag` at
+   * all would be two states that mean the same thing and compare as
+   * different — so a card Or opened, looked at and left alone would save as
+   * edited, and the "ships with nothing chosen" measurement in
+   * dragChoice.test.ts would stop being true of cards nobody chose for.
+   */
+  it("leaves no trace when everything is put back to automatic", () => {
+    const fn = SRC.slice(SRC.indexOf("const setDrag ="));
+    const body = fn.slice(0, fn.indexOf("\n    });"));
+    expect(body).toContain("else delete next[key];");
+    expect(body).toContain("if (!Object.keys(next).length)");
+    expect(body).toContain("const { drag: _gone, ...rest } = d;");
+  });
+
+  it("describes what the card comes out as, in words", () => {
+    expect(SRC).toContain("תנועה — {CARRY_HE[nowMove].he}");
+    expect(SRC).toContain("אנימציה — {FX_HE[nowFx].he}");
+    expect(SRC).toContain("צליל — {nowSound}");
+  });
+
+  /*
+   * ⚠ READ OFF THE DRAFT, NOT THROUGH THE PREVIEW SEAM. The seam is set in
+   * an effect, which is one render behind the form — so a line that
+   * described the card through it would be describing the card you had a
+   * keystroke ago. `dragMixOf` takes the card itself for exactly this.
+   */
+  it("describes the card being edited and not the one before it", () => {
+    expect(SRC).toContain("dragMixOf(draft)");
+    expect(SRC).toContain("styleFor(draft)");
+  });
+});

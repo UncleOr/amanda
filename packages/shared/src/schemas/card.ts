@@ -2,6 +2,7 @@ import { z } from "zod";
 import { LocalizedStringSchema, ArtSchema } from "./common.js";
 import { ElementsSchema } from "./elements.js";
 import { AbilitySchema } from "./ability.js";
+import { DragChoiceSchema } from "./drag.js";
 
 /** Attack range archetypes (from GDD §11). */
 export const RANGES = ["melee", "ranged", "sniper"] as const;
@@ -105,6 +106,12 @@ export const CardSchema = z.object({
    * particular card — Or: *"Chuppy should cost 4, not 5."*
    */
   cost: z.number().int().min(1).max(5).optional(),
+  /*
+   * How it moves, sounds and looks WHILE IT IS IN YOUR HAND — and only when
+   * somebody overruled the derivation. See schemas/drag.ts; absent is the
+   * normal state and the game ships with it absent everywhere.
+   */
+  drag: DragChoiceSchema.optional(),
   art: ArtSchema,
 });
 export type Card = z.infer<typeof CardSchema>;

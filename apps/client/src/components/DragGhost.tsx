@@ -1,5 +1,6 @@
 import type { DragState } from "../game/useDrag";
 import { carryOf } from "../game/carry";
+import { fxOf } from "../game/dragFx";
 import { ACTIONS } from "../data/catalog";
 import { ActionCardView } from "./ActionCardView";
 import { CardView } from "./CardView";
@@ -35,12 +36,18 @@ export function DragGhost({ drag }: { drag: DragState }) {
   if (!drag.cardId) return null;
 
   const carry = carryOf(drag.cardId);
+  /*
+   * How it MOVES and what it THROWS OFF are two questions now — Or asked to
+   * choose them separately per card (dragFx.ts). They agree unless somebody
+   * said otherwise, so every card that looked right still does.
+   */
+  const fx = fxOf(drag.cardId);
   // It leans into its own movement, and a flier runs ahead of your
   // thumb rather than trailing it.
   const lean = Math.max(-carry.tilt, Math.min(carry.tilt, drag.vx * 1.6));
   return (
     <div
-      className={`drag-ghost drag-ghost--${carry.style}`}
+      className={`drag-ghost drag-ghost--${carry.style} drag-ghost--fx-${fx}`}
       style={{
         left: drag.cx + drag.vx * carry.lead,
         top: drag.cy + drag.vy * carry.lead,
@@ -52,7 +59,7 @@ export function DragGhost({ drag }: { drag: DragState }) {
         over their hinges — they grow out from behind it rather than
         being stuck on the front of it.
       */}
-      {(carry.style === "flutter" || carry.style === "soar") && (
+      {(fx === "wings" || fx === "wingsBig") && (
         <span className="drag-ghost__wings" aria-hidden="true">
           <i />
           <i />
@@ -64,7 +71,7 @@ export function DragGhost({ drag }: { drag: DragState }) {
       ) : (
         <CardView cardId={drag.cardId} size="medium" />
       )}
-      {carry.style === "spark" && (
+      {fx === "lightning" && (
         <>
           <span className="drag-ghost__arc" aria-hidden="true">
             <i />
@@ -105,7 +112,7 @@ export function DragGhost({ drag }: { drag: DragState }) {
         lets go and falls, which is the one thing that says a thing
         is WET rather than merely green.
       */}
-      {carry.style === "ooze" && (
+      {fx === "drips" && (
         <span className="drag-ghost__drip" aria-hidden="true">
           <i />
           <i />
@@ -120,7 +127,7 @@ export function DragGhost({ drag }: { drag: DragState }) {
         because the thing that throws soil is something coming up by
         the roots rather than something walking about on it.
       */}
-      {carry.style === "root" && (
+      {fx === "soil" && (
         <>
           <span className="drag-ghost__soil" aria-hidden="true">
             <i />
@@ -131,7 +138,7 @@ export function DragGhost({ drag }: { drag: DragState }) {
           <span className="drag-ghost__dust" aria-hidden="true" />
         </>
       )}
-      {carry.style === "heavy" && (
+      {fx === "rubble" && (
         <>
           <span className="drag-ghost__rubble" aria-hidden="true">
             <i />

@@ -321,7 +321,19 @@
   grid-template-columns: 240px 1fr;
   gap: 18px;
   align-items: start;
-  overflow: hidden;
+  /*
+   * ⚠ `overflow: hidden` HERE BROKE EVERY STICKY INSIDE IT, including the
+   * card list that has been written `position: sticky` since the day it was
+   * made — a hidden overflow makes this box the scroll container, so its
+   * children stick to a box that never scrolls. Nobody saw it while the
+   * panel did not scroll at all; the moment it did (admin__page), the list
+   * and the card both rode off the top of the screen.
+   *
+   * `clip` is the one that does not create a scroll container, and the
+   * reason the line is here at all — a grid child wider than its column —
+   * is horizontal anyway.
+   */
+  overflow-x: clip;
 }
 .ed__list {
   display: flex;
@@ -371,9 +383,34 @@
 .ed__row-tags i { color: var(--danger); font-style: normal; font-size: 10px; }
 
 .ed__empty { padding-top: 40px; }
-.ed__form { min-width: 0; padding-bottom: 60px; }
-.ed__head { display: flex; gap: 18px; align-items: flex-start; flex-wrap: wrap; }
-.ed__preview { width: 150px; flex: none; display: flex; flex-direction: column; gap: 8px; }
+/*
+ * ═══ THE CARD STAYS BESIDE ITS OWN FORM ═══
+ *
+ * Or: *"it has become a mess in the character editing interface, so tidy it
+ * into a sensible, comfortable order so I can go over them with Hod."*
+ *
+ * The card used to be the first row of a flex column, which meant that by the
+ * time you reached the numbers — or the three lists about how it feels in the
+ * hand — the card itself had scrolled off the top. Two columns, and the left
+ * one sticks: every section is read beside the thing it is about, and the
+ * stage you drag to test a carry is always one gesture away.
+ */
+.ed__form {
+  min-width: 0;
+  padding-bottom: 60px;
+  display: grid;
+  grid-template-columns: 150px 1fr;
+  gap: 18px;
+  align-items: start;
+}
+.ed__fields { min-width: 0; }
+.ed__preview {
+  position: sticky;
+  top: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
 
 /*
   The stage. Or: *"maybe drag it and see how it looks."* `useDrag` only
@@ -497,11 +534,30 @@
 }
 .ed__elements button.is-on { border-color: var(--accent); color: var(--accent); background: rgba(255, 176, 32, 0.12); }
 
+/*
+ * ⚠ FOUR COLUMNS THAT COULD NOT SHRINK. `1fr` is min-content at its floor,
+ * and the floor of a <select> is its widest option — which went from
+ * `absorbOnCollision` to "בולע אויב שנתקל בו" the day these were named in
+ * Hebrew. Measured at 844px, the width of the phone Or plays on, the row was
+ * 367px wide with its last control 224px off the left edge of the screen,
+ * clipped and unreachable. `minmax(0, …)` lets a column be narrower than
+ * what is in it, and below a laptop the row folds into two.
+ */
 .ed__ability {
   display: grid;
-  grid-template-columns: 1fr 1.2fr 1.4fr auto;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1.2fr) minmax(0, 1.4fr) auto;
   gap: 6px;
-  margin-bottom: 6px;
+  margin-bottom: 12px;
+}
+@media (max-width: 1020px) {
+  .ed__ability { grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); }
+}
+/* What that effect does and which numbers it reads, under its own row. */
+.ed__ability-note {
+  grid-column: 1 / -1;
+  color: var(--muted);
+  font-size: 11.5px;
+  line-height: 1.5;
 }
 .ed__ability select,
 .ed__ability input,
@@ -541,6 +597,9 @@
   .ed { grid-template-columns: 1fr; }
   .ed__list { position: static; }
   .ed__scroll { max-height: 220px; }
+  /* No room for a column beside the form; the card goes back on top of it. */
+  .ed__form { grid-template-columns: 1fr; }
+  .ed__preview { position: static; width: 150px; }
 }
 
 .admin__where--banned {
@@ -968,7 +1027,7 @@ textarea.admin__preview {
  * side they ran together into one grey paragraph: two different facts
  * reading as one sentence.
  */
-.ed__form > small {
+.ed__fields > small {
   display: block;
   margin-top: 8px;
   max-width: 68ch;

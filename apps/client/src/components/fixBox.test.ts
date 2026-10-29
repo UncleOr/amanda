@@ -67,7 +67,10 @@ describe("picking out one thing's notes", () => {
 
 describe("the box", () => {
   it("is under a card and under an arena, and is the same box", () => {
-    expect(EDITOR).toContain('<FixBox\n            scope="card"');
+    // Whitespace-insensitive on purpose: this pinned the editor's INDENTATION
+    // once, and broke the day the form grew a column. What matters is that the
+    // card editor renders the one box with the card's scope.
+    expect(EDITOR).toMatch(/<FixBox\s+scope="card"/);
     expect(ARENAS).toContain('scope="arena"');
     // One component, not two that drift.
     expect(BOX).toContain("export function FixBox");

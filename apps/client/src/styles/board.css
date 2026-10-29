@@ -480,7 +480,14 @@
  * leading edge instead of a translucent blur. An insect's wing is a blur
  * you cannot resolve; a dragon's is a shape you can watch move.
  */
-.drag-ghost--soar .drag-ghost__wings i {
+/*
+ * ⚠ KEYED ON THE EFFECT, NOT ON THE CARRY. These used to say
+ * `.drag-ghost--soar`, which tied "big slow wings" to "moves like a dragon"
+ * — one word doing two of Or's three jobs. Since he can now pick the
+ * animation on its own, a card given dragon wings gets them whatever it
+ * does in the hand. See game/dragFx.ts.
+ */
+.drag-ghost--fx-wingsBig .drag-ghost__wings i {
   top: 10%;
   width: 64%;
   height: 50%;
@@ -489,12 +496,12 @@
   border-radius: 96% 10% 60% 40% / 100% 52% 48% 0%;
   filter: drop-shadow(0 4px 8px rgba(0, 0, 0, 0.55));
 }
-.drag-ghost--soar .drag-ghost__wings i:first-child {
+.drag-ghost--fx-wingsBig .drag-ghost__wings i:first-child {
   right: 86%;
   transform-origin: 100% 55%;
   animation: wing-dl 0.34s ease-in-out infinite alternate;
 }
-.drag-ghost--soar .drag-ghost__wings i:last-child {
+.drag-ghost--fx-wingsBig .drag-ghost__wings i:last-child {
   left: 86%;
   transform-origin: 0 55%;
   border-radius: 10% 96% 40% 60% / 52% 100% 0% 48%;

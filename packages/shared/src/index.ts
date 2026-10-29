@@ -8,6 +8,8 @@
 export * from "./schemas/common.js";
 export * from "./schemas/elements.js";
 export * from "./schemas/ability.js";
+// How a card behaves in your hand — the three lists the panel chooses from
+export * from "./schemas/drag.js";
 export * from "./schemas/card.js";
 export * from "./schemas/series.js";
 export * from "./schemas/actionCard.js";

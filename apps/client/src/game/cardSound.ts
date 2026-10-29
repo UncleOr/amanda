@@ -37,8 +37,8 @@
  * already written keeps overriding it.
  */
 
-import { ALL_MAINS } from "@amanda/shared";
-import { CATALOG } from "../data/catalog";
+import { ALL_MAINS, type Card, type DragSound } from "@amanda/shared";
+import { cardFor } from "./preview";
 
 /** One card's three moments. Every one of them is optional. */
 export interface CardVoice {
@@ -240,6 +240,32 @@ const OWN_DRAG: Record<string, string> = {
   dragons_02_obsidian_egg: "card-obsidian-egg",
 };
 
+/**
+ * The list Or picks from, and the clip each name means.
+ *
+ * Or: *"let me choose, for every monster… a drag sound out of a list of
+ * sounds."* These are the mixer's own ingredients — nothing new was
+ * recorded for the list, because a list of sounds that are not already in
+ * the game is a list of promises.
+ *
+ * ⚠ VOICE_CLIPS IS BUILT FROM THIS, so a sound added here is a sound that
+ * gets decoded at unlock. A clip asked for mid-gesture that was never
+ * fetched arrives after the gesture that wanted it, which is not a sound,
+ * it is lag.
+ */
+export const DRAG_SOUND_CLIP: Record<DragSound, string | null> = {
+  none: null,
+  flame: "ing-flame",
+  ice: "ing-ice",
+  stone: "ing-stone",
+  slime: "ing-slime",
+  spark: "ing-spark",
+  skitter: "ing-skitter",
+  dragonWings: "ing-wings-dragon",
+  insectWings: "ing-wings-insect",
+  egg: "card-obsidian-egg",
+};
+
 /** What the card is made of, as a layer. One per card, the first that hits. */
 const BY_MATERIAL: Array<[string, string, number]> = [
   // element, clip, how loud it is relative to the wings
@@ -251,12 +277,41 @@ const BY_MATERIAL: Array<[string, string, number]> = [
   ["poison", "ing-slime", 0.34],
 ];
 
+/**
+ * The mix for a card that is in the catalogue (or on the editor's bench).
+ *
+ * ⚠ Prefer `dragMixOf` anywhere the card is already in hand — the admin
+ * panel edits a DRAFT, and a draft is only reachable by id for as long as
+ * the preview seam points at it (preview.ts), which is one render later
+ * than the form that wants to describe it.
+ */
 export function dragMix(cardId: string): DragLayer[] {
+  const card = cardFor(cardId);
+  return card ? dragMixOf(card) : [];
+}
+
+/** What a card sounds like while it is carried. */
+export function dragMixOf(card: Card): DragLayer[] {
+  const cardId = card.id;
+
+  /*
+   * What Or chose for this card, before anything is worked out. One
+   * ingredient instead of the mix — the point of choosing is to stop the
+   * mixer, so layering his choice on top of the recipe would be answering a
+   * different question. `none` is a card he wants silent, and it has to be
+   * a real answer or there is no way to say it.
+   */
+  const chosen = card.drag?.sound;
+  if (chosen) {
+    const clip = DRAG_SOUND_CLIP[chosen];
+    if (!clip) return [];
+    const weight = heft(card.stats.hp);
+    return [{ clip, gain: 0.46 + weight * 0.14, rate: 1.08 - weight * 0.26 }];
+  }
+
   const own = OWN_DRAG[cardId];
   if (own) return [{ clip: own, gain: 0.6, rate: 1 }];
 
-  const card = CATALOG.get(cardId);
-  if (!card) return [];
   const series = cardId.slice(0, cardId.indexOf("_"));
   const big = heft(card.stats.hp);
   const layers: DragLayer[] = [];
@@ -304,7 +359,7 @@ export function dragMix(cardId: string): DragLayer[] {
  */
 export function voiceFor(cardId: string): CardVoice {
   const series = cardId.slice(0, cardId.indexOf("_"));
-  const card = CATALOG.get(cardId);
+  const card = cardFor(cardId);
   /*
    * The FIRST element that has a voice, not the last and not a blend.
    *
@@ -342,10 +397,9 @@ export const VOICE_CLIPS: string[] = [
   ...new Set(
     [
       // The drag ingredients, which are asked for mid-gesture and so cannot
-      // be fetched when they are wanted.
-      ...["ing-wings-dragon", "ing-wings-insect", "ing-flame", "ing-ice", "ing-stone", "ing-slime", "ing-spark", "ing-skitter"].map(
-        (clip) => ({ drag: clip }) as CardVoice,
-      ),
+      // be fetched when they are wanted. Read off the list the panel offers,
+      // so a sound Or can choose is a sound that has been decoded.
+      ...Object.values(DRAG_SOUND_CLIP).map((clip) => ({ ...(clip ? { drag: clip } : {}) }) as CardVoice),
       ...Object.values(OWN_DRAG).map((clip) => ({ drag: clip }) as CardVoice),
       ...Object.values(BY_ELEMENT),
       ...Object.values(BY_SERIES),

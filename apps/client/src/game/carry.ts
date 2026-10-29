@@ -21,7 +21,10 @@
  * and it overshoots and swings because that is what mass does. A flier is
  * stiffer than the pointer itself and arrives AHEAD of it.
  */
-import { CATALOG } from "../data/catalog";
+import type { Card, CarryStyle } from "@amanda/shared";
+import { cardFor } from "./preview";
+
+export type { CarryStyle };
 
 /*
  * Or: *"the wings you made here suit insects, but dragons will of course
@@ -52,14 +55,16 @@ import { CATALOG } from "../data/catalog";
  * Seven styles for fifty-one cards, all of them read off what the card
  * already says it is. Nothing is written per card.
  */
-export type CarryStyle =
-  | "heavy"
-  | "flutter"
-  | "soar"
-  | "spark"
-  | "ooze"
-  | "root"
-  | "steady";
+/*
+ * ⚠ THE SEVEN NAMES LIVE IN @amanda/shared NOW, not here.
+ *
+ * Or: *"let me choose, for every monster, a drag movement out of a list of
+ * movements."* A list somebody chooses from is a list that has to be
+ * VALIDATED when it comes back — the panel writes it into the card and the
+ * card is parsed by CardSchema on both sides — so the names belong where the
+ * schema can see them. The tuning below stays here, because how stiff a
+ * spring is has nothing to do with the server.
+ */
 
 export interface Carry {
   style: CarryStyle;
@@ -110,18 +115,35 @@ const STYLES: Record<CarryStyle, Omit<Carry, "style">> = {
 const HEAVY_HP = 1600;
 
 /**
- * Which of the five, from what the card already says about itself.
+ * How this card travels in a hand: what Or chose for it, or what it is.
+ */
+export function carryOf(cardId: string): Carry {
+  const card = cardFor(cardId);
+  if (!card) return { style: "steady", ...STYLES.steady };
+  /*
+   * What Or chose for this one card, if he chose anything. One line, and it
+   * is deliberately the FIRST line: a derivation that cannot be overruled is
+   * a derivation nobody can disagree with, and he has been right about
+   * individual cards before.
+   */
+  const style = card.drag?.move ?? styleFor(card);
+  return { style, ...STYLES[style] };
+}
+
+/**
+ * The style a card gets when nobody has said otherwise.
  *
  * The order is the priority, and it is the same one the walk uses in a
  * battle (arenaFx.ts): what flies does not plod, and after that it is the
  * size and what it is made of. Chuppy comes out `spark` because he is
  * electric, not because he is Chuppy — which is the whole point of deriving
  * it, and means the next electric card crackles too.
+ *
+ * Exported because the panel shows what it decided: an "automatic" that
+ * does not say what it chose is a dropdown nobody can check.
  */
-export function carryOf(cardId: string): Carry {
-  const card = CATALOG.get(cardId);
-  if (!card) return { style: "steady", ...STYLES.steady };
-  const style: CarryStyle = card.flying
+export function styleFor(card: Card): CarryStyle {
+  return card.flying
     ? card.seriesId === "dragons"
       ? "soar"
       : "flutter"
@@ -141,5 +163,4 @@ export function carryOf(cardId: string): Carry {
             card.stats.moveSpeed === 0
             ? "root"
             : "steady";
-  return { style, ...STYLES[style] };
 }
