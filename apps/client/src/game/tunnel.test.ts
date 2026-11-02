@@ -276,6 +276,20 @@ describe("the screen it is read on", () => {
     expect(PANEL).toContain("function Marker(");
     expect(PANEL).toContain("tunnelProgress(state.best)");
     expect(CSS).toContain("inset-inline-start: var(--through)");
+    /*
+     * ⚠ AND THE POINT IS ON THE CENTRE LINE, AT EVERY FRAME.
+     *
+     * Or: *"the tip of the marker for where we are in the tunnel should be
+     * on the middle of the road."* It was the PILL that was centred on the
+     * road, with the point hanging below it — so the one part of this that
+     * says exactly where you are was pointing at the kerb.
+     *
+     * The marker is pushed up by its own height plus the point's, and the
+     * breathing moved onto the pill so the point never leaves the line.
+     * Measured in the browser over a full second: six samples, all zero.
+     */
+    expect(CSS).toContain("transform: translate(50%, calc(-100% - var(--tip)))");
+    expect(CSS).toMatch(/\.tun-you b \{\s*animation: tun-bob/);
   });
 
   it("shares the home screen's row with the arena rather than taking one", () => {

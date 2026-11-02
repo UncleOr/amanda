@@ -281,17 +281,39 @@
 }
 
 /* ── where you are ── */
+/*
+ * ⚠ THE TIP SITS ON THE CENTRE LINE, and the pill hangs above it.
+ *
+ * Or: *"the tip of the marker for where we are in the tunnel should be on
+ * the middle of the road."* It was the PILL that was centred on the road,
+ * with the point hanging below it — so the one part of this that is
+ * supposed to say exactly where you are was pointing at the kerb.
+ *
+ * `--tip` is the point's height plus its hairline gap, and it is a variable
+ * because the keyframes below have to move the same distance: a bob written
+ * with the number in it goes out of step with the triangle the first time
+ * either changes.
+ */
 .tun-you {
+  --tip: 7px;
   position: absolute;
   top: 50%;
   inset-inline-start: var(--through);
-  transform: translate(50%, -50%);
+  transform: translate(50%, calc(-100% - var(--tip)));
   z-index: 3;
   display: grid;
   place-items: center;
-  animation: tun-bob 1.8s ease-in-out infinite;
 }
+/*
+ * ⚠ THE PILL BREATHES, THE POINT DOES NOT.
+ *
+ * The whole marker used to bob, which left the point hovering above the
+ * line for most of every second — and the point is the entire claim this
+ * thing makes. The flag moves on its pin instead: the tip is on the centre
+ * line at every frame, measured.
+ */
 .tun-you b {
+  animation: tun-bob 1.8s ease-in-out infinite;
   display: inline-flex;
   align-items: center;
   gap: 3px;
@@ -317,8 +339,8 @@
   border-top-color: #ffa41c;
 }
 @keyframes tun-bob {
-  0%, 100% { transform: translate(50%, -50%); }
-  50% { transform: translate(50%, calc(-50% - 4px)); }
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-3px); }
 }
 
 /* ── a station ── */
@@ -588,7 +610,7 @@
 
 @media (prefers-reduced-motion: reduce) {
   .tunnel-strip--due,
-  .tun-you,
+  .tun-you b,
   .tun__lane.is-ready,
   .tun-pop::before {
     animation: none;
