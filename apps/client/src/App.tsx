@@ -1300,6 +1300,14 @@ function Game() {
     if (m.phase === "build") haptics.buzz("build");
     else if (m.phase === "panic") haptics.buzz("panic");
     else if (m.phase === "battle") haptics.buzz("battle");
+    /*
+     * And the end of it. Or: *"also at the end of a match."* Two different
+     * answers, because losing and winning are not the same news and the
+     * phone is the one part of the game that can say so before the screen
+     * has finished drawing.
+     */
+    else if (m.phase === "result") haptics.buzz(m.iWon ? "victory" : "defeat");
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [m.phase]);
 
   /*

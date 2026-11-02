@@ -41,47 +41,86 @@
  * `[14, 40, 26]` is a short one, a gap you can feel, then a longer one.
  */
 const PATTERN = {
+  /* ── the light ones: the game's furniture ── */
   /**
-   * A card has left the table and is in your hand. The lightest thing here:
-   * it fires on a gesture you make dozens of times in a build phase, and it
-   * is a confirmation, not an event.
-   */
-  lift: 12,
-  /**
-   * An action card is in play. Two pulses, the second longer — a thing
-   * wound up and then let go, which is what an action card is.
-   */
-  action: [14, 45, 30],
-  /**
-   * And it has been aimed. One firm thud: the decision is made and the card
-   * is spent.
-   */
-  aim: 45,
-  /**
-   * The build phase opening: places, please. Two even taps, mid-weight —
-   * the start of something rather than a warning about it.
+   * A button. Any button: the shop, the tunnel, the way into a match.
    *
-   * Or asked for this one after the others: *"and it needs to be at the
-   * start of the battle and at the start of the build phase too."*
+   * Or: *"the small vibrations there are now can be on the Asulins logo
+   * appearing, and on button presses — going into the shop, into the
+   * tunnel, into a game."* So they are not deleted, they are DEMOTED: this
+   * is the tick that says a control took the press, and it is the lightest
+   * thing in the set because it happens more than anything else.
    */
-  build: [25, 55, 25],
+  tap: 14,
+  /** The studio mark coming up. Two feathers, once a session. */
+  logo: [12, 70, 18],
+
+  /* ── the heavy ones: the match ── */
   /**
-   * Panic. Three short pulses in a row, fast — the one pattern here that is
-   * meant to be slightly unpleasant, because the phase is.
+   * A card has left the table and is in your hand.
+   *
+   * Or: *"the vibrations are really short and not noticeable. There needs
+   * to be more vibration in every parameter... also when you take a card."*
+   * It was twelve milliseconds, which is at the floor of what a phone's
+   * motor can even spin up for. Forty is a thing you feel through a case.
    */
-  panic: [40, 60, 40, 60, 40],
+  lift: 40,
   /**
-   * The battle. A short pulse, a beat, then a long one: the drum before the
-   * charge. The longest single buzz in the game, and it happens once.
+   * An action card is in play. Wound up and let go — and now it is the
+   * event it should always have been rather than a flutter.
    */
-  battle: [60, 70, 170],
-  /** Something of theirs came apart. A crisp tick — this one is good news. */
-  kill: 18,
+  action: [45, 55, 90],
+  /** And it has been aimed. One heavy thud: the card is spent. */
+  aim: 110,
   /**
-   * Something of yours. Heavier and duller than the kill, and twice as long,
-   * so the difference is felt rather than counted.
+   * The build phase opening: places, please. Three even beats, mid-weight —
+   * the start of something rather than a warning about it.
    */
-  fallen: 55,
+  build: [70, 60, 70, 60, 70],
+  /**
+   * Panic. Fast, hard, and ending on the longest pulse of the three — the
+   * one pattern here that is meant to be slightly unpleasant, because the
+   * phase is.
+   */
+  panic: [80, 55, 80, 55, 150],
+  /**
+   * The battle. A beat, a gap, and then the drum: the longest thing in the
+   * game, and it happens once a match.
+   */
+  battle: [110, 70, 300],
+  /** Something of theirs came apart. The lightest of the three deaths —
+      this one is good news, and it can happen twenty times. */
+  kill: 35,
+  /**
+   * Something of YOURS. Or: *"also when our soldiers die."* Three times the
+   * kill and dull with it, so the difference is felt rather than counted.
+   */
+  fallen: 120,
+
+  /* ── and the end of it ── */
+  /**
+   * The match is over and you won. A fanfare: three beats and a long one.
+   *
+   * Or: *"also at the end of a match."* It is the one moment in the game
+   * that has earned a vibration a child will describe to somebody.
+   */
+  victory: [90, 60, 90, 60, 320],
+  /** And when it is lost: one long, flat weight. Nothing rhythmic about it. */
+  defeat: [260],
+  /**
+   * A chest, being pressed and being opened.
+   *
+   * Or: *"and of course also when you press a chest."* Heavy, because a
+   * chest is the heaviest object in the game.
+   */
+  chest: [60, 50, 160],
+  /**
+   * The prize coming out: diamonds, cards, anything that flies to the purse.
+   *
+   * Or: *"and when diamonds are taken."* A rattle rather than a thud — many
+   * small things arriving, which is exactly what is on the screen.
+   */
+  gems: [40, 40, 40, 40, 110],
 } as const;
 
 export type Buzz = keyof typeof PATTERN;
@@ -94,7 +133,16 @@ export type Buzz = keyof typeof PATTERN;
  * together is still one moment, and alternating two patterns through it
  * would feel like neither.
  */
-const FLOOR: Partial<Record<Buzz, number>> = { kill: 200, fallen: 200 };
+const FLOOR: Partial<Record<Buzz, number>> = {
+  /*
+   * ⚠ RAISED WITH THE PATTERNS. A death is 35ms or 120ms now rather than
+   * 18 or 55, so the old 200ms floor would have let a wipe run the motor
+   * for more than half of every second — which is the drone this floor
+   * exists to prevent. 320 leaves a clear gap between two of them.
+   */
+  kill: 320,
+  fallen: 320,
+};
 /** Deaths of both kinds answer to one clock. See FLOOR. */
 const GROUP: Partial<Record<Buzz, string>> = { kill: "death", fallen: "death" };
 

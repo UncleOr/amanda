@@ -29,6 +29,7 @@
 import { useEffect, useRef, useState } from "react";
 import { OpeningFilm } from "./OpeningFilm";
 import { markIdentPlayed } from "../game/intro";
+import { haptics } from "../game/haptics";
 
 const SRC = `${import.meta.env.BASE_URL}brand/ident.mp4`;
 
@@ -54,6 +55,12 @@ export function Ident({ onDone }: { onDone: () => void }) {
      * watched — finishing is not what makes the second one unwanted.
      */
     markIdentPlayed();
+    /*
+     * Or: *"the small vibrations there are now can be on the Asulins logo
+     * appearing."* Two feathers, once a session — the studio saying hello
+     * in the hand as well as on the screen.
+     */
+    haptics.buzz("logo");
 
     const leave = () => {
       setGone(true);

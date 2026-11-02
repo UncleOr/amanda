@@ -158,7 +158,7 @@ export function Challenges({
     const from = flyFrom?.getBoundingClientRect();
 
     // 1. The press itself. Synchronous, before anything else is touched.
-    pressed(button, { sound: "newcard" });
+    pressed(button, { sound: "newcard", buzz: "gems" });
     // 2. The row is taken. Locally, now — the server is told below.
     setTaken((was) => new Set(was).add(id));
     // 3. Out of the way: the purse and the nacho bar this flies TO are on

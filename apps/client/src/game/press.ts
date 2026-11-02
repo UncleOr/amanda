@@ -30,6 +30,7 @@
  * decoration. The caller's next line runs whatever happens here.
  */
 import { sfx, type SoundName } from "./sfx";
+import { haptics, type Buzz } from "./haptics";
 
 /** The game's own palette, so a burst belongs to this game and not to a library. */
 const CHIPS = ["#ffd166", "#5ce1e6", "#ff8fab", "#9af06a", "#ffffff"];
@@ -40,6 +41,19 @@ const LIFE = 620;
 export interface Press {
   /** One of sfx's names, played at once. Leave out for a silent press. */
   sound?: SoundName;
+  /**
+   * What the phone does, if it does anything.
+   *
+   * Or: *"the small vibrations there are now can be on button presses —
+   * going into the shop, into the tunnel, into a game. But during the game
+   * itself there needs to be a more significant vibration."*
+   *
+   * So a press is a TAP by default — the lightest thing in the set, because
+   * it happens more than anything else — and the handful of presses that
+   * are events in their own right say so: a chest, a prize. `false` for a
+   * press that must stay still.
+   */
+  buzz?: Buzz | false;
   /** How many chips fly. 0 for a press with no confetti. */
   chips?: number;
   /** Chip colours, if this press wants its own. */
@@ -60,6 +74,7 @@ const still = (): boolean =>
 export function pressed(el: HTMLElement | null | undefined, opts: Press = {}): void {
   try {
     if (opts.sound) sfx.play(opts.sound);
+    if (opts.buzz !== false) haptics.buzz(opts.buzz ?? "tap");
     if (!el || still()) return;
 
     /*

@@ -92,7 +92,7 @@ export function Payout({
            * happened under the thumb while they ran.
            */
           onClick={(e) => {
-            pressed(e.currentTarget, { sound: "click" });
+            pressed(e.currentTarget, { sound: "click", buzz: "chest" });
             onOpenChest?.();
           }}
           disabled={!onOpenChest}

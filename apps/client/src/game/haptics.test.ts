@@ -73,15 +73,48 @@ afterEach(() => {
   vi.useRealTimers();
 });
 
-describe("the eight, as feelings", () => {
+/** The two that are furniture: a button, and the studio mark. */
+const LIGHT: Buzz[] = ["tap", "logo"];
+
+describe("the vocabulary, as feelings", () => {
   const names = Object.keys(PATTERNS) as Buzz[];
 
   it("covers everything Or asked for", () => {
-    // The eighth arrived after the first seven: *"and it needs to be at the
-    // start of the battle and at the start of the build phase too."*
+    /*
+     * It grew twice. Seven at first, then the build phase — *"and it needs
+     * to be at the start of the battle and at the start of the build phase
+     * too"* — and then the whole scale was rebuilt: *"the vibrations are
+     * really short and not noticeable... the small ones there are now can
+     * be on the Asulins logo appearing and on button presses. But during
+     * the game itself there needs to be a more significant vibration. Also
+     * when you take a card, when the panic starts, when our soldiers die.
+     * Also at the end of a match. And of course when you press a chest and
+     * when diamonds are taken."*
+     */
     expect(names.sort()).toEqual(
-      ["action", "aim", "battle", "build", "fallen", "kill", "lift", "panic"].sort(),
+      [
+        "action", "aim", "battle", "build", "chest", "defeat", "fallen",
+        "gems", "kill", "lift", "logo", "panic", "tap", "victory",
+      ].sort(),
     );
+  });
+
+  it("keeps the light ones light and makes everything else felt", () => {
+    const total = (p: number | readonly number[]) =>
+      typeof p === "number" ? p : p.reduce((a, b) => a + b, 0);
+    /*
+     * ⚠ THE WHOLE POINT OF THE REBUILD. Twelve milliseconds is at the floor
+     * of what a phone's motor can spin up for, which is why Or could not
+     * feel any of it. The furniture stays there; everything that happens
+     * IN a match is at least thirty-five, and the events that matter are
+     * past a hundred.
+     */
+    for (const n of LIGHT) expect(total(PATTERNS[n]), n).toBeLessThanOrEqual(110);
+    for (const n of names.filter((x) => !LIGHT.includes(x)))
+      expect(total(PATTERNS[n]), n).toBeGreaterThanOrEqual(35);
+    // And the four that are moments rather than confirmations.
+    for (const n of ["battle", "victory", "defeat", "panic"] as Buzz[])
+      expect(total(PATTERNS[n]), n).toBeGreaterThanOrEqual(260);
   });
 
   it("gives no two of them the same rhythm", () => {
@@ -96,10 +129,10 @@ describe("the eight, as feelings", () => {
       // Under about ten milliseconds a phone's motor does not finish
       // spinning up, so the pulse is felt as nothing at all.
       for (const ms of parts) expect(ms, `${n} has a ${ms}ms step`).toBeGreaterThanOrEqual(10);
-      // And nothing here is longer than a moment. The battle is the longest
-      // and it happens once a match.
+      // And nothing here is longer than a moment. The longest are the
+      // curtain going up and the match being won, and both happen once.
       const total = parts.reduce((a, b) => a + b, 0);
-      expect(total, `${n} runs for ${total}ms`).toBeLessThanOrEqual(400);
+      expect(total, `${n} runs for ${total}ms`).toBeLessThanOrEqual(800);
     }
   });
 
@@ -110,10 +143,10 @@ describe("the eight, as feelings", () => {
     expect(PATTERNS.fallen).toBeGreaterThan((PATTERNS.kill as number) * 2);
   });
 
-  it("makes picking a card up the lightest thing in the set", () => {
+  it("makes a button press the lightest thing in the set", () => {
     const first = (p: number | readonly number[]) => (typeof p === "number" ? p : p[0]!);
-    for (const n of (["action", "aim", "panic", "battle", "build", "fallen"] as Buzz[]))
-      expect(first(PATTERNS.lift), n).toBeLessThan(first(PATTERNS[n]));
+    for (const n of (["lift", "action", "aim", "panic", "battle", "build", "fallen"] as Buzz[]))
+      expect(first(PATTERNS.tap), n).toBeLessThan(first(PATTERNS[n]));
   });
 
   it("answers the settings switch with something nobody can miss", () => {
@@ -138,7 +171,7 @@ describe("a battle does not become one long buzz", () => {
     try {
       for (let i = 0; i < 20; i++) haptics.buzz("kill");
       expect(m.calls, "twenty cards died in one frame").toHaveLength(1);
-      vi.advanceTimersByTime(250);
+      vi.advanceTimersByTime(400);
       haptics.buzz("kill");
       expect(m.calls).toHaveLength(2);
     } finally {
@@ -173,7 +206,8 @@ describe("a battle does not become one long buzz", () => {
       haptics.buzz("lift");
       haptics.buzz("action");
       haptics.buzz("aim");
-      expect(m.calls).toHaveLength(4);
+      haptics.buzz("tap");
+      expect(m.calls).toHaveLength(5);
     } finally {
       m.off();
     }
@@ -266,6 +300,35 @@ describe("where the game asks for it", () => {
     // `flip` is the only thing in that file that knows whose cards are
     // whose: it is set when the local player is side B.
     expect(arena).toContain('const mine = (g.owner === "A") !== flip');
+  });
+
+  it("answers a button press, wherever that button is", () => {
+    /*
+     * Or: *"the small ones can be on button presses — going into the shop,
+     * into the tunnel, into a game."* Every button in this game already
+     * goes through one function, so that is where it lives: a press is a
+     * TAP unless the press says otherwise.
+     */
+    const press = read("./press.ts");
+    expect(press).toContain('haptics.buzz(opts.buzz ?? "tap")');
+    expect(press).toContain("opts.buzz !== false");
+    // And the presses that are events in their own right say so.
+    expect(read("../components/Payout.tsx")).toContain('buzz: "chest"');
+    expect(read("../components/ChestReveal.tsx")).toContain('haptics.buzz("chest")');
+    expect(read("../components/Tunnel.tsx")).toContain('buzz: "gems"');
+    expect(read("../components/Challenges.tsx")).toContain('buzz: "gems"');
+  });
+
+  it("and the studio mark says hello in the hand", () => {
+    expect(read("../components/Ident.tsx")).toContain('haptics.buzz("logo")');
+  });
+
+  it("tells a won match from a lost one", () => {
+    // Or: *"also at the end of a match."* Losing and winning are not the
+    // same news, and the phone can say which before the screen has drawn.
+    expect(read("../App.tsx")).toContain(
+      'haptics.buzz(m.iWon ? "victory" : "defeat")',
+    );
   });
 
   it("and can be turned off by the adult in the room", () => {

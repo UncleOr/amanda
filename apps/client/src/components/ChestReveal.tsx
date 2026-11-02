@@ -44,6 +44,7 @@ import { Plaque } from "./Plaque";
 import { CATCHPHRASES, EMOJI, EMOJI_PACKS } from "@amanda/shared";
 import { sfx } from "../game/sfx";
 import { pressed } from "../game/press";
+import { haptics } from "../game/haptics";
 import { flyReward } from "../game/reward";
 import type { Chest } from "../game/account";
 import * as V from "../data/voice";
@@ -145,6 +146,9 @@ export function ChestReveal({ chest, onClose, onWear, onToDeck }: Props) {
   const hit = () => {
     if (opened || taps > 0) return;
     sfx.play("click");
+    // Or: *"and of course also when you press a chest."* The heaviest
+    // object in the game answers like one.
+    haptics.buzz("chest");
     setTaps(1);
   };
 
@@ -182,7 +186,7 @@ export function ChestReveal({ chest, onClose, onWear, onToDeck }: Props) {
    * them.
    */
   const takeTheDiamonds = (button: HTMLElement) => {
-    pressed(button, { sound: "newcard" });
+    pressed(button, { sound: "newcard", buzz: "gems" });
     if (!chest.diamonds) return;
     const from = document.querySelector(".chest__gems")?.getBoundingClientRect();
     if (from) void flyReward({ icon: "gem", amount: chest.diamonds, from });

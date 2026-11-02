@@ -6,7 +6,6 @@ import { Overlay } from "./Overlay";
 import { CATALOG } from "../data/catalog";
 import { RARITY_META } from "../data/cardMeta";
 import { flyReward } from "../game/reward";
-import { haptics } from "../game/haptics";
 import { pressed } from "../game/press";
 import { claimStop, isClaimed, lastTunnel, loadTunnel, waiting, type TunnelState } from "../game/tunnel";
 import { line as t, lineF as tf } from "../game/copy";
@@ -539,8 +538,8 @@ export function Tunnel({
 
     // The press, then the row, then the server — the same order a challenge
     // is taken in, and for the same reason: see Challenges.tsx.
-    pressed(button, { sound: "newcard" });
-    haptics.buzz("aim");
+    // A prize, not a press: the phone rattles like the diamonds do.
+    pressed(button, { sound: "newcard", buzz: "gems" });
     setState((was) => ({ ...was, claimed: [...was.claimed, { stop, lane }] }));
     /*
      * ⚠ AND THE PANEL STAYS OPEN. Or: *"when you take something from the
