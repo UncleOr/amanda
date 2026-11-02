@@ -541,10 +541,17 @@
 @media (max-height: 460px) {
   .tun { width: 104px; }
   .tun-gap { width: 64px; }
-  .tun__lane { height: 84px; }
-  .tunnel__tag { height: 84px; width: 76px; }
-  .tun__bit--card img { width: 38px; height: 50px; }
-  .tun__bit--thing img { width: 42px; height: 42px; }
+  /*
+   * Measured on the phone this is played on: the overlay leaves 350px, the
+   * title takes 31 and the road's own padding 22, so two lanes and the
+   * milestone between them have 290 to share. 94 each leaves room for the
+   * marker to bob without touching anything — and a prize is a picture, so
+   * every pixel that is not spent here is spent on nothing.
+   */
+  .tun__lane { height: 94px; }
+  .tunnel__tag { height: 94px; width: 76px; }
+  .tun__bit--card img { width: 40px; height: 54px; }
+  .tun__bit--thing img { width: 46px; height: 46px; }
 }
 
 @media (prefers-reduced-motion: reduce) {

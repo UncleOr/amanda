@@ -220,8 +220,13 @@ export function TunnelStrip({ best, onOpen }: { best: number; onOpen: () => void
             already doing the work of catching the eye.
           */}
           {due ? (
-            /* The one thing worth saying here: something is waiting. */
-            tf("sbd894ed", "{0} פרסים מחכים", due)
+            /*
+             * The one thing worth saying here: something is waiting. One of
+             * them is its own sentence — Hebrew does not count to one with a
+             * plural, and "1 פרסים מחכים" is the kind of line a child reads
+             * as the game being broken.
+             */
+            due === 1 ? t("sf778536", "פרס אחד מחכה") : tf("sbd894ed", "{0} פרסים מחכים", due)
           ) : next ? (
             <>
               <Icon name="win" size={12} /> {tf("s75e5443", "עוד {0}", Math.max(0, next.at - at))}
