@@ -7,6 +7,7 @@ import type { BattleResult, EndedBy, FrameUnit, Owner } from "@amanda/engine";
 import { cardColor, CATALOG } from "../data/catalog";
 import { seriesColor } from "../data/cardMeta";
 import { sfx } from "../game/sfx";
+import { haptics } from "../game/haptics";
 import { voiceFor } from "../game/cardSound";
 import { combatLook, drawAura, drawProjectile, type CombatLook } from "./arenaFx";
 import { line as t, lineF as tf } from "../game/copy";
@@ -909,6 +910,17 @@ export function Arena({
      */
     function deathBurst(g: UnitGfx): void {
       hear("die", 140);
+      /*
+       * Or: *"and every time a monster dies, or an enemy monster dies"* —
+       * two of the seven, and the only pair that has to be told apart
+       * without looking. Theirs is a tick, yours is a thud (haptics.ts).
+       *
+       * `flip` is set when the local player is side B, which is the one
+       * thing in this file that knows whose cards are whose.
+       */
+      /** Side A is yours unless the board was flipped, which is what `flip` means. */
+      const mine = (g.owner === "A") !== flip;
+      haptics.buzz(mine ? "fallen" : "kill");
       const x = g.container.x;
       const y = g.container.y;
       const c = g.look.death;

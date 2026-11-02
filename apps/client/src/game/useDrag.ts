@@ -1,6 +1,7 @@
 import { useCallback, useEffect, useRef, useState } from "react";
 import { carryOf } from "./carry";
 import { sfx } from "./sfx";
+import { haptics } from "./haptics";
 import { dragMix } from "./cardSound";
 
 /**
@@ -74,6 +75,10 @@ export function useDrag(onDrop: (cardId: string, target: string) => void) {
          * gesture is definitely a carry.
          */
         sfx.drag(dragMix(p.cardId));
+        // And in the hand holding the phone. Or's list starts here: *"when
+        // you pick a card up."* Same frame as the sound, for the same reason
+        // — this is the instant the gesture became a carry.
+        haptics.buzz("lift");
         setDrag({
           cardId: p.cardId,
           x: e.clientX,

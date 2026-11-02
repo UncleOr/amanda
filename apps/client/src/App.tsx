@@ -50,6 +50,7 @@ import { BattleScreen } from "./components/BattleScreen";
 import { ResultScreen } from "./components/ResultScreen";
 import { useDrag } from "./game/useDrag";
 import { sfx } from "./game/sfx";
+import { haptics } from "./game/haptics";
 import { voiceFor } from "./game/cardSound";
 import { music } from "./game/music";
 import { ACTIONS, cardPool, isEnemyTargeted, synergyGroups } from "./data/catalog";
@@ -1233,6 +1234,22 @@ function Game() {
     const t = window.setTimeout(() => setPhaseCard(null), 1700);
     return () => window.clearTimeout(t);
   }, [m.phase, m.playground]);
+
+  /*
+   * ═══ AND THE TWO MOMENTS THE PHONE ANNOUNCES ═══
+   *
+   * Or: *"when the panic phase starts, and when the battle starts."* The
+   * two phases a player does not choose and cannot miss — one is a warning
+   * and one is a curtain going up, and they feel different (haptics.ts).
+   *
+   * Its own effect rather than a line inside the one above, because that one
+   * is about a word on the screen and leaves early in the playground. A
+   * battle starting in the lab still starts.
+   */
+  useEffect(() => {
+    if (m.phase === "panic") haptics.buzz("panic");
+    else if (m.phase === "battle") haptics.buzz("battle");
+  }, [m.phase]);
 
   return (
     /*

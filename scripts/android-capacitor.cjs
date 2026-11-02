@@ -388,6 +388,30 @@ const cfg = ${JSON.stringify(
        */
       // Two newlines, built here so the patch never has to escape one.
       blankLine: "\n\n",
+      /*
+       * ═══ WITHOUT THIS LINE THE PHONE DOES NOT BUZZ ═══
+       *
+       * Or: *"I want to add vibration — when you pick a card up, when you
+       * play an action card, when the panic phase starts, when the battle
+       * starts, every time a monster dies."* The game asks for it through
+       * `navigator.vibrate` (apps/client/src/game/haptics.ts).
+       *
+       * In the TWA that needed nothing: the page ran inside Chrome and
+       * Chrome holds the permission. This is a WebView inside our own app,
+       * so the permission has to be ours — and a WebView whose app has not
+       * declared VIBRATE does not fail, throw or warn. `navigator.vibrate`
+       * returns true and nothing happens, which is the worst of the three.
+       *
+       * It is a normal permission: granted at install, nothing to ask the
+       * player, nothing shown on the store listing's permission list beyond
+       * the line itself.
+       */
+      vibratePermission: [
+        "",
+        "    <!-- The game buzzes: see apps/client/src/game/haptics.ts.",
+        "         A WebView without this fails silently. -->",
+        '    <uses-permission android:name="android.permission.VIBRATE" />',
+      ].join("\n"),
       landscapeFeature: [
         "",
         "    <!-- The game is DRAWN landscape; it does not need landscape hardware.",
@@ -677,7 +701,7 @@ edit("src/main/java/com/asulins/amanda/MainActivity.java", (s) =>
 // mistake this file has now made five times.
 const APP_TAG = cfg.blankLine + '    <application';
 edit("src/main/AndroidManifest.xml", (s) =>
-  s.replace("    <application", cfg.landscapeFeature + APP_TAG),
+  s.replace("    <application", cfg.vibratePermission + cfg.landscapeFeature + APP_TAG),
 );
 
 edit("src/main/AndroidManifest.xml", (s) =>

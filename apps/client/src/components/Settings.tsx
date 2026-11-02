@@ -55,6 +55,7 @@ import { Overlay } from "./Overlay";
 import { deleteAccount, scrubMyData, type Account } from "../game/account";
 import { hardRefresh } from "../game/refresh";
 import { sfx } from "../game/sfx";
+import { haptics } from "../game/haptics";
 import { music } from "../game/music";
 import { lang, setLang } from "../game/lang";
 import type { Overlays } from "../game/useOverlay";
@@ -124,6 +125,7 @@ export function Settings({
 }) {
   const [muted, setMuted] = useState(sfx.muted);
   const [musicOn, setMusicOn] = useState(music.isEnabled());
+  const [buzz, setBuzz] = useState(haptics.isEnabled());
   const [danger, setDanger] = useState(false);
   const [deleting, setDeleting] = useState(false);
   const [reallyDeleting, setReallyDeleting] = useState(false);
@@ -167,6 +169,24 @@ export function Settings({
             <span className="set__label">{t("sa503b39", "מוזיקה")}</span>
             <span className={`set__state${musicOn ? " set__state--on" : ""}`}>
               {musicOn ? t("s6f43267", "דולקת") : t("s3c95ca3", "כבויה")}
+            </span>
+          </button>
+
+          {/*
+            The phone itself, as a switch.
+
+            On by default, unlike the music: vibration is part of how the
+            game feels rather than something playing over it. It is here
+            because a thing that happens in a child's hand without asking
+            has to be turnable off by the adult beside him — and because a
+            phone that is already buzzing for messages is a phone somebody
+            may want to keep quiet.
+          */}
+          <button className="set__row" onClick={() => setBuzz(haptics.toggleEnabled())}>
+            <Icon name="phone" size={20} />
+            <span className="set__label">{t("s2e0f20a", "רטט")}</span>
+            <span className={`set__state${buzz ? " set__state--on" : ""}`}>
+              {buzz ? t("s4e2eb6c", "דולק") : t("s6af16ba", "כבוי")}
             </span>
           </button>
 

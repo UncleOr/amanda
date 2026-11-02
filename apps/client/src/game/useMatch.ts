@@ -45,6 +45,7 @@ import {
   isTargetedAction,
 } from "../data/catalog";
 import { sfx } from "./sfx";
+import { haptics } from "./haptics";
 import { track } from "./track";
 import {
   albumToPool,
@@ -1898,6 +1899,9 @@ export function useMatch(): MatchApi {
       if (isTargetedAction(id)) {
         setTargeting(id);
         sfx.play("click");
+        // Armed, and waiting to be pointed at something. The aim that
+        // follows gets its own, heavier buzz — see applyTargetTo.
+        haptics.buzz("action");
         return;
       }
       const a = ACTIONS.get(id);
@@ -1949,6 +1953,7 @@ export function useMatch(): MatchApi {
       } else if (a?.effect === "shuffleEnemyFrontRow") shuffleEnemyFront();
       setUsedActions((u) => ({ ...u, [id]: true }));
       sfx.play("draw");
+      haptics.buzz("action");
     },
     [shuffleEnemyFront, freezeOpponent, canPlayAction],
   );
@@ -1971,6 +1976,9 @@ export function useMatch(): MatchApi {
       if (!first) {
         setFirstPick(key);
         sfx.play("click");
+        // Half an aim: one of the two cards is chosen. The swap itself
+        // lands on the second pick, below, with the full thud.
+        haptics.buzz("lift");
         return; // still targeting — do not spend the card yet
       }
       if (first !== key) {
@@ -2002,6 +2010,13 @@ export function useMatch(): MatchApi {
     setTargeting(null);
     setFirstPick(null);
     sfx.play("place");
+    /*
+     * Or: *"and also when you have chosen a position for an action card —
+     * which card to strengthen, say, or which enemy card to destroy."* This
+     * is the only place all four of those meet: whatever the card does, it
+     * is spent HERE, at the moment it is pointed at something.
+     */
+    haptics.buzz("aim");
   }, []);
 
   /*
