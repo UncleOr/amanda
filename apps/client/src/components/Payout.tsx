@@ -1,5 +1,6 @@
 import { nachoBar } from "@amanda/shared";
 import { Icon } from "./Icon";
+import { pressed } from "../game/press";
 import type { Award } from "../game/meta";
 import { line as t, lineF as tf } from "../game/copy";
 
@@ -83,7 +84,17 @@ export function Payout({
           key={i}
           type="button"
           className="payout__bit payout__bit--chest"
-          onClick={onOpenChest}
+          /*
+           * The thump is on the press, not on the answer. Or: *"when you
+           * press 'a chest is waiting for you' it takes a while to
+           * respond."* Half of that was the two round trips behind it (see
+           * App's openNewestChest) and half was that nothing at all
+           * happened under the thumb while they ran.
+           */
+          onClick={(e) => {
+            pressed(e.currentTarget, { sound: "click" });
+            onOpenChest?.();
+          }}
           disabled={!onOpenChest}
         >
           <Icon name="chest" size={19} /> {t("sedb65d6", "תיבה מחכה לך!")}

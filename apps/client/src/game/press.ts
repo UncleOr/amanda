@@ -87,10 +87,15 @@ export function pressed(el: HTMLElement | null | undefined, opts: Press = {}): v
       const chip = document.createElement("i");
       chip.setAttribute("aria-hidden", "true");
       const size = 4 + Math.random() * 5;
+      /*
+       * ⚠ NO `will-change`. See the burst below for the whole story: it is
+       * a standing promise to the compositor that this element will keep
+       * moving, on a thing that lives for a second and is then deleted.
+       */
       chip.style.cssText =
         `position:fixed;left:${cx}px;top:${cy}px;width:${size}px;height:${size * 1.6}px;` +
         `background:${colors[i % colors.length]};border-radius:1px;pointer-events:none;` +
-        `z-index:9999;will-change:transform,opacity`;
+        `z-index:9999`;
       document.body.appendChild(chip);
 
       /*
@@ -106,7 +111,36 @@ export function pressed(el: HTMLElement | null | undefined, opts: Press = {}): v
       const fall = 90 + Math.random() * 120;
       const spin = (Math.random() - 0.5) * 900;
 
-      chip.animate(
+      /*
+       * ═══ THE BURNT PIXEL ═══
+       *
+       * Or, twice: *"there is some annoying bug — when there are diamonds
+       * or other things flying there is a 'burnt' pixel on the screen"*,
+       * and then *"the pixel is still there."* The first search went to
+       * reward.ts, which throws the diamonds; this is the thing that throws
+       * fourteen four-pixel rectangles out of EVERY press in the game,
+       * including the press that starts the diamonds flying.
+       *
+       * Three faults, and any one of them is enough to leave one lit:
+       *
+       *   NO `fill`. The last keyframe is opacity 0 — and with no fill the
+       *   chip SNAPS BACK to its base style the moment the animation ends:
+       *   full opacity, back at the button. It then sits there, visible,
+       *   until a timer removes it up to 400ms later. On a frame where the
+       *   main thread is busy — opening a chest, changing screen — that
+       *   timer is late and the chip stays.
+       *
+       *   NO `cancel` BEFORE REMOVAL. A composited layer deleted while its
+       *   animation still holds a painted frame is the classic ghost tile.
+       *
+       *   `will-change` FOR EVER, on an element that lives for a second.
+       *
+       * So: hold the last frame, cancel on the way out, and take the layer
+       * back. And remove on `finished` as well as on the timer — with the
+       * cancel in `gone`, `finished` settling late or not at all costs
+       * nothing, because the timer is still the floor.
+       */
+      const run = chip.animate(
         [
           { transform: "translate(-50%, -50%) rotate(0deg)", opacity: 1 },
           {
@@ -119,11 +153,18 @@ export function pressed(el: HTMLElement | null | undefined, opts: Press = {}): v
             opacity: 0,
           },
         ],
-        { duration: LIFE + Math.random() * 220, easing: "cubic-bezier(0.25, 0.6, 0.4, 1)" },
+        {
+          duration: LIFE + Math.random() * 220,
+          easing: "cubic-bezier(0.25, 0.6, 0.4, 1)",
+          fill: "forwards",
+        },
       );
-      // Not `.finished`: an animation on a removed element never settles, and
-      // a chip that outlives its timer is a chip nobody ever cleans up.
-      window.setTimeout(() => chip.remove(), LIFE + 400);
+      const gone = () => {
+        for (const a of chip.getAnimations()) a.cancel();
+        chip.remove();
+      };
+      run.finished.then(gone, gone);
+      window.setTimeout(gone, LIFE + 400);
     }
   } catch {
     /* Decoration. If it cannot run, the press still counts. */

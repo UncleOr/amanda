@@ -54,7 +54,9 @@ import { sfx } from "./game/sfx";
 import { haptics } from "./game/haptics";
 import { voiceFor } from "./game/cardSound";
 import { music } from "./game/music";
-import { ACTIONS, cardPool, isEnemyTargeted, synergyGroups } from "./data/catalog";
+import { ACTIONS, CATALOG, cardPool, isEnemyTargeted, synergyGroups } from "./data/catalog";
+import { artUrl } from "./game/skins";
+import { warm, warmSoon } from "./game/preload";
 import { carryOf } from "./game/carry";
 import * as V from "./data/voice";
 import { BoardGrid } from "./components/BoardGrid";
@@ -425,13 +427,59 @@ function Game() {
    * Nothing happens on a miss: if the chest is somehow gone, the home screen
    * is where it would have been.
    */
+  /**
+   * The chest that is waiting, fetched while the result is still being read.
+   *
+   * ═══ WHY IT IS FETCHED EARLY ═══
+   *
+   * Or: *"and when you press 'a chest is waiting for you' at the end of a
+   * match it takes a while to respond."*
+   *
+   * It did, and the reason was two round trips standing in front of the
+   * animation: ask which chests are waiting, then ask the server to open
+   * one, and only then draw anything. The shelf on the home screen has not
+   * worked that way since Or said the same thing about it — it holds the
+   * list, opens the reveal on the tap with what it already has, and lets the
+   * server's answer land during the chest's own 480ms of rattling.
+   *
+   * This is that, moved to the result screen: the list is fetched the moment
+   * the match pays out a chest, so the press has nothing left to wait for.
+   */
+  const [waitingChest, setWaitingChest] = useState<Chest | null>(null);
+  useEffect(() => {
+    if (m.phase !== "result" || !m.award?.chests?.length) return;
+    void unopenedChests().then((list) => setWaitingChest(list[0] ?? null));
+  }, [m.phase, m.award]);
+
   const openNewestChest = useCallback(async () => {
+    /*
+     * The screen opens NOW, with what we already hold. `unopenedChests`
+     * reads `contents` out of the player's own row, so the browser knows
+     * what is inside before it asks anybody; the server call is what makes
+     * it TRUE — marks it open, puts the cards in the album, pays the
+     * diamonds — and the reveal waits for none of that. The second
+     * `setChest` fills in `fresh`, which is not read until every card has
+     * turned over a second and a half later.
+     */
+    const held = waitingChest;
+    if (held) {
+      setChest(held);
+      setWaitingChest(null);
+      void openChest(held.id).then((opened) => {
+        if (opened) setChest(opened);
+        void m.reloadAccount();
+      });
+      return;
+    }
+    // Nothing in hand — the award arrived without the list catching up, or
+    // this is a chest won before the screen was open. One round trip each.
     const waiting = await unopenedChests();
     const first = waiting[0];
     if (!first) return;
     const opened = await openChest(first.id);
     if (opened) setChest(opened);
-  }, []);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [waitingChest]);
   /*
    * Shown once, when an account exists and has never been set up. Guests have
    * no account to save it to, so they are not asked — they are asked the
@@ -1253,6 +1301,50 @@ function Game() {
     else if (m.phase === "panic") haptics.buzz("panic");
     else if (m.phase === "battle") haptics.buzz("battle");
   }, [m.phase]);
+
+  /*
+   * ═══ THE MATCH FETCHES ITS PICTURES WHILE YOU ARE STILL BUILDING ═══
+   *
+   * Or: *"maybe we should do a kind of 'loading resources' at the start of a
+   * match so it runs more smoothly."*
+   *
+   * The build phase is forty-five seconds in which the player looks at their
+   * own board and the network does nothing — and the moment after it is the
+   * one that cannot afford to wait: the battle draws every card on BOTH
+   * boards at once, races a budget for them, and falls back to coloured
+   * boxes for whatever has not arrived.
+   *
+   * Two waves. What this match will certainly show goes first; the rest of
+   * the catalogue waits for the browser to be idle, because it is worth
+   * having for the NEXT match and worth nothing at all if it costs a frame
+   * of this one. Nothing here is awaited and nothing can fail loudly — see
+   * preload.ts.
+   */
+  useEffect(() => {
+    if (m.phase !== "build") return;
+    const art = (id: string) => {
+      const card = CATALOG.get(id);
+      return card?.art.sprite ? artUrl(card.art.sprite) : "";
+    };
+    const mine = [
+      ...Object.values(m.placements),
+      m.king,
+      m.hand,
+      ...m.extraHand,
+      ...Object.values(m.opponent.placements ?? {}),
+    ].filter((id): id is string => !!id);
+    warm([
+      ...mine.map(art),
+      `${BASE}arena/${arena.id}.webp`,
+      `${BASE}scenes/result_win.webp`,
+      `${BASE}scenes/result_lose.webp`,
+      `${BASE}scenes/chest_wood.png`,
+      `${BASE}scenes/chest_silver.png`,
+      `${BASE}scenes/chest_gold.png`,
+    ]);
+    // Everything else the deck could deal, once the game is quiet.
+    warmSoon([...CATALOG.keys()].map(art));
+  }, [m.phase, m.placements, m.king, m.hand, m.extraHand, m.opponent, m.account, arena.id]);
 
   return (
     /*

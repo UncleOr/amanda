@@ -306,6 +306,35 @@ describe("the prize that flies, and the pixel it left behind", () => {
     expect(REWARD).toContain("for (const a of node.getAnimations()) a.cancel()");
   });
 
+  it("and the fourteen chips every press throws do the same three things", () => {
+    /*
+     * ⚠ THE SECOND TIME HE REPORTED IT: *"the pixel is still there."* The
+     * first search went to reward.ts, which throws the diamonds. This is
+     * the thing that throws fourteen four-pixel rectangles out of EVERY
+     * press in the game — including the press that starts the diamonds.
+     *
+     * Measured in the browser with the old recipe: at 300ms the chip is at
+     * opacity 0.53 and flying, at 650ms it is at 0.01 — and at 850ms it is
+     * back at OPACITY 1, sitting at the button, because with no `fill` an
+     * animation's last frame is dropped the moment it ends. It stays lit
+     * until a timer removes it up to 400ms later, and on a frame where the
+     * main thread is busy — opening a chest, changing screen — that timer
+     * is late and the chip stays on the screen.
+     */
+    const press = readFileSync(
+      fileURLToPath(new URL("./press.ts", import.meta.url)),
+      "utf8",
+    );
+    expect(press).toContain('fill: "forwards"');
+    expect(press).toContain("for (const a of chip.getAnimations()) a.cancel()");
+    // The declaration, not the word: the file explains in a comment why it
+    // is not there.
+    expect(press).not.toMatch(/will-change:/);
+    // Removed when it finishes, with the timer left as the floor under it.
+    expect(press).toContain("run.finished.then(gone, gone)");
+    expect(press).toContain("window.setTimeout(gone, LIFE + 400)");
+  });
+
   it("makes no permanent promise to the compositor", () => {
     // `will-change` on an element that lives for one second and is then
     // deleted is a layer asked for and never released.
