@@ -55,11 +55,41 @@ describe("the list is divided by series", () => {
   });
 });
 
-describe("still, walking or flying", () => {
-  it("is one choice of three, not two fields that disagree", () => {
+describe("still, walking, flying or diving", () => {
+  it("is one choice of four, not two fields that disagree", () => {
     expect(SRC).toContain('{ id: "still", he: "נייח"');
     expect(SRC).toContain('{ id: "walks", he: "הולך"');
     expect(SRC).toContain('{ id: "flies", he: "מעופף"');
+    /*
+     * Or: *"a reminder that I asked to add another movement ability besides
+     * walks / flies / stands — the diver."* It had been in the engine since
+     * the day he asked for it, and reachable only from the ABILITIES list —
+     * which is not where anybody looks for a way of getting about.
+     */
+    expect(SRC).toContain('id: "dives"');
+    expect(SRC).toContain('he: "צולל"');
+  });
+
+  it("gives the diver the name its own family uses", () => {
+    /*
+     * One mechanic under three names — Or: *"one for the machines and one
+     * for the sea creatures and one for the plants"* — so the editor picks
+     * the one that fits the card rather than asking a question the card has
+     * already answered.
+     */
+    expect(SRC).toContain('machines: "teleport"');
+    expect(SRC).toContain('plants: "burrow"');
+    expect(SRC).toContain('sea: "dive"');
+  });
+
+  it("adds the ability when you choose it, and takes it away when you do not", () => {
+    // ⚠ Otherwise a card that was a diver yesterday keeps diving under a
+    // button that says it walks.
+    const fn = SRC.slice(SRC.indexOf("function setMove"));
+    const body = fn.slice(0, fn.search(/\n {2}\}/));
+    expect(body).toContain("ROUND_THE_BACK as readonly string[]");
+    expect(body).toContain('to === "dives"');
+    expect(body).toContain("abilities,");
   });
 
   /*

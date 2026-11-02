@@ -8,6 +8,7 @@ import {
   ELEMENTS,
   RANGES,
   RARITIES,
+  ROUND_THE_BACK,
   STARTER_ALBUM,
   TARGETINGS,
   type Ability,
@@ -106,15 +107,52 @@ function clone(card: Card): Card {
  * So the three of them are one question with three answers, and the pace is a
  * second question that only exists once the answer is not "still".
  */
+/*
+ * ═══ AND THE FOURTH WAY: ROUND THE BACK ═══
+ *
+ * Or: *"a reminder that I asked to add another movement ability besides
+ * walks / flies / stands — the diver."*
+ *
+ * It has been in the engine since the day he asked for it — *"it basically
+ * bypasses everyone and reaches the back part of the board, and then turns
+ * around and attacks backwards"* — but it was only reachable from the
+ * ABILITIES list, which is not where anybody looks for a way of getting
+ * about. It is one of four answers to one question now.
+ *
+ * ⚠ IT IS STILL ONE MECHANIC UNDER THREE NAMES, one per family (Or: "one
+ * for the machines and one for the sea creatures and one for the plants"),
+ * so the editor picks the name that fits the card rather than asking a
+ * question whose answer is already on the card. The ability shows up in the
+ * list above as צלילה / טלפורטציה / חפירה, and can be changed there.
+ */
+const DIVE_BY_SERIES: Record<string, (typeof ROUND_THE_BACK)[number]> = {
+  machines: "teleport",
+  plants: "burrow",
+  sea: "dive",
+};
+
 const MOVES = [
   { id: "still", he: "נייח", note: "לא זז מהמשבצת" },
   { id: "walks", he: "הולך", note: "מתקדם קדימה, נעצר מאחורי מי שחוסם" },
   { id: "flies", he: "מעופף", note: "מתקדם וחולף מעל מי שחוסם" },
+  {
+    id: "dives",
+    he: "צולל",
+    note: "עוקף את כולם, צץ בקצה האחורי של לוח היריב ואוכל את דרכו חזרה",
+  },
 ] as const;
 
 type Move = (typeof MOVES)[number]["id"];
 
+/** The round-the-back ability on this card, if it has one. */
+function diveOf(card: Card): Ability | undefined {
+  return card.abilities.find((a) => (ROUND_THE_BACK as readonly string[]).includes(a.type));
+}
+
 function moveOf(card: Card): Move {
+  // A diver walks home from the far end, so it is a mover with a one-off
+  // relocation — and that relocation is the thing worth saying first.
+  if (diveOf(card)) return "dives";
   if (card.flying) return "flies";
   return card.stats.moveSpeed > 0 ? "walks" : "still";
 }
@@ -374,15 +412,37 @@ export function CardEditor({ call, say, upload, notes, reloadNotes }: CardEditor
       return { ...d, drag: next as Card["drag"] };
     });
 
-  /** One choice for how a card gets about, written into the two fields it takes. */
+  /** One choice for how a card gets about, written into the fields it takes. */
   function setMove(to: Move) {
     setDraft((d) => {
       if (!d) return d;
       if (d.stats.moveSpeed > 0) pace.current = d.stats.moveSpeed;
       const speed = pace.current || DEFAULT_PACE[to === "flies" ? "flies" : "walks"];
+      /*
+       * The dive is an ability, so choosing it here adds one and choosing
+       * anything else takes it away — otherwise a card that was a diver
+       * yesterday keeps diving under a button that says it walks.
+       */
+      const without = d.abilities.filter(
+        (a) => !(ROUND_THE_BACK as readonly string[]).includes(a.type),
+      );
+      const abilities =
+        to === "dives"
+          ? [
+              ...without,
+              (diveOf(d) ?? {
+                type: DIVE_BY_SERIES[d.seriesId] ?? "dive",
+                trigger: "onSpawn",
+                params: {},
+              }) as Ability,
+            ]
+          : without;
       return {
         ...d,
         flying: to === "flies",
+        abilities,
+        // A diver has to be able to walk home, so "still" is the one answer
+        // it cannot share with.
         stats: { ...d.stats, moveSpeed: to === "still" ? 0 : speed },
       };
     });
