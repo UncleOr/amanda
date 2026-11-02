@@ -475,7 +475,12 @@
   align-items: center;
   justify-content: center;
   color: var(--text);
+  /* The last line of defence: three prizes in one tile are sized to fit by
+     the rules above, and if a station is ever given a fourth they shrink
+     rather than reaching over the road. */
+  min-width: 0;
 }
+.tun__bit img { max-width: 100%; }
 /* The halo behind it, in the prize's own colour. */
 .tun__bit::before {
   content: "";

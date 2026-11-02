@@ -28,10 +28,17 @@
 
   "packageId": "com.asulins.amanda",
   "appName": "אמנדה",
-  "versionName": "1.1.5",
+  "versionName": "1.2.0",
   "versionCode": 8,
 
   "_versionRules": [
+    "8 CARRIES THE VIBRATION, which is the first thing in a long time that",
+    "a new bundle is actually FOR. The app loads the live site, so the game",
+    "itself reaches a phone the moment it is pushed - but navigator.vibrate",
+    "is refused by a WebView whose app has not declared VIBRATE, silently,",
+    "and that declaration lives in the bundle. Or, on the version installed",
+    "before this one: the rattle does not work. This build is why.",
+    "",
     "8 CARRIES NOTHING 7 DOES NOT. It exists only because a version code is",
     "spent on upload, so if 7 has been sent to Play this is the next number",
     "Play will accept. If 7 was never uploaded, upload the bundle already at",
