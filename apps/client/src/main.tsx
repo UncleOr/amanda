@@ -12,6 +12,7 @@ import { loadCopy } from "./game/copy";
 import { loadCardOverrides } from "./game/cardOverrides";
 import { loadLiveContent } from "./game/liveContent";
 import { watchForSignInReturn } from "./game/nativeAuth";
+import { haptics } from "./game/haptics";
 import { watchForLeaving } from "./game/away";
 import { isStale } from "./game/staleBuild";
 import { track } from "./game/track";
@@ -123,6 +124,40 @@ document.body.appendChild(film);
  * for. Does nothing at all on the web. See game/nativeAuth.ts.
  */
 watchForSignInReturn();
+
+/*
+ * ═══ EVERY CONTROL ANSWERS IN THE HAND ═══
+ *
+ * Or: *"there needs to be vibration on every click... in general, more
+ * haptic gestures for everything."*
+ *
+ * One listener rather than a line in every button. There are something like
+ * two hundred controls in this game and they are written in a dozen files;
+ * the half that go through `pressed()` already buzz, and the half that do
+ * not are exactly the ones nobody would remember to go back to.
+ *
+ * ⚠ CAPTURE AND PASSIVE. Capture so a handler that stops the event — the
+ * board does, for the drag — cannot take the answer away with it; passive
+ * so this can never be the thing that delays a tap.
+ *
+ * ⚠ AND IT CANNOT DOUBLE UP. A control that also calls `pressed` fires this
+ * and that on one finger, which on a 14ms pattern is not two taps but one
+ * longer one. The floor under `tap` in haptics.ts collapses them.
+ */
+document.addEventListener(
+  "pointerdown",
+  (e) => {
+    const el = (e.target as Element | null)?.closest?.(
+      "button, a[href], [role='button'], input, select, summary",
+    );
+    if (!el || (el as HTMLButtonElement).disabled) return;
+    // A control can opt out: `data-nobuzz` on anything that is pressed in a
+    // stream rather than once, if one ever turns up.
+    if (el.hasAttribute("data-nobuzz")) return;
+    haptics.buzz("tap");
+  },
+  { capture: true, passive: true },
+);
 
 createRoot(film).render(<Intro />);
 

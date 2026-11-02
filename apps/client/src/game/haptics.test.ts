@@ -94,7 +94,8 @@ describe("the vocabulary, as feelings", () => {
     expect(names.sort()).toEqual(
       [
         "action", "aim", "battle", "build", "chest", "defeat", "fallen",
-        "gems", "kill", "lift", "logo", "panic", "tap", "victory",
+        "gems", "go", "kill", "lift", "lock", "logo", "panic", "tap",
+        "victory",
       ].sort(),
     );
   });
@@ -300,6 +301,32 @@ describe("where the game asks for it", () => {
     // `flip` is the only thing in that file that knows whose cards are
     // whose: it is set when the local player is side B.
     expect(arena).toContain('const mine = (g.owner === "A") !== flip');
+  });
+
+  it("answers EVERY click, through one listener", () => {
+    /*
+     * Or: *"there needs to be vibration on every click... in general, more
+     * haptic gestures for everything."* There are two hundred controls in
+     * this game across a dozen files; the ones that would be missed are
+     * exactly the ones nobody would remember to go back to.
+     */
+    const main = read("../main.tsx");
+    expect(main).toContain('haptics.buzz("tap")');
+    expect(main).toMatch(/addEventListener\(\s*"pointerdown"/);
+    // Capture, so a handler that stops the event cannot take the answer
+    // with it; passive, so this is never what delays a tap.
+    expect(main).toContain("{ capture: true, passive: true }");
+    // And a control that also calls `pressed` must not fire twice.
+    const src = read("./haptics.ts");
+    expect(src).toMatch(/tap: 90,/);
+  });
+
+  it("starts a match and locks the boards", () => {
+    // Or: *"and when you press start game... and at the start of the panic.
+    // And at the end of the panic."*
+    const app = read("../App.tsx");
+    expect(app).toContain('m.phase === "countdown") haptics.buzz("go")');
+    expect(app).toContain('m.phase === "prebattle") haptics.buzz("lock")');
   });
 
   it("answers a button press, wherever that button is", () => {

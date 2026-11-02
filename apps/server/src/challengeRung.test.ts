@@ -96,7 +96,7 @@ describe("the id of a challenge", () => {
 
   it("still names the day and the period it belongs to", () => {
     const ids = liveChallenges(new Date(2026, 4, 12), 0).map((c) => c.id);
-    expect(ids.filter((id) => id.startsWith("d:2026-05-12:"))).toHaveLength(3);
-    expect(ids.filter((id) => id.startsWith("m:2026-05:"))).toHaveLength(1);
+    expect(ids.filter((id) => id.startsWith("d:2026-05-12:"))).toHaveLength(4);
+    expect(ids.filter((id) => id.startsWith("m:2026-05:"))).toHaveLength(2);
   });
 });

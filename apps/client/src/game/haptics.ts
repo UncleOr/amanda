@@ -54,6 +54,21 @@ const PATTERN = {
   tap: 14,
   /** The studio mark coming up. Two feathers, once a session. */
   logo: [12, 70, 18],
+  /**
+   * A match is starting.
+   *
+   * Or: *"and when you press start game."* Heavier than a button and
+   * lighter than the curtain — the engine turning over.
+   */
+  go: [80, 50, 80],
+  /**
+   * The panic is over and the boards are locked.
+   *
+   * Or: *"and at the start of the panic. And at the END of the panic."* The
+   * end of the panic is the one moment in a match where a player's hands
+   * stop mattering, and nothing on the screen had said so.
+   */
+  lock: 170,
 
   /* ── the heavy ones: the match ── */
   /**
@@ -134,6 +149,14 @@ export type Buzz = keyof typeof PATTERN;
  * would feel like neither.
  */
 const FLOOR: Partial<Record<Buzz, number>> = {
+  /*
+   * ⚠ A BUTTON ANSWERS ONCE. Every control in the game buzzes through the
+   * listener in main.tsx, and the handful that also go through `pressed`
+   * would otherwise fire twice on one finger — which on a short pattern is
+   * not two taps, it is one longer one, and the difference between a
+   * button and a prize stops being legible.
+   */
+  tap: 90,
   /*
    * ⚠ RAISED WITH THE PATTERNS. A death is 35ms or 120ms now rather than
    * 18 or 55, so the old 200ms floor would have let a wipe run the motor

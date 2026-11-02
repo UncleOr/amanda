@@ -57,7 +57,34 @@ export type Goal =
   /** Win. */
   | { kind: "win" }
   /** Play, however it goes. */
-  | { kind: "play" };
+  | { kind: "play" }
+  /*
+   * ═══ THE SEVEN THAT ASK FOR SOMETHING HARDER ═══
+   *
+   * Or: *"the challenges are a bit unsuited to the game. We need more
+   * varied and more challenging ones. I have just finished a challenge to
+   * play 8 games in a month. It is the 2nd of the month."*
+   *
+   * The first five above can all be satisfied by playing, which is the
+   * whole problem: a challenge that a player cannot help finishing is a
+   * receipt, not a goal. Every one of these asks for a DECISION — how to
+   * win, what to crown, what to put together — and can be read off one
+   * finished match (see MatchFacts).
+   */
+  /** Win by bringing the crown down, rather than on the clock. */
+  | { kind: "crush" }
+  /** Win in under this many seconds. */
+  | { kind: "fastWin"; seconds: number }
+  /** Win while losing no more than this many of your own cards. */
+  | { kind: "hold"; lost: number }
+  /** Have enough of one family on the board for its bonus to be live. */
+  | { kind: "family"; seriesId: string }
+  /** Put a card of this family on the crown. */
+  | { kind: "crown"; seriesId: string }
+  /** Field a card of this rarity. */
+  | { kind: "rarity"; rarity: string }
+  /** Fill every slot on the board yourself, with no Crumb Demons. */
+  | { kind: "fullBoard" };
 
 export interface Challenge {
   /** Stable for as long as the challenge is live: "d:2026-10-07:1". */
@@ -195,6 +222,16 @@ interface Template {
   make(
     pick: () => number,
     pools: Pools,
+    /*
+     * ⚠ THE PERIOD, because a month is not a long week.
+     *
+     * Or: *"I have just finished a challenge to play 8 games in a month. It
+     * is the 2nd of the month."* The counting templates were shared between
+     * weekly and monthly and drew from the SAME range, so a month could ask
+     * for eight games — which is a Tuesday. Every template that counts
+     * matches now scales what it asks for by the period it is in.
+     */
+    period: Period,
   ): {
     goal: Goal;
     need: number;
@@ -278,22 +315,10 @@ const TEMPLATES: Template[] = [
     },
   },
   {
-    periods: ["daily"],
-    make: (pick) => {
-      const need = 2 + Math.floor(pick() * 2); // 2 or 3
-      return {
-        goal: { kind: "win" },
-        need,
-        reward: { diamonds: need * 5 },
-        he: `לנצח ב-${need} משחקים`,
-        en: `Win ${need} games`,
-      };
-    },
-  },
-  {
-    periods: ["weekly", "monthly"],
-    make: (pick) => {
-      const need = 8 + Math.floor(pick() * 8) * 2; // 8..22, even
+    periods: ["daily", "weekly", "monthly"],
+    make: (pick, _pools, period) => {
+      // A day, a week of evenings, a month of them.
+      const need = span(pick, period, [3, 5], [18, 30], [60, 90]);
       return {
         goal: { kind: "play" },
         need,
@@ -304,9 +329,9 @@ const TEMPLATES: Template[] = [
     },
   },
   {
-    periods: ["weekly", "monthly"],
-    make: (pick) => {
-      const need = 5 + Math.floor(pick() * 6); // 5..10
+    periods: ["daily", "weekly", "monthly"],
+    make: (pick, _pools, period) => {
+      const need = span(pick, period, [2, 3], [10, 16], [35, 55]);
       return {
         goal: { kind: "win" },
         need,
@@ -316,10 +341,147 @@ const TEMPLATES: Template[] = [
       };
     },
   },
+
+  /* ═══ and the seven that ask for a decision ═══ */
+  {
+    periods: ["daily", "weekly", "monthly"],
+    make: (pick, _pools, period) => {
+      const need = span(pick, period, [1, 2], [5, 8], [18, 26]);
+      return {
+        goal: { kind: "crush" },
+        need,
+        reward: { diamonds: need * 8 },
+        he: need === 1 ? `להפיל מלך` : `להפיל ${need} מלכים`,
+        en: need === 1 ? `Bring a King down` : `Bring ${need} Kings down`,
+      };
+    },
+  },
+  {
+    periods: ["daily", "weekly", "monthly"],
+    make: (pick, _pools, period) => {
+      // The battle itself is fifteen seconds of simulated time at most, so
+      // these are the matches that END early — a crown down in the first
+      // exchange rather than a board that outlasted the clock.
+      const seconds = 6 + Math.floor(pick() * 4); // 6..9
+      const need = span(pick, period, [1, 1], [3, 5], [12, 18]);
+      return {
+        goal: { kind: "fastWin", seconds },
+        need,
+        reward: { diamonds: need * 10 },
+        he: need === 1 ? `לנצח תוך ${seconds} שניות` : `לנצח ${need} פעמים תוך ${seconds} שניות`,
+        en:
+          need === 1
+            ? `Win inside ${seconds} seconds`
+            : `Win ${need} times inside ${seconds} seconds`,
+      };
+    },
+  },
+  {
+    periods: ["daily", "weekly", "monthly"],
+    make: (pick, _pools, period) => {
+      const lost = 2 + Math.floor(pick() * 3); // 2..4
+      const need = span(pick, period, [1, 1], [3, 5], [12, 18]);
+      return {
+        goal: { kind: "hold", lost },
+        need,
+        reward: { diamonds: need * 9 },
+        he:
+          need === 1
+            ? `לנצח ולאבד לא יותר מ-${lost} קלפים`
+            : `לנצח ${need} פעמים ולאבד כל פעם לא יותר מ-${lost} קלפים`,
+        en:
+          need === 1
+            ? `Win losing no more than ${lost} cards`
+            : `Win ${need} times, losing no more than ${lost} cards each time`,
+      };
+    },
+  },
+  {
+    periods: ["daily", "weekly", "monthly"],
+    make: (pick, pools, period) => {
+      const s = oneOf(pick, pools.series);
+      if (!s) return null;
+      const need = span(pick, period, [1, 2], [4, 7], [15, 22]);
+      return {
+        goal: { kind: "family", seriesId: s.id },
+        need,
+        reward: { diamonds: need * 7 },
+        he: `לשחק עם בונוס משפחה של ${s.he}`,
+        en: `Play with the ${attr(s.en)} family bonus live`,
+      };
+    },
+  },
+  {
+    periods: ["daily", "weekly", "monthly"],
+    make: (pick, pools, period) => {
+      const s = oneOf(pick, pools.series);
+      if (!s) return null;
+      const need = span(pick, period, [1, 2], [4, 6], [14, 20]);
+      return {
+        goal: { kind: "crown", seriesId: s.id },
+        need,
+        reward: { diamonds: need * 6 },
+        he: `להכתיר קלף מ${s.he}`,
+        en: `Crown a ${attr(s.en)} card`,
+      };
+    },
+  },
+  {
+    periods: ["daily", "weekly", "monthly"],
+    make: (pick, _pools, period) => {
+      const need = span(pick, period, [1, 2], [4, 7], [16, 24]);
+      return {
+        goal: { kind: "rarity", rarity: "epic" },
+        need,
+        reward: { diamonds: need * 7 },
+        he: `לשחק עם קלף אפי על הלוח`,
+        en: `Play with an epic card on the board`,
+      };
+    },
+  },
+  {
+    periods: ["daily", "weekly", "monthly"],
+    make: (pick, _pools, period) => {
+      const need = span(pick, period, [1, 2], [4, 7], [16, 24]);
+      return {
+        goal: { kind: "fullBoard" },
+        need,
+        reward: { diamonds: need * 8 },
+        he: `למלא את כל הלוח לבד`,
+        en: `Fill every slot yourself`,
+      };
+    },
+  },
 ];
 
-/** How many of each period are live at once. */
-const HOW_MANY: Record<Period, number> = { daily: 3, weekly: 2, monthly: 1 };
+/**
+ * How much a period asks for.
+ *
+ * Three ranges, one per period, and the seeded stream picks inside the one
+ * that applies. Written as a helper rather than as a number in each template
+ * because the bug Or found was a template that did not know which period it
+ * was being built for — and a helper that TAKES the period cannot have it.
+ */
+function span(
+  pick: () => number,
+  period: Period,
+  daily: [number, number],
+  weekly: [number, number],
+  monthly: [number, number],
+): number {
+  const [lo, hi] = period === "daily" ? daily : period === "weekly" ? weekly : monthly;
+  return lo + Math.floor(pick() * (hi - lo + 1));
+}
+
+/**
+ * How many of each period are live at once.
+ *
+ * Or: *"we need more challenges and another challenge and more variety."*
+ * Four, three and two — nine live at a time out of twelve templates, so two
+ * days running are never the same list and a player who finishes the day's
+ * four still has the week's three to work on.
+ */
+const HOW_MANY: Record<Period, number> = { daily: 4, weekly: 3, monthly: 2 };
 
 const LETTER: Record<Period, string> = { daily: "d", weekly: "w", monthly: "m" };
 
@@ -342,7 +504,7 @@ export function challengesIn(period: Period, key: string, pools: Pools): Challen
   const start = Math.floor(pick() * usable.length);
   for (let n = 0; out.length < HOW_MANY[period] && n < usable.length; n++) {
     const i = (start + n) % usable.length;
-    const built = usable[i]!.make(pick, pools);
+    const built = usable[i]!.make(pick, pools, period);
     if (built) out.push({ id: `${LETTER[period]}:${key}:${i}`, period, ...built });
   }
   return out;
@@ -404,6 +566,20 @@ export interface MatchFacts {
   /** Series of the cards in the front row (x = 3) and the back row (x = 0). */
   frontSeries: string[];
   backSeries: string[];
+  /** How long the battle ran, in seconds. */
+  seconds: number;
+  /** The match ended with a crown down rather than on the clock. */
+  kingDown: boolean;
+  /** How many of this player's own cards died. */
+  lost: number;
+  /** Real cards placed, Crumb Demons not counted. */
+  placed: number;
+  /** Rarities on the board. */
+  rarities: string[];
+  /** The family of the card on the crown, if there was one. */
+  kingSeries: string | null;
+  /** Families with enough cards on the board for the bonus to be live. */
+  synergies: string[];
 }
 
 /** How much one finished match moves this challenge along. Always 0 or 1. */
@@ -421,5 +597,29 @@ export function progressFrom(goal: Goal, facts: MatchFacts): 0 | 1 {
       return (goal.row === "front" ? facts.frontSeries : facts.backSeries).includes(goal.seriesId)
         ? 1
         : 0;
+    case "crush":
+      return facts.won && facts.kingDown ? 1 : 0;
+    case "fastWin":
+      return facts.won && facts.seconds <= goal.seconds ? 1 : 0;
+    case "hold":
+      return facts.won && facts.lost <= goal.lost ? 1 : 0;
+    case "family":
+      return facts.synergies.includes(goal.seriesId) ? 1 : 0;
+    case "crown":
+      return facts.kingSeries === goal.seriesId ? 1 : 0;
+    case "rarity":
+      return facts.rarities.includes(goal.rarity) ? 1 : 0;
+    case "fullBoard":
+      return facts.placed >= FULL_BOARD ? 1 : 0;
   }
 }
+
+/**
+ * A board with nothing left empty.
+ *
+ * Twelve cells plus the crown. An empty cell is filled with a Crumb Demon
+ * when the panic ends (config.ts), and those are not counted — so this is
+ * "you placed everything yourself", which is a thing to aim at in the last
+ * ten seconds rather than a thing that happens.
+ */
+const FULL_BOARD = 13;

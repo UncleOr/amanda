@@ -72,11 +72,13 @@ describe("the day ends in Israel", () => {
 });
 
 describe("the set for a period", () => {
-  it("is three daily, two weekly and one monthly", () => {
+  it("is four daily, three weekly and two monthly", () => {
+    // Or: *"we need more challenges and another challenge and more
+    // variety."* Nine live at a time, out of twelve templates.
     const live = challengesFor(POOLS, at("2026-10-07"));
-    expect(live.filter((c) => c.period === "daily")).toHaveLength(3);
-    expect(live.filter((c) => c.period === "weekly")).toHaveLength(2);
-    expect(live.filter((c) => c.period === "monthly")).toHaveLength(1);
+    expect(live.filter((c) => c.period === "daily")).toHaveLength(4);
+    expect(live.filter((c) => c.period === "weekly")).toHaveLength(3);
+    expect(live.filter((c) => c.period === "monthly")).toHaveLength(2);
   });
 
   it("is the same set every time it is asked — this is what lets it not be stored", () => {
@@ -104,7 +106,7 @@ describe("the set for a period", () => {
     for (let i = 0; i < 365; i++) {
       const day = new Date(start + i * 86_400_000 + 12 * 3600_000);
       const live = challengesFor(POOLS, day);
-      expect(live, `short set on ${israelDay(day)}`).toHaveLength(6);
+      expect(live, `short set on ${israelDay(day)}`).toHaveLength(9);
       for (const c of live) {
         expect(c.he.length, `empty sentence on ${c.id}`).toBeGreaterThan(3);
         expect(c.need).toBeGreaterThan(0);
@@ -143,6 +145,15 @@ describe("whether a match counted", () => {
     cardIds: ["lion_a", "slime_b"],
     frontSeries: ["lions"],
     backSeries: ["slimes"],
+    // The seven harder goals read these. Defaults that satisfy none of
+    // them, so a test about one goal cannot pass because of another.
+    seconds: 15,
+    kingDown: false,
+    lost: 99,
+    placed: 0,
+    rarities: [],
+    kingSeries: null,
+    synergies: [],
     ...over,
   });
 
@@ -169,6 +180,64 @@ describe("whether a match counted", () => {
     const goal = { kind: "placeSeries", seriesId: "lions", row: "front" } as const;
     expect(progressFrom(goal, facts())).toBe(1);
     expect(progressFrom({ ...goal, row: "back" }, facts())).toBe(0);
+  });
+
+  /*
+   * ═══ AND THE SEVEN THAT ASK FOR A DECISION ═══
+   *
+   * Or: *"the challenges are a bit unsuited to the game. We need more
+   * varied and more challenging ones. I have just finished a challenge to
+   * play 8 games in a month. It is the 2nd of the month."*
+   *
+   * ⚠ EVERY ONE OF THESE HAS A WIN IN IT WHERE IT SHOULD. "Bring a King
+   * down" that counted a crown falling in a match you LOST would be a
+   * challenge finished by being beaten, which is the shape of the bug
+   * above wearing a harder sentence.
+   */
+  it("counts a crown falling, but only in a match you won", () => {
+    expect(progressFrom({ kind: "crush" }, facts({ kingDown: true }))).toBe(1);
+    expect(progressFrom({ kind: "crush" }, facts({ kingDown: true, won: false }))).toBe(0);
+    expect(progressFrom({ kind: "crush" }, facts())).toBe(0);
+  });
+
+  it("counts a fast win at the second, not just under it", () => {
+    const goal = { kind: "fastWin", seconds: 8 } as const;
+    expect(progressFrom(goal, facts({ seconds: 8 }))).toBe(1);
+    expect(progressFrom(goal, facts({ seconds: 8.1 }))).toBe(0);
+    expect(progressFrom(goal, facts({ seconds: 5, won: false }))).toBe(0);
+  });
+
+  it("counts a win that kept its board", () => {
+    const goal = { kind: "hold", lost: 3 } as const;
+    expect(progressFrom(goal, facts({ lost: 3 }))).toBe(1);
+    expect(progressFrom(goal, facts({ lost: 4 }))).toBe(0);
+    expect(progressFrom(goal, facts({ lost: 0, won: false }))).toBe(0);
+  });
+
+  it("counts a family bonus that was actually live", () => {
+    const goal = { kind: "family", seriesId: "lions" } as const;
+    expect(progressFrom(goal, facts({ synergies: ["lions"] }))).toBe(1);
+    // Cards of that family on the board is NOT the same as the bonus: the
+    // threshold is the family's own, and the battle reads the same one.
+    expect(progressFrom(goal, facts({ cardIds: ["lion_a"] }))).toBe(0);
+  });
+
+  it("counts what is on the crown", () => {
+    expect(progressFrom({ kind: "crown", seriesId: "lions" }, facts({ kingSeries: "lions" }))).toBe(1);
+    expect(progressFrom({ kind: "crown", seriesId: "lions" }, facts({ kingSeries: "slimes" }))).toBe(0);
+    expect(progressFrom({ kind: "crown", seriesId: "lions" }, facts())).toBe(0);
+  });
+
+  it("counts a rarity that was on the board", () => {
+    expect(progressFrom({ kind: "rarity", rarity: "epic" }, facts({ rarities: ["epic"] }))).toBe(1);
+    expect(progressFrom({ kind: "rarity", rarity: "epic" }, facts({ rarities: ["rare"] }))).toBe(0);
+  });
+
+  it("counts a board the player filled themselves", () => {
+    // Thirteen: twelve cells and the crown. A cell left empty is filled
+    // with a Crumb Demon when the panic ends, and those are not counted.
+    expect(progressFrom({ kind: "fullBoard" }, facts({ placed: 13 }))).toBe(1);
+    expect(progressFrom({ kind: "fullBoard" }, facts({ placed: 12 }))).toBe(0);
   });
 });
 

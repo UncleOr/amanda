@@ -237,6 +237,18 @@ const facts = (over: Partial<MatchFacts> = {}): MatchFacts => ({
   cardIds: [],
   frontSeries: [],
   backSeries: [],
+  /*
+   * The seven the harder challenges read. Defaults that satisfy NOTHING, on
+   * purpose: a fixture that quietly ticks a goal off would make a test about
+   * nachos pass for a reason that has nothing to do with nachos.
+   */
+  seconds: 15,
+  kingDown: false,
+  lost: 99,
+  placed: 0,
+  rarities: [],
+  kingSeries: null,
+  synergies: [],
   ...over,
 });
 
@@ -373,7 +385,9 @@ describe("challenges", () => {
   it("shows a guest the same challenges, at zero", async () => {
     const { sb } = fakeDb({});
     const guest = await standings(sb, null, DAY);
-    expect(guest).toHaveLength(6);
+    // Four daily, three weekly, two monthly — Or: *"we need more challenges
+    // and another challenge and more variety."*
+    expect(guest).toHaveLength(9);
     expect(guest.every((c) => c.progress === 0 && !c.claimed)).toBe(true);
   });
 

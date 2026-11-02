@@ -33,6 +33,8 @@ import {
   progressFrom,
   soloTrophiesFor,
   trophiesFor,
+  SIMULATION,
+  type Card,
   type Opponent,
   withinDailyCap,
   type BotLevel,
@@ -42,7 +44,7 @@ import {
   NACHOS_PER_CHEST,
 } from "@amanda/shared";
 import { buildReport, type BattleResult, type Placement } from "@amanda/engine";
-import { CATALOG, SERIES_NAMES } from "./content.js";
+import { CATALOG, SERIES_NAMES, SYNERGIES } from "./content.js";
 import { bestTrophiesOf, rollChest } from "./progress.js";
 import { db } from "./supabase.js";
 import { track } from "./events.js";
@@ -137,14 +139,54 @@ export function factsFor(
       .filter((p) => p.x === x)
       .map((p) => CATALOG.get(p.cardId)?.seriesId)
       .filter((s): s is string => Boolean(s));
+  /*
+   * ═══ THE SEVEN HARDER QUESTIONS ═══
+   *
+   * Or: *"the challenges are a bit unsuited to the game. We need more varied
+   * and more challenging ones."* Every one of the new goals is answerable
+   * from the same two things this function already has — the board as it was
+   * BUILT and the battle as it ran — and none of them needs a second row in
+   * a table or a second pass over the match.
+   */
+  const cards = real.map((p) => CATALOG.get(p.cardId)).filter((c): c is Card => !!c);
+  /** Families with enough cards on the board for the bonus to be live. */
+  const byFamily = new Map<string, number>();
+  for (const c of cards) byFamily.set(c.seriesId, (byFamily.get(c.seriesId) ?? 0) + 1);
+  const synergies = [...byFamily]
+    .filter(([id, n]) => n >= (SYNERGY_AT.get(id) ?? Infinity))
+    .map(([id]) => id);
+  /** Your own dead, counted off the battle rather than off the board. */
+  const mine = new Set(result.finalUnits.filter((u) => u.owner === owner).map((u) => u.uid));
+  const lost = result.events.filter(
+    (e) => e.type === "death" && !!e.uid && mine.has(e.uid),
+  ).length;
+  const crown = placements.find((p) => p.king);
   return {
     won: result.winner === owner,
     score: report.grades[owner].score,
     cardIds: real.map((p) => p.cardId),
     frontSeries: seriesAt(FRONT_X),
     backSeries: seriesAt(BACK_X),
+    seconds: result.ticks / SIMULATION.ticksPerSecond,
+    // The crown fell. `winReason` says how the WINNER was decided, and this
+    // is the one value of it that is not a tiebreak.
+    kingDown: result.winReason === "kingDown",
+    lost,
+    placed: real.length,
+    rarities: [...new Set(cards.map((c) => c.rarity))],
+    kingSeries: crown ? (CATALOG.get(crown.cardId)?.seriesId ?? null) : null,
+    synergies,
   };
 }
+
+/**
+ * How many of a family it takes for its bonus to be live.
+ *
+ * Read off the series data rather than fixed at three: the threshold is a
+ * per-family number (series.synergy.threshold) and a challenge that says
+ * "play with the family bonus" has to mean the same thing the battle does.
+ */
+const SYNERGY_AT = new Map(SYNERGIES.map((s) => [s.seriesId, s.threshold]));
 
 /** What one finished match gave a player, for the screen to celebrate. */
 export interface MetaAward {

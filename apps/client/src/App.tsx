@@ -1297,8 +1297,12 @@ function Game() {
    * battle starting in the lab still starts.
    */
   useEffect(() => {
-    if (m.phase === "build") haptics.buzz("build");
+    if (m.phase === "countdown") haptics.buzz("go");
+    else if (m.phase === "build") haptics.buzz("build");
     else if (m.phase === "panic") haptics.buzz("panic");
+    // The panic is over and the boards are locked — Or asked for the end of
+    // it as well as the start, and this is the phase that IS the end.
+    else if (m.phase === "prebattle") haptics.buzz("lock");
     else if (m.phase === "battle") haptics.buzz("battle");
     /*
      * And the end of it. Or: *"also at the end of a match."* Two different
