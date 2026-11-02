@@ -53,6 +53,7 @@ import { inbox, markRead } from "./notify.js";
 import { handleAdmin, handleCopy } from "./admin.js";
 import { awardMatch, claim, factsFor, standings } from "./meta.js";
 import { soloResult } from "./solo.js";
+import { claimStop, tunnelState } from "./tunnel.js";
 import { birthdayGift } from "./birthday.js";
 
 import { SUPABASE_URL as URL, db, keyHasWhitespace, keyLength, keyStartsWith } from "./supabase.js";
@@ -738,6 +739,23 @@ async function handleMeta(req: IncomingMessage, res: ServerResponse, path: strin
     // battle itself: one authority, so a bug in either grader shows up as a
     // disagreement on the screen rather than as a quiet difference in pay.
     return send(res, 200, { ...award, score: facts.score, won: facts.won });
+  }
+
+  /*
+   * ═══ THE PRIZE TUNNEL ═══
+   *
+   * Two routes and nothing else: what is open and what has been taken, and
+   * taking one. Everything about WHAT is on the track is in the shared
+   * package, which both sides read — see tunnel.ts here and there.
+   */
+  if (path === "/api/meta/tunnel") return send(res, 200, await tunnelState(sb, playerId));
+
+  if (path === "/api/meta/tunnel/claim") {
+    const body = (await readBody(req)) as Record<string, unknown>;
+    const stop = typeof body.stop === "number" ? body.stop : -1;
+    const lane = body.lane === "pass" ? "pass" : "free";
+    const done = await claimStop(sb, playerId, stop, lane);
+    return send(res, done.ok ? 200 : 400, done.ok ? { ok: true } : { error: done.why });
   }
 
   if (path === "/api/meta/claim") {

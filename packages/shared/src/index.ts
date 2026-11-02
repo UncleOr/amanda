@@ -51,6 +51,9 @@ export * from "./draft.js";
 // The ladder of arenas, and which one a trophy count puts you in.
 export * from "./arenas.js";
 
+// The prize stations between those arenas, and the two lanes through them.
+export * from "./tunnel.js";
+
 // The handful of numbers the admin panel may turn, and why only those.
 export * from "./tunables.js";
 

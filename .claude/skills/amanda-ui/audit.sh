@@ -27,6 +27,7 @@ apps/client/src/components/Shop.tsx
 apps/client/src/components/ChestReveal.tsx
 apps/client/src/components/Challenges.tsx
 apps/client/src/components/ArenaTrack.tsx
+apps/client/src/components/Tunnel.tsx
 apps/client/src/components/MoreModes.tsx
 apps/client/src/components/Profile.tsx
 apps/client/src/components/Friends.tsx

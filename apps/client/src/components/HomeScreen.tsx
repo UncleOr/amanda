@@ -3,6 +3,7 @@ import { Icon } from "./Icon";
 import { anyReadyToLevel } from "../game/upgradable";
 import { clubHasNews } from "../game/club";
 import { ArenaTrack } from "./ArenaTrack";
+import { TunnelStrip } from "./Tunnel";
 import { ChestShelf } from "./ChestShelf";
 import { NachoBar } from "./NachoBar";
 import { ChallengeButton, Challenges } from "./Challenges";
@@ -579,6 +580,26 @@ export function HomeScreen({
             <ArenaTrack
               trophies={m.account?.trophies ?? 0}
               best={m.account?.bestTrophies ?? m.account?.trophies ?? 0}
+            />
+            {/*
+              ═══ AND THE PRIZES ALONG THE WAY ═══
+
+              Or: *"a prize track like in Brawl Stars... it adds little prize
+              stations between the arenas. Find it a normal place."*
+
+              Beside the arena ladder, because they are one sentence read
+              twice: the ladder says where the trophies have taken you and
+              this says what they earned on the way there. Anywhere else on
+              this screen and a child would have to be told the two are the
+              same climb.
+
+              It is measured against the HIGH-WATER mark, like the ladder's
+              own stories — a prize you walked past is not taken back by a
+              bad evening.
+            */}
+            <TunnelStrip
+              best={m.account?.bestTrophies ?? m.account?.trophies ?? 0}
+              onOpen={() => panel.show("tunnel")}
             />
             {/*
               ═══ STRAIGHT FROM THE HOME SCREEN, AND ABOVE THE ALBUM ═══

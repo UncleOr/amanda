@@ -1,0 +1,297 @@
+/*
+ * ═══ מנהרת הפרסים — THE PRIZE WASH ═══
+ *
+ * Or: *"a prize track like in Brawl Stars... it should look like a car wash
+ * tunnel."*
+ *
+ * The arches are the whole idea. A row of numbered boxes is a table; a row of
+ * arches is a place you drive through, and the player is the thing being
+ * carried along by their own trophies. Nothing here is an image: the tunnel
+ * is built out of two gradients and a border radius, so it costs nothing to
+ * download and it recolours with the tokens.
+ *
+ * Sizes, spaces and colours are all from the scale (see .claude/skills/
+ * amanda-ui/SKILL.md). The screen's hero is the one station that can be
+ * claimed — it is the only thing on it that is lit and the only thing with a
+ * button.
+ *
+ * New, so it goes last among the panels: it can only add.
+ */
+
+/* ── the strip on the home screen ── */
+.tunnel-strip {
+  display: flex;
+  align-items: center;
+  gap: var(--sp-2);
+  width: 100%;
+  padding: var(--sp-2);
+  border-radius: 14px;
+  border: 1px solid var(--line);
+  background: var(--sur-2);
+  color: var(--text);
+  cursor: pointer;
+  text-align: start;
+  position: relative;
+}
+.tunnel-strip:hover { border-color: var(--accent); }
+/* Something is waiting in there, and that is the only reason this strip
+   should ever shout. */
+.tunnel-strip--due { border-color: var(--line-lit); background: var(--sur-lit); }
+/*
+ * The mouth of the tunnel, in the place the arena strip keeps its painting.
+ * A half-round arch with a lit rim and a dark throat — the same two
+ * gradients the stations use, at thumbnail size.
+ */
+.tunnel-strip__arch {
+  flex: none;
+  width: 54px;
+  height: 40px;
+  border-radius: 22px 22px 6px 6px;
+  background:
+    radial-gradient(60% 70% at 50% 110%, rgba(0, 0, 0, 0.85), transparent 70%),
+    linear-gradient(180deg, rgba(255, 176, 32, 0.35), rgba(74, 163, 255, 0.18));
+  box-shadow: inset 0 0 0 1px var(--line-lit);
+}
+.tunnel-strip__text {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+}
+.tunnel-strip__text b { font-size: var(--t-3); }
+.tunnel-strip__text small {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--sp-1);
+  color: var(--muted);
+  font-size: var(--t-2);
+}
+.tunnel-strip--due .tunnel-strip__text small { color: var(--text); }
+.tunnel-strip__bar {
+  display: block;
+  height: 5px;
+  border-radius: 999px;
+  background: var(--sur-1);
+  overflow: hidden;
+}
+.tunnel-strip__bar i {
+  display: block;
+  height: 100%;
+  border-radius: 999px;
+  background: linear-gradient(90deg, #ffb020, #ff7a2f);
+}
+
+/*
+ * In the ladder column it lines up with the arena strip above it — same
+ * width, same centring. They are one sentence read twice (where the trophies
+ * took you, and what they earned on the way), and two strips of different
+ * widths read as two unrelated things that happen to be near each other.
+ */
+.home__ladder .tunnel-strip {
+  max-width: 320px;
+  margin-inline: auto;
+}
+
+/* ── the tunnel itself ── */
+.modal--tunnel {
+  max-width: 900px;
+  width: 100%;
+}
+.tunnel__title {
+  margin: 0 0 var(--sp-2);
+  font-size: var(--t-5);
+}
+/*
+ * The road. Scrolls sideways — a track with an end you can see is a track
+ * with nothing left to want.
+ */
+/*
+ * The road, and the two lane tags beside it. The tags do not scroll: they
+ * name the two rows once, at the head of the lane, which is the one place a
+ * dark row of prizes can be explained before it is wondered about.
+ */
+.tunnel__body {
+  display: flex;
+  align-items: stretch;
+  gap: var(--sp-2);
+  min-width: 0;
+}
+.tunnel__tags {
+  flex: none;
+  display: flex;
+  flex-direction: column;
+  gap: var(--sp-1);
+  padding: calc(var(--sp-2) * 2) 0 var(--sp-3);
+}
+.tunnel__tag {
+  flex: none;
+  /* The same height as a lane, so the two tags sit beside the two rows they
+     name rather than near them. */
+  height: 88px;
+  width: 86px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 2px;
+  padding: var(--sp-1);
+  border-radius: 12px;
+  background: var(--sur-2);
+  border: 1px dashed var(--line);
+  font-size: var(--t-2);
+  font-weight: 800;
+  text-align: center;
+  line-height: 1.2;
+}
+/* The lane that is not for sale yet says so here, once. */
+.tunnel__tag--pass { color: var(--muted); }
+.tunnel__tag--pass b {
+  font-size: var(--t-1);
+  color: var(--accent);
+  letter-spacing: 0.04em;
+}
+
+.tunnel__road {
+  list-style: none;
+  margin: 0;
+  padding: var(--sp-2) 0 var(--sp-3);
+  display: flex;
+  gap: var(--sp-2);
+  overflow-x: auto;
+  overflow-y: hidden;
+  /* The wet floor under the arches, and the drain line down the middle. */
+  background:
+    linear-gradient(180deg, transparent 62%, rgba(74, 163, 255, 0.07) 70%, transparent),
+    repeating-linear-gradient(
+      90deg,
+      transparent 0 18px,
+      rgba(255, 255, 255, 0.025) 18px 19px
+    );
+  scroll-padding-inline: var(--sp-3);
+}
+.tun {
+  position: relative;
+  flex: none;
+  width: 104px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--sp-1);
+  padding: var(--sp-2) var(--sp-1);
+}
+/*
+ * One arch of the wash, behind its station. The brush stripes are a repeating
+ * gradient inside the arch, so they curve with it.
+ */
+.tun__arch {
+  position: absolute;
+  inset: 0;
+  border-radius: 46px 46px 10px 10px;
+  background:
+    repeating-linear-gradient(
+      90deg,
+      rgba(255, 255, 255, 0.05) 0 3px,
+      transparent 3px 9px
+    ),
+    var(--sur-1);
+  box-shadow: inset 0 0 0 1px var(--line);
+  pointer-events: none;
+}
+.tun.is-open .tun__arch {
+  background:
+    repeating-linear-gradient(
+      90deg,
+      rgba(255, 176, 32, 0.12) 0 3px,
+      transparent 3px 9px
+    ),
+    var(--sur-lit);
+  box-shadow: inset 0 0 0 1px var(--line-lit);
+}
+/* A station you have not reached is dark, named and still there — the same
+   rule the arena ladder follows. */
+.tun.is-shut { opacity: 0.55; }
+
+.tun__lane {
+  position: relative;
+  z-index: 1;
+  width: 100%;
+  /*
+   * A fixed height, not a minimum. The free lane carries a button and the
+   * pass lane does not, so a minimum makes the two rows different heights —
+   * and then the tags beside them, and every station's number, stop lining
+   * up with anything.
+   */
+  height: 88px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: var(--sp-1);
+  padding: var(--sp-1);
+  border-radius: 12px;
+  background: var(--sur-2);
+  border: 1px solid var(--line);
+}
+/* The paid lane is dark the whole way along: it is not for sale yet, and a
+   lane that looks live is a promise. */
+.tun__lane--pass { opacity: 0.45; }
+.tun.is-open .tun__lane--free { border-color: var(--line-lit); }
+.tun__lane.is-taken { opacity: 0.4; }
+
+.tun__prize {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--sp-1);
+  flex-wrap: wrap;
+}
+.tun__bit {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  gap: 2px;
+  color: var(--text);
+}
+.tun__bit img {
+  width: 34px;
+  height: 34px;
+  object-fit: cover;
+  border-radius: 7px;
+}
+.tun__amount {
+  font-size: var(--t-2);
+  font-weight: 800;
+  font-variant-numeric: tabular-nums;
+}
+.tun__take {
+  padding: 3px var(--sp-2);
+  border-radius: 999px;
+  border: 0;
+  background: var(--accent);
+  color: #1a1203;
+  font-size: var(--t-2);
+  font-weight: 800;
+  cursor: pointer;
+}
+.tun__tick { color: var(--muted); line-height: 0; }
+.tun__at {
+  position: relative;
+  z-index: 1;
+  display: inline-flex;
+  align-items: center;
+  gap: var(--sp-1);
+  font-size: var(--t-2);
+  font-weight: 800;
+  font-variant-numeric: tabular-nums;
+  color: var(--muted);
+}
+.tun.is-open .tun__at { color: var(--text); }
+
+/* A phone held sideways is 390 tall: the arches lose their height first. */
+@media (max-height: 460px) {
+  .tun { width: 92px; }
+  .tun__lane { height: 76px; }
+  .tunnel__tag { height: 76px; width: 78px; }
+  .tun__bit img { width: 28px; height: 28px; }
+}

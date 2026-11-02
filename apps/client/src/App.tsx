@@ -48,6 +48,7 @@ import { useOverlay } from "./game/useOverlay";
 import { HomeScreen } from "./components/HomeScreen";
 import { BattleScreen } from "./components/BattleScreen";
 import { ResultScreen } from "./components/ResultScreen";
+import { Tunnel } from "./components/Tunnel";
 import { useDrag } from "./game/useDrag";
 import { sfx } from "./game/sfx";
 import { haptics } from "./game/haptics";
@@ -2549,6 +2550,24 @@ function Game() {
             />
           </div>
         </Overlay>
+      )}
+
+      {/*
+        The prize tunnel — the stations between the arenas.
+
+        Opened from the strip on the home screen, and closed before a prize
+        flies: the purse it flies to is on the home screen, behind this.
+      */}
+      {panel.is("tunnel") && (
+        <Tunnel
+          best={m.account?.bestTrophies ?? m.account?.trophies ?? 0}
+          signedIn={signedIn}
+          guest={guest}
+          gated={gated}
+          onTaking={() => panel.close()}
+          onClaimed={() => m.reloadAccount()}
+          onClose={() => panel.close()}
+        />
       )}
 
       {/*

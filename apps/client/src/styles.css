@@ -37,6 +37,8 @@
 @import "./styles/opening.css";
 @import "./styles/builder.css";
 @import "./styles/settings.css";
+/* The prize tunnel: its own sheet, and new, so it can only add. */
+@import "./styles/tunnel.css";
 /*
  * New, so it goes on the end where it can only add — see the note in the file.
  * It is the only sheet allowed to override the home screen's positioning,
