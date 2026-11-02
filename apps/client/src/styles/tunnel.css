@@ -179,7 +179,7 @@
   /* The same height as a prize tile, so each tag sits beside the row it
      names rather than near it. */
   height: 96px;
-  width: 84px;
+  width: 112px;
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -196,15 +196,28 @@
 }
 /* The lane that is not for sale yet says so here, once — and wears the
    colour it will be sold in. */
+/*
+ * The pass tag carries the lockup, so it stops being a dashed placeholder
+ * and becomes the thing itself: a royal panel with a gold edge.
+ */
 .tunnel__tag--pass {
   color: #d8c7ff;
-  border-color: rgba(167, 139, 250, 0.45);
-  background: linear-gradient(180deg, rgba(109, 72, 190, 0.38), rgba(40, 26, 74, 0.6));
+  border: 2px solid rgba(255, 176, 32, 0.55);
+  background: linear-gradient(180deg, #4a3480, #2a1d4d);
+  box-shadow: 0 3px 0 rgba(0, 0, 0, 0.45), inset 0 0 22px rgba(167, 139, 250, 0.25);
+  gap: var(--sp-1);
 }
 .tunnel__tag--pass b {
   font-size: var(--t-1);
   color: var(--accent);
   letter-spacing: 0.04em;
+}
+/* The lockup takes the tag; the one Hebrew word sits under it. */
+.tun-pass {
+  width: 100%;
+  height: auto;
+  max-height: 72px;
+  filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.6));
 }
 
 /* ── the road ── */
@@ -418,14 +431,28 @@
   filter: grayscale(0.8);
 }
 
+/*
+ * ⚠ IT NEVER WRAPS. A gift of a chest and a pile of diamonds used to become
+ * two rows inside a tile of fixed height — clipped at the top and spilling
+ * over the road, which is what Or saw. See `Prize`.
+ */
 .tun__prize {
   position: relative;
   display: flex;
   align-items: center;
   justify-content: center;
-  gap: var(--sp-3);
-  flex-wrap: wrap;
+  gap: var(--sp-2);
+  flex-wrap: nowrap;
+  max-width: 100%;
 }
+/* Two or three things in one tile: they shrink to share it. */
+.tun__prize[data-n="2"] { gap: var(--sp-1); }
+.tun__prize[data-n="2"] .tun__bit--card img { width: 32px; height: 43px; }
+.tun__prize[data-n="2"] .tun__bit--thing img { width: 36px; height: 36px; }
+.tun__prize[data-n="3"] { gap: 3px; }
+.tun__prize[data-n="3"] .tun__bit--card img { width: 26px; height: 35px; }
+.tun__prize[data-n="3"] .tun__bit--thing img { width: 28px; height: 28px; }
+.tun__prize[data-n="3"] .tun__amount { padding: 0 3px; }
 /*
  * ═══ A PRIZE IS A THING, AND IT IS NOT CROPPED ═══
  *
@@ -549,7 +576,7 @@
    * every pixel that is not spent here is spent on nothing.
    */
   .tun__lane { height: 94px; }
-  .tunnel__tag { height: 94px; width: 76px; }
+  .tunnel__tag { height: 94px; width: 100px; }
   .tun__bit--card img { width: 40px; height: 54px; }
   .tun__bit--thing img { width: 46px; height: 46px; }
 }

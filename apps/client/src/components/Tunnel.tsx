@@ -142,9 +142,27 @@ function bitsOf(gives: GrantGives): Bit[] {
   return bits;
 }
 
+/**
+ * ═══ A STATION CAN GIVE TWO THINGS, AND IT IS STILL ONE PRIZE ═══
+ *
+ * Or, pointing at the Legendary Pass lane: *"the prizes in the Legendary
+ * Pass are cut and chopped and they ride up onto the road. And why are there
+ * two? Sort it out."*
+ *
+ * Both halves were one bug. A gift of a chest AND a pile of diamonds drew
+ * two full-size pictures in a row that was allowed to WRAP — so it became
+ * two rows inside a tile with a fixed height, and the tile clipped the top
+ * of the first one and spilled the rest over the road. What he read as "why
+ * are there two" is a chest with its lid cut off sitting above a diamond.
+ *
+ * So the row never wraps, and the pictures shrink as they are joined: one
+ * prize is big, two are smaller, three smaller still. `data-n` rather than
+ * `:has()` — the count is known here, and a layout this load-bearing should
+ * not depend on a selector that an older phone's browser may not support.
+ */
 function Prize({ bits }: { bits: Bit[] }) {
   return (
-    <span className="tun__prize">
+    <span className="tun__prize" data-n={Math.min(bits.length, 3)}>
       {bits.map((b, i) => (
         <span
           className={`tun__bit tun__bit--${b.shape}`}
@@ -167,6 +185,73 @@ function Prize({ bits }: { bits: Bit[] }) {
         </span>
       ))}
     </span>
+  );
+}
+
+/**
+ * ═══ THE LEGENDARY PASS, AS A MARK ═══
+ *
+ * Or: *"make a logo for the Legendary Pass instead of writing it like that.
+ * In big letters, obviously."*
+ *
+ * Two words set in the page's own font are a label; a lockup is a thing the
+ * game SELLS. Drawn rather than fetched, for the same reason the tunnel is:
+ * it is three shapes and two words, it recolours with the screen, it is
+ * sharp at any size, and it costs nothing to download.
+ *
+ * `textLength` on both words is the whole trick — it makes the lockup
+ * immune to the font it is rendered in. A logo that reflows on a phone
+ * whose Hebrew font has different metrics is not a logo.
+ */
+function PassLogo() {
+  return (
+    <svg className="tun-pass" viewBox="0 0 120 92" role="img" aria-label="Legendary Pass">
+      <defs>
+        <linearGradient id="lp-gold" x1="0" y1="0" x2="0" y2="1">
+          <stop offset="0" stopColor="#fff6dc" />
+          <stop offset="0.42" stopColor="#ffd36b" />
+          <stop offset="0.56" stopColor="#eda014" />
+          <stop offset="1" stopColor="#ffe6a8" />
+        </linearGradient>
+      </defs>
+      {/* The crown: five points, because a pass is a small kingdom. */}
+      <path
+        d="M30 20 L44 32 L60 12 L76 32 L90 20 L85 42 H35 Z"
+        fill="url(#lp-gold)"
+        stroke="#4a2d00"
+        strokeWidth="3"
+        strokeLinejoin="round"
+      />
+      <circle cx="60" cy="7" r="5" fill="url(#lp-gold)" stroke="#4a2d00" strokeWidth="3" />
+      <text
+        x="60"
+        y="62"
+        textAnchor="middle"
+        textLength="112"
+        lengthAdjust="spacingAndGlyphs"
+        fontSize="17"
+        fontWeight="900"
+        fill="url(#lp-gold)"
+        stroke="#2a1a02"
+        strokeWidth="4"
+        paintOrder="stroke"
+      >
+        LEGENDARY
+      </text>
+      <rect x="20" y="68" width="80" height="22" rx="7" fill="url(#lp-gold)" stroke="#4a2d00" strokeWidth="3" />
+      <text
+        x="60"
+        y="84"
+        textAnchor="middle"
+        textLength="58"
+        lengthAdjust="spacingAndGlyphs"
+        fontSize="15"
+        fontWeight="900"
+        fill="#2a1a02"
+      >
+        PASS
+      </text>
+    </svg>
   );
 }
 
@@ -518,7 +603,7 @@ export function Tunnel({
           */}
           <div className="tunnel__tags" aria-hidden="true">
             <span className="tunnel__tag tunnel__tag--pass">
-              Legendary Pass
+              <PassLogo />
               <b>{t("sa63fff7", "בקרוב")}</b>
             </span>
             <span className="tunnel__tag">{t("s373d8d1", "חינם")}</span>

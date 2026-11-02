@@ -224,13 +224,50 @@ describe("the screen it is read on", () => {
      * `object-fit: cover`, and a monster card is a portrait — so the screen
      * advertised its prizes by showing a card's chin.
      */
-    const card = CSS.slice(CSS.indexOf(".tun__bit--card img {"));
+    // The BASE rule, not the one that shrinks a picture when a station
+    // gives two things — that one sets sizes and inherits the rest.
+    const card = CSS.slice(CSS.search(/^\.tun__bit--card img \{/m));
     expect(card.slice(0, card.indexOf("}"))).toContain("object-position: center top");
-    const thing = CSS.slice(CSS.indexOf(".tun__bit--thing img {"));
+    const thing = CSS.slice(CSS.search(/^\.tun__bit--thing img \{/m));
     // A chest, a face or an icon is square-ish and transparent: `cover`
     // would cut the lid off a chest exactly the way it cut off a face.
     expect(thing.slice(0, thing.indexOf("}"))).toContain("object-fit: contain");
     expect(PANEL).toContain('shape: "card"');
+  });
+
+  it("never lets a station's prizes spill out of their tile", () => {
+    /*
+     * Or, pointing at the Legendary Pass lane: *"the prizes in the Legendary
+     * Pass are cut and chopped and they ride up onto the road. And why are
+     * there two?"*
+     *
+     * A gift of a chest AND a pile of diamonds drew two full-size pictures
+     * in a row that was allowed to WRAP, so it became two rows inside a
+     * tile of fixed height: the top of the first was clipped and the rest
+     * spilled over the road. What reads as "why are there two" is a chest
+     * with its lid cut off sitting above a diamond.
+     *
+     * Measured in the browser after the fix: of every tile on the track,
+     * none has a prize taller or wider than the tile holding it.
+     */
+    const row = CSS.slice(CSS.indexOf(".tun__prize {"));
+    expect(row.slice(0, row.indexOf("}"))).toContain("flex-wrap: nowrap");
+    expect(CSS).toContain('.tun__prize[data-n="2"]');
+    expect(CSS).toContain('.tun__prize[data-n="3"]');
+    expect(PANEL).toContain("data-n={Math.min(bits.length, 3)}");
+  });
+
+  it("gives the Legendary Pass a mark rather than two words", () => {
+    // Or: *"make a logo for the Legendary Pass instead of writing it like
+    // that. In big letters, obviously."* Drawn, not fetched: three shapes
+    // and two words, sharp at any size and free to download.
+    expect(PANEL).toContain("function PassLogo(");
+    expect(PANEL).toContain("<PassLogo />");
+    // ⚠ textLength is what makes a lockup a lockup: it cannot reflow on a
+    // phone whose font has different metrics.
+    expect(PANEL).toMatch(/textLength="112"/);
+    // And the two plain words are gone from the lane tag.
+    expect(PANEL).not.toMatch(/^\s+Legendary Pass\s*$/m);
   });
 
   it("says where you are, between two stations", () => {
