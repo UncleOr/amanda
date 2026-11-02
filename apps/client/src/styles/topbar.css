@@ -106,3 +106,33 @@
   font-weight: 800;
   letter-spacing: 0.04em;
 }
+
+/*
+ * ═══ ON THE BATTLE AND THE RESULT, THE BAR FLOATS ═══
+ *
+ * Or: *"the battle screen and the end-of-battle screen are not full screen.
+ * Fix it."* The bar was taking a 40px row off the top of a 390px window, and
+ * the field below it keeps its shape — so those 40 pixels cost width as well
+ * as height, 72 of it.
+ *
+ * It is not hidden. The way out has to work from inside a battle, and the
+ * sound has to be reachable while it is loud. It stops being a row and
+ * becomes an overlay: no background, no border, clicks only where there is
+ * a button.
+ */
+.app--immersive .topbar {
+  position: absolute;
+  top: env(safe-area-inset-top, 0px);
+  left: env(safe-area-inset-left, 0px);
+  right: env(safe-area-inset-right, 0px);
+  background: none;
+  border-bottom: 0;
+  pointer-events: none;
+}
+.app--immersive .topbar > * { pointer-events: auto; }
+/* Over a painted battlefield a flat chip disappears; this is the same dark
+   the panels use, just carried on the buttons instead of behind them. */
+.app--immersive .topbar button {
+  background: rgba(8, 12, 22, 0.72);
+  backdrop-filter: blur(3px);
+}

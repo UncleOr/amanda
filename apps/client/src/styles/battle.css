@@ -234,3 +234,46 @@
   direction: ltr;
   word-break: break-word;
 }
+
+/*
+ * ═══ FULL SCREEN, WHICH IS WHAT A BATTLE IS FOR ═══
+ *
+ * See IMMERSIVE in App.tsx for the measurement. Padding is a frame, and a
+ * frame is the thing Or was looking at. The rounded corner and the border go
+ * with it: at the edge of the window they draw a box around the game.
+ */
+.app--immersive .battle { padding: 0; }
+.app--immersive .battle > .arena {
+  border: 0;
+  border-radius: 0;
+  box-shadow: none;
+}
+/*
+ * And the result fills the window too — the painting IS the screen.
+ *
+ * The buttons keep a measure of their own: a row of controls stretched
+ * across 844 pixels is a toolbar, and this is a card telling a child how it
+ * went. Everything else lines up under the headline as before.
+ */
+.app--immersive .result { padding: 0; }
+.app--immersive .result__card {
+  width: 100%;
+  /*
+   * MIN, not height. The battle report opens inside this card and is taller
+   * than any phone — a fixed height would clip it (the card hides its own
+   * overflow, so the picture can have square corners), and the screen it
+   * scrolls in is `.result`.
+   */
+  min-height: 100%;
+  max-width: none;
+  border: 0;
+  border-radius: 0;
+  box-shadow: none;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+.app--immersive .result__body {
+  width: min(560px, 100%);
+  margin-inline: auto;
+}

@@ -175,6 +175,24 @@ const PHASE_LABEL: Record<string, string> = {
 const IN_MATCH = ["countdown", "build", "panic", "prebattle", "battle"];
 
 /**
+ * ═══ THE TWO SCREENS THAT TAKE THE WHOLE WINDOW ═══
+ *
+ * Or: *"the battle screen, and the screen at the end of the battle, are not
+ * full screen. Fix it."*
+ *
+ * Measured on his phone, 844x390: the result card came to 560x333 — two
+ * thirds of the width, with 142 pixels of empty background down each side —
+ * and the arena to 583 wide, because a 40px bar and 16px of padding came off
+ * the height first and the field keeps its shape. Everywhere else in the
+ * game a panel floating in the middle is right; these two ARE the game
+ * looking back at you, and they should fill it.
+ *
+ * The bar is not removed — the way out must always work — it stops taking a
+ * row of its own and floats over the top instead. See topbar.css.
+ */
+const IMMERSIVE = ["battle", "result"];
+
+/**
  * Review views, chosen once at module load: ?gallery for the card art, ?arena
  * for the battle effects. Reading this inside App would mean returning before
  * its hooks run, which breaks the rules of hooks (and Fast Refresh with it).
@@ -1218,12 +1236,19 @@ function Game() {
 
   return (
     /*
+      * `app--immersive` gives the battle and the screen after it the WHOLE
+      * window — see IMMERSIVE.
+      *
       * `app--teaching` is what lets the top bar step aside for a lesson —
       * see topbar.css. The bar sits ABOVE the tutorial on purpose (the exit
       * must always work), which also left the gear and the sound reachable
       * while Amanda was pointing at something else.
       */
-    <div className={`app${teaching && m.lesson > 0 ? " app--teaching" : ""}`}>
+    <div
+      className={`app${teaching && m.lesson > 0 ? " app--teaching" : ""}${
+        IMMERSIVE.includes(m.phase) ? " app--immersive" : ""
+      }`}
+    >
       {/* Two 4x4 boards of portrait cards only fit side by side in landscape,
           so on a phone held upright we ask for a turn instead of squashing. */}
       <div className="rotate-hint">

@@ -15,10 +15,46 @@ import { lang, say } from "../game/lang";
 const CELL = 72;
 /** Header band above the lanes, so the identity banners never cover a unit. */
 const HEAD = 26;
-const W = ARENA.width * CELL;
+/**
+ * ═══ A CELL IS AS TALL AS IT IS, AND AS WIDE AS THE SCREEN NEEDS ═══
+ *
+ * Or: *"the battle screen is not full screen. Fix it."*
+ *
+ * Taking the bar and the padding off the top was not enough, because the
+ * field has a SHAPE: eight columns by four lanes is 576x314, and a phone
+ * held sideways is 844x390. Fitted inside that, the battlefield comes to
+ * 715 pixels wide with 64 of empty background down each side — and that was
+ * AFTER the frame came off. Nothing about the grid being square is visible
+ * to a player; the gap between two columns is.
+ *
+ * So the lanes keep their height and the columns take whatever width is
+ * left over. A unit is still drawn square, at CELL — only the distance
+ * between columns grows, which reads as a wider battlefield and nothing
+ * else.
+ *
+ * Capped, because this is a stretch of the board and not of the art: past a
+ * quarter again the cards start to look marooned. Amanda mode (eight lanes,
+ * a nearly square field) runs into that cap and keeps a letterbox, which is
+ * the honest answer — the alternative is cropping a lane off the screen.
+ */
+const MAX_SPREAD = 1.25;
+
 /** Four lanes is the ordinary arena; Amanda mode is eight. Per battle. */
 const laneCount = (result: { lanes?: number }) => result.lanes ?? ARENA.lanes;
 const heightFor = (lanes: number) => lanes * CELL + HEAD;
+
+/**
+ * How wide to draw a column, given the screen the battle has to fill.
+ *
+ * Never narrower than a cell is tall (a screen too narrow for the field is
+ * letterboxed above and below, which costs nothing), and never wider than
+ * MAX_SPREAD. Exported for the test that pins those two edges.
+ */
+export function columnWidth(lanes: number, screenW: number, screenH: number): number {
+  const want = screenW / Math.max(1, screenH);
+  const natural = (ARENA.width * CELL) / heightFor(lanes);
+  return CELL * Math.min(MAX_SPREAD, Math.max(1, want / natural));
+}
 const OWNER_TINT = { A: 0x4aa3ff, B: 0xff5a5a } as const;
 /**
  * The battlefield when nobody has said which.
@@ -198,7 +234,6 @@ const ANNOUNCE_MS = 1200;
 /** The pause between the words clearing and the board coming down. */
 const VERDICT_MS = 1500;
 
-const cx = (col: number): number => (col + 0.5) * CELL;
 const cy = (lane: number): number => HEAD + (lane + 0.5) * CELL;
 const laneCenter = (lanes: number[]): number => lanes.reduce((s, l) => s + l, 0) / lanes.length;
 
@@ -400,6 +435,15 @@ export function Arena({
   const [why, setWhy] = useState<string | null>(null);
   const LANES = laneCount(result);
   const H = heightFor(LANES);
+  /*
+   * The window, because in a battle the window is what the field gets (see
+   * `app--immersive`). Once per battle: the canvas is scaled by CSS from
+   * there on, so a device that turns mid-fight loses nothing but the last
+   * few pixels of fit.
+   */
+  const [COLW] = useState(() => columnWidth(LANES, window.innerWidth, window.innerHeight));
+  const W = ARENA.width * COLW;
+  const cx = (col: number): number => (col + 0.5) * COLW;
 
   useEffect(() => {
     finishedRef.current = false;
@@ -1364,7 +1408,7 @@ export function Arena({
           if (l % 2 === 1)
             bg.rect(0, HEAD + l * CELL, W, CELL).fill({ color: 0xffffff, alpha: bgTexture ? 0.02 : 0.03 });
         // column guides (faint) and lane separators (stronger)
-        for (let c = 0; c <= ARENA.width; c++) bg.moveTo(c * CELL, HEAD).lineTo(c * CELL, H);
+        for (let c = 0; c <= ARENA.width; c++) bg.moveTo(c * COLW, HEAD).lineTo(c * COLW, H);
         bg.stroke({ width: 1, color: 0x2a3550, alpha: bgTexture ? 0.3 : 0.5 });
         for (let l = 0; l <= LANES; l++)
           bg.moveTo(0, HEAD + l * CELL).lineTo(W, HEAD + l * CELL);
