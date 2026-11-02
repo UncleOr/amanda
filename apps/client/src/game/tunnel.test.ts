@@ -186,6 +186,79 @@ describe("what is waiting", () => {
   });
 });
 
+describe("the screen it is read on", () => {
+  const PANEL = read("../components/Tunnel.tsx");
+  const CSS = read("../styles/tunnel.css");
+  const APP = read("../App.tsx");
+  const HOME = read("../components/HomeScreen.tsx");
+
+  it("does not shut when you take something out of it", () => {
+    /*
+     * Or: *"when you take something from the track it closes. That is no
+     * good."* It closed because it was built like the challenges panel,
+     * which closes so the prize can fly to the purse behind it — and a
+     * challenge list is a thing you are finished with, while a track is a
+     * place you are walking along.
+     */
+    expect(PANEL).not.toContain("onTaking");
+    const where = APP.slice(APP.indexOf('panel.is("tunnel")'));
+    expect(where.slice(0, where.indexOf("/>"))).not.toContain("onTaking");
+    // And the celebration happens on the tile instead.
+    expect(PANEL).toContain("setWon(stop)");
+    expect(CSS).toContain(".tun-pop");
+  });
+
+  it("puts the burst inside the station rather than on the road", () => {
+    /*
+     * ⚠ IT WAS AN ITEM IN THE ROW, and inserting one into a scrolled
+     * right-to-left scroller moves the scroll position — so taking a prize
+     * threw the player back to the mouth of the tunnel. Measured before and
+     * after: scrollLeft -1138 both times, once it was absolute.
+     */
+    expect(CSS).toMatch(/\.tun-pop \{[^}]*position: absolute/);
+  });
+
+  it("never crops a prize", () => {
+    /*
+     * Or: *"the images are cut."* They were: a 38px square with
+     * `object-fit: cover`, and a monster card is a portrait — so the screen
+     * advertised its prizes by showing a card's chin.
+     */
+    const card = CSS.slice(CSS.indexOf(".tun__bit--card img {"));
+    expect(card.slice(0, card.indexOf("}"))).toContain("object-position: center top");
+    const thing = CSS.slice(CSS.indexOf(".tun__bit--thing img {"));
+    // A chest, a face or an icon is square-ish and transparent: `cover`
+    // would cut the lid off a chest exactly the way it cut off a face.
+    expect(thing.slice(0, thing.indexOf("}"))).toContain("object-fit: contain");
+    expect(PANEL).toContain('shape: "card"');
+  });
+
+  it("says where you are, between two stations", () => {
+    // Or: *"with a marker of where you are right now, even before you have
+    // reached the next prize."*
+    expect(PANEL).toContain("function Marker(");
+    expect(PANEL).toContain("tunnelProgress(state.best)");
+    expect(CSS).toContain("inset-inline-start: var(--through)");
+  });
+
+  it("shares the home screen's row with the arena rather than taking one", () => {
+    /*
+     * Or: *"the layout of the main screen is not good now. The track is
+     * enormous. The challenges are enormous and out of proportion with the
+     * icon. The bottom buttons are cut off and need scrolling."*
+     *
+     * All three were one measurement: a second full-width strip under the
+     * arena took the progress row from 78 pixels to 148, which pushed the
+     * row of doors 4 pixels off a 390-tall screen — and the challenges tile
+     * is a square sized by that row, so it went from 61x61 to 131x131
+     * around a 19px rosette. Side by side the row is 76 again.
+     */
+    expect(HOME).toContain('<div className="home__road">');
+    expect(CSS).toContain(".home__road {");
+    expect(CSS).toContain("display: flex");
+  });
+});
+
 describe("the two rules only the server can keep", () => {
   it("refuses the lane that is not for sale", () => {
     expect(canClaim("free")).toBe(true);

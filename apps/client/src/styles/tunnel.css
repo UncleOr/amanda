@@ -2,21 +2,51 @@
  * ═══ מנהרת הפרסים — THE PRIZE WASH ═══
  *
  * Or: *"a prize track like in Brawl Stars... it should look like a car wash
- * tunnel."*
+ * tunnel."* And, after the first version: *"the look of the tunnel is not
+ * great. It needs to be more colourful and inviting. Everything to do with
+ * prizes needs to be more fun... it should look like a TRACK — maybe more
+ * space between the prizes, with a marker of where you are right now, even
+ * before you reach the next prize. Look at how it is done in Brawl Stars and
+ * Clash Royale."*
  *
- * The arches are the whole idea. A row of numbered boxes is a table; a row of
- * arches is a place you drive through, and the player is the thing being
- * carried along by their own trophies. Nothing here is an image: the tunnel
- * is built out of two gradients and a border radius, so it costs nothing to
- * download and it recolours with the tokens.
+ * What those two actually do, and what is taken from them here:
  *
- * Sizes, spaces and colours are all from the scale (see .claude/skills/
- * amanda-ui/SKILL.md). The screen's hero is the one station that can be
- * claimed — it is the only thing on it that is lit and the only thing with a
- * button.
+ *   A ROAD, NOT A ROW. There is a physical line running through the whole
+ *   thing, lit behind you and dark ahead, and the prizes hang off it. That
+ *   one element is most of what makes a list of rewards read as a journey.
  *
- * New, so it goes last among the panels: it can only add.
+ *   YOU ARE ON IT. A marker sits at your real position BETWEEN two stations,
+ *   so "nearly there" is something you can see rather than work out.
+ *
+ *   ONLY THE NEXT THING MOVES. What you can take right now is gold, lifted,
+ *   breathing, with a light sweeping over it; everything else is still. One
+ *   moving object is a pointer, ten is a fairground.
+ *
+ *   COLOUR MEANS STATE. Gold is yours to take, grey is spent, dark is ahead,
+ *   purple is the pass. The screen should be readable with the words blurred.
+ *
+ * Nothing here is an image: the road, the arches and the marker are
+ * gradients and border radii, so the screen costs nothing to download and
+ * recolours with the tokens. Sizes and spaces come from the scale (see
+ * .claude/skills/amanda-ui/SKILL.md) — the type never leaves it, and the
+ * colours that are not tokens are the paint of this one screen.
  */
+
+/*
+ * ── the home screen: the arena and the tunnel, one row ──
+ *
+ * See HomeScreen for the measurement. The two of them are what trophies buy,
+ * so they share a line; the arena takes the room it needs for its painting
+ * and the tunnel takes what is left.
+ */
+.home__road {
+  display: flex;
+  align-items: stretch;
+  gap: var(--sp-2);
+  min-width: 0;
+}
+.home__road .track { flex: 1 1 auto; margin: 0; }
+.home__road .tunnel-strip { flex: 0 1 196px; min-width: 0; }
 
 /* ── the strip on the home screen ── */
 .tunnel-strip {
@@ -36,7 +66,15 @@
 .tunnel-strip:hover { border-color: var(--accent); }
 /* Something is waiting in there, and that is the only reason this strip
    should ever shout. */
-.tunnel-strip--due { border-color: var(--line-lit); background: var(--sur-lit); }
+.tunnel-strip--due {
+  border-color: var(--line-lit);
+  background: var(--sur-lit);
+  animation: tunnel-strip-due 2.6s ease-in-out infinite;
+}
+@keyframes tunnel-strip-due {
+  0%, 100% { box-shadow: 0 0 0 rgba(255, 176, 32, 0); }
+  50% { box-shadow: 0 0 18px rgba(255, 176, 32, 0.45); }
+}
 /*
  * The mouth of the tunnel, in the place the arena strip keeps its painting.
  * A half-round arch with a lit rim and a dark throat — the same two
@@ -44,9 +82,9 @@
  */
 .tunnel-strip__arch {
   flex: none;
-  width: 54px;
-  height: 40px;
-  border-radius: 22px 22px 6px 6px;
+  width: 34px;
+  height: 38px;
+  border-radius: 17px 17px 5px 5px;
   background:
     radial-gradient(60% 70% at 50% 110%, rgba(0, 0, 0, 0.85), transparent 70%),
     linear-gradient(180deg, rgba(255, 176, 32, 0.35), rgba(74, 163, 255, 0.18));
@@ -59,14 +97,33 @@
   flex-direction: column;
   gap: 3px;
 }
-.tunnel-strip__text b { font-size: var(--t-3); }
+.tunnel-strip__text b {
+  font-size: var(--t-2);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
 .tunnel-strip__text small {
   display: inline-flex;
   align-items: center;
   gap: var(--sp-1);
   color: var(--muted);
-  font-size: var(--t-2);
+  font-size: var(--t-1);
+  white-space: nowrap;
 }
+/* What is at the end of this stretch. A picture, because a prize is a thing
+   and not a number. */
+.tunnel-strip__next {
+  flex: none;
+  display: grid;
+  place-items: center;
+  width: 34px;
+  height: 34px;
+  border-radius: 10px;
+  background: var(--sur-1);
+  color: var(--accent);
+}
+.tunnel-strip__next img { width: 30px; height: 30px; object-fit: contain; }
 .tunnel-strip--due .tunnel-strip__text small { color: var(--text); }
 .tunnel-strip__bar {
   display: block;
@@ -82,61 +139,54 @@
   background: linear-gradient(90deg, #ffb020, #ff7a2f);
 }
 
-/*
- * In the ladder column it lines up with the arena strip above it — same
- * width, same centring. They are one sentence read twice (where the trophies
- * took you, and what they earned on the way), and two strips of different
- * widths read as two unrelated things that happen to be near each other.
- */
-.home__ladder .tunnel-strip {
-  max-width: 320px;
-  margin-inline: auto;
-}
-
-/* ── the tunnel itself ── */
+/* ══════════════ the tunnel itself ══════════════ */
 .modal--tunnel {
-  max-width: 900px;
+  max-width: 940px;
   width: 100%;
+  /*
+   * Its own light. The panel behind every other modal is the game's dark
+   * blue; a prize screen that is the same colour as a settings screen is
+   * the thing Or means by *"it is not on-theme — we need to solve that."*
+   * A warm glow at the top and a cold one at the bottom is enough: the
+   * tiles do the rest.
+   */
+  background:
+    radial-gradient(120% 90% at 50% -10%, rgba(255, 176, 32, 0.16), transparent 60%),
+    radial-gradient(90% 70% at 50% 110%, rgba(74, 163, 255, 0.12), transparent 60%),
+    var(--panel);
 }
 .tunnel__title {
   margin: 0 0 var(--sp-2);
   font-size: var(--t-5);
 }
-/*
- * The road. Scrolls sideways — a track with an end you can see is a track
- * with nothing left to want.
- */
-/*
- * The road, and the two lane tags beside it. The tags do not scroll: they
- * name the two rows once, at the head of the lane, which is the one place a
- * dark row of prizes can be explained before it is wondered about.
- */
 .tunnel__body {
   display: flex;
   align-items: stretch;
   gap: var(--sp-2);
   min-width: 0;
 }
+
+/* ── the two lane tags, which do not scroll ── */
 .tunnel__tags {
   flex: none;
   display: flex;
   flex-direction: column;
-  gap: var(--sp-1);
-  padding: calc(var(--sp-2) * 2) 0 var(--sp-3);
+  justify-content: space-between;
+  padding: var(--sp-2) 0 var(--sp-3);
 }
 .tunnel__tag {
   flex: none;
-  /* The same height as a lane, so the two tags sit beside the two rows they
-     name rather than near them. */
-  height: 88px;
-  width: 86px;
+  /* The same height as a prize tile, so each tag sits beside the row it
+     names rather than near it. */
+  height: 96px;
+  width: 84px;
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
   gap: 2px;
   padding: var(--sp-1);
-  border-radius: 12px;
+  border-radius: 14px;
   background: var(--sur-2);
   border: 1px dashed var(--line);
   font-size: var(--t-2);
@@ -144,74 +194,160 @@
   text-align: center;
   line-height: 1.2;
 }
-/* The lane that is not for sale yet says so here, once. */
-.tunnel__tag--pass { color: var(--muted); }
+/* The lane that is not for sale yet says so here, once — and wears the
+   colour it will be sold in. */
+.tunnel__tag--pass {
+  color: #d8c7ff;
+  border-color: rgba(167, 139, 250, 0.45);
+  background: linear-gradient(180deg, rgba(109, 72, 190, 0.38), rgba(40, 26, 74, 0.6));
+}
 .tunnel__tag--pass b {
   font-size: var(--t-1);
   color: var(--accent);
   letter-spacing: 0.04em;
 }
 
+/* ── the road ── */
 .tunnel__road {
   list-style: none;
   margin: 0;
   padding: var(--sp-2) 0 var(--sp-3);
   display: flex;
-  gap: var(--sp-2);
+  align-items: stretch;
   overflow-x: auto;
   overflow-y: hidden;
-  /* The wet floor under the arches, and the drain line down the middle. */
-  background:
-    linear-gradient(180deg, transparent 62%, rgba(74, 163, 255, 0.07) 70%, transparent),
-    repeating-linear-gradient(
-      90deg,
-      transparent 0 18px,
-      rgba(255, 255, 255, 0.025) 18px 19px
-    );
-  scroll-padding-inline: var(--sp-3);
+  scroll-padding-inline: 120px;
+  /* The bar belongs to the road: a grey browser trough under a gold track
+     is the one piece of furniture on this screen that says "web page". */
+  scrollbar-width: thin;
+  scrollbar-color: rgba(255, 176, 32, 0.6) transparent;
 }
+.tunnel__road::-webkit-scrollbar { height: 8px; }
+.tunnel__road::-webkit-scrollbar-track { background: transparent; }
+.tunnel__road::-webkit-scrollbar-thumb {
+  border-radius: 999px;
+  background: rgba(255, 176, 32, 0.55);
+}
+.tunnel__road::-webkit-scrollbar-thumb:hover { background: rgba(255, 176, 32, 0.85); }
+/*
+ * A stretch of road between two stations — the thing that makes this a track
+ * rather than a shelf. Wide, because Or asked for room between the prizes
+ * and because the marker has to have somewhere to BE.
+ */
+.tun-gap {
+  position: relative;
+  flex: none;
+  width: 74px;
+}
+.tun-gap--end { width: 110px; }
+/* The tarmac: a dark band with a dashed centre line, running right through
+   the stations as well as between them. */
+.tun-gap::before,
+.tun::after {
+  content: "";
+  position: absolute;
+  inset-inline: 0;
+  top: 50%;
+  height: 30px;
+  transform: translateY(-50%);
+  background:
+    repeating-linear-gradient(90deg, rgba(255, 255, 255, 0.5) 0 14px, transparent 14px 30px)
+      center / 100% 3px no-repeat,
+    linear-gradient(180deg, #243050 0 4px, #1a2238 4px calc(100% - 4px), #121a2c calc(100% - 4px));
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.09), inset 0 -2px 0 rgba(0, 0, 0, 0.55);
+  z-index: 0;
+}
+/* The part you have already driven is lit. */
+.tun-gap.is-done::before,
+.tun.is-open::after,
+.tun.is-next::after {
+  background:
+    repeating-linear-gradient(90deg, rgba(255, 245, 210, 0.85) 0 14px, transparent 14px 30px)
+      center / 100% 3px no-repeat,
+    linear-gradient(180deg, #6b5420 0 4px, #4a3a16 4px calc(100% - 4px), #2b2210 calc(100% - 4px));
+}
+
+/* ── where you are ── */
+.tun-you {
+  position: absolute;
+  top: 50%;
+  inset-inline-start: var(--through);
+  transform: translate(50%, -50%);
+  z-index: 3;
+  display: grid;
+  place-items: center;
+  animation: tun-bob 1.8s ease-in-out infinite;
+}
+.tun-you b {
+  display: inline-flex;
+  align-items: center;
+  gap: 3px;
+  padding: 3px var(--sp-2);
+  border-radius: 999px;
+  background: linear-gradient(180deg, #ffd978, #ffa41c);
+  color: #2a1a02;
+  font-size: var(--t-1);
+  font-weight: 900;
+  font-variant-numeric: tabular-nums;
+  white-space: nowrap;
+  box-shadow: 0 3px 0 rgba(0, 0, 0, 0.45), 0 0 16px rgba(255, 176, 32, 0.55);
+}
+/* The point of it, so it says WHERE rather than "here somewhere". */
+.tun-you::after {
+  content: "";
+  position: absolute;
+  top: 100%;
+  margin-top: 1px;
+  width: 0;
+  height: 0;
+  border: 6px solid transparent;
+  border-top-color: #ffa41c;
+}
+@keyframes tun-bob {
+  0%, 100% { transform: translate(50%, -50%); }
+  50% { transform: translate(50%, calc(-50% - 4px)); }
+}
+
+/* ── a station ── */
 .tun {
   position: relative;
   flex: none;
-  width: 104px;
+  width: 112px;
   display: flex;
   flex-direction: column;
   align-items: center;
+  justify-content: space-between;
   gap: var(--sp-1);
-  padding: var(--sp-2) var(--sp-1);
 }
-/*
- * One arch of the wash, behind its station. The brush stripes are a repeating
- * gradient inside the arch, so they curve with it.
- */
-.tun__arch {
-  position: absolute;
-  inset: 0;
-  border-radius: 46px 46px 10px 10px;
-  background:
-    repeating-linear-gradient(
-      90deg,
-      rgba(255, 255, 255, 0.05) 0 3px,
-      transparent 3px 9px
-    ),
-    var(--sur-1);
-  box-shadow: inset 0 0 0 1px var(--line);
-  pointer-events: none;
-}
-.tun.is-open .tun__arch {
-  background:
-    repeating-linear-gradient(
-      90deg,
-      rgba(255, 176, 32, 0.12) 0 3px,
-      transparent 3px 9px
-    ),
-    var(--sur-lit);
-  box-shadow: inset 0 0 0 1px var(--line-lit);
-}
-/* A station you have not reached is dark, named and still there — the same
-   rule the arena ladder follows. */
-.tun.is-shut { opacity: 0.55; }
+.tun::after { inset-inline: -1px; }
 
+/* The node on the road: the toll, in trophies. */
+.tun__node {
+  position: relative;
+  z-index: 2;
+  display: inline-flex;
+  align-items: center;
+  gap: 3px;
+  padding: 2px var(--sp-2);
+  border-radius: 999px;
+  border: 2px solid #0d1322;
+  background: linear-gradient(180deg, #2b3752, #1b2439);
+  color: var(--muted);
+  font-size: var(--t-1);
+  font-weight: 900;
+  font-variant-numeric: tabular-nums;
+}
+.tun.is-open .tun__node {
+  background: linear-gradient(180deg, #ffd978, #ff9f17);
+  color: #2a1a02;
+  box-shadow: 0 0 14px rgba(255, 176, 32, 0.45);
+}
+.tun.is-next .tun__node {
+  color: var(--text);
+  border-color: var(--accent);
+}
+
+/* ── a prize tile ── */
 .tun__lane {
   position: relative;
   z-index: 1;
@@ -222,76 +358,201 @@
    * and then the tags beside them, and every station's number, stop lining
    * up with anything.
    */
-  height: 88px;
+  height: 96px;
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  gap: var(--sp-1);
+  gap: var(--sp-2);
   padding: var(--sp-1);
-  border-radius: 12px;
-  background: var(--sur-2);
-  border: 1px solid var(--line);
+  border-radius: 16px;
+  overflow: hidden;
+  background: linear-gradient(180deg, #223049, #16203a);
+  border: 2px solid #0d1322;
+  box-shadow: 0 3px 0 rgba(0, 0, 0, 0.45);
 }
-/* The paid lane is dark the whole way along: it is not for sale yet, and a
-   lane that looks live is a promise. */
-.tun__lane--pass { opacity: 0.45; }
-.tun.is-open .tun__lane--free { border-color: var(--line-lit); }
-.tun__lane.is-taken { opacity: 0.4; }
+/* Ahead of you: there, named, and plainly not yours yet. */
+.tun.is-shut .tun__lane { opacity: 0.6; }
+/* The paid lane is royal, and shut all the way along. */
+.tun__lane--pass {
+  background: linear-gradient(180deg, #4a3480, #2a1d4d);
+  border-color: #18102e;
+}
+.tun__shut { opacity: 0.75; line-height: 0; }
+/*
+ * ═══ THE ONE TILE THAT MOVES ═══
+ *
+ * Gold, lifted, breathing, with a light sweeping across it. Everything else
+ * on this screen is still, which is what makes this one a pointer rather
+ * than part of a fairground.
+ */
+.tun__lane.is-ready {
+  background: linear-gradient(180deg, #ffcf6b, #f59a12);
+  border-color: #6b3f00;
+  box-shadow: 0 4px 0 rgba(0, 0, 0, 0.5), 0 0 22px rgba(255, 176, 32, 0.5);
+  animation: tun-breathe 2.4s ease-in-out infinite;
+}
+.tun__lane.is-ready .tun__amount { color: #2a1a02; }
+@keyframes tun-breathe {
+  0%, 100% { transform: translateY(0) scale(1); }
+  50% { transform: translateY(-3px) scale(1.03); }
+}
+.tun__shine {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(110deg, transparent 35%, rgba(255, 255, 255, 0.55) 50%, transparent 65%);
+  transform: translateX(-120%);
+  animation: tun-shine 2.8s ease-in-out infinite;
+  pointer-events: none;
+}
+@keyframes tun-shine {
+  0%, 55% { transform: translateX(-120%); }
+  85%, 100% { transform: translateX(120%); }
+}
+/* Spent: flat, grey, ticked. */
+.tun__lane.is-taken {
+  background: #141c2e;
+  border-color: #0d1322;
+  box-shadow: none;
+  opacity: 0.5;
+  filter: grayscale(0.8);
+}
 
 .tun__prize {
+  position: relative;
   display: flex;
   align-items: center;
   justify-content: center;
-  gap: var(--sp-1);
+  gap: var(--sp-3);
   flex-wrap: wrap;
 }
+/*
+ * ═══ A PRIZE IS A THING, AND IT IS NOT CROPPED ═══
+ *
+ * Or: *"the images are cut."* They were. Every prize was a 38px SQUARE with
+ * `object-fit: cover`, and a monster card is a portrait — so the screen was
+ * advertising the prizes by showing a card's chin.
+ *
+ * A card is drawn as a little card: portrait, framed, anchored at the TOP
+ * (which is where the face is on every one of them), with the count on the
+ * corner the way a stack of copies is counted everywhere else in the game.
+ * A chest, a face or an icon is drawn WHOLE inside a square — `contain`,
+ * never `cover`.
+ *
+ * `--tone` is set per prize: the card's rarity, the chest's own metal, cyan
+ * for diamonds. It is what gives the row colour without painting anything.
+ */
 .tun__bit {
   position: relative;
   display: inline-flex;
   align-items: center;
-  gap: 2px;
+  justify-content: center;
   color: var(--text);
 }
-.tun__bit img {
-  width: 34px;
-  height: 34px;
-  object-fit: cover;
-  border-radius: 7px;
+/* The halo behind it, in the prize's own colour. */
+.tun__bit::before {
+  content: "";
+  position: absolute;
+  inset: -6px;
+  border-radius: 12px;
+  background: radial-gradient(circle, var(--tone, #ffb020), transparent 70%);
+  opacity: 0.35;
+  pointer-events: none;
 }
+.tun__bit--card img {
+  width: 42px;
+  height: 56px;
+  object-fit: cover;
+  object-position: center top;
+  border-radius: 7px;
+  border: 2px solid var(--tone, #9aa4ad);
+  background: #0d1322;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.6);
+}
+.tun__bit--thing img {
+  width: 48px;
+  height: 48px;
+  object-fit: contain;
+  filter: drop-shadow(0 3px 6px rgba(0, 0, 0, 0.6));
+}
+.tun__bit--thing .icon { filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.6)); }
+/* The count rides on the corner of the picture, not beside it: beside it,
+   two prizes in one tile stop being two prizes. */
 .tun__amount {
-  font-size: var(--t-2);
-  font-weight: 800;
+  position: absolute;
+  inset-inline-end: -6px;
+  bottom: -6px;
+  padding: 0 5px;
+  border-radius: 999px;
+  border: 2px solid #0d1322;
+  background: linear-gradient(180deg, #ffd978, #ffa41c);
+  color: #2a1a02;
+  font-size: var(--t-1);
+  font-weight: 900;
   font-variant-numeric: tabular-nums;
 }
 .tun__take {
-  padding: 3px var(--sp-2);
-  border-radius: 999px;
-  border: 0;
-  background: var(--accent);
-  color: #1a1203;
-  font-size: var(--t-2);
-  font-weight: 800;
-  cursor: pointer;
-}
-.tun__tick { color: var(--muted); line-height: 0; }
-.tun__at {
   position: relative;
-  z-index: 1;
-  display: inline-flex;
-  align-items: center;
-  gap: var(--sp-1);
+  padding: 3px var(--sp-3);
+  border-radius: 999px;
+  border: 2px solid #6b3f00;
+  background: linear-gradient(180deg, #fff3cf, #ffd36b);
+  color: #2a1a02;
   font-size: var(--t-2);
-  font-weight: 800;
-  font-variant-numeric: tabular-nums;
-  color: var(--muted);
+  font-weight: 900;
+  cursor: pointer;
+  box-shadow: 0 2px 0 rgba(0, 0, 0, 0.4);
 }
-.tun.is-open .tun__at { color: var(--text); }
+.tun__take:active { transform: translateY(1px); box-shadow: none; }
+.tun__tick { color: var(--muted); line-height: 0; }
 
-/* A phone held sideways is 390 tall: the arches lose their height first. */
+/*
+ * The burst when a prize is taken, ON the tile — because the panel stays
+ * open now. Or: *"when you take something from the track it closes. That is
+ * no good."*
+ */
+.tun-pop {
+  position: absolute;
+  inset: 0;
+  z-index: 4;
+  pointer-events: none;
+}
+.tun-pop::before {
+  content: "";
+  position: absolute;
+  top: 50%;
+  inset-inline-start: 50%;
+  width: 140px;
+  height: 140px;
+  margin-inline-start: -70px;
+  transform: translateY(-50%);
+  border-radius: 50%;
+  background: radial-gradient(circle, rgba(255, 221, 140, 0.9), rgba(255, 176, 32, 0) 70%);
+  animation: tun-pop 800ms ease-out forwards;
+}
+@keyframes tun-pop {
+  from { transform: translateY(-50%) scale(0.3); opacity: 1; }
+  to { transform: translateY(-50%) scale(1.8); opacity: 0; }
+}
+
+/* A phone held sideways is 390 tall: the tiles lose height first. */
+/* A phone held sideways is 390 tall: the panel takes what it can get and
+   the tiles give up a little height, never the picture. */
 @media (max-height: 460px) {
-  .tun { width: 92px; }
-  .tun__lane { height: 76px; }
-  .tunnel__tag { height: 76px; width: 78px; }
-  .tun__bit img { width: 28px; height: 28px; }
+  .tun { width: 104px; }
+  .tun-gap { width: 64px; }
+  .tun__lane { height: 84px; }
+  .tunnel__tag { height: 84px; width: 76px; }
+  .tun__bit--card img { width: 38px; height: 50px; }
+  .tun__bit--thing img { width: 42px; height: 42px; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .tunnel-strip--due,
+  .tun-you,
+  .tun__lane.is-ready,
+  .tun-pop::before {
+    animation: none;
+  }
+  .tun__shine { display: none; }
 }

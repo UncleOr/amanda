@@ -959,6 +959,35 @@
   animation: chest-bob 2.4s ease-in-out infinite;
   filter: drop-shadow(0 6px 12px rgba(0, 0, 0, 0.55));
 }
+/*
+ * ═══ A CHEST IS TREASURE, NOT AN ICON ═══
+ *
+ * Or: *"everything to do with prizes needs to be more fun. The chests and
+ * the nachos and the challenges too."* It already bobs; what it did not have
+ * was LIGHT — a dark box bobbing in a dark row reads as furniture.
+ *
+ * Written here rather than in effects.css because this sheet already owns
+ * `.shelf__chest` (see the note at the top of social.css), and two sheets
+ * owning one class name is the collision the tests in styles/ exist to stop.
+ */
+.shelf__chest { position: relative; border-radius: 14px; }
+.shelf__chest::before {
+  content: "";
+  position: absolute;
+  inset: -6px;
+  border-radius: inherit;
+  background: radial-gradient(circle, rgba(255, 198, 88, 0.45), transparent 68%);
+  animation: chest-glow 2.2s ease-in-out infinite;
+  pointer-events: none;
+  z-index: -1;
+}
+@keyframes chest-glow {
+  0%, 100% { opacity: 0.35; transform: scale(0.92); }
+  50% { opacity: 0.9; transform: scale(1.06); }
+}
+@media (prefers-reduced-motion: reduce) {
+  .shelf__chest::before { animation: none; }
+}
 .shelf__chest:nth-child(2) { animation-delay: 0.3s; }
 .shelf__chest:nth-child(3) { animation-delay: 0.6s; }
 .shelf__chest:nth-child(4) { animation-delay: 0.9s; }

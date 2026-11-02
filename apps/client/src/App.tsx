@@ -1239,16 +1239,18 @@ function Game() {
   /*
    * ═══ AND THE TWO MOMENTS THE PHONE ANNOUNCES ═══
    *
-   * Or: *"when the panic phase starts, and when the battle starts."* The
-   * two phases a player does not choose and cannot miss — one is a warning
-   * and one is a curtain going up, and they feel different (haptics.ts).
+   * Or: *"when the panic phase starts, and when the battle starts"* — and
+   * then *"and at the start of the build phase too."* The three phases a
+   * player does not choose: the board opening, the warning, and the curtain
+   * going up. They feel different (haptics.ts).
    *
    * Its own effect rather than a line inside the one above, because that one
    * is about a word on the screen and leaves early in the playground. A
    * battle starting in the lab still starts.
    */
   useEffect(() => {
-    if (m.phase === "panic") haptics.buzz("panic");
+    if (m.phase === "build") haptics.buzz("build");
+    else if (m.phase === "panic") haptics.buzz("panic");
     else if (m.phase === "battle") haptics.buzz("battle");
   }, [m.phase]);
 
@@ -2564,7 +2566,6 @@ function Game() {
           signedIn={signedIn}
           guest={guest}
           gated={gated}
-          onTaking={() => panel.close()}
           onClaimed={() => m.reloadAccount()}
           onClose={() => panel.close()}
         />

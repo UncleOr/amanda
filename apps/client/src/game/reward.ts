@@ -126,6 +126,25 @@ export function flyReward({ icon, amount, from }: Flight): Promise<void> {
       const land = () => {
         if (done) return;
         done = true;
+        /*
+         * ═══ THE BURNT PIXEL ═══
+         *
+         * Or: *"there is some annoying bug — when there are diamonds or
+         * other things flying there is a 'burnt' pixel on the screen."*
+         *
+         * Three things made one: the flight's last keyframe left the token
+         * at opacity 0.1 rather than 0, it was held there by `fill:
+         * forwards`, and the node carried a permanent `will-change` — which
+         * is a promise to the compositor that it will keep moving. A layer
+         * that is still painted, still promised, and then deleted is
+         * exactly the shape of a leftover tile: fourteen diamonds all land
+         * on the same spot, so what is left reads as one stuck pixel on the
+         * purse.
+         *
+         * Cancelling first drops the fill and the layer with it, and the
+         * flight now ends at nothing rather than at a tenth of something.
+         */
+        for (const a of node.getAnimations()) a.cancel();
         node.remove();
         /*
          * The bar reacts to being landed on — once per coin, so a big prize
@@ -171,7 +190,8 @@ export function flyReward({ icon, amount, from }: Flight): Promise<void> {
                 },
                 {
                   transform: `translate(calc(-50% + ${dx}px), calc(-50% + ${dy}px)) scale(0.35)`,
-                  opacity: 0.1,
+                  // Nothing, not a tenth of something. See `land`.
+                  opacity: 0,
                 },
               ],
               {

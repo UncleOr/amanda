@@ -73,12 +73,14 @@ afterEach(() => {
   vi.useRealTimers();
 });
 
-describe("the seven, as feelings", () => {
+describe("the eight, as feelings", () => {
   const names = Object.keys(PATTERNS) as Buzz[];
 
   it("covers everything Or asked for", () => {
+    // The eighth arrived after the first seven: *"and it needs to be at the
+    // start of the battle and at the start of the build phase too."*
     expect(names.sort()).toEqual(
-      ["action", "aim", "battle", "fallen", "kill", "lift", "panic"].sort(),
+      ["action", "aim", "battle", "build", "fallen", "kill", "lift", "panic"].sort(),
     );
   });
 
@@ -110,8 +112,22 @@ describe("the seven, as feelings", () => {
 
   it("makes picking a card up the lightest thing in the set", () => {
     const first = (p: number | readonly number[]) => (typeof p === "number" ? p : p[0]!);
-    for (const n of (["action", "aim", "panic", "battle", "fallen"] as Buzz[]))
+    for (const n of (["action", "aim", "panic", "battle", "build", "fallen"] as Buzz[]))
       expect(first(PATTERNS.lift), n).toBeLessThan(first(PATTERNS[n]));
+  });
+
+  it("answers the settings switch with something nobody can miss", () => {
+    /*
+     * ⚠ THE SWITCH IS THE ONLY TEST A PLAYER HAS. The three reasons a phone
+     * stays still — no VIBRATE permission in the installed app, a handset on
+     * silent, a page nobody has touched yet — are all invisible from inside
+     * the game, so the one control that is ABOUT vibration has to answer
+     * with a pattern that cannot be confused with silence. It used to answer
+     * with the 12ms tick.
+     */
+    const src = read("./haptics.ts");
+    const on = src.slice(src.indexOf("toggleEnabled()"));
+    expect(on).toContain('else this.buzz("panic")');
   });
 });
 
@@ -237,8 +253,9 @@ describe("where the game asks for it", () => {
     expect(match.indexOf('haptics.buzz("aim")')).toBeGreaterThan(spend);
   });
 
-  it("when the panic starts and when the battle does", () => {
+  it("when the board opens, when the panic starts and when the battle does", () => {
     const app = read("../App.tsx");
+    expect(app).toContain('m.phase === "build") haptics.buzz("build")');
     expect(app).toContain('m.phase === "panic") haptics.buzz("panic")');
     expect(app).toContain('m.phase === "battle") haptics.buzz("battle")');
   });
@@ -255,6 +272,47 @@ describe("where the game asks for it", () => {
     const settings = read("../components/Settings.tsx");
     expect(settings).toContain("haptics.toggleEnabled()");
     expect(settings).toContain("haptics.isEnabled()");
+  });
+});
+
+describe("the prize that flies, and the pixel it left behind", () => {
+  /*
+   * Or: *"there is some annoying bug — when there are diamonds or other
+   * things flying there is a 'burnt' pixel on the screen."*
+   *
+   * Not a leftover element: measured in the browser, the fourteen tokens a
+   * forty-diamond prize throws are all gone a second later and the body is
+   * back to the four children it started with. It is a leftover LAYER —
+   * which three things conspired to leave behind, and all three are here.
+   */
+  const REWARD = readFileSync(
+    fileURLToPath(new URL("./reward.ts", import.meta.url)),
+    "utf8",
+  );
+  const FX = readFileSync(
+    fileURLToPath(new URL("../styles/effects.css", import.meta.url)),
+    "utf8",
+  );
+
+  it("ends the flight at nothing, not at a tenth of something", () => {
+    const flight = REWARD.slice(REWARD.indexOf("A lift before the run"));
+    expect(flight).toContain("opacity: 0,");
+    expect(flight).not.toContain("opacity: 0.1");
+  });
+
+  it("cancels the animation before deleting the element it is holding", () => {
+    // `fill: forwards` keeps the last frame painted on a node that is about
+    // to be removed, which is the other half of the ghost.
+    expect(REWARD).toContain("for (const a of node.getAnimations()) a.cancel()");
+  });
+
+  it("makes no permanent promise to the compositor", () => {
+    // `will-change` on an element that lives for one second and is then
+    // deleted is a layer asked for and never released.
+    // The DECLARATION, not the word: the rule explains in a comment why it
+    // is not there, and a plain string match reads that as the bug.
+    const fly = FX.slice(FX.indexOf(".fly {"));
+    expect(fly.slice(0, fly.indexOf("}"))).not.toMatch(/will-change\s*:/);
   });
 });
 

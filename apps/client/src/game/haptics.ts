@@ -58,6 +58,14 @@ const PATTERN = {
    */
   aim: 45,
   /**
+   * The build phase opening: places, please. Two even taps, mid-weight —
+   * the start of something rather than a warning about it.
+   *
+   * Or asked for this one after the others: *"and it needs to be at the
+   * start of the battle and at the start of the build phase too."*
+   */
+  build: [25, 55, 25],
+  /**
    * Panic. Three short pulses in a row, fast — the one pattern here that is
    * meant to be slightly unpleasant, because the phase is.
    */
@@ -159,8 +167,18 @@ export const haptics = {
       /* ignore */
     }
     if (!enabled) this.silence();
-    // The switch answers in the language it is a switch for.
-    else this.buzz("lift");
+    /*
+     * ⚠ THE SWITCH IS ALSO THE TEST, so it answers with something nobody
+     * can miss.
+     *
+     * It used to answer with `lift`, which is twelve milliseconds — the
+     * lightest thing in the set, and completely indistinguishable from "this
+     * phone cannot vibrate at all". That matters because the three reasons a
+     * phone stays still (the app has no VIBRATE permission, the handset is
+     * on silent, the browser has never been touched) are invisible from in
+     * here, and this row is the only place a player can ask the question.
+     */
+    else this.buzz("panic");
     return enabled;
   },
 };

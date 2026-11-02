@@ -577,6 +577,26 @@ export function HomeScreen({
             not about the album.
           */}
           <div className="home__ladder">
+            {/*
+              ═══ THE TWO THINGS TROPHIES BUY, SIDE BY SIDE ═══
+
+              Or, after the tunnel first went in under the arena: *"the
+              layout of the main screen is not good now. The track is
+              enormous. The challenges are enormous and out of proportion
+              with the icon. The bottom buttons are cut off and need
+              scrolling."*
+
+              All three were one measurement: a second full-width strip under
+              the arena took the progress row from 78 pixels to 148, which
+              pushed the row of doors 4 pixels off the bottom of a 390-tall
+              screen — and the challenges tile is a SQUARE sized by that row,
+              so it went from 61x61 to 131x131 around a 19px rosette.
+
+              Side by side they cost the row nothing: the arena keeps its
+              painting and the tunnel becomes a chip with the next prize on
+              the end of it.
+            */}
+            <div className="home__road">
             <ArenaTrack
               trophies={m.account?.trophies ?? 0}
               best={m.account?.bestTrophies ?? m.account?.trophies ?? 0}
@@ -601,6 +621,7 @@ export function HomeScreen({
               best={m.account?.bestTrophies ?? m.account?.trophies ?? 0}
               onOpen={() => panel.show("tunnel")}
             />
+            </div>
             {/*
               ═══ STRAIGHT FROM THE HOME SCREEN, AND ABOVE THE ALBUM ═══
 

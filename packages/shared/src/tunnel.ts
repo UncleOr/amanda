@@ -137,6 +137,46 @@ export const TUNNEL: readonly TunnelStop[] = [
     free: { chest: "gold", diamonds: 100 },
     pass: { chest: "gold", items: ["avatar.jellyking"], diamonds: 300 },
   },
+  /*
+   * ── and on, past the arenas that are open today ──
+   *
+   * Or: *"carry on with the track."*
+   *
+   * These run through Fright Alley (4500) and the Fuel Stop (8000), which
+   * are shut from the admin panel for now — and that is the right place for
+   * a track to go. A player at the top of the open ladder can still see
+   * where the road continues, which is the one thing a reward track must
+   * never run out of. They cost nothing until somebody gets there.
+   */
+  {
+    at: 4800,
+    free: { cards: [{ cardId: "insects_06_ambush_spider", copies: 3 }] },
+    pass: { cards: [{ cardId: "insects_10_insect_empress", copies: 2 }], diamonds: 150 },
+  },
+  { at: 5300, free: { diamonds: 180 }, pass: { diamonds: 450, chest: "gold" } },
+  { at: 5900, free: { items: ["back.stars"] }, pass: { items: ["avatar.astronaut"] } },
+  {
+    at: 6500,
+    free: { chest: "gold" },
+    pass: { chest: "gold", cards: [{ cardId: "machines_09_steelbot", copies: 2 }] },
+  },
+  {
+    at: 7200,
+    free: { cards: [{ cardId: "slimes_09_pudding_shield", copies: 3 }], diamonds: 80 },
+    pass: { cards: [{ cardId: "slimes_10_zelig_giant_ooze", copies: 2 }], diamonds: 200 },
+  },
+  { at: 8000, free: { items: ["phrase.behindyou"] }, pass: { items: ["avatar.mechanic"], diamonds: 150 } },
+  {
+    at: 8800,
+    free: { cards: [{ cardId: "plants_02_ancient_tree", copies: 3 }] },
+    pass: { cards: [{ cardId: "plants_10_great_mother_tree", copies: 2 }] },
+  },
+  { at: 9600, free: { diamonds: 220, chest: "silver" }, pass: { diamonds: 600, chest: "gold" } },
+  {
+    at: 10500,
+    free: { chest: "gold", items: ["back.lava"] },
+    pass: { chest: "gold", cards: [{ cardId: "sea_10_leviathan", copies: 3 }], diamonds: 400 },
+  },
 ];
 
 /**

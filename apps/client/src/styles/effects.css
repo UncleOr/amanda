@@ -266,7 +266,14 @@
   display: grid;
   place-items: center;
   pointer-events: none;
-  will-change: transform, opacity;
+  /*
+   * ⚠ NO `will-change`. It was here, and it is half of the stuck pixel Or
+   * found: a permanent promise that this element will keep moving gives it
+   * a compositor layer of its own for as long as it exists — and these
+   * exist for one second and are then deleted mid-flight. The Web
+   * Animations API promotes the element while the animation is actually
+   * running, which is the whole time it needs one. See reward.ts.
+   */
 }
 .fly__icon {
   grid-area: 1 / 1;
@@ -546,4 +553,57 @@
   .bday__gift,
   .bday__gems,
   .bday__out { transition: opacity 200ms linear; transform: none; }
+}
+
+/*
+ * ═══ EVERYTHING TO DO WITH PRIZES, LOUDER ═══
+ *
+ * Or: *"everything to do with prizes needs to be more fun. The chests and
+ * the nachos and the challenges too. I know it is not on-theme. We need to
+ * solve that. It needs more animations and more fun."*
+ *
+ * The rule that keeps this from becoming a fairground: ONLY WHAT IS READY
+ * MOVES. A chest you have won, a nacho bar that is full, a challenge with a
+ * prize sitting on it — those three get light and motion. The same things
+ * when there is nothing in them stay perfectly still, which is what makes
+ * the motion mean "come and get it" rather than "this screen is busy".
+ */
+
+/*
+ * The nacho bar when the next chest is the good one. The border already
+ * changes colour (home-layout.css) — which is a fact you have to be told to
+ * look for; this is the same fact arriving on its own.
+ */
+.nachos--gold .nachos__chest,
+.nachos--silver .nachos__chest {
+  animation: prize-bump 2.6s ease-in-out infinite;
+}
+@keyframes prize-bump {
+  0%, 70%, 100% { transform: scale(1) rotate(0deg); }
+  78% { transform: scale(1.14) rotate(-6deg); }
+  86% { transform: scale(1.14) rotate(6deg); }
+}
+/* And the pip that just filled lands rather than fades in. */
+.nachos__row > i.is-on { animation: prize-pop 420ms cubic-bezier(0.2, 0.9, 0.3, 1.5); }
+@keyframes prize-pop {
+  from { transform: scale(0.4); }
+  60% { transform: scale(1.25); }
+  to { transform: scale(1); }
+}
+
+/* A challenge with a prize on it. The tile already goes green; this is what
+   makes it ask. */
+.quests__open:has(.quests__dot--big) { animation: prize-ask 2.4s ease-in-out infinite; }
+@keyframes prize-ask {
+  0%, 100% { transform: translateY(0); box-shadow: 0 0 14px rgba(74, 222, 128, 0.25); }
+  50% { transform: translateY(-3px); box-shadow: 0 0 22px rgba(74, 222, 128, 0.5); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .nachos--gold .nachos__chest,
+  .nachos--silver .nachos__chest,
+  .nachos__row > i.is-on,
+  .quests__open:has(.quests__dot--big) {
+    animation: none;
+  }
 }
