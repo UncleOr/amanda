@@ -181,7 +181,8 @@
         "placeholderColor": "#6fbf3b",
         "sprite": "cards/insects_04_toxic_moth.webp"
       },
-      "launch": false
+      "launch": false,
+      "targeting": "sniperHunter"
     },
     {
       "id": "insects_05_armored_beetle",
@@ -211,6 +212,11 @@
           "params": {
             "pct": 20
           }
+        },
+        {
+          "type": "silencePoison",
+          "trigger": "onHit",
+          "params": {}
         }
       ],
       "role": {
@@ -221,7 +227,8 @@
         "placeholderColor": "#9aa4ad",
         "sprite": "cards/insects_05_armored_beetle.webp"
       },
-      "launch": false
+      "launch": false,
+      "targeting": "avenger"
     },
     {
       "id": "insects_06_ambush_spider",
@@ -340,7 +347,8 @@
         "placeholderColor": "#e2492f",
         "sprite": "cards/insects_08_firefly.webp"
       },
-      "launch": true
+      "launch": true,
+      "targeting": "champion"
     },
     {
       "id": "insects_09_bombardier",
@@ -382,7 +390,8 @@
         "placeholderColor": "#e2492f",
         "sprite": "cards/insects_09_bombardier.webp"
       },
-      "launch": false
+      "launch": false,
+      "targeting": "wallbreaker"
     },
     {
       "id": "insects_10_insect_empress",
@@ -427,7 +436,8 @@
         "placeholderColor": "#6fbf3b",
         "sprite": "cards/insects_10_insect_empress.webp"
       },
-      "launch": true
+      "launch": true,
+      "targeting": "invader"
     }
   ]
 }

@@ -104,7 +104,8 @@
         "placeholderColor": "#2f7fe2",
         "sprite": "cards/slimes_02_gelatinous_cube.webp"
       },
-      "launch": true
+      "launch": true,
+      "targeting": "wallbreaker"
     },
     {
       "id": "slimes_03_acid_ooze",
@@ -137,6 +138,11 @@
             "he": "ממיסה במכה הראשונה  את שריון האויב, חזק ככל שיהיה",
             "en": "First hit: Melts all enemy Armor, regardless of its strength"
           }
+        },
+        {
+          "type": "silenceArmor",
+          "trigger": "onHit",
+          "params": {}
         }
       ],
       "role": {
@@ -275,7 +281,8 @@
         "placeholderColor": "#4b2e6b",
         "sprite": "cards/slimes_06_toxic_sludge.webp"
       },
-      "launch": false
+      "launch": false,
+      "targeting": "invader"
     },
     {
       "id": "slimes_07_floating_brain",
@@ -319,7 +326,8 @@
         "placeholderColor": "#f2c530",
         "sprite": "cards/slimes_07_floating_brain.webp"
       },
-      "launch": false
+      "launch": false,
+      "targeting": "champion"
     },
     {
       "id": "slimes_08_assimilator",

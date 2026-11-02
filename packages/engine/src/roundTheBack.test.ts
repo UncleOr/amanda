@@ -126,6 +126,32 @@ describe("dive, teleport and burrow", () => {
     expect(b).toBe(c);
   });
 
+  it("but a King never leaves its crown", () => {
+    /*
+     * ⚠ THE KING'S TRAP BEATS THE DIVE. A monster placed on the crown gives
+     * up its movement, and a dive is the biggest movement in the game.
+     *
+     * Found by the tutorial's three hundred battles the day the ability was
+     * handed out to real cards: the lesson's opponent board is five creeping
+     * vines, one of them the King, and five of those three hundred lessons
+     * were LOST — by a crown that started the match standing behind the
+     * child's back row, eating forwards.
+     */
+    const r = runBattle({
+      a: { owner: "A", placements: [{ cardId: "artillery", x: 3, y: 0 }] },
+      b: { owner: "B", placements: [{ cardId: "diver", x: 1, y: 1, king: true }] },
+      seed: 1,
+      catalog: CATALOG,
+      synergies: [],
+    });
+    const king = r.finalUnits.find((u) => u.isKing)!;
+    expect(king.cardId, "the King is the diver").toBe("diver");
+    // B is mirrored into the high columns; its crown sits in the middle of
+    // its own half and must still be there.
+    expect(king.col).toBeGreaterThan(4);
+    expect(r.events.some((e) => e.type === "dig")).toBe(false);
+  });
+
   it("do not walk off into an empty board once they are through", () => {
     /*
      * ⚠ THE STALL, WHICH THIS ABILITY WOULD HAVE REINTRODUCED. Facing home

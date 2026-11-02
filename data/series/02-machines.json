@@ -91,7 +91,8 @@
         "placeholderColor": "#9aa4ad",
         "sprite": "cards/machines_02_drone.webp"
       },
-      "launch": true
+      "launch": true,
+      "targeting": "sniperHunter"
     },
     {
       "id": "machines_03_bolt_mine",
@@ -134,7 +135,8 @@
         "placeholderColor": "#9aa4ad",
         "sprite": "cards/machines_03_bolt_mine.webp"
       },
-      "launch": true
+      "launch": true,
+      "targeting": "invader"
     },
     {
       "id": "machines_04_assembly_line",
@@ -305,7 +307,8 @@
         "placeholderColor": "#9aa4ad",
         "sprite": "cards/machines_07_magnetros.webp"
       },
-      "launch": true
+      "launch": true,
+      "targeting": "champion"
     },
     {
       "id": "machines_08_crusher",
@@ -375,6 +378,11 @@
           "params": {
             "lanes": 3
           }
+        },
+        {
+          "type": "teleport",
+          "trigger": "onSpawn",
+          "params": {}
         }
       ],
       "role": {

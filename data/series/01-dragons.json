@@ -185,6 +185,11 @@
             "he": "משאיר בנתיב שלו לבה רותחת, מי שנוגע בה נשרף ומאבד חיים",
             "en": "Leaves molten lava behind it. Anything standing in it burns."
           }
+        },
+        {
+          "type": "silenceHeal",
+          "trigger": "onHit",
+          "params": {}
         }
       ],
       "role": {
@@ -195,7 +200,8 @@
         "placeholderColor": "#e2492f",
         "sprite": "cards/dragons_04_lava.webp"
       },
-      "launch": true
+      "launch": true,
+      "targeting": "invader"
     },
     {
       "id": "dragons_05_spike",
@@ -236,7 +242,8 @@
         "placeholderColor": "#8a6d3b",
         "sprite": "cards/dragons_05_spike.webp"
       },
-      "launch": false
+      "launch": false,
+      "targeting": "avenger"
     },
     {
       "id": "dragons_06_frost_breath",
@@ -323,7 +330,8 @@
         "placeholderColor": "#9aa4ad",
         "sprite": "cards/dragons_07_gold_horn.webp"
       },
-      "launch": false
+      "launch": false,
+      "targeting": "champion"
     },
     {
       "id": "dragons_08_ghost_dragon",
@@ -366,7 +374,8 @@
         "placeholderColor": "#4b2e6b",
         "sprite": "cards/dragons_08_ghost_dragon.webp"
       },
-      "launch": false
+      "launch": false,
+      "targeting": "sniperHunter"
     },
     {
       "id": "dragons_09_typhoon_dragon",

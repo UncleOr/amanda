@@ -494,7 +494,17 @@ export function runOnSpawn(state: BattleState, ops: BattleOps): void {
        * intercept, which is what "bypasses everyone" has to mean on a board
        * where every other card has to walk.
        */
-      if (ROUND_THE_BACK.includes(ab.type) && !u.flags.dug) {
+      /*
+       * ⚠ AND A KING NEVER GOES ANYWHERE. The King's Trap is the rule that
+       * a monster placed on the crown gives up its movement — and a dive is
+       * movement, the biggest in the game. Without this line a family whose
+       * diver is also its King (the tutorial's own plants board, which is
+       * five creeping vines) starts the match with its crown standing
+       * behind the child's back row, eating forwards. Found by the
+       * tutorial's three hundred battles: five of them ended with the
+       * lesson lost, which is the one thing a lesson may never do.
+       */
+      if (ROUND_THE_BACK.includes(ab.type) && !u.flags.dug && !u.isKing) {
         u.col = u.facing > 0 ? ARENA.width - 1 : 0;
         u.facing = u.facing > 0 ? -1 : 1;
         u.flags.dug = true;

@@ -136,6 +136,11 @@
           "params": {
             "slots": 1
           }
+        },
+        {
+          "type": "silenceArmor",
+          "trigger": "onHit",
+          "params": {}
         }
       ],
       "role": {
@@ -146,7 +151,8 @@
         "placeholderColor": "#8a6d3b",
         "sprite": "cards/giants_03_hill_giant.webp"
       },
-      "launch": false
+      "launch": false,
+      "targeting": "wallbreaker"
     },
     {
       "id": "giants_04_rock_troll",
@@ -186,7 +192,8 @@
         "placeholderColor": "#6fbf3b",
         "sprite": "cards/giants_04_rock_troll.webp"
       },
-      "launch": false
+      "launch": false,
+      "targeting": "champion"
     },
     {
       "id": "giants_05_wall_breaker",
@@ -225,7 +232,7 @@
         "sprite": "cards/giants_05_wall_breaker.webp"
       },
       "launch": true,
-      "targeting": "king"
+      "targeting": "wallbreaker"
     },
     {
       "id": "giants_06_frost_giant",
@@ -345,7 +352,8 @@
         "placeholderColor": "#4b2e6b",
         "sprite": "cards/giants_08_vengeful_rok.webp"
       },
-      "launch": false
+      "launch": false,
+      "targeting": "avenger"
     },
     {
       "id": "giants_09_thunder_giant",

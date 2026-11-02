@@ -58,7 +58,8 @@
         "placeholderColor": "#2f7fe2",
         "sprite": "cards/sea_01_minnow.webp"
       },
-      "launch": true
+      "launch": true,
+      "targeting": "sniperHunter"
     },
     {
       "id": "sea_02_jellyfish",
@@ -178,7 +179,8 @@
         "placeholderColor": "#2f7fe2",
         "sprite": "cards/sea_04_squid.webp"
       },
-      "launch": true
+      "launch": true,
+      "targeting": "wallbreaker"
     },
     {
       "id": "sea_05_surge",
@@ -208,6 +210,11 @@
           "params": {
             "slots": 2
           }
+        },
+        {
+          "type": "dive",
+          "trigger": "onSpawn",
+          "params": {}
         }
       ],
       "role": {
@@ -250,6 +257,11 @@
             "freezeSeconds": 2,
             "resetCooldown": true
           }
+        },
+        {
+          "type": "silenceHeal",
+          "trigger": "onHit",
+          "params": {}
         }
       ],
       "role": {
@@ -260,7 +272,8 @@
         "placeholderColor": "#2f7fe2",
         "sprite": "cards/sea_06_frozen.webp"
       },
-      "launch": true
+      "launch": true,
+      "targeting": "champion"
     },
     {
       "id": "sea_07_siren",
@@ -342,7 +355,8 @@
         "placeholderColor": "#2f7fe2",
         "sprite": "cards/sea_08_ocean.webp"
       },
-      "launch": true
+      "launch": true,
+      "targeting": "invader"
     },
     {
       "id": "sea_09_shark",

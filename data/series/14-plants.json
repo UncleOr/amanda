@@ -268,7 +268,8 @@
         "placeholderColor": "#6fbf3b",
         "sprite": "cards/plants_06_toxic_mushroom.webp"
       },
-      "launch": true
+      "launch": true,
+      "targeting": "invader"
     },
     {
       "id": "plants_07_dandelion",
@@ -300,6 +301,11 @@
             "spiritHp": 80,
             "spiritPower": 80
           }
+        },
+        {
+          "type": "burrow",
+          "trigger": "onSpawn",
+          "params": {}
         }
       ],
       "role": {
@@ -310,7 +316,8 @@
         "placeholderColor": "#9fd6e8",
         "sprite": "cards/plants_07_dandelion.webp"
       },
-      "launch": false
+      "launch": false,
+      "targeting": "sniperHunter"
     },
     {
       "id": "plants_08_cactus",
@@ -347,6 +354,11 @@
           "params": {
             "hpPerSecond": 40
           }
+        },
+        {
+          "type": "silencePoison",
+          "trigger": "onHit",
+          "params": {}
         }
       ],
       "role": {
@@ -357,7 +369,8 @@
         "placeholderColor": "#6fbf3b",
         "sprite": "cards/plants_08_cactus.webp"
       },
-      "launch": false
+      "launch": false,
+      "targeting": "avenger"
     },
     {
       "id": "plants_09_sunflower",
