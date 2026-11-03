@@ -186,7 +186,7 @@ export function Settings({
             <Icon name="phone" size={20} />
             <span className="set__label">{t("s2e0f20a", "רטט")}</span>
             <span className={`set__state${buzz ? " set__state--on" : ""}`}>
-              {buzz ? t("s4e2eb6c", "דולק") : t("s6af16ba", "כבוי")}
+              {buzz ? t("s6827665", "דולק") : t("sdb41019", "כבוי")}
             </span>
           </button>
 

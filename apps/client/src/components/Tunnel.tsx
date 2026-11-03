@@ -293,7 +293,7 @@ export function TunnelStrip({ best, onOpen }: { best: number; onOpen: () => void
     >
       <span className="tunnel-strip__arch" aria-hidden="true" />
       <span className="tunnel-strip__text">
-        <b>{t("s2213087", "מנהרת הפרסים")}</b>
+        <b>{t("s26a4e3d", "מנהרת הפרסים")}</b>
         <span className="tunnel-strip__bar" aria-hidden="true">
           <i style={{ width: `${tunnelProgress(at) * 100}%` }} />
         </span>
@@ -587,7 +587,7 @@ export function Tunnel({
         <button className="modal__close" onClick={onClose} title={t("s4848cb9", "סגירה")}>
           <Icon name="exit" size={15} />
         </button>
-        <h2 className="tunnel__title">{t("s26a4e3d", "מנהרת הפרסים")}</h2>
+        <h2 className="tunnel__title">{t("saa5347d", "מנהרת הפרסים")}</h2>
         <div className="tunnel__body">
           {/*
             ═══ WHICH LANE IS WHICH, SAID ONCE ═══

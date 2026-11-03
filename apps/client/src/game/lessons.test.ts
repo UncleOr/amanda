@@ -1,7 +1,7 @@
 import { describe, expect, it } from "vitest";
 import { runBattle, type BoardInput, type Placement } from "@amanda/engine";
 import { CATALOG, SYNERGIES, ACTIONS } from "../data/catalog";
-import { LESSONS } from "./lessons";
+import { LESSONS, STAGE_LESSONS, type Lesson } from "./lessons";
 
 /*
  * "ותוודא שהוא יפסיד" — Or, 2026-10-06.
@@ -62,8 +62,8 @@ function childBoard(deck: string[], rnd: () => number): BoardInput {
   return { owner: "A", placements };
 }
 
-function playLesson(index: number, runs: number) {
-  const lesson = LESSONS[index]!;
+function playLesson(index: number, runs: number, set: Lesson[] = LESSONS) {
+  const lesson = set[index]!;
   let seed = 20261006 + index;
   const rnd = () => ((seed = (seed * 1103515245 + 12345) & 0x7fffffff) / 0x7fffffff);
   const losses: string[] = [];
@@ -94,6 +94,25 @@ describe("the tutorial matches are won", () => {
     const losses = playLesson(1, 300);
     expect(losses.slice(0, 5)).toEqual([]);
   }, 30000);
+
+  /*
+   * ═══ AND THE THREE STAGE LESSONS, WHICH HAD NO BATTLE TEST AT ALL ═══
+   *
+   * The two above are `LESSONS`; the tutorial also has `STAGE_LESSONS`, and
+   * only the first array was ever played here. Three real battles a child
+   * is promised they will win, and nothing checked that they do.
+   *
+   * Found the way a gap like this is always found — by walking into it. Or
+   * asked for the Sunflower to be weakened; the Sunflower is dealt in
+   * `LESSONS[1]` AND in `STAGE_LESSONS[2]`, and only the first of those
+   * would have gone red if the nerf had gone too far.
+   */
+  it("the stage lessons are won too, and nothing checked that before", () => {
+    for (let i = 0; i < STAGE_LESSONS.length; i++) {
+      if (!STAGE_LESSONS[i]!.opponent?.length) continue;
+      expect(playLesson(i, 300, STAGE_LESSONS).slice(0, 5), `stage lesson ${i}`).toEqual([]);
+    }
+  }, 60000);
 
   it("every card a lesson deals actually exists", () => {
     for (const lesson of LESSONS)

@@ -386,8 +386,8 @@
       "rarity": "common",
       "stats": {
         "hp": 500,
-        "power": 200,
-        "attackSpeed": 2.5,
+        "power": 150,
+        "attackSpeed": 3,
         "moveSpeed": 0,
         "range": "ranged"
       },
@@ -398,7 +398,7 @@
           "type": "healAura",
           "trigger": "aura",
           "params": {
-            "hpPerSecond": 40
+            "hpPerSecond": 30
           }
         }
       ],

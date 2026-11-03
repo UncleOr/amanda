@@ -273,8 +273,8 @@
       "seriesId": "insects",
       "numberInSeries": 7,
       "name": {
-        "he": "צרעה תוקפנית",
-        "en": "Aggressive Wasp"
+        "he": "צרעה נוקמת",
+        "en": "Avenging Wasp"
       },
       "elements": [
         "air"
@@ -299,15 +299,15 @@
         }
       ],
       "role": {
-        "he": "עפה מהר, עוקצת והודפת.",
-        "en": "Flies fast, stings and knocks back."
+        "he": "עפה מהר. עוקצת את מי שעקץ אותה.",
+        "en": "Flies fast. Goes after whoever stung it."
       },
       "art": {
         "placeholderColor": "#9fd6e8",
         "sprite": "cards/insects_07_aggressive_wasp.webp"
       },
       "launch": true,
-      "targeting": "king"
+      "targeting": "avenger"
     },
     {
       "id": "insects_08_firefly",
