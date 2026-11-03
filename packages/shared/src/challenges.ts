@@ -260,12 +260,60 @@ function attr(name: string): string {
   return name.replace(/^The\s+/i, "");
 }
 
-/*
- * The drafts below are mine; the words are Or's.
+/**
+ * The same name with the article that fits in front of it.
  *
- * He is a copywriter and has asked to write the strings himself. These say the
- * right thing in roughly the right register so the screen can be built and
- * looked at, and every one of them is expected to be rewritten.
+ * ⚠ AND THIS IS THE SECOND HALF OF THE BUG ABOVE. Taking "The" off the
+ * front fixed "a The Insects card" into "a Insects card", which is wrong in
+ * a quieter way and went out on the live site for a month. Ten families, one
+ * of them beginning with a vowel, so nine rows read correctly and the tenth
+ * read like a typo — which is exactly how it was missed.
+ *
+ * Hebrew does not need this: `מ${s.he}` already carries its own article.
+ */
+function one(name: string): string {
+  return `${/^[aeiou]/i.test(name) ? "an" : "a"} ${name}`;
+}
+
+/*
+ * ═══ THE SENTENCES, AND THE FOUR RULES THEY NOW KEEP ═══
+ *
+ * These were drafts — written to say the right thing in roughly the right
+ * register so the screen could be built and looked at. Or, who is a
+ * copywriter: *"go over the sentences and write them better."*
+ *
+ * What was wrong with them was not the words one at a time. It was that
+ * twelve sentences had been written twelve separate times, so a player
+ * reading nine rows down a panel had to parse nine different shapes. The
+ * rules below are what the pass settled on, and a new template keeps them.
+ *
+ *   1. THE VERB FIRST, AND A VERB THAT MEANS SOMETHING. Hebrew runs
+ *      right-to-left and the eye lands on the first word, so that word is
+ *      the one worth spending. Five of the twelve opened with `לשחק` — the
+ *      emptiest verb in a game that is entirely about playing. They open
+ *      with `להילחם`, `להפיל`, `להכתיר`, `להדליק`, `למלא` now.
+ *
+ *   2. THE ROW ALREADY SAYS IT, SO THE SENTENCE DOES NOT. Beside every
+ *      sentence sits a bar, a `3/5`, a gem and a period tab. A sentence
+ *      that also carried the count said the same number twice — and said
+ *      it worst where it mattered most: `לנצח 3 פעמים ולאבד כל פעם לא
+ *      יותר מ-4 קלפים` is a sentence about arithmetic, not about a battle.
+ *      The sentence describes ONE battle; the bar says how many.
+ *
+ *      ⚠ EXCEPT `play` AND `win`, where the count IS the goal. "Fight 60
+ *      battles" is the whole task; "crown a Dragon" is the task and 20 is
+ *      how often. Strip the number from the first and nothing is left.
+ *
+ *   3. THE GAME'S OWN WORDS, NOT THE ENGINE'S. The family bonus is the
+ *      thing the tutorial calls `הסינרגיה נדלקת`, so a challenge asks to
+ *      LIGHT one. The empty cells fill with `מפלצי פירורים`, a creature
+ *      with a name and a face, so the full-board challenge names them
+ *      rather than saying "by yourself". A match is a `קרב`.
+ *
+ *   4. SHORT, AND THIS ONE IS MEASURED. `.quests__what` is the `1fr` of a
+ *      three-column row and it wraps; every sentence that takes a second
+ *      line makes its row taller, on a screen that is 390 pixels tall with
+ *      four rows and a header on it.
  */
 const TEMPLATES: Template[] = [
   {
@@ -278,8 +326,8 @@ const TEMPLATES: Template[] = [
         goal: { kind: "playCard", cardId: card.id },
         need,
         reward: { nachos: need },
-        he: need === 1 ? `לשחק משחק עם ${card.he}` : `לשחק ${need} משחקים עם ${card.he}`,
-        en: need === 1 ? `Play a game with ${card.en}` : `Play ${need} games with ${card.en}`,
+        he: `לצאת לקרב עם ${card.he}`,
+        en: `Take ${card.en} into battle`,
       };
     },
   },
@@ -293,11 +341,13 @@ const TEMPLATES: Template[] = [
         goal: { kind: "placeSeries", seriesId: s.id, row },
         need: 1,
         reward: { nachos: 1 },
-        he: row === "front" ? `לשים קלף מ${s.he} בשורה הקדמית` : `לשים קלף מ${s.he} בשורה האחורית`,
+        // `בחזית` and `מאחור` are the words Amanda uses in the tutorial;
+        // `בשורה הקדמית` is the word the board file uses.
+        he: row === "front" ? `לשים קלף מ${s.he} בחזית` : `לשים קלף מ${s.he} מאחור`,
         en:
           row === "front"
-            ? `Put a ${attr(s.en)} card in the front row`
-            : `Put a ${attr(s.en)} card in the back row`,
+            ? `Put ${one(attr(s.en))} card up front`
+            : `Put ${one(attr(s.en))} card at the back`,
       };
     },
   },
@@ -309,8 +359,8 @@ const TEMPLATES: Template[] = [
         goal: { kind: "score", least },
         need: 1,
         reward: { diamonds: least * 2 },
-        he: `לסיים משחק עם ציון ${least} ומעלה`,
-        en: `Finish a game scoring ${least} or better`,
+        he: `לסיים קרב בציון ${least} ומעלה`,
+        en: `Finish a battle on ${least} or better`,
       };
     },
   },
@@ -323,8 +373,9 @@ const TEMPLATES: Template[] = [
         goal: { kind: "play" },
         need,
         reward: { diamonds: need * 3 },
-        he: `לשחק ${need} משחקים`,
-        en: `Play ${need} games`,
+        // Rule 2's exception: the count IS the goal here, so it stays.
+        he: `להילחם ב-${need} קרבות`,
+        en: `Fight ${need} battles`,
       };
     },
   },
@@ -336,8 +387,8 @@ const TEMPLATES: Template[] = [
         goal: { kind: "win" },
         need,
         reward: { diamonds: need * 6 },
-        he: `לנצח ב-${need} משחקים`,
-        en: `Win ${need} games`,
+        he: `לנצח ב-${need} קרבות`,
+        en: `Win ${need} battles`,
       };
     },
   },
@@ -351,8 +402,8 @@ const TEMPLATES: Template[] = [
         goal: { kind: "crush" },
         need,
         reward: { diamonds: need * 8 },
-        he: need === 1 ? `להפיל מלך` : `להפיל ${need} מלכים`,
-        en: need === 1 ? `Bring a King down` : `Bring ${need} Kings down`,
+        he: `להפיל מלך`,
+        en: `Bring a King down`,
       };
     },
   },
@@ -368,11 +419,8 @@ const TEMPLATES: Template[] = [
         goal: { kind: "fastWin", seconds },
         need,
         reward: { diamonds: need * 10 },
-        he: need === 1 ? `לנצח תוך ${seconds} שניות` : `לנצח ${need} פעמים תוך ${seconds} שניות`,
-        en:
-          need === 1
-            ? `Win inside ${seconds} seconds`
-            : `Win ${need} times inside ${seconds} seconds`,
+        he: `לנצח תוך ${seconds} שניות`,
+        en: `Win inside ${seconds} seconds`,
       };
     },
   },
@@ -385,14 +433,8 @@ const TEMPLATES: Template[] = [
         goal: { kind: "hold", lost },
         need,
         reward: { diamonds: need * 9 },
-        he:
-          need === 1
-            ? `לנצח ולאבד לא יותר מ-${lost} קלפים`
-            : `לנצח ${need} פעמים ולאבד כל פעם לא יותר מ-${lost} קלפים`,
-        en:
-          need === 1
-            ? `Win losing no more than ${lost} cards`
-            : `Win ${need} times, losing no more than ${lost} cards each time`,
+        he: `לנצח ולאבד עד ${lost} קלפים`,
+        en: `Win losing ${lost} cards at most`,
       };
     },
   },
@@ -406,8 +448,10 @@ const TEMPLATES: Template[] = [
         goal: { kind: "family", seriesId: s.id },
         need,
         reward: { diamonds: need * 7 },
-        he: `לשחק עם בונוס משפחה של ${s.he}`,
-        en: `Play with the ${attr(s.en)} family bonus live`,
+        // The tutorial's own name for this moment is `הסינרגיה נדלקת`, so
+        // the challenge asks the player to light one.
+        he: `להדליק בונוס משפחה של ${s.he}`,
+        en: `Light the ${attr(s.en)} family bonus`,
       };
     },
   },
@@ -422,7 +466,7 @@ const TEMPLATES: Template[] = [
         need,
         reward: { diamonds: need * 6 },
         he: `להכתיר קלף מ${s.he}`,
-        en: `Crown a ${attr(s.en)} card`,
+        en: `Crown ${one(attr(s.en))} card`,
       };
     },
   },
@@ -434,8 +478,10 @@ const TEMPLATES: Template[] = [
         goal: { kind: "rarity", rarity: "epic" },
         need,
         reward: { diamonds: need * 7 },
-        he: `לשחק עם קלף אפי על הלוח`,
-        en: `Play with an epic card on the board`,
+        // Deliberately the same shape as the card template above it: both
+        // of them ask for one thing to be fielded, so both read alike.
+        he: `לצאת לקרב עם קלף אפי`,
+        en: `Take an epic card into battle`,
       };
     },
   },
@@ -447,8 +493,10 @@ const TEMPLATES: Template[] = [
         goal: { kind: "fullBoard" },
         need,
         reward: { diamonds: need * 8 },
-        he: `למלא את כל הלוח לבד`,
-        en: `Fill every slot yourself`,
+        // Naming the Crumb Demons says what "by yourself" meant, in a
+        // creature the player met in the tutorial and has a face for.
+        he: `למלא את הלוח בלי פירורים`,
+        en: `Fill the board, no Crumb Demons`,
       };
     },
   },

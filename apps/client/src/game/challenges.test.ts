@@ -19,6 +19,10 @@ const POOLS: Pools = {
   series: [
     { id: "lions", he: "אריות", en: "The Lions" },
     { id: "slimes", he: "רירים", en: "The Slimes" },
+    // ⚠ ONE FAMILY BEGINNING WITH A VOWEL, deliberately. Nine of the ten
+    // real families begin with a consonant, which is how "a Insects card"
+    // survived a month on the live site — see `one()`.
+    { id: "ants", he: "נמלים", en: "The Ants" },
   ],
 };
 
@@ -135,6 +139,105 @@ describe("the set for a period", () => {
       POOLS,
     );
     expect(evening.map((c) => c.id)).toEqual(morning.map((c) => c.id));
+  });
+});
+
+/**
+ * ═══ THE SENTENCE DESCRIBES ONE BATTLE; THE BAR SAYS HOW MANY ═══
+ *
+ * Or: *"go over the sentences and write them better."*
+ *
+ * Half the templates used to put the count into the words and half did not,
+ * so a player reading nine rows had to work out, row by row, whether the
+ * number in the sentence was the same number as the one in the `3/5` beside
+ * it. The worst of them read `לנצח 3 פעמים ולאבד כל פעם לא יותר מ-4 קלפים`
+ * — a sentence about arithmetic rather than about a battle, and the longest
+ * string the panel has ever had to fit.
+ *
+ * The rule is that the sentence is a function of the GOAL ALONE, with one
+ * deliberate exception. This test is how it stays that way when somebody
+ * adds a thirteenth template, because the pull to write "win 5 times" in the
+ * words is strong and the panel will not complain.
+ */
+describe("the sentence and the number beside it", () => {
+  /** Every (goal, sentence, need) the year produces, in both languages. */
+  const everything = () => {
+    const rows: { goal: string; he: string; en: string; need: number; id: string }[] = [];
+    for (let d = 0; d < 365; d++) {
+      const day = new Date(Date.UTC(2026, 0, 1 + d, 12));
+      for (const c of challengesFor(POOLS, day))
+        rows.push({ goal: JSON.stringify(c.goal), he: c.he, en: c.en, need: c.need, id: c.id });
+    }
+    return rows;
+  };
+
+  it("reads the same for one battle as for twenty, except where the count is the goal", () => {
+    const says = new Map<string, { he: string; en: string; need: number; id: string }>();
+    for (const row of everything()) {
+      // "Fight 60 battles" IS the task; strip the number and nothing is
+      // left of it. Every other goal is a thing to do, and `need` is only
+      // how often.
+      if (row.goal.includes('"play"') || row.goal.includes('"win"')) continue;
+      const had = says.get(row.goal);
+      if (!had) {
+        says.set(row.goal, row);
+        continue;
+      }
+      expect(
+        row.he,
+        `${row.id} says it differently at ${row.need} than ${had.id} did at ${had.need}`,
+      ).toBe(had.he);
+      expect(row.en, row.id).toBe(had.en);
+    }
+    // And the year really did produce the same goal at two different needs,
+    // or the loop above never compared anything.
+    expect(says.size).toBeGreaterThan(5);
+  });
+
+  it("puts the count in the words exactly where the count is the goal", () => {
+    for (const row of everything()) {
+      const counted = row.goal.includes('"play"') || row.goal.includes('"win"');
+      if (counted) {
+        expect(row.he, row.id).toContain(String(row.need));
+        expect(row.en, row.id).toContain(String(row.need));
+      }
+    }
+  });
+
+  /*
+   * `.quests__what` is the `1fr` of a three-column row and it wraps. A row
+   * that takes a second line is taller, on a home screen that is 390 pixels
+   * tall with four of these rows, a header, a tab strip and a clock on it.
+   *
+   * Measured in the running panel at 844×390, which is the landscape phone
+   * Hod plays on: the column is 255px and Hebrew at `--t-3` wraps there at
+   * about 39 characters. The longest sentence the templates can now build
+   * is 31 (`להדליק בונוס משפחה של שוכני הים`); before this pass it was 44,
+   * and that one did wrap. 34 leaves the headroom for a longer family name
+   * without leaving room for another sentence about arithmetic.
+   */
+  it("is short enough to stay on one line", () => {
+    for (const row of everything()) {
+      expect(row.he.length, `${row.id}: ${row.he}`).toBeLessThanOrEqual(34);
+      expect(row.en.length, `${row.id}: ${row.en}`).toBeLessThanOrEqual(40);
+    }
+  });
+
+  /*
+   * Rule 1 of the pass: the first word is the one the eye lands on in a
+   * right-to-left row, and five of the twelve templates used to spend it on
+   * `לשחק` — the emptiest verb in a game that is entirely about playing.
+   */
+  it("opens on a verb that means something", () => {
+    /*
+     * ⚠ NOT `\b`. JavaScript defines a word boundary over [A-Za-z0-9_], so
+     * there is no boundary between a Hebrew letter and the space after it
+     * and `/^לשחק\b/` matches NOTHING — this test was written that way
+     * first and passed against the very copy it was supposed to reject.
+     */
+    for (const row of everything()) {
+      expect(row.he, `${row.id}: ${row.he}`).not.toMatch(/^לשחק(\s|$)/);
+    }
   });
 });
 
@@ -296,10 +399,32 @@ describe("a challenge in English", () => {
     }
   });
 
+  /*
+   * === AND THE ARTICLE HAS TO FIT THE NAME ===
+   *
+   * The test above this one caught "a The Giants card" and the fix — take
+   * "The" off the front — left "a Insects card" behind it. Nine families
+   * begin with a consonant and one does not, so the broken row was one row
+   * in ten and read as a typo rather than as a rule nobody had written.
+   */
+  it("puts an before a vowel and a before everything else", () => {
+    let vowels = 0;
+    for (let d = 0; d < 365; d++) {
+      const day = new Date(Date.UTC(2026, 0, 1 + d, 12));
+      for (const c of challengesFor(POOLS, day)) {
+        expect(c.en, c.id).not.toMatch(/\ba [aeiou]/i);
+        expect(c.en, c.id).not.toMatch(/\ban [^aeiou ]/i);
+        if (/\ban Ants\b/.test(c.en)) vowels++;
+      }
+    }
+    // And the vowel case was actually reached, or this proves nothing.
+    expect(vowels, "no challenge ever named the vowel family").toBeGreaterThan(0);
+  });
+
   it("names the card or the family it is about", () => {
     // The two templates that take a name out of the pools must take the
     // ENGLISH one — the half of this that a `en: he` typo would pass.
-    const names = ["Lion", "Slime", "Ghost", "The Lions", "The Slimes"];
+    const names = ["Lion", "Slime", "Ghost", "The Lions", "The Slimes", "The Ants"];
     let named = 0;
     for (let d = 0; d < 120; d++) {
       const day = new Date(Date.UTC(2026, 0, 1 + d, 12));
