@@ -88,6 +88,22 @@ export type SoundName =
    * rarer of the two is the one that loses.
    */
   | "newcard"
+  /**
+   * Your board just got better.
+   *
+   * Or, naming three cards: *"when you activate dark corners, full refuel,
+   * energy boost, there should be a vibration like that and a HAPPIER
+   * sound, and the card or cards that improved should glow for a moment."*
+   * All three were playing `draw` — a 70ms sine slide, the sound of being
+   * handed a card — which says "a thing happened" and nothing else.
+   *
+   * Computed rather than generated, for the reason fanfare.ts gives: happy
+   * is a feeling, a feeling is music, and the effects model cannot make
+   * music. It is brass rather than the bells `newcard` is made of, and it
+   * has no drum, so it sits between the two things it must not be mistaken
+   * for — a prize and a result. See fanfare.ts.
+   */
+  | "boost"
   | "lose";
 
 let ctx: AudioContext | null = null;
@@ -332,6 +348,19 @@ const RECIPES: Record<SoundName, () => void> = {
   // Higher, faster and with no bottom to it, so the fallback keeps the one
   // distinction that matters: a win has weight, a new card sparkles.
   newcard: () => [1047, 1319, 1568, 2093].forEach((f, i) => tone(f, 160, { type: "sine", gain: 0.1, delayMs: i * 70 })),
+  /*
+   * The oscillator stand-in for the boost: D up to G, then the G major
+   * triad together. Mid-register and short, so even the fallback keeps the
+   * one thing that matters — it is neither the high sparkle of `newcard`
+   * nor the wide landing of `win`.
+   */
+  boost: () => {
+    tone(294, 90, { type: "triangle", gain: 0.1 });
+    tone(392, 90, { type: "triangle", gain: 0.12, delayMs: 80 });
+    [494, 587, 784].forEach((f, i) =>
+      tone(f, 380, { type: "triangle", gain: 0.12 - i * 0.03, delayMs: 160 }),
+    );
+  },
   lose: () => [392, 330, 262, 196].forEach((f, i) => tone(f, 260, { type: "sine", gain: 0.14, delayMs: i * 130 })),
 };
 

@@ -88,10 +88,53 @@ const PATTERN = {
   /** And it has been aimed. One heavy thud: the card is spent. */
   aim: 110,
   /**
+   * ═══ WHAT THE CARD DID, NOT THAT A CARD WAS PLAYED ═══
+   *
+   * Or: *"and on every card you activate there should be a vibration and a
+   * fitting sound."* Ten action cards shared one buzz and one sound, which
+   * is the same mistake the win and the new-card fanfares made before they
+   * were split: two events that feel identical teach a child that nothing
+   * in particular happened, and the rarer of the two is the one that loses.
+   *
+   * They do not get ten feelings. A phone has one motor and a seven-year-
+   * old has to tell them apart through a case, so they get the two things
+   * an action card can ever mean — see actionFx.ts for which card is which.
+   *
+   * GOOD FOR YOU. Three short pulses, each longer than the last: something
+   * growing. Or, naming the three cards: *"when you use dark corners, full
+   * refuel, energy boost, there should be a vibration like that and a
+   * happier sound, and the card or cards that improved should glow for a
+   * moment."*
+   */
+  boost: [25, 45, 55, 45, 110],
+  /**
+   * DONE TO THEM. The opposite shape — a heavy hit first and then two
+   * quick stabs that fall away, which is what the boost would be backwards.
+   * Deliberately the least pleasant thing a player can set off on purpose.
+   */
+  hex: [140, 45, 50, 40, 30],
+  /**
    * The build phase opening: places, please. Three even beats, mid-weight —
    * the start of something rather than a warning about it.
    */
   build: [70, 60, 70, 60, 70],
+  /**
+   * One second of the 3-2-1, and the only pattern in this file that is
+   * meant to be felt SEVERAL TIMES IN A ROW.
+   *
+   * Or: *"every time there is a 3 2 1 — before the build phase and before
+   * the battle too — there need to be vibrations like that every second,
+   * 3 2 1."* The screen had been counting and the speaker had been ticking
+   * (sfx `clock`/`clockLow`, alternating), and the hand had been told
+   * nothing between the phase buzz at the start and the phase buzz at the
+   * end.
+   *
+   * A single pulse on purpose. Everything else here is a rhythm because it
+   * happens ONCE and the rhythm is all it has; this one's rhythm is the
+   * repetition — one beat a second — and a two-pulse pattern played three
+   * times in three seconds is a stutter, not a count.
+   */
+  count: 65,
   /**
    * Panic. Fast, hard, and ending on the longest pulse of the three — the
    * one pattern here that is meant to be slightly unpleasant, because the

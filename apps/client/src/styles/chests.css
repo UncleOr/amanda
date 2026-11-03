@@ -803,6 +803,53 @@
 }
 
 /*
+ * ═══ THE SQUARE THAT JUST GOT BETTER ═══
+ *
+ * Or: *"and the card or cards that improved should glow for a moment."*
+ *
+ * A MOMENT is the whole specification, and it is what makes this different
+ * from the green ring above. That one is a STATE — three of a family are
+ * touching, and they will be touching until you move one — so it sits there
+ * and breathes. This is an EVENT: a card was spent, these squares are what
+ * it bought, and a second later there is nothing to see because there is
+ * nothing left to say. A permanent mark would be a lie by the next card.
+ *
+ * Three reasons it is drawn on the slot rather than on another ::after:
+ * both pseudo-elements on .slot are already taken (the sticker-settle
+ * shadow and the synergy ring), a corner can be lit AND in a family bonus
+ * at the same time, and `filter` on the slot reaches the card inside it —
+ * which is the thing that is supposed to look brighter.
+ *
+ * Gold-white rather than the synergy green for the same reason the two are
+ * different animations: green here means "a rule is satisfied". This means
+ * "a number went up", and the game's word for that is already gold.
+ */
+.slot--lit { animation: slot-lit 0.9s ease-out; }
+@keyframes slot-lit {
+  0% {
+    filter: brightness(1);
+    box-shadow: inset 0 2px 5px rgba(0, 0, 0, 0.55);
+  }
+  /* The flash arrives fast and leaves slowly — the shape of every struck
+     thing, and the reason a linear fade reads as a lamp instead. */
+  18% {
+    filter: brightness(1.85) saturate(1.15);
+    box-shadow:
+      inset 0 0 24px 7px rgba(255, 226, 150, 0.95),
+      0 0 16px rgba(255, 214, 102, 0.8);
+  }
+  100% {
+    filter: brightness(1);
+    box-shadow: inset 0 2px 5px rgba(0, 0, 0, 0.55);
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  /* The sound and the buzz still say it. A flash is the one part of this
+     that a reader of that setting has asked not to have. */
+  .slot--lit { animation: none; }
+}
+
+/*
  * The empty crown, asking for a King.
  *
  * This carries the whole message now: the sentence that used to sit under

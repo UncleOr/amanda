@@ -62,6 +62,16 @@ interface Props {
    * the board is a rule you cannot play to.
    */
   synergy?: Set<string>;
+  /**
+   * Cells flashing for a moment because an action card just improved them.
+   *
+   * Or: *"and the card or cards that improved should glow for a moment."* A
+   * card whose whole effect is a number going up somewhere has, until it
+   * does, no effect you can see — and the three cards this is for are the
+   * three a seven-year-old is most likely to spend without learning what
+   * they bought. See actionFx.ts for which card lights what.
+   */
+  lit?: Set<string>;
   /** How many more cells may still be stacked onto. */
   stackSlots?: number;
   /** True when the four corners are stackable without spending a slot. */
@@ -134,6 +144,7 @@ export function BoardGrid({
   dragging = false,
   editing = false,
   synergy,
+  lit,
   stacked = {},
   lanes = BOARD_SIZE,
   kingLane = 1,
@@ -205,6 +216,7 @@ export function BoardGrid({
           // sentence under the hand that said the same thing in words.
           `${!king && interactive ? " slot--king-empty" : ""}` +
           `${synergy?.has(KING_KEY) ? " slot--synergy" : ""}` +
+          `${lit?.has(KING_KEY) ? " slot--lit" : ""}` +
           `${king && revealKing ? " slot--readable" : ""}` +
           `${targeting && king ? " slot--target" : ""}` +
           `${interactive && dragging && !king ? " slot--droppable" : ""}` +
@@ -265,6 +277,7 @@ export function BoardGrid({
             className={
               `slot${occ && shown ? " slot--filled slot--readable" : ""}` +
               `${synergy?.has(key) ? " slot--synergy" : ""}` +
+              `${lit?.has(key) ? " slot--lit" : ""}` +
               `${isGuardPost(x, y, kingLane) ? " slot--guard" : ""}` +
               `${stacked[key] ? " slot--stacked" : ""}` +
               `${stackableHere(key, occ) ? " slot--stackable" : ""}` +

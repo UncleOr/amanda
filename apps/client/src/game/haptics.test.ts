@@ -29,6 +29,8 @@ import { afterEach, describe, expect, it, vi } from "vitest";
 import { readFileSync } from "node:fs";
 import { fileURLToPath } from "node:url";
 import { haptics, PATTERNS, type Buzz } from "./haptics";
+import { ACTION_FX } from "./actionFx";
+import { ACTIVE_ACTIONS } from "../data/catalog";
 
 const read = (p: string) => readFileSync(fileURLToPath(new URL(p, import.meta.url)), "utf8");
 
@@ -91,11 +93,18 @@ describe("the vocabulary, as feelings", () => {
      * Also at the end of a match. And of course when you press a chest and
      * when diamonds are taken."*
      */
+    /*
+     * And a third time, for the two things a player DOES rather than
+     * watches: *"every time there is a 3 2 1 — before the build phase and
+     * before the battle too — there need to be vibrations like that every
+     * second"*, and *"on every card you activate there should be a
+     * vibration and a fitting sound."*
+     */
     expect(names.sort()).toEqual(
       [
-        "action", "aim", "battle", "build", "chest", "defeat", "fallen",
-        "gems", "go", "kill", "lift", "lock", "logo", "panic", "tap",
-        "victory",
+        "action", "aim", "battle", "boost", "build", "chest", "count",
+        "defeat", "fallen", "gems", "go", "hex", "kill", "lift", "lock",
+        "logo", "panic", "tap", "victory",
       ].sort(),
     );
   });
@@ -280,12 +289,72 @@ describe("where the game asks for it", () => {
 
   it("when an action card is played, and again when it is aimed", () => {
     const match = read("./useMatch.ts");
+    // Arming a targeted card still buzzes where it always did.
     expect(match).toContain('haptics.buzz("action")');
-    expect(match).toContain('haptics.buzz("aim")');
-    // The aim fires where the card is SPENT — one place, whatever the card
-    // does, which is why all four of Or's examples are covered by it.
-    const spend = match.indexOf("const applyTargetTo");
-    expect(match.indexOf('haptics.buzz("aim")')).toBeGreaterThan(spend);
+    /*
+     * ⚠ THE AIM MOVED INTO A LOOKUP, AND IT IS STILL THE AIM.
+     *
+     * Or: *"and also when you have chosen a position for an action card."*
+     * That used to be a literal `haptics.buzz("aim")` at the bottom of
+     * applyTargetTo; it is now the FALLBACK of the per-card lookup that
+     * answered his later *"on every card you activate there should be a
+     * vibration and a fitting sound"*. A card with no entry of its own is
+     * exactly as loud as it was before — which is the property this line
+     * is here to keep, since the easy way to write that lookup is one that
+     * goes silent on an unknown id.
+     */
+    const land = match.indexOf("const applyTargetTo");
+    expect(land).toBeGreaterThan(-1);
+    expect(match.slice(land)).toContain('{ sound: "place", buzz: "aim" }, key)');
+    // And the untargeted half keeps the pair the whole bar used to play.
+    expect(match).toContain('{ sound: "draw", buzz: "action" }');
+  });
+
+  it("and says something different for each kind of card", () => {
+    /*
+     * Or: *"on every card you activate there should be a vibration and a
+     * fitting sound"*, and, naming three of them: *"when you use dark
+     * corners, full refuel, energy boost, there should be a vibration like
+     * that and a happier sound."*
+     *
+     * The thing that actually goes wrong is a card being ADDED and nobody
+     * remembering this file — so the check is against the list of cards
+     * that exist, not against a list written here.
+     */
+    for (const id of ACTIVE_ACTIONS) {
+      const fx = ACTION_FX[id];
+      expect(fx, `${id} has no sound and no buzz`).toBeDefined();
+      expect(PATTERNS[fx!.buzz], `${id} buzzes with something that is not a pattern`).toBeDefined();
+    }
+    // The three Or named, and the one that buys the same thing they buy.
+    for (const id of ["energy_boost", "full_refuel", "dark_corners", "ground_floor"])
+      expect(ACTION_FX[id], id).toEqual({ sound: "boost", buzz: "boost" });
+    // And the four that are done to the opponent are never the happy one.
+    for (const id of ["radioactive_eraser", "sandstorm", "time_freeze", "xray"])
+      expect(ACTION_FX[id]!.buzz, id).toBe("hex");
+  });
+
+  it("counts the 3 2 1 out loud in the hand, on both of them", () => {
+    /*
+     * Or: *"every time there is a 3 2 1 — before the build phase and before
+     * the battle too — there need to be vibrations like that every second,
+     * 3 2 1."*
+     *
+     * ⚠ AND THE FIRST SECOND IS SKIPPED ON PURPOSE. The motor is a queue of
+     * one and the phase buzz (`go`, `lock`) fires in the same flush, so a
+     * count on the opening second is not two feelings — it is whichever one
+     * ran second. Without the guard the first beat of every countdown would
+     * be silently eaten.
+     */
+    const app = read("../App.tsx");
+    expect(app).toContain('haptics.buzz("count")');
+    const tick = app.indexOf('sfx.play(s % 2 === 1 ? "clock" : "clockLow")');
+    expect(tick).toBeGreaterThan(-1);
+    const after = app.slice(tick, tick + 1400);
+    expect(after).toContain('haptics.buzz("count")');
+    expect(after).toContain("s < (m.phase === \"countdown\" ? COUNTDOWN_SECONDS : PREBATTLE_SECONDS)");
+    // The block it sits in is the one both countdowns run through.
+    expect(app).toContain('m.phase === "countdown" || m.phase === "prebattle"');
   });
 
   it("when the board opens, when the panic starts and when the battle does", () => {

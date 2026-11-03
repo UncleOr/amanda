@@ -42,7 +42,7 @@ import {
   type Deck,
 } from "@amanda/shared";
 import type { BattleResult } from "@amanda/engine";
-import { useMatch } from "./game/useMatch";
+import { useMatch, COUNTDOWN_SECONDS, PREBATTLE_SECONDS } from "./game/useMatch";
 import { useAchievements } from "./game/useAchievements";
 import { useOverlay } from "./game/useOverlay";
 import { HomeScreen } from "./components/HomeScreen";
@@ -1254,6 +1254,28 @@ function Game() {
        * three carries the rhythm that makes it a clock. See sfx.ts.
        */
       sfx.play(s % 2 === 1 ? "clock" : "clockLow");
+      /*
+       * ═══ AND THE HAND COUNTS ALONG ═══
+       *
+       * Or: *"every time there is a 3 2 1 — before the build phase and
+       * before the battle too — there need to be vibrations like that every
+       * second, 3 2 1."*
+       *
+       * The screen was counting and the speaker was ticking; between the
+       * phase buzz at the start and the phase buzz at the end the phone said
+       * nothing, which is three seconds of a child looking at a number and
+       * holding a thing that has gone quiet.
+       *
+       * ⚠ THE FIRST SECOND IS ALREADY SPOKEN FOR, and it has to be skipped
+       * here rather than left to collide. The motor is a queue of one: the
+       * phase effect below fires `go` (or `lock`) in the same flush as this
+       * one, so a count on the opening second would not be two feelings, it
+       * would be whichever ran second. So the countdown reads GO · tick ·
+       * tick · BUILD, and the prebattle LOCK · tick · BATTLE — a beat a
+       * second either way, with the two ends being the louder beats.
+       */
+      if (s < (m.phase === "countdown" ? COUNTDOWN_SECONDS : PREBATTLE_SECONDS))
+        haptics.buzz("count");
       return;
     }
     // Running out of build time: a quiet tick from ten seconds, urgent at three.
@@ -1709,6 +1731,7 @@ function Game() {
                 editing={m.playground}
                 dropSide={m.playground ? "me" : undefined}
                 synergy={mySynergy}
+                lit={m.lit}
                 handActive={m.hand !== null}
                 mods={m.mods}
                 targeting={m.targeting !== null && !isEnemyTargeted(m.targeting)}

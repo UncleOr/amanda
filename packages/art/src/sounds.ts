@@ -401,6 +401,22 @@ export const SOUNDS: SoundSpec[] = [
     level: 0.75,
   },
   {
+    id: "boost",
+    what: "an action card that made your board better",
+    /*
+     * Computed — see fanfare.ts. Or: *"when you activate dark corners, full
+     * refuel, energy boost, there should be a vibration like that and a
+     * happier sound."* All three were playing `draw`, which is the sound of
+     * being handed a card and says nothing about what the card did.
+     *
+     * Brass and no drum, so it cannot be mistaken for `win` (a result) or
+     * `newcard` (a surprise). Short, because it plays in the middle of a
+     * build phase you are racing a clock through.
+     */
+    seconds: 0.85,
+    level: 0.78,
+  },
+  {
     id: "lose",
     what: "you lost",
     /*

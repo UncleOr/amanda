@@ -44,8 +44,9 @@ import {
   isPassiveAction,
   isTargetedAction,
 } from "../data/catalog";
-import { sfx } from "./sfx";
-import { haptics } from "./haptics";
+import { sfx, type SoundName } from "./sfx";
+import { haptics, type Buzz } from "./haptics";
+import { ACTION_FX, LIT_MS, improvedBy } from "./actionFx";
 import { track } from "./track";
 import {
   albumToPool,
@@ -72,14 +73,16 @@ export type Phase =
   | "result";
 
 const BATTLE_SEED = 20260707;
-const COUNTDOWN_SECONDS = 3;
+/* Exported because the countdown's per-second buzz has to know which
+   second is the FIRST one — see the clock effect in App.tsx. */
+export const COUNTDOWN_SECONDS = 3;
 /**
  * The pause between locking the boards and the first blow. It has to exist —
  * both players lock at the same moment, and the empty slots fill — but it is
  * four seconds of a blocked screen when you are still placing cards, so it is
  * kept to the shortest beat that still reads.
  */
-const PREBATTLE_SECONDS = 2;
+export const PREBATTLE_SECONDS = 2;
 const XRAY_MS = 6000;
 const KING_KEY = "king";
 
@@ -881,6 +884,8 @@ export interface MatchApi {
   barFull: boolean;
   /** Action id currently awaiting a board target, or null. */
   targeting: string | null;
+  /** Cells flashing because an action card just improved them. */
+  lit: Set<string>;
   mods: BattleMods;
   /** Multiplayer state. */
   online: boolean;
@@ -1091,6 +1096,15 @@ export function useMatch(): MatchApi {
   const [kingWound, setKingWound] = useState(0);
   const [boardPowerAdd, setBoardPowerAdd] = useState(0);
   const [boostedCells, setBoostedCells] = useState<Record<string, true>>({});
+  /**
+   * The cells flashing right now because an action card just improved them.
+   *
+   * Or: *"and the card or cards that improved should glow for a moment."*
+   * A moment, so this empties itself — see `lightUp`. Held as a Set because
+   * BoardGrid asks it one key at a time, thirteen times a render.
+   */
+  const [lit, setLit] = useState<Set<string>>(() => new Set());
+  const litTimer = useRef(0);
   const [xrayActive, setXrayActive] = useState(false);
   const [targeting, setTargeting] = useState<string | null>(null);
   const [online, setOnline] = useState(false);
@@ -1892,6 +1906,45 @@ export function useMatch(): MatchApi {
     if (at >= 0) plan.splice(at, 1);
   }, []);
 
+  /**
+   * Light the cells a card just improved, and put them out again.
+   *
+   * The timeout is held in a ref and cleared first, so two buffs in quick
+   * succession cannot have the earlier one's timer switch the later one's
+   * glow off in the middle.
+   */
+  const lightUp = useCallback((keys: string[]) => {
+    if (!keys.length) return;
+    window.clearTimeout(litTimer.current);
+    setLit(new Set(keys));
+    litTimer.current = window.setTimeout(() => setLit(new Set()), LIT_MS);
+  }, []);
+  // A match that ends — or a player who leaves — must not get a flash a
+  // second later on a board that is no longer there.
+  useEffect(() => () => window.clearTimeout(litTimer.current), []);
+
+  /**
+   * An action card has just done whatever it does. Say so, in the ear, in
+   * the hand, and on the board.
+   *
+   * Or: *"and on every card you activate there should be a vibration and a
+   * fitting sound."* One place for all ten of them, which is the only way a
+   * card added next month cannot quietly arrive silent — see actionFx.ts,
+   * where a test holds the map to the list of cards that exist.
+   *
+   * The fallbacks are what the whole bar used to play, so a card with no
+   * entry is as loud as it was before rather than mute.
+   */
+  const spend = useCallback(
+    (id: string, fallback: { sound: SoundName; buzz: Buzz }, target?: string) => {
+      const fx = ACTION_FX[id];
+      sfx.play(fx?.sound ?? fallback.sound);
+      haptics.buzz(fx?.buzz ?? fallback.buzz);
+      lightUp(improvedBy(id, gsRef.current, target));
+    },
+    [lightUp],
+  );
+
   const activateAction = useCallback(
     (id: string) => {
       if (isPassiveAction(id) || usedRef.current[id]) return;
@@ -1952,10 +2005,11 @@ export function useMatch(): MatchApi {
         window.setTimeout(() => setXrayActive(false), XRAY_MS);
       } else if (a?.effect === "shuffleEnemyFrontRow") shuffleEnemyFront();
       setUsedActions((u) => ({ ...u, [id]: true }));
-      sfx.play("draw");
-      haptics.buzz("action");
+      // What the card DID, rather than that a card was played. The two it
+      // used to play for all six of these are the fallback.
+      spend(id, { sound: "draw", buzz: "action" });
     },
-    [shuffleEnemyFront, freezeOpponent, canPlayAction],
+    [shuffleEnemyFront, freezeOpponent, canPlayAction, spend],
   );
 
   const applyTargetTo = useCallback((id: string, key: string) => {
@@ -2009,15 +2063,18 @@ export function useMatch(): MatchApi {
     setUsedActions((u) => ({ ...u, [id]: true }));
     setTargeting(null);
     setFirstPick(null);
-    sfx.play("place");
     /*
      * Or: *"and also when you have chosen a position for an action card —
      * which card to strengthen, say, or which enemy card to destroy."* This
      * is the only place all four of those meet: whatever the card does, it
      * is spent HERE, at the moment it is pointed at something.
+     *
+     * And now it is spent as ITSELF: the eraser goes off, the refuel lifts
+     * the square it was pointed at. `place` and `aim` stay as the fallback,
+     * which is what all four of them played before actionFx.ts existed.
      */
-    haptics.buzz("aim");
-  }, []);
+    spend(id, { sound: "place", buzz: "aim" }, key);
+  }, [spend]);
 
   /*
    * ═══ WHOSE BOARD THE GUARD CHECKS ═══
@@ -2259,6 +2316,10 @@ export function useMatch(): MatchApi {
     setKingWound(0);
     setBoardPowerAdd(0);
     setBoostedCells({});
+    // A flash that outlived its board would go off on the next match's
+    // empty squares a second after this one ended.
+    window.clearTimeout(litTimer.current);
+    setLit(new Set());
     setXrayActive(false);
     setTargeting(null);
     setStacked({});
@@ -3129,6 +3190,8 @@ export function useMatch(): MatchApi {
     actionBar: actionBar.map((id) => ({ id, used: !!usedActions[id], passive: isPassiveAction(id) })),
     barFull: actionBar.length >= ACTION_SLOTS,
     targeting,
+    /** Cells flashing because an action card just improved them. */
+    lit,
     mods: { boardPowerAdd, boostedCells, kingWound },
     online,
     account,

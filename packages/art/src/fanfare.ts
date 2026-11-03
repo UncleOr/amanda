@@ -473,6 +473,63 @@ const STING: Fanfare[] = [
     },
   },
   {
+    id: "boost",
+    idea: "Your board got better. A two-note run into a held G major, brass, no drum.",
+    build: () => {
+      /*
+       * Or: *"when you activate dark corners, full refuel, energy boost,
+       * there should be a vibration like that and a HAPPIER sound, and the
+       * card or cards that improved should glow for a moment."*
+       *
+       * ═══ WHAT IT HAS TO SIT BETWEEN ═══
+       *
+       * This is the fourth musical sound in a game that already has three,
+       * and the only interesting question is what it must not be confused
+       * with. `win` is a RESULT: low, wide, and it has a drum. `newcard` is
+       * a SURPRISE: nothing below C5, bells only, running up off the top.
+       * A boost is neither — it is something you DID, on purpose, in the
+       * middle of a build phase, and it is followed by more building.
+       *
+       * So it takes the one timbre neither of them owns. Brass is the
+       * sound of power in every score ever written, `newcard` is forbidden
+       * from using it by its own spec, and `win` only uses it under a
+       * drum. No drum here at all: weight means a result, and the match is
+       * not over.
+       *
+       * G major rather than the C the fanfares live in, which is the other
+       * half of the separation — a different key is a different sentence,
+       * even to an ear that could not name either.
+       *
+       * And it is SHORT. 0.85s against win's 1.9, because this plays in
+       * the middle of a phase where the player is racing a clock. A reward
+       * sound that has to be waited through is a reward sound that gets in
+       * the way the third time.
+       */
+      const out = make(0.85);
+      const L = 0.16; // where the chord lands
+
+      // The charge: a short rise of air INTO the run, not a hiss after it.
+      at(out, air(0.16, { cutoff: 3000, gain: 0.05, rise: true }), 0);
+
+      // Two stabs up, D to G — loud enough to be heard as a run-up, which
+      // is the correction win-1 needed and the reason it is written here.
+      at(out, brass(note("D4"), 0.13, { gain: 0.44, swell: 0.01, decay: 3.2, open: 2.2 }), 0);
+      at(out, brass(note("G4"), 0.13, { gain: 0.5, swell: 0.01, decay: 3.2, open: 2.2 }), 0.08);
+
+      // The landing: G major, held, thinning upwards.
+      ["B4", "D5", "G5"].forEach((n, i) =>
+        at(out, brass(note(n), 0.62, { gain: 0.3 - i * 0.055, swell: 0.02, decay: 2.6, open: 2.8 }), L),
+      );
+      // One voice on the third — the note that makes a chord happy rather
+      // than merely finished — and one bell on top so it sparkles.
+      at(out, choir(note("B4"), 0.6, { gain: 0.14, swell: 0.05, decay: 2.2 }), L + 0.02);
+      at(out, bell(note("G6"), 0.5, { ratio: 2.0, index: 1.2, decay: 3.4, gain: 0.13 }), L + 0.04);
+
+      // Barely any room: it plays over a board you are busy arranging.
+      return finish(room(out, { mix: 0.18 }));
+    },
+  },
+  {
     id: "beep",
     idea: "The notification. Two bells, up, and nothing else at all.",
     build: () => {
@@ -537,6 +594,8 @@ const CHOSEN: Record<string, string> = {
   go: "go",
   lose: "lose",
   beep: "beep",
+  // And the one the action cards needed: see `boost` above.
+  boost: "boost",
   // The one card voice that is music rather than an event.
   "card-healing-bloom": "card-healing-bloom",
 };
