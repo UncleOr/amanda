@@ -1,0 +1,12 @@
+{
+  "appId": "com.asulins.amanda",
+  "appName": "אמנדה",
+  "webDir": "www",
+  "server": {
+    "url": "https://playamanda.com/play/",
+    "cleartext": false
+  },
+  "android": {
+    "backgroundColor": "#0B0E17"
+  }
+}
