@@ -859,7 +859,7 @@ export function Arena({
       opts: {
         gravity?: number;
         size?: number;
-        shape?: "dot" | "chip" | "streak";
+        shape?: "dot" | "chip" | "streak" | "plus";
         /** Centre of the spray, in radians. Left out, it goes everywhere. */
         dir?: number;
         /** How wide the spray is around `dir`. */
@@ -880,7 +880,25 @@ export function Arena({
             .rotation = Math.random() * Math.PI;
         else if (opts.shape === "streak")
           g.rect(-size * 3, -size * 0.4, size * 6, size * 0.8).fill(color);
-        else g.circle(0, 0, size).fill(color);
+        else if (opts.shape === "plus") {
+          /*
+           * A HEAL IS A PLUS, NOT A BUBBLE.
+           *
+           * Or: *"green bubbles hint at poison. We need a different mark for
+           * healing."* He is right and the board agreed with him: a healed
+           * card threw round green dots upward and a poisoned card dripped
+           * round green dots downward, so two opposite things were told
+           * apart by which way they drifted.
+           *
+           * A plus cannot be mistaken for a drip whichever way it goes, and
+           * it is the one symbol a seven-year-old already reads as "better".
+           * The bar is deliberately thick — a thin cross at three pixels on
+           * moving artwork is a speck again.
+           */
+          const arm = size * 0.34;
+          g.rect(-size, -arm, size * 2, arm * 2).fill(color);
+          g.rect(-arm, -size, arm * 2, size * 2).fill(color);
+        } else g.circle(0, 0, size).fill(color);
         g.x = x;
         g.y = y;
         fxLayer.addChild(g);
@@ -2349,7 +2367,9 @@ export function Arena({
                   0x6ee787,
                   1,
                   0.05,
-                  { size: 2.5, gravity: -0.0004, dir: -Math.PI / 2, spread: 0.8 },
+                  // Bigger than the poison drip (2.5) as well as a different
+                  // shape: at this size shape alone is a fine distinction.
+                  { size: 4.6, shape: "plus", gravity: -0.0004, dir: -Math.PI / 2, spread: 0.8 },
                 );
               if (g.healed >= 60) {
                 spawnDamage(g, Math.round(g.healed), 1, { healed: true });
@@ -2419,7 +2439,9 @@ export function Arena({
             if (g.aura && g.look.aura) {
               const on = g.targetAlpha > 0.5;
               g.aura.alpha = on ? 1 : 0;
-              if (on) drawAura(g.aura, g.look.aura.kind, g.look.aura.color, g.half * 0.95, clock / 1000);
+              // 1.12, not 0.95: at the card's own width the ring is exactly the
+              // shape the artwork paints over. See drawAura.
+              if (on) drawAura(g.aura, g.look.aura.kind, g.look.aura.color, g.half * 1.12, clock / 1000);
             }
 
             // frozen: a pale ring plus three shards orbiting the unit

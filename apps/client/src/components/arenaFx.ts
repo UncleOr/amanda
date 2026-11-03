@@ -326,19 +326,63 @@ export function drawProjectile(
   }
 }
 
-/** The ring that sits under a unit whose aura is helping (or hurting) others. */
+/**
+ * The ring under a unit whose aura is helping (or hurting) others.
+ *
+ * ═══ WHY IT WAS NOT THERE AT ALL ═══
+ *
+ * Or: *"the ring is not clear enough. It needs something clearer."*
+ *
+ * It was drawn, every frame, correctly — and almost none of it reached the
+ * screen. Three things stacked up, and the alpha was the least of them:
+ *
+ *   IT WAS BEHIND THE CARD. The aura Graphics is added to the unit's
+ *   container before the artwork is, so anything inside the card's
+ *   silhouette is painted over. At a radius of 0.95 × half — which is the
+ *   card's own width — the ellipse was almost exactly the shape that gets
+ *   covered. What showed was the sliver below the bottom edge.
+ *
+ *   AND THAT SLIVER WAS 13% OPAQUE, with a 2px line at 55% over it.
+ *
+ *   AND IT BREATHED BY 7%, which at that size is two pixels. A pulse
+ *   nobody can see is a static smudge.
+ *
+ * So it is WIDER THAN THE CARD now, and that is the fix that matters: the
+ * ring clears the artwork at the sides, where there is nothing to hide
+ * behind. 1.12 rather than 0.95, which is as far as it can go — the cell is
+ * 72 and the card is 63, so a ring past about 1.14 would reach into the
+ * next card's cell and stop belonging to this one.
+ *
+ * The rest is contrast and motion: the fill and the line are up, and a
+ * second ring SWELLS OUT OF IT and fades, once every 1.6 seconds. An
+ * expanding ring reads as something being emitted; a still one reads as a
+ * mark on the floor, and the thing being said here is that this card is
+ * doing something to its neighbours.
+ */
 export function drawAura(g: Graphics, kind: AuraKind, color: number, radius: number, phase: number): void {
   g.clear();
   const breathe = 1 + Math.sin(phase * 2.2) * 0.07;
   const r = radius * breathe;
-  g.ellipse(0, 0, r, r * 0.42).fill({ color, alpha: 0.13 });
-  g.ellipse(0, 0, r, r * 0.42).stroke({ width: 2, color, alpha: 0.55 });
+  /** The ground ellipse is squashed to 0.42 so it lies flat under the unit. */
+  const squash = 0.42;
+  g.ellipse(0, 0, r, r * squash).fill({ color, alpha: 0.22 });
+  g.ellipse(0, 0, r, r * squash).stroke({ width: 3, color, alpha: 0.9 });
+
+  /*
+   * The pulse. `t` runs 0..1 every 1.6s; the ring grows from just inside
+   * the base ring to just outside it and fades to nothing on the way, so
+   * the two never sit on top of each other looking like one thick line.
+   */
+  const t = (phase / 1.6) % 1;
+  const pr = r * (0.72 + t * 0.5);
+  g.ellipse(0, 0, pr, pr * squash).stroke({ width: 2, color, alpha: 0.55 * (1 - t) });
+
   if (kind === "haste" || kind === "slow") {
     // ticks around the ring spin — fast for haste, backwards and slow for slow
     const dir = kind === "haste" ? 1 : -0.35;
     for (let i = 0; i < 6; i++) {
       const a = phase * 1.8 * dir + (i * Math.PI) / 3;
-      g.circle(Math.cos(a) * r, Math.sin(a) * r * 0.42, 2).fill({ color, alpha: 0.8 });
+      g.circle(Math.cos(a) * r, Math.sin(a) * r * squash, 2.5).fill({ color, alpha: 0.9 });
     }
   }
 }

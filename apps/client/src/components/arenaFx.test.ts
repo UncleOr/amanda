@@ -4,6 +4,10 @@ import { fileURLToPath } from "node:url";
 import { CATALOG, cardPool } from "../data/catalog";
 import { combatLook } from "./arenaFx";
 
+const read = (f: string) => readFileSync(fileURLToPath(new URL(f, import.meta.url)), "utf8");
+const FX = read("./arenaFx.ts");
+const ARENA = read("./Arena.tsx");
+
 /**
  * The battle effects are derived from card data rather than hand-authored, so
  * these lock the derivation: if a card's element, range or abilities change, the
@@ -247,5 +251,76 @@ describe("abilities you can see", () => {
 
   it("writes healing with a plus and damage with a minus", () => {
     expect(ARENA).toContain('`${extra.healed ? "+" : "-"}${amount}${mark}`');
+  });
+});
+
+/**
+ * ═══ TELLING A HEAL FROM A POISON, AND SEEING THE RING AT ALL ═══
+ *
+ * Or, on the board during a battle: *"the ring is not clear enough, it needs
+ * something clearer"* and *"green bubbles hint at poison. We need a
+ * different mark for healing."*
+ *
+ * Both were one failure wearing two faces: everything supportive in this
+ * arena was drawn in green, small, and behind something.
+ *
+ * ⚠ THESE ARE SOURCE TESTS AND THEY HAVE TO BE. There is no jsdom here and
+ * no canvas; `drawAura` and `spawnParticles` take a Pixi Graphics and paint.
+ * What CAN be pinned is the handful of numbers that decide whether any of it
+ * reaches the screen — and those numbers are exactly where both bugs lived.
+ */
+describe("a heal is not a poison, and a ring is visible", () => {
+  it("draws the aura ring wider than the card it sits under", () => {
+    /*
+     * The aura Graphics is added to the unit container BEFORE the artwork,
+     * so anything inside the card's silhouette is painted over. At 0.95 —
+     * the card's own width — the ellipse was almost exactly the shape that
+     * gets covered, and what reached the screen was the sliver below the
+     * bottom edge. It has to be greater than 1 or it is invisible.
+     */
+    const call = /drawAura\([^)]*g\.half \* ([0-9.]+)/.exec(ARENA);
+    expect(call, "drawAura is no longer called with a multiple of g.half").toBeTruthy();
+    const mult = Number(call![1]);
+    expect(mult).toBeGreaterThan(1);
+    /*
+     * And not so wide it reaches into the next card's cell: CELL is 72 and
+     * a card is 0.88 of that, so half is 31.7 and the ring may not pass
+     * 36 — 1.14 — or it stops belonging to the unit under it.
+     */
+    expect(mult).toBeLessThanOrEqual(1.14);
+  });
+
+  it("gives the ring enough contrast and a pulse that moves", () => {
+    // 0.13 fill under a 2px line at 0.55 was the old setting, and it was
+    // a smudge. The pulse is the part that says "this is being emitted".
+    expect(FX).toMatch(/fill\(\{ color, alpha: 0\.2[0-9] \}\)/);
+    expect(FX).toMatch(/stroke\(\{ width: 3, color, alpha: 0\.[89][0-9]? \}\)/);
+    expect(FX, "the expanding pulse ring is gone").toContain("const pr = r * (0.72 + t * 0.5)");
+  });
+
+  it("marks healing with a plus and poison with a drip", () => {
+    const heal = ARENA.slice(ARENA.indexOf("if (g.healed >= 1"));
+    const burn = ARENA.slice(ARENA.indexOf("if (g.burned >= 1"));
+    // The whole point: two opposite things must not be the same shape.
+    expect(heal.slice(0, 700)).toContain('shape: "plus"');
+    expect(burn.slice(0, 700), "poison went back to being a plus too").not.toContain('shape: "plus"');
+  });
+
+  it("sends the heal up and the poison down", () => {
+    // Direction was the ONLY thing telling them apart before. It is still
+    // worth keeping — it is just no longer carrying the whole message.
+    const heal = ARENA.slice(ARENA.indexOf("if (g.healed >= 1"), ARENA.indexOf("if (g.burned >= 1"));
+    expect(heal).toMatch(/gravity: -0\.0/);
+    const burn = ARENA.slice(ARENA.indexOf("if (g.burned >= 1"));
+    expect(burn.slice(0, 700)).toMatch(/gravity: 0\.0/);
+  });
+
+  it("draws a plus with arms thick enough to read at this size", () => {
+    // A cross one pixel wide on moving artwork is a speck, which is the
+    // thing being fixed. The arm is a third of the half-span.
+    expect(ARENA).toContain("const arm = size * 0.34;");
+    const size = /\{ size: ([0-9.]+), shape: "plus"/.exec(ARENA);
+    expect(size, "the heal particle lost its size").toBeTruthy();
+    expect(Number(size![1])).toBeGreaterThanOrEqual(4);
   });
 });
