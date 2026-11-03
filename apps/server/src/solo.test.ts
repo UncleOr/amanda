@@ -1,6 +1,6 @@
 import { describe, expect, it } from "vitest";
 import type { Placement } from "@amanda/engine";
-import { LEVELS, levelMultiplier } from "@amanda/shared";
+import { FULL_BOARD, LEVELS, levelMultiplier } from "@amanda/shared";
 import { soloResult } from "./solo.js";
 import { factsFor } from "./meta.js";
 
@@ -180,6 +180,41 @@ describe("reading a side's performance off the replay", () => {
     expect(facts.frontSeries).toEqual(["dragons", "dragons"]);
     expect(facts.backSeries).toEqual(["dragons"]);
     expect(facts.frontSeries).not.toContain("giants");
+  });
+
+  /*
+   * ═══ AND IT SEES THE FILLER, HAVING LEFT IT OUT ═══
+   *
+   * Or: *"do a challenge for winning with a Crumb Demon on the board too."*
+   *
+   * The test above says the filler is not a card anybody chose, so it is not
+   * in `cardIds`. This one says the opposite thing about the same board:
+   * that it was THERE is itself a fact about how the board was built, and a
+   * challenge now asks for it.
+   *
+   * ⚠ WHICH MEANS THE TWO READINGS MUST NOT DRIFT. `crumbs` is the
+   * difference between the placements and the real cards, and `placed` is
+   * the count of the real ones — one subtraction, so they cannot come to
+   * disagree about one board. A board with a filler on it is never a full
+   * board, and that is what makes `fullBoard` and `crumbWin` a real pair
+   * rather than two challenges that can be closed by the same match.
+   */
+  it("sees a Crumb Demon on the board, and never on a full one", () => {
+    const withFiller: Placement[] = [
+      ...strong.slice(0, 8),
+      ...slots().slice(7).map((s) => ({ cardId: FILLER, ...s })),
+    ];
+    const left = factsFor(replay.result, "A", withFiller);
+    expect(left.crumbs).toBe(true);
+    expect(left.placed).toBeLessThan(FULL_BOARD);
+
+    const full = factsFor(replay.result, "A", strong);
+    expect(full.crumbs).toBe(false);
+    expect(full.placed).toBe(strong.length);
+
+    // The invariant, stated once: a filler means an empty square meant a
+    // board the player did not fill.
+    for (const f of [left, full]) expect(f.crumbs && f.placed >= FULL_BOARD).toBe(false);
   });
 
   it("gives a score inside the scale the nacho bands expect", () => {

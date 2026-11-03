@@ -257,6 +257,7 @@ describe("whether a match counted", () => {
     rarities: [],
     kingSeries: null,
     synergies: [],
+    crumbs: false,
     ...over,
   });
 
@@ -342,6 +343,21 @@ describe("whether a match counted", () => {
     expect(progressFrom({ kind: "fullBoard" }, facts({ placed: 13 }))).toBe(1);
     expect(progressFrom({ kind: "fullBoard" }, facts({ placed: 12 }))).toBe(0);
   });
+
+  /*
+   * Or: *"do a challenge for winning with a Crumb Demon on the board too."*
+   *
+   * ⚠ AND THE WIN IS THE WHOLE POINT. Leaving a square empty costs nothing
+   * and happens by accident every time the panic runs out; leaving it empty
+   * and winning anyway is the challenge. Without the win in it, this is
+   * "lose a match badly", which the game does for you.
+   */
+  it("counts a win with a Crumb Demon on the board, and only a win", () => {
+    expect(progressFrom({ kind: "crumbWin" }, facts({ crumbs: true }))).toBe(1);
+    expect(progressFrom({ kind: "crumbWin" }, facts({ crumbs: true, won: false }))).toBe(0);
+    expect(progressFrom({ kind: "crumbWin" }, facts())).toBe(0);
+  });
+
 });
 
 /**

@@ -84,7 +84,19 @@ export type Goal =
   /** Field a card of this rarity. */
   | { kind: "rarity"; rarity: string }
   /** Fill every slot on the board yourself, with no Crumb Demons. */
-  | { kind: "fullBoard" };
+  | { kind: "fullBoard" }
+  /**
+   * Win with a Crumb Demon on your board.
+   *
+   * Or: *"do a challenge for winning with a Crumb Demon on the board too."*
+   *
+   * The mirror of `fullBoard`, and the pair of them is the nicest thing in
+   * this list: one asks you to leave nothing empty, the other asks you to
+   * leave a square empty ON PURPOSE and win anyway. A Crumb Demon is not a
+   * card anybody chose — it is what the panic drops into a slot nobody
+   * filled — so this is a handicap you set yourself.
+   */
+  | { kind: "crumbWin" };
 
 export interface Challenge {
   /** Stable for as long as the challenge is live: "d:2026-10-07:1". */
@@ -495,8 +507,39 @@ const TEMPLATES: Template[] = [
         reward: { diamonds: need * 8 },
         // Naming the Crumb Demons says what "by yourself" meant, in a
         // creature the player met in the tutorial and has a face for.
-        he: `למלא את הלוח בלי פירורים`,
+        he: `למלא את הלוח בלי מפלצי פירורים`,
         en: `Fill the board, no Crumb Demons`,
+      };
+    },
+  },
+  {
+    /*
+     * ═══ AND THE ONE THAT ASKS FOR THE OPPOSITE ═══
+     *
+     * Or: *"do a challenge for winning with a Crumb Demon on the board
+     * too."*
+     *
+     * Read it next to the template above it. One says fill every square
+     * yourself; this one says leave one empty and win anyway. Same board,
+     * opposite instruction, and a child who has both live at once has to
+     * decide which evening is which — which is the most a challenge can ask
+     * of a game this short.
+     *
+     * ⚠ THEY CANNOT BOTH BE SATISFIED BY ONE MATCH, and that is deliberate
+     * rather than a clash: `fullBoard` wants `placed >= 13` and this wants
+     * a filler on the board, which is `placed < 13`. Nine are live at a
+     * time out of thirteen, so the day they both come up is a day with a
+     * real choice in it.
+     */
+    periods: ["daily", "weekly", "monthly"],
+    make: (pick, _pools, period) => {
+      const need = span(pick, period, [1, 2], [5, 8], [18, 26]);
+      return {
+        goal: { kind: "crumbWin" },
+        need,
+        reward: { diamonds: need * 7 },
+        he: `לנצח עם מפלץ פירורים על הלוח`,
+        en: `Win with a Crumb Demon on the board`,
       };
     },
   },
@@ -525,7 +568,7 @@ function span(
  * How many of each period are live at once.
  *
  * Or: *"we need more challenges and another challenge and more variety."*
- * Four, three and two — nine live at a time out of twelve templates, so two
+ * Four, three and two — nine live at a time out of thirteen templates, so two
  * days running are never the same list and a player who finishes the day's
  * four still has the week's three to work on.
  */
@@ -628,6 +671,15 @@ export interface MatchFacts {
   kingSeries: string | null;
   /** Families with enough cards on the board for the bonus to be live. */
   synergies: string[];
+  /**
+   * A Crumb Demon ended up on this player's board.
+   *
+   * Which is the same thing as "a square was left empty", because the filler
+   * is dropped into every empty slot the moment a board locks (solo.ts). It
+   * is read as `placements.length > real.length` rather than counted a
+   * second way, so it cannot disagree with `placed` about the same board.
+   */
+  crumbs: boolean;
 }
 
 /** How much one finished match moves this challenge along. Always 0 or 1. */
@@ -659,6 +711,11 @@ export function progressFrom(goal: Goal, facts: MatchFacts): 0 | 1 {
       return facts.rarities.includes(goal.rarity) ? 1 : 0;
     case "fullBoard":
       return facts.placed >= FULL_BOARD ? 1 : 0;
+    case "crumbWin":
+      // ⚠ AND THE WIN IS THE WHOLE POINT. Leaving a square empty is free;
+      // leaving it empty and winning anyway is the challenge. Without the
+      // win this is "lose a match badly", which happens on its own.
+      return facts.won && facts.crumbs ? 1 : 0;
   }
 }
 
@@ -670,4 +727,4 @@ export function progressFrom(goal: Goal, facts: MatchFacts): 0 | 1 {
  * "you placed everything yourself", which is a thing to aim at in the last
  * ten seconds rather than a thing that happens.
  */
-const FULL_BOARD = 13;
+export const FULL_BOARD = 13;

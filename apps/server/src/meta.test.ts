@@ -249,6 +249,8 @@ const facts = (over: Partial<MatchFacts> = {}): MatchFacts => ({
   rarities: [],
   kingSeries: null,
   synergies: [],
+  // A board the player filled completely: no filler on it.
+  crumbs: false,
   ...over,
 });
 

@@ -176,6 +176,15 @@ export function factsFor(
     rarities: [...new Set(cards.map((c) => c.rarity))],
     kingSeries: crown ? (CATALOG.get(crown.cardId)?.seriesId ?? null) : null,
     synergies,
+    /*
+     * A Crumb Demon on the board, which is the same board fact as "a square
+     * was left empty": the filler goes into every empty slot the moment the
+     * board locks (solo.ts), so it is in `placements` and not in `real`.
+     *
+     * Read off the difference between those two rather than scanned for a
+     * second time, so it cannot disagree with `placed` about one board.
+     */
+    crumbs: placements.length > real.length,
   };
 }
 
