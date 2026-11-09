@@ -110,3 +110,7 @@ store/achievements/play-import.zip
 # which does.
 client_secret_*.json
 .secrets/
+
+# Railway CLI link for this working copy. Machine-local: it names a project
+# and an environment, and a clone on another machine must link its own.
+.railway/

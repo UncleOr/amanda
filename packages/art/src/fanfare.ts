@@ -379,114 +379,145 @@ const CARDS: Fanfare[] = [
 
 /* ── the Siren, sung ───────────────────────────────────────────────── */
 /*
- * ═══ OR AND HOD SANG IT; A SOPRANO SINGS IT ═══
+ * ═══ THE REAL TUNE, AND WHY NONE OF THE RECORDING IS IN THE FILE ═══
  *
  * Or: *"the Siren — when you place her you should hear an opera song like
- * Sirenaaa Sirenna, twice."* Then two voice notes: *"I put you two references
- * where we roughly fake the melody in our own voices."* Then, on the first
- * attempt, which was their own recording pulled into tune: *"it needs to be
- * COMPLETELY regenerated, the singing, in a beautiful soprano opera voice.
- * Our recordings are only a reference for the melody itself."*
+ * Sirenaaa Sirenna, twice."* Then two voice notes of him and Hod faking it
+ * from memory. Then: *"it needs to be COMPLETELY regenerated, the singing, in
+ * a beautiful soprano opera voice. Our recordings are only a reference for
+ * the melody itself."* And then the actual track, with: *"take the Sirena
+ * Sirena Sirena three times from second 00:11."*
  *
- * So the recordings were a SCORE, not a take. What came out of them is
- * written down in scripts/make-siren.mjs — autocorrelation pitch tracking at
- * 10ms frames over both voice notes, which agree:
+ * ⚠ SO THE RECORDING IS A SCORE AND NOT A SAMPLE, and that is a decision
+ * about rights rather than about sound. The file is 2:11 long, carries cover
+ * art, and is tagged to a handle rather than to anybody who could license it
+ * — there is no way from here to find out who owns it. A few seconds of
+ * somebody else's recording inside a game on Google Play is Or's problem to
+ * have, not mine to create. Measuring the notes and singing them is a tune,
+ * and a tune is not a recording. If he does own it, putting the sample back
+ * is one line.
  *
- *             take 1              take 2            agreed
- *   held      A#3/B3 ~620ms       B3 ~290ms         B3        "Siii—"
- *   scoop     C4→F4 fast          C4→F4 fast        a slide
- *   PEAK      F#4 ~980ms          F#4 ~930ms        F#4       "—reeee"
- *   fall      D#4 279ms           D#4 150ms         D#4       "naaa"
- *   PEAK      F#4 ~1120ms         F#4 ~470ms        F#4       "Siii-reee"
- *   lift      G#4                 G4                G#4
- *   land      F4 (flat, fading)   F4 (flat, fading) F#4
+ * ═══ WHAT WAS MEASURED, FROM 00:11 ═══
  *
- * B, D# and F# is a B major triad, so it is in B major, and the two phrases
- * he asked for are right there: each one climbs to F#4 and falls. The two
- * notes the takes disagree on went the way take 1 sang them, which is also
- * the way that is in key — and the last note is a semitone up from what both
- * of them sang, because in both takes the volume is dying exactly there. That
- * is a breath running out, not a note.
+ * Autocorrelation at 20ms frames. The voice runs 11.28 to 15.78, and it is
+ * three phrases rather than two — which is why he said three:
  *
- * ⚠ AND IT IS SUNG AN OCTAVE ABOVE WHAT THEY SANG. B3 to G#4 is where a
- * father and a seven-year-old land; a soprano lives an octave up, and "a
- * beautiful soprano" is a register before it is a timbre. B4 · F#5 · D#5 ·
- * F#5 · G#5 · F#5.
+ *   11.28  D4  520ms          "Si"
+ *   11.82      80ms           a scoop, D#-E-F#-G-G#
+ *   11.92  A4  1200ms         "—reeenaaa"      ← the note the song is about
+ *   13.14  G4  200ms          falling away
+ *   13.48  A4  320ms          "Si"
+ *   13.82  A#4 300ms          "re"
+ *   14.14  B4/C5 60ms         a flick off the top
+ *   14.22  A#4 → A4           "naaa"
+ *   14.76  G4  480ms          "Si-re"
+ *   15.26  A4  520ms          "naaa"
  *
- * The vowels carry the word: si(ee) · re(eh) · na(ah), twice. A soprano high
- * in her range is genuinely hard to understand — that is true of real ones —
- * so each phrase lands on the open /a/, which is the syllable an audience
- * actually hears.
+ * D, E, F, G, A, A# and C — every vocal note is in D MINOR, which is also
+ * why the thing sounds like a siren luring somebody rather than a fanfare.
+ * The B natural at 14.14 is a passing note on the way to C and back.
+ *
+ * ⚠ AND IT IS SUNG AT THE PITCH IT WAS MEASURED AT, not an octave up. The
+ * first attempt at "soprano" moved Or and Hod's humming from B3 up to F#5,
+ * which is where four of six vowels stopped being physically possible (see
+ * `soprano` in synth.ts). This melody already sits at D4-C5 with its long
+ * note on A4 — which IS a soprano's middle, the part of the range a soprano
+ * is actually beautiful in, and low enough that /e/ and /a/ can both speak.
+ * Higher is not more operatic; it is only higher.
  */
 const SIREN: Fanfare[] = [
   {
     id: "card-name-siren",
-    idea: "Sirena, Sirena — a soprano on the melody Or and Hod sang, an octave up.",
+    idea: "Sirena, three times — the measured melody, sung in D minor.",
     build: () => {
-      const out = make(3.4);
+      const out = make(3.9);
 
-      // A breath of air before the voice, so she arrives rather than starts.
-      at(out, air(0.3, { cutoff: 5200, gain: 0.035, rise: true }), 0);
+      // A breath before the voice, so she arrives rather than starts.
+      at(out, air(0.28, { cutoff: 5000, gain: 0.03, rise: true }), 0);
 
       /*
-       * Phrase one: Si — reeee — naaa.
+       * ═══ PHRASE ONE: Si — reeenaaa ═══
        *
-       * The long F#5 is the note the whole song is about, so it gets more
-       * than half the phrase and the vibrato has room to open up on it.
+       * Timed at about 0.82 of the original, which is the one liberty taken
+       * with it: the voice there runs 4.5 seconds and `processVoices` cuts
+       * every card voice at 4 as a backstop. The SHAPE is untouched — the
+       * long A4 is still two thirds of the phrase, because that note is the
+       * whole song.
        */
-      at(out, soprano(note("B4"), 0.42, { vowel: "ee", gain: 0.30, swell: 0.08 }), 0.06);
+      at(out, soprano(note("D4"), 0.40, { vowel: "ee", gain: 0.30, swell: 0.07 }), 0.05);
       at(
         out,
-        soprano(note("F#5"), 1.00, {
+        soprano(note("A4"), 0.88, {
           vowel: "eh",
           gain: 0.34,
-          swell: 0.10,
-          // Reaching the note from the B below is the scoop they both sang.
-          slideFrom: note("B4"),
+          swell: 0.09,
+          // The scoop they sing on the way in, as a reach rather than a jump.
+          slideFrom: note("D4"),
         }),
-        0.46,
+        0.45,
       );
-      at(out, soprano(note("D#5"), 0.40, { vowel: "ah", gain: 0.30, swell: 0.06 }), 1.46);
+      /*
+       * ⚠ THIS NOTE WAS INAUDIBLE AT gain 0.28 WITH A 0.05 SWELL. Measured:
+       * a tight window inside it still read A4, because the hall tail of the
+       * 0.88s A4 in front of it swamps 200ms at a softer level with a soft
+       * attack. A real voice cuts through with its ATTACK, so this one gets
+       * one — the swell is 20ms, not 50 — and it is no quieter than the note
+       * it follows.
+       */
+      at(out, soprano(note("G4"), 0.24, { vowel: "ah", gain: 0.34, swell: 0.02 }), 1.33);
+
+      /* ═══ PHRASE TWO: Si — re — (up) — naaa ═══ */
+      at(out, soprano(note("A4"), 0.26, { vowel: "ee", gain: 0.31, swell: 0.05 }), 1.55);
+      at(out, soprano(note("A#4"), 0.24, { vowel: "eh", gain: 0.32, swell: 0.05 }), 1.81);
+      // The flick off the top. Short on purpose — in the recording it is 60ms.
+      at(out, soprano(note("C5"), 0.10, { vowel: "eh", gain: 0.34, swell: 0.015 }), 2.05);
+      at(out, soprano(note("A#4"), 0.12, { vowel: "eh", gain: 0.32, swell: 0.015 }), 2.15);
+      at(out, soprano(note("A4"), 0.26, { vowel: "ah", gain: 0.30, swell: 0.05 }), 2.27);
 
       /*
-       * Phrase two, after a breath: Si-reee — (up) — naaa. Shorter than the
-       * first and it lifts before it lands, which is the only reason the
-       * second one is not a repeat.
+       * ═══ PHRASE THREE: Si-re — naaa ═══
+       *
+       * The only one that climbs at the end rather than falling, which is
+       * what makes three phrases an ending instead of a loop. The last note
+       * gets a wider, slower vibrato: a singer holding the final note.
        */
-      at(out, soprano(note("F#5"), 0.46, { vowel: "ee", gain: 0.32, swell: 0.07 }), 2.00);
-      at(out, soprano(note("G#5"), 0.18, { vowel: "eh", gain: 0.30, swell: 0.04 }), 2.44);
+      at(out, soprano(note("G4"), 0.38, { vowel: "ee", gain: 0.31, swell: 0.06 }), 2.55);
       at(
         out,
-        soprano(note("F#5"), 0.70, {
+        soprano(note("A4"), 0.60, {
           vowel: "ah",
-          gain: 0.33,
+          gain: 0.34,
           swell: 0.06,
-          // A little slower and wider at the end: a singer holding a last note.
-          vibrato: 45,
+          vibrato: 48,
           vibratoHz: 5.1,
         }),
-        2.60,
+        2.93,
       );
 
       /*
-       * One quiet voice a sixth below, on the open vowel only.
+       * One quiet voice underneath, on the open vowel, at the two landings.
        *
-       * Not a full harmony line — two sopranos in parallel is a duet, and
-       * this is one singer. It is there to put a chord under the two landings
-       * so the phrases resolve onto something, which is what makes a line
-       * sound composed rather than hummed. D#5 under the first (B major) and
-       * A#4 under the second (an F# chord, which is where it lands).
+       * Not a harmony line — two sopranos in parallel is a duet and this is
+       * one singer. It is there to put a chord under the phrases so they
+       * resolve onto something: F4 under the first (D minor) and D4 under
+       * the last (the tonic, which is how a song in D minor ends).
        */
-      at(out, soprano(note("B4"), 0.40, { vowel: "ah", gain: 0.10, swell: 0.14, vibrato: 25 }), 1.46);
-      at(out, soprano(note("A#4"), 0.70, { vowel: "ah", gain: 0.10, swell: 0.16, vibrato: 25 }), 2.60);
+      at(out, soprano(note("F4"), 0.40, { vowel: "ah", gain: 0.07, swell: 0.16, vibrato: 22 }), 1.36);
+      at(out, soprano(note("D4"), 0.62, { vowel: "ah", gain: 0.10, swell: 0.16, vibrato: 22 }), 2.93);
 
       /*
        * A real hall, and bigger than anything else in this file. Everywhere
        * else a tail is a nuisance by the tenth hearing; opera IS the room,
-       * and this plays once per placement of one card. The same reasoning
+       * and this plays once per placement of one card — the same reasoning
        * the Healing Bloom's 0.5 was written under.
        */
-      return finish(room(out, { mix: 0.46, size: 1.7, damp: 0.28 }));
+      /*
+       * ⚠ AND A SMALLER HALL THAN THE FIRST ATTEMPT'S 0.44 at 1.7. Opera is
+       * the room, but this melody has 100ms notes in the middle of it and
+       * the Healing Bloom's cathedral is written for a sound that is all
+       * long swells. A tail that eats the notes is not atmosphere.
+       */
+      return finish(room(out, { mix: 0.34, size: 1.5, damp: 0.3 }));
     },
   },
 ];
