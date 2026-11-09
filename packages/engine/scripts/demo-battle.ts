@@ -43,7 +43,7 @@ const setup: BattleSetup = {
       // Slime blockers guarding the King lanes.
       { cardId: "slimes_01_basic_slime", x: 3, y: 1 },
       { cardId: "slimes_02_gelatinous_cube", x: 3, y: 2 },
-      { cardId: "slimes_06_toxic_sludge", x: 0, y: 0 },
+      { cardId: "slimes_09_pudding_shield", x: 0, y: 0 },
       { cardId: "slimes_07_floating_brain", x: 0, y: 3 },
       { cardId: "slimes_10_zelig_giant_ooze", x: 1, y: 1, king: true },
     ],

@@ -67,7 +67,19 @@ export const TUNNEL: readonly TunnelStop[] = [
   {
     at: 110,
     free: { cards: [{ cardId: "slimes_01_basic_slime", copies: 2 }] },
-    pass: { cards: [{ cardId: "slimes_06_toxic_sludge", copies: 2 }], diamonds: 40 },
+    /*
+     * ⚠ WAS THE RADIOACTIVE SLIME, WHICH NO LONGER EXISTS. Or, 9 November
+     * 2026: *"delete the Radioactive Slime card, so we have 10 slime
+     * cards."* A stop that hands over a card id with nothing behind it is a
+     * prize that is an empty box, which is exactly what the warning at the
+     * top of this list is about.
+     *
+     * The Pudding Shield in its place: the same rarity, so the pass lane
+     * keeps paying better than the free one, and NOT a main — handing over
+     * one of the two cards the Slimes are met through would pre-empt the
+     * arena whose whole job is introducing them.
+     */
+    pass: { cards: [{ cardId: "slimes_09_pudding_shield", copies: 2 }], diamonds: 40 },
   },
   // ── the Court ──
   { at: 190, free: { diamonds: 40 }, pass: { diamonds: 100 } },

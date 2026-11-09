@@ -240,51 +240,6 @@
       "launch": true
     },
     {
-      "id": "slimes_06_toxic_sludge",
-      "seriesId": "slimes",
-      "numberInSeries": 6,
-      "name": {
-        "he": "סליים רדיואקטיבי",
-        "en": "Radioactive Slime"
-      },
-      "elements": [
-        "dark"
-      ],
-      "rarity": "rare",
-      "stats": {
-        "hp": 300,
-        "power": 650,
-        "attackSpeed": 2,
-        "moveSpeed": 0,
-        "range": "ranged"
-      },
-      "flying": false,
-      "midBoss": false,
-      "abilities": [
-        {
-          "type": "stackingDot",
-          "trigger": "onHit",
-          "params": {
-            "dotPerStack": 50
-          },
-          "description": {
-            "he": "מי שעובר דרכו מאט ומאבד כח תקיפה",
-            "en": "Enemies passing through are Slowed and lose Attack Power"
-          }
-        }
-      ],
-      "role": {
-        "he": "נזק מתמשך מרחוק.",
-        "en": "Ranged damage over time."
-      },
-      "art": {
-        "placeholderColor": "#4b2e6b",
-        "sprite": "cards/slimes_06_toxic_sludge.webp"
-      },
-      "launch": false,
-      "targeting": "invader"
-    },
-    {
       "id": "slimes_07_floating_brain",
       "seriesId": "slimes",
       "numberInSeries": 7,

@@ -126,7 +126,26 @@ function shuffle<T>(items: T[], rnd: () => number = Math.random): T[] {
  * game has to start either way.
  */
 function monsterPool(album?: Map<string, OwnedCard> | null, best?: number): string[] {
-  if (album && album.size) return albumToPool(album);
+  /*
+   * ⚠ AND AN ALBUM CAN HOLD A CARD THAT NO LONGER EXISTS.
+   *
+   * `player_cards` is a list of ids in a database; the catalogue is a list of
+   * cards in the build. A card RETIRED from the game leaves its rows behind
+   * — Or, deleting one on 9 November 2026: *"delete the Radioactive Slime
+   * card, so we have 10 slime cards"* — and one player really did own a copy
+   * of it.
+   *
+   * Everywhere else that reads an album is driven FROM the catalogue (the
+   * album screen asks "do I own this card", never "what is this id"), so a
+   * stale row is invisible and harmless. This is the one path that goes the
+   * other way: the id goes straight into the pool a match is dealt from, and
+   * a board built around a card the catalogue cannot resolve is a crash in
+   * the middle of a battle, for one child, months later.
+   *
+   * Filtered here rather than at the delete, because the next retirement
+   * will not come with somebody remembering this line.
+   */
+  if (album && album.size) return albumToPool(album).filter((id) => CATALOG.has(id));
   // No album is a guest, or a phone with no signal. The ladder still applies:
   // a first evening with no account should look like a first evening.
   return cardPool(best);
