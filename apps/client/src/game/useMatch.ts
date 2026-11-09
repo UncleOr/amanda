@@ -2591,6 +2591,28 @@ export function useMatch(): MatchApi {
    * exists so the mode can be looked at without waiting for a second person.
    */
   const startAmandaSolo = useCallback(() => {
+    /*
+     * ⚠ THE ONE START THAT DID NOT UNLOCK THE AUDIO.
+     *
+     * `sfx.unlock()` is the only thing that ever calls `loadClips`, and
+     * `loadClips` is the only thing that ever fetches and decodes a voice.
+     * Every other start does it — a bot match, an online one, the playground,
+     * a lesson, a mirror. This one never did, so a session that opened with
+     * the Amanda PREVIEW had no clip decoded at all: not her lines, not any
+     * card's name.
+     *
+     * ⚠ AND NOT THE REAL MODE. `startAmanda` above is a one-liner through
+     * `startOnline`, which has always unlocked — so this never explained
+     * Or's *"I checked Amanda in the playground and she does not talk."*
+     * That was two other things: she is wired not to speak in the playground
+     * at all, and her clips were missing from the loader entirely (see
+     * ALL_AMANDA in cardSound.ts). This is a third, smaller hole found while
+     * looking for those, and it is only the preview.
+     *
+     * `sfx.play("click")` below resumes a suspended context but loads
+     * nothing, which is why it was invisible — the clicks worked.
+     */
+    sfx.unlock();
     clearMatch();
     setCoop(true);
     sfx.play("click");

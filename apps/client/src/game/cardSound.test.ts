@@ -164,6 +164,64 @@ describe("what a card sounds like while it is carried", () => {
     }
   });
 
+  it("and every way into a match unlocks the audio", () => {
+    /*
+     * ⚠ THE SECOND HALF OF THE SAME EVENING. Or: *"I checked Amanda in the
+     * playground and she does not talk."* She does not talk THERE by design
+     * — but she would not have talked in her own mode either, because
+     * `startAmanda` was the one match start in the file that never called
+     * `sfx.unlock()`.
+     *
+     * `unlock()` is the only thing that calls `loadClips`, and `loadClips`
+     * is the only thing that ever fetches and decodes a voice. So a session
+     * that began with Amanda mode had nothing decoded at all — not her
+     * lines, not any card's name. And `sfx.play` resumes a suspended context
+     * without loading anything, which is exactly why the clicks worked and
+     * nothing else did.
+     *
+     * Checked for every start rather than for hers, because the next one
+     * somebody adds will have the same hole and the same silence.
+     */
+    const MATCH = readFileSync(fileURLToPath(new URL("./useMatch.ts", import.meta.url)), "utf8");
+    /*
+     * ⚠ AND `startAmanda` IS NOT IN THIS LIST, WHICH IS THE CORRECTION THAT
+     * MATTERS. It is a one-liner that delegates to `startOnline`, so it has
+     * no `sfx.unlock()` of its own and does not need one — the first version
+     * of this test asserted on it and failed against perfectly correct code.
+     * The real gap was `startAmandaSolo`, the unwinnable preview, which is a
+     * start in its own right and had none.
+     */
+    const starts = [
+      "startMatch",
+      "startOnline",
+      "startPlayground",
+      "startAmandaSolo",
+      "startMirror",
+    ];
+    for (const fn of starts) {
+      const at = MATCH.indexOf(`const ${fn}`);
+      expect(at, `${fn} is gone — rename it here too`).toBeGreaterThan(-1);
+      /*
+       * To the NEXT declaration, not a fixed number of characters. 1400 was
+       * the first guess and `startAmanda` failed on it with the fix in place
+       * — the comment explaining the fix is nine hundred characters long and
+       * pushed the call out of the window.
+       */
+      const next = MATCH.slice(at + 10).search(/\n {2}const /);
+      const body = MATCH.slice(at, next > 0 ? at + 10 + next : at + 2600);
+      /*
+       * ⚠ THE CALL, WITH ITS SEMICOLON — NOT THE WORDS.
+       *
+       * The first version of this asserted `toContain("sfx.unlock()")` and
+       * PASSED with the fix deliberately removed, because the comment
+       * explaining the fix says `sfx.unlock()` in prose a few lines above
+       * the call. A test that matches its own documentation checks nothing.
+       * Proved by taking the line out again and watching it fail.
+       */
+      expect(body, `${fn} never unlocks the audio`).toContain("sfx.unlock();");
+    }
+  });
+
   it("and every clip the game can ask for is in the loader", () => {
     /*
      * ⚠ THE OTHER DIRECTION, AND NOTHING CHECKED IT UNTIL AMANDA WAS SILENT
