@@ -21,7 +21,8 @@ import { describe, expect, it } from "vitest";
 import { existsSync, readFileSync, statSync } from "node:fs";
 import { fileURLToPath } from "node:url";
 import { CATALOG } from "../data/catalog";
-import { dragMix, voiceFor, VOICE_CLIPS } from "./cardSound";
+import {
+  ALL_AMANDA, dragMix, voiceFor, VOICE_CLIPS } from "./cardSound";
 
 const SRC = fileURLToPath(new URL("./cardSound.ts", import.meta.url));
 const SFX = fileURLToPath(new URL("../../public/sfx/", import.meta.url));
@@ -160,6 +161,27 @@ describe("what a card sounds like while it is carried", () => {
     const wanted = new Set(CATALOG_ALL.flatMap((c) => dragMix(c.id).map((l) => l.clip)));
     for (const clip of wanted) {
       expect(existsSync(`${SFX}${clip}.mp3`), `public/sfx/${clip}.mp3 is missing`).toBe(true);
+    }
+  });
+
+  it("and every clip the game can ask for is in the loader", () => {
+    /*
+     * ⚠ THE OTHER DIRECTION, AND NOTHING CHECKED IT UNTIL AMANDA WAS SILENT
+     * FOR AN EVENING.
+     *
+     * Or: *"Amanda has no sound. Are you sure everything went up?"* It had.
+     * All seven clips were on the live site and listed in art.json. They were
+     * never DECODED: `ALL_AMANDA` was declared and used nowhere, so
+     * `loadClips` never fetched them, `sfx.voice` found no buffer, and it did
+     * the correct thing for a missing clip — nothing.
+     *
+     * Every list in this file guards against a NAME WITH NO FILE. This is the
+     * mirror: A FILE NO LOADER FETCHES. It sounds identical from a sofa and
+     * no amount of checking the deploy finds it.
+     */
+    for (const clip of ALL_AMANDA) {
+      expect(existsSync(`${SFX}${clip}.mp3`), `public/sfx/${clip}.mp3 is missing`).toBe(true);
+      expect(VOICE_CLIPS, `${clip} exists but nothing decodes it`).toContain(clip);
     }
   });
 });

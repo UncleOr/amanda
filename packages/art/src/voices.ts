@@ -29,7 +29,7 @@
 import { existsSync, mkdirSync } from "node:fs";
 import { execFileSync } from "node:child_process";
 import { join } from "node:path";
-import { download, speak, speakEleven, type Accent } from "./fal.js";
+import { changeVoice, download, speak, speakEleven, type Accent } from "./fal.js";
 import { REPO_ROOT } from "./catalog.js";
 import { ffmpegBin } from "./sounds.js";
 
@@ -75,6 +75,21 @@ export interface VoiceSpec {
   stability?: number;
   /** ElevenLabs only: 0-1, how hard it holds the voice's character. */
   similarity?: number;
+  /**
+   * A recording of somebody SAYING the line, to be re-voiced rather than
+   * re-invented.
+   *
+   * Or: *"everything is fine except Kiddo Kiddo Kiddo. I have put a reference
+   * for the intonation. Run it through ElevenLabs."* Relative to
+   * `assets/reference/`. When this is set, `says` is no longer the input —
+   * it is only there so the table still reads as a list of what she says.
+   *
+   * ⚠ WHICH MAKES IT THE ONE SPEC THAT IS NOT REPRODUCIBLE FROM CODE. Every
+   * other line here can be regenerated from this file alone; this one needs
+   * the wav beside it. That is the trade for being able to specify a
+   * delivery at all, and the reference is committed for exactly that reason.
+   */
+  perform?: string;
   /** Why these three numbers, in one line. */
   why: string;
 }
@@ -146,8 +161,23 @@ const AMANDA: VoiceSpec[] = [
     voice: AMANDA_VOICE,
     stability: 0.42,
     similarity: 0.85,
+    /*
+     * ⚠ THE ONLY LINE IN THIS FILE THAT IS A PERFORMANCE RATHER THAN A
+     * PROMPT, and it took three rejections to get here. MiniMax stretched it
+     * to 4.37 seconds for three words; ElevenLabs tightened it to 1.89 and
+     * Or still said *"everything is fine except Kiddo Kiddo Kiddo."*
+     *
+     * Which was the answer: the argument was never about the voice, it was
+     * about the PHRASING — where the stress falls, how long the gaps are,
+     * which of the three climbs. None of that is a parameter on any
+     * text-to-speech model. So he recorded it, and the voice changer keeps
+     * his delivery and swaps in hers.
+     *
+     * `says` below is now only documentation. The input is the wav.
+     */
+    perform: "amanda-kiddo-reference.mp3",
     speed: 1.0,
-    why: "Three full stops, which read as three separate beats. Was 4.37 seconds of stretched vowels.",
+    why: "Or's own delivery, re-voiced. Three takes argued about phrasing; this one is given it.",
   },
   {
     id: "amanda-iam",
@@ -661,8 +691,13 @@ export async function generateVoices(only: string[]): Promise<void> {
        * pause syntax and a different idea of what `speed` ranges over. See
        * `engine` on VoiceSpec.
        */
-      const url =
-        spec.engine === "eleven"
+      const url = spec.perform
+        ? /*
+           * A performance, re-voiced. Not generated from the words at all —
+           * see `perform`, and changeVoice in fal.ts.
+           */
+          await changeVoice(join(REPO_ROOT, "assets", "reference", spec.perform), spec.voice)
+        : spec.engine === "eleven"
           ? await speakEleven(spec.says, {
               id: spec.voice,
               stability: spec.stability,

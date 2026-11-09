@@ -578,6 +578,22 @@ export const VOICE_CLIPS: string[] = [
       // The mains that have been recorded. The nulls are the ones that
       // have not, and they must not reach the loader as a 404.
       ...Object.values(MAIN_NAME).map((name) => ({ ...(name ? { name } : {}) }) as CardVoice),
+      /*
+       * ⚠ AND AMANDA, WHO WAS SILENT FOR A WHOLE EVENING BECAUSE OF THIS.
+       *
+       * Or: *"Amanda has no sound. Are you sure everything went up?"* It had
+       * — all seven clips were live on the site and listed in art.json. They
+       * were simply never DECODED: `ALL_AMANDA` was declared and then used
+       * nowhere, so `loadClips` never fetched them and `sfx.voice` found no
+       * buffer and did what it is supposed to do when a clip is missing,
+       * which is nothing at all.
+       *
+       * The same silence as a missing file, from the opposite cause — and no
+       * TO_RECORD list could ever have caught it, because the files existed.
+       * See "every clip the game can ask for is in the loader" in
+       * cardSound.test.ts, which now checks the direction nothing checked.
+       */
+      ...ALL_AMANDA.map((name) => ({ name }) as CardVoice),
     ].flatMap((v) =>
       [v.name, v.drag, v.cry].filter((c): c is string => !!c),
     ),

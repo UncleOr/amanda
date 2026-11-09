@@ -273,6 +273,51 @@ export async function speakEleven(
   return res.data?.audio?.url ?? null;
 }
 
+/**
+ * The same voice, saying it exactly the way somebody else said it.
+ *
+ * Or, having rejected "Kiddo Kiddo Kiddo" twice: *"everything is fine except
+ * Kiddo Kiddo Kiddo. I have put a reference for the INTONATION. Run it
+ * through ElevenLabs."*
+ *
+ * ═══ WHY THIS AND NOT ANOTHER TEXT-TO-SPEECH TAKE ═══
+ *
+ * Text-to-speech is handed words and invents a delivery. Two takes of "Kiddo.
+ * Kiddo. Kiddo." differ in where the stress lands, how long the gaps are and
+ * which of the three climbs — and none of that is a parameter. Three
+ * rejections in, the thing being argued about was never the voice, it was the
+ * PHRASING.
+ *
+ * Speech-to-speech takes a recording and keeps all of it — rhythm, stress,
+ * the shape of the line — and changes only who is saying it. So the reference
+ * is Or performing the line, and the output is Amanda performing Or's
+ * performance. It is the only tool here that can be given an intonation
+ * rather than asked for one.
+ *
+ * ⚠ THE MODEL IS `voice-changer`, WHICH TOOK FINDING. There is no
+ * `fal-ai/elevenlabs/speech-to-speech` — that path 404s, and
+ * `fal-ai/elevenlabs/sts` does too. The field is `audio_url` and it must be a
+ * URL fal can fetch, so the file is uploaded to fal's own storage first.
+ */
+export async function changeVoice(
+  audioPath: string,
+  voiceId: string,
+): Promise<string | null> {
+  const { readFile } = await import("node:fs/promises");
+  const buf = await readFile(audioPath);
+  /*
+   * ⚠ WITH AN AUDIO CONTENT TYPE. `uploadFile` below hardcodes image/png
+   * because every other thing this file uploads is a style anchor; handing
+   * that to the voice changer uploads an .mpeg announced as a picture.
+   */
+  const blob = new Blob([new Uint8Array(buf)], { type: "audio/mpeg" });
+  const url = await fal.storage.upload(blob as unknown as File);
+  const res = (await fal.subscribe("fal-ai/elevenlabs/voice-changer", {
+    input: { audio_url: url, voice: voiceId } as unknown as never,
+  })) as { data?: { audio?: { url?: string } } };
+  return res.data?.audio?.url ?? null;
+}
+
 /** Download a generated image to disk. */
 export async function download(url: string, destPath: string): Promise<void> {
   const res = await fetch(url);
