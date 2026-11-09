@@ -32,19 +32,57 @@ export const CARD_LOOK: Record<string, string> = {
    * moves the card away from its source. Shaggy fur over a see-through body
    * is not a thing the keyring does.
    *
-   * And the card's whole mechanic is that it is UGLY — anything that can see
-   * it hits softer. The brief has to land that without being frightening:
-   * funny-ugly, the way a child draws something gross on purpose.
+   * ═══ AND "UGLY" WAS THE WORD THAT RUINED THE FIRST TWO ═══
+   *
+   * The card's mechanic is that it is ugly — anything that can see it hits
+   * softer — so the first brief said so, loudly: *comically, memorably UGLY,
+   * goofy and gross on purpose*, with crooked teeth, a lolling tongue and
+   * mismatched googly eyes. The model did exactly that, twice, and Or: *"it
+   * did not come out so well. It came out TOO ugly. Make him like in the
+   * photo, just furry, with the same cute smile. He is ugly in his cuteness
+   * and cute in his ugliness."*
+   *
+   * ⚠ THE MECHANIC IS NOT THE PICTURE. A card whose power is that looking at
+   * it costs you does not have to be unpleasant to look at — the joke is
+   * funnier if it is not.
+   *
+   * ═══ AND THEN OR EXPLAINED THE PHOTOGRAPH, WHICH IS THE WHOLE BRIEF ═══
+   *
+   * Four renders in — too ugly, too ugly again, too cute, too cute and *"not
+   * similar enough"* — he said what the object actually is:
+   *
+   *   *"Obviously somebody TRIED to make something cute. But it was some
+   *   talentless manufacturer and what came out is fairly ugly. You can
+   *   still see he was trying to make something cute. He just did not
+   *   manage it. Tragedy and comedy, made of plastic with a bit of fur."*
+   *
+   * Which is a different thing entirely from everything attempted above. He
+   * is not an ugly creature and he is not a cute creature: he is a BAD COPY
+   * of a cute creature. The ugliness is MANUFACTURING FAILURE, not anatomy —
+   * eyes not quite level, the smile painted off to one side, the nose stuck
+   * on crooked, the paint a hair outside the lines, a mould seam down the
+   * middle, fur glued on in patches. Every one of those is a factory being
+   * careless, and not one of them is a monster.
+   *
+   * That is also why both earlier directions were doomed. "Ugly" got a
+   * gargoyle, because a model asked for ugly draws a bad CREATURE. "Cute"
+   * got a mascot, because nothing in it said the cuteness had FAILED. The
+   * failure is the subject.
    */
   furries_02_kioory:
-    "a small scruffy electric furball creature standing on two stubby legs, " +
-    "a round oversized head under a bright acid-green furry cap, shaggy unkempt white and green fur, " +
-    "an almost TRANSPARENT glowing body you can see straight through, lit from inside with pale yellow light, " +
-    "two enormous mismatched googly eyes, a fat round red button nose, long drooping whiskers, " +
-    "an absurdly wide lopsided grin with crooked teeth and a lolling tongue, " +
-    "comically, memorably UGLY — goofy and gross on purpose, funny rather than frightening, " +
-    "a few small yellow electric arcs crackling off the fur",
-
+    "a cheap badly-made knock-off plastic toy creature brought to life, standing on two short stubby legs, " +
+    "it was clearly MEANT to be cute and the maker did not manage it: " +
+    "a round head under a glossy bright acid-green moulded cap, a shiny cream-white face, " +
+    "two big round eyes that are slightly different sizes and not quite level with each other, " +
+    "a small red button nose stuck on slightly off-centre, a few stiff whiskers at uneven angles, " +
+    "a wide open smile PAINTED a little crooked and a little too far to one side, " +
+    "the paint very slightly outside the lines, a faint moulding seam down the middle of the body, " +
+    "a plump glossy translucent plastic body glowing softly from inside, " +
+    "patches of cheap thin fur glued on in places and missing in others, " +
+    "endearing and a bit sad and quite funny all at once — a failed attempt at cuteness, " +
+    "NOT a monster, NOT scary, NOT grotesque: nothing sharp, no fangs, no tongue out, no menace, " +
+    "no fire, no flames, no embers, no sparks, no lightning, no smoke, " +
+    "on a deep dark background",
   // ── Dragons — vary the body plan hard, not just the flame colour ──
   dragons_01_flame_dragon:
     "a classic armoured western dragon standing on two muscular legs, broad spread membranous wings, " +

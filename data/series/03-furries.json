@@ -111,7 +111,8 @@
         "en": "Painfully ugly. Anything that can see him down his lane hits softer, and one body in the way breaks it. Shoots only at the King."
       },
       "art": {
-        "placeholderColor": "#63d93f"
+        "placeholderColor": "#63d93f",
+        "sprite": "cards/furries_02_kioory.webp"
       },
       "launch": true,
       "drag": {

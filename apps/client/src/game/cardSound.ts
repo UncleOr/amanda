@@ -173,10 +173,13 @@ const CARDS: Record<string, CardVoice> = {
  * string.
  */
 export const NAMES_TO_RECORD: readonly string[] = [
-  "card-name-torch",
-  "card-name-kioory",
-  "card-name-sky-king",
-  "card-name-avenging-wasp",
+  /*
+   * Empty since 9 November 2026, when Or said *"why do you not just use FAL
+   * to generate?"* and all four were made. The list stays because the
+   * mechanism is the point: the next name somebody writes down goes here
+   * until it exists, and the test refuses to let this disagree with the
+   * files on disk in either direction.
+   */
 ];
 
 /**
@@ -220,10 +223,8 @@ export const ALL_AMANDA: readonly string[] = [
  * disk in both directions.
  */
 export const CRIES_TO_RECORD: readonly string[] = [
-  // `pnpm art:sounds card-ocean card-frozen` records these. It costs money,
-  // so it is Or's to run.
-  "card-ocean",
-  "card-frozen",
+  // Empty since 9 November 2026 — `card-ocean` and `card-frozen` were made
+  // in the same batch as the names. The list stays for the next one.
 ];
 
 /** Is there a recording behind this spoken name yet? */
@@ -395,17 +396,10 @@ export const DRAG_SOUND_CLIP: Record<DragSound, string | null> = {
  */
 export const DRAG_SOUNDS_TO_RECORD: readonly DragSound[] = [
   /*
-   * Added 9 November 2026 for Kioory. Or: *"he needs a sound of footsteps,
-   * ordinary walking."* Specced in packages/art/src/sounds.ts; `pnpm
-   * art:sounds steps` records it and costs money, so it is Or's to run.
-   */
-  "steps",
-  /*
-   * Empty since 2026-10-29, when Or said *"run art:sounds"* and the ten
-   * arrived. The list stays because the mechanism is the point: the next
-   * sound somebody names goes here until it exists, and the test below
-   * refuses to let this disagree with the files on disk in either
-   * direction.
+   * Empty again since 9 November 2026: `steps` was written down for Kioory in
+   * the morning and recorded the same evening. The list stays because the
+   * mechanism is the point, and the test below refuses to let it disagree
+   * with the files on disk in either direction.
    */
 ];
 

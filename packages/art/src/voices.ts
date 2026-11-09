@@ -29,7 +29,7 @@
 import { existsSync, mkdirSync } from "node:fs";
 import { execFileSync } from "node:child_process";
 import { join } from "node:path";
-import { download, speak, type Accent } from "./fal.js";
+import { download, speak, speakEleven, type Accent } from "./fal.js";
 import { REPO_ROOT } from "./catalog.js";
 import { ffmpegBin } from "./sounds.js";
 
@@ -62,122 +62,158 @@ export interface VoiceSpec {
   computed?: { by: string };
   /** A language to lean the phonetics on, for an accent. See fal.ts. */
   accent?: Accent;
+  /**
+   * Which service says it. MiniMax unless stated.
+   *
+   * ⚠ AND THE TWO DO NOT SHARE A SYNTAX. MiniMax takes `<#0.2#>` for a
+   * pause and a pitch in semitones; ElevenLabs has never heard of either and
+   * takes punctuation and a stability instead. A spec written for one and
+   * handed to the other does not fail — it reads the markup out loud.
+   */
+  engine?: "minimax" | "eleven";
+  /** ElevenLabs only: 0-1, how expressive. Low varies between takes. */
+  stability?: number;
+  /** ElevenLabs only: 0-1, how hard it holds the voice's character. */
+  similarity?: number;
   /** Why these three numbers, in one line. */
   why: string;
 }
 
 
+/**
+ * ═══ WHICH VOICE AMANDA IS, AND WHY IT IS A CONSTANT ═══
+ *
+ * Or: *"anyway let's use ElevenLabs — Lucia, or Tosca."*
+ *
+ * ⚠ NEITHER NAME WORKS THROUGH FAL, AND THAT WAS CHECKED RATHER THAN
+ * ASSUMED. The endpoint answers 422 `"Voice not found: Lucia"`, and the same
+ * for Tosca, Valentina, Sofia, Carmen, Isabella, Martina, Camila and
+ * Paulina — while "Rachel" generates. So fal exposes a small set of BUILT-IN
+ * voices by name, and not one of them is Spanish.
+ *
+ * But `Lucía`, spelled with the accent, failed DIFFERENTLY: `"Invalid voice
+ * ID provided."` A different error means an unrecognised string is passed
+ * through to ElevenLabs as a voice id rather than rejected — so raw ids work,
+ * and two real ones prove it: 21m00Tcm4TlvDq8ikWAM (Rachel) and
+ * XB0fDUnXU5powFXDhCwa (Charlotte) both generate.
+ *
+ * Which makes Lucia and Tosca reachable after all. They are VOICE LIBRARY
+ * voices, and a library voice's id exists only inside an ElevenLabs account:
+ * app → Voices → Voice Library → search the name → copy the id, about twenty
+ * characters. Paste it here and run `pnpm art:voices amanda`. Nothing else
+ * changes.
+ *
+ * Until then it is Charlotte — a real voice, a woman rather than a girl, and
+ * not American, which is the nearest the built-in set gets. She is NOT
+ * Spanish, and that is the one thing still missing.
+ */
+const AMANDA_VOICE = "XB0fDUnXU5powFXDhCwa";
+
 /* ── Amanda herself ─────────────────────────────────────────────────── */
 /*
  * ═══ THE OPPONENT GETS A VOICE ═══
  *
- * Or: *"and for Amanda make several random options for the voices, a woman of
- * about 40-50 with a slight Spanish accent."* And then the seven lines, in his
- * own words and in his own order.
+ * Or: *"and for Amanda make several random options for the voices, a woman
+ * of about 40-50 with a slight Spanish accent"* — and then the seven lines,
+ * in his own words and in his own order.
  *
  * ⚠ THEY ARE A POOL, NOT A SCRIPT. "Several random options" is what these
  * are: the game picks one when she has something to say, so that meeting her
  * twice is not the same scene twice. See AMANDA_LINES in the client, which is
  * the list it picks from, and `sfx.amanda()`, which picks.
  *
- * ═══ HOW THE ACCENT IS DONE ═══
+ * ═══ WHY THEY WERE REWRITTEN FOR THE SECOND ENGINE ═══
  *
- * Not by naming a Spanish-accented voice, because there is no way to know
- * from here whether one exists and a guess is a generation paid for a name.
- * `accent: "Spanish"` sets `language_boost` to Spanish over English text,
- * which leans the vowels and consonants that way — which is what an accent
- * is. See fal.ts.
+ * Or, having heard the MiniMax takes: *"Kiddo Kiddo Kiddo did not come out
+ * well, and Come here is not good either. The rest are fine."*
  *
- * ⚠ AND IT IS SEVEN GENERATIONS ON ONE UNTESTED DIAL. If the boost goes too
- * far the model reads the words AS Spanish rather than with a Spanish colour.
- * `pnpm art:voices amanda-iam` makes exactly one of them — listen to that
- * before paying for the other six.
+ * Measured, those two were the LONGEST of the seven — 4.37s for three words
+ * and 3.69s — against 1.56s for the one he liked best. Both were the ones
+ * carrying `<#0.2#>` pause markers on top of a speed below 1. Stretched into
+ * a dirge, in other words, by two dials pulling the same way.
  *
- * ═══ THE AGE, WHICH IS THE PART THE DIALS ACTUALLY DO ═══
- *
- * 40-50 is not a voice in any list; it is a pitch and a tempo. `Wise_Woman`
- * sits lower than `Calm_Woman` to begin with, pitch -2 takes it a little
- * further, and every line is SLOWER than speech — between 0.8 and 0.9. An
- * unhurried voice is an older voice, and it is also the whole character: she
- * is not chasing anybody. She has all evening.
+ * ⚠ AND THOSE MARKERS ARE MINIMAX'S OWN SYNTAX. ElevenLabs has never heard
+ * of them and would read them out or choke; pauses here are PUNCTUATION. So
+ * every line is punctuated rather than marked up, and nothing is slowed —
+ * the age comes from the voice, not from dragging the words out.
  */
 const AMANDA: VoiceSpec[] = [
   {
     id: "amanda-kiddo",
     cardId: "legends_01_amanda",
-    says: "Kiddo, <#0.2#> kiddo, <#0.2#> kiddo",
-    voice: "Wise_Woman",
-    pitch: -2,
-    speed: 0.9,
-    emotion: "neutral",
-    accent: "Spanish",
-    why: "Three times, slowing. Calling a child in from the garden, except for dinner.",
+    says: "Kiddo. Kiddo. Kiddo.",
+    engine: "eleven",
+    voice: AMANDA_VOICE,
+    stability: 0.42,
+    similarity: 0.85,
+    speed: 1.0,
+    why: "Three full stops, which read as three separate beats. Was 4.37 seconds of stretched vowels.",
   },
   {
     id: "amanda-iam",
     cardId: "legends_01_amanda",
-    says: "I'm Amanda",
-    voice: "Wise_Woman",
-    pitch: -2,
-    speed: 0.85,
-    emotion: "neutral",
-    accent: "Spanish",
-    why: "Her name, said the way somebody says it who expects you to know it.",
+    says: "I'm Amanda.",
+    engine: "eleven",
+    voice: AMANDA_VOICE,
+    stability: 0.42,
+    similarity: 0.85,
+    speed: 0.95,
+    why: "Her name, said by somebody who expects you to know it already.",
   },
   {
     id: "amanda-name",
     cardId: "legends_01_amanda",
-    says: "Amanda",
-    voice: "Wise_Woman",
-    pitch: -2,
-    speed: 0.8,
-    emotion: "happy",
-    accent: "Spanish",
+    says: "Amanda.",
+    engine: "eleven",
+    voice: AMANDA_VOICE,
+    stability: 0.42,
+    similarity: 0.85,
+    speed: 0.92,
     why: "Just the name. The shortest one, for the moment she arrives.",
   },
   {
     id: "amanda-dinner",
     cardId: "legends_01_amanda",
-    says: "Dinner is ready",
-    voice: "Wise_Woman",
-    pitch: -2,
-    speed: 0.85,
-    emotion: "happy",
-    accent: "Spanish",
-    why: "Cheerful, and that is the joke — she means you.",
+    says: "Dinner is ready!",
+    engine: "eleven",
+    voice: AMANDA_VOICE,
+    stability: 0.42,
+    similarity: 0.85,
+    speed: 1.0,
+    why: "Cheerful, and that is the joke — she means you. The best of the seven at 1.56s.",
   },
   {
     id: "amanda-tasty",
     cardId: "legends_01_amanda",
-    says: "You look tasty",
-    voice: "Wise_Woman",
-    pitch: -2,
-    speed: 0.9,
-    emotion: "happy",
-    accent: "Spanish",
+    says: "You look tasty.",
+    engine: "eleven",
+    voice: AMANDA_VOICE,
+    stability: 0.42,
+    similarity: 0.85,
+    speed: 0.95,
     why: "A compliment, delivered as one.",
   },
   {
     id: "amanda-menu",
     cardId: "legends_01_amanda",
-    says: "Oh, <#0.25#> kids menu",
-    voice: "Wise_Woman",
-    pitch: -2,
-    speed: 0.9,
-    emotion: "surprised",
-    accent: "Spanish",
-    why: "Delighted. The pause before 'kids' is the whole line.",
+    says: "Oh! A kids menu.",
+    engine: "eleven",
+    voice: AMANDA_VOICE,
+    stability: 0.42,
+    similarity: 0.85,
+    speed: 0.95,
+    why: "Delighted. The break after Oh is the whole line, and a full stop does it.",
   },
   {
     id: "amanda-comehere",
     cardId: "legends_01_amanda",
-    says: "Come here, <#0.2#> delicious kid",
-    voice: "Wise_Woman",
-    pitch: -2,
-    speed: 0.85,
-    emotion: "happy",
-    accent: "Spanish",
-    why: "Warm and unhurried. Nothing about it is a threat, which is worse.",
+    says: "Come here, delicious kid.",
+    engine: "eleven",
+    voice: AMANDA_VOICE,
+    stability: 0.42,
+    similarity: 0.85,
+    speed: 0.95,
+    why: "One comma and normal speed. A woman calling a child does not draw it out.",
   },
 ];
 
@@ -614,15 +650,32 @@ export async function generateVoices(only: string[]): Promise<void> {
       console.log(`   skip  ${spec.says} (exists)`);
       continue;
     }
-    process.stdout.write(`   ${spec.says.padEnd(20)} ${spec.voice.padEnd(16)} ... `);
+    const where = spec.engine === "eleven" ? "eleven" : "minimax";
+    process.stdout.write(
+      `   ${spec.says.slice(0, 24).padEnd(26)} ${where.padEnd(8)} ${spec.voice.slice(0, 20).padEnd(21)} ... `,
+    );
     try {
-      const url = await speak(spec.says, {
-        id: spec.voice,
-        pitch: spec.pitch,
-        speed: spec.speed,
-        emotion: spec.emotion,
-        accent: spec.accent,
-      });
+      /*
+       * Two services, and the spec says which. Not a flag that changes a
+       * parameter — a different API with different field names, a different
+       * pause syntax and a different idea of what `speed` ranges over. See
+       * `engine` on VoiceSpec.
+       */
+      const url =
+        spec.engine === "eleven"
+          ? await speakEleven(spec.says, {
+              id: spec.voice,
+              stability: spec.stability,
+              similarity: spec.similarity,
+              speed: spec.speed,
+            })
+          : await speak(spec.says, {
+              id: spec.voice,
+              pitch: spec.pitch,
+              speed: spec.speed,
+              emotion: spec.emotion,
+              accent: spec.accent,
+            });
       if (!url) throw new Error("no audio returned");
       await download(url, dest);
       console.log("OK");

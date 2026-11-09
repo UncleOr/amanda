@@ -111,7 +111,12 @@ export async function animate(
  *
  * ElevenLabs is the obvious model for this and it is the one that failed —
  * every request came back "Sound effect generation failed" from fal's side,
- * whatever the input. Cassette answers, so Cassette it is. It returns a wav
+ * whatever the input. Cassette answers, so Cassette it is.
+ *
+ * ⚠ THAT WAS `elevenlabs/sound-effects` AND ONLY THAT. Their text-to-speech
+ * is a different endpoint and it works fine — see `speakEleven` below, which
+ * Amanda is voiced with. The sentence above is about effects, and reading it
+ * as "ElevenLabs does not work here" cost an afternoon of not trying. It returns a wav
  * and takes whole seconds, which is why nothing here asks for 0.4s: the clips
  * are generated long and cut down with ffmpeg afterwards.
  */
@@ -211,6 +216,59 @@ export async function speak(
       language_boost: voice.accent ?? "English",
       output_format: "url",
     },
+  })) as { data?: { audio?: { url?: string } } };
+  return res.data?.audio?.url ?? null;
+}
+
+/**
+ * The same job as `speak`, through ElevenLabs instead.
+ *
+ * Or, having heard the MiniMax takes: *"Kiddo Kiddo Kiddo did not come out
+ * well, and Come here is not good either. The rest are fine. Anyway, let's
+ * use ElevenLabs — Lucia, or Tosca."*
+ *
+ * ═══ WHAT IS DIFFERENT, AND WHY IT MATTERS FOR THE TEXT ═══
+ *
+ * The field is `text`, not `prompt`, and the voice is `voice`, not
+ * `voice_id`. Neither of those is a detail: a wrong field name here is a
+ * paid request that fails, and the two services disagree on both.
+ *
+ * ⚠ AND MINIMAX'S PAUSE MARKERS DO NOT WORK HERE. `<#0.2#>` is MiniMax's own
+ * syntax; ElevenLabs has never heard of it and will either read it aloud or
+ * choke on it. Pauses are punctuation here — a comma, or an ellipsis for a
+ * longer one — which is why Amanda's lines were rewritten rather than
+ * copied across.
+ *
+ * `speed` is a narrow 0.7 to 1.2, against MiniMax's 0.5 to 2. That is the
+ * service telling you something true: a voice slowed to half speed does not
+ * sound older, it sounds broken, and the two lines Or rejected were the two
+ * slowest and longest of the seven (4.37s and 3.69s, against 1.56 for the
+ * one he liked best).
+ */
+export async function speakEleven(
+  text: string,
+  voice: {
+    /** A voice NAME, as ElevenLabs lists it: "Rachel", "Lucia", "Tosca". */
+    id: string;
+    /** 0 to 1. Low is expressive and varies between takes; high is flat. */
+    stability?: number;
+    /** 0 to 1. How hard it holds onto the original voice's character. */
+    similarity?: number;
+    /** 0 to 1. Exaggeration. Past about 0.5 it starts acting. */
+    style?: number;
+    /** 0.7 to 1.2, and the ends of that range are the ends for a reason. */
+    speed?: number;
+  },
+): Promise<string | null> {
+  const res = (await fal.subscribe("fal-ai/elevenlabs/tts/multilingual-v2", {
+    input: {
+      text,
+      voice: voice.id,
+      ...(voice.stability !== undefined ? { stability: voice.stability } : {}),
+      ...(voice.similarity !== undefined ? { similarity_boost: voice.similarity } : {}),
+      ...(voice.style !== undefined ? { style: voice.style } : {}),
+      ...(voice.speed !== undefined ? { speed: voice.speed } : {}),
+    } as unknown as never,
   })) as { data?: { audio?: { url?: string } } };
   return res.data?.audio?.url ?? null;
 }
