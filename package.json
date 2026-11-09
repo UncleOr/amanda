@@ -26,6 +26,7 @@
     "art:emoji": "pnpm --filter @amanda/art emoji",
     "art:animate": "pnpm --filter @amanda/art animate",
     "art:sounds": "pnpm --filter @amanda/art sounds",
+    "art:siren": "node scripts/make-siren.mjs",
     "art:fanfare": "pnpm --filter @amanda/art fanfare",
     "art:sounds-process": "pnpm --filter @amanda/art sounds-process",
     "art:surfaces": "pnpm --filter @amanda/art surfaces",

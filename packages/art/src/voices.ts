@@ -50,6 +50,16 @@ export interface VoiceSpec {
   /** 0.5 to 2. Slow is heavy, and slow is also slow-witted. */
   speed?: number;
   emotion?: "happy" | "sad" | "angry" | "fearful" | "disgusted" | "surprised" | "neutral";
+  /**
+   * Not the model's. The clip is built somewhere else and this entry exists
+   * only so the card is wired up and the gap tests can see it.
+   *
+   * ⚠ `generateVoices` REFUSES these. One of them took a recording of Or and
+   * Hod singing and spent an afternoon pulling it into tune; `pnpm art:voices
+   * siren` would overwrite it with a text-to-speech take of the word "Siren"
+   * and nothing would say so until somebody placed the card.
+   */
+  computed?: { by: string };
   /** Why these three numbers, in one line. */
   why: string;
 }
@@ -272,44 +282,37 @@ export const VOICES: VoiceSpec[] = [
     id: "card-name-siren",
     cardId: "sea_07_siren",
     /*
-     * ═══ OR WANTS HER TO SING, AND THIS MODEL DOES NOT SING ═══
+     * ═══ THE ONE CLIP IN THIS GAME THAT WAS SUNG BY THE PEOPLE MAKING IT ═══
      *
-     * Or, 9 November 2026: *"the Siren — when you place her you should hear
-     * an opera song like Sirenaaa Sirenna, twice."*
+     * Or: *"the Siren — when you place her you should hear an opera song
+     * like Sirenaaa Sirenna, twice."* And then, with two voice notes: *"I put
+     * you two references where we roughly fake the Siren's melody in our own
+     * voices. Make it autotune and a beautiful opera and that will be the
+     * sound."*
      *
-     * It is the right idea for the one card in this game whose VOICE is part
-     * of what it does, and it runs straight into the rule this project has
-     * now learnt four times: a feeling is music, and music is the one thing
-     * this model cannot make. Twice a fanfare was asked for and twice it came
-     * back as an error sound. Asked to sing opera, a text-to-speech model
-     * returns somebody SAYING a word in a theatrical voice.
+     * The first answer here was a text-to-speech spec with the vowels
+     * stretched, and it was wrong for the reason this project has now met
+     * four times: a feeling is music, and music is the one thing that model
+     * cannot make. Asked for opera it returns somebody SAYING a word.
      *
-     * ⚠ SO THIS IS AN ATTEMPT AND NOT A PROMISE, and it is worth one run of
-     * Or's credit because it costs pennies and the fallback is the clip that
-     * is already there. Three dials are pushed as far as they go toward a
-     * sung line:
+     * So this one is neither generated nor synthesised. It is Or and Hod,
+     * recorded into a phone, with the pitch of every held note corrected onto
+     * a melody measured out of their own two takes — B major, two phrases,
+     * each climbing to F#4 and falling, which is exactly the "twice" he asked
+     * for. See scripts/make-siren.mjs, which has the measurements, the one
+     * musical decision it had to make, and both answers to it.
      *
-     *   THE WORD IS STRETCHED. "Sirenaaa" rather than "Siren" — the held
-     *   vowel is most of what makes a sung syllable sound sung, and it is
-     *   the one part of this a speech model can actually do.
-     *   IT IS SAID TWICE, with a real pause between, because Or asked for
-     *   twice and because a repeated phrase is a PHRASE rather than a label.
-     *   SLOW AND HIGH. 0.5 is the floor the model takes, and nothing is
-     *   slower than singing.
-     *
-     * If it comes back as speech — which is the likely outcome — the answer
-     * is NOT another prompt. It is two held choir notes computed in
-     * fanfare.ts (`choir` already does exactly that, and it is how the
-     * Healing Bloom got "spiritual") with this clip laid over the top.
-     * That is an hour of work and it costs nothing, and it should only be
-     * spent after Or has heard this one.
+     * The settings below are what the TTS take USED to be, kept so the
+     * record of what she sounded like before is not lost. Nothing reads them
+     * while `computed` is set.
      */
-    says: "Sirenaaa <#0.3#> Sirennaaa",
+    computed: { by: "node scripts/make-siren.mjs" },
+    says: "Siren",
     voice: "Wise_Woman",
-    pitch: 5,
-    speed: 0.5,
+    pitch: 3,
+    speed: 0.75,
     emotion: "happy",
-    why: "Held vowels, said twice, as slow and high as the dials go. A try at a song.",
+    why: "Or and Hod singing it, pulled into tune. The only sung clip in the game.",
   },
   {
     id: "card-name-iron-bulwark",
@@ -478,6 +481,16 @@ export async function generateVoices(only: string[]): Promise<void> {
   console.log(`\nSaying ${list.length} names\n`);
   for (const spec of list) {
     const dest = join(RAW, `${spec.id}.mp3`);
+    /*
+     * ⚠ SOME CLIPS ARE NOT THIS MODEL'S TO MAKE, and naming one explicitly
+     * must not be a way round that. The Siren is Or and Hod singing, pulled
+     * into tune by hand; a text-to-speech take of the word would overwrite
+     * it and nothing would say so until somebody placed the card.
+     */
+    if (spec.computed) {
+      console.log(`   keep  ${spec.id} — built by \`${spec.computed.by}\`, not by this model`);
+      continue;
+    }
     // Named explicitly means "do it again"; otherwise never pay twice.
     if (!only.length && existsSync(dest)) {
       console.log(`   skip  ${spec.says} (exists)`);
