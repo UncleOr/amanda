@@ -271,12 +271,45 @@ export const VOICES: VoiceSpec[] = [
      */
     id: "card-name-siren",
     cardId: "sea_07_siren",
-    says: "Siren",
+    /*
+     * ═══ OR WANTS HER TO SING, AND THIS MODEL DOES NOT SING ═══
+     *
+     * Or, 9 November 2026: *"the Siren — when you place her you should hear
+     * an opera song like Sirenaaa Sirenna, twice."*
+     *
+     * It is the right idea for the one card in this game whose VOICE is part
+     * of what it does, and it runs straight into the rule this project has
+     * now learnt four times: a feeling is music, and music is the one thing
+     * this model cannot make. Twice a fanfare was asked for and twice it came
+     * back as an error sound. Asked to sing opera, a text-to-speech model
+     * returns somebody SAYING a word in a theatrical voice.
+     *
+     * ⚠ SO THIS IS AN ATTEMPT AND NOT A PROMISE, and it is worth one run of
+     * Or's credit because it costs pennies and the fallback is the clip that
+     * is already there. Three dials are pushed as far as they go toward a
+     * sung line:
+     *
+     *   THE WORD IS STRETCHED. "Sirenaaa" rather than "Siren" — the held
+     *   vowel is most of what makes a sung syllable sound sung, and it is
+     *   the one part of this a speech model can actually do.
+     *   IT IS SAID TWICE, with a real pause between, because Or asked for
+     *   twice and because a repeated phrase is a PHRASE rather than a label.
+     *   SLOW AND HIGH. 0.5 is the floor the model takes, and nothing is
+     *   slower than singing.
+     *
+     * If it comes back as speech — which is the likely outcome — the answer
+     * is NOT another prompt. It is two held choir notes computed in
+     * fanfare.ts (`choir` already does exactly that, and it is how the
+     * Healing Bloom got "spiritual") with this clip laid over the top.
+     * That is an hour of work and it costs nothing, and it should only be
+     * spent after Or has heard this one.
+     */
+    says: "Sirenaaa <#0.3#> Sirennaaa",
     voice: "Wise_Woman",
-    pitch: 3,
-    speed: 0.75,
+    pitch: 5,
+    speed: 0.5,
     emotion: "happy",
-    why: "Warm, unhurried and a little too pleased to see you.",
+    why: "Held vowels, said twice, as slow and high as the dials go. A try at a song.",
   },
   {
     id: "card-name-iron-bulwark",

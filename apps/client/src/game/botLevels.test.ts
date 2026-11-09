@@ -20,6 +20,36 @@
  * have LEVELS now. Every bot fielded level-1 cards because nothing had ever
  * given them one, and a player who has been collecting for a fortnight has
  * not — ten per cent a level, on every card, in every battle.
+ *
+ * ═══ AND ON 9 NOVEMBER 2026 OR OBJECTED TO EXACTLY THAT LEVER ═══
+ *
+ * *"There is no way it kills my whole defence in a second. That means it is
+ * simply significantly more upgraded than me, no? The difference between the
+ * levels should be in how SMART it is and how well it uses the cards, not in
+ * how strong they are."*
+ *
+ * He is right about the fact, and the database says it is worse than he
+ * guessed. Measured on the live accounts:
+ *
+ *     the hard bot          level 6   ×1.50
+ *     Or's 48 cards         avg 2.04  ×1.10   (top level 3)
+ *     Hod's 11 cards        all 1     ×1.00   (and he is at 1560 trophies)
+ *
+ * So the hard bot carries 36% more health and power than Or's average card,
+ * and a flat 50% more than every card Hod owns — while Hod is the one further
+ * up the ladder.
+ *
+ * ⚠ AND IT CONTRADICTS HIS OWN TARGET, WHICH IS WHY NOTHING HAS CHANGED HERE
+ * YET. The quote at the top of this file is also his: *"a player should lose
+ * 75% of the time to the hard bot."* The levels are what got it from ~55% to
+ * the 75-82% measured above; planning alone did not, and two planner changes
+ * were tried and thrown away (see scripts/bot-report.ts, which has both and
+ * why). Taking the levels out without making the planner genuinely smarter
+ * would hand back a hard bot that loses more often than he asked for.
+ *
+ * The next step is a measurement, not an edit: run bot-report with the levels
+ * removed and find out what the planner alone is worth. Until then the two
+ * instructions are both on the record and this is the one place they meet.
  */
 import { describe, expect, it } from "vitest";
 import { levelMultiplier } from "@amanda/shared";
