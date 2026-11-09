@@ -754,11 +754,14 @@ const CHOSEN: Record<string, string> = {
   // The one card voice that is music rather than an event.
   "card-healing-bloom": "card-healing-bloom",
   /*
-   * And the one that is a SONG. It goes to assets/raw/voices rather than
-   * assets/raw/sfx, because it is a card's spoken name as far as the rest of
-   * the game is concerned — see VOICES_OUT above.
+   * ⚠ THE SIREN IS DELIBERATELY NOT HERE ANY MORE. It renders into the
+   * audition folder and goes no further: Or owns the original recording from
+   * Amanda's film — *"the recording is mine, you can use it exactly"* — and
+   * nothing synthesised beats the thing itself. The build stays because
+   * `soprano` was written for it, because it is the only worked example of a
+   * formant voice in this file, and because an audition is how you find out
+   * whether a sample is better. See scripts/make-siren.mjs.
    */
-  "card-name-siren": "card-name-siren",
 };
 
 mkdirSync(OUT, { recursive: true });

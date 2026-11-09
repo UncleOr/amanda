@@ -579,8 +579,17 @@ export function processVoices(): void {
         "areverse",
         "loudnorm=I=-18:TP=-1.5:LRA=11",
       ].join(","),
-      // A backstop, not a trim: nothing here should come close to it.
-      "-t", "4",
+      /*
+       * A backstop, not a trim.
+       *
+       * ⚠ RAISED FROM 4 TO 6 THE DAY A CARD SANG. Four was chosen when every
+       * clip here was somebody saying a name — the longest was the Mother
+       * Tree at 4.0s and the comment said nothing should come close. The
+       * Siren is 4.64 seconds of the original film recording, three phrases
+       * of it, and at 4 the third "Sirena" was simply gone — which is a
+       * backstop doing the one thing a backstop must not do.
+       */
+      "-t", "6",
       "-ac", "1", "-ar", "44100", "-b:a", "96k",
       join(OUT, `${spec.id}.mp3`),
     ]);
