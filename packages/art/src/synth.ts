@@ -300,4 +300,183 @@ export function choir(freq: number, dur: number, { gain = 1, swell = 0.12, decay
   return out;
 }
 
+/* ── a voice that actually sings ───────────────────────────────────── */
+
+/**
+ * ═══ WHY `choir` WAS NOT ENOUGH, AND WHAT A SUNG VOWEL ACTUALLY IS ═══
+ *
+ * Or, about the Siren: *"it needs to be COMPLETELY regenerated, the singing,
+ * in a beautiful soprano opera voice. Our recordings are only a reference
+ * for the melody itself."*
+ *
+ * `choir` above is five detuned sines with one harmonic. That is a warm PAD
+ * — it is what sits under a landing — and it is not a person. Three things
+ * are missing, and all three are what the ear uses to decide it is hearing
+ * somebody sing:
+ *
+ *   A GLOTTAL SOURCE. A voice is not a sine. It is a buzz, rich in
+ *     harmonics, which the throat then filters. Here it is a summed harmonic
+ *     series with a -12dB/octave roll-off, which is roughly what a vocal fold
+ *     actually produces.
+ *
+ *   FORMANTS. This is the whole thing. A vowel is not a pitch — it is two or
+ *     three RESONANCES at fixed frequencies that stay put while the pitch
+ *     moves underneath them. /i/ is a low first formant and a very high
+ *     second; /a/ has them close together in the middle. Sing the same note
+ *     through different formants and you get different vowels, which is how
+ *     this file can make a voice say "si-re-na" with no recording involved.
+ *
+ *   VIBRATO. An operatic voice oscillates about 5.5 times a second by
+ *     roughly a third of a semitone. Without it the line is a synthesiser;
+ *     with it, it is a singer. It is the single cheapest thing here and it
+ *     does more than the other two.
+ *
+ * The formants below are soprano values. They are higher and wider apart
+ * than a speaking voice's, which is why a soprano is hard to understand and
+ * why this one leans on the long /a/ at the end of each phrase.
+ */
+/**
+ * Each vowel as three resonances AND their three levels.
+ *
+ * ⚠ THE LEVELS ARE HALF THE VOWEL, which the first version of this got
+ * wrong. With one shared balance of [1, 0.42, 0.18] every vowel came out
+ * measuring the same: the second formant sat 17dB under the first and the
+ * bands around 1150, 1700 and 2000 all held under 1% of the energy whatever
+ * was asked for. A formant nobody can hear is not a formant.
+ *
+ * In a real /i/ the second formant is only a few dB below the first — that
+ * brightness IS the vowel. In /a/ the two sit close together in frequency
+ * and the second is well down. So the balance travels with the frequencies.
+ *
+ * ⚠ `g` IS NOT IN DECIBELS AND IS NOT A RATIO OF LEVELS. It is a multiplier
+ * on a resonator whose own output is already scaled by `(1 - r)`, and the
+ * upper formants are driven by harmonics that are themselves 10-18dB down
+ * before they arrive. So the numbers that LOOK right — 1, 0.8, 0.34 for /i/
+ * — measured as less than one per cent of the energy above a kilohertz, and
+ * the voice came out dark. These are calibrated against the spectrum of the
+ * finished file instead, which is the only thing that can be checked without
+ * ears.
+ */
+export const VOWELS = {
+  /** "si" — closed and bright: a very high second formant, almost as loud. */
+  ee: { f: [350, 2000, 2800], g: [1, 5.0, 2.1] },
+  /** "re" — half open. */
+  eh: { f: [500, 1700, 2500], g: [1, 3.8, 1.5] },
+  /** "na" — wide open, and the one an audience actually hears. */
+  ah: { f: [800, 1150, 2800], g: [1, 2.8, 0.9] },
+} as const;
+
+export type Vowel = keyof typeof VOWELS;
+
+/**
+ * One sung note: a soprano on `freq`, shaped into `vowel`.
+ *
+ * `slideFrom` starts the note at another pitch and glides to this one over
+ * the first fifth of its length — a singer reaching a note from below, and
+ * the thing that keeps a sequence of notes from sounding typed in.
+ */
+export function soprano(
+  freq: number,
+  dur: number,
+  {
+    vowel = "ah" as Vowel,
+    gain = 1,
+    swell = 0.09,
+    decay = 0.6,
+    /** Depth in cents. 35 is operatic; 0 is a synthesiser. */
+    vibrato = 35,
+    vibratoHz = 5.5,
+    slideFrom = 0,
+  } = {},
+): Buf {
+  const n = seconds(dur);
+  const out = make(dur);
+  const [f1, f2, f3] = VOWELS[vowel].f;
+  const level = VOWELS[vowel].g;
+  /*
+   * ═══ FORMANT TUNING, WHICH IS WHY SOPRANOS SOUND LIKE SOPRANOS ═══
+   *
+   * ⚠ A RESONANCE BELOW THE FUNDAMENTAL CANNOT SOUND. There is no harmonic
+   * down there to excite it. Measured on the first render of the Siren: four
+   * of the six notes asked for a first formant under their own fundamental
+   * — /i/ wants 350Hz and F#5 is 740 — so those four notes were being shaped
+   * by whatever harmonic happened to sit nearest, and the vowels were mush.
+   *
+   * Real sopranos have exactly this problem and exactly this answer: they
+   * RAISE the first formant to meet the note. It is why every vowel drifts
+   * toward /a/ as a soprano climbs, and why a high aria is hard to make out
+   * even sung by somebody magnificent.
+   *
+   * So F1 is lifted to the fundamental when it would fall below it, and the
+   * vowel keeps its identity in F2 and F3 — which are high enough to speak
+   * at any note in this range. /i/ at F#5 is no longer a low F1; it is a
+   * 2kHz second formant over an open throat, which is what it really is.
+   */
+  const tunedF1 = Math.max(f1, freq * 1.02);
+  // Three two-pole resonators, one per formant. `r` near 1 is a narrow,
+  // ringing peak — which is what a throat is.
+  const res = [tunedF1, f2, f3].map((f, i) => ({
+    w: (2 * Math.PI * f) / RATE,
+    r: [0.986, 0.976, 0.968][i]!,
+    g: level[i]!,
+    y1: 0,
+    y2: 0,
+  }));
+  let phase = 0;
+  for (let i = 0; i < n; i++) {
+    const t = i / RATE;
+    const k = i / n;
+    /*
+     * The pitch for this sample: the note, plus the reach up into it, plus
+     * the vibrato — which fades IN over the first fifth, because a singer
+     * does not start wobbling on the attack.
+     */
+    const reach = slideFrom > 0 && k < 0.2 ? Math.pow(1 - k / 0.2, 2) : 0;
+    const base = freq * Math.pow(slideFrom / freq, reach);
+    const vib = vibrato * Math.min(1, k / 0.2) * Math.sin(2 * Math.PI * vibratoHz * t);
+    const f = base * Math.pow(2, vib / 1200);
+
+    /*
+     * The glottal buzz.
+     *
+     * ⚠ 1/h AND NOT 1/h². The comment above this used to say -12dB/octave
+     * and the code said 1/h², which is -12dB per HARMONIC — by the third one
+     * it is 19dB down. Measured on the first render: every band above 1kHz
+     * held under 2% of the energy, so the formants had nothing to shape and
+     * the "soprano" was a sine with vibrato on it. A theremin.
+     *
+     * 1/h is the real figure for a vocal fold: -6dB per octave of harmonic
+     * number, which leaves a bright buzz for the throat to work on. The
+     * difference between this line and the last one is the difference
+     * between a voice and a tone.
+     */
+    phase += (2 * Math.PI * f) / RATE;
+    if (phase > 2 * Math.PI) phase -= 2 * Math.PI;
+    let src = 0;
+    for (let h = 1; h <= 24; h++) {
+      if (f * h > RATE / 2.2) break;
+      src += Math.sin(phase * h) / h;
+    }
+
+    // Through the throat.
+    let v = 0;
+    for (const o of res) {
+      const y = src + 2 * o.r * Math.cos(o.w) * o.y1 - o.r * o.r * o.y2;
+      o.y2 = o.y1;
+      o.y1 = y;
+      v += y * (1 - o.r) * o.g;
+    }
+
+    /*
+     * Held, not struck. A sung note barely decays while the breath lasts, so
+     * the default decay is a tenth of a bell's — and it releases at the end
+     * rather than stopping, or the join to the next note is a click.
+     */
+    const a = Math.min(1, t / swell);
+    const release = k > 0.86 ? (1 - k) / 0.14 : 1;
+    out[i] = v * a * release * Math.exp((-decay * i) / n) * gain;
+  }
+  return out;
+}
+
 /* ── the idents ────────────────────────────────────────────────────── */

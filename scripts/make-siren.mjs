@@ -1,8 +1,19 @@
 /**
- * The Siren's song — Or and Hod singing it, pulled into tune.
+ * The Siren's song — where the melody came from.
  *
- *   node scripts/make-siren.mjs            the in-key take (what ships)
+ *   node scripts/make-siren.mjs            the in-key reading of their takes
  *   node scripts/make-siren.mjs faithful   their notes exactly, in tune
+ *
+ * ⚠ THIS NO LONGER MAKES THE CLIP THE GAME PLAYS. Or, on the first attempt,
+ * which was their own recording pulled into tune: *"it needs to be COMPLETELY
+ * regenerated, the singing, in a beautiful soprano opera voice. Our
+ * recordings are only a reference for the melody itself."*
+ *
+ * So this script's job is now the MEASUREMENT. It is where the notes in
+ * `SIREN` in packages/art/src/fanfare.ts come from, and it still renders the
+ * autotuned version of their own voices into the audition folder beside the
+ * soprano — because comparing the two is the only way to check the soprano is
+ * singing the right tune. It writes nothing the pipeline reads.
  *
  * Or: *"the Siren — when you place her you should hear an opera song like
  * Sirenaaa Sirenna, twice."* And then, with two voice notes attached: *"I
@@ -299,8 +310,15 @@ execFileSync(FF, [
   "-map", "[out]", "-ac", "1", "-ar", "44100", wet,
 ]);
 
-// And the one that ships, where the voice pipeline looks for it.
-const dest = join(RAW, "card-name-siren.mp3");
+/*
+ * ⚠ INTO THE AUDITION FOLDER, NOT THE PIPELINE. This used to write
+ * `assets/raw/voices/card-name-siren.mp3`, which is exactly where
+ * `art:voices-process` looks — so once the soprano replaced it, running this
+ * script put Or and Hod's own voices back into the game, silently. It did,
+ * once, five minutes after the soprano was built. It goes beside the soprano
+ * now, to be listened to against it.
+ */
+const dest = join(AUDITION, `${which}-autotuned.mp3`);
 execFileSync(FF, ["-y", "-v", "error", "-i", wet, "-ac", "1", "-ar", "44100", "-b:a", "128k", dest]);
 
 const dur = execFileSync(FF.replace(/ffmpeg(\.exe)?$/, (m) => m.replace("ffmpeg", "ffprobe")), [
@@ -311,4 +329,8 @@ const dur = execFileSync(FF.replace(/ffmpeg(\.exe)?$/, (m) => m.replace("ffmpeg"
 
 console.log(`\n   -> ${dest}  (${Number(dur).toFixed(2)}s)`);
 console.log(`   -> ${wet}`);
-console.log(`\n   Now run:  pnpm art:voices-process\n`);
+console.log(
+  `\n   The clip the game plays is the SOPRANO, built from these notes:` +
+    `\n     pnpm --filter @amanda/art exec tsx src/fanfare.ts card-name-siren` +
+    `\n     pnpm art:voices-process\n`,
+);

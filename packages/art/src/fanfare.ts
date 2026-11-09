@@ -55,11 +55,21 @@ import { execFileSync } from "node:child_process";
 import { join } from "node:path";
 import { REPO_ROOT } from "./catalog.js";
 import type { Buf } from "./synth.js";
-import { air, at, bell, brass, choir, finish, make, note, room, thud, wav } from "./synth.js";
+import { air, at, bell, brass, choir, finish, make, note, room, soprano, thud, wav } from "./synth.js";
 
 const OUT = join(REPO_ROOT, "assets", "raw", "sfx", "fanfare");
 /** Where sounds.ts reads from, for the ones that end up in the game. */
 const RAW = join(REPO_ROOT, "assets", "raw", "sfx");
+/**
+ * And where voices.ts reads from, for the one that is a card's VOICE.
+ *
+ * The Siren's song is music, so it is built here; but the game asks for it
+ * the way it asks for every other card's name (`sfx.voice`), so it has to
+ * land in the voices pipeline and be trimmed and loudness-matched by
+ * `art:voices-process` with the rest of them. A clip that arrives at its own
+ * volume is a clip that stands out for the wrong reason.
+ */
+const VOICES_OUT = join(REPO_ROOT, "assets", "raw", "voices");
 
 interface Fanfare {
   id: string;
@@ -367,6 +377,120 @@ const CARDS: Fanfare[] = [
   },
 ];
 
+/* ── the Siren, sung ───────────────────────────────────────────────── */
+/*
+ * ═══ OR AND HOD SANG IT; A SOPRANO SINGS IT ═══
+ *
+ * Or: *"the Siren — when you place her you should hear an opera song like
+ * Sirenaaa Sirenna, twice."* Then two voice notes: *"I put you two references
+ * where we roughly fake the melody in our own voices."* Then, on the first
+ * attempt, which was their own recording pulled into tune: *"it needs to be
+ * COMPLETELY regenerated, the singing, in a beautiful soprano opera voice.
+ * Our recordings are only a reference for the melody itself."*
+ *
+ * So the recordings were a SCORE, not a take. What came out of them is
+ * written down in scripts/make-siren.mjs — autocorrelation pitch tracking at
+ * 10ms frames over both voice notes, which agree:
+ *
+ *             take 1              take 2            agreed
+ *   held      A#3/B3 ~620ms       B3 ~290ms         B3        "Siii—"
+ *   scoop     C4→F4 fast          C4→F4 fast        a slide
+ *   PEAK      F#4 ~980ms          F#4 ~930ms        F#4       "—reeee"
+ *   fall      D#4 279ms           D#4 150ms         D#4       "naaa"
+ *   PEAK      F#4 ~1120ms         F#4 ~470ms        F#4       "Siii-reee"
+ *   lift      G#4                 G4                G#4
+ *   land      F4 (flat, fading)   F4 (flat, fading) F#4
+ *
+ * B, D# and F# is a B major triad, so it is in B major, and the two phrases
+ * he asked for are right there: each one climbs to F#4 and falls. The two
+ * notes the takes disagree on went the way take 1 sang them, which is also
+ * the way that is in key — and the last note is a semitone up from what both
+ * of them sang, because in both takes the volume is dying exactly there. That
+ * is a breath running out, not a note.
+ *
+ * ⚠ AND IT IS SUNG AN OCTAVE ABOVE WHAT THEY SANG. B3 to G#4 is where a
+ * father and a seven-year-old land; a soprano lives an octave up, and "a
+ * beautiful soprano" is a register before it is a timbre. B4 · F#5 · D#5 ·
+ * F#5 · G#5 · F#5.
+ *
+ * The vowels carry the word: si(ee) · re(eh) · na(ah), twice. A soprano high
+ * in her range is genuinely hard to understand — that is true of real ones —
+ * so each phrase lands on the open /a/, which is the syllable an audience
+ * actually hears.
+ */
+const SIREN: Fanfare[] = [
+  {
+    id: "card-name-siren",
+    idea: "Sirena, Sirena — a soprano on the melody Or and Hod sang, an octave up.",
+    build: () => {
+      const out = make(3.4);
+
+      // A breath of air before the voice, so she arrives rather than starts.
+      at(out, air(0.3, { cutoff: 5200, gain: 0.035, rise: true }), 0);
+
+      /*
+       * Phrase one: Si — reeee — naaa.
+       *
+       * The long F#5 is the note the whole song is about, so it gets more
+       * than half the phrase and the vibrato has room to open up on it.
+       */
+      at(out, soprano(note("B4"), 0.42, { vowel: "ee", gain: 0.30, swell: 0.08 }), 0.06);
+      at(
+        out,
+        soprano(note("F#5"), 1.00, {
+          vowel: "eh",
+          gain: 0.34,
+          swell: 0.10,
+          // Reaching the note from the B below is the scoop they both sang.
+          slideFrom: note("B4"),
+        }),
+        0.46,
+      );
+      at(out, soprano(note("D#5"), 0.40, { vowel: "ah", gain: 0.30, swell: 0.06 }), 1.46);
+
+      /*
+       * Phrase two, after a breath: Si-reee — (up) — naaa. Shorter than the
+       * first and it lifts before it lands, which is the only reason the
+       * second one is not a repeat.
+       */
+      at(out, soprano(note("F#5"), 0.46, { vowel: "ee", gain: 0.32, swell: 0.07 }), 2.00);
+      at(out, soprano(note("G#5"), 0.18, { vowel: "eh", gain: 0.30, swell: 0.04 }), 2.44);
+      at(
+        out,
+        soprano(note("F#5"), 0.70, {
+          vowel: "ah",
+          gain: 0.33,
+          swell: 0.06,
+          // A little slower and wider at the end: a singer holding a last note.
+          vibrato: 45,
+          vibratoHz: 5.1,
+        }),
+        2.60,
+      );
+
+      /*
+       * One quiet voice a sixth below, on the open vowel only.
+       *
+       * Not a full harmony line — two sopranos in parallel is a duet, and
+       * this is one singer. It is there to put a chord under the two landings
+       * so the phrases resolve onto something, which is what makes a line
+       * sound composed rather than hummed. D#5 under the first (B major) and
+       * A#4 under the second (an F# chord, which is where it lands).
+       */
+      at(out, soprano(note("B4"), 0.40, { vowel: "ah", gain: 0.10, swell: 0.14, vibrato: 25 }), 1.46);
+      at(out, soprano(note("A#4"), 0.70, { vowel: "ah", gain: 0.10, swell: 0.16, vibrato: 25 }), 2.60);
+
+      /*
+       * A real hall, and bigger than anything else in this file. Everywhere
+       * else a tail is a nuisance by the tenth hearing; opera IS the room,
+       * and this plays once per placement of one card. The same reasoning
+       * the Healing Bloom's 0.5 was written under.
+       */
+      return finish(room(out, { mix: 0.46, size: 1.7, damp: 0.28 }));
+    },
+  },
+];
+
 const STING: Fanfare[] = [
   {
     id: "go",
@@ -598,19 +722,48 @@ const CHOSEN: Record<string, string> = {
   boost: "boost",
   // The one card voice that is music rather than an event.
   "card-healing-bloom": "card-healing-bloom",
+  /*
+   * And the one that is a SONG. It goes to assets/raw/voices rather than
+   * assets/raw/sfx, because it is a card's spoken name as far as the rest of
+   * the game is concerned — see VOICES_OUT above.
+   */
+  "card-name-siren": "card-name-siren",
 };
 
 mkdirSync(OUT, { recursive: true });
 mkdirSync(RAW, { recursive: true });
 const only = process.argv[2];
 console.log();
-for (const f of [...WIN, ...NEW, ...STING, ...CARDS]) {
+for (const f of [...WIN, ...NEW, ...STING, ...CARDS, ...SIREN]) {
   if (only && !f.id.startsWith(only)) continue;
   const raw = join(OUT, `${f.id}.wav`);
   const mp3 = join(OUT, `${f.id}.mp3`);
   const rendered = wav(f.build());
   writeFileSync(raw, rendered);
-  if (CHOSEN[f.id]) writeFileSync(join(RAW, `${CHOSEN[f.id]}.wav`), rendered);
+  /*
+   * A card's NAME goes to the voices pipeline; everything else to sounds.ts.
+   *
+   * ⚠ AND IT HAS TO BE AN MP3 THERE, NOT A WAV. `processVoices` reads
+   * `<id>.mp3` — sounds.ts reads `<id>.wav` — so writing the wav alone left
+   * an OLDER mp3 sitting beside it, and the voice pipeline happily shipped
+   * the old one. Caught because the previous take of this clip was Or and
+   * Hod's own recording and the file was five minutes older than the render
+   * that was supposed to replace it.
+   */
+  const name = f.id.startsWith("card-name-");
+  const home = name ? VOICES_OUT : RAW;
+  if (CHOSEN[f.id]) {
+    mkdirSync(home, { recursive: true });
+    if (name) {
+      execFileSync(ffmpeg(), [
+        "-y", "-v", "error", "-i", raw,
+        "-ac", "1", "-ar", "44100", "-b:a", "160k",
+        join(home, `${CHOSEN[f.id]}.mp3`),
+      ]);
+    } else {
+      writeFileSync(join(home, `${CHOSEN[f.id]}.wav`), rendered);
+    }
+  }
   execFileSync(ffmpeg(), [
     "-y", "-v", "error", "-i", raw,
     // The same -16 LUFS as every other effect in the game, so choosing one of
