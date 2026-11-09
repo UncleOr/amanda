@@ -527,6 +527,42 @@ export const SOUNDS: SoundSpec[] = [
     level: 0.4,
   },
   {
+    id: "card-ocean",
+    what: "Ocean is put down",
+    /*
+     * Or: *"make sounds for Ocean and Frozen too."*
+     *
+     * ⚠ AND THE SEA ALREADY HAS A SOUND, which is the thing to design
+     * against: every card in the family derives `ing-wind` or `ing-bubbles`
+     * while it is carried. A cry that is more water is a cry nobody will
+     * notice. Ocean is the BIGGEST card in the family — so this is the sea
+     * arriving rather than the sea being present: one deep swell that builds
+     * and breaks, with weight underneath it.
+     */
+    prompt: `One huge ocean wave rising and breaking: a deep swelling surge of water that crests into a heavy crash, then drains away. Vast and powerful, close and dry. No seagulls, no wind howl, no boat, no rain, no music. ${DRY}`,
+    generate: 3,
+    seconds: 1.4,
+    level: 0.5,
+  },
+  {
+    id: "card-frozen",
+    what: "Frozen is put down",
+    /*
+     * The opposite half of the same family. Frozen is water AND electric, and
+     * the card is a freeze — so the sound is the MOMENT of freezing rather
+     * than ice as a material: a sharp crystalline snap and the creak of
+     * something setting solid.
+     *
+     * `ing-ice` already exists as the carry texture, and this must not be
+     * that. The difference written into the prompt is that this one is an
+     * EVENT with a beginning: ice forming, not ice being.
+     */
+    prompt: `Water freezing solid in an instant: a sharp crystalline crack, then a tight creaking groan as the ice sets and locks. Brittle, close and dry. No snow crunch, no footsteps, no glass shatter, no wind, no music. ${DRY}`,
+    generate: 3,
+    seconds: 1.2,
+    level: 0.5,
+  },
+  {
     id: "card-slime",
     what: "the Slime is put down",
     /*
@@ -765,6 +801,33 @@ export const SOUNDS: SoundSpec[] = [
     generate: 4,
     seconds: 2.2,
     level: 0.5,
+    loop: true,
+  },
+  {
+    id: "ing-steps",
+    what: "footsteps, while it is carried",
+    /*
+     * Or, on Kioory: *"he is also not electric. He needs a sound of
+     * footsteps, ordinary walking."*
+     *
+     * ⚠ THE WORD "ORDINARY" IS THE WHOLE BRIEF AND THE HARD PART. Nineteen
+     * ingredients here are textures — weather, liquids, machinery, wings — and
+     * every one of them has a prompt full of what it must NOT be, because the
+     * model reaches for drama. Footsteps are where it reaches hardest: ask
+     * for walking and it returns boots on gravel in a corridor with a reverb
+     * tail, which is a film, not a creature being picked up.
+     *
+     * So the negatives do most of the work. Small feet, bare, close, flat,
+     * even — and explicitly no boots, no gravel, no stairs, no room.
+     *
+     * It loops, like every carry sound, so the tempo has to be EVEN. A walk
+     * that speeds up is a walk that stumbles every 2.2 seconds, which is the
+     * same trap `ing-heartbeat` has "no acceleration" in its prompt for.
+     */
+    prompt: `Small soft footsteps walking at an even pace on a bare wooden floor, light padding steps, close and dry. Steady unchanging tempo, no acceleration, no pause. No boots, no heels, no gravel, no stairs, no crowd, no room reverb, no music. ${DRY}`,
+    generate: 4,
+    seconds: 2.2,
+    level: 0.45,
     loop: true,
   },
   {

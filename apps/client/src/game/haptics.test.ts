@@ -361,7 +361,15 @@ describe("where the game asks for it", () => {
     const app = read("../App.tsx");
     expect(app).toContain('m.phase === "build") haptics.buzz("build")');
     expect(app).toContain('m.phase === "panic") haptics.buzz("panic")');
-    expect(app).toContain('m.phase === "battle") haptics.buzz("battle")');
+    /*
+     * ⚠ The battle arm is a BLOCK now, not a one-liner: Amanda says one of
+     * her hungry lines a second into her own mode (sfx.amanda), so the buzz
+     * shares the branch. Matched on the two lines rather than on the shape,
+     * which is the part that must not be dropped.
+     */
+    expect(app).toContain('m.phase === "battle") {');
+    const battleArm = app.slice(app.indexOf('m.phase === "battle") {'));
+    expect(battleArm.slice(0, 200)).toContain('haptics.buzz("battle")');
   });
 
   it("and every time a monster falls, on whichever side", () => {

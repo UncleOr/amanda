@@ -1325,7 +1325,21 @@ function Game() {
     // The panic is over and the boards are locked — Or asked for the end of
     // it as well as the start, and this is the phase that IS the end.
     else if (m.phase === "prebattle") haptics.buzz("lock");
-    else if (m.phase === "battle") haptics.buzz("battle");
+    else if (m.phase === "battle") {
+      haptics.buzz("battle");
+      /*
+       * And in Amanda mode she says what she is about to do.
+       *
+       * One of four — "Dinner is ready", "You look tasty", "Oh, kids menu",
+       * "Come here, delicious kid" — a second into the battle, so it lands
+       * over the boards being revealed rather than under the war horn.
+       *
+       * ⚠ Only in HER mode. Those lines are hers and she is not in an
+       * ordinary bot match; a voice from nowhere is worse than no voice.
+       * Silent until `pnpm art:voices amanda` has been run.
+       */
+      if (m.amandaMode) sfx.amanda("hungry", 1000);
+    }
     /*
      * And the end of it. Or: *"also at the end of a match."* Two different
      * answers, because losing and winning are not the same news and the

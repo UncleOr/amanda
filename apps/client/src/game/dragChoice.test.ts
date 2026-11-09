@@ -58,7 +58,17 @@ describe("the game still decides for itself", () => {
      * what they say.
      */
     const chosen = [...CATALOG.values()].filter((c) => c.drag);
-    expect(chosen.map((c) => c.id)).toEqual([]);
+    /*
+     * One, since 9 November 2026. Or, on Kioory: *"he is also not electric.
+     * He needs a sound of footsteps, ordinary walking."* A choice written
+     * into the data rather than made in the panel, which the note above says
+     * is allowed as long as somebody says so here.
+     *
+     * It is also the one card where the derivation has nothing to say: every
+     * other card announces what it is MADE of, and a plastic keyring is made
+     * of nothing you would hear.
+     */
+    expect(chosen.map((c) => c.id)).toEqual(["furries_02_kioory"]);
   });
 
   it("gives every card a carry, an effect and a sound without being asked", () => {

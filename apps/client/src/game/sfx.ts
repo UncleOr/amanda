@@ -16,7 +16,7 @@
  * Must be unlocked from a user gesture (browser autoplay policy) — call
  * sfx.unlock() from the first click.
  */
-import { VOICE_CLIPS, type DragLayer } from "./cardSound";
+import { AMANDA_LINES, VOICE_CLIPS, type DragLayer } from "./cardSound";
 
 export type SoundName =
   | "click"
@@ -492,6 +492,28 @@ export const sfx = {
     } catch {
       /* audio is best-effort */
     }
+  },
+
+  /**
+   * Amanda says one of her lines, chosen at random.
+   *
+   * Or: *"for Amanda make several random options for the voices."* `which`
+   * picks the pool — she introduces herself when she arrives and threatens to
+   * eat you once the fighting starts, and the two sets are not
+   * interchangeable (see AMANDA_LINES).
+   *
+   * ⚠ SILENT UNTIL THE CLIPS EXIST, deliberately. `voice()` says nothing when
+   * a clip is missing, so this is safe to call from the game today and starts
+   * working the moment `pnpm art:voices amanda` has been run — with no second
+   * change anywhere. Returns the line it chose, for the screen to caption if
+   * it ever wants to.
+   */
+  amanda(which: keyof typeof AMANDA_LINES, delayMs = 0): string | null {
+    const pool = AMANDA_LINES[which];
+    if (!pool.length || muted) return null;
+    const slug = pool[Math.floor(Math.random() * pool.length)]!;
+    this.voice(slug, delayMs);
+    return slug;
   },
   /**
    * The mix a card makes while it is being carried, started and held.

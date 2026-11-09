@@ -84,7 +84,7 @@
         "en": "The keyring nobody has managed to look at twice"
       },
       "elements": [
-        "electric"
+        "light"
       ],
       "rarity": "epic",
       "stats": {
@@ -113,7 +113,10 @@
       "art": {
         "placeholderColor": "#63d93f"
       },
-      "launch": true
+      "launch": true,
+      "drag": {
+        "sound": "steps"
+      }
     }
   ]
 }

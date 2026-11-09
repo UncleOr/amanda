@@ -903,6 +903,8 @@ export interface MatchApi {
   barFull: boolean;
   /** Action id currently awaiting a board target, or null. */
   targeting: string | null;
+  /** True while this is Amanda's own mode. See sfx.amanda. */
+  amandaMode: boolean;
   /** Cells flashing because an action card just improved them. */
   lit: Set<string>;
   mods: BattleMods;
@@ -2605,6 +2607,20 @@ export function useMatch(): MatchApi {
     setPhase("countdown");
     setTimeLeft(COUNTDOWN_SECONDS);
     soloAmandaRef.current = true;
+    /*
+     * And she introduces herself, differently each time.
+     *
+     * Or: *"for Amanda make several random options for the voices."* One of
+     * three — "Kiddo, kiddo, kiddo", "I'm Amanda", "Amanda" — over the three
+     * seconds of countdown, after a beat so it is not on top of the button
+     * press. The hungry lines wait for the battle (see the phase effect in
+     * App.tsx).
+     *
+     * ⚠ Silent until `pnpm art:voices amanda` has been run, on purpose: a
+     * missing clip says nothing rather than failing, so this can be finished
+     * before the audio exists.
+     */
+    sfx.amanda("hello", 400);
   }, [clearMatch]);
   const joinRoom = useCallback(
     (code: string) => startOnline({ kind: "join", code: code.toUpperCase().trim() }),
@@ -3266,6 +3282,8 @@ export function useMatch(): MatchApi {
     lesson,
     startLesson,
     playground,
+    /** True while this is Amanda's own mode — she speaks only there. */
+    amandaMode: soloAmandaRef.current,
     editSide,
     setEditSide,
     startPlayground,

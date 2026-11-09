@@ -129,6 +129,16 @@ export async function sound(
 }
 
 /**
+ * The languages whose phonetics can be leaned on for an accent.
+ *
+ * A narrow union rather than `string`, because the service takes a fixed
+ * list and the compiler already knows it — the first version of this typed
+ * it as a string and tsc said so, in as many words, with the whole list.
+ * Widen it when somebody needs one of the other twenty-odd.
+ */
+export type Accent = "English" | "Spanish" | "Italian" | "French" | "German" | "Portuguese";
+
+/**
  * A card saying its own name, in a voice chosen for it.
  *
  * Or: *"those specific ones should also say their name in their own special
@@ -154,6 +164,22 @@ export async function speak(
     /** 0.5 to 2. Slow is heavy; slow is also stupid. */
     speed?: number;
     emotion?: "happy" | "sad" | "angry" | "fearful" | "disgusted" | "surprised" | "neutral";
+    /**
+     * Which language's phonetics to lean on, for an ACCENT.
+     *
+     * Or, on Amanda: *"a woman of about 40-50 with a slight Spanish
+     * accent."* There is no "Spanish-accented English woman" in the preset
+     * list, and guessing at one is a generation spent on a name that may
+     * not exist. `language_boost` is the dial that does exist: set to
+     * Spanish over English text it biases the model's vowels and consonants
+     * that way, which is what an accent IS.
+     *
+     * ⚠ AND IT CAN GO TOO FAR. Pushed on text that is already English it may
+     * read the words AS Spanish rather than with a Spanish colour. That is
+     * one generation to find out and the reason Amanda's lines are worth
+     * listening to before the rest of a batch is paid for.
+     */
+    accent?: Accent;
   },
 ): Promise<string | null> {
   const res = (await fal.subscribe("fal-ai/minimax/speech-2.6-turbo", {
@@ -182,7 +208,7 @@ export async function speak(
        * so that the next person to "fix the cast" reads this first.
        */
       audio_setting: { sample_rate: 44100, channel: 1, format: "mp3" } as unknown as never,
-      language_boost: "English",
+      language_boost: voice.accent ?? "English",
       output_format: "url",
     },
   })) as { data?: { audio?: { url?: string } } };

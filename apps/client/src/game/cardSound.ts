@@ -121,6 +121,14 @@ const CARDS: Record<string, CardVoice> = {
   giants_10_titan_king: { name: "card-name-titan-king", cry: "card-titan-king" },
   insects_01_ant_soldier: { cry: "card-ant-soldier" },
   plants_03_healing_bloom: { cry: "card-healing-bloom" },
+  /*
+   * Or: *"make sounds for Ocean and Frozen too."* The two ends of the Sea —
+   * the biggest card in the family and the one that freezes. Both specced in
+   * packages/art/src/sounds.ts and neither recorded yet, so both are on
+   * CRIES_TO_RECORD below.
+   */
+  sea_06_frozen: { cry: "card-frozen" },
+  sea_08_ocean: { cry: "card-ocean" },
   slimes_01_basic_slime: { cry: "card-slime" },
   /*
    * Two that say their name and have no sound of their own yet. They are
@@ -169,6 +177,53 @@ export const NAMES_TO_RECORD: readonly string[] = [
   "card-name-kioory",
   "card-name-sky-king",
   "card-name-avenging-wasp",
+];
+
+/**
+ * ═══ WHAT AMANDA SAYS, AND SHE PICKS ═══
+ *
+ * Or: *"and for Amanda make several random options for the voices, a woman of
+ * about 40-50 with a slight Spanish accent"* — and then seven lines.
+ *
+ * Split in two because she has two kinds of moment and the lines are not
+ * interchangeable: she ARRIVES, and then she is hungry at you. "I'm Amanda"
+ * over a board that has been fighting for a minute is a introduction nobody
+ * needed; "Oh, kids menu" before the player has even seen her is a punchline
+ * with no setup.
+ *
+ * ⚠ NONE OF THESE ARE RECORDED YET. The specs are in
+ * packages/art/src/voices.ts and `pnpm art:voices amanda` makes all seven —
+ * it costs money, so it is Or's to run. Until then `sfx.voice` is silent on
+ * every one of them and nothing else changes, which is the whole reason the
+ * code can be finished before the audio exists.
+ */
+export const AMANDA_LINES = {
+  /** When she turns up. */
+  hello: ["amanda-kiddo", "amanda-iam", "amanda-name"],
+  /** Once the fighting starts. */
+  hungry: ["amanda-dinner", "amanda-tasty", "amanda-menu", "amanda-comehere"],
+} as const;
+
+/** Every line of hers, for the loader and for the tests. */
+export const ALL_AMANDA: readonly string[] = [
+  ...AMANDA_LINES.hello,
+  ...AMANDA_LINES.hungry,
+];
+
+/**
+ * Cries that are written down and not yet recorded.
+ *
+ * The third list of this shape in this file, and the reason is the same all
+ * three times: `sfx.voice` is silent when a clip is missing, so a card named
+ * here without a file sounds exactly like a card nobody gave a sound to. Only
+ * a list can tell the two apart, and a test holds it against the files on
+ * disk in both directions.
+ */
+export const CRIES_TO_RECORD: readonly string[] = [
+  // `pnpm art:sounds card-ocean card-frozen` records these. It costs money,
+  // so it is Or's to run.
+  "card-ocean",
+  "card-frozen",
 ];
 
 /** Is there a recording behind this spoken name yet? */
@@ -318,6 +373,8 @@ export const DRAG_SOUND_CLIP: Record<DragSound, string | null> = {
   chains: "ing-chains",
   heartbeat: "ing-heartbeat",
   magic: "ing-magic",
+  // Kioory, and the one thing a plastic keyring would actually make.
+  steps: "ing-steps",
 };
 
 /**
@@ -337,6 +394,12 @@ export const DRAG_SOUND_CLIP: Record<DragSound, string | null> = {
  * of the game.
  */
 export const DRAG_SOUNDS_TO_RECORD: readonly DragSound[] = [
+  /*
+   * Added 9 November 2026 for Kioory. Or: *"he needs a sound of footsteps,
+   * ordinary walking."* Specced in packages/art/src/sounds.ts; `pnpm
+   * art:sounds steps` records it and costs money, so it is Or's to run.
+   */
+  "steps",
   /*
    * Empty since 2026-10-29, when Or said *"run art:sounds"* and the ten
    * arrived. The list stays because the mechanism is the point: the next
@@ -387,7 +450,26 @@ export function dragMixOf(card: Card): DragLayer[] {
    * a real answer or there is no way to say it.
    */
   const chosen = card.drag?.sound;
-  if (chosen) {
+  /*
+   * ⚠ AND A CHOICE THAT HAS NOT BEEN RECORDED YET FALLS THROUGH.
+   *
+   * `steps` was named for Kioory before anybody recorded it — Or: *"he needs
+   * a sound of footsteps, ordinary walking"* — and honouring that choice
+   * immediately meant the card asked for `ing-steps.mp3`, which is a 404 at
+   * unlock and then a card that is SILENT in the hand. A test caught it
+   * (cardSound.test.ts, "asks only for clips that exist"), and the test was
+   * right: a choice is a promise about a sound, and a sound that does not
+   * exist is not one.
+   *
+   * So an unrecorded choice is ignored and the mixer derives as if nobody
+   * had chosen — which means the card sounds like SOMETHING today, and
+   * starts sounding like footsteps the moment the clip lands, with no second
+   * change anywhere. `none` is deliberately not affected: that is a card Or
+   * wants silent, and silence needs no recording.
+   */
+  if (chosen && chosen !== "none" && !dragSoundExists(chosen)) {
+    // fall through to the derivation below
+  } else if (chosen) {
     const clip = DRAG_SOUND_CLIP[chosen];
     if (!clip) return [];
     const weight = heft(card.stats.hp);
@@ -491,11 +573,13 @@ export const VOICE_CLIPS: string[] = [
       ...Object.values(OWN_DRAG).map((clip) => ({ drag: clip }) as CardVoice),
       ...Object.values(BY_ELEMENT),
       ...Object.values(BY_SERIES),
-      // Minus any spoken name that has not been recorded — see
-      // NAMES_TO_RECORD. A name with no file is a 404 at unlock.
+      // Minus any spoken name or cry that has not been recorded — see
+      // NAMES_TO_RECORD and CRIES_TO_RECORD. A clip with no file is a 404
+      // at unlock, for every player, on the first press of the game.
       ...Object.values(CARDS).map((v) => ({
         ...v,
         ...(v.name && !nameExists(v.name) ? { name: undefined } : {}),
+        ...(v.cry && CRIES_TO_RECORD.includes(v.cry) ? { cry: undefined } : {}),
       })),
       // The mains that have been recorded. The nulls are the ones that
       // have not, and they must not reach the loader as a 404.

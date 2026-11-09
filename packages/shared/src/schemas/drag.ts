@@ -116,6 +116,21 @@ export const DRAG_SOUNDS = [
   "chains",
   "heartbeat",
   "magic",
+  /*
+   * ── and one more, for a card that walks ──
+   *
+   * Or, on Kioory: *"he is also not electric. He needs a sound of footsteps,
+   * ordinary walking."* Which is a thing none of the nineteen above can say:
+   * the mixer can do weather, machinery, liquids, wings and a pulse, and has
+   * no way to say that something is simply WALKING TOWARDS YOU.
+   *
+   * It suits him for a reason beyond the brief. Every other card in this
+   * game announces itself with what it is made of; a keyring made of plastic
+   * has nothing to announce, and the only thing you would actually hear is
+   * its feet. See DRAG_SOUNDS_TO_RECORD in the client — it is not recorded
+   * yet.
+   */
+  "steps",
 ] as const;
 export const DragSoundSchema = z.enum(DRAG_SOUNDS);
 export type DragSound = z.infer<typeof DragSoundSchema>;

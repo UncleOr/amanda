@@ -104,6 +104,7 @@ export const SOUND_HE: Record<DragSound, Named> = {
   chains: { he: "שרשראות" },
   heartbeat: { he: "פעימות לב" },
   magic: { he: "זמזום קסם" },
+  steps: { he: "צעדים", note: "הליכה רגילה — לקלף שאין לו ממה להשמיע קול" },
 };
 
 /* ───────────────────────── what a card is ───────────────────────── */

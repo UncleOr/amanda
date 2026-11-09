@@ -29,7 +29,7 @@
 import { existsSync, mkdirSync } from "node:fs";
 import { execFileSync } from "node:child_process";
 import { join } from "node:path";
-import { download, speak } from "./fal.js";
+import { download, speak, type Accent } from "./fal.js";
 import { REPO_ROOT } from "./catalog.js";
 import { ffmpegBin } from "./sounds.js";
 
@@ -60,9 +60,126 @@ export interface VoiceSpec {
    * and nothing would say so until somebody placed the card.
    */
   computed?: { by: string };
+  /** A language to lean the phonetics on, for an accent. See fal.ts. */
+  accent?: Accent;
   /** Why these three numbers, in one line. */
   why: string;
 }
+
+
+/* ── Amanda herself ─────────────────────────────────────────────────── */
+/*
+ * ═══ THE OPPONENT GETS A VOICE ═══
+ *
+ * Or: *"and for Amanda make several random options for the voices, a woman of
+ * about 40-50 with a slight Spanish accent."* And then the seven lines, in his
+ * own words and in his own order.
+ *
+ * ⚠ THEY ARE A POOL, NOT A SCRIPT. "Several random options" is what these
+ * are: the game picks one when she has something to say, so that meeting her
+ * twice is not the same scene twice. See AMANDA_LINES in the client, which is
+ * the list it picks from, and `sfx.amanda()`, which picks.
+ *
+ * ═══ HOW THE ACCENT IS DONE ═══
+ *
+ * Not by naming a Spanish-accented voice, because there is no way to know
+ * from here whether one exists and a guess is a generation paid for a name.
+ * `accent: "Spanish"` sets `language_boost` to Spanish over English text,
+ * which leans the vowels and consonants that way — which is what an accent
+ * is. See fal.ts.
+ *
+ * ⚠ AND IT IS SEVEN GENERATIONS ON ONE UNTESTED DIAL. If the boost goes too
+ * far the model reads the words AS Spanish rather than with a Spanish colour.
+ * `pnpm art:voices amanda-iam` makes exactly one of them — listen to that
+ * before paying for the other six.
+ *
+ * ═══ THE AGE, WHICH IS THE PART THE DIALS ACTUALLY DO ═══
+ *
+ * 40-50 is not a voice in any list; it is a pitch and a tempo. `Wise_Woman`
+ * sits lower than `Calm_Woman` to begin with, pitch -2 takes it a little
+ * further, and every line is SLOWER than speech — between 0.8 and 0.9. An
+ * unhurried voice is an older voice, and it is also the whole character: she
+ * is not chasing anybody. She has all evening.
+ */
+const AMANDA: VoiceSpec[] = [
+  {
+    id: "amanda-kiddo",
+    cardId: "legends_01_amanda",
+    says: "Kiddo, <#0.2#> kiddo, <#0.2#> kiddo",
+    voice: "Wise_Woman",
+    pitch: -2,
+    speed: 0.9,
+    emotion: "neutral",
+    accent: "Spanish",
+    why: "Three times, slowing. Calling a child in from the garden, except for dinner.",
+  },
+  {
+    id: "amanda-iam",
+    cardId: "legends_01_amanda",
+    says: "I'm Amanda",
+    voice: "Wise_Woman",
+    pitch: -2,
+    speed: 0.85,
+    emotion: "neutral",
+    accent: "Spanish",
+    why: "Her name, said the way somebody says it who expects you to know it.",
+  },
+  {
+    id: "amanda-name",
+    cardId: "legends_01_amanda",
+    says: "Amanda",
+    voice: "Wise_Woman",
+    pitch: -2,
+    speed: 0.8,
+    emotion: "happy",
+    accent: "Spanish",
+    why: "Just the name. The shortest one, for the moment she arrives.",
+  },
+  {
+    id: "amanda-dinner",
+    cardId: "legends_01_amanda",
+    says: "Dinner is ready",
+    voice: "Wise_Woman",
+    pitch: -2,
+    speed: 0.85,
+    emotion: "happy",
+    accent: "Spanish",
+    why: "Cheerful, and that is the joke — she means you.",
+  },
+  {
+    id: "amanda-tasty",
+    cardId: "legends_01_amanda",
+    says: "You look tasty",
+    voice: "Wise_Woman",
+    pitch: -2,
+    speed: 0.9,
+    emotion: "happy",
+    accent: "Spanish",
+    why: "A compliment, delivered as one.",
+  },
+  {
+    id: "amanda-menu",
+    cardId: "legends_01_amanda",
+    says: "Oh, <#0.25#> kids menu",
+    voice: "Wise_Woman",
+    pitch: -2,
+    speed: 0.9,
+    emotion: "surprised",
+    accent: "Spanish",
+    why: "Delighted. The pause before 'kids' is the whole line.",
+  },
+  {
+    id: "amanda-comehere",
+    cardId: "legends_01_amanda",
+    says: "Come here, <#0.2#> delicious kid",
+    voice: "Wise_Woman",
+    pitch: -2,
+    speed: 0.85,
+    emotion: "happy",
+    accent: "Spanish",
+    why: "Warm and unhurried. Nothing about it is a threat, which is worse.",
+  },
+];
 
 export const VOICES: VoiceSpec[] = [
   {
@@ -466,6 +583,7 @@ export const VOICES: VoiceSpec[] = [
      */
     why: "Something that lives in a bin and did not expect the lid to come off.",
   },
+  ...AMANDA,
 ];
 
 /** Say the missing ones (or the named ones) into assets/raw/voices. */
@@ -503,6 +621,7 @@ export async function generateVoices(only: string[]): Promise<void> {
         pitch: spec.pitch,
         speed: spec.speed,
         emotion: spec.emotion,
+        accent: spec.accent,
       });
       if (!url) throw new Error("no audio returned");
       await download(url, dest);
