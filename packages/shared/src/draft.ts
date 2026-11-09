@@ -47,6 +47,32 @@ export const DRAFT_PACK = 2;
 export const DRAFT_ROUNDS = DECK_RULES.dealt;
 
 /**
+ * How long you get to decide, in seconds.
+ *
+ * Or: *"give up to 5 seconds to choose each card."*
+ *
+ * ═══ WHY A DRAFT NEEDS A CLOCK AT ALL ═══
+ *
+ * Fifteen taps is the cost of this mode, and the one number worth arguing
+ * about is above. A clock is the other half of that bill: fifteen UNTIMED
+ * decisions is as long as the player wants it to be, and two children at one
+ * phone means it is as long as the slower of them wants. Five seconds turns
+ * the whole draft into a minute and a quarter whatever happens.
+ *
+ * ⚠ AND LETTING IT RUN OUT MUST NOT BE A MOVE. A clock that hands you the
+ * better card is a clock worth waiting for, and one that hands you the worse
+ * card punishes a child who was still reading. So the card it takes is drawn
+ * from the same seeded generator that dealt the pack — neither, as far as
+ * the player can tell, and the same every time for the same seed, which is
+ * the one property `seed` exists for. See Draft.tsx.
+ *
+ * It does not run while a card is open. Or asked for the information button
+ * in the same breath, and a clock that eats the five seconds you spent
+ * reading is a button nobody presses twice.
+ */
+export const DRAFT_SECONDS = 5;
+
+/**
  * What one side ends up holding, and what the other does.
  *
  * `mine` and `theirs` are always the same length and never share a card: the

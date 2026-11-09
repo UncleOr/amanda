@@ -318,6 +318,77 @@ export const VOICES: VoiceSpec[] = [
     emotion: "angry",
     why: "A very small plant that is very annoyed — the Healing Bloom inverted.",
   },
+  /* ── three more Or named, 9 November 2026 ───────────────────────────── */
+  /*
+   * Or: *"add a sound that says its name for Torch, for Kioory, Avenging
+   * Wasp, Sky King."* Three of the four exist; Kioory is the card he is
+   * having me build from the keychain and its spec waits for the card.
+   *
+   * None of these three is a MAIN, which is the first time that has come up.
+   * The precedent is already here — Zelig and the Great Mother Tree speak
+   * because they are the biggest card in their family — and the rule it
+   * settles is worth writing down: *nothing about "the two you meet a family
+   * with" says nobody else may speak.* A card earns a voice by being
+   * somebody.
+   */
+  {
+    id: "card-name-torch",
+    cardId: "dragons_03_thunderwing",
+    says: "Torch",
+    /*
+     * ⚠ NOT THE FLAME DRAGON AGAIN. That one is this same voice at -5 and
+     * 0.9 — big, cross and slow. Torch is the dragon that goes STRAIGHT FOR
+     * THE KING (`targeting: "king"`) at three hits a second, so the whole
+     * character is speed: barely under natural pitch and faster than speech,
+     * one syllable spat out. Two dragons that sound the same would make the
+     * family one card.
+     */
+    voice: "Deep_Voice_Man",
+    pitch: -1,
+    speed: 1.3,
+    emotion: "angry",
+    why: "A dragon with one syllable and somewhere to be. Fast, where the Flame Dragon is heavy.",
+  },
+  {
+    id: "card-name-sky-king",
+    cardId: "dragons_10_sky_king",
+    says: "Sky <#0.15#> King",
+    /*
+     * ⚠ THE THIRD KING, AND THE THREE ARE TOLD APART BY PITCH ALONE. Titan
+     * King is this voice at -6 and the Alley King at -4, so a Sky King at
+     * -5 would be the file's own warning come true — one actor reading a
+     * list. It goes UP instead: +1 is the only king here that is not
+     * underneath you, which is the one thing its name actually says.
+     *
+     * Slow, because every king in this game is slow. Commanding is a
+     * tempo before it is a pitch.
+     */
+    voice: "Deep_Voice_Man",
+    pitch: 1,
+    speed: 0.8,
+    emotion: "neutral",
+    why: "Titan -6 under a mountain, Alley -4 in a street, Sky +1 above the clouds.",
+  },
+  {
+    id: "card-name-avenging-wasp",
+    cardId: "insects_07_aggressive_wasp",
+    says: "Avenging Wasp",
+    /*
+     * ⚠ AND NOT THE THORN SPROUT, which is Friendly_Person at +8, 1.3 and
+     * angry — a small furious thing, which is also exactly what a wasp is.
+     * Same brief, so it needs a different instrument: a woman's voice taken
+     * high and run FASTER than anything else in this file.
+     *
+     * 1.6 is the top end here on purpose. The card attacks once a second —
+     * the quickest thing in the game — and it only exists to go after
+     * whoever stung it. Anything unhurried would be a different card.
+     */
+    voice: "Calm_Woman",
+    pitch: 7,
+    speed: 1.6,
+    emotion: "angry",
+    why: "The fastest line in the file, for the fastest card in the game. High and personal.",
+  },
   {
     id: "card-name-thing-in-the-bin",
     cardId: "slimes_11_thing_in_the_bin",

@@ -30,6 +30,50 @@
   color: var(--text);
   font-variant-numeric: tabular-nums;
 }
+/*
+ * ═══ THE FIVE SECONDS ═══
+ *
+ * Or: *"give up to 5 seconds to choose each card."*
+ *
+ * A BAR AND NOT A NUMBER, for the reason at the top of this file: the pair
+ * is the hero, and a digit counting down is a second thing to read on a
+ * screen whose entire job is a choice between two pictures. A bar is taken
+ * in without being looked at, which is what a clock on a decision has to be.
+ *
+ * Thin on purpose — 4px is furniture (§1). It sits under the counter rather
+ * than between the cards, because nothing goes between the cards.
+ */
+.draft__clock {
+  width: min(260px, 62%);
+  height: 4px;
+  border-radius: 999px;
+  background: var(--sur-1);
+  overflow: hidden;
+  flex: none;
+}
+.draft__clock i {
+  display: block;
+  height: 100%;
+  border-radius: 999px;
+  background: var(--accent);
+  /* Matches the tick in Draft.tsx, so the bar slides instead of stepping. */
+  transition: width 0.1s linear, background-color 0.2s;
+}
+/* The last two seconds. The one place on this screen that is allowed to be
+   urgent, and it says so in colour rather than by moving. */
+.draft__clock--last i {
+  background: var(--danger);
+}
+/*
+ * Held, because a card is open and being read. Or asked for the information
+ * button in the same breath as the clock, and a clock that spends your five
+ * seconds while you read is a button nobody presses twice — so the bar stops
+ * AND says it has stopped, or a player who looks back at a full bar will
+ * think the timer broke.
+ */
+.draft__clock--held i {
+  background: var(--muted);
+}
 .draft__pair {
   display: flex;
   align-items: center;
@@ -55,9 +99,10 @@
   border: 0;
   background: none;
   border-radius: 14px;
+  cursor: pointer;
   transition: transform 0.12s ease-out;
 }
-.draft__pick:hover:not(:disabled),
+.draft__pick:hover,
 .draft__pick:focus-visible {
   transform: translateY(-4px);
   border-color: transparent;

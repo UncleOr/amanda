@@ -130,8 +130,49 @@ const CARDS: Record<string, CardVoice> = {
    */
   slimes_10_zelig_giant_ooze: { name: "card-name-zelig" },
   plants_10_great_mother_tree: { name: "card-name-mother-tree" },
+  /*
+   * And three more Or named on 9 November 2026: *"add a sound that says its
+   * name for Torch, for Kioory, Avenging Wasp, Sky King."*
+   *
+   * Which settles the rule the two above only implied: a card earns a voice
+   * by being SOMEBODY, not by being one of the two you meet a family with.
+   * Torch is the dragon that goes for the King, the Sky King is a King, and
+   * the wasp is the card Or renamed last week so it would mean something.
+   *
+   * ⚠ THE RECORDINGS DO NOT EXIST YET, so all three are on
+   * NAMES_TO_RECORD below and kept out of the loader. A name with no file is
+   * a 404 on the first press of the game, and — worse — a card that says
+   * nothing, which is indistinguishable from a card that was never given a
+   * voice at all. See packages/art/src/voices.ts for the three specs and
+   * `pnpm art:voices` for the one command that makes them.
+   */
+  dragons_03_thunderwing: { name: "card-name-torch" },
+  dragons_10_sky_king: { name: "card-name-sky-king" },
+  insects_07_aggressive_wasp: { name: "card-name-avenging-wasp" },
   // Chuppy moved to MAIN_NAME, with the rest of the mains.
 };
+
+/**
+ * Names that are written down and not yet recorded.
+ *
+ * The same mechanism as DRAG_SOUNDS_TO_RECORD and the nulls in MAIN_NAME,
+ * and it exists for the same reason: `sfx.voice` is deliberately silent when
+ * a clip is missing, so a card named here without a file is a card that says
+ * nothing — which looks exactly like a card nobody ever meant to give a
+ * voice. Written down, the gap is a list, a test holds it against the files
+ * on disk in both directions, and recording one is the deletion of one
+ * string.
+ */
+export const NAMES_TO_RECORD: readonly string[] = [
+  "card-name-torch",
+  "card-name-sky-king",
+  "card-name-avenging-wasp",
+];
+
+/** Is there a recording behind this spoken name yet? */
+export function nameExists(clip: string): boolean {
+  return !NAMES_TO_RECORD.includes(clip);
+}
 
 /**
  * ═══ THE TWO FROM EACH FAMILY THAT SAY THEIR OWN NAME ═══
@@ -448,7 +489,12 @@ export const VOICE_CLIPS: string[] = [
       ...Object.values(OWN_DRAG).map((clip) => ({ drag: clip }) as CardVoice),
       ...Object.values(BY_ELEMENT),
       ...Object.values(BY_SERIES),
-      ...Object.values(CARDS),
+      // Minus any spoken name that has not been recorded — see
+      // NAMES_TO_RECORD. A name with no file is a 404 at unlock.
+      ...Object.values(CARDS).map((v) => ({
+        ...v,
+        ...(v.name && !nameExists(v.name) ? { name: undefined } : {}),
+      })),
       // The mains that have been recorded. The nulls are the ones that
       // have not, and they must not reach the loader as a 404.
       ...Object.values(MAIN_NAME).map((name) => ({ ...(name ? { name } : {}) }) as CardVoice),

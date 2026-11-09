@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { readFileSync } from "node:fs";
+import { existsSync, readFileSync } from "node:fs";
 import { fileURLToPath } from "node:url";
 import {
   ALL_MAINS,
@@ -10,8 +10,12 @@ import {
   mainsOf,
 } from "@amanda/shared";
 import { CATALOG, SERIES } from "../data/catalog";
-import { MAINS_WITHOUT_A_VOICE } from "./cardSound";
-import { voiceFor } from "./cardSound";
+import {
+  MAINS_WITHOUT_A_VOICE,
+  NAMES_TO_RECORD,
+  VOICE_CLIPS,
+  voiceFor,
+} from "./cardSound";
 
 /**
  * **The two cards each family is met through.**
@@ -248,5 +252,52 @@ describe("the nine that still have to be recorded", () => {
      */
     expect(MAINS_WITHOUT_A_VOICE).toEqual([]);
     for (const id of ALL_MAINS) expect(voiceFor(id).name, `${id} is silent`).toBeTruthy();
+  });
+});
+
+/* ─────────── the cards that speak without being mains ─────────── */
+
+describe("a card earns a voice by being somebody", () => {
+  /*
+   * Or, 9 November 2026: *"add a sound that says its name for Torch, for
+   * Kioory, Avenging Wasp, Sky King."* None of those is one of the two you
+   * meet a family with, which is what MAIN_NAME is for — so they sit in
+   * CARDS beside Zelig and the Great Mother Tree, who were already there
+   * for the same reason.
+   */
+  const SFX = fileURLToPath(new URL("../../public/sfx/", import.meta.url));
+
+  it("says the name of each of the three Or asked for", () => {
+    expect(voiceFor("dragons_03_thunderwing").name).toBe("card-name-torch");
+    expect(voiceFor("dragons_10_sky_king").name).toBe("card-name-sky-king");
+    expect(voiceFor("insects_07_aggressive_wasp").name).toBe("card-name-avenging-wasp");
+  });
+
+  it("and the list of unrecorded names agrees with the files on disk, both ways", () => {
+    /*
+     * ⚠ THE ONLY THING THAT CAN KEEP THIS HONEST. `sfx.voice` is silent when
+     * a clip is missing, so a name with no file is a card that says nothing
+     * — which is indistinguishable from a card nobody gave a voice to, and
+     * would stay that way until somebody tapped all fifty-three and
+     * listened.
+     *
+     * Record one and forget to take it off the list: fails here. Name one
+     * and forget to spec it: fails here.
+     */
+    const named = [...new Set(ALL_MAINS.map((id) => voiceFor(id).name))]
+      .concat(
+        ["dragons_03_thunderwing", "dragons_10_sky_king", "insects_07_aggressive_wasp"].map(
+          (id) => voiceFor(id).name,
+        ),
+      )
+      .filter((n): n is string => !!n);
+    const missing = named.filter((clip) => !existsSync(`${SFX}${clip}.mp3`));
+    expect(missing.sort()).toEqual([...NAMES_TO_RECORD].sort());
+  });
+
+  it("and none of them reaches the loader as a 404", () => {
+    // VOICE_CLIPS is fetched and decoded at unlock. A name with no file is
+    // a failed request on the first press of the game.
+    for (const clip of NAMES_TO_RECORD) expect(VOICE_CLIPS, clip).not.toContain(clip);
   });
 });
