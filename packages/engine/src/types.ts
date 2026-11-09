@@ -63,6 +63,16 @@ export interface Unit {
   damageTakenMult: number;
   attackSpeedMult: number;
   moveSlowMult: number;
+  /**
+   * What this unit's blows are worth this tick, as a multiplier on `power`.
+   *
+   * ⚠ A MULTIPLIER AND NOT AN EDIT TO `power`. `power` is what the card IS —
+   * the report reads it, the details screen reads it, and the targeting that
+   * hunts "the strongest thing over there" reads it. A debuff that wrote
+   * itself into that number would make a card stop saying what it is, and
+   * would compound every tick it was applied. See `gazeWeaken`.
+   */
+  powerMult: number;
   /** Flat armor granted by allied auras this tick (on top of `armor`). */
   auraArmor: number;
 

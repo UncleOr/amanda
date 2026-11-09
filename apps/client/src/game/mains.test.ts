@@ -3,6 +3,7 @@ import { existsSync, readFileSync } from "node:fs";
 import { fileURLToPath } from "node:url";
 import {
   ALL_MAINS,
+  ONE_MAIN_ON_PURPOSE,
   FAMILY_MAINS,
   STARTER_ALBUM,
   isCollectable,
@@ -60,13 +61,37 @@ describe("which cards a family is met through", () => {
       for (const id of ids) expect(card(id)!.seriesId, id).toBe(seriesId);
   });
 
-  it("gives two to every family that has two to give", () => {
+  it("gives two to every family that has two to give, or says why not", () => {
+    /*
+     * ⚠ THE RULE GOT NARROWER THE DAY A FAMILY HAD A SECOND CARD THAT IS NOT
+     * AN INTRODUCTION. Or, on Kioory: *"of course you do not get him in the
+     * starter deck, but you CAN get him."* A flat "two wherever two exist"
+     * wanted to promote him to a main, and the test below would then have
+     * forced him into the starter album — the one thing ruled out.
+     *
+     * So: at most two, at least one, and a family that names only one with
+     * more than one card to give has to be in ONE_MAIN_ON_PURPOSE with the
+     * reason. Forgetting to name a real second main still fails here.
+     */
     for (const s of SERIES) {
       const playable = s.cards.filter(isCollectable);
       if (!playable.length) continue; // the Legends: Amanda is the opponent
-      const want = Math.min(2, playable.length);
-      expect(mainsOf(s.id).length, `${s.id} has ${playable.length} cards`).toBe(want);
+      const named = mainsOf(s.id).length;
+      expect(named, `${s.id} has ${playable.length} cards`).toBeGreaterThan(0);
+      expect(named, `${s.id} names more than two`).toBeLessThanOrEqual(2);
+      if (playable.length >= 2 && named === 1)
+        expect(
+          ONE_MAIN_ON_PURPOSE[s.id],
+          `${s.id} has ${playable.length} cards and names one main, with no reason given`,
+        ).toBeTruthy();
     }
+  });
+
+  it("and nothing is excused that does not need excusing", () => {
+    // The other direction: a family listed as a deliberate single that has
+    // since been given its second main is a comment nobody updated.
+    for (const seriesId of Object.keys(ONE_MAIN_ON_PURPOSE))
+      expect(mainsOf(seriesId).length, `${seriesId} names two mains now`).toBe(1);
   });
 
   it("names nobody twice", () => {
@@ -271,6 +296,8 @@ describe("a card earns a voice by being somebody", () => {
     expect(voiceFor("dragons_03_thunderwing").name).toBe("card-name-torch");
     expect(voiceFor("dragons_10_sky_king").name).toBe("card-name-sky-king");
     expect(voiceFor("insects_07_aggressive_wasp").name).toBe("card-name-avenging-wasp");
+    // And the fourth, once the card existed: Kioory, built from the keyring.
+    expect(voiceFor("furries_02_kioory").name).toBe("card-name-kioory");
   });
 
   it("and the list of unrecorded names agrees with the files on disk, both ways", () => {
@@ -286,9 +313,12 @@ describe("a card earns a voice by being somebody", () => {
      */
     const named = [...new Set(ALL_MAINS.map((id) => voiceFor(id).name))]
       .concat(
-        ["dragons_03_thunderwing", "dragons_10_sky_king", "insects_07_aggressive_wasp"].map(
-          (id) => voiceFor(id).name,
-        ),
+        [
+          "dragons_03_thunderwing",
+          "dragons_10_sky_king",
+          "insects_07_aggressive_wasp",
+          "furries_02_kioory",
+        ].map((id) => voiceFor(id).name),
       )
       .filter((n): n is string => !!n);
     const missing = named.filter((clip) => !existsSync(`${SFX}${clip}.mp3`));

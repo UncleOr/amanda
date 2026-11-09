@@ -81,6 +81,13 @@ export const ABILITY_LABEL: Partial<Record<AbilityType, { he: string; en: string
   stackingDot: { he: "רעל מצטבר", en: "Stacking poison" },
   absorbOnCollision: { he: "בליעת יריב", en: "Swallow rival" },
   slowAura: { he: "הילת האטה", en: "Slowing aura" },
+  /*
+   * Kioory. ⚠ Or writes the copy — this is vocabulary (the name of a
+   * mechanic, like "Break armour" above) and it is still a DRAFT he should
+   * look at, because "a weakening stare" is the one label in this table that
+   * is also a joke.
+   */
+  gazeWeaken: { he: "מבט מחליש", en: "Weakening stare" },
   attackSpeedAura: { he: "הילת מהירות", en: "Speed aura" },
   delayedTransform: { he: "התמרה מושהית", en: "Delayed change" },
   hatchOnDeath: { he: "בוקע במות", en: "Hatches on death" },

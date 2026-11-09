@@ -70,6 +70,50 @@
         "sprite": "cards/furries_01_chuppy.webp"
       },
       "launch": true
+    },
+    {
+      "id": "furries_02_kioory",
+      "seriesId": "furries",
+      "numberInSeries": 2,
+      "name": {
+        "he": "כיעורי",
+        "en": "Kioory"
+      },
+      "story": {
+        "he": "מחזיק המפתחות שאף אחד לא הצליח להסתכל עליו פעמיים",
+        "en": "The keyring nobody has managed to look at twice"
+      },
+      "elements": [
+        "electric"
+      ],
+      "rarity": "epic",
+      "stats": {
+        "hp": 520,
+        "power": 850,
+        "attackSpeed": 1.6,
+        "moveSpeed": 1.5,
+        "range": "ranged"
+      },
+      "flying": false,
+      "midBoss": false,
+      "targeting": "king",
+      "abilities": [
+        {
+          "type": "gazeWeaken",
+          "trigger": "aura",
+          "params": {
+            "pct": 25
+          }
+        }
+      ],
+      "role": {
+        "he": "מכוער עד כאב. כל מי שרואה אותו בקו שלו מכה חלש יותר — וגוף אחד באמצע כבר שובר את זה. יורה רק למלך.",
+        "en": "Painfully ugly. Anything that can see him down his lane hits softer, and one body in the way breaks it. Shoots only at the King."
+      },
+      "art": {
+        "placeholderColor": "#63d93f"
+      },
+      "launch": true
     }
   ]
 }

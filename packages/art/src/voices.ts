@@ -390,6 +390,33 @@ export const VOICES: VoiceSpec[] = [
     why: "The fastest line in the file, for the fastest card in the game. High and personal.",
   },
   {
+    id: "card-name-kioory",
+    cardId: "furries_02_kioory",
+    says: "Kioory",
+    /*
+     * Or's own spelling of the name, in his own message: *"Kioory"*. Said in
+     * English like every other name here, which is the game's answer from an
+     * earlier round — a Hebrew card with an English name said out loud is a
+     * thing a seven-year-old repeats.
+     *
+     * ⚠ AND IT HAS TO BE FUNNY-UGLY, NOT FRIGHTENING. The whole card is that
+     * looking at it costs you, and a growl would make it a horror — which it
+     * is not, and which would also put it next to the Alley King. So: a
+     * squashed, nasal, slightly wet voice, gurgled out too slowly. Disgusted
+     * is the one emotion in this file used ONCE before, on the Slime, and
+     * for the same reason.
+     *
+     * Not Chuppy's instrument either, although they are family: Chuppy is
+     * Friendly_Person at +4 and the brief on him is a list of what he must
+     * NOT be. Two Furries that sound alike would make the family one card.
+     */
+    voice: "Deep_Voice_Man",
+    pitch: 5,
+    speed: 0.65,
+    emotion: "disgusted",
+    why: "Squashed, nasal and too slow. Gross on purpose — a laugh, not a scare.",
+  },
+  {
     id: "card-name-thing-in-the-bin",
     cardId: "slimes_11_thing_in_the_bin",
     says: "The Thing <#0.15#> in the Bin",

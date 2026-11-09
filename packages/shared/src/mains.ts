@@ -29,6 +29,21 @@
  *
  * Two families have one card each and so have one main. That is the family
  * being unfinished, not an exception to the rule.
+ *
+ * ═══ AND ONE FAMILY WHERE THE SECOND CARD IS NOT AN INTRODUCTION ═══
+ *
+ * Or, handing over Kioory: *"of course you do not get him in the starter
+ * deck, but you CAN get him, because the Furries family is open from the
+ * start."* That is a card you go and GET, which is the opposite of a card a
+ * family is met through — and it collided with two rules at once the moment
+ * it existed. "Two mains wherever a family has two cards" wanted to promote
+ * him; "a main of a family you already own is a starter card" would then
+ * have forced him into the starter album, which is the one thing Or ruled
+ * out.
+ *
+ * So the rule is narrower than it was written: a family is met through at
+ * most two cards, and a family that names only ONE has to say why, below.
+ * See ONE_MAIN_ON_PURPOSE.
  */
 
 /** Series id → the cards that family is met through, smallest first. */
@@ -54,6 +69,26 @@ export const FAMILY_MAINS: Readonly<Record<string, readonly string[]>> = {
    * down why: Amanda is the opponent. She cannot be won (collectable.ts), so
    * there is no "first one you get" to name.
    */
+};
+
+/**
+ * Families that name a single main although they have more than one card.
+ *
+ * ⚠ A LIST AND NOT A COMMENT, because mains.test.ts asks: a family with two
+ * cards and one main has to appear here or it fails. Forgetting to name the
+ * second main of a family that really does want two is the mistake that
+ * list exists to catch, and the Furries are the one case where the answer
+ * is genuinely "one".
+ */
+export const ONE_MAIN_ON_PURPOSE: Readonly<Record<string, string>> = {
+  /*
+   * Chuppy is the card every player is handed on day one, and the family is
+   * open from the start because of him. Kioory is the opposite kind of card
+   * — Or: *"of course you do not get him in the starter deck"* — so making
+   * him a main would both mislabel him and, through the starter-album rule,
+   * put him in the album anyway.
+   */
+  furries: "Chuppy is handed to you; Kioory is a card you go and get.",
 };
 
 /** The cards this family is met through. Empty for a family with none. */

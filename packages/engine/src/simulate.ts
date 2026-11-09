@@ -453,6 +453,7 @@ export function runBattle(setup: BattleSetup): BattleResult {
       damageTakenMult: 1,
       attackSpeedMult: 1,
       moveSlowMult: 1,
+      powerMult: 1,
       auraArmor: 0,
       abilities: [],
       alive: true,
@@ -609,6 +610,20 @@ export function runBattle(setup: BattleSetup): BattleResult {
    * then climbing to SUDDEN_DEATH.peak by the final tick — the clock itself
    * breaking a deadlock that neither board can.
    */
+  /**
+   * What this card's blow is worth right now.
+   *
+   * `power` is what the card IS and never moves; everything that weakens or
+   * strengthens a unit mid-battle goes through `powerMult`, rebuilt from
+   * scratch every tick by `runAuras`. Used at every place a blow is costed
+   * — the hit, the figure the screen shows for an unblocked hit, and the
+   * splash onto the lanes either side — because a debuff that reaches two of
+   * the three is a debuff nobody can reason about.
+   */
+  function swing(u: Unit): number {
+    return u.power * u.powerMult;
+  }
+
   function escalation(): number {
     const from = totalTicks * SUDDEN_DEATH.startsAt;
     if (state.tick <= from) return 1;
@@ -629,7 +644,7 @@ export function runBattle(setup: BattleSetup): BattleResult {
     // Fires as the swing starts, before anything lands: a vacuum drags the
     // line in, a gelatinous cube swallows what walked into it.
     runOnAttack(state, u, target);
-    let dmg = computeDamage(u.power * escalation(), u.activeElement, target);
+    let dmg = computeDamage(swing(u) * escalation(), u.activeElement, target);
 
     /*
      * A neighbour can step in front of part of the blow (Pudding Shield).
@@ -660,7 +675,7 @@ export function runBattle(setup: BattleSetup): BattleResult {
      * taking a share all land in the same gap — see computeDamage.
      */
     const unprotected = Math.floor(
-      u.power * escalation() * COMBAT.damageMultiplier *
+      swing(u) * escalation() * COMBAT.damageMultiplier *
         elementMultiplier(u.activeElement, target.activeElement),
     );
     state.events.push({
@@ -681,7 +696,7 @@ export function runBattle(setup: BattleSetup): BattleResult {
      * they die, straight into the arc of the next swing.
      */
     for (const splash of rowAttackTargets(state, u, target)) {
-      const extra = computeDamage(u.power * escalation(), u.activeElement, splash);
+      const extra = computeDamage(swing(u) * escalation(), u.activeElement, splash);
       splash.hp -= extra;
       state.events.push({
         tick: state.tick,

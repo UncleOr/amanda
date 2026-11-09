@@ -101,6 +101,7 @@ export function runAuras(state: BattleState): void {
     u.damageTakenMult = 1;
     u.attackSpeedMult = 1;
     u.moveSlowMult = 1;
+    u.powerMult = 1;
     u.auraArmor = 0;
   }
   for (const src of state.units) {
@@ -123,6 +124,38 @@ export function runAuras(state: BattleState): void {
           for (const enemy of state.units)
             if (enemy.alive && enemy.owner !== src.owner && sharesLane(enemy, src))
               enemy.moveSlowMult *= 1 - pct / 100;
+          break;
+        /*
+         * ═══ LOOKING AT IT IS WHAT COSTS YOU ═══
+         *
+         * Or: *"monsters that SEE it — in its line, with nothing in between
+         * them — lose power, even when it is not shooting."*
+         *
+         * Three conditions, and the third is the card. Same lane, on the
+         * other side, and NOTHING STANDING BETWEEN THE TWO: one body in the
+         * way and the look is broken for everything behind it. That makes it
+         * the only ability in the game a player answers by moving a card
+         * rather than by killing one, and the only reason the back row is
+         * ever the right place for something.
+         *
+         * ⚠ BOTH SIDES BLOCK. A unit of its OWN in the way breaks the look
+         * too, which reads as a flaw and is the point: a stare does not care
+         * whose shoulder is in front of it, and a card whose own front row
+         * switches it off is a card you have to build around.
+         *
+         * `isAhead` is deliberately not used. A monster BEHIND it in the
+         * lane can see it just as well — the card has no back — and
+         * `isAhead` would quietly make this a forward-facing beam.
+         */
+        case "gazeWeaken":
+          for (const enemy of state.units)
+            if (
+              enemy.alive &&
+              enemy.owner !== src.owner &&
+              sharesLane(enemy, src) &&
+              nothingBetween(state, src, enemy)
+            )
+              enemy.powerMult *= 1 - pct / 100;
           break;
         case "armorAura":
           for (const ally of state.units)
@@ -651,6 +684,30 @@ export function runOnHit(state: BattleState, attacker: Unit, target: Unit): void
 /** Within one lane of each other — the reach of an aura that is not global. */
 function nearbyLane(a: Unit, b: Unit): boolean {
   return a.lanes.some((la) => b.lanes.some((lb) => Math.abs(la - lb) <= 1));
+}
+
+/**
+ * Is the lane between these two clear — can they actually see each other?
+ *
+ * Anything alive that shares a lane with BOTH of them and stands between
+ * their columns breaks it, whichever side it belongs to. Written as "shares
+ * a lane with both" rather than "is in src's lane" because a King is two
+ * lanes wide: a crown straddling lanes 1 and 2 blocks a look down either of
+ * them, and asking only about the source's lane would let it block one and
+ * not the other.
+ *
+ * Columns are compared strictly, so a unit at exactly one of the two
+ * columns is one of the two, not a wall between them.
+ */
+function nothingBetween(state: BattleState, a: Unit, b: Unit): boolean {
+  const lo = Math.min(a.col, b.col);
+  const hi = Math.max(a.col, b.col);
+  for (const mid of state.units) {
+    if (!mid.alive || mid === a || mid === b) continue;
+    if (mid.col <= lo || mid.col >= hi) continue;
+    if (sharesLane(mid, a) && sharesLane(mid, b)) return false;
+  }
+  return true;
 }
 
 export function runOnDamaged(target: Unit, attacker: Unit, damage: number): number {

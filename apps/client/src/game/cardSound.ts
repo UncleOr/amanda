@@ -147,6 +147,7 @@ const CARDS: Record<string, CardVoice> = {
    * `pnpm art:voices` for the one command that makes them.
    */
   dragons_03_thunderwing: { name: "card-name-torch" },
+  furries_02_kioory: { name: "card-name-kioory" },
   dragons_10_sky_king: { name: "card-name-sky-king" },
   insects_07_aggressive_wasp: { name: "card-name-avenging-wasp" },
   // Chuppy moved to MAIN_NAME, with the rest of the mains.
@@ -165,6 +166,7 @@ const CARDS: Record<string, CardVoice> = {
  */
 export const NAMES_TO_RECORD: readonly string[] = [
   "card-name-torch",
+  "card-name-kioory",
   "card-name-sky-king",
   "card-name-avenging-wasp",
 ];

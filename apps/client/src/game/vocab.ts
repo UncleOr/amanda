@@ -216,6 +216,11 @@ export const EFFECT_HE: Record<AbilityType, Effect> = {
   stackingDot: { he: "רעל שמתחזק כל מכה", params: "dotPerStack" },
   absorbOnCollision: { he: "בולע אויב שנתקל בו", params: "stunSeconds" },
   slowAura: { he: "מאט אויבים שעוברים לידו", params: "pct" },
+  gazeWeaken: {
+    he: "מחליש כל אויב שרואה אותו במסלול",
+    params: "pct",
+    note: "מספיק קלף אחד באמצע — של מי שזה לא יהיה — והקשר נשבר",
+  },
   attackSpeedAura: { he: "מזרז תקיפות של חברים", params: "pct" },
   statAura: {
     he: "בונוס משפחה — עוצמה וחיים",

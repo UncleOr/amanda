@@ -14,6 +14,37 @@ export const CARD_LOOK: Record<string, string> = {
     "made of stale crumbs and dust, oversized worried eyes, knobbly little arms, " +
     "comically weak and harmless, drab grey-brown",
 
+  /*
+   * ═══ KIOORY, FROM A KEYRING ON OR'S TABLE ═══
+   *
+   * Or sent a photograph of it: a small light-up keyring figure, a round
+   * head with a bright green cap, a white face, two big round eyes, a red
+   * button nose, whiskers, a wide open grin, and a CLEAR PLASTIC BODY that
+   * glows. Kept at `assets/reference/kioory-canon.jpg`.
+   *
+   * ⚠ THE PHOTOGRAPH IS A STARTING POINT, NOT THE BRIEF. The object in it is
+   * a licensed character's merchandise, and a card that came back as a
+   * recognisable copy of it would be a problem on a published game however
+   * much fun it was to make. So the brief below takes the parts that are
+   * nobody's — a round capped head, big eyes, a button nose, a transparent
+   * glowing body — and builds a Furry out of them: *"from the Furries
+   * family (add fur to him)"* is Or's own instruction and it is also what
+   * moves the card away from its source. Shaggy fur over a see-through body
+   * is not a thing the keyring does.
+   *
+   * And the card's whole mechanic is that it is UGLY — anything that can see
+   * it hits softer. The brief has to land that without being frightening:
+   * funny-ugly, the way a child draws something gross on purpose.
+   */
+  furries_02_kioory:
+    "a small scruffy electric furball creature standing on two stubby legs, " +
+    "a round oversized head under a bright acid-green furry cap, shaggy unkempt white and green fur, " +
+    "an almost TRANSPARENT glowing body you can see straight through, lit from inside with pale yellow light, " +
+    "two enormous mismatched googly eyes, a fat round red button nose, long drooping whiskers, " +
+    "an absurdly wide lopsided grin with crooked teeth and a lolling tongue, " +
+    "comically, memorably UGLY — goofy and gross on purpose, funny rather than frightening, " +
+    "a few small yellow electric arcs crackling off the fur",
+
   // ── Dragons — vary the body plan hard, not just the flame colour ──
   dragons_01_flame_dragon:
     "a classic armoured western dragon standing on two muscular legs, broad spread membranous wings, " +

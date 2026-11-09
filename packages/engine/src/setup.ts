@@ -128,6 +128,7 @@ export function createUnitFromCard(
     damageTakenMult: 1,
     attackSpeedMult: 1,
     moveSlowMult: 1,
+    powerMult: 1,
     auraArmor: 0,
     abilities: card.abilities,
     alive: true,

@@ -52,6 +52,21 @@ export const ABILITY_TYPES = [
   "stackingDot", // poison that ramps up per stack
   "absorbOnCollision", // swallow a colliding enemy, stunning it
   "slowAura", // slow enemies advancing through the lane
+  /*
+   * ═══ A CARD SO UGLY THAT LOOKING AT IT COSTS YOU ═══
+   *
+   * Or, handing over a photograph of a keychain: *"its power: monsters that
+   * SEE it — in its line, with nothing in between them — lose power, even
+   * when it is not shooting."*
+   *
+   * Two things make this unlike `slowAura`, which is the closest thing here.
+   * It takes POWER rather than movement, and it needs a clear LINE: anything
+   * standing between the two breaks the look, so where the card sits and
+   * what you park in front of it is the whole card. An aura you can block by
+   * putting a body in the way is the first one in this game, and it is the
+   * only ability on the board that a player can answer by MOVING something.
+   */
+  "gazeWeaken", // enemies that can see it down the lane lose power
   "attackSpeedAura", // buff attack speed of nearby allies
   /*
    * The series bonus, and now the ONLY series bonus.
