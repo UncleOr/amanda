@@ -1,5 +1,10 @@
 /**
- * ═══ מנהרת הפרסים — THE PRIZE WASH ═══
+ * ═══ מנהרת השגעות · THE MADNESS TUNNEL ═══
+ *
+ * ⚠ IT WAS מנהרת הפרסים UNTIL 9 NOVEMBER 2026, when Or renamed it: *"call
+ * the prize tunnel מנהרת השגעות, and in English Madness tunnel."* The quote
+ * below is the older one and is left exactly as he said it then — it is why
+ * the thing looks like a car wash, which has not changed.
  *
  * Or: *"we want to add a prize track like in Brawl Stars. We'll call it 'the
  * prize tunnel' and it should look like a car wash tunnel — if there is a

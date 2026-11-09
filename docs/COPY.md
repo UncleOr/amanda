@@ -1,6 +1,6 @@
 # הטקסטים של אמנדה
 
-כל טקסט שהשחקן רואה — 1600 במספר, 1409 מהם כבר באנגלית.
+כל טקסט שהשחקן רואה — 1603 במספר, 1413 מהם כבר באנגלית.
 
 ## איך עורכים
 
@@ -111,6 +111,9 @@
 | d7e855a6 | צ'ופי | | Choopy |
 | defbeb5b | החבר הנאמן שתמיד איתך | | The loyal friend who is always with you |
 | de54292a | החבר שלך מההתחלה. מכה חזק מרחוק ושובר שריון — אבל סופג כמעט כלום, אז הוא לא עומד בחזית. | | Your friend from day one. Hits hard from range and breaks armour — and he is made of paper. Not a front-row card. |
+| d6063916 | כיעורי | | Kioory |
+| de7cf4d8 | מחזיק המפתחות שאף אחד לא הצליח להסתכל עליו פעמיים | | The keyring nobody has managed to look at twice |
+| d363982f | מכוער עד כאב. כל מי שרואה אותו בקו שלו מכה חלש יותר — וגוף אחד באמצע כבר שובר את זה. יורה רק למלך. | | Painfully ugly. Anything that can see him down his lane hits softer, and one body in the way breaks it. Shoots only at the King. |
 
 ## סדרה — שוכני הים
 
@@ -259,9 +262,6 @@
 | d414ebd5 | שטיח-דבק | | Sticky Rug |
 | df4c8192 | מדביק את היריב שמולו ומונע ממנו לזוז עד סוף הקרב. | | Glues the enemy in front so it cannot move for the rest of the battle. |
 | d0b30ec8 | מלכודת קומת-קרקע. | | Ground-floor trap. |
-| daaa981c | סליים רדיואקטיבי | | Radioactive Slime |
-| da746365 | מי שעובר דרכו מאט ומאבד כח תקיפה | | Enemies passing through are Slowed and lose Attack Power |
-| d1818001 | נזק מתמשך מרחוק. | | Ranged damage over time. |
 | d9892ad9 | מוח-צף | | Floating Brain |
 | d920d13a | משדר פולסים חשמליים שמעניקים מהירות תקיפה למפלצות הסמוכות שלך | | Emits electric pulses, granting Attack Speed to your adjacent monsters |
 | d81d470f | באף אזורי. | | Area buffer. |
@@ -756,6 +756,7 @@
 | s9454569 | רעל מצטבר | | Stacking poison |
 | s46a5630 | בליעת יריב | | Swallow rival |
 | sfe07448 | הילת האטה | | Slowing aura |
+| sd3a78db | מבט מחליש | | Weakening stare |
 | s703d3b1 | הילת מהירות | | Speed aura |
 | sab709b3 | התמרה מושהית | | Delayed change |
 | s0ab9380 | בוקע במות | | Hatches on death |
@@ -1434,8 +1435,8 @@
 | s8bbbe6d | פריט | |  |
 | s18b2098 | תיבה | |  |
 | s10a6bc3 | יהלומים | |  |
-| s2213087 | מנהרת הפרסים | |  |
-| s26a4e3d | מנהרת הפרסים | |  |
+| se42beed | מנהרת השגעות | | Madness tunnel |
+| s4d48f87 | מנהרת השגעות | | Madness tunnel |
 | sf778536 | פרס אחד מחכה | |  |
 | sbd894ed | {0} פרסים מחכים | |  |
 | s75e5443 | עוד {0} | |  |
@@ -1443,7 +1444,7 @@
 | s28c6942 | נלקח | |  |
 | sf07fc28 | לקחת | |  |
 | s4848cb9 | סגירה | |  |
-| saa5347d | מנהרת הפרסים | |  |
+| s5f8b110 | מנהרת השגעות | | Madness tunnel |
 | sa63fff7 | בקרוב | |  |
 | s373d8d1 | חינם | |  |
 
@@ -1990,6 +1991,8 @@
 | sb469d70 | רעל שמתחזק כל מכה | |  |
 | s03d9dfb | בולע אויב שנתקל בו | |  |
 | sc620ea9 | מאט אויבים שעוברים לידו | |  |
+| sa3c8b40 | מחליש כל אויב שרואה אותו במסלול | |  |
+| s427af0a | מספיק קלף אחד באמצע — של מי שזה לא יהיה — והקשר נשבר | |  |
 | sddaf979 | מזרז תקיפות של חברים | |  |
 | sc8ee4d4 | בונוס משפחה — עוצמה וחיים | |  |
 | s24f6eb1 | עובד כששלושה מהמשפחה נוגעים זה בזה | |  |

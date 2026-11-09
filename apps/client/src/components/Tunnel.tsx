@@ -12,7 +12,7 @@ import { line as t, lineF as tf } from "../game/copy";
 import { say } from "../game/lang";
 
 /**
- * ═══ מנהרת הפרסים ═══
+ * ═══ מנהרת השגעות ═══
  *
  * Or: *"we want to add a prize track like in Brawl Stars. We'll call it 'the
  * prize tunnel' and it should look like a car wash tunnel... it works by
@@ -289,11 +289,11 @@ export function TunnelStrip({ best, onOpen }: { best: number; onOpen: () => void
     <button
       className={`tunnel-strip${due ? " tunnel-strip--due" : ""}`}
       onClick={onOpen}
-      title={t("s2213087", "מנהרת הפרסים")}
+      title={t("se42beed", "מנהרת השגעות")}
     >
       <span className="tunnel-strip__arch" aria-hidden="true" />
       <span className="tunnel-strip__text">
-        <b>{t("s26a4e3d", "מנהרת הפרסים")}</b>
+        <b>{t("s4d48f87", "מנהרת השגעות")}</b>
         <span className="tunnel-strip__bar" aria-hidden="true">
           <i style={{ width: `${tunnelProgress(at) * 100}%` }} />
         </span>
@@ -587,7 +587,7 @@ export function Tunnel({
         <button className="modal__close" onClick={onClose} title={t("s4848cb9", "סגירה")}>
           <Icon name="exit" size={15} />
         </button>
-        <h2 className="tunnel__title">{t("saa5347d", "מנהרת הפרסים")}</h2>
+        <h2 className="tunnel__title">{t("s5f8b110", "מנהרת השגעות")}</h2>
         <div className="tunnel__body">
           {/*
             ═══ WHICH LANE IS WHICH, SAID ONCE ═══
