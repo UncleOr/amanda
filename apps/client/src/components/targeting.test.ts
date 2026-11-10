@@ -25,9 +25,37 @@ const CSS = read("../styles/board.css");
 const APP = read("../App.tsx");
 
 describe("aiming an action card", () => {
-  it("has exactly one card that aims at the opponent", () => {
+  it("has two cards that aim at the opponent, and only one of them stays there", () => {
     const enemy = [...ACTIONS.keys()].filter(isEnemyTargeted);
-    expect(enemy).toEqual(["radioactive_eraser"]);
+    expect(enemy).toEqual(["radioactive_eraser", "thief"]);
+  });
+
+  it("hands the thief's aim back across the midline for its second press", () => {
+    /*
+     * ═══ THE ONLY CARD THAT TOUCHES BOTH BOARDS ═══
+     *
+     * Or: *"you activate the card, then one press on theirs + one press on
+     * an empty square."* Every other targeted card belongs to one side for
+     * its whole life, so `isEnemyTargeted` was enough to say which grid is
+     * armed. It is not enough for this one: after the first press the aim
+     * is on YOUR board, looking for somewhere to put what it took.
+     *
+     * Pinned at the source because there is no jsdom here and nothing to
+     * click — the same reason the rest of this file reads the stylesheet.
+     * What breaks it is somebody simplifying the condition back to
+     * `isEnemyTargeted(m.targeting)` on either grid, and that is what these
+     * two lines catch.
+     */
+    expect(APP, "your board is never armed for the second press").toContain(
+      "(!isEnemyTargeted(m.targeting) || m.stealing !== null)",
+    );
+    expect(APP, "theirs stays armed and the second press lands on it").toContain(
+      "isEnemyTargeted(m.targeting) && m.stealing === null",
+    );
+    // And the squares that answer are the EMPTY ones, which is the opposite
+    // of every other card here.
+    expect(APP).toContain("targetEmpty={m.stealing !== null}");
+    expect(read("./BoardGrid.tsx")).toContain("targetEmpty ? !occ : !!occ");
   });
 
   it("marks which side is live", () => {

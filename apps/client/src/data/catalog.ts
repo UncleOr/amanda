@@ -307,10 +307,19 @@ export const TARGET_EFFECTS: Record<string, "own" | "enemy"> = {
   removeCard: "own",
   swapOwnCards: "own",
   eraseEnemyCard: "enemy",
+  /*
+   * ⚠ "enemy" IS ONLY THE FIRST HALF OF THE THIEF. It picks on their board
+   * and then on YOURS — the one card in the game that crosses the midline —
+   * so the own-board half cannot be expressed here and is driven by
+   * `stealing` in useMatch instead. Listed as "enemy" because that is where
+   * it starts, and because everything that reads this is asking "which
+   * board do I arm first".
+   */
+  stealEnemyCard: "enemy",
 };
 
 /** Effects that need two picks, not one. */
-export const TWO_PICK_EFFECTS = ["swapOwnCards"];
+export const TWO_PICK_EFFECTS = ["swapOwnCards", "stealEnemyCard"];
 
 /** How many separate cells "ground floor" lets you stack onto. */
 export const GROUND_FLOOR_SLOTS = 4;

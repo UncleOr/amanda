@@ -1690,7 +1690,17 @@ function Game() {
              * So the class says WHICH side is live, and the stylesheet pushes
              * the other one into the background.
              */
-            m.targeting && isEnemyTargeted(m.targeting) ? " build--targeting-enemy" : ""
+            /*
+              ⚠ AND THE THIEF CHANGES SIDES HALFWAY, so this has to as
+              well. Found by driving it: after the first press the aim had
+              correctly moved to your own board — twelve empty squares lit
+              — and this class was still saying the ENEMY half was the live
+              one, so the game dimmed the half you were being asked to
+              press. Everything worked and the screen pointed the wrong way.
+            */
+            m.targeting && isEnemyTargeted(m.targeting) && m.stealing === null
+              ? " build--targeting-enemy"
+              : ""
           }${actionsOpen ? " build--drawer" : ""}${m.playground ? " build--lab" : ""}`}
         >
           <div className="boards">
@@ -1788,7 +1798,24 @@ function Game() {
                 lit={m.lit}
                 handActive={m.hand !== null}
                 mods={m.mods}
-                targeting={m.targeting !== null && !isEnemyTargeted(m.targeting)}
+                /*
+                  ═══ THE ONE CARD THAT ARMS BOTH BOARDS, IN TURN ═══
+
+                  Every other targeted card belongs to one side for its
+                  whole life. The thief starts on theirs and finishes on
+                  yours, so `m.stealing` — non-null only between the two
+                  presses — is what hands the aim across the midline.
+
+                  And with `targetEmpty`, because at that moment it is
+                  holding a card and looking for somewhere to put it: the
+                  squares that answer are the ones with nothing in them,
+                  which is the opposite of every other card here.
+                */
+                targeting={
+                  m.targeting !== null &&
+                  (!isEnemyTargeted(m.targeting) || m.stealing !== null)
+                }
+                targetEmpty={m.stealing !== null}
                 onTarget={m.applyTargetCell}
                 onTargetKing={m.applyTargetKing}
                 stacked={m.stacked}
@@ -1911,7 +1938,11 @@ function Game() {
                 reveal={m.revealOpponentCell}
                 revealKing={m.revealOpponentKing}
                 onCardInfo={openInfo}
-                targeting={m.targeting !== null && isEnemyTargeted(m.targeting)}
+                // Theirs is armed for the FIRST press only — once the thief
+                // has something in hand, the aim is on your own board.
+                targeting={
+                  m.targeting !== null && isEnemyTargeted(m.targeting) && m.stealing === null
+                }
                 interactive={
                   m.playground || (m.targeting !== null && isEnemyTargeted(m.targeting))
                 }

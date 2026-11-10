@@ -907,6 +907,13 @@ export interface MatchApi {
   amandaMode: boolean;
   /** True once the fog card has hidden this board from the opponent. */
   hidingBoard: boolean;
+  /**
+   * The thief has taken aim and is waiting for somewhere to put it.
+   *
+   * Non-null between the two presses, which is also how the screen knows to
+   * arm YOUR board instead of theirs for the second one.
+   */
+  stealing: { from: string; cardId: string } | null;
   /** True once the double card has been played: twice the trophies, either way. */
   doubled: boolean;
   /** Cells flashing because an action card just improved them. */
@@ -1138,6 +1145,35 @@ export function useMatch(): MatchApi {
    * hiding is done by the match server, which is the only thing holding the
    * board the other player is shown. See match.ts.
    */
+  /**
+   * The thief, between its two picks: whose card, and which one.
+   *
+   * Or: *"Thief — lets you steal an enemy card (according to what you can
+   * SEE: the front row, three rows in panic, or everything if you played
+   * the X-Ray). You activate the card, then one press on theirs + one press
+   * on an empty square."*
+   *
+   * ⚠ THE CARD ID IS KEPT, NOT LOOKED UP AGAIN AT THE SECOND PRESS. The
+   * opponent's board arrives from the server and changes under you — they
+   * are still building, and in the panic phase the fog lifts a row at a
+   * time. Reading the cell again on the second press would occasionally
+   * steal something other than the card that was pointed at, which is the
+   * worst kind of bug in a game a child is learning the rules of.
+   *
+   * ⚠ AND "WHAT YOU CAN SEE" NEEDED NO CODE AT ALL, which is the one thing
+   * worth knowing about this card. The enemy grid is drawn from
+   * `revealedOpponent` — the board already cut down to what is showing —
+   * and BoardGrid only fires `onTarget` for a cell it has drawn something
+   * in. A fogged card is not on the screen, so it cannot be pressed, so it
+   * cannot be stolen. The rule Or wrote is the rule the screen already had.
+   */
+  const [stealing, setStealing] = useState<{ from: string; cardId: string } | null>(null);
+  /** The opponent board as last drawn — see the assignment below the render. */
+  const opponentRef = useRef<BoardView>({ placements: {}, king: null });
+  /** The live fog rule, for callbacks that outlive the render that made it. */
+  const revealRef = useRef<(x: number, y: number) => boolean>(() => true);
+  const stealingRef = useRef<{ from: string; cardId: string } | null>(null);
+  stealingRef.current = stealing;
   const [hidingBoard, setHidingBoard] = useState(false);
   /**
    * The double card has been played: this match is worth twice as much.
@@ -1907,6 +1943,26 @@ export function useMatch(): MatchApi {
      * a board. It takes the wound instead, carried into the fight as a cut to
      * its health, which is what the card already promised in words.
      */
+    /*
+     * The thief, landing on YOUR board: the card is gone, and it is gone to
+     * them. From this side it is identical to the eraser — the card leaves —
+     * so the same guard applies and for the same reason: only this client
+     * can really do it, because the sender was looking at a fogged copy.
+     *
+     * The crown is not stealable at all (see applyTargetTo), so unlike the
+     * eraser there is no King branch here. A `cell` that says otherwise is a
+     * message this build did not send and will not act on.
+     */
+    if (a?.effect === "stealEnemyCard" && cell && cell !== KING_KEY) {
+      setGs((st) => {
+        if (!st.placements[cell]) return st;
+        const placements = { ...st.placements };
+        delete placements[cell];
+        return { ...st, placements };
+      });
+      sfx.play("discard");
+      return;
+    }
     if (a?.effect === "eraseEnemyCard" && cell) {
       if (cell === KING_KEY) {
         setKingWound(Number(a.params?.kingFlatDamage ?? 2000));
@@ -1945,6 +2001,33 @@ export function useMatch(): MatchApi {
      * So the picture goes first, for both kinds of opponent, and the plan is
      * edited afterwards if there is one.
      */
+    /*
+     * ⚠ AND IN THE PLAYGROUND THE OPPONENT IS NEITHER OF THE TWO BOARDS
+     * BELOW, which is how the thief came back from its first real drive
+     * having COPIED a card instead of taking one.
+     *
+     * There are three opponents in this game and this function knew two:
+     * `netOpp` is what the server sent, `aiPlanRef` is the computer's plan
+     * — and the playground's other half is `foe`, a board you built
+     * yourself. Erasing from the first two left the Lava Dragon standing on
+     * both sides of the midline at once, which is exactly the shape of
+     * "the card did nothing" that Or has reported about enemy-targeted
+     * cards twice before.
+     *
+     * The eraser has had this hole for as long as the playground has
+     * existed. Nobody found it because an action card you spend in a
+     * sandbox to see what it does is the one place a miss looks like a
+     * feature.
+     */
+    if (key !== KING_KEY && playgroundRef.current) {
+      setFoe((v) => {
+        if (!v.placements[key]) return v;
+        const placements = { ...v.placements };
+        delete placements[key];
+        return { ...v, placements };
+      });
+      return;
+    }
     if (key !== KING_KEY)
       setNetOpp((v) => {
         if (!v.placements[key]) return v;
@@ -2150,6 +2233,74 @@ export function useMatch(): MatchApi {
         }
       }
       setFirstPick(null);
+    } else if (effect === "stealEnemyCard") {
+      /*
+       * ═══ TWO PRESSES, AND THEY ARE ON DIFFERENT BOARDS ═══
+       *
+       * The only card in the game that crosses the midline. The first press
+       * is on theirs and the second on yours, so this function is reached
+       * twice from two different grids — see `stealing` above for what is
+       * carried between them, and App.tsx for which board is armed when.
+       */
+      const held = stealingRef.current;
+      if (!held) {
+        /*
+         * ⚠ NOT THE CROWN. A board with no King is not a board — the same
+         * reason the eraser wounds a King instead of deleting it — and a
+         * King that changed sides would take its ×3 and its whole family
+         * bonus with it. There is nothing to say here: the crown simply
+         * does not answer, and the next press on a real card does.
+         */
+        if (key === KING_KEY) return;
+        /*
+         * ⚠ AND THE FOG IS CHECKED HERE TOO, not only by the grid that
+         * drew it. The screen already makes it impossible — a fogged card
+         * is not on the board to be pressed — but "what you can steal" is a
+         * RULE, and a rule that lives only inside a component is a rule the
+         * next caller of this function does not have. Two lines, and the
+         * card cannot be made to lift something nobody could see.
+         */
+        const [tx, ty] = key.split("-").map(Number);
+        /*
+         * ⚠ THROUGH A REF, AND THAT IS NOT A STYLE CHOICE. `applyTargetTo`
+         * is memoised on [spend], and `revealOpponentCell` is rebuilt
+         * whenever the phase or the x-ray changes — so calling it directly
+         * would have captured the version from the render this callback was
+         * made in and kept it for the whole match. The thief would have
+         * been judging "can I see that" by the BUILD phase's fog while the
+         * player was standing in the panic phase looking at three rows.
+         *
+         * Silent, correct-looking, and only wrong in the one direction
+         * nobody tests: it refuses a steal that should be allowed.
+         */
+        if (tx === undefined || ty === undefined || !revealRef.current(tx, ty)) return;
+        const cardId = opponentRef.current.placements[key];
+        if (!cardId) return;
+        setStealing({ from: key, cardId });
+        sfx.play("click");
+        // Half an aim, the same as the swap's first pick.
+        haptics.buzz("lift");
+        return; // still targeting — the card is not spent yet
+      }
+      /*
+       * The second press, on an empty square of your own. Empty is enforced
+       * by the grid (see `targetEmpty` in BoardGrid), and checked again
+       * here because a guard that lives only in a component is a guard that
+       * the next caller does not have.
+       */
+      if (key !== KING_KEY && !gsRef.current.placements[key]) {
+        setGs((st) => ({ ...st, placements: { ...st.placements, [key]: held.cardId } }));
+        /*
+         * And it leaves their side. `eraseEnemyAt` is exactly the right
+         * half of this already: it takes the card off the picture AND out
+         * of the computer's plan, which are the two places a solo opponent
+         * exists. The King damage is zero because a King cannot be here.
+         */
+        eraseEnemyAt(held.from, 0);
+        // Against a person, only their client holds the board it left.
+        netRef.current?.hex(id, held.from);
+      }
+      setStealing(null);
     } else if (effect === "eraseEnemyCard") {
       // Aimed at the opponent's board: the card is gone. A King cannot be
       // erased outright, so it takes a heavy wound instead.
@@ -2430,6 +2581,7 @@ export function useMatch(): MatchApi {
      */
     setHidingBoard(false);
     setDoubled(false);
+    setStealing(null);
     setTargeting(null);
     setStacked({});
     setStackSlots(0);
@@ -3314,6 +3466,13 @@ export function useMatch(): MatchApi {
       else opponentView.placements[cellKey(p.x, p.y)] = p.cardId;
     }
   }
+  /*
+   * The opponent's board as it stands, for the one caller that reads it
+   * outside a render: the thief, which has to know WHAT it just pointed at
+   * and is called from an event handler.
+   */
+  opponentRef.current = opponentView;
+  revealRef.current = revealOpponentCell;
 
   return {
     phase,
@@ -3403,6 +3562,7 @@ export function useMatch(): MatchApi {
     amandaMode: soloAmandaRef.current,
     hidingBoard,
     doubled,
+    stealing,
     editSide,
     setEditSide,
     startPlayground,

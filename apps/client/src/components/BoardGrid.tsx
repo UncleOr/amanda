@@ -27,6 +27,15 @@ interface Props {
   mods?: BattleMods;
   /** In targeting mode, clicking an occupied cell picks it as the target. */
   targeting?: boolean;
+  /**
+   * Target EMPTY cells instead of occupied ones.
+   *
+   * The thief's second press: it has a card in its hand and is looking for
+   * somewhere to put it, so the squares that answer are the ones with
+   * nothing in them — the exact opposite of every other targeted card,
+   * which is pointing at something that is already there.
+   */
+  targetEmpty?: boolean;
   onTarget?: (x: number, y: number) => void;
   onTargetKing?: () => void;
   /**
@@ -137,6 +146,7 @@ export function BoardGrid({
   compact = false,
   mods,
   targeting = false,
+  targetEmpty = false,
   onTarget,
   onTargetKing,
   dragOver = null,
@@ -218,7 +228,7 @@ export function BoardGrid({
           `${synergy?.has(KING_KEY) ? " slot--synergy" : ""}` +
           `${lit?.has(KING_KEY) ? " slot--lit" : ""}` +
           `${king && revealKing ? " slot--readable" : ""}` +
-          `${targeting && king ? " slot--target" : ""}` +
+          `${targeting && king && !targetEmpty ? " slot--target" : ""}` +
           `${interactive && dragging && !king ? " slot--droppable" : ""}` +
           `${dragOver === dropKey(KING_KEY) && !king ? " slot--dragover" : ""}`
         }
@@ -226,7 +236,9 @@ export function BoardGrid({
         style={{ gridColumn: "2 / 4", gridRow: `${kingLane + 1} / ${kingLane + 3}` }}
         onClick={() => {
           if (targeting && interactive) {
-            if (king) onTargetKing?.();
+            // Never a landing square: the thief is looking for somewhere to
+            // PUT a card, and the crown is not somewhere.
+            if (king && !targetEmpty) onTargetKing?.();
             return;
           }
           // Looking at a card is always allowed — including the opponent's,
@@ -281,7 +293,7 @@ export function BoardGrid({
               `${isGuardPost(x, y, kingLane) ? " slot--guard" : ""}` +
               `${stacked[key] ? " slot--stacked" : ""}` +
               `${stackableHere(key, occ) ? " slot--stackable" : ""}` +
-              `${targeting && occ ? " slot--target" : ""}` +
+              `${targeting && (targetEmpty ? !occ : !!occ) ? " slot--target" : ""}` +
               `${interactive && dragging && (!occ || stackableHere(key, occ)) ? " slot--droppable" : ""}` +
               `${dragOver === dropKey(key) && (!occ || stackableHere(key, occ)) ? " slot--dragover" : ""}`
             }
@@ -289,7 +301,7 @@ export function BoardGrid({
             style={{ gridColumn: colForX(x), gridRow: rowForY(y) }}
             onClick={() => {
               if (targeting && interactive) {
-                if (occ) onTarget?.(x, y);
+                if (targetEmpty ? !occ : !!occ) onTarget?.(x, y);
                 return;
               }
               // With Ground Floor active and a monster in hand, tapping a card
