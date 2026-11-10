@@ -564,11 +564,63 @@ export function voiceFor(cardId: string): CardVoice {
  * time you touch it is the opposite of that. So the tap asks for a LINE, and
  * the choice happens at the moment of the tap.
  *
- * `hello` and not `hungry`, because picking a card up is an arrival. "Dinner
- * is ready" belongs over a board that is already fighting, which is where
- * App.tsx plays it.
+ * ═══ ALL SEVEN, AND IN A BAG ═══
+ *
+ * Or, after picking her up over and over: *"80% she said 'Amanda', 20%
+ * Kiddo Kiddo Kiddo. Zero percent on the rest. Fix it."*
+ *
+ * ⚠ THE ZERO WAS A DECISION OF MINE, NOT A FAULT. The tap drew from `hello`
+ * only — three lines — on the reasoning that picking a card up is an arrival
+ * and "Dinner is ready" belongs over a board that is already fighting. The
+ * other four could not come up because they were not in the hat. He has
+ * overruled it by listening, which is the right way to settle it, and the
+ * hat is now all seven.
+ *
+ * And the 80/20 was not what it looked like either: two of those three lines
+ * are "Amanda." and "I'm Amanda.", which from a sofa are the same line.
+ * Roughly two in three were "Amanda-ish" and one in three was Kiddo, which
+ * is what a fair three-way draw sounds like.
+ *
+ * ⚠ BUT A FAIR DRAW IS STILL THE WRONG MECHANISM, which is the part worth
+ * fixing properly. Seven independent coin tosses will happily give you the
+ * same line three times and skip another for twenty presses, and a child
+ * pressing a card does not experience that as randomness, he experiences it
+ * as the game being broken. So it is a BAG: all seven are shuffled, drawn
+ * one at a time, and only reshuffled when the bag is empty. Every seven
+ * presses you have heard every line exactly once, and "zero percent on the
+ * rest" stops being possible rather than becoming unlikely.
  */
 export const AMANDA_CARD = "legends_01_amanda";
+
+/** The shuffled remainder. Refilled only when it runs out. */
+let amandaBag: string[] = [];
+/** So a reshuffle cannot hand back the line that just played. */
+let lastAmanda: string | null = null;
+
+function refillAmanda(): void {
+  const next = [...ALL_AMANDA];
+  for (let i = next.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [next[i], next[j]] = [next[j]!, next[i]!];
+  }
+  /*
+   * The one seam a bag has: the last of one and the first of the next can be
+   * the same line, which is the only way to hear her say it twice running —
+   * and the only place a player would notice. One swap costs nothing.
+   */
+  if (next.length > 1 && next[next.length - 1] === lastAmanda) {
+    [next[0], next[next.length - 1]] = [next[next.length - 1]!, next[0]!];
+  }
+  amandaBag = next;
+}
+
+/** One of her lines, and never the same one twice until all seven are used. */
+export function amandaLine(): string {
+  if (!amandaBag.length) refillAmanda();
+  const line = amandaBag.pop()!;
+  lastAmanda = line;
+  return line;
+}
 
 /**
  * What a card says the instant it is pressed — the slug, not the sound.
@@ -578,10 +630,7 @@ export const AMANDA_CARD = "legends_01_amanda";
  * -cased at four call sites. Everything else answers exactly as before.
  */
 export function tapVoice(cardId: string): string | undefined {
-  if (cardId === AMANDA_CARD) {
-    const pool = AMANDA_LINES.hello;
-    return pool[Math.floor(Math.random() * pool.length)];
-  }
+  if (cardId === AMANDA_CARD) return amandaLine();
   return voiceFor(cardId).name;
 }
 

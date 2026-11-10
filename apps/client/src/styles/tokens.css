@@ -147,6 +147,50 @@ body {
   overflow: hidden;
   overscroll-behavior: none; /* no rubber-banding the whole game around */
 }
+
+/*
+ * ═══ NOTHING IN A GAME IS TEXT TO SELECT ═══
+ *
+ * Or: *"when you press and hold, the text gets selected. Can we turn that
+ * off? The only case you need it is if there is a code, and then you can
+ * have a copy button. Or inside a text box."*
+ *
+ * A long press is how a child holds a card, drags it to a square, and waits
+ * to see what it does — and the browser answered every one of those by
+ * highlighting a word in blue and putting two handles on it. It is not a
+ * feature anybody used here; it is the web's default leaking through a game.
+ *
+ * `user-select` stops the highlight. `-webkit-touch-callout` stops the other
+ * half, which is the menu Android and iOS raise over a long-pressed link or
+ * image — the one that offers to copy, share or save a card's picture, and
+ * covers the board while it asks.
+ *
+ * ⚠ THE EXCEPTIONS ARE OR'S TWO, EXACTLY. A real text box, where selecting
+ * is how you fix a typo — and a CODE, where it was the only way to get the
+ * thing onto a clipboard. The codes now have a press that copies them
+ * (components/CopyCode.tsx), so this is belt and braces for a mouse.
+ */
+body {
+  -webkit-user-select: none;
+  user-select: none;
+  -webkit-touch-callout: none;
+}
+input,
+textarea,
+[contenteditable="true"] {
+  -webkit-user-select: text;
+  user-select: text;
+  -webkit-touch-callout: default;
+}
+/*
+ * ⚠ AND THE CODES THEMSELVES ARE NOT LISTED HERE, which is a rule this file
+ * has and the collision test enforces: a bare class name belongs to ONE
+ * sheet. `.room-code` is rooms.css's, `.friends__codeval` is social.css's,
+ * `.club__code` is clubs.css's, and each keeps its own `user-select: all`
+ * beside the rest of its own styling. Naming all three here to save three
+ * lines would have put four class names in two sheets each — which is the
+ * state this project measured its way out of once already.
+ */
 body {
   color: var(--text);
   font-family: "Segoe UI", "Assistant", system-ui, sans-serif;

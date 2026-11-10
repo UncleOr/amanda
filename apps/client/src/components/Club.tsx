@@ -9,6 +9,7 @@ import {
 } from "@amanda/shared";
 import { Icon, type IconName } from "./Icon";
 import { Overlay } from "./Overlay";
+import { CopyCode } from "./CopyCode";
 import { line as t, lineF as tf } from "../game/copy";
 import { serverError } from "../game/serverError";
 import { collectable } from "../data/catalog";
@@ -561,7 +562,7 @@ function Invite({ busy }: { busy: boolean }) {
 
   return (
     <div className="club__invite">
-      <code className="club__code">{invite.code}</code>
+      <CopyCode className="club__code" code={invite.code} title={t("sa4d6453", "קוד הזמנה — לחיצה מעתיקה")} />
       <span className="club__bar">
         <i style={{ width: `${(left / (INVITE_SECONDS * 1000)) * 100}%` }} />
       </span>

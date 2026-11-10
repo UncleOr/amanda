@@ -57,6 +57,31 @@
 .modal-overlay--peek {
   background: rgba(3, 6, 14, 0.12);
 }
+
+/*
+ * ═══ A DIALOG GETS OUT OF THE KEYBOARD'S WAY ═══
+ *
+ * Or: *"when the keyboard opens it gets really small and ugly."* The page no
+ * longer shrinks for it — see the viewport meta in index.html — which fixes
+ * the game being cut in half and leaves exactly one thing behind: a dialog
+ * centred in the window is centred BEHIND the keyboard.
+ *
+ * `--kb` is how many pixels are covered at the bottom right now, set from
+ * `visualViewport` (game/keyboardInset.ts) and 0 whenever nothing is. Adding
+ * it to the bottom padding of the sheet shortens the box the dialog is
+ * centred in, so the dialog rises by half the keyboard — centred in what is
+ * left of the screen, which is where it should have been all along.
+ *
+ * ⚠ `0px` AND NOT `0` IN THE FALLBACK. This is inside a calc; an unitless
+ * zero there makes the whole expression invalid and the padding reverts to
+ * the browser default, which is none at all.
+ */
+.modal-overlay {
+  padding-bottom: calc(20px + var(--kb, 0px));
+  transition:
+    background 0.18s ease-out,
+    padding-bottom 0.2s ease-out;
+}
 @keyframes fade { from { opacity: 0; } to { opacity: 1; } }
 .modal {
   --card-color: #888;

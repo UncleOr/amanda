@@ -115,6 +115,7 @@ const ArenaPreview = lazy(() =>
 import { MoreModes } from "./components/MoreModes";
 import { Draft } from "./components/Draft";
 import { Overlay } from "./components/Overlay";
+import { CopyCode } from "./components/CopyCode";
 import { lang, say, setLang } from "./game/lang";
 import { line as t, lineF as tf } from "./game/copy";
 
@@ -1631,7 +1632,7 @@ function Game() {
             {m.roomCode ? (
               <>
                 <p className="intro__tag">{t("sbb39d20", "שלח את הקוד למי שבא לך לאכול:")}</p>
-                <div className="room-code">{m.roomCode}</div>
+                <CopyCode className="room-code" code={m.roomCode} title={t("s8376618", "קוד החדר — לחיצה מעתיקה")} />
                 <button
                   className="btn-link"
                   onClick={() => {

@@ -1,6 +1,6 @@
 # הטקסטים של אמנדה
 
-כל טקסט שהשחקן רואה — 1610 במספר, 1417 מהם כבר באנגלית.
+כל טקסט שהשחקן רואה — 1615 במספר, 1422 מהם כבר באנגלית.
 
 ## איך עורכים
 
@@ -451,6 +451,7 @@
 | sa759290 | מחכה לחבר שלך… | | Waiting for your friend… |
 | s70fb9fd | מחפשת לך יריב… | | Finding you someone… |
 | sbb39d20 | שלח את הקוד למי שבא לך לאכול: | | Send the code to whoever you fancy eating: |
+| s8376618 | קוד החדר — לחיצה מעתיקה | | Room code — press to copy |
 | s8850299 | ✔ העתקתי | | ✔ Copied |
 | sb48d812 | ⧉ העתק הזמנה | | ⧉ Copy invitation |
 | s20677b2 | השרת לא עונה. אני פנויה. | | The server is not answering. I am free. |
@@ -983,12 +984,20 @@
 | s8b3b70f | העברת הבעלות | | Hand it over |
 | sc5257ed | דיווח | | Report |
 | sfc9e23a | יציאה מהמועדון | | Leave the club |
+| sa4d6453 | קוד הזמנה — לחיצה מעתיקה | | Invite code — press to copy |
 | s1a1ea1b | כתוב משהו | | Say something |
 | sabda139 | בקשת קלף | | Ask for a card |
 | sb733665 | {0} נצחונות | | {0} wins |
 | sf7e2ddd | {0} גביעים | | {0} trophies |
 | s4fe4c14 | {0} קלפים | | {0} cards |
 | s47fdf22 | {0} קרבות פנימיים | | {0} club battles |
+
+## components/CopyCode.tsx
+
+| מזהה | טקסט נוכחי | טקסט חדש | אנגלית |
+| --- | --- | --- | --- |
+| sfb9a580 | הועתק! | | Copied! |
+| se5dcd9e | לא הלך — תקריא אותו | | No luck — read it out |
 
 ## components/DeckBuilder.tsx
 
@@ -1088,6 +1097,7 @@
 | s940973e | לא מחובר | | Offline |
 | s6bdffb3 | להוסיף חבר | | Add a friend |
 | s310399d | הקוד שלי | | My code |
+| s5f4391d | הקוד שלי — לחיצה מעתיקה | | My code — press to copy |
 | sec12a0d | קוד של חבר | | Friend's code |
 | s2a0da49 | הוספה | | Add |
 | s1620146 | רגע… | | One moment… |

@@ -359,6 +359,32 @@ button:disabled {
   opacity: 0.4;
   cursor: not-allowed;
 }
+/*
+ * A code that copies itself when pressed — components/CopyCode.tsx.
+ *
+ * Or: *"the only case you need [selection] is if there is a code, and then
+ * you can have a copy button."* It keeps whatever the code already looked
+ * like; everything here is one of the things a <button> brings with it that
+ * the <div>, <b> and <code> it replaced did not.
+ */
+.copycode {
+  font: inherit;
+  font-size: inherit;
+  font-weight: inherit;
+  letter-spacing: inherit;
+  color: inherit;
+  background: none;
+  border: 0;
+  padding: 0;
+  cursor: pointer;
+}
+/* Room for the whole sentence when it reports back, without the box jumping. */
+.copycode--said {
+  letter-spacing: normal;
+  text-indent: 0;
+  color: var(--text);
+}
+
 .btn-fight {
   margin-inline-start: auto;
   background: linear-gradient(160deg, #ff7a2f, #e23f3f);

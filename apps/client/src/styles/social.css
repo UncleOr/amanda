@@ -366,6 +366,11 @@
   /* A code is read left to right whatever the page around it is doing. */
   direction: ltr;
   unicode-bidi: isolate;
+  /* The whole of it or none of it — four characters of a six-character code
+     is no use to anybody, and dragging two handles accurately is not a thing
+     a seven-year-old does. Selection is off everywhere else (tokens.css). */
+  -webkit-user-select: all;
+  user-select: all;
 }
 .friends__codein { display: flex; gap: 6px; margin-top: var(--sp-2); }
 .friends__codein input {

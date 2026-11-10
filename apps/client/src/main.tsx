@@ -9,6 +9,7 @@ import "./styles.css";
 import "./lab.css";
 
 import { loadCopy } from "./game/copy";
+import { watchKeyboard } from "./game/keyboardInset";
 import { loadCardOverrides } from "./game/cardOverrides";
 import { loadLiveContent } from "./game/liveContent";
 import { watchForSignInReturn } from "./game/nativeAuth";
@@ -97,6 +98,13 @@ const SURFACES: Array<[string, string]> = [
 for (const [name, file] of SURFACES) {
   document.documentElement.style.setProperty(name, `url("${import.meta.env.BASE_URL}${file}")`);
 }
+
+/*
+ * And how much of the screen the keyboard is covering, for the dialogs that
+ * have to get out of its way. Started here rather than in a component
+ * because it is one listener for the life of the page and nothing owns it.
+ */
+watchKeyboard();
 
 /*
  * The opening film, on its own root.

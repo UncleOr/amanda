@@ -11,6 +11,7 @@ import {
 } from "../game/account";
 import { collectable } from "../data/catalog";
 import { Overlay } from "./Overlay";
+import { CopyCode } from "./CopyCode";
 import { say } from "../game/lang";
 import { line as t } from "../game/copy";
 
@@ -241,7 +242,15 @@ export function Friends({
             */}
             <div className="friends__code">
               <span className="friends__codelabel">{t("s310399d", "הקוד שלי")}</span>
-              <b className="friends__codeval">{myCode ?? "…"}</b>
+              {myCode ? (
+                <CopyCode
+                  className="friends__codeval"
+                  code={myCode}
+                  title={t("s5f4391d", "הקוד שלי — לחיצה מעתיקה")}
+                />
+              ) : (
+                <b className="friends__codeval">…</b>
+              )}
             </div>
             <div className="friends__codein">
               <input

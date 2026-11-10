@@ -241,13 +241,67 @@ describe("what a card sounds like while it is carried", () => {
     for (let i = 0; i < 200; i++) {
       const line = tapVoice(AMANDA_CARD);
       expect(line, "Amanda says nothing when she is picked up").toBeDefined();
-      expect(AMANDA_LINES.hello, `${line} is not one of her arrival lines`).toContain(line);
+      expect(ALL_AMANDA, `${line} is not one of her lines`).toContain(line);
       seen.add(line!);
     }
     expect(seen.size, "she says the same thing every time").toBeGreaterThan(1);
     // And everything else answers exactly as it did before.
     expect(tapVoice("dragons_04_lava")).toBe("card-name-lava");
     expect(tapVoice("dragons_08_ghost_dragon")).toBeUndefined();
+  });
+
+  it("works through all seven before she repeats one", () => {
+    /*
+     * ⚠ OR COUNTED, WHICH IS WHY THIS IS A BAG AND NOT A DICE ROLL. *"80%
+     * she said 'Amanda', 20% Kiddo Kiddo Kiddo. Zero percent on the rest."*
+     *
+     * The zero was mine: the tap drew from `hello` only, so four of the
+     * seven could not come up. The 80/20 was not what it looked like — two
+     * of those three lines are "Amanda." and "I'm Amanda.", which from a
+     * sofa are the same line.
+     *
+     * Both are fixed by the same change, and the bag is the half that keeps
+     * being true: seven independent draws will happily skip a line for
+     * twenty presses, which a child experiences as the game being broken
+     * rather than as chance. Here, seven presses ARE all seven lines —
+     * stated as a property over the whole run rather than as a count, so a
+     * bag of a different size still has to satisfy it.
+     */
+    const n = ALL_AMANDA.length;
+    const rounds = 40;
+    const drawn: string[] = [];
+    for (let i = 0; i < n * rounds; i++) drawn.push(tapVoice(AMANDA_CARD)!);
+
+    /*
+     * ⚠ STATED OVER ANY 2n-1 DRAWS, NOT OVER ALIGNED BLOCKS OF n. The first
+     * version asserted that every window starting at a multiple of seven
+     * held all seven, and it failed against perfectly correct code: the
+     * tests above this one have already drawn 200 lines, so the bag is
+     * part-used by the time this starts and the boundaries are nowhere near
+     * multiples of seven. 2n-1 is the window that holds whatever the phase
+     * — worst case you are at the end of one bag and the start of the next.
+     */
+    for (let at = 0; at + (2 * n - 1) <= drawn.length; at++) {
+      const window = drawn.slice(at, at + 2 * n - 1);
+      expect(
+        new Set(window).size,
+        `a line is missing from ${2 * n - 1} presses: ${window.join(" ")}`,
+      ).toBe(n);
+    }
+    // No line is ever said twice running, which is the seam between bags.
+    for (let i = 1; i < drawn.length; i++) {
+      expect(drawn[i], `${drawn[i]} twice in a row at ${i}`).not.toBe(drawn[i - 1]);
+    }
+    /*
+     * And the spread is even to within one draw — the leftover of whatever
+     * part-bag this started in. "80% / 20% / zero percent on the rest" is
+     * arithmetically impossible here, which is the whole point: it is not
+     * made unlikely, it is made unavailable.
+     */
+    for (const line of ALL_AMANDA) {
+      const got = drawn.filter((d) => d === line).length;
+      expect(Math.abs(got - rounds), `${line} came up ${got} times in ${rounds} rounds`).toBeLessThanOrEqual(1);
+    }
   });
 
   it("asks the cards for their tap voice through the one function that knows her", () => {

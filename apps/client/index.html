@@ -25,9 +25,24 @@
       rel="stylesheet"
     />
     <meta charset="UTF-8" />
+    <!--
+      `interactive-widget=overlays-content` is the keyboard half of this, and
+      it is one word with a visible consequence. Without it the browser
+      SHRINKS the page to fit above the on-screen keyboard — measured at 844
+      by 190, which is what a keyboard leaves of a landscape phone, the home
+      screen is not redrawn smaller, it is cut in half: the type scale is all
+      sitting on its clamp floors and the layout is `height: 100dvh` with
+      `overflow: hidden`, so the bottom simply stops existing. Or: *"when the
+      keyboard opens it gets really small and ugly."*
+
+      With it the page keeps its full height and the keyboard lies on top.
+      Nothing reflows. What the keyboard covers is then handed to the
+      stylesheet as `--kb` — see game/keyboardInset.ts — so a dialog can lift
+      itself clear instead of the whole game being made smaller for it.
+    -->
     <meta
       name="viewport"
-      content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover"
+      content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover, interactive-widget=overlays-content"
     />
     <script>
       /*

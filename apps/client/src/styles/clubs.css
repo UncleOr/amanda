@@ -79,6 +79,10 @@
   letter-spacing: 0.22em;
   color: var(--accent);
   font-variant-numeric: tabular-nums;
+  /* The whole of it or none of it. Selection is off everywhere else — see
+     tokens.css, and CopyCode.tsx for the press that copies it. */
+  -webkit-user-select: all;
+  user-select: all;
 }
 .club__gear {
   flex: none;
