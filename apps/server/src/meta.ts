@@ -208,6 +208,29 @@ export interface MetaAward {
    */
   cappedOut: boolean;
   /**
+   * This opponent pays nothing, however well you play.
+   *
+   * ═══ WHY A ZERO HAS TO EXPLAIN ITSELF ═══
+   *
+   * Or: *"I won again and got no trophies or nachos."* He had, and the
+   * server had done exactly what he asked for — the match was against the
+   * EASY bot, which is zero in both currencies by his own rule (*"a match
+   * against the easy bot gives no nachos"*, and the easy bot "loses 83% of
+   * the time; a ladder that moves on those matches is a ladder made of
+   * them").
+   *
+   * So nothing was broken and the report was still right: a win that pays
+   * nothing and says nothing is indistinguishable from a bug, and he spent
+   * his evening reporting one. The ceiling already had this courtesy —
+   * `cappedOut` exists so the screen can say why a zero is a zero — and the
+   * opponent needed it too.
+   *
+   * Derived from the rules rather than from the word "easy": it asks what a
+   * PERFECT win against this opponent would pay. A level tuned to zero
+   * later gets the sentence for free.
+   */
+  noStakes: boolean;
+  /**
    * The lifetime count AFTER this match.
    *
    * Here rather than worked out by the screen, because the screen's copy of
@@ -221,7 +244,15 @@ export interface MetaAward {
   moved: Array<{ id: string; progress: number; need: number; done: boolean }>;
 }
 
-const NONE: MetaAward = { nachos: 0, trophies: 0, cappedOut: false, total: 0, chests: [], moved: [] };
+const NONE: MetaAward = {
+  nachos: 0,
+  trophies: 0,
+  cappedOut: false,
+  noStakes: false,
+  total: 0,
+  chests: [],
+  moved: [],
+};
 
 /**
  * Pay out a finished match: nachos, any chest they filled, challenge progress.
@@ -337,6 +368,11 @@ export async function awardMatch(
       moved,
       trophies: won?.gave ?? 0,
       cappedOut: won?.cappedOut ?? false,
+      // Asked of the rules, not of the level's name: what would a flawless
+      // win against this opponent have been worth? Nothing, for the easy bot.
+      noStakes:
+        nachosFor(opponent, true) === 0 &&
+        trophiesFor({ won: true, score: 10, opponent }) === 0,
     };
   } catch (err) {
     // A match that finished matters more than a counter that did not move.

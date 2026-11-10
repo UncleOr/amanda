@@ -1,6 +1,6 @@
 # הטקסטים של אמנדה
 
-כל טקסט שהשחקן רואה — 1625 במספר, 1431 מהם כבר באנגלית.
+כל טקסט שהשחקן רואה — 1626 במספר, 1433 מהם כבר באנגלית.
 
 ## איך עורכים
 
@@ -1134,7 +1134,7 @@
 | מזהה | טקסט נוכחי | טקסט חדש | אנגלית |
 | --- | --- | --- | --- |
 | s5eb66c7 | קליל | | Easy |
-| safec7e3 | לוח דליל, קלפים חלשים. בשביל ללמוד. | | Thin board, weak cards. For learning. |
+| s9f1f515 | לוח דליל, קלפים חלשים. בשביל ללמוד — בלי גביעים ונאצ'וס. | | A thin board and weak cards. For learning — no trophies or nachos. |
 | s0c9f683 | רגיל | | Normal |
 | s685a0b6 | בונה כמו שהוא יודע, עם קלפים ברמה 2. | | Builds properly. Level 2 cards. |
 | sc93cdac | קשה | | Hard |
@@ -1262,6 +1262,7 @@
 | s1b4740d | אתגר הושלם | | Challenge done |
 | s440773f | {0} אתגרים הושלמו | | {0} challenges done |
 | s854fe19 | מספיק גביעים מהבוט להיום — נאצ'וס ואתגרים ממשיכים | | No more bot trophies today. Nachos and challenges carry on. |
+| s71c0b47 | הבוט הקל הוא לאימון — בלי גביעים ונאצ'וס | | The easy bot is for practice — no trophies or nachos |
 | s6ddcdaa | עוד {0} נאצ'וס לתיבה | | {0} more nachos to a chest |
 
 ## components/Profile.tsx
@@ -1324,7 +1325,7 @@
 | --- | --- | --- | --- |
 | sb73e6cd | הצד שלך החזיק | | Your side held |
 | sb66c1e6 | הצד שמולך החזיק | | Their side held |
-| sdf00f7b | ציון | |  |
+| sdf00f7b | ציון | | Score |
 | s6832cda | {0}ש׳ | | {0}s |
 | sb4b2aa8 | {0} נפלו | | {0} fell |
 | s6052ae4 | מתחילים… | | Starting… |

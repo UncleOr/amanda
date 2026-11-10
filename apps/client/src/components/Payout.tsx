@@ -49,7 +49,29 @@ export function Payout({
 }) {
   if (!award) return null;
   const done = award.moved.filter((c) => c.done).length;
-  if (!award.nachos && !award.trophies && !award.chests.length && !done && !award.cappedOut)
+  /*
+   * ═══ A ZERO THAT SAYS NOTHING IS A BUG REPORT ═══
+   *
+   * Or: *"I won again and got no trophies or nachos."* He had, and nothing
+   * was broken: the match was against the EASY bot, which pays nothing in
+   * either currency by his own rule — *"a match against the easy bot gives
+   * no nachos"*, and the trophy table has it at zero both ways because it
+   * loses 83% of the time and a ladder made of those matches is not a
+   * ladder.
+   *
+   * But he spent an evening reporting a bug that was a rule, and he was
+   * right to: this component returned null, so a win paid out as an empty
+   * space on the screen. The daily ceiling already had the courtesy of a
+   * sentence; the opponent did not.
+   */
+  if (
+    !award.nachos &&
+    !award.trophies &&
+    !award.chests.length &&
+    !done &&
+    !award.cappedOut &&
+    !award.noStakes
+  )
     return null;
 
   return (
@@ -143,6 +165,15 @@ export function Payout({
       */}
       {award.cappedOut && (
         <span className="payout__near">{t("s854fe19", "מספיק גביעים מהבוט להיום — נאצ'וס ואתגרים ממשיכים")}</span>
+      )}
+      {/*
+        And the other zero that needed a sentence. Said only when it is the
+        whole story — a challenge that finished on the same match is a real
+        thing that moved, and "this one is for practice" under it would read
+        as if that had not counted either.
+      */}
+      {award.noStakes && !award.nachos && !award.trophies && (
+        <span className="payout__near">{t("s71c0b47", "הבוט הקל הוא לאימון — בלי גביעים ונאצ'וס")}</span>
       )}
     </p>
   );

@@ -635,3 +635,62 @@ describe("trophies from the computer", () => {
     expect(state.players[ME]!.best_trophies).toBe(90 + TUNED.soloTrophiesHard + bonus);
   });
 });
+
+/**
+ * **A zero that says nothing is a bug report.**
+ *
+ * Or, on 10 November 2026: *"I won again and got no trophies or nachos."*
+ *
+ * He had, and nothing was broken. The match in the events table — 18:49,
+ * `won: true`, `score: 9` — was against the EASY bot, which is zero in both
+ * currencies by his own two rules: *"a match against the easy bot gives no
+ * nachos"*, and the trophy table has it at zero in both directions because
+ * it loses 83% of the time and a ladder that moves on those matches is a
+ * ladder made of them.
+ *
+ * ═══ SO THE DEFECT IS THE SILENCE, AND IT COST AN EVENING ═══
+ *
+ * `Payout` returns null when a match paid nothing, so a win against that
+ * setting came out as an empty space where the rewards go — indistinguishable
+ * from a server that is down, which is exactly what the same symptom meant
+ * six days earlier. The daily ceiling already had the courtesy of a sentence
+ * (`cappedOut`). The opponent did not.
+ *
+ * ⚠ AND IT IS ASKED OF THE RULES, NOT OF THE WORD "easy". The question is
+ * "what would a flawless win against this opponent have paid?" — so a level
+ * tuned to zero later says the sentence without anybody remembering to.
+ */
+describe("an opponent that pays nothing says so", () => {
+  it("marks a win against the easy bot, with the right score and the right zero", async () => {
+    const { sb } = fakeDb({ players: { [ME]: {} } });
+    const got = await awardMatch(sb, ME, facts({ won: true, score: 9 }), DAY, "easy");
+    expect(got.trophies, "the easy bot moved the ladder").toBe(0);
+    expect(got.nachos, "the easy bot filled the bar").toBe(0);
+    expect(got.noStakes, "a win paid nothing and the screen was told nothing").toBe(true);
+    // Not the ceiling — a different zero with a different sentence, and
+    // telling a child the wrong reason is worse than telling them none.
+    expect(got.cappedOut).toBe(false);
+  });
+
+  it("is not said of an opponent that pays", async () => {
+    const { sb } = fakeDb({ players: { [ME]: {} } });
+    for (const level of ["normal", "hard"] as const) {
+      const got = await awardMatch(sb, ME, facts(), DAY, level);
+      expect(got.noStakes, `${level} is not stakeless`).toBe(false);
+    }
+    // And a person least of all.
+    expect((await awardMatch(sb, ME, facts(), DAY)).noStakes).toBe(false);
+  });
+
+  it("is still said when the easy bot is LOST to", async () => {
+    /*
+     * The zero is about the opponent, not about the result — "nothing is
+     * taken for a loss to it either, it is the setting you learn on". A
+     * child who loses and sees nothing has the same question.
+     */
+    const { sb } = fakeDb({ players: { [ME]: {} } });
+    const got = await awardMatch(sb, ME, facts({ won: false, score: 3 }), DAY, "easy");
+    expect(got.trophies).toBe(0);
+    expect(got.noStakes).toBe(true);
+  });
+});

@@ -26,6 +26,15 @@ export interface Award {
   trophies: number;
   /** True when the day's ceiling on solo trophies trimmed what it paid. */
   cappedOut: boolean;
+  /**
+   * This opponent pays nothing, however well you play — the easy bot.
+   *
+   * Or: *"I won again and got no trophies or nachos."* Nothing was broken;
+   * the easy bot is zero in both currencies by his own rule. What was broken
+   * is that the screen said so with an empty space. See MetaAward on the
+   * server for the whole of it.
+   */
+  noStakes?: boolean;
   /** The lifetime count after this match. The bar is this mod NACHOS_PER_CHEST. */
   total: number;
   /** Chest kinds the nacho bar filled. Usually none, sometimes one. */

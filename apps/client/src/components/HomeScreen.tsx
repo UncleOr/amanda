@@ -63,7 +63,20 @@ const MOTES = [
 
 /** The three settings of the bot dial, and what each one means in a sentence. */
 const BOT_LEVELS: ReadonlyArray<{ id: "easy" | "normal" | "hard"; he: string; note: string }> = [
-  { id: "easy", he: t("s5eb66c7", "קליל"), note: t("safec7e3", "לוח דליל, קלפים חלשים. בשביל ללמוד.") },
+  /*
+   * ⚠ "בלי גביעים" IS NOT DECORATION — IT IS THE ANSWER TO A BUG REPORT.
+   *
+   * Or: *"I won again and got no trophies or nachos."* The match was against
+   * this setting, which is zero in both currencies by his own rule, and the
+   * only place that was ever written down was a comment in trophies.ts. The
+   * result screen now says it afterwards (see Payout), and this says it
+   * before — which is the half that stops the question being asked.
+   */
+  {
+    id: "easy",
+    he: t("s5eb66c7", "קליל"),
+    note: t("s9f1f515", "לוח דליל, קלפים חלשים. בשביל ללמוד — בלי גביעים ונאצ'וס."),
+  },
   { id: "normal", he: t("s0c9f683", "רגיל"), note: t("s685a0b6", "בונה כמו שהוא יודע, עם קלפים ברמה 2.") },
   { id: "hard", he: t("sc93cdac", "קשה"), note: t("s2827bc7", "כל האוסף, וקלפים ברמה 6. מנצח 3 מתוך 4.") },
 ];
