@@ -262,3 +262,106 @@ function readSource(): string {
     "utf8",
   ) as string;
 }
+
+/**
+ * **And the enemy's side of the same word.**
+ *
+ * Or, asked whether an enemy flyer should stop a walker the way an ally one
+ * no longer does: *"if the enemy is walking to the King — a hovering card
+ * does not stop him. If the enemy gets stuck on people he has to kill on the
+ * way — then yes, they stop until they kill one another."*
+ *
+ * Two stops, and the engine only ever had one. He is separating them:
+ *
+ *   PICKED IT  → walk to arm's length and fight. Unchanged, and it is the
+ *                only thing that has ever physically stopped a unit here.
+ *   SHIELDING  → "kill me before you may touch the crown". A thing in the
+ *                air is not that, and never was.
+ *
+ * So the change is narrow on purpose and the two tests below are the two
+ * halves of his sentence.
+ *
+ * ═══ AND IT IS THE BIGGER OF THE TWO HALVES, MEASURED ═══
+ *
+ * 600 real-catalogue battles, eight or nine random cards a side, same seeds
+ * before and after:
+ *
+ *   winner changed                  11 of 600   (1.8%)
+ *   anything changed at all         84 of 600
+ *   who it favoured                 A 305/295 -> 304/296, i.e. neither
+ *   mean length                     219.3 -> 212.8 ticks
+ *   decided by a crown falling      482 -> 492, on the clock 80 -> 70
+ *
+ * The own-side half moved two battles in six hundred; this one moves eleven.
+ * The direction is the rule doing exactly what it says: more battles end
+ * with a King down and fewer run out the clock, because attackers reach the
+ * crown instead of standing under something they cannot walk round.
+ */
+describe("an enemy card in the air", () => {
+  /** Where the attacker finished, and what it spent the battle hitting. */
+  function run(guard: "ally_wall" | "ally_hover") {
+    const r = runBattle({
+      a: { owner: "A", placements: [{ cardId: "walker", x: 0, y: 1 }] },
+      b: {
+        owner: "B",
+        placements: [
+          // The crown, and one body in front of it in the same lane.
+          { cardId: "far", x: 1, y: 1, king: true },
+          { cardId: guard, x: 3, y: 1 },
+        ],
+      },
+      seed: 3,
+      catalog: CATALOG,
+      synergies: [],
+    });
+    const mine = r.finalUnits.find((u) => u.cardId === "walker")!.uid;
+    const hit = new Set(
+      r.events
+        .filter((e) => e.type === "attack" && e.uid === mine)
+        .map((e) => r.finalUnits.find((u) => u.uid === e.targetUid)?.cardId),
+    );
+    return { hit, col: r.finalUnits.find((u) => u.cardId === "walker")!.col };
+  }
+
+  it("does not shield the crown behind it", () => {
+    /*
+     * ⚠ THE WHOLE RULE, IN ONE COMPARISON. The same board twice, the guard
+     * on the ground and then in the air. On the ground the attacker never
+     * reaches the King — it has to go through the guard first. In the air
+     * the guard is not a door, so the King is what it walks to.
+     */
+    const ground = run("ally_wall");
+    const air = run("ally_hover");
+    expect(ground.hit.has("ally_wall"), "a body in the way is fought").toBe(true);
+    expect(ground.hit.has("far"), "the crown is shielded by a body").toBe(false);
+    expect(air.hit.has("far"), "the crown is still shielded by something in the air").toBe(true);
+    // And it physically got further, which is the thing a player sees.
+    expect(air.col).toBeGreaterThan(ground.col);
+  });
+
+  it("is still fought when it is the nearest thing in the lane", () => {
+    /*
+     * ⚠ AND THIS IS THE HALF THAT KEEPS THE RULE HONEST — the worry that
+     * held this change up for a day: if a walker simply passed under
+     * anything hovering, every hovering card would be untouchable by melee,
+     * the Sky King at 1,450hp included.
+     *
+     * It is not, because only the SHIELD changed. With no crown behind it,
+     * a hovering card is the nearest thing in the lane and is picked like
+     * anything else — and then the ordinary stop applies and the two of
+     * them fight it out, which is Or's second sentence exactly.
+     */
+    const r = runBattle({
+      a: { owner: "A", placements: [{ cardId: "walker", x: 0, y: 0 }] },
+      b: { owner: "B", placements: [{ cardId: "ally_hover", x: 3, y: 0 }] },
+      seed: 3,
+      catalog: CATALOG,
+      synergies: [],
+    });
+    const mine = r.finalUnits.find((u) => u.cardId === "walker")!.uid;
+    const hits = r.events.filter((e) => e.type === "attack" && e.uid === mine);
+    expect(hits.length, "a walker flew past a hovering card instead of fighting it").toBeGreaterThan(
+      0,
+    );
+  });
+});

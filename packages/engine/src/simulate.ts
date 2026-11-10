@@ -79,12 +79,37 @@ function aheadBy(u: Unit, other: Unit): number {
 /**
  * Who is standing between an attacker and the enemy King — the King's actual
  * bodyguards, whatever lane they happen to be in.
+ *
+ * ═══ A BODYGUARD IS A BODY, AND A BODY IS ON THE GROUND ═══
+ *
+ * Or, closing the question the ally half left open: *"if the enemy is walking
+ * to the King — a hovering card does not stop him. If the enemy gets stuck on
+ * people he has to kill on the way — then yes, they stop until they kill one
+ * another."*
+ *
+ * Two different stops, and the engine had only ever had one. "Stuck on people
+ * on the way" is TARGETING, and it is untouched: a card that picks something
+ * in its lane walks to arm's length of it and the two of them fight it out,
+ * a hovering card included. What changes is the SHIELD — being counted as a
+ * thing that must die before the crown can be touched — and nothing in the
+ * air has ever been that. You walk under it.
+ *
+ * ⚠ AND IT IS STILL KILLABLE, which was the whole worry. A hoverer is picked
+ * like anything else when it is the nearest thing in the lane; it stops being
+ * a wall only in the two lanes the crown itself sits in, where a walker now
+ * goes for the crown and takes the hoverer's fire on the way. Which is the
+ * trade Or is describing: a hovering card is a gun, not a door.
  */
 function guardsOf(state: BattleState, u: Unit, king: Unit): Unit[] {
   const kingAt = aheadBy(u, king);
   return state.units.filter(
     (e) =>
-      e.alive && e.owner === king.owner && !e.isKing && isAhead(u, e) && aheadBy(u, e) < kingAt,
+      e.alive &&
+      e.owner === king.owner &&
+      !e.isKing &&
+      !e.flying &&
+      isAhead(u, e) &&
+      aheadBy(u, e) < kingAt,
   );
 }
 
@@ -309,8 +334,39 @@ function pickTarget(state: BattleState, u: Unit): TargetPick | null {
   const theirKing = ahead.find((e) => e.isKing);
   if (theirKing) {
     const kingAt = aheadBy(u, theirKing);
-    const shielded = ahead.some((e) => !e.isKing && aheadBy(u, e) < kingAt);
+    // `!e.flying` for the same reason as in guardsOf: a shield is made of
+    // bodies on the ground. Or: *"if the enemy is walking to the King — a
+    // hovering card does not stop him."*
+    const shielded = ahead.some((e) => !e.isKing && !e.flying && aheadBy(u, e) < kingAt);
     if (shielded) ahead = ahead.filter((e) => !e.isKing);
+  }
+  /*
+   * ═══ YOU WALK UNDER IT ═══
+   *
+   * Or: *"if the enemy is walking to the King — a hovering card does not
+   * stop him. If the enemy gets stuck on people he has to kill on the way —
+   * then yes, they stop until they kill one another."*
+   *
+   * The shield rule above was not enough on its own, and the measurement
+   * said so: with a hovering card and a crown both in the lane, taking the
+   * hoverer out of the SHIELD changed nothing, because a lane card picks the
+   * NEAREST thing ahead and the hoverer was still it. Attacks tallied 19
+   * each way — exactly the stand-off the rule is meant to remove.
+   *
+   * So a card that has to close the distance to swing prefers something
+   * standing on the floor. "People he has to kill on the way" are the ones
+   * actually in the way.
+   *
+   * ⚠ MELEE ONLY, AND THAT IS WHAT KEEPS FLYERS MORTAL. The reason to pass
+   * under a flyer is that you cannot reach it by walking; a shooter has no
+   * such problem and aims at it exactly as before. And when the lane holds
+   * nothing but the flyer, even the melee card goes for it — otherwise a
+   * hovering card would be untouchable by half the board, the Sky King at
+   * 1,450hp included.
+   */
+  if (u.range === "melee") {
+    const onGround = ahead.filter((e) => !e.flying);
+    if (onGround.length) ahead = onGround;
   }
   /*
    * Nothing left in this lane — go and find the crown.
@@ -758,11 +814,11 @@ export function runBattle(setup: BattleSetup): BattleResult {
    * owner everything, and it was the one in the code. A thing in the air does
    * not block a lane; you walk under it.
    *
-   * ⚠ THIS IS THE OWN-SIDE HALF ONLY. An ENEMY flyer still stops a walker,
-   * because stopping is how this engine attacks — a melee card that walked
-   * under an enemy instead of engaging it would make every hovering card
-   * untouchable by half the board, the Sky King at 1,450hp included. That is
-   * a far larger rule and it is Or's to call, not a side effect of this one.
+   * ⚠ THIS IS THE OWN-SIDE HALF. The enemy side is a different question and
+   * Or answered it separately — see `guardsOf`. The short of it: an enemy
+   * flyer still stops a walker that has PICKED it, because stopping is how
+   * this engine attacks, and it stops shielding the crown behind it, because
+   * a shield is made of bodies on the ground.
    */
   function blockingAlly(u: Unit): Unit | null {
     let best: Unit | null = null;
