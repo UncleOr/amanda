@@ -131,10 +131,23 @@ const DIVE_BY_SERIES: Record<string, (typeof ROUND_THE_BACK)[number]> = {
   sea: "dive",
 };
 
+/*
+ * ═══ חמש אפשרויות, לא ארבע ═══
+ *
+ * Or: *"flying is forwards; hovering is on the spot."* He drew the line in
+ * the words, and this is the one screen where the line can be SET — and it
+ * could not be. "מעופף" wrote a moveSpeed as well as the flag, "נייח" wrote
+ * a zero and took the flag off, so the one combination that is five real
+ * cards today — Torch, the Typhoon Dragon, the Sky King, the Insect Empress
+ * and the Floating Brain — was the one combination this panel could not
+ * make. They are hand-written in data/series/*.json, and the first press of
+ * either button would have quietly turned one into something else.
+ */
 const MOVES = [
   { id: "still", he: "נייח", note: "לא זז מהמשבצת" },
   { id: "walks", he: "הולך", note: "מתקדם קדימה, נעצר מאחורי מי שחוסם" },
-  { id: "flies", he: "מעופף", note: "מתקדם וחולף מעל מי שחוסם" },
+  { id: "flies", he: "מעופף", note: "מתקדם קדימה וחולף מעל מי שחוסם" },
+  { id: "hovers", he: "מרחף", note: "לא זז, ומי שהולך עובר מתחתיו" },
   {
     id: "dives",
     he: "צולל",
@@ -153,7 +166,8 @@ function moveOf(card: Card): Move {
   // A diver walks home from the far end, so it is a mover with a one-off
   // relocation — and that relocation is the thing worth saying first.
   if (diveOf(card)) return "dives";
-  if (card.flying) return "flies";
+  // The same split the cards themselves now use — see `hovers` in shared.
+  if (card.flying) return card.stats.moveSpeed > 0 ? "flies" : "hovers";
   return card.stats.moveSpeed > 0 ? "walks" : "still";
 }
 
@@ -439,11 +453,15 @@ export function CardEditor({ call, say, upload, notes, reloadNotes }: CardEditor
           : without;
       return {
         ...d,
-        flying: to === "flies",
+        // Both of the airborne answers set the flag; only one of them also
+        // sets a speed, and that difference IS the difference between the
+        // two words.
+        flying: to === "flies" || to === "hovers",
         abilities,
         // A diver has to be able to walk home, so "still" is the one answer
-        // it cannot share with.
-        stats: { ...d.stats, moveSpeed: to === "still" ? 0 : speed },
+        // it cannot share with — and a hoverer keeps the zero for the same
+        // reason the word exists.
+        stats: { ...d.stats, moveSpeed: to === "still" || to === "hovers" ? 0 : speed },
       };
     });
   }
@@ -1039,8 +1057,14 @@ export function CardEditor({ call, say, upload, notes, reloadNotes }: CardEditor
                 </button>
               ))}
             </div>
-            {move === "still" ? (
-              <small className="dim">{MOVES[0].note}.</small>
+            {/*
+              ⚠ A HOVERER HAS NO PACE EITHER, which is the whole of what the
+              word means. Showing the slider here would offer a number that
+              `setMove` has just written a zero into — and the next press of
+              it would make a מרחף into a מעופף without saying so.
+            */}
+            {move === "still" || move === "hovers" ? (
+              <small className="dim">{MOVES.find((m) => m.id === move)!.note}.</small>
             ) : (
               <label className="ed__f ed__pace">
                 קצב — {draft.stats.moveSpeed} משבצות בשנייה

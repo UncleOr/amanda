@@ -61,6 +61,15 @@ describe("still, walking, flying or diving", () => {
     expect(SRC).toContain('{ id: "walks", he: "הולך"');
     expect(SRC).toContain('{ id: "flies", he: "מעופף"');
     /*
+     * ⚠ FIVE, SINCE OR DREW THE LINE: *"flying is forwards; hovering is on
+     * the spot."* The combination behind "מרחף" — the flag on, the speed at
+     * zero — is five real cards and was the one thing this panel could not
+     * make: "מעופף" wrote a speed too, "נייח" took the flag off. Opening the
+     * Typhoon Dragon and pressing either would have turned him into a
+     * different card.
+     */
+    expect(SRC).toContain('{ id: "hovers", he: "מרחף"');
+    /*
      * Or: *"a reminder that I asked to add another movement ability besides
      * walks / flies / stands — the diver."* It had been in the engine since
      * the day he asked for it, and reachable only from the ABILITIES list —
@@ -103,8 +112,9 @@ describe("still, walking, flying or diving", () => {
   it("writes both fields from the one choice", () => {
     const fn = SRC.slice(SRC.indexOf("function setMove"));
     const body = fn.slice(0, fn.indexOf("\n  }"));
-    expect(body).toContain('flying: to === "flies"');
-    expect(body).toContain('moveSpeed: to === "still" ? 0 : speed');
+    // Both airborne answers set the flag; only one of them sets a speed.
+    expect(body).toContain('flying: to === "flies" || to === "hovers"');
+    expect(body).toContain('moveSpeed: to === "still" || to === "hovers" ? 0 : speed');
   });
 
   it("gives a card that starts moving a pace instead of leaving it at zero", () => {
@@ -126,7 +136,9 @@ describe("still, walking, flying or diving", () => {
   });
 
   it("asks for the pace only when there is something to pace", () => {
-    expect(SRC).toContain('move === "still" ? (');
+    // Including the hoverer, whose pace is zero by definition — see the
+    // note by this branch in the editor.
+    expect(SRC).toContain('move === "still" || move === "hovers" ? (');
     expect(SRC).toContain("משבצות בשנייה");
   });
 

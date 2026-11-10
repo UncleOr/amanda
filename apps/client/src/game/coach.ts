@@ -13,7 +13,7 @@
 import { CATALOG, SERIES_BY_ID, synergyGroups } from "../data/catalog";
 import { line } from "../data/tutorialLines";
 import { SCRIPTS } from "./lessonScript";
-import type { Card } from "@amanda/shared";
+import { hovers, type Card } from "@amanda/shared";
 import { line as t } from "./copy";
 import { say } from "./lang";
 
@@ -316,7 +316,9 @@ function glassCannon(view: CoachView): Card | null {
  * rather than hoped for.
  */
 function trait(c: Card): string {
-  if (c.flying) return t("sc10480b", "הוא מעופף");
+  // The same two words. "It flies" about a card that will not move an inch
+  // is the first thing a child would call the game wrong about.
+  if (c.flying) return hovers(c) ? t("sb92f04e", "הוא מרחף") : t("sc10480b", "הוא מעופף");
   if (c.stats.range === "sniper") return t("s4a2ba08", "הוא צלף");
   if (c.stats.hp >= 800) return t("sdf5d45f", "הוא עבה");
   if (c.stats.power >= c.stats.hp) return t("s46589c2", "הוא חזק");

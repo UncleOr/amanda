@@ -115,3 +115,32 @@ export const CardSchema = z.object({
   art: ArtSchema,
 });
 export type Card = z.infer<typeof CardSchema>;
+
+/**
+ * Is this card HOVERING rather than flying?
+ *
+ * Or, after an evening spent on what the Typhoon Dragon's card says: *"just
+ * call it hovering instead of flying. In English too. Flying is forwards;
+ * hovering is on the spot."*
+ *
+ * One flag in the data, two words on the screen, and the difference between
+ * them is the only thing a player can actually see: a card with `flying` and
+ * a moveSpeed advances over whatever is in the way, and a card with `flying`
+ * and no moveSpeed stays exactly where you put it. Calling both of them
+ * "flying" is what made the Typhoon's card read as a contradiction — תנועה:
+ * מעופף, במקום, "movement: flying, in place".
+ *
+ * ⚠ A PREDICATE AND NOT A SECOND FLAG, deliberately. Nothing about hovering
+ * is separately authored: it IS "flying with nowhere to go", and a flag Or
+ * could set independently would be a flag that could disagree with the
+ * number beside it. Five cards are hovering today — Torch, the Typhoon
+ * Dragon, the Sky King, the Insect Empress and the Floating Brain — and
+ * none of them had to be told so.
+ *
+ * It lives here, next to the two fields it reads, because the engine, the
+ * screens and the admin panel all ask the same question and the answer must
+ * not be written out three times.
+ */
+export function hovers(card: Pick<Card, "flying" | "stats">): boolean {
+  return card.flying && card.stats.moveSpeed === 0;
+}

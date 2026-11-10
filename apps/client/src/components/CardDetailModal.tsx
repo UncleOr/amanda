@@ -2,7 +2,7 @@ import type { CSSProperties } from "react";
 import { Icon, type IconName } from "./Icon";
 import { CATALOG, SERIES_BY_ID } from "../data/catalog";
 import { ABILITY_LABEL, ELEMENT_META, RANGE_META, RARITY_META } from "../data/cardMeta";
-import { LEVELS, RANGE_REACH, levelCost, levelDiamonds, levelMultiplier } from "@amanda/shared";
+import { LEVELS, RANGE_REACH, hovers, levelCost, levelDiamonds, levelMultiplier } from "@amanda/shared";
 import { Overlay } from "./Overlay";
 import { artUrl, spriteFor } from "../game/skins";
 import { say } from "../game/lang";
@@ -103,9 +103,17 @@ export function CardDetailModal({
                 that row and nowhere else, so a flyer stopped being a flyer
                 the moment the row went.
               */}
+              {/*
+                ⚠ TWO WORDS, ONE FLAG. Or: *"flying is forwards; hovering is
+                on the spot."* See `hovers` in shared — the badge is the
+                first place a player meets the word, and a Typhoon Dragon
+                badged מעופף beside a movement row reading "in place" is the
+                contradiction he was asking about.
+              */}
               {card.flying && (
                 <span className="badge">
-                  <Icon name="fly" size={13} /> {t("s39d10ba", "מעופף")}
+                  <Icon name="fly" size={13} />{" "}
+                  {hovers(card) ? t("sf93c6e4", "מרחף") : t("s39d10ba", "מעופף")}
                 </span>
               )}
               {card.midBoss && (
@@ -186,7 +194,7 @@ export function CardDetailModal({
                   ? tf("s372d0ea", "עף {0}/ש׳", card.stats.moveSpeed)
                   : tf("s118277a", "הולך {0}/ש׳", card.stats.moveSpeed)
                 : card.flying
-                  ? t("sb00a40a", "מעופף, במקום")
+                  ? t("sa3c82f7", "מרחף")
                   : t("s60fd570", "סטטי")
             }
           />

@@ -1,7 +1,7 @@
 import type { CSSProperties } from "react";
 import { artUrl, spriteFor } from "../game/skins";
 import { Icon } from "./Icon";
-import { KING, cardBack } from "@amanda/shared";
+import { KING, cardBack, hovers } from "@amanda/shared";
 import { CATALOG } from "../data/catalog";
 import { ELEMENT_META, RANGE_META, RARITY_META, seriesColor } from "../data/cardMeta";
 import { say } from "../game/lang";
@@ -151,7 +151,7 @@ export function CardView({
             </span>
           )}
           {card.flying && (
-            <span title={t("sd75b53b", "מעופף")}>
+            <span title={hovers(card) ? t("s4a7ad86", "מרחף") : t("sd75b53b", "מעופף")}>
               <Icon name="fly" size={12} />
             </span>
           )}
