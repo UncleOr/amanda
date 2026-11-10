@@ -92,7 +92,7 @@ const LEVEL = (process.argv[3] ?? "normal") as "easy" | "normal" | "hard";
  *   good       Or and Hod: a chosen pool, roles in the right squares, and
  *              cards that have been upgraded. The hard bot is for this one.
  */
-const FOE = (process.argv[4] ?? "beginner") as "beginner" | "good";
+const FOE = (process.argv[4] ?? "beginner") as "beginner" | "good" | "real";
 
 const synergies = [...SERIES.values()].map((s) => ({
   seriesId: s.id,
@@ -229,6 +229,93 @@ function goodish(): Placement[] {
 /** What level a good player's cards are at. Or's are at 2. */
 const PLAYER_LEVEL = 2;
 
+/**
+ * ═══ AND A THIRD OPPONENT, WHICH IS THE ONLY REAL ONE ═══
+ *
+ * Or: *"somehow the medium mode has become too easy again, I win in a
+ * second."* Measured against `good`, the normal bot wins 1% and the average
+ * battle is 1.9 seconds — which looks like a complete answer and is the
+ * wrong one, because `good` IS NOT A PLAYER.
+ *
+ * `good` buys the strongest cards that fit the budget, and the cost scale is
+ * flat enough that the answer is always the same nine cards: THREE Flame
+ * Dragons, THREE Titan Kings, THREE Sky Kings, exactly 45 of a 45 budget.
+ * Mean card worth 5,460 against the normal bot's 3,185 — 71% more — and more
+ * even than the HARD bot's 5,408 with its level-6 multiplier.
+ *
+ * ⚠ So tuning any bot against `good` is tuning it against a deck nobody
+ * plays. The deck read off the live database, which is the one Or and Hod
+ * actually built, is eighteen different things: two Stone Colossus, three
+ * Obsidian Eggs, three Healing Blooms, a Thunderwing, a Titan King, two
+ * Sunflowers, trees. Varied, defensive, and nothing like the optimum.
+ *
+ * That the two are so far apart is itself a finding and it is NOT this
+ * file's to fix: `cardCost` prices a 2,500hp King and a 630hp dragon the
+ * same, so the optimum is "three copies of the three biggest". It is written
+ * down here because it is the reason this third model exists.
+ *
+ * Card ids only — no name, no account, nothing that is not already game
+ * content — because this repository is public.
+ */
+const REAL_DECK = [
+  "furries_01_chuppy",
+  "giants_01_stone_colossus",
+  "giants_01_stone_colossus",
+  "slimes_10_zelig_giant_ooze",
+  "giants_05_wall_breaker",
+  "dragons_03_thunderwing",
+  "plants_03_healing_bloom",
+  "dragons_02_obsidian_egg",
+  "plants_03_healing_bloom",
+  "giants_10_titan_king",
+  "plants_02_ancient_tree",
+  "plants_10_great_mother_tree",
+  "dragons_02_obsidian_egg",
+  "dragons_02_obsidian_egg",
+  "insects_04_toxic_moth",
+  "plants_03_healing_bloom",
+  "plants_09_sunflower",
+  "plants_09_sunflower",
+];
+
+/**
+ * The real deck, dealt and placed the way the game does it.
+ *
+ * Same placement rules as `goodish` — crown behind the wall, toughest in
+ * front, shooters at the back — because that is how somebody who has played
+ * for a month lays a board out. The only difference is WHICH CARDS, and that
+ * is the entire point of this model.
+ */
+function realish(): Placement[] {
+  const dps = (c: Card) => (c.stats.attackSpeed > 0 ? c.stats.power / c.stats.attackSpeed : 0);
+  const dealt = REAL_DECK.map((id) => CATALOG.get(id)!)
+    .filter(Boolean)
+    .map((c) => ({ c, r: Math.random() }))
+    .sort((a, b) => a.r - b.r)
+    .slice(0, DECK_RULES.dealt)
+    .map((x) => x.c);
+
+  const mult = levelMultiplier(PLAYER_LEVEL);
+  const buff = { hpMult: mult, powerMult: mult };
+  const left = [...dealt];
+  const take = (rank: (a: Card, b: Card) => number) => {
+    left.sort(rank);
+    return left.shift()!;
+  };
+  const byHp = (a: Card, b: Card) => b.stats.hp - a.stats.hp;
+  const byDps = (a: Card, b: Card) => dps(b) - dps(a);
+
+  const out: Placement[] = [{ cardId: take(byHp).id, x: 1, y: 1, king: true, buff }];
+  for (let y = 0; y < 4 && left.length; y++) out.push({ cardId: take(byHp).id, x: 3, y, buff });
+  for (let y = 0; y < 4 && left.length; y++) out.push({ cardId: take(byDps).id, x: 0, y, buff });
+  for (let x = 1; x <= 2; x++)
+    for (let y = 0; y < 4; y++) {
+      if (x >= 1 && x <= 2 && y >= 1 && y <= 2) continue;
+      out.push(left.length ? { cardId: take(byHp).id, x, y, buff } : { cardId: "crumb_demon", x, y });
+    }
+  return out;
+}
+
 const counts = { bot: new Map<string, number>(), human: new Map<string, number>() };
 const bump = (who: "bot" | "human", code: string) =>
   counts[who].set(code, (counts[who].get(code) ?? 0) + 1);
@@ -242,7 +329,10 @@ for (let i = 0; i < RUNS; i++) {
     seed: 1 + Math.floor(Math.random() * 2_000_000_000),
     catalog: CATALOG,
     synergies,
-    a: { owner: "A", placements: FOE === "good" ? goodish() : humanish() },
+    a: {
+      owner: "A",
+      placements: FOE === "good" ? goodish() : FOE === "real" ? realish() : humanish(),
+    },
     b: { owner: "B", placements: __testing.generateAiPlan(undefined, LEVEL) },
     recordFrames: false,
   });

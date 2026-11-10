@@ -404,9 +404,56 @@ const SKILL: Record<BotLevel, Skill> = {
    * fair thing to learn against.
    */
   easy: { window: 8, fromWorst: true, sloppiness: 0.55, gaps: 4, draw: DECK_RULES.dealt, level: 1 },
-  normal: { window: 3, fromWorst: false, sloppiness: 0.1, gaps: 0, draw: 24, level: 2 },
-  /** Every choice the planner knows how to make, made correctly. */
-  hard: { window: 1, fromWorst: false, sloppiness: 0, gaps: 0, draw: 0, level: 6 },
+  /*
+   * ═══ SMARTER, NOT STRONGER — AND MEASURED AGAINST A REAL DECK ═══
+   *
+   * Or: *"somehow the medium mode has become too easy again, I win in a
+   * second."* He is right, and the two numbers that say so are new, because
+   * the opponent they were measured against is new: a deck read off the live
+   * database — the one he and Hod actually built — rather than the
+   * theoretical optimum the tuning model had been using. See the REAL_DECK
+   * note in scripts/bot-report.ts for why that mattered so much.
+   *
+   *     normal as it was      29%   (his target for this setting is 50%)
+   *     normal as it is now   42%
+   *
+   * ⚠ AND THE LEVER IS `draw`, WHICH IS HIS OWN RULE. *"The difference
+   * between the levels should be in how SMART it is and how well it uses
+   * the cards, not in how strong they are."* `level` is untouched at 2 —
+   * the same multiplier a fortnight-old album carries, so the bot's cards
+   * are no stronger than the player's. What changed is that it no longer
+   * builds its board out of a RANDOM 24 of the arena pool: it sees all of
+   * them, like the hard bot, and chooses. That is using the cards better,
+   * which is the sentence.
+   *
+   * `window: 2` rather than 1 for the same reason, and it is what keeps
+   * this setting distinct from hard: measured, window 1 takes it to 47% —
+   * nearer his number — but then the ONLY thing left between normal and
+   * hard is the card level, which is the exact difference he objected to.
+   * Eight points short with a real difference beats on-target without one.
+   */
+  normal: { window: 2, fromWorst: false, sloppiness: 0.1, gaps: 0, draw: 0, level: 2 },
+  /*
+   * Every choice the planner knows how to make, made correctly.
+   *
+   * ⚠ LEVEL 5, NOT 6, AND THAT IS THE OTHER HALF OF THE SAME SENTENCE. Or,
+   * on 9 November: *"there is no way it kills my whole defence in a second.
+   * That means it is simply significantly more upgraded than me."* He was
+   * right — level 6 is x1.50 against the x1.11 a 2.13-average album carries
+   * — and nothing was done about it then, because his other target (*"a
+   * player should lose 75% of the time to the hard bot"*) was what the
+   * levels were buying.
+   *
+   * Measured against the real deck, both can now be true at once:
+   *
+   *     level 6   83%   (over his target)
+   *     level 5   77%   (his target is 75%)
+   *     level 4   62%
+   *
+   * So the strength advantage comes down a step and the setting lands on
+   * the number he asked for instead of past it.
+   */
+  hard: { window: 1, fromWorst: false, sloppiness: 0, gaps: 0, draw: 0, level: 5 },
 };
 
 /**
@@ -3617,4 +3664,11 @@ export function useMatch(): MatchApi {
 
 /** Internals exposed for unit tests. */
 export const __testing = {
-  matchDeck, fillGs, cellKey, resolveKing, rotateFrontLanes, generateAiPlan };
+  matchDeck, fillGs, cellKey, resolveKing, rotateFrontLanes, generateAiPlan,
+  /*
+   * The difficulty dial itself, so a test can say which of its numbers are
+   * the brain and which are the muscles — see botLevels.test.ts, where Or's
+   * *"the difference should be in how smart it is, not how strong"* finally
+   * has somewhere to live.
+   */
+  SKILL };
