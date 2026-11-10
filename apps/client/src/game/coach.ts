@@ -12,7 +12,7 @@
  */
 import { CATALOG, SERIES_BY_ID, synergyGroups } from "../data/catalog";
 import { line } from "../data/tutorialLines";
-import { SCRIPTS } from "./lessonScript";
+import { SCRIPTS, type ScriptStep } from "./lessonScript";
 import { hovers, type Card } from "@amanda/shared";
 import { line as t } from "./copy";
 import { say } from "./lang";
@@ -61,6 +61,18 @@ export interface Cue {
    * nothing.
    */
   awaits?: Awaits;
+  /**
+   * A second thing to light: the card this step is asking you to put down.
+   *
+   * Added by `withCard` at the bottom of this file rather than written on
+   * each step — see there for why, and Tutorial.tsx for what the light
+   * actually does, which is more than look bright.
+   */
+  also?: string;
+  /**
+   * Show the gesture, where the gesture is new. See `scriptedCue`.
+   */
+  hint?: "tap" | "drag";
 }
 
 /**
@@ -450,7 +462,39 @@ function scriptedCue(view: CoachView, said: Set<string>): Cue | null {
     ...(step.awaits ? { awaits: step.awaits } : {}),
     ...(step.advance ? { advance: step.advance } : {}),
     ...(step.press ? { press: step.press } : {}),
+    ...(gestureFor(script, step, view.matchNo) ?? {}),
   };
+}
+
+/**
+ * **Press, then drag — each shown once, on the first lesson.**
+ *
+ * Or: *"a marking for drag or press. Say, on the first card mark with an
+ * arrow animation to press, and on the second card show — you can also drag,
+ * with a marking and an animation."*
+ *
+ * Which card is "the first" is read off the script rather than written on a
+ * step, for the same reason `withCard` is: the first two steps that ask for
+ * a card are a fact about the lesson, and a step inserted in front of them
+ * should move the hint rather than leave it on what used to be first.
+ *
+ * ═══ STAGE ONE ONLY ═══
+ *
+ * It is a gesture, not a rule — once you know a card can be dragged you know
+ * it for the rest of the game. Repeating the arrow at the top of every stage
+ * is the kind of thing that teaches a child the game thinks they forgot.
+ */
+function gestureFor(
+  script: ScriptStep[],
+  step: ScriptStep,
+  matchNo: number | undefined,
+): { hint: "tap" | "drag" } | null {
+  if (matchNo !== 1) return null;
+  const places = script.filter((s) => s.awaits && PLACING.has(s.awaits.kind));
+  const at = places.findIndex((s) => s.id === step.id);
+  if (at === 0) return { hint: "tap" };
+  if (at === 1) return { hint: "drag" };
+  return null;
 }
 
 /** Does this lesson have a written script at all? */
@@ -458,7 +502,7 @@ function isScripted(view: CoachView): boolean {
   return Boolean(view.matchNo && SCRIPTS[view.matchNo]);
 }
 
-export function nextCue(view: CoachView, said: Set<string>): Cue | null {
+function pickCue(view: CoachView, said: Set<string>): Cue | null {
   /*
    * ORDER IS THE POINT.
    *
@@ -689,4 +733,38 @@ export function nextCue(view: CoachView, said: Set<string>): Cue | null {
     if (cue && !said.has(cue.id)) return cue;
   }
   return null;
+}
+
+/** The card in your hand, which is what a placing step is really about. */
+const HAND_CARD = ".hand__draggable";
+
+/** The three gates that mean "a card has to come out of your hand". */
+const PLACING: ReadonlySet<Awaits["kind"]> = new Set(["cell", "king", "placements"]);
+
+/**
+ * **Light the card as well as the square it is going on.**
+ *
+ * Or: *"in the tutorial you only see the free squares, but the card has to
+ * be lit too, so you can see what you are putting down. And there has to be
+ * a drag option."*
+ *
+ * ═══ ONE RULE HERE RATHER THAN A FIELD ON TWENTY STEPS ═══
+ *
+ * Every step that waits for a card to land is talking about two things, and
+ * only ever named one of them. Written out step by step it would be right
+ * today and wrong the first time somebody adds a step — this file has the
+ * scar already: `press` existed on two steps for weeks and never arrived,
+ * because `scriptedCue` copied its fields one at a time and missed it.
+ *
+ * So it is derived from the gate, which every such step already carries and
+ * cannot be written without. See Tutorial.tsx for why the light matters more
+ * than it looks: the hole it cuts is what lets the card be dragged at all.
+ */
+function withCard(cue: Cue | null): Cue | null {
+  if (!cue || cue.also || !cue.awaits || !PLACING.has(cue.awaits.kind)) return cue;
+  return { ...cue, also: HAND_CARD };
+}
+
+export function nextCue(view: CoachView, said: Set<string>): Cue | null {
+  return withCard(pickCue(view, said));
 }

@@ -44,3 +44,16 @@ export function verdictText(result: BattleResult, iWon: boolean): string {
       return t("s156d757", "הזמן נגמר, הקרב הסתיים. שניכם בתיקו מוחלט. הטלתי מטבע כדי לקבוע מי המנצח");
   }
 }
+
+/**
+ * Which of three bands a 1–10 score falls in.
+ *
+ * Lives here, beside the verdict sentence, because two screens now say the
+ * score: the battle report prints it big at the top of its analysis, and the
+ * result card prints it as a chip you can press to open that report. The
+ * thresholds are the colour, and a colour that means "good" in one place and
+ * "ok" in the other is worse than no colour at all.
+ */
+export function gradeBand(score: number): "bad" | "ok" | "good" {
+  return score >= 8 ? "good" : score >= 5 ? "ok" : "bad";
+}

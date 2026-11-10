@@ -167,7 +167,8 @@
   gap: 10px;
   flex-wrap: wrap;
 }
-.result__tally span {
+.result__tally span,
+.result__tally button {
   display: inline-flex;
   align-items: center;
   gap: 6px;
@@ -179,6 +180,53 @@
   font-weight: 700;
   font-variant-numeric: tabular-nums;
 }
+
+/*
+ * The mark out of ten, on the card instead of inside the report.
+ *
+ * Or: *"let's show the match score too, without having to go into the
+ * explanation."* It is a chip in the same row as the clock and the fallen,
+ * because it is the same kind of fact — but it is the one that is about HIM,
+ * so it is the one with a colour and the one you can press.
+ *
+ * `font: inherit` and `color` are the two things a <button> brings with it
+ * that a <span> does not; without them one chip in a row of three arrives in
+ * the browser's own UI face. (The payout row learned this the same way.)
+ */
+/* ⚠ Written with the row in front of it, not bare: the rule above it is
+   `.result__tally button`, which already out-ranks a single class — so a
+   bare `.result__grade` would set a background the row then took back. */
+.result__tally .result__grade {
+  color: var(--text);
+  font: inherit;
+  font-size: var(--t-2);
+  font-weight: 800;
+  cursor: pointer;
+  /* Darker than its neighbours, because it is the one sitting over the
+     brightest part of the illustration and the one with coloured digits. */
+  background: rgba(6, 9, 18, 0.78);
+}
+.result__grade b {
+  font-size: var(--t-4);
+  line-height: 1;
+}
+.result__grade small {
+  font-size: var(--t-1);
+  opacity: 0.55;
+  /* ⚠ The chip is an inline-flex with `gap: 6px`, and `b` and `small` are
+     two of its items — so "3" and "/10" came out as "3 / 10". This closes
+     the gap for that one join, which is a single number. */
+  margin-inline-start: -6px;
+}
+/* The same three bands as the report's big number — see game/verdict.ts.
+   A score that is green on one screen and amber on the other is worse than
+   no colour at all. */
+.result__grade--good b { color: #5ad25a; }
+.result__tally .result__grade--good { border-color: rgba(90, 210, 90, 0.5); }
+.result__grade--ok b { color: var(--accent); }
+.result__tally .result__grade--ok { border-color: rgba(255, 211, 107, 0.5); }
+.result__grade--bad b { color: var(--danger); }
+.result__tally .result__grade--bad { border-color: rgba(248, 113, 113, 0.45); }
 
 /* A short window puts the picture behind the words instead of above them. */
 @media (max-height: 560px) {

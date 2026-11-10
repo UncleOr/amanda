@@ -745,24 +745,35 @@
  */
 .tut__next { position: relative; z-index: 1; }
 /*
- * The four panels that make the dimming true. See Tutorial.tsx.
+ * The panels that make the dimming true, and now that MAKE it. See
+ * Tutorial.tsx and game/spotWalls.ts.
  *
  * They take clicks and keep them: during a pointing step the only thing on
  * the screen that answers is the thing being pointed at.
+ *
+ * ⚠ AND THE DARKNESS IS THEIRS NOW, WHICH IT WAS NOT. It used to be a
+ * 9999px spread shadow on `.tut__spot` — one hole, cut by the ring itself.
+ * That recipe has exactly one hole in it, so the day a step lit the CARD as
+ * well as the square, the card sat under the square's own sheet of black and
+ * came out as dim as everything else. The walls are already the shape of
+ * "everywhere but the holes", for both of them, so they are the honest place
+ * for it.
  */
 .tut__wall > i {
   position: fixed;
   display: block;
   pointer-events: auto;
+  background: rgba(4, 7, 14, 0.78);
 }
+/* A step with nothing to press has nothing to press IN the hole either —
+   one transparent sheet over the lot, on top of the dimming. */
+.tut__wall > i.tut__wall--shut { background: none; }
 .tut__spot {
   position: fixed;
   border-radius: 14px;
-  /* an enormous spread shadow IS the dimming — everything except this hole */
   box-shadow:
     0 0 0 4px rgba(255, 176, 32, 0.9),
-    0 0 26px 6px rgba(255, 176, 32, 0.35),
-    0 0 0 9999px rgba(4, 7, 14, 0.78);
+    0 0 26px 6px rgba(255, 176, 32, 0.35);
   animation: tut-pulse 1.5s ease-in-out infinite alternate;
   pointer-events: none;
 }
@@ -794,8 +805,8 @@
   padding-block-end: var(--coach-h);
 }
 @keyframes tut-pulse {
-  from { box-shadow: 0 0 0 3px rgba(255,176,32,0.65), 0 0 20px 4px rgba(255,176,32,0.25), 0 0 0 9999px rgba(4,7,14,0.78); }
-  to   { box-shadow: 0 0 0 5px rgba(255,176,32,1),    0 0 34px 8px rgba(255,176,32,0.45), 0 0 0 9999px rgba(4,7,14,0.78); }
+  from { box-shadow: 0 0 0 3px rgba(255,176,32,0.65), 0 0 20px 4px rgba(255,176,32,0.25); }
+  to   { box-shadow: 0 0 0 5px rgba(255,176,32,1),    0 0 34px 8px rgba(255,176,32,0.45); }
 }
 .tut__bubble {
   position: fixed;
@@ -1133,4 +1144,141 @@ html[dir="ltr"] .intro__wash {
   display: inline-grid;
   place-items: center;
   line-height: 0;
+}
+
+/* ═══ THE CARD YOU ARE HOLDING, LIT TOO ═══
+ *
+ * Or: *"in the tutorial you only see the free squares, but the card has to
+ * be lit too, so you can see what you are putting down. And there has to be
+ * a drag option."*
+ *
+ * ⚠ AND IT MUST NOT PAINT THE DIM. `.tut__spot` makes the darkness with a
+ * 9999px spread shadow — the dim IS the hole's shadow — so a second ring
+ * using the same recipe draws its own sheet of black over the first one's
+ * hole, and both holes come out dark. The destination keeps the dimming.
+ * This one is only a light.
+ *
+ * Different colour on purpose: gold is where it goes, white is what you are
+ * holding. Two golds would be two destinations.
+ */
+.tut__spot--card {
+  box-shadow:
+    0 0 0 3px rgba(255, 255, 255, 0.95),
+    0 0 26px 6px rgba(190, 220, 255, 0.45);
+  animation: tut-held 1.5s ease-in-out infinite alternate;
+}
+@keyframes tut-held {
+  from { box-shadow: 0 0 0 2px rgba(255,255,255,0.7), 0 0 18px 4px rgba(190,220,255,0.3); }
+  to   { box-shadow: 0 0 0 4px rgba(255,255,255,1),   0 0 32px 8px rgba(190,220,255,0.55); }
+}
+
+/* ═══ SHOW THE GESTURE, DO NOT NAME IT ═══
+ *
+ * Or: *"a marking for drag or press. Say, on the first card mark with an
+ * arrow animation to press, and on the second card show — you can also drag,
+ * with a marking and an animation."*
+ *
+ * No words in either of them. Amanda's band under the screen is already
+ * saying the sentence; a label reading "press" beside a thing pressing is
+ * the sort of text this game has spent a year removing.
+ *
+ * Both are `pointer-events: none` and sit above the walls: a hint that can
+ * be tapped is a hint standing in front of the thing it is pointing at.
+ */
+.tut__hint {
+  position: fixed;
+  z-index: 2;
+  width: 0;
+  height: 0;
+  pointer-events: none;
+}
+/* A finger coming down on the square, and the ring it leaves. */
+.tut__hint--tap::before,
+.tut__hint--tap::after {
+  content: "";
+  position: absolute;
+  border-radius: 50%;
+  inset-block-start: 0;
+  inset-inline-start: 0;
+}
+.tut__hint--tap::before {
+  width: 54px;
+  height: 54px;
+  margin: -27px 0 0 -27px;
+  border: 3px solid rgba(255, 255, 255, 0.9);
+  animation: tut-ripple 1.6s ease-out infinite;
+}
+.tut__hint--tap::after {
+  width: 26px;
+  height: 26px;
+  margin: -13px 0 0 -13px;
+  background: radial-gradient(circle at 35% 30%, #fff, rgba(255, 255, 255, 0.55));
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.6);
+  animation: tut-press 1.6s ease-in-out infinite;
+}
+@keyframes tut-ripple {
+  0%   { transform: scale(0.35); opacity: 0; }
+  25%  { opacity: 0.95; }
+  100% { transform: scale(1.5); opacity: 0; }
+}
+@keyframes tut-press {
+  0%, 100% { transform: scale(1); }
+  18%      { transform: scale(0.62); }
+  40%      { transform: scale(1); }
+}
+/*
+ * The drag: the same finger, travelling the real distance to the real
+ * square, over and over. `--to-x`/`--to-y` are measured in Tutorial.tsx,
+ * because the two boxes are the only things that know where they are.
+ */
+.tut__hint--drag::before {
+  content: "";
+  position: absolute;
+  inset-block-start: 0;
+  inset-inline-start: 0;
+  width: var(--len, 0);
+  height: 3px;
+  margin-top: -1.5px;
+  transform: rotate(var(--ang, 0deg));
+  transform-origin: 0 50%;
+  background: repeating-linear-gradient(
+    90deg,
+    rgba(255, 255, 255, 0.85) 0 9px,
+    transparent 9px 17px
+  );
+  opacity: 0.5;
+  /*
+   * ⚠ LTR, ALWAYS. The angle is measured off the screen's X axis with
+   * atan2, and this document is RTL — a logical `inset-inline-start` plus a
+   * rotation in a mirrored box sends the trail the other way across the
+   * screen. `direction: ltr` pins the box to the maths that produced it.
+   */
+  direction: ltr;
+}
+.tut__hint--drag::after {
+  content: "";
+  position: absolute;
+  inset-block-start: 0;
+  inset-inline-start: 0;
+  width: 26px;
+  height: 26px;
+  margin: -13px 0 0 -13px;
+  border-radius: 50%;
+  background: radial-gradient(circle at 35% 30%, #fff, rgba(255, 255, 255, 0.55));
+  box-shadow: 0 2px 12px rgba(0, 0, 0, 0.6);
+  animation: tut-carry 2.2s ease-in-out infinite;
+}
+@keyframes tut-carry {
+  0%        { transform: translate(0, 0) scale(1); opacity: 0; }
+  12%       { transform: translate(0, 0) scale(0.7); opacity: 1; }
+  68%       { transform: translate(var(--to-x, 0), var(--to-y, 0)) scale(0.7); opacity: 1; }
+  82%       { transform: translate(var(--to-x, 0), var(--to-y, 0)) scale(1.15); opacity: 1; }
+  100%      { transform: translate(var(--to-x, 0), var(--to-y, 0)) scale(1); opacity: 0; }
+}
+/* Movement is the whole message here, so there is no still version to fall
+   back to — but it can at least stop flashing. */
+@media (prefers-reduced-motion: reduce) {
+  .tut__hint--tap::before { animation-duration: 3.2s; }
+  .tut__hint--tap::after,
+  .tut__hint--drag::after { animation-duration: 4.4s; }
 }

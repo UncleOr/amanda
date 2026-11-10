@@ -1,10 +1,12 @@
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
+import { buildReport } from "@amanda/engine";
 import { Icon } from "./Icon";
 import { BattleLog } from "./BattleLog";
 import { Payout } from "./Payout";
 import { SayButton, SaidBubble } from "./Say";
 import * as V from "../data/voice";
-import { verdictText } from "../game/verdict";
+import { CATALOG } from "../data/catalog";
+import { gradeBand, verdictText } from "../game/verdict";
 import type { MatchApi } from "../game/useMatch";
 import type { Overlays } from "../game/useOverlay";
 import { line as t, lineF as tf } from "../game/copy";
@@ -46,6 +48,25 @@ export function ResultScreen({
     if (!showLog) return;
     logRef.current?.scrollIntoView({ behavior: "smooth", block: "start" });
   }, [showLog]);
+  /*
+   * The mark out of ten, on the card itself.
+   *
+   * Or: *"let's show the match score too, without having to go into the
+   * explanation."* It was the first thing in the report and the report was
+   * behind a button that asks a question — so the one number that says how
+   * the board did was the one number nobody saw. A child who played well and
+   * lost on the clock deserves to be told so on the screen that says he lost.
+   *
+   * ⚠ THE WHOLE REPORT IS BUILT FOR ONE NUMBER, and that is on purpose: the
+   * grade is weighed from damage, participation and survival across every
+   * unit, so there is no cheaper way to it than the pass that already exists.
+   * It is one walk over a finished battle's events, memoised on the result,
+   * and the same call is made again by the report below when it opens.
+   */
+  const grade = useMemo(
+    () => (m.result ? buildReport(m.result, CATALOG).grades[m.mySide].score : null),
+    [m.result, m.mySide],
+  );
   const [winTitle, setWinTitle] = useState("");
   const [loseTitle, setLoseTitle] = useState("");
   const [leftTitle, setLeftTitle] = useState("");
@@ -77,6 +98,24 @@ export function ResultScreen({
             <>
               <p className="result__verdict">{verdictText(m.result, m.iWon)}</p>
               <p className="result__tally">
+                {/*
+                  The score leads the row, and pressing it opens the report
+                  it is the headline of. This screen's own rule by now — the
+                  chest line opens the chest, the challenges line opens the
+                  challenges — and here it costs nothing: the number was
+                  always the first thing in the analysis, so the short answer
+                  is now on the card and the long one is one press behind it.
+                */}
+                {grade !== null && (
+                  <button
+                    type="button"
+                    className={`result__grade result__grade--${gradeBand(grade)}`}
+                    onClick={() => setShowLog(true)}
+                  >
+                    {t("sdf00f7b", "ציון")} <b>{grade}</b>
+                    <small>/10</small>
+                  </button>
+                )}
                 <span>
                   <Icon name="timer" size={15} />{" "}
                   {tf("s6832cda", "{0}ש׳", (m.result.ticks / 30).toFixed(1))}

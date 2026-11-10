@@ -696,7 +696,38 @@
 }
 /* Nothing to open — no account, no panel — so it is a sentence again. */
 .payout__bit--quest:disabled { cursor: default; opacity: 1; }
-.payout__near { color: var(--muted); font-size: 12.5px; }
+/*
+ * "Two more nachos to a chest", and the line that says the trophies are
+ * capped for today.
+ *
+ * ⚠ IT USED TO BE GREY TEXT ON NOTHING, and that was fine for exactly as
+ * long as the thing behind it was a flat panel. Or, once the result screen
+ * became an illustration: *"on the new background you can't see 'two more
+ * nachos to a chest' well."* He is right, and grey was already against the
+ * house rule — `--muted` is for a unit beside a value, never for the only
+ * thing in a box.
+ *
+ * So it stops being loose text and becomes what everything else in this row
+ * already is: a chip with its own dark ground under it. That is what makes
+ * it legible over a painting, at any brightness the painting happens to have
+ * under this particular line.
+ */
+.payout__near {
+  display: inline-flex;
+  align-items: center;
+  padding: 4px 11px;
+  border-radius: 999px;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  background: rgba(6, 9, 18, 0.78);
+  color: var(--text);
+  font-size: var(--t-2);
+  font-weight: 700;
+  /* The capped-trophies line is a whole sentence, so the chip has to be
+     allowed to be two lines rather than wider than the card. */
+  max-width: 100%;
+  text-align: center;
+  line-height: 1.35;
+}
 @media (prefers-reduced-motion: reduce) {
   .payout { animation: none; }
   .payout__bit--chest { animation: none; }

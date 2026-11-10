@@ -4999,7 +4999,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/App.tsx",
-   "line": 1709
+   "line": 1719
   }
  },
  {
@@ -5009,7 +5009,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/App.tsx",
-   "line": 1716
+   "line": 1726
   }
  },
  {
@@ -5019,7 +5019,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/App.tsx",
-   "line": 1716
+   "line": 1726
   }
  },
  {
@@ -5029,7 +5029,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/App.tsx",
-   "line": 1735
+   "line": 1745
   }
  },
  {
@@ -5039,7 +5039,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/App.tsx",
-   "line": 1736
+   "line": 1746
   }
  },
  {
@@ -5049,7 +5049,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/App.tsx",
-   "line": 1740
+   "line": 1750
   }
  },
  {
@@ -5059,7 +5059,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/App.tsx",
-   "line": 1748
+   "line": 1758
   }
  },
  {
@@ -5069,7 +5069,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/App.tsx",
-   "line": 1750
+   "line": 1760
   }
  },
  {
@@ -5079,7 +5079,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/App.tsx",
-   "line": 1758
+   "line": 1768
   }
  },
  {
@@ -5089,7 +5089,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/App.tsx",
-   "line": 1822
+   "line": 1849
   }
  },
  {
@@ -5099,7 +5099,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/App.tsx",
-   "line": 1843
+   "line": 1870
   }
  },
  {
@@ -5109,7 +5109,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/App.tsx",
-   "line": 1862
+   "line": 1889
   }
  },
  {
@@ -5119,7 +5119,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/App.tsx",
-   "line": 1872
+   "line": 1899
   }
  },
  {
@@ -5129,7 +5129,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/App.tsx",
-   "line": 1885
+   "line": 1912
   }
  },
  {
@@ -5139,7 +5139,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/App.tsx",
-   "line": 1886
+   "line": 1913
   }
  },
  {
@@ -5149,7 +5149,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/App.tsx",
-   "line": 1948
+   "line": 1979
   }
  },
  {
@@ -5159,7 +5159,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/App.tsx",
-   "line": 1950
+   "line": 1981
   }
  },
  {
@@ -5169,7 +5169,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/App.tsx",
-   "line": 1951
+   "line": 1982
   }
  },
  {
@@ -5179,7 +5179,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/App.tsx",
-   "line": 1956
+   "line": 1987
   }
  },
  {
@@ -5189,7 +5189,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/App.tsx",
-   "line": 1959
+   "line": 1990
   }
  },
  {
@@ -5199,7 +5199,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/App.tsx",
-   "line": 2028
+   "line": 2059
   }
  },
  {
@@ -5209,7 +5209,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/App.tsx",
-   "line": 2041
+   "line": 2072
   }
  },
  {
@@ -5219,7 +5219,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/App.tsx",
-   "line": 2043
+   "line": 2074
   }
  },
  {
@@ -5229,7 +5229,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/App.tsx",
-   "line": 2044
+   "line": 2075
   }
  },
  {
@@ -5239,7 +5239,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/App.tsx",
-   "line": 2086
+   "line": 2117
   }
  },
  {
@@ -5249,7 +5249,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/App.tsx",
-   "line": 2106
+   "line": 2137
   }
  },
  {
@@ -5259,7 +5259,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/App.tsx",
-   "line": 2119
+   "line": 2150
   }
  },
  {
@@ -5269,7 +5269,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/App.tsx",
-   "line": 2145
+   "line": 2176
   }
  },
  {
@@ -5279,7 +5279,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/App.tsx",
-   "line": 2159
+   "line": 2190
   }
  },
  {
@@ -5289,7 +5289,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/App.tsx",
-   "line": 2199
+   "line": 2230
   }
  },
  {
@@ -5299,7 +5299,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/App.tsx",
-   "line": 2203
+   "line": 2234
   }
  },
  {
@@ -5309,7 +5309,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/App.tsx",
-   "line": 2232
+   "line": 2263
   }
  },
  {
@@ -5319,7 +5319,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/App.tsx",
-   "line": 2233
+   "line": 2264
   }
  },
  {
@@ -5329,7 +5329,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/App.tsx",
-   "line": 2243
+   "line": 2274
   }
  },
  {
@@ -5339,7 +5339,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/App.tsx",
-   "line": 2244
+   "line": 2275
   }
  },
  {
@@ -5349,7 +5349,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/App.tsx",
-   "line": 2252
+   "line": 2283
   }
  },
  {
@@ -5359,7 +5359,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/App.tsx",
-   "line": 2257
+   "line": 2288
   }
  },
  {
@@ -5369,7 +5369,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/App.tsx",
-   "line": 2267
+   "line": 2298
   }
  },
  {
@@ -5379,7 +5379,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/App.tsx",
-   "line": 2268
+   "line": 2299
   }
  },
  {
@@ -5389,7 +5389,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/App.tsx",
-   "line": 2283
+   "line": 2314
   }
  },
  {
@@ -5399,7 +5399,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/App.tsx",
-   "line": 2285
+   "line": 2316
   }
  },
  {
@@ -5409,7 +5409,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/App.tsx",
-   "line": 2291
+   "line": 2322
   }
  },
  {
@@ -5419,7 +5419,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/App.tsx",
-   "line": 2293
+   "line": 2324
   }
  },
  {
@@ -5429,7 +5429,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/App.tsx",
-   "line": 2294
+   "line": 2325
   }
  },
  {
@@ -5439,7 +5439,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/App.tsx",
-   "line": 2310
+   "line": 2341
   }
  },
  {
@@ -5449,7 +5449,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/App.tsx",
-   "line": 2314
+   "line": 2345
   }
  },
  {
@@ -5459,7 +5459,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/App.tsx",
-   "line": 2318
+   "line": 2349
   }
  },
  {
@@ -5469,7 +5469,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/App.tsx",
-   "line": 2513
+   "line": 2544
   }
  },
  {
@@ -5479,7 +5479,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/App.tsx",
-   "line": 2533
+   "line": 2564
   }
  },
  {
@@ -5489,7 +5489,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/App.tsx",
-   "line": 2546
+   "line": 2577
   }
  },
  {
@@ -5499,7 +5499,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/App.tsx",
-   "line": 2557
+   "line": 2588
   }
  },
  {
@@ -5509,7 +5509,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/App.tsx",
-   "line": 2561
+   "line": 2592
   }
  },
  {
@@ -5519,7 +5519,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/App.tsx",
-   "line": 2581
+   "line": 2612
   }
  },
  {
@@ -5529,7 +5529,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/App.tsx",
-   "line": 2595
+   "line": 2626
   }
  },
  {
@@ -5539,7 +5539,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/App.tsx",
-   "line": 2740
+   "line": 2771
   }
  },
  {
@@ -5549,7 +5549,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/App.tsx",
-   "line": 2837
+   "line": 2868
   }
  },
  {
@@ -5559,7 +5559,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/App.tsx",
-   "line": 2840
+   "line": 2871
   }
  },
  {
@@ -5569,7 +5569,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/App.tsx",
-   "line": 2999
+   "line": 3030
   }
  },
  {
@@ -5579,7 +5579,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/App.tsx",
-   "line": 2999
+   "line": 3030
   }
  },
  {
@@ -5589,7 +5589,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/App.tsx",
-   "line": 3002
+   "line": 3033
   }
  },
  {
@@ -5599,7 +5599,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/App.tsx",
-   "line": 3005
+   "line": 3036
   }
  },
  {
@@ -5609,7 +5609,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/components/BattleLog.tsx",
-   "line": 30
+   "line": 31
   }
  },
  {
@@ -5619,7 +5619,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/components/BattleLog.tsx",
-   "line": 31
+   "line": 32
   }
  },
  {
@@ -5629,7 +5629,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/components/BattleLog.tsx",
-   "line": 32
+   "line": 33
   }
  },
  {
@@ -5639,7 +5639,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/components/BattleLog.tsx",
-   "line": 33
+   "line": 34
   }
  },
  {
@@ -5649,7 +5649,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/components/BattleLog.tsx",
-   "line": 34
+   "line": 35
   }
  },
  {
@@ -5659,7 +5659,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/components/BattleLog.tsx",
-   "line": 35
+   "line": 36
   }
  },
  {
@@ -5669,7 +5669,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/components/BattleLog.tsx",
-   "line": 36
+   "line": 37
   }
  },
  {
@@ -5679,7 +5679,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/components/BattleLog.tsx",
-   "line": 37
+   "line": 38
   }
  },
  {
@@ -5689,7 +5689,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/components/BattleLog.tsx",
-   "line": 38
+   "line": 39
   }
  },
  {
@@ -5699,7 +5699,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/components/BattleLog.tsx",
-   "line": 40
+   "line": 41
   }
  },
  {
@@ -5709,7 +5709,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/components/BattleLog.tsx",
-   "line": 41
+   "line": 42
   }
  },
  {
@@ -5719,7 +5719,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/components/BattleLog.tsx",
-   "line": 45
+   "line": 46
   }
  },
  {
@@ -5729,7 +5729,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/components/BattleLog.tsx",
-   "line": 45
+   "line": 46
   }
  },
  {
@@ -5739,7 +5739,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/components/BattleLog.tsx",
-   "line": 46
+   "line": 47
   }
  },
  {
@@ -5749,7 +5749,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/components/BattleLog.tsx",
-   "line": 46
+   "line": 47
   }
  },
  {
@@ -5759,7 +5759,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/components/BattleLog.tsx",
-   "line": 47
+   "line": 48
   }
  },
  {
@@ -5769,7 +5769,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/components/BattleLog.tsx",
-   "line": 49
+   "line": 50
   }
  },
  {
@@ -5779,7 +5779,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/components/BattleLog.tsx",
-   "line": 50
+   "line": 51
   }
  },
  {
@@ -5789,7 +5789,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/components/BattleLog.tsx",
-   "line": 51
+   "line": 52
   }
  },
  {
@@ -5799,7 +5799,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/components/BattleLog.tsx",
-   "line": 52
+   "line": 53
   }
  },
  {
@@ -5809,7 +5809,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/components/BattleLog.tsx",
-   "line": 52
+   "line": 53
   }
  },
  {
@@ -5819,7 +5819,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/components/BattleLog.tsx",
-   "line": 53
+   "line": 54
   }
  },
  {
@@ -5829,7 +5829,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/components/BattleLog.tsx",
-   "line": 53
+   "line": 54
   }
  },
  {
@@ -5839,7 +5839,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/components/BattleLog.tsx",
-   "line": 82
+   "line": 83
   }
  },
  {
@@ -5849,7 +5849,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/components/BattleLog.tsx",
-   "line": 82
+   "line": 83
   }
  },
  {
@@ -5859,7 +5859,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/components/BattleLog.tsx",
-   "line": 127
+   "line": 128
   }
  },
  {
@@ -5869,7 +5869,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/components/BattleLog.tsx",
-   "line": 133
+   "line": 134
   }
  },
  {
@@ -5879,7 +5879,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/components/BattleLog.tsx",
-   "line": 139
+   "line": 140
   }
  },
  {
@@ -5889,7 +5889,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/components/BattleLog.tsx",
-   "line": 145
+   "line": 146
   }
  },
  {
@@ -5899,7 +5899,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/components/BattleLog.tsx",
-   "line": 147
+   "line": 148
   }
  },
  {
@@ -5909,7 +5909,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/components/BattleLog.tsx",
-   "line": 148
+   "line": 149
   }
  },
  {
@@ -5919,7 +5919,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/components/BattleLog.tsx",
-   "line": 148
+   "line": 149
   }
  },
  {
@@ -5929,7 +5929,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/components/BattleLog.tsx",
-   "line": 163
+   "line": 164
   }
  },
  {
@@ -5939,7 +5939,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/components/BattleLog.tsx",
-   "line": 177
+   "line": 178
   }
  },
  {
@@ -5949,7 +5949,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/components/BattleLog.tsx",
-   "line": 178
+   "line": 179
   }
  },
  {
@@ -5959,7 +5959,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/components/BattleLog.tsx",
-   "line": 179
+   "line": 180
   }
  },
  {
@@ -5969,7 +5969,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/components/BattleLog.tsx",
-   "line": 180
+   "line": 181
   }
  },
  {
@@ -5979,7 +5979,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/components/BattleLog.tsx",
-   "line": 181
+   "line": 182
   }
  },
  {
@@ -5989,7 +5989,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/components/BattleLog.tsx",
-   "line": 202
+   "line": 203
   }
  },
  {
@@ -5999,7 +5999,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/components/BattleLog.tsx",
-   "line": 206
+   "line": 207
   }
  },
  {
@@ -6009,7 +6009,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/components/BattleLog.tsx",
-   "line": 210
+   "line": 211
   }
  },
  {
@@ -6019,7 +6019,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/components/BattleLog.tsx",
-   "line": 214
+   "line": 215
   }
  },
  {
@@ -6029,7 +6029,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/components/BattleLog.tsx",
-   "line": 224
+   "line": 225
   }
  },
  {
@@ -6039,7 +6039,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/components/BattleLog.tsx",
-   "line": 237
+   "line": 238
   }
  },
  {
@@ -6049,7 +6049,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/components/BattleLog.tsx",
-   "line": 251
+   "line": 252
   }
  },
  {
@@ -6059,7 +6059,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/components/BattleLog.tsx",
-   "line": 252
+   "line": 253
   }
  },
  {
@@ -6069,7 +6069,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/components/BattleLog.tsx",
-   "line": 253
+   "line": 254
   }
  },
  {
@@ -6079,7 +6079,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/components/BattleLog.tsx",
-   "line": 255
+   "line": 256
   }
  },
  {
@@ -6089,7 +6089,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/components/BattleLog.tsx",
-   "line": 256
+   "line": 257
   }
  },
  {
@@ -6099,7 +6099,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/components/BattleLog.tsx",
-   "line": 257
+   "line": 258
   }
  },
  {
@@ -6109,7 +6109,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/components/BattleLog.tsx",
-   "line": 259
+   "line": 260
   }
  },
  {
@@ -6119,7 +6119,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/components/BattleLog.tsx",
-   "line": 269
+   "line": 270
   }
  },
  {
@@ -6129,7 +6129,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/components/BattleLog.tsx",
-   "line": 270
+   "line": 271
   }
  },
  {
@@ -6139,7 +6139,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/components/BattleLog.tsx",
-   "line": 271
+   "line": 272
   }
  },
  {
@@ -6149,7 +6149,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/components/BattleLog.tsx",
-   "line": 272
+   "line": 273
   }
  },
  {
@@ -6159,7 +6159,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/components/BattleLog.tsx",
-   "line": 273
+   "line": 274
   }
  },
  {
@@ -6169,7 +6169,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/components/BattleLog.tsx",
-   "line": 274
+   "line": 275
   }
  },
  {
@@ -6179,7 +6179,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/components/BattleLog.tsx",
-   "line": 388
+   "line": 384
   }
  },
  {
@@ -6189,7 +6189,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/components/BattleLog.tsx",
-   "line": 389
+   "line": 385
   }
  },
  {
@@ -6199,7 +6199,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/components/BattleLog.tsx",
-   "line": 417
+   "line": 413
   }
  },
  {
@@ -6209,7 +6209,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/components/BattleLog.tsx",
-   "line": 458
+   "line": 454
   }
  },
  {
@@ -6219,7 +6219,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/components/BattleLog.tsx",
-   "line": 458
+   "line": 454
   }
  },
  {
@@ -6229,7 +6229,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/components/BattleLog.tsx",
-   "line": 458
+   "line": 454
   }
  },
  {
@@ -6239,7 +6239,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/components/BattleLog.tsx",
-   "line": 458
+   "line": 454
   }
  },
  {
@@ -6249,7 +6249,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/components/BattleLog.tsx",
-   "line": 464
+   "line": 460
   }
  },
  {
@@ -6259,7 +6259,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/components/BattleLog.tsx",
-   "line": 465
+   "line": 461
   }
  },
  {
@@ -6269,7 +6269,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/components/BattleLog.tsx",
-   "line": 466
+   "line": 462
   }
  },
  {
@@ -6279,7 +6279,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/components/BattleLog.tsx",
-   "line": 467
+   "line": 463
   }
  },
  {
@@ -6289,7 +6289,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/components/BattleLog.tsx",
-   "line": 468
+   "line": 464
   }
  },
  {
@@ -6299,7 +6299,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/components/BattleLog.tsx",
-   "line": 478
+   "line": 474
   }
  },
  {
@@ -6309,7 +6309,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/components/BattleLog.tsx",
-   "line": 496
+   "line": 492
   }
  },
  {
@@ -6319,7 +6319,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/components/BattleLog.tsx",
-   "line": 496
+   "line": 492
   }
  },
  {
@@ -6329,7 +6329,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/components/BattleLog.tsx",
-   "line": 497
+   "line": 493
   }
  },
  {
@@ -6339,7 +6339,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/components/BattleLog.tsx",
-   "line": 510
+   "line": 506
   }
  },
  {
@@ -6349,7 +6349,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/components/BattleLog.tsx",
-   "line": 514
+   "line": 510
   }
  },
  {
@@ -6359,7 +6359,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/components/BattleLog.tsx",
-   "line": 528
+   "line": 524
   }
  },
  {
@@ -6369,7 +6369,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/components/BattleLog.tsx",
-   "line": 532
+   "line": 528
   }
  },
  {
@@ -6379,7 +6379,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/components/BattleLog.tsx",
-   "line": 536
+   "line": 532
   }
  },
  {
@@ -6389,7 +6389,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/components/BattleLog.tsx",
-   "line": 540
+   "line": 536
   }
  },
  {
@@ -6399,7 +6399,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/components/BattleLog.tsx",
-   "line": 549
+   "line": 545
   }
  },
  {
@@ -6409,7 +6409,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/components/BattleLog.tsx",
-   "line": 552
+   "line": 548
   }
  },
  {
@@ -6419,7 +6419,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/components/BattleLog.tsx",
-   "line": 553
+   "line": 549
   }
  },
  {
@@ -6429,7 +6429,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/components/BattleLog.tsx",
-   "line": 556
+   "line": 552
   }
  },
  {
@@ -6439,7 +6439,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/components/BattleLog.tsx",
-   "line": 558
+   "line": 554
   }
  },
  {
@@ -6449,7 +6449,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/components/BattleLog.tsx",
-   "line": 559
+   "line": 555
   }
  },
  {
@@ -6899,7 +6899,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/components/BoardGrid.tsx",
-   "line": 261
+   "line": 273
   }
  },
  {
@@ -6909,7 +6909,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/components/BoardGrid.tsx",
-   "line": 262
+   "line": 274
   }
  },
  {
@@ -6919,7 +6919,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/components/BoardGrid.tsx",
-   "line": 308
+   "line": 320
   }
  },
  {
@@ -6929,7 +6929,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/components/BoardGrid.tsx",
-   "line": 313
+   "line": 325
   }
  },
  {
@@ -11531,7 +11531,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/components/ResultScreen.tsx",
-   "line": 75
+   "line": 96
   }
  },
  {
@@ -11541,7 +11541,17 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/components/ResultScreen.tsx",
-   "line": 75
+   "line": 96
+  }
+ },
+ {
+  "id": "sdf00f7b",
+  "section": "components/ResultScreen.tsx",
+  "text": "ציון",
+  "where": {
+   "kind": "source",
+   "file": "apps/client/src/components/ResultScreen.tsx",
+   "line": 115
   }
  },
  {
@@ -11551,7 +11561,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/components/ResultScreen.tsx",
-   "line": 82
+   "line": 121
   }
  },
  {
@@ -11561,7 +11571,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/components/ResultScreen.tsx",
-   "line": 86
+   "line": 125
   }
  },
  {
@@ -11571,7 +11581,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/components/ResultScreen.tsx",
-   "line": 135
+   "line": 174
   }
  },
  {
@@ -11581,7 +11591,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/components/ResultScreen.tsx",
-   "line": 136
+   "line": 175
   }
  },
  {
@@ -11591,7 +11601,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/components/ResultScreen.tsx",
-   "line": 138
+   "line": 177
   }
  },
  {
@@ -11601,7 +11611,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/components/ResultScreen.tsx",
-   "line": 139
+   "line": 178
   }
  },
  {
@@ -11611,7 +11621,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/components/ResultScreen.tsx",
-   "line": 144
+   "line": 183
   }
  },
  {
@@ -11621,7 +11631,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/components/ResultScreen.tsx",
-   "line": 153
+   "line": 192
   }
  },
  {
@@ -11631,7 +11641,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/components/ResultScreen.tsx",
-   "line": 163
+   "line": 202
   }
  },
  {
@@ -11641,7 +11651,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/components/ResultScreen.tsx",
-   "line": 169
+   "line": 208
   }
  },
  {
@@ -11651,7 +11661,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/components/ResultScreen.tsx",
-   "line": 182
+   "line": 221
   }
  },
  {
@@ -11661,7 +11671,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/components/ResultScreen.tsx",
-   "line": 185
+   "line": 224
   }
  },
  {

@@ -30,6 +30,7 @@
  */
 import { useCallback, useEffect, useLayoutEffect, useRef, useState } from "react";
 import type { Awaits } from "../game/coach";
+import { wallsAround } from "../game/spotWalls";
 import { line as t } from "../game/copy";
 
 export interface Step {
@@ -69,6 +70,37 @@ export interface Step {
    */
   press?: "target";
   cta?: string;
+  /**
+   * A SECOND thing to light, and to open the wall over.
+   *
+   * ═══ THE CARD YOU ARE HOLDING ═══
+   *
+   * Or: *"in the tutorial you only see the free squares, but the card has to
+   * be lit too, so you can see what you are putting down. And there has to
+   * be a drag option."*
+   *
+   * One ask, two bugs. A step that says "put the giant on that square" lit
+   * the square and left the card in the dark — so a child looking at the
+   * lit thing was looking at the destination and never at the card. And the
+   * card was not merely dim: it was under a wall, and a wall eats the
+   * pointerdown that a drag STARTS with (game/useDrag.ts), so the only way
+   * to place anything in the whole tutorial was a tap.
+   *
+   * Lighting it fixes both, because the hole is what makes it pressable.
+   * See game/spotWalls.ts for how two holes are cut.
+   */
+  also?: string;
+  /**
+   * Show the gesture, once, where the gesture is new.
+   *
+   * Or: *"and a marking for drag or press. Say, on the first card mark it
+   * with an arrow animation to press, and on the second card show — you can
+   * also drag, with a marking and an animation."*
+   *
+   * Set on the first two placing steps of a lesson and nowhere else; coach.ts
+   * works out which those are, so a step added later cannot miss it.
+   */
+  hint?: "tap" | "drag";
 }
 
 interface Props {
@@ -113,13 +145,78 @@ export interface Spot {
  * The spotlight stays. Where to press is still worth saying; it just no
  * longer has to be said in a place the words then have to dodge.
  */
+/**
+ * Where everything a selector finds is, as one box — or null.
+ *
+ * ═══ ALL OF THEM, NOT THE FIRST OF THEM ═══
+ *
+ * Or, on the step that explains the series bonus: *"here you need to light
+ * all three cards together so it is clear."*
+ *
+ * This used `querySelector`, which answers with the first match and nothing
+ * else. The step points at `.slot--synergy` — the engine's own mark on every
+ * card in a lit group — so Amanda said "see the glow around THEM" and ringed
+ * one card. The same silence anywhere a step names more than one square: the
+ * two crumb corners in stage two, the whole back row in the old lesson two.
+ *
+ * ═══ AND A TARGET WITH NO SIZE IS NOT A TARGET ═══
+ *
+ * It used to ask only whether the element EXISTED. An element can exist and
+ * be nowhere: inside a collapsed drawer, inside a panel that has not opened,
+ * inside anything with `height: 0`. The ring is then drawn at 0x0 in the
+ * top-left corner, over nothing, and the step waits for a press that has
+ * nowhere to land.
+ *
+ * Measured in stage three: the x-ray card sat in a shut action drawer and
+ * reported `{top: 0, height: 0, width: 0}` while being perfectly present.
+ * The tutorial stopped there with nothing on the screen to do.
+ *
+ * Treating it as absent is right in both directions — a patient step waits
+ * for the drawer to open, and an impatient one gives up and moves on.
+ */
+function boxOf(selector: string): Spot | null {
+  const all = [...document.querySelectorAll(selector)]
+    .map((e) => e.getBoundingClientRect())
+    .filter((r) => r.width > 0 && r.height > 0);
+  if (!all.length) return null;
+  const top = Math.min(...all.map((r) => r.top));
+  const left = Math.min(...all.map((r) => r.left));
+  const width = Math.max(...all.map((r) => r.right)) - left;
+  const height = Math.max(...all.map((r) => r.bottom)) - top;
+  return width > 0 && height > 0 ? { top, left, width, height } : null;
+}
+
+/**
+ * Only publish a change.
+ *
+ * This runs on every animation frame. Setting a fresh object each time
+ * re-rendered the whole overlay sixty times a second for no reason, and a
+ * re-render that moves nothing still restarts nothing-in-particular all the
+ * way down the tree.
+ */
+const keep =
+  (box: Spot | null) =>
+  (was: Spot | null): Spot | null => {
+    if (!box) return was === null ? was : null;
+    return was &&
+      was.top === box.top &&
+      was.left === box.left &&
+      was.width === box.width &&
+      was.height === box.height
+      ? was
+      : box;
+  };
+
 export function Tutorial({ steps, onDone }: Props) {
   const [i, setI] = useState(0);
   const [spot, setSpot] = useState<Spot | null>(null);
+  /** Where the card being placed is, when the step lights one. */
+  const [also, setAlso] = useState<Spot | null>(null);
   const step = steps[i];
 
   const next = useCallback(() => {
     setSpot(null);
+    setAlso(null);
     if (i + 1 >= steps.length) onDone();
     else setI(i + 1);
   }, [i, steps.length, onDone]);
@@ -130,26 +227,8 @@ export function Tutorial({ steps, onDone }: Props) {
     if (!step?.target) return;
     const selector = step.target;
     let raf = 0;
+    const card = step.also ?? null;
     const measure = () => {
-      /*
-       * ═══ ALL OF THEM, NOT THE FIRST OF THEM ═══
-       *
-       * Or, on the step that explains the series bonus: *"here you need to
-       * light all three cards together so it is clear."*
-       *
-       * This used `querySelector`, which answers with the first match and
-       * nothing else. The step points at `.slot--synergy` — the engine's
-       * own mark on every card in a lit group — so Amanda said "see the
-       * glow around THEM" and ringed one card.
-       *
-       * The same silence anywhere a step names more than one square: the two
-       * crumb corners in stage two, the whole back row in the old lesson
-       * two. Each of them has been ringing one square and describing
-       * several since they were written.
-       *
-       * The ring is the union of everything the selector finds. For a
-       * single match that is the match, which is every other step.
-       */
       /*
        * ═══ A DIALOG IS THE ONLY THING ON THE SCREEN ═══
        *
@@ -167,70 +246,16 @@ export function Tutorial({ steps, onDone }: Props) {
        */
       if (document.querySelector(".modal-overlay")) {
         setSpot((was) => (was === null ? was : null));
+        setAlso((was) => (was === null ? was : null));
         return;
       }
-      const all = [...document.querySelectorAll(selector)].filter((e) => {
-        const r = e.getBoundingClientRect();
-        return r.width > 0 && r.height > 0;
-      });
-      const el = all[0];
-      const b = all.length
-        ? all.reduce(
-            (acc, e) => {
-              const r = e.getBoundingClientRect();
-              return {
-                top: Math.min(acc.top, r.top),
-                left: Math.min(acc.left, r.left),
-                right: Math.max(acc.right, r.right),
-                bottom: Math.max(acc.bottom, r.bottom),
-              };
-            },
-            {
-              top: Infinity,
-              left: Infinity,
-              right: -Infinity,
-              bottom: -Infinity,
-            },
-          )
-        : undefined;
-      const box = b && { top: b.top, left: b.left, width: b.right - b.left, height: b.bottom - b.top };
+      setSpot(keep(boxOf(selector)));
       /*
-       * ═══ A TARGET WITH NO SIZE IS NOT A TARGET ═══
-       *
-       * It used to ask only whether the element EXISTED. An element can
-       * exist and be nowhere: inside a collapsed drawer, inside a panel
-       * that has not opened, inside anything with `height: 0`. The ring is
-       * then drawn at 0x0 in the top-left corner, over nothing, and the
-       * step waits for a press that has nowhere to land.
-       *
-       * Measured in stage three: the x-ray card sits in the action drawer,
-       * the drawer was shut, and `.action-chip__main` reported
-       * `{top: 0, height: 0, width: 0}` while being perfectly present. The
-       * tutorial stopped there with nothing on the screen to do. (That
-       * button has since gone — the card in the drawer IS the button now —
-       * but the rule it taught is the point and it outlived it.)
-       *
-       * Treating it as absent is right in both directions — a patient step
-       * waits for the drawer to open, and an impatient one gives up and
-       * moves on, which are the two behaviours that already exist for a
-       * target that is not there.
+       * The card is lit only while the step is still waiting. The moment it
+       * lands the hand deals the next one, and a ring that stayed on the
+       * hand would be pointing at a card the step has never mentioned.
        */
-      if (!el || !box || box.width <= 0 || box.height <= 0) {
-        setSpot((was) => (was === null ? was : null));
-        return;
-      }
-      // Only publish a change. Setting a fresh object every frame re-rendered
-      // the whole overlay sixty times a second for no reason.
-      setSpot((was) =>
-        was &&
-        was.top === box.top &&
-        was.left === box.left &&
-        was.width === box.width &&
-        was.height === box.height
-          ? was
-          : box,
-      );
-
+      setAlso(keep(card ? boxOf(card) : null));
     };
     const loop = () => {
       measure();
@@ -419,37 +444,88 @@ export function Tutorial({ steps, onDone }: Props) {
             pointing at the board is the right thing to do while describing
             it — and the ring is a picture rather than a door.
           */}
+          {/*
+            ═══ AND THERE CAN BE TWO HOLES NOW ═══
+
+            A placing step lights the square AND the card going on it, which
+            four panels cannot describe — see game/spotWalls.ts, where the
+            screen is cut along every hole edge instead. One hole still comes
+            back as the same four panels this replaced.
+
+            The second hole is not decoration: a drag STARTS with a
+            pointerdown on the card (game/useDrag.ts), and a wall over the
+            card eats it. Lighting the card is what makes dragging possible
+            at all, which is why Or's two asks were one bug.
+          */}
           <div className="tut__wall" onClick={(e) => e.stopPropagation()}>
-            {wantsAPress ? (
-              <>
-                <i style={{ top: 0, left: 0, right: 0, height: Math.max(0, spot.top) }} />
-                <i style={{ top: spot.top + spot.height, left: 0, right: 0, bottom: 0 }} />
-                <i
-                  style={{
-                    top: spot.top,
-                    left: 0,
-                    width: Math.max(0, spot.left),
-                    height: spot.height,
-                  }}
-                />
-                <i
-                  style={{
-                    top: spot.top,
-                    left: spot.left + spot.width,
-                    right: 0,
-                    height: spot.height,
-                  }}
-                />
-              </>
-            ) : (
-              // Nothing to press out there: one sheet over the lot.
-              <i style={{ inset: 0 }} />
+            {wallsAround(also ? [spot, also] : [spot], window.innerWidth, window.innerHeight).map(
+              (r, n) => (
+                <i key={n} style={{ top: r.top, left: r.left, width: r.width, height: r.height }} />
+              ),
             )}
+            {/*
+              The walls are the DARKNESS as well as the floor now, so a
+              talking step cannot simply swap them for one sheet — that
+              would black out the thing it is pointing at. It gets a
+              transparent pane over the top instead: the hole still shows,
+              and nothing in it answers.
+            */}
+            {!wantsAPress && <i className="tut__wall--shut" style={{ inset: 0 }} />}
           </div>
           <div
             className="tut__spot"
             style={{ top: spot.top, left: spot.left, width: spot.width, height: spot.height }}
           />
+          {also && (
+            <div
+              className="tut__spot tut__spot--card"
+              style={{ top: also.top, left: also.left, width: also.width, height: also.height }}
+            />
+          )}
+          {/*
+            ═══ AND THE GESTURE, SHOWN RATHER THAN NAMED ═══
+
+            Or: *"a marking for drag or press. Say, on the first card mark
+            with an arrow animation to press, and on the second card show —
+            you can also drag, with a marking and an animation."*
+
+            No words. The band under it is already a sentence; a label
+            saying "press" beside an arrow pressing is the thing this game
+            has spent a year taking back out. The tap pulses on the square;
+            the drag travels from the card to the square and does it again,
+            which is the whole instruction.
+          */}
+          {step.hint === "tap" && (
+            <div
+              className="tut__hint tut__hint--tap"
+              aria-hidden="true"
+              style={{ top: spot.top + spot.height / 2, left: spot.left + spot.width / 2 }}
+            />
+          )}
+          {step.hint === "drag" && also && (
+            <div
+              className="tut__hint tut__hint--drag"
+              aria-hidden="true"
+              style={{
+                top: also.top + also.height / 2,
+                left: also.left + also.width / 2,
+                // Where it is going: as a vector for the hand to travel
+                // along, and as a length and an angle for the trail it
+                // leaves. Worked out here because CSS cannot do the
+                // arithmetic on two boxes it does not know about.
+                ...(() => {
+                  const dx = spot.left + spot.width / 2 - (also.left + also.width / 2);
+                  const dy = spot.top + spot.height / 2 - (also.top + also.height / 2);
+                  return {
+                    ["--to-x" as string]: `${dx}px`,
+                    ["--to-y" as string]: `${dy}px`,
+                    ["--len" as string]: `${Math.hypot(dx, dy)}px`,
+                    ["--ang" as string]: `${(Math.atan2(dy, dx) * 180) / Math.PI}deg`,
+                  };
+                })(),
+              }}
+            />
+          )}
         </>
       )}
       {/*

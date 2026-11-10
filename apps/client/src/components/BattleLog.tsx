@@ -16,6 +16,7 @@ import { CATALOG } from "../data/catalog";
 import { ELEMENT_META, RANGE_META, seriesColor } from "../data/cardMeta";
 import { Overlay } from "./Overlay";
 import { say } from "../game/lang";
+import { gradeBand } from "../game/verdict";
 import { line as t, lineF as tf } from "../game/copy";
 
 
@@ -335,11 +336,6 @@ export function BattleLog({ result, mySide }: { result: BattleResult; mySide: Ow
       )}
     </div>
   );
-}
-
-/** Colour band for a match grade. */
-function gradeBand(score: number): "bad" | "ok" | "good" {
-  return score >= 8 ? "good" : score >= 5 ? "ok" : "bad";
 }
 
 /** Which bucket a card falls into, for the heat colouring. */

@@ -368,8 +368,19 @@ describe("a step that only talks", () => {
 
   it("is what the overlay decides on, not the selector", () => {
     expect(TUTORIAL).toMatch(/const wantsAPress =\s*Boolean\(step\.awaits\) \|\| step\.press === "target"/);
-    // And the hole is cut only when it is true.
-    expect(TUTORIAL).toContain("{wantsAPress ? (");
+    /*
+     * And a step that only talks is shut.
+     *
+     * ⚠ THE SHAPE OF THIS CHANGED AND THE RULE DID NOT. It used to read
+     * `{wantsAPress ? (four panels) : (one sheet)}` — the hole existed only
+     * on a live step. Then the dimming moved off the ring and onto the
+     * walls (see game/spotWalls.ts, which cuts two holes for a step that
+     * lights the card as well as the square), and one sheet over the lot
+     * would now black out the very thing being pointed at. So the walls are
+     * always the shape of the holes, and a talking step gets a TRANSPARENT
+     * pane on top: the hole still shows, and nothing in it answers.
+     */
+    expect(TUTORIAL).toContain('{!wantsAPress && <i className="tut__wall--shut"');
   });
 
   /*
