@@ -54,17 +54,23 @@ const CATALOG = new Map<string, Card>([
   // A wall of its own side: it does not move, so anything behind it on the
   // ground has to stop and wait.
   ["ally_wall", card("ally_wall", { move: 0, hp: 9000 })],
+  // The same wall, in the air. Or: *"'flying in place' means he does not
+  // move, but walkers can pass under him?"* This is the card that answers it.
+  ["ally_hover", card("ally_hover", { move: 0, hp: 9000, flying: true })],
   // Something to walk towards, far away and harmless, so the only thing
   // deciding where anybody ends up is the wall.
   ["far", card("far", { hp: 90000, power: 0, move: 0 })],
 ]);
 
 /** How far the mover got, as a column, after a full battle. */
-function reached(mover: "walker" | "flyer"): number {
+function reached(
+  mover: "walker" | "flyer",
+  infront: "ally_wall" | "ally_hover" | null = "ally_wall",
+): number {
   const placements: BoardInput["placements"] = [
     // The mover at the back, its own wall directly in front of it.
     { cardId: mover, x: 0, y: 0 },
-    { cardId: "ally_wall", x: 1, y: 0 },
+    ...(infront ? [{ cardId: infront, x: 1, y: 0 }] : []),
   ];
   const r = runBattle({
     a: { owner: "A", placements },
@@ -126,7 +132,7 @@ describe("a card that flies", () => {
     expect(src.match(/if \(!u\.flying\)/g) ?? [], "forward and sideways").toHaveLength(2);
   });
 
-  it("does nothing whatsoever for a card that cannot move", () => {
+  it("does nothing for the hovering card's OWN movement", () => {
     /*
      * ═══ "WHAT IS STATIC FLYING? HE SHOULD FLY, SHOULDN'T HE?" ═══
      *
@@ -140,11 +146,22 @@ describe("a card that flies", () => {
      * the other `if (!u.flying)` — is called under the same condition. A
      * card with moveSpeed 0 reaches neither, so the flag is read by nobody.
      *
-     * Measured below rather than argued: the same card, flying and not
-     * flying, fights a bit-identical battle. Five cards are in this
-     * position today — Torch, the Typhoon Dragon, the Sky King, the Insect
-     * Empress and the Floating Brain — and on all five the word is
-     * decoration.
+     * Measured below rather than argued: the same card ALONE on its side,
+     * flying and not flying, fights a bit-identical battle. Five cards are
+     * in this position today — Torch, the Typhoon Dragon, the Sky King, the
+     * Insect Empress and the Floating Brain.
+     *
+     * ⚠ AND THIS WAS OVERSTATED WHEN IT WAS WRITTEN, SO THE CORRECTION
+     * BELONGS HERE RATHER THAN IN A COMMIT NOBODY WILL READ AGAIN. It said
+     * the flag was "read by nobody". That stopped being true an hour later:
+     * Or answered the question with a rule — *"he does not move, but walkers
+     * can pass under him"* — and `blockingAlly` now reads `flying` on every
+     * ally ahead in the lane. So a hovering card no longer walls in its own
+     * side, which is the test above this one.
+     *
+     * What is still true, and is all this one claims, is that the flag does
+     * nothing for the hovering card's OWN movement: both branches that use
+     * it for the unit itself sit behind `effectiveMoveSpeed(u) > 0`.
      *
      * ⚠ AND THE OBVIOUS FIX IS A TRAP, WHICH IS WHY IT IS WRITTEN DOWN
      * HERE. Giving the Typhoon a moveSpeed does not make him fly; it makes
@@ -180,6 +197,43 @@ describe("a card that flies", () => {
     expect(shape(fly), "a hovering card is not using its wings for anything").toEqual(
       shape(ground),
     );
+  });
+
+  it("is not a wall for its own side either", () => {
+    /*
+     * ═══ "WALKERS CAN PASS UNDER HIM" ═══
+     *
+     * Or, giving the word a meaning the engine did not have: *"'flying in
+     * place' means he does not move, but walkers can pass under him?"*
+     *
+     * They could not. `blockingAlly` counted every living body ahead in the
+     * lane, and nothing in it asked whether that body was standing on the
+     * floor — so a hovering Typhoon Dragon or Sky King held up the whole
+     * lane behind it exactly as a Stone Colossus does. Measured before the
+     * fix: a walker with a clear lane reaches 2.40, and behind a HOVERING
+     * ally it reached 0.00 — the same 0.00 as behind a standing one. It
+     * never left the square it started on.
+     *
+     * That is the one reading of "flying" that costs the card nothing and
+     * its owner a whole unit, and it was the reading in the code.
+     *
+     * Across 600 real-catalogue battles with that exact shape forced onto
+     * the board — a static flyer at the front of a lane, a Rock Troll
+     * behind it — the troll's mean final column went 3.17 → 4.17, a full
+     * column further, every battle. Outcomes moved by two battles in six
+     * hundred, so the rule frees a unit without moving the balance.
+     */
+    const clear = reached("walker", null);
+    const underHover = reached("walker", "ally_hover");
+    const behindWall = reached("walker", "ally_wall");
+    expect(underHover, "it is still queued behind something in the air").toBe(clear);
+    /*
+     * ⚠ AND THE OTHER HALF, WHICH IS WHAT KEEPS THIS A RULE ABOUT FLYING
+     * RATHER THAN A DELETED QUEUE. Lane discipline is Or's own: *"part of
+     * the wisdom is building the board so that you do not put someone
+     * walking behind someone static."* A card on the GROUND still blocks.
+     */
+    expect(behindWall, "the ground queue is gone, which was never the ask").toBeLessThan(clear);
   });
 
   it("still stops to fight what is in front of it", () => {

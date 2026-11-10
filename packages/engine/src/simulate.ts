@@ -739,11 +739,38 @@ export function runBattle(setup: BattleSetup): BattleResult {
    * Ground units queue up behind their own front line instead of walking
    * through it; flyers pass over and ignore this entirely.
    */
+  /**
+   * The nearest of its own standing in front of it, which it must queue behind.
+   *
+   * ═══ NOTHING IN THE AIR IS A WALL ═══
+   *
+   * Or, giving the word its meaning: *"'flying in place' means he does not
+   * move, but walkers can pass under him?"*
+   *
+   * They could not. A hovering ally was counted here like any other body in
+   * the lane, so a Typhoon Dragon or a Sky King parked at the front held up
+   * everything behind it exactly as a Stone Colossus does. Measured: a walker
+   * with a clear lane reaches column 2.40; behind a HOVERING ally it reaches
+   * 0.00 — the same 0.00 as behind a standing one. It never left the square
+   * it started on.
+   *
+   * That is the only reading of "flying" that costs a card nothing and its
+   * owner everything, and it was the one in the code. A thing in the air does
+   * not block a lane; you walk under it.
+   *
+   * ⚠ THIS IS THE OWN-SIDE HALF ONLY. An ENEMY flyer still stops a walker,
+   * because stopping is how this engine attacks — a melee card that walked
+   * under an enemy instead of engaging it would make every hovering card
+   * untouchable by half the board, the Sky King at 1,450hp included. That is
+   * a far larger rule and it is Or's to call, not a side effect of this one.
+   */
   function blockingAlly(u: Unit): Unit | null {
     let best: Unit | null = null;
     let bestGap = Infinity;
     for (const o of state.units) {
       if (!o.alive || o === u || o.owner !== u.owner) continue;
+      // Under it, not behind it.
+      if (o.flying) continue;
       if (!sharesLane(o, u) || !isAhead(u, o)) continue;
       const gap = gapAhead(u, o);
       if (gap < bestGap) {
