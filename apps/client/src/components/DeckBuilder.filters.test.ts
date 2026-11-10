@@ -87,6 +87,37 @@ describe("the album filter", () => {
     }
   });
 
+  it("keeps the ones that fly apart from the ones that hover", () => {
+    /*
+     * Or: *"split the filter in the deck builder too."* The cards were split
+     * first — *"flying is forwards, hovering is on the spot"* — and this was
+     * the last place answering one question for both: עפים tested the raw
+     * flag, so it returned the Sky King, who has never advanced an inch,
+     * alongside the Drone.
+     *
+     * Three things worth holding, and the third is the one that catches a
+     * lazy fix: neither chip may be empty, they may not overlap, and
+     * together they must still be every flyer — a split that loses a card is
+     * worse than no split, because the card is simply gone from both.
+     */
+    const flies = keep(ALL, GROUPS, pick("move:fly"));
+    const hovers = keep(ALL, GROUPS, pick("move:hover"));
+    expect(flies.length, "nothing flies").toBeGreaterThan(0);
+    expect(hovers.length, "nothing hovers").toBeGreaterThan(0);
+    expect(
+      flies.filter((c) => hovers.includes(c)),
+      "a card is in both halves",
+    ).toEqual([]);
+    expect(ids([...flies, ...hovers]), "the split lost a flyer").toEqual(
+      ids(ALL.filter((c) => c.flying)),
+    );
+    // And each chip means what the card says. A flyer with a pace is מעופף;
+    // a flyer without one is מרחף.
+    for (const c of flies) expect(c.stats.moveSpeed, `${c.id} does not advance`).toBeGreaterThan(0);
+    for (const c of hovers) expect(c.stats.moveSpeed, `${c.id} advances`).toBe(0);
+    for (const c of [...flies, ...hovers]) expect(c.flying, `${c.id} is not in the air`).toBe(true);
+  });
+
   it("splits the album in two on movement, with nothing falling between", () => {
     const moves = keep(ALL, GROUPS, pick("move:moves"));
     const still = keep(ALL, GROUPS, pick("move:static"));

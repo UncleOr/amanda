@@ -33,6 +33,7 @@ import {
   canAdd,
   cardCost,
   deckCost,
+  hovers,
   myBacks,
   type Card,
   type Deck,
@@ -114,6 +115,19 @@ const SORTS: Array<{ id: SortBy; label: () => string }> = [
  *     healers 6 · returns damage 7 · armoured 4 · moving 24 · still 27
  *
  * `has an ability` was the obvious one to add and it is 49 of 51. Left out.
+ *
+ * ═══ AND FLYING IS TWO BUTTONS, BECAUSE IT IS TWO THINGS ═══
+ *
+ * Or: *"split the filter in the deck builder too."* The cards had already
+ * been split — *"flying is forwards, hovering is on the spot"* — and this
+ * was the last place still answering one question for both: עפים tested the
+ * raw flag, so ticking it returned the Sky King, who has never advanced an
+ * inch, alongside the Drone.
+ *
+ * Measured over the launched cards before splitting them, because a filter
+ * that returns almost nothing is as useless as one that returns almost
+ * everything: 8 flying, which is 4 that advance and 4 that hover. An even
+ * cut, and both halves are worth a button.
  */
 const has = (c: Card, ...types: string[]) =>
   c.abilities.some((a) => types.includes(a.type));
@@ -138,7 +152,13 @@ export const FIXED_GROUPS: Group[] = [
     choices: [
       { id: "moves", label: () => t("s91ecd04", "זזים"), test: (c) => c.stats.moveSpeed > 0 },
       { id: "static", label: () => t("s3fc66d9", "סטטיים"), test: (c) => c.stats.moveSpeed === 0 },
-      { id: "fly", label: () => t("s1d926cf", "עפים"), test: (c) => c.flying },
+      {
+        id: "fly",
+        label: () => t("s1d926cf", "עפים"),
+        // The flag AND a pace, which is what the word means on the card now.
+        test: (c) => c.flying && c.stats.moveSpeed > 0,
+      },
+      { id: "hover", label: () => t("s5248986", "מרחפים"), test: (c) => hovers(c) },
     ],
   },
   {
