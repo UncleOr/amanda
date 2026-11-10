@@ -37,6 +37,25 @@
    */
   z-index: 70;
   animation: fade 0.15s ease-out;
+  /* For --peek below. Not on the sheet's own fade-in, which is a different
+     125 milliseconds and would otherwise be fought over. */
+  transition: background 0.18s ease-out;
+}
+/*
+ * ═══ THE SHEET GOES CLEAR WHILE A PRIZE IS IN THE AIR ═══
+ *
+ * Or: *"a challenges window that doesn't close after taking, so I can take
+ * more."* It did close, and for a real reason — the purse and the nacho bar
+ * a prize flies to are behind this sheet, so an opaque one hid the whole
+ * animation. See the challenges panel in App.tsx.
+ *
+ * The glass is the only thing that moves. The modal itself stays solid, in
+ * place and pressable throughout: the token is z-index 210 and flies over
+ * all of it anyway (effects.css), and a list that fades under your thumb
+ * while you reach for the next "take" reads as a bug, not as a flourish.
+ */
+.modal-overlay--peek {
+  background: rgba(3, 6, 14, 0.12);
 }
 @keyframes fade { from { opacity: 0; } to { opacity: 1; } }
 .modal {

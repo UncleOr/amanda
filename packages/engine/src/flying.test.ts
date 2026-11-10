@@ -126,6 +126,62 @@ describe("a card that flies", () => {
     expect(src.match(/if \(!u\.flying\)/g) ?? [], "forward and sideways").toHaveLength(2);
   });
 
+  it("does nothing whatsoever for a card that cannot move", () => {
+    /*
+     * ═══ "WHAT IS STATIC FLYING? HE SHOULD FLY, SHOULDN'T HE?" ═══
+     *
+     * Or, reading the Typhoon Dragon's card on 10 November 2026. The card
+     * says תנועה: מעופף, במקום — "flying, in place" — and he is right that
+     * it reads as a contradiction. It is worse than that: in the engine it
+     * is not a contradiction, it is NOTHING.
+     *
+     * Both halves of `flying` hang off movement. `driftTowardLane` is called
+     * only when `effectiveMoveSpeed(u) > 0`, and `moveUnit` — which holds
+     * the other `if (!u.flying)` — is called under the same condition. A
+     * card with moveSpeed 0 reaches neither, so the flag is read by nobody.
+     *
+     * Measured below rather than argued: the same card, flying and not
+     * flying, fights a bit-identical battle. Five cards are in this
+     * position today — Torch, the Typhoon Dragon, the Sky King, the Insect
+     * Empress and the Floating Brain — and on all five the word is
+     * decoration.
+     *
+     * ⚠ AND THE OBVIOUS FIX IS A TRAP, WHICH IS WHY IT IS WRITTEN DOWN
+     * HERE. Giving the Typhoon a moveSpeed does not make him fly; it makes
+     * him walk out of his own lane towards whatever he is shooting at,
+     * stand in front of the wall that was covering him, and die. Measured
+     * on his real numbers — 580hp against one ordinary attacker — he went
+     * from surviving the battle and dealing 18,431 to being killed partway
+     * through for 3,500. An 81% cut, from a change that reads on paper like
+     * a buff.
+     *
+     * So this test is not here because the behaviour is right. It is here
+     * so that the day somebody makes flying mean something while hovering,
+     * this fails and says so, instead of five cards quietly changing.
+     */
+    const fly = runBattle({
+      a: { owner: "A", placements: [{ cardId: "ally_wall", x: 0, y: 0 }] },
+      b: { owner: "B", placements: [{ cardId: "far", x: 3, y: 1 }] },
+      seed: 7,
+      catalog: new Map(CATALOG).set("ally_wall", card("ally_wall", { move: 0, hp: 9000, flying: true })),
+      synergies: [],
+    });
+    const ground = runBattle({
+      a: { owner: "A", placements: [{ cardId: "ally_wall", x: 0, y: 0 }] },
+      b: { owner: "B", placements: [{ cardId: "far", x: 3, y: 1 }] },
+      seed: 7,
+      catalog: CATALOG,
+      synergies: [],
+    });
+    const shape = (r: ReturnType<typeof runBattle>) => {
+      const u = r.finalUnits.find((x) => x.cardId === "ally_wall")!;
+      return { col: u.col, lanes: u.lanes.join(","), hp: u.hp, ticks: r.ticks };
+    };
+    expect(shape(fly), "a hovering card is not using its wings for anything").toEqual(
+      shape(ground),
+    );
+  });
+
   it("still stops to fight what is in front of it", () => {
     /*
      * The other half of Or's question. "Advances even when somebody is

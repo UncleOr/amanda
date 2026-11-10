@@ -19,6 +19,28 @@
   color-scheme: dark;
 
   /*
+   * ── won and lost, as two different colours of light ──
+   *
+   * Or: *"make the visual between winning and losing more distinct. Right
+   * now the background looks identical at first glance."*
+   *
+   * He is right, and on his screen it was almost literally identical. Both
+   * cards are `--panel`; the only difference was a border — gold against
+   * grey-blue, one pixel wide — and under 560px of height the illustration
+   * stops being the top of the card and becomes a 42% wash behind the
+   * words, which is the one place two different paintings stop reading as
+   * two different paintings. A landscape phone is 390 tall, so that is the
+   * version he sees every time.
+   *
+   * Two washes and nothing else new: the win is lit from inside, the loss
+   * is the same room with the light off. Tokens rather than rgba() in the
+   * component, because "about twenty panel backgrounds differing by 1–3%"
+   * is how the last round of this started.
+   */
+  --wash-win: rgba(255, 176, 32, 0.22);
+  --wash-lose: rgba(40, 62, 110, 0.5);
+
+  /*
    * ════════ THE DESIGN SYSTEM ════════
    *
    * Or: *"this goes beyond fitting pixels to screens. All our screens don't

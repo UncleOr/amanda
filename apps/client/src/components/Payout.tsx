@@ -32,9 +32,20 @@ export function Payout({
    * sentence names the thing; pressing the name should be pressing the thing.
    */
   onOpenChest,
+  /**
+   * Open today's challenges, from the line that says one was finished.
+   *
+   * Or: *"at the end of a battle, when you press '3 challenges completed',
+   * take me to the challenges."* The same complaint as the chest, and the
+   * same answer: the sentence names a thing, so pressing the name should be
+   * pressing the thing. Finishing a challenge and then being made to go and
+   * find it is the longest possible route to a prize that is already won.
+   */
+  onChallenges,
 }: {
   award: Award | null;
   onOpenChest?: () => void;
+  onChallenges?: () => void;
 }) {
   if (!award) return null;
   const done = award.moved.filter((c) => c.done).length;
@@ -101,10 +112,22 @@ export function Payout({
         </button>
       ))}
       {done > 0 && (
-        <span className="payout__bit payout__bit--quest">
+        <button
+          type="button"
+          className="payout__bit payout__bit--quest"
+          /* The thump under the thumb on this frame, same as the chest —
+             what is behind it is a panel, not a round trip, but a button
+             that does nothing for 100ms is a button that gets pressed
+             twice. */
+          onClick={(e) => {
+            pressed(e.currentTarget, { sound: "click", buzz: "gems" });
+            onChallenges?.();
+          }}
+          disabled={!onChallenges}
+        >
           <Icon name="challenge" size={17} />{" "}
           {done === 1 ? t("s1b4740d", "אתגר הושלם") : tf("s440773f", "{0} אתגרים הושלמו", done)}
-        </span>
+        </button>
       )}
       {/* How close the next one is, so the screen that says "play again"
           also says why. Only when the bar is nearly full — "4 more" is not

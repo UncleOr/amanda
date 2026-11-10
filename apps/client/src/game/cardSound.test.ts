@@ -22,7 +22,7 @@ import { existsSync, readFileSync, statSync } from "node:fs";
 import { fileURLToPath } from "node:url";
 import { CATALOG } from "../data/catalog";
 import {
-  ALL_AMANDA, dragMix, voiceFor, VOICE_CLIPS } from "./cardSound";
+  ALL_AMANDA, AMANDA_CARD, AMANDA_LINES, dragMix, tapVoice, voiceFor, VOICE_CLIPS } from "./cardSound";
 
 const SRC = fileURLToPath(new URL("./cardSound.ts", import.meta.url));
 const SFX = fileURLToPath(new URL("../../public/sfx/", import.meta.url));
@@ -219,6 +219,52 @@ describe("what a card sounds like while it is carried", () => {
        * Proved by taking the line out again and watching it fail.
        */
       expect(body, `${fn} never unlocks the audio`).toContain("sfx.unlock();");
+    }
+  });
+
+  it("gives Amanda a different line each time she is picked up", () => {
+    /*
+     * ⚠ THE THIRD EVENING OF THE SAME REPORT. Or: *"I still cannot hear
+     * Amanda in the playground."*
+     *
+     * Twice before, the answer was a wiring fault — nothing decoded her
+     * clips, and one match start never unlocked the audio. Both were real
+     * and both are fixed, and she was STILL silent, because the playground
+     * plays `voiceFor(id).name` on the press and Amanda has no `name`. Her
+     * seven lines were wired to her MODE and never to her CARD.
+     *
+     * So the two things worth holding: she answers at all, and she does not
+     * answer the same way twice. A constant would have been one line in
+     * CARDS and would have quietly undone *"several random options"*.
+     */
+    const seen = new Set<string>();
+    for (let i = 0; i < 200; i++) {
+      const line = tapVoice(AMANDA_CARD);
+      expect(line, "Amanda says nothing when she is picked up").toBeDefined();
+      expect(AMANDA_LINES.hello, `${line} is not one of her arrival lines`).toContain(line);
+      seen.add(line!);
+    }
+    expect(seen.size, "she says the same thing every time").toBeGreaterThan(1);
+    // And everything else answers exactly as it did before.
+    expect(tapVoice("dragons_04_lava")).toBe("card-name-lava");
+    expect(tapVoice("dragons_08_ghost_dragon")).toBeUndefined();
+  });
+
+  it("asks the cards for their tap voice through the one function that knows her", () => {
+    /*
+     * ⚠ AND THE SPECIAL CASE IS WORTH NOTHING IF A CALLER WALKS ROUND IT.
+     *
+     * `voiceFor(id).name` is the expression that was written at each of the
+     * three places a card is pressed, and it is the expression that makes
+     * her silent. Writing it again anywhere is the same bug returning, so
+     * it is banned in the screens — `voiceFor` itself stays public for the
+     * cry and the drag, which are not a tap.
+     */
+    for (const file of ["../App.tsx", "../components/CardEditor.tsx"]) {
+      const text = readFileSync(fileURLToPath(new URL(file, import.meta.url)), "utf8");
+      expect(text, `${file} reads a tap voice straight out of voiceFor`).not.toContain(
+        "voiceFor(",
+      );
     }
   });
 

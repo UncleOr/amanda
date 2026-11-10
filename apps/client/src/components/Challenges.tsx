@@ -58,20 +58,24 @@ export function Challenges({
   /** Run after a reward is taken, so the purse on screen catches up. */
   onClaimed,
   /**
-   * Run the moment the server says yes, BEFORE the prize flies.
+   * A prize has just left this list, and here is when it lands.
    *
-   * Or: *"I had a challenge, I pressed to take the things, but I didn't see
-   * any cool animation."*
+   * Or, first: *"I had a challenge, I pressed to take the things, but I
+   * didn't see any cool animation."* On a phone this list is a modal over
+   * the home screen (see App.tsx), and the places a prize flies TO — the
+   * diamond in the purse, the nacho bar — are on the home screen, in the
+   * DOM and completely covered by that modal. The animation ran every
+   * time, correctly, underneath an opaque panel.
    *
-   * On a phone this list is a modal over the home screen (see App.tsx), and
-   * the places the prize flies TO — the diamond in the purse, the nacho bar
-   * — are on the home screen, still in the DOM and completely covered by
-   * that modal. So the animation ran every time, correctly, underneath an
-   * opaque panel.
+   * The answer then was to close the panel. Or, now: *"a challenges window
+   * that doesn't close after taking, so I can take more."* Which is the
+   * cost of that answer — three finished challenges meant opening the same
+   * panel three times, and the panel is the slowest thing on the home
+   * screen to open.
    *
-   * The caller uses this to close the panel first. Nothing is lost by
-   * closing it: the button has already done its job, and the prize landing
-   * in the bar is the thing that replaces it.
+   * ⚠ SO THE PROMISE IS THE WHOLE POINT OF THIS CALLBACK NOW. It resolves
+   * when the last token touches down, which lets the caller get out of the
+   * way for exactly that long instead of closing for good. See App.tsx.
    */
   onTaking,
   /** Bumped by the caller after a match, to re-read the progress. */
@@ -81,7 +85,7 @@ export function Challenges({
   guest: boolean;
   gated: (open: () => void) => () => void;
   onClaimed?: () => void;
-  onTaking?: () => void;
+  onTaking?: (landed: Promise<void>) => void;
   reloadKey?: unknown;
 }) {
   /*
@@ -161,10 +165,7 @@ export function Challenges({
     pressed(button, { sound: "newcard", buzz: "gems" });
     // 2. The row is taken. Locally, now — the server is told below.
     setTaken((was) => new Set(was).add(id));
-    // 3. Out of the way: the purse and the nacho bar this flies TO are on
-    //    the home screen, behind this panel. See onTaking.
-    onTaking?.();
-    // 4. And the prize is in the air.
+    // 3. The prize is in the air.
     const landed =
       prize && from
         ? flyReward({
@@ -174,6 +175,9 @@ export function Challenges({
             from,
           })
         : Promise.resolve();
+    // 4. And the caller gets out of its way until it lands — see onTaking.
+    //    After it, not before: `landed` is what this hands over.
+    onTaking?.(landed);
 
     // And only now, underneath all of that, the part that is slow.
     void (async () => {

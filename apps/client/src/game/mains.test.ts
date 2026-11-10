@@ -181,8 +181,15 @@ describe("when a card says its name", () => {
    * right.
    */
   it("says it on the press that picks the card up", () => {
-    expect(APP).toContain("sfx.voice(voiceFor(m.hand!).name)");
-    expect(APP).toContain("if (!ACTIONS.has(id)) sfx.voice(voiceFor(id).name);");
+    /*
+     * ⚠ `tapVoice`, NOT `voiceFor(...).name`, SINCE 10 NOVEMBER 2026. The
+     * two were the same expression until Amanda needed a different line
+     * every time she is picked up — see tapVoice in cardSound.ts. The
+     * screens must go through it, because going round it is exactly the
+     * bug that left her silent in the playground.
+     */
+    expect(APP).toContain("sfx.voice(tapVoice(m.hand!))");
+    expect(APP).toContain("if (!ACTIONS.has(id)) sfx.voice(tapVoice(id));");
   });
 
   it("says nothing when a card is merely opened to be read", () => {

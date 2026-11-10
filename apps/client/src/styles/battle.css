@@ -109,11 +109,23 @@
   -webkit-mask-image: linear-gradient(180deg, #000 58%, transparent 97%);
   mask-image: linear-gradient(180deg, #000 58%, transparent 97%);
 }
+/*
+ * And the picture itself takes a side.
+ *
+ * The second half of Or's *"the background looks identical at first
+ * glance"*. Two illustrations behind a 42% veil are two grey rectangles;
+ * the colour is what survives at that opacity, so the colour is what has
+ * to differ. A win is turned up, a loss has most of it drained out —
+ * which is also the oldest shorthand there is for the two outcomes and
+ * needs no explaining to a seven-year-old.
+ */
 .result__card--win .result__scene {
   background-image: var(--scene-win);
+  filter: saturate(1.2) brightness(1.06);
 }
 .result__card--lose .result__scene {
   background-image: var(--scene-lose);
+  filter: saturate(0.3) brightness(0.72);
 }
 /*
  * The words sit over the bottom of the picture, not under it. Pulled up by
@@ -178,6 +190,16 @@
     -webkit-mask-image: none;
     mask-image: none;
   }
+  /*
+   * ⚠ AND THIS IS THE WINDOW OR ACTUALLY PLAYS IN — a landscape phone is
+   * 390px tall. Here the picture is not the top of the card, it is the
+   * whole card at 42%, so the two endings have one pixel of border between
+   * them and nothing else. The win is brought up and the loss pushed
+   * further down than at full height, because 42% of a difference is not a
+   * difference.
+   */
+  .result__card--win .result__scene { opacity: 0.55; }
+  .result__card--lose .result__scene { opacity: 0.3; }
   .result__body {
     margin-top: 0;
     padding-top: 22px;

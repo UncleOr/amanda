@@ -145,7 +145,7 @@ describe("seeing, hearing and carrying a card", () => {
    * is a second way to hear a thing the panel exists to show as it is.
    */
   it("says the name on the press that starts the carry, and from nowhere else", () => {
-    expect(EDITOR).toContain("sfx.voice(voiceFor(draft.id).name)");
+    expect(EDITOR).toContain("sfx.voice(tapVoice(draft.id))");
     expect(EDITOR, "the play button is back").not.toContain("ed__hear");
     expect((EDITOR.match(/sfx\.voice/g) ?? []).length).toBe(1);
   });

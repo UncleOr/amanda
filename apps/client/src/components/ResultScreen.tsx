@@ -91,7 +91,17 @@ export function ResultScreen({
           {/* And what it was worth. Arrives a round trip after the result,
               because the server re-runs the battle before paying anything —
               and draws nothing at all until it does. */}
-          <Payout award={m.award} onOpenChest={onOpenChest} />
+          {/*
+            The challenges open from here through the same `panel` the rest
+            of this screen already uses for the report dialog — it is
+            rendered at the top of App, outside every phase, so it opens
+            over the result exactly as it opens over the home screen.
+          */}
+          <Payout
+            award={m.award}
+            onOpenChest={onOpenChest}
+            onChallenges={() => panel.show("challenges")}
+          />
           {/* The two of you, after the fact. The end-of-match lines unlock
               here — "good game" means nothing during the build phase. */}
           {m.online && !m.playground && (

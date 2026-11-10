@@ -159,10 +159,47 @@
   background: rgba(143, 211, 255, 0.14);
   color: #8fd3ff;
 }
+/*
+ * The search box and its X, as one pill.
+ *
+ * The wrapper is what flexes now; the input fills it. The button sits ON the
+ * box rather than after it, because a clear button outside the field it
+ * clears reads as a second control.
+ */
+.rack__find {
+  flex: 1;
+  min-width: 0;
+  position: relative;
+  display: flex;
+}
+.rack__clear {
+  position: absolute;
+  /* Logical, so it stays on the closing edge in Hebrew and in English. */
+  inset-inline-end: 4px;
+  top: 50%;
+  transform: translateY(-50%);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 20px;
+  height: 20px;
+  padding: 0;
+  border: 0;
+  border-radius: 999px;
+  background: transparent;
+  color: var(--muted);
+  cursor: pointer;
+}
+.rack__clear:hover {
+  color: var(--text);
+  background: rgba(255, 255, 255, 0.08);
+}
 .rack__search {
   flex: 1;
   min-width: 0;
+  /* Room on the closing edge for the X, which overlaps the text otherwise. */
   padding: 5px 12px;
+  padding-inline-end: 26px;
   border-radius: 999px;
   border: 1px solid var(--line);
   background: rgba(8, 12, 22, 0.8);

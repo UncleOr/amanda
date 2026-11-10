@@ -547,6 +547,45 @@ export function voiceFor(cardId: string): CardVoice {
 }
 
 /**
+ * ═══ AND THE ONE CARD WHOSE NAME IS SEVEN DIFFERENT SENTENCES ═══
+ *
+ * Or, on the evening after her clips went live: *"I still cannot hear Amanda
+ * in the playground."*
+ *
+ * She was silent because `voiceFor` is a lookup of ONE slug per card, and
+ * Amanda has never had one. Her seven lines were wired to her MODE — a
+ * `sfx.amanda()` when the match begins, another when the fighting starts —
+ * and nowhere to the card. So the one place in the game built for picking a
+ * card up and hearing what it is was the one place she could not be heard.
+ *
+ * ⚠ THE FIX IS NOT AN ENTRY IN `CARDS`, DELIBERATELY. A name there is a
+ * constant, and the whole point of hers is that it is not one: Or asked for
+ * *"several random options"*, and a card that says the same sentence every
+ * time you touch it is the opposite of that. So the tap asks for a LINE, and
+ * the choice happens at the moment of the tap.
+ *
+ * `hello` and not `hungry`, because picking a card up is an arrival. "Dinner
+ * is ready" belongs over a board that is already fighting, which is where
+ * App.tsx plays it.
+ */
+export const AMANDA_CARD = "legends_01_amanda";
+
+/**
+ * What a card says the instant it is pressed — the slug, not the sound.
+ *
+ * Every caller already had `voiceFor(id).name` written out; this exists so
+ * that the one card whose answer is a dice roll does not have to be special
+ * -cased at four call sites. Everything else answers exactly as before.
+ */
+export function tapVoice(cardId: string): string | undefined {
+  if (cardId === AMANDA_CARD) {
+    const pool = AMANDA_LINES.hello;
+    return pool[Math.floor(Math.random() * pool.length)];
+  }
+  return voiceFor(cardId).name;
+}
+
+/**
  * Every clip any card can ask for, so they can all be decoded at unlock.
  *
  * Eight small files today. The day this is fifty-three it becomes a reason

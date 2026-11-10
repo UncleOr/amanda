@@ -37,7 +37,7 @@ describe("the playground's held card", () => {
 
   it("says its name on the way, like the hand in a match does", () => {
     const lab = APP.slice(APP.indexOf('className={`lab__held'), APP.indexOf("lab__eraser"));
-    expect(lab).toContain("sfx.voice(voiceFor(m.hand!).name)");
+    expect(lab).toContain("sfx.voice(tapVoice(m.hand!))");
   });
 
   it("uses the same drag the match does, not a second one", () => {

@@ -52,7 +52,7 @@ import { Tunnel } from "./components/Tunnel";
 import { useDrag } from "./game/useDrag";
 import { sfx } from "./game/sfx";
 import { haptics } from "./game/haptics";
-import { voiceFor } from "./game/cardSound";
+import { AMANDA_CARD, tapVoice } from "./game/cardSound";
 import { music } from "./game/music";
 import { ACTIONS, CATALOG, cardPool, isEnemyTargeted, synergyGroups } from "./data/catalog";
 import { artUrl } from "./game/skins";
@@ -381,6 +381,12 @@ function Game() {
    * See useOverlay.ts for why that matters.
    */
   const panel = useOverlay();
+  /*
+   * A prize from the challenges panel is mid-flight — see that panel below.
+   * It is one boolean rather than a count because two prizes cannot be in
+   * the air at once: taking one strikes its row out on the same frame.
+   */
+  const [flying, setFlying] = useState(false);
   /** Set when a guest reaches for something that needs an account. */
   const [unread, setUnread] = useState(0);
   /** Turned off for the session the moment the clip fails to load. */
@@ -1334,11 +1340,19 @@ function Game() {
        * "Come here, delicious kid" — a second into the battle, so it lands
        * over the boards being revealed rather than under the war horn.
        *
-       * ⚠ Only in HER mode. Those lines are hers and she is not in an
-       * ordinary bot match; a voice from nowhere is worse than no voice.
-       * Silent until `pnpm art:voices amanda` has been run.
+       * ⚠ HER MODE, OR HER CARD ON ONE OF THE TWO BOARDS. The rule was
+       * "only in her mode", on the grounds that a voice from nowhere is
+       * worse than no voice — and that is still the rule, it is just that
+       * Amanda standing on the board is not nowhere. In the playground you
+       * can put her down yourself, and then the battle starting with her in
+       * it and her saying nothing is the silence Or kept reporting.
        */
-      if (m.amandaMode) sfx.amanda("hungry", 1000);
+      const amandaIsHere =
+        m.king === AMANDA_CARD ||
+        m.opponent.king === AMANDA_CARD ||
+        Object.values(m.placements).includes(AMANDA_CARD) ||
+        Object.values(m.opponent.placements ?? {}).includes(AMANDA_CARD);
+      if (m.amandaMode || amandaIsHere) sfx.amanda("hungry", 1000);
     }
     /*
      * And the end of it. Or: *"also at the end of a match."* Two different
@@ -2050,7 +2064,7 @@ function Game() {
                     <div
                       className="hand__draggable"
                       onPointerDown={(e) => {
-                        sfx.voice(voiceFor(m.hand!).name);
+                        sfx.voice(tapVoice(m.hand!));
                         startDrag(m.hand!, e);
                       }}
                     >
@@ -2091,7 +2105,7 @@ function Game() {
                  * right long before the finger lifts.
                  */
                 onDragOut={(id, e) => {
-                  if (!ACTIONS.has(id)) sfx.voice(voiceFor(id).name);
+                  if (!ACTIONS.has(id)) sfx.voice(tapVoice(id));
                   startDrag(id, e);
                 }}
               />
@@ -2139,7 +2153,7 @@ function Game() {
                      * and `sfx.voice` does nothing for them.
                      */
                     onPointerDown={(e) => {
-                      sfx.voice(voiceFor(m.hand!).name);
+                      sfx.voice(tapVoice(m.hand!));
                       startDrag(m.hand!, e);
                     }}
                     title=""
@@ -2675,7 +2689,27 @@ function Game() {
         because the list is already on the screen.
       */}
       {panel.is("challenges") && (
-        <Overlay onClick={() => panel.close()}>
+        <Overlay
+          onClick={() => panel.close()}
+          /*
+           * ═══ IT STEPS ASIDE FOR A SECOND; IT DOES NOT LEAVE ═══
+           *
+           * Or: *"a challenges window that doesn't close after taking, so I
+           * can take more."* It used to call `panel.close()` here, because
+           * the purse and the nacho bar a prize flies TO are on the home
+           * screen, behind this panel — so the animation ran correctly,
+           * under an opaque sheet, every time.
+           *
+           * Closing solved that and created this: finishing three
+           * challenges meant opening the slowest panel on the home screen
+           * three times. Both asks are the same one pixel of dark glass, so
+           * only the glass moves. The sheet goes clear while the token is
+           * in the air and comes back when it lands — about a second — and
+           * the list itself never moves, never reloads and stays under the
+           * thumb the whole time.
+           */
+          className={flying ? "modal-overlay--peek" : ""}
+        >
           <div className="modal modal--quests" onClick={(e) => e.stopPropagation()}>
             <button className="modal__close" onClick={() => panel.close()} title={t("s0e0ecca", "סגירה")}>
               <Icon name="exit" size={15} />
@@ -2684,10 +2718,14 @@ function Game() {
               signedIn={signedIn}
               guest={guest}
               gated={gated}
-              // Close before the prize flies: the purse and the nacho bar it
-              // flies to are on the home screen, behind this panel. See
-              // onTaking in Challenges.tsx.
-              onTaking={() => panel.close()}
+              onTaking={(landed) => {
+                setFlying(true);
+                // `finally`, not `then`: a flight that is cut short — no
+                // target, reduced motion, an interrupted animation — still
+                // has to put the sheet back, or the panel stays transparent
+                // for the rest of the session.
+                void landed.finally(() => setFlying(false));
+              }}
               onClaimed={() => m.reloadAccount()}
               reloadKey={m.award}
             />

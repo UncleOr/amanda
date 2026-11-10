@@ -17,7 +17,7 @@ import {
 } from "@amanda/shared";
 import { CATALOG, SERIES } from "../data/catalog";
 import { artUrl } from "../game/skins";
-import { DRAG_SOUND_CLIP, dragMixOf, dragSoundExists, voiceFor } from "../game/cardSound";
+import { DRAG_SOUND_CLIP, dragMixOf, dragSoundExists, tapVoice } from "../game/cardSound";
 import { styleFor } from "../game/carry";
 import { FX_FOR_STYLE } from "../game/dragFx";
 import { setPreviewCard } from "../game/preview";
@@ -481,7 +481,7 @@ export function CardEditor({ call, say, upload, notes, reloadNotes }: CardEditor
 
   const move = draft ? moveOf(draft) : "still";
   const inStarter = !!draft && (STARTER_ALBUM as readonly string[]).includes(draft.id);
-  const speaks = draft ? voiceFor(draft.id).name : undefined;
+  const speaks = draft ? tapVoice(draft.id) : undefined;
 
   /*
    * What the three "automatic"s would answer for this card as it stands, and
@@ -600,7 +600,7 @@ export function CardEditor({ call, say, upload, notes, reloadNotes }: CardEditor
                  * first press and not on this one.
                  */
                 sfx.unlock();
-                sfx.voice(voiceFor(draft.id).name);
+                sfx.voice(tapVoice(draft.id));
                 startDrag(draft.id, e);
               }}
             >

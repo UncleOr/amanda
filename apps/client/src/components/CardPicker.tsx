@@ -80,13 +80,43 @@ export function CardPicker({
         >
           <Icon name="erase" size={14} /> {t("s06b4234", "מחק")}
         </button>
-        <input
-          className="rack__search"
-          value={query}
-          onChange={(e) => setQuery(e.target.value)}
-          placeholder={t("s7af4893", "חיפוש קלף…")}
-          inputMode="search"
-        />
+        {/*
+          Or: *"in the playground's search box add an X button that clears
+          the text."* Inside the pill rather than beside it, and present only
+          when there is something to clear — an X over an empty box is a
+          control that does nothing, which is worse than no control.
+
+          Drawn here instead of taken from Icon: there is no X in the set,
+          and the set is generated (and paid for) a sheet at a time. Two
+          lines of SVG in currentColor cost nothing and match the box.
+        */}
+        <div className="rack__find">
+          <input
+            className="rack__search"
+            value={query}
+            onChange={(e) => setQuery(e.target.value)}
+            placeholder={t("s7af4893", "חיפוש קלף…")}
+            inputMode="search"
+          />
+          {query !== "" && (
+            <button
+              type="button"
+              className="rack__clear"
+              onClick={() => setQuery("")}
+              aria-label={t("s59830b9", "נקה חיפוש")}
+            >
+              <svg viewBox="0 0 24 24" width="13" height="13" aria-hidden="true">
+                <path
+                  d="M6 6l12 12M18 6L6 18"
+                  stroke="currentColor"
+                  strokeWidth="2.6"
+                  strokeLinecap="round"
+                  fill="none"
+                />
+              </svg>
+            </button>
+          )}
+        </div>
       </div>
 
       <div className="rack__tabs">
