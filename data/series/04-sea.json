@@ -225,7 +225,8 @@
         "placeholderColor": "#2f7fe2",
         "sprite": "cards/sea_05_surge.webp"
       },
-      "launch": true
+      "launch": true,
+      "targeting": "invader"
     },
     {
       "id": "sea_06_frozen",
@@ -314,7 +315,8 @@
         "placeholderColor": "#2f7fe2",
         "sprite": "cards/sea_07_siren.webp"
       },
-      "launch": true
+      "launch": true,
+      "targeting": "avenger"
     },
     {
       "id": "sea_08_ocean",

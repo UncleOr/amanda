@@ -65,10 +65,14 @@ describe("the combinations Or asked for by name", () => {
     ["bodyguard at close range", "bodyguard", "melee", true],
     ["bodyguard with a sniper's reach", "bodyguard", "sniper", true],
     ["avenger in the air", "avenger", "melee", true],
-    // ⚠ NOT YET, AND THE REASON IS THE SAME ONE TWICE: there are two snipers
-    // in the whole game and one avenger. Both are Or's to place — a card's
-    // identity is his — and these two lines are the shopping list.
-    ["sniper that avenges", "avenger", "sniper", false],
+    /*
+     * ⚠ THIS LINE WAS `false` FOR ONE DAY, and it is the whole reason the
+     * table is written as a table. "Sniper — avenger" needed a second
+     * sniper before it could need anything else; the Mother Machine is it,
+     * and she is the avenger as well — a turret that does not start fights
+     * and finishes them.
+     */
+    ["sniper that avenges", "avenger", "sniper", true],
   ];
 
   for (const [what, targeting, range, should] of WANTED) {
@@ -80,10 +84,28 @@ describe("the combinations Or asked for by name", () => {
     });
   }
 
-  it("has an avenger that walks and one that flies, or says which is missing", () => {
+  it("has an avenger in the air and one standing still, and not yet one that walks", () => {
     const shapes = new Set(of("avenger").map(moves));
-    // Measured: one avenger in the game and it flies. The walking one is on
-    // the list above; this records the state rather than asserting a wish.
     expect(shapes.has("flies"), "the flying avenger went away").toBe(true);
+    expect(shapes.has("still"), "the standing avenger went away").toBe(true);
+    /*
+     * ⚠ THE ONE OF OR'S FOUR EXAMPLES THAT IS STILL MISSING, and it is
+     * missing on purpose. The Stone Colossus was going to be it — it
+     * already returns damage, and measured it cost nothing: zero winners
+     * changed in six hundred battles. He took it off the list for a reason
+     * that has nothing to do with balance:
+     *
+     *   *"except the Stone Colossus, which should be the most ordinary
+     *   giant there is: he walks and he kills the King."*
+     *
+     * Which is a description of the DEFAULT, and the default already does
+     * it — a lane card whose lane has been cleared falls through to hunting
+     * the crown (see pickTarget). Giving him a mode would have put the
+     * plainest card in the game into an archetype filter.
+     *
+     * So this records a gap rather than a wish, and it stays until Or
+     * names the card.
+     */
+    expect(shapes.has("walks"), "there is a walking avenger now — tick this over").toBe(false);
   });
 });

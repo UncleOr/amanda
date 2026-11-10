@@ -265,7 +265,8 @@
         "placeholderColor": "#9aa4ad",
         "sprite": "cards/machines_06_mandroid.webp"
       },
-      "launch": true
+      "launch": true,
+      "targeting": "sniperHunter"
     },
     {
       "id": "machines_07_magnetros",
@@ -393,7 +394,8 @@
         "placeholderColor": "#9aa4ad",
         "sprite": "cards/machines_09_steelbot.webp"
       },
-      "launch": true
+      "launch": true,
+      "targeting": "champion"
     },
     {
       "id": "machines_10_mother_machine",
@@ -413,7 +415,7 @@
         "power": 620,
         "attackSpeed": 3.5,
         "moveSpeed": 0,
-        "range": "ranged"
+        "range": "sniper"
       },
       "flying": false,
       "midBoss": true,
@@ -436,14 +438,15 @@
         }
       ],
       "role": {
-        "he": "משריינת את כל מי שסביבה, ומפילה ארבעה חדשים כשהיא נופלת.",
-        "en": "Armours everything around it, and drops four more when it falls."
+        "he": "צריח. יורה למרחק כפול, משריינת את כל מי שסביבה, ומפילה ארבעה חדשים כשהיא נופלת.",
+        "en": "A turret. Twice the reach, armours everything around it, and drops four more when it falls."
       },
       "art": {
         "placeholderColor": "#9aa4ad",
         "sprite": "cards/machines_10_mother_machine.webp"
       },
-      "launch": true
+      "launch": true,
+      "targeting": "avenger"
     }
   ]
 }
