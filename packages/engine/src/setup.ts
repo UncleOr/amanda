@@ -136,6 +136,7 @@ export function createUnitFromCard(
     flags: {},
     lastHitBy: null,
     hasAttacked: false,
+    struckKing: null,
   };
 }
 

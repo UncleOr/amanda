@@ -285,7 +285,7 @@
         "power": 580,
         "attackSpeed": 4,
         "moveSpeed": 0,
-        "range": "ranged"
+        "range": "sniper"
       },
       "flying": false,
       "midBoss": false,
@@ -300,15 +300,15 @@
         }
       ],
       "role": {
-        "he": "שדה מגנטי. גורר את כל מי שמנסה לשמור מרחק.",
-        "en": "A magnetic field. Drags in anybody trying to keep their distance."
+        "he": "שדה מגנטי. נועל על מי שפגע במלך, מכל מרחק, וגורר אותו משם.",
+        "en": "A magnetic field. Locks on to whatever hit the King, from any range, and drags it off."
       },
       "art": {
         "placeholderColor": "#9aa4ad",
         "sprite": "cards/machines_07_magnetros.webp"
       },
       "launch": true,
-      "targeting": "champion"
+      "targeting": "bodyguard"
     },
     {
       "id": "machines_08_crusher",

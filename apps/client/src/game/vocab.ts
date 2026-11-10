@@ -150,6 +150,12 @@ export const TARGETING_HE: Record<Targeting, Named> = {
   sniperHunter: { he: "צייד צלפים", note: "הולך על מי שיורה מהמרחק הכי גדול" },
   wallbreaker: { he: "שובר חומות", note: "הולך על מי שלא זז — קירות, מגדלים, מה שחונה" },
   invader: { he: "שומר הגבול", note: "על מי שהגיע לקו שלך וכבר התחיל להילחם" },
+  /*
+   * Or: *"somebody who shoots whoever is shooting at the King."* The only
+   * one of these that is about defending rather than about choosing a
+   * victim — so the name is a job, not a hunt.
+   */
+  bodyguard: { he: "שומר ראש", note: "על מי שכבר פגע במלך שלך" },
 };
 
 export const RARITY_HE: Record<Rarity, string> = {

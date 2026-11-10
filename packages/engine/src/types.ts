@@ -96,6 +96,19 @@ export interface Unit {
   lastHitBy: string | null;
   /** Has it swung at anything yet? Sticky — it never goes back to false. */
   hasAttacked: boolean;
+  /**
+   * Whose King this unit has actually landed a blow on, if any.
+   *
+   * The third fact of the same kind, and it is what `bodyguard` is about:
+   * Or asked for *"somebody who shoots whoever is shooting at the King"*,
+   * and a card cannot be told to watch the crown without the battle
+   * remembering who has touched it.
+   *
+   * Sticky, like `hasAttacked`: a card that hit the crown once and backed
+   * off is still the card that hit the crown, and a guard that forgot it
+   * the moment the attacker paused would change its mind every swing.
+   */
+  struckKing: Owner | null;
 }
 
 /** A card sitting under another via the Stacking / "Ground Floor" mechanic. */

@@ -1,6 +1,6 @@
 # הטקסטים של אמנדה
 
-כל טקסט שהשחקן רואה — 1626 במספר, 1433 מהם כבר באנגלית.
+כל טקסט שהשחקן רואה — 1629 במספר, 1434 מהם כבר באנגלית.
 
 ## איך עורכים
 
@@ -92,7 +92,7 @@
 | de31dbda | מאנדרואיד | | Mandroid |
 | ddc276b6 | קרן צללים שמפרקת שריון. מה שחטף ממנו כבר לא מוגן. | | A shadow beam that strips armour. What it hits is not protected any more. |
 | d7236863 | מגנטרוס | | Magnetros |
-| dadf3fa6 | שדה מגנטי. גורר את כל מי שמנסה לשמור מרחק. | | A magnetic field. Drags in anybody trying to keep their distance. |
+| d8bef35b | שדה מגנטי. נועל על מי שפגע במלך, מכל מרחק, וגורר אותו משם. | | A magnetic field. Locks on to whatever hit the King, from any range, and drags it off. |
 | d42a117e | המרסק | | The Crusher |
 | d5d48f38 | מוחץ מכונה אחת משלו כדי להתחיל את הקרב משוריין. | | Crushes one of its own to start the battle armoured. |
 | daa3fbd9 | פלדובוט | | Steelbot |
@@ -155,7 +155,7 @@
 | dbbaccd6 | גולם אבן | | Stone Golem |
 | d3694c8e | טנק הליכה שמחזיר נזק. | | A walking tank that reflects damage. |
 | dd07b195 | שומר הפלדה | | Steel Warden |
-| df53d12f | מעניק שריון לכל בעלי הברית סביבו. | | Grants armor to nearby allies. |
+| db3e8ad8 | מעניק שריון לבעלי הברית סביבו, ועונה למי שפגע במלך. | | Grants armor to nearby allies, and answers whatever hit the King. |
 | d68c3bcf | ענק הגבעות | | Hill Giant |
 | d71c0943 | מכה כבדה שהודפת יריבים אחורה. | | Heavy blows that knock enemies back. |
 | d8d307c3 | טרול סלע | | Rock Troll |
@@ -1025,6 +1025,7 @@
 | sfeaf273 | קרב | | Combat |
 | s2e7ed39 | יורים מרחוק | | Ranged |
 | s2845407 | רודפים את המלך | | Hunts the King |
+| sb784b9a | על מי הם הולכים | | Who they go for |
 | sb15ae7e | יכולת | | Ability |
 | scae68e4 | חיים אחרי המוות | | Life after death |
 | s234a399 | מרפאים | | Healers |
@@ -1981,6 +1982,8 @@
 | s10175a0 | הולך על מי שלא זז — קירות, מגדלים, מה שחונה | |  |
 | s3617286 | שומר הגבול | |  |
 | s4eae28a | על מי שהגיע לקו שלך וכבר התחיל להילחם | |  |
+| sb5c8df9 | שומר ראש | |  |
+| s0293cca | על מי שכבר פגע במלך שלך | |  |
 | s76194ba | רגיל | |  |
 | s4259498 | נדיר | |  |
 | sbde0949 | אפי | |  |

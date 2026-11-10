@@ -193,6 +193,17 @@ function nearestAnywhere(u: Unit, enemies: Unit[]): TargetPick | null {
  */
 const PREY: Partial<Record<Targeting, (e: Unit, u: Unit) => boolean>> = {
   avenger: (e, u) => e.uid === u.lastHitBy,
+  /*
+   * Or: *"somebody who shoots whoever is shooting at the King."* The one
+   * defensive mode in the table — every other entry picks what to ATTACK
+   * and this one picks what to STOP, which is also why its answer depends
+   * on something that happened to a third card rather than to either of
+   * these two.
+   *
+   * `u.owner` and not "my side's King", because a side can hold two of them
+   * in Amanda mode: whoever has hit any crown of mine is who I am for.
+   */
+  bodyguard: (e, u) => e.struckKing === u.owner,
   // Not the King: it is static by rule (King's Trap), so a wall-breaker that
   // counted it would hunt the crown and nothing else, every game.
   wallbreaker: (e) => e.moveSpeed === 0 && !e.isKing,
@@ -516,6 +527,7 @@ export function runBattle(setup: BattleSetup): BattleResult {
       below: null,
       lastHitBy: null,
       hasAttacked: false,
+      struckKing: null,
       // The one thing that is not inherited: this is a PIECE of something,
       // and the screen draws it smaller for it. See `spawned` in types.ts.
       flags: { spawned: true },
@@ -697,6 +709,12 @@ export function runBattle(setup: BattleSetup): BattleResult {
      */
     u.hasAttacked = true;
     target.lastHitBy = u.uid;
+    /*
+     * And the third of them, for the bodyguard. Recorded HERE, where the
+     * blow lands, for the reason the comment above gives: a card that aimed
+     * at the crown and died on the way has not touched it.
+     */
+    if (target.isKing) u.struckKing = target.owner;
     // Fires as the swing starts, before anything lands: a vacuum drags the
     // line in, a gelatinous cube swallows what walked into it.
     runOnAttack(state, u, target);

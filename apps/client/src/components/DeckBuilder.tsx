@@ -45,6 +45,7 @@ import { CardDetailModal } from "./CardDetailModal";
 import { Overlay } from "./Overlay";
 import { Icon } from "./Icon";
 import { say } from "../game/lang";
+import { TARGETING_HE } from "../game/vocab";
 import { line as t, lineF as tf } from "../game/copy";
 import type { Account } from "../game/account";
 
@@ -176,6 +177,45 @@ export const FIXED_GROUPS: Group[] = [
         test: (c) => c.targeting === "king",
       },
     ],
+  },
+  /*
+   * ═══ WHO THEY SHOOT AT ═══
+   *
+   * Or: *"in the deck builder filter give me options to filter by who they
+   * shoot at as well."*
+   *
+   * The seven modes have been on the cards for weeks and the only one that
+   * could be filtered for was the King-hunter, sitting in "קרב" beside
+   * "shoots from a distance" — which is a range, not a choice of victim.
+   * Two different questions in one group.
+   *
+   * ⚠ `lane` IS NOT A BUTTON, and that is the rule this file already
+   * states: a filter that returns most of the shelf is a button that does
+   * nothing. Measured over the launched cards, "straight ahead" is 33 of
+   * 53 — it is the DEFAULT, not an archetype, and a player looking for one
+   * of these is looking for the card that does something unusual.
+   *
+   * Measured, the rest: hunts the King 5 · border guard 5 · wall-breaker 3
+   * · bodyguard 2 · sniper-hunter 2 · champion-hunter 2 · avenger 1. Thin
+   * at the bottom and Or has the table — see the note in vocab.ts.
+   *
+   * The King-hunter stays where it also is, in "קרב", because it was there
+   * first and a player who has learned where it lives should not have to
+   * learn again. It is the same test either way, so ticking both is just
+   * the same set twice.
+   */
+  {
+    id: "aim",
+    label: () => t("sb784b9a", "על מי הם הולכים"),
+    choices: (["king", "bodyguard", "avenger", "champion", "sniperHunter", "wallbreaker", "invader"] as const).map(
+      (id) => ({
+        id,
+        // The names are the ones on the card's own panel — one vocabulary,
+        // so a filter and a card never call the same thing two things.
+        label: () => say(TARGETING_HE[id]),
+        test: (c: Card) => c.targeting === id,
+      }),
+    ),
   },
   {
     id: "power",

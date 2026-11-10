@@ -49,6 +49,30 @@ export const TARGETINGS = [
   /** The ones that never move — the walls, the towers, the things parked. */
   "wallbreaker",
   /**
+   * Whoever is going for YOUR King — the crown's own answer.
+   *
+   * ═══ OR ASKED FOR IT AS A FACT, AND IT WAS NOT ONE ═══
+   *
+   * *"And confirming with you that there is an option for somebody who
+   * shoots whoever is shooting at the King (both as a sniper and at close
+   * range)."* There was not. `avenger` is the closest thing in the list and
+   * it is a different card: it replies to what hit ME. Nothing in the game
+   * could be told to watch the crown.
+   *
+   * ⚠ IT IS THE ONLY DEFENSIVE TARGETING IN THE LIST, which is why it is
+   * worth a mode rather than a stat. Every other one of these is a way of
+   * choosing what to attack; this one is a way of choosing what to STOP, and
+   * it is the only one whose answer depends on something that happened to a
+   * third card. A board with one of these on it has a reason for the back
+   * row to exist.
+   *
+   * "Shooting at the King" means a blow that LANDED on it, not an intention
+   * — see `struckKing` in the engine, recorded in the same place as the
+   * avenger's `lastHitBy` and for the same reason: a card that aimed at the
+   * crown and died on the way has not touched it.
+   */
+  "bodyguard",
+  /**
    * Anything that has reached your line AND has started fighting.
    *
    * "Reached" rather than "crossed": a melee attacker stops ON the boundary

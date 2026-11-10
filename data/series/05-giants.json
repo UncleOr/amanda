@@ -99,14 +99,15 @@
         }
       ],
       "role": {
-        "he": "מעניק שריון לכל בעלי הברית סביבו.",
-        "en": "Grants armor to nearby allies."
+        "he": "מעניק שריון לבעלי הברית סביבו, ועונה למי שפגע במלך.",
+        "en": "Grants armor to nearby allies, and answers whatever hit the King."
       },
       "art": {
         "placeholderColor": "#9aa4ad",
         "sprite": "cards/giants_02_steel_warden.webp"
       },
-      "launch": true
+      "launch": true,
+      "targeting": "bodyguard"
     },
     {
       "id": "giants_03_hill_giant",
