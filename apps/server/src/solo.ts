@@ -156,6 +156,23 @@ export interface SoloOutcome {
    */
   level: BotLevel;
   /**
+   * The double card was played: this match is worth twice as much.
+   *
+   * ⚠ THE BROWSER'S WORD, AND THE ONLY NUMBER IN THIS FILE THAT IS. Every
+   * other input here is re-played and checked — the boards are refought, the
+   * claimed winner is compared against the replay and pays nothing when they
+   * disagree. A card that was played during the PREP leaves no trace in the
+   * battle, so there is nothing to replay it against.
+   *
+   * What makes that survivable is the direction it cuts. Doubling applies to
+   * a loss exactly as it does to a win (Or: *"doubles the trophies you win
+   * OR lose"*), and the server decides which of those happened — so claiming
+   * it on a match the replay scores as a loss doubles the LOSS. The cheat
+   * worth worrying about is claiming it only on wins, and that is checked
+   * one level up, in awardMatch, against whether the player owns the card.
+   */
+  doubled: boolean;
+  /**
    * Who the BROWSER says won — what the player is looking at right now.
    *
    * Not believed and never paid on. It is here so the caller can compare it
@@ -218,6 +235,7 @@ export function soloResult(raw: unknown): SoloOutcome | { error: string } {
       result,
       mine,
       level,
+      doubled: body.doubled === true,
       claimedWon: typeof body.won === "boolean" ? body.won : null,
     };
   } catch (err) {

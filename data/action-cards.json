@@ -280,5 +280,64 @@
     "usableIn": [
       "build"
     ]
+  },
+  {
+    "id": "fog",
+    "name": {
+      "he": "ערפל",
+      "en": "Fog"
+    },
+    "rarity": "rare",
+    "copiesInPack": 7,
+    "description": {
+      "he": "השורות שלך מוסתרות מהיריב עד תחילת הקרב — גם הראשונה, וגם בפאניקה. רנטגן חודר אותו.",
+      "en": "Your rows are hidden from the opponent until the battle — the front one too, and through the panic. X-Ray sees through it."
+    },
+    "effect": "hideOwnBoard",
+    "params": {},
+    "usableIn": [
+      "build",
+      "panic"
+    ]
+  },
+  {
+    "id": "double",
+    "name": {
+      "he": "דאבל",
+      "en": "Double"
+    },
+    "rarity": "rare",
+    "copiesInPack": 6,
+    "description": {
+      "he": "מכפיל את הגביעים שתרוויח או תפסיד במשחק הזה. רק במשחקים עם גביעים.",
+      "en": "Doubles the trophies you win or lose this match. Only in matches that pay trophies."
+    },
+    "effect": "doubleTrophies",
+    "params": {
+      "factor": 2
+    },
+    "usableIn": [
+      "build",
+      "panic"
+    ]
+  },
+  {
+    "id": "thief",
+    "name": {
+      "he": "גנב",
+      "en": "Thief"
+    },
+    "rarity": "epic",
+    "copiesInPack": 4,
+    "description": {
+      "he": "גונב קלף של היריב — רק מה שאתה רואה. נוגעים בקלף שלו ואז במשבצת ריקה שלך.",
+      "en": "Steals an enemy card — only one you can see. Touch theirs, then an empty square of yours."
+    },
+    "effect": "stealEnemyCard",
+    "params": {},
+    "usableIn": [
+      "build",
+      "panic"
+    ]
   }
 ]

@@ -29,6 +29,10 @@ describe("action cards", () => {
     "eraseEnemyCard",
     "freezeOpponentPlacing",
     "fillBoard",
+    // The three Or picked on 10 November 2026, out of ten offered.
+    "hideOwnBoard",
+    "doubleTrophies",
+    "stealEnemyCard",
   ]);
 
   it("every live action card exists in the data", () => {
@@ -89,8 +93,21 @@ describe("action cards", () => {
    * The pin is what made this a decision instead of a surprise: dropping
    * them from the data broke this line, which is exactly what it is for.
    */
-  it("holds 10 playable action cards, not 5", () => {
-    expect(ACTIVE_ACTIONS.length).toBe(10);
+  it("holds 13 playable action cards, not 5", () => {
+    /*
+     * Thirteen since 10 November 2026. Or asked for ten ideas and picked
+     * three — the fog, the double and the thief — and they were chosen for
+     * a gap rather than for variety: every card above either changes a
+     * board or hides one, and none of them changed what the MATCH was worth
+     * or let you take something off the other side.
+     *
+     * The pin did its job again on the way in. Adding the three to the data
+     * without adding them here would have left them written, described,
+     * translated and never dealt; adding them here without an effect broke
+     * the line above; and both of those failed within a minute of being
+     * written.
+     */
+    expect(ACTIVE_ACTIONS.length).toBe(13);
   });
 
   /**

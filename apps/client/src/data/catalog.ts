@@ -252,6 +252,22 @@ export const ACTIVE_ACTIONS = [
   "ground_floor", // stack a second card onto your own slots
   "dark_corners", // the same, applied to the four corners at once
   /*
+   * ═══ THE THREE OR PICKED, 10 NOVEMBER 2026 ═══
+   *
+   * Out of ten offered. All three are about the PREP rather than the
+   * battle, which is the gap they were chosen to fill: everything above
+   * either changes a board or hides one, and none of them changed what the
+   * match was worth or let you take something off the other side.
+   *
+   * ⚠ AND THEY ARE ONLY DEALT BECAUSE THEY ARE IN THIS LIST. An action card
+   * exists in data/action-cards.json and reaches a hand from here — the
+   * two have gone out of step before, which is a card that is written,
+   * described, translated, and never once seen by a player.
+   */
+  "fog", // hide your own board from them — the x-ray, backwards
+  "double", // twice the trophies this match, win or lose
+  "thief", // take one of theirs, if you can see it (targeted on THEIR board)
+  /*
    * ═══ THREE MORE THAT ARE GONE, AND ONE THAT NEVER SHIPPED ═══
    *
    * Or, going through the copy document: *"I can't see how this card

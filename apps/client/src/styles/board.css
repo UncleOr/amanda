@@ -77,6 +77,37 @@
 .side--me .side__label {
   color: #9fd0ff;
 }
+/*
+ * The mark an action card leaves on the board it was played over.
+ *
+ * Two cards today and both of them invisible otherwise: the fog hides a
+ * board on somebody ELSE's screen, and the double changes a number that does
+ * not exist until the match is over. Or has thrown two cards out of this
+ * game for being exactly that, so each of these says so where it was played
+ * and stays for as long as it lasts. See App.tsx.
+ */
+.side__mark {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  margin-inline-start: 8px;
+  padding: 1px 7px;
+  border-radius: 999px;
+  border: 1px solid var(--line);
+  font-size: var(--t-1);
+  font-weight: 800;
+  vertical-align: middle;
+}
+.side__mark--fog {
+  border-color: rgba(159, 208, 255, 0.55);
+  background: rgba(159, 208, 255, 0.14);
+  color: #9fd0ff;
+}
+.side__mark--double {
+  border-color: rgba(255, 211, 107, 0.6);
+  background: rgba(255, 176, 32, 0.16);
+  color: var(--accent);
+}
 .midline {
   align-self: stretch;
   display: flex;

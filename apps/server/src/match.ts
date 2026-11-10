@@ -42,6 +42,31 @@ const XRAY_ID = "xray";
  * reason anyone could see. It must never be the shorter of the two.
  */
 const XRAY_SECONDS = 6;
+/*
+ * ═══ AND ITS OPPOSITE ═══
+ *
+ * Or: *"Fog — your rows are hidden from the opponent. Including the first
+ * one. Also during the panic phase. (X-Ray goes through it.)"*
+ *
+ * Here for the same reason the x-ray is: it is the other card that cannot be
+ * carried out by the client it lands on. Everything else is forwarded and
+ * applied by whoever holds the board — but a board is HIDDEN by the server
+ * that does the hiding, and the player being hidden from must not be sent the
+ * cards and asked politely not to draw them.
+ *
+ * ⚠ NO DURATION. The x-ray is a five-second look; this is not its mirror in
+ * time, only in direction. It holds until the boards lock, because "my front
+ * row is hidden until the fighting starts" is a decision you make about the
+ * whole round, and a fog that lifts after six seconds would be a card you
+ * played at the wrong moment rather than a card you played.
+ */
+const FOG_ID = "fog";
+/*
+ * And the third, for the same reason again: the double card changes what the
+ * match PAYS, and what a match pays is settled here and in meta.ts. A card
+ * that only the browser knew about would be a payout the browser decided.
+ */
+const DOUBLE_ID = "double";
 
 interface PlayerConn {
   ws: WebSocket;
@@ -257,7 +282,22 @@ export class Match {
      * all, which is what the card promises in words: "reveals the entire
      * enemy board (including the back Surprise Row) for 5 seconds".
      */
-    const view = this.peeking[p.side] ? this.other(p).view : fog(this.other(p).view, this.phase);
+    const other = this.other(p);
+    /*
+     * Three answers in a fixed order, and the order IS the rule:
+     *
+     *   PEEKING WINS. Or: *"(X-Ray goes through it.)"* A card that beats
+     *     another card has to be checked first or it does not beat it.
+     *   THEN HIDING. The fog card takes the whole board away, front row
+     *     included — which is the half the phase fog never hid, and the
+     *     half Or named: *"including the first one."*
+     *   THEN THE PHASE, which is what everybody sees on an ordinary round.
+     */
+    const view = this.peeking[p.side]
+      ? other.view
+      : this.hiding[other.side]
+        ? { placements: {}, king: null }
+        : fog(other.view, this.phase);
     this.send(p, { t: "opp", view });
   }
 
@@ -283,6 +323,33 @@ export class Match {
    */
   private peeking = { A: false, B: false };
 
+  /**
+   * Whose board is hidden from the other player — the fog card.
+   *
+   * Per player and not per match, exactly like `peeking`: both of them may
+   * play one, and A hiding has nothing to do with what A can see.
+   *
+   * Cleared when the boards lock. The battle is not a secret.
+   */
+  private hiding = { A: false, B: false };
+
+  /**
+   * Who played the double card — twice the trophies, either way.
+   *
+   * ⚠ THE SERVER'S OWN OBSERVATION, WHICH IS THE POINT OF KEEPING IT HERE.
+   * The card passes through this socket on its way to being played, so
+   * online there is nothing for a browser to claim: it either sent the
+   * message or it did not. Solo has no equivalent — see awardMatch in
+   * meta.ts for what is believed there and why.
+   */
+  private doubling = { A: false, B: false };
+
+  private raiseFog(p: PlayerConn): void {
+    this.hiding[p.side] = true;
+    // The other player is the one whose view just changed, not this one.
+    this.showOthers(this.other(p));
+  }
+
   private grantPeek(p: PlayerConn, seconds: number): void {
     this.peeking[p.side] = true;
     this.showOthers(p);
@@ -294,6 +361,14 @@ export class Match {
 
   private setPhase(phase: string, seconds: number): void {
     this.phase = phase;
+    /*
+     * The fog card lifts when the boards lock. It is a card about the PREP —
+     * "they cannot see what I am building" — and once nothing can be built
+     * there is nothing left to hide: the reveal before the battle is the
+     * moment both boards are supposed to be seen, and a fog that survived it
+     * would turn one player's screen blank for the fight.
+     */
+    if (phase !== "build" && phase !== "panic") this.hiding = { A: false, B: false };
     this.both({ t: "phase", phase, timeLeft: seconds });
     // Re-send each view with the new (looser) fog.
     this.showOthers(this.a);
@@ -354,6 +429,25 @@ export class Match {
          */
         if (msg.id === XRAY_ID) {
           this.grantPeek(p, XRAY_SECONDS);
+          return;
+        }
+        /*
+         * The other card the target cannot carry out. Forwarding it would
+         * mean sending the opponent the board and asking them not to look.
+         */
+        if (msg.id === FOG_ID) {
+          this.raiseFog(p);
+          return;
+        }
+        /*
+         * The third card the other client has no part in: it does nothing to
+         * their board and everything to this player's payout. Forwarding it
+         * would tell them something they are not entitled to know — whether
+         * the person opposite has raised the stakes — which is half of what
+         * makes it a bet.
+         */
+        if (msg.id === DOUBLE_ID) {
+          this.doubling[p.side] = true;
           return;
         }
         this.send(this.other(p), {
@@ -520,7 +614,14 @@ export class Match {
          * stranger.
          */
         const against = this.coop ? null : i === 0 ? this.b.playerId : this.a.playerId;
-        void awardMeta(id, factsFor(result, side, placements), against);
+        void awardMeta(
+          id,
+          factsFor(result, side, placements),
+          against,
+          // Whether THIS player doubled. In co-op both seats are side A, so
+          // the flag is read per connection rather than per side.
+          this.doubling[i === 0 ? "A" : "B"],
+        );
       });
     }
   }

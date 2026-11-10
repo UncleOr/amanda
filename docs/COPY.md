@@ -1,6 +1,6 @@
 # הטקסטים של אמנדה
 
-כל טקסט שהשחקן רואה — 1615 במספר, 1422 מהם כבר באנגלית.
+כל טקסט שהשחקן רואה — 1624 במספר, 1431 מהם כבר באנגלית.
 
 ## איך עורכים
 
@@ -320,6 +320,12 @@
 | d598d611 | פסיבי: בסוף הבנייה ממלא עד 3 משבצות ריקות ב'פליים דראגון' במיקומים אקראיים. | | Passive: at the end of building, fills up to 3 empty slots with Flame Dragon at random positions. |
 | db55bdb5 | מילוי קוביית ג'לי | | Cube Fill |
 | d3c3107c | פסיבי: בסוף הבנייה ממלא עד 3 משבצות ריקות ב'קוביית ג'לי' במיקומים אקראיים. | | Passive: at the end of building, fills up to 3 empty slots with Gelatinous Cube at random positions. |
+| d68d6652 | ערפל | | Fog |
+| dfcd2bdb | השורות שלך מוסתרות מהיריב עד תחילת הקרב — גם הראשונה, וגם בפאניקה. רנטגן חודר אותו. | | Your rows are hidden from the opponent until the battle — the front one too, and through the panic. X-Ray sees through it. |
+| d4674417 | דאבל | | Double |
+| d7cfb7d8 | מכפיל את הגביעים שתרוויח או תפסיד במשחק הזה. רק במשחקים עם גביעים. | | Doubles the trophies you win or lose this match. Only in matches that pay trophies. |
+| dd04d8db | גנב | | Thief |
+| de52f3d7 | גונב קלף של היריב — רק מה שאתה רואה. נוגעים בקלף שלו ואז במשבצת ריקה שלך. | | Steals an enemy card — only one you can see. Touch theirs, then an empty square of yours. |
 
 ## הארנות — שמות, רמזים וסיפורים
 
@@ -461,6 +467,9 @@
 | sc2b0252 | הצד שלך | | Your side |
 | sc84b632 | החצי שלך | | Your half |
 | s502312f | אתה | | You |
+| s1a82ea8 | היריב לא רואה את הלוח שלך | | They cannot see your board |
+| s10b1ccc | מוסתר | | Hidden |
+| s495f79f | גביעים כפולים — לטוב ולרע | | Double trophies — for better or worse |
 | sa531737 | הידיים שלך קפואות | | Your hands are frozen |
 | s5d4a4e0 | לשלוף ולזרוק אפשר. להדביק — לא. | | Draw and bin, yes. Place, no. |
 | s138a2c6 | החצי שלך | | Your half |

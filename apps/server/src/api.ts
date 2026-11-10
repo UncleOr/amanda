@@ -734,7 +734,15 @@ async function handleMeta(req: IncomingMessage, res: ServerResponse, path: strin
         won: outcome.claimedWon,
       });
     }
-    const award = await awardMatch(sb, playerId, facts, new Date(), outcome.level);
+    const award = await awardMatch(
+      sb,
+      playerId,
+      facts,
+      new Date(),
+      outcome.level,
+      null,
+      outcome.doubled,
+    );
     // The score comes back from HERE even though the browser graded the same
     // battle itself: one authority, so a bug in either grader shows up as a
     // disagreement on the screen rather than as a quiet difference in pay.

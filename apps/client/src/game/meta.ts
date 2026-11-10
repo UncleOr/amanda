@@ -233,6 +233,17 @@ export async function reportSolo(opts: {
    * solo route in apps/server/src/api.ts.
    */
   won: boolean;
+  /**
+   * The double card was played — twice the trophies, win or lose.
+   *
+   * ⚠ UNLIKE EVERYTHING ELSE IN THIS BODY, THE SERVER CANNOT CHECK IT. The
+   * boards are refought there and the claimed winner is compared against the
+   * replay, but an action card played during the prep leaves no mark on the
+   * battle. Online there is no such gap — the card goes through the match
+   * server, which sees it. See awardMatch in apps/server/src/meta.ts for the
+   * exposure that leaves and what bounds it.
+   */
+  doubled?: boolean;
 }): Promise<Award> {
   const base = serverHttp();
   if (!base) return NOTHING;

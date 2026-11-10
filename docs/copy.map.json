@@ -6,7 +6,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/index.html",
-   "line": 102
+   "line": 117
   }
  },
  {
@@ -16,7 +16,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/index.html",
-   "line": 103
+   "line": 118
   }
  },
  {
@@ -26,7 +26,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/index.html",
-   "line": 115
+   "line": 130
   }
  },
  {
@@ -3652,6 +3652,96 @@
   "en": "Passive: fills up to 3 empty slots with a Gelatinous Cube when building ends."
  },
  {
+  "id": "d68d6652",
+  "section": "קלפי פעולה",
+  "text": "ערפל",
+  "where": {
+   "kind": "json",
+   "file": "data/action-cards.json",
+   "path": [
+    14,
+    "name",
+    "he"
+   ]
+  },
+  "en": "Fog"
+ },
+ {
+  "id": "dfcd2bdb",
+  "section": "קלפי פעולה",
+  "text": "השורות שלך מוסתרות מהיריב עד תחילת הקרב — גם הראשונה, וגם בפאניקה. רנטגן חודר אותו.",
+  "where": {
+   "kind": "json",
+   "file": "data/action-cards.json",
+   "path": [
+    14,
+    "description",
+    "he"
+   ]
+  },
+  "en": "Your rows are hidden from the opponent until the battle — the front one too, and through the panic. X-Ray sees through it."
+ },
+ {
+  "id": "d4674417",
+  "section": "קלפי פעולה",
+  "text": "דאבל",
+  "where": {
+   "kind": "json",
+   "file": "data/action-cards.json",
+   "path": [
+    15,
+    "name",
+    "he"
+   ]
+  },
+  "en": "Double"
+ },
+ {
+  "id": "d7cfb7d8",
+  "section": "קלפי פעולה",
+  "text": "מכפיל את הגביעים שתרוויח או תפסיד במשחק הזה. רק במשחקים עם גביעים.",
+  "where": {
+   "kind": "json",
+   "file": "data/action-cards.json",
+   "path": [
+    15,
+    "description",
+    "he"
+   ]
+  },
+  "en": "Doubles the trophies you win or lose this match. Only in matches that pay trophies."
+ },
+ {
+  "id": "dd04d8db",
+  "section": "קלפי פעולה",
+  "text": "גנב",
+  "where": {
+   "kind": "json",
+   "file": "data/action-cards.json",
+   "path": [
+    16,
+    "name",
+    "he"
+   ]
+  },
+  "en": "Thief"
+ },
+ {
+  "id": "de52f3d7",
+  "section": "קלפי פעולה",
+  "text": "גונב קלף של היריב — רק מה שאתה רואה. נוגעים בקלף שלו ואז במשבצת ריקה שלך.",
+  "where": {
+   "kind": "json",
+   "file": "data/action-cards.json",
+   "path": [
+    16,
+    "description",
+    "he"
+   ]
+  },
+  "en": "Steals an enemy card — only one you can see. Touch theirs, then an empty square of yours."
+ },
+ {
   "id": "a592d187",
   "section": "הארנות — שמות, רמזים וסיפורים",
   "text": "חדר המשחקים",
@@ -4933,13 +5023,43 @@
   }
  },
  {
+  "id": "s1a82ea8",
+  "section": "מסכי המשחק — פתיחה, בנייה, קרב, תוצאה",
+  "text": "היריב לא רואה את הלוח שלך",
+  "where": {
+   "kind": "source",
+   "file": "apps/client/src/App.tsx",
+   "line": 1735
+  }
+ },
+ {
+  "id": "s10b1ccc",
+  "section": "מסכי המשחק — פתיחה, בנייה, קרב, תוצאה",
+  "text": "מוסתר",
+  "where": {
+   "kind": "source",
+   "file": "apps/client/src/App.tsx",
+   "line": 1736
+  }
+ },
+ {
+  "id": "s495f79f",
+  "section": "מסכי המשחק — פתיחה, בנייה, קרב, תוצאה",
+  "text": "גביעים כפולים — לטוב ולרע",
+  "where": {
+   "kind": "source",
+   "file": "apps/client/src/App.tsx",
+   "line": 1740
+  }
+ },
+ {
   "id": "sa531737",
   "section": "מסכי המשחק — פתיחה, בנייה, קרב, תוצאה",
   "text": "הידיים שלך קפואות",
   "where": {
    "kind": "source",
    "file": "apps/client/src/App.tsx",
-   "line": 1723
+   "line": 1748
   }
  },
  {
@@ -4949,7 +5069,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/App.tsx",
-   "line": 1725
+   "line": 1750
   }
  },
  {
@@ -4959,7 +5079,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/App.tsx",
-   "line": 1733
+   "line": 1758
   }
  },
  {
@@ -4969,7 +5089,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/App.tsx",
-   "line": 1797
+   "line": 1822
   }
  },
  {
@@ -4979,7 +5099,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/App.tsx",
-   "line": 1818
+   "line": 1843
   }
  },
  {
@@ -4989,7 +5109,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/App.tsx",
-   "line": 1837
+   "line": 1862
   }
  },
  {
@@ -4999,7 +5119,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/App.tsx",
-   "line": 1847
+   "line": 1872
   }
  },
  {
@@ -5009,7 +5129,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/App.tsx",
-   "line": 1860
+   "line": 1885
   }
  },
  {
@@ -5019,7 +5139,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/App.tsx",
-   "line": 1861
+   "line": 1886
   }
  },
  {
@@ -5029,7 +5149,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/App.tsx",
-   "line": 1923
+   "line": 1948
   }
  },
  {
@@ -5039,7 +5159,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/App.tsx",
-   "line": 1925
+   "line": 1950
   }
  },
  {
@@ -5049,7 +5169,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/App.tsx",
-   "line": 1926
+   "line": 1951
   }
  },
  {
@@ -5059,7 +5179,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/App.tsx",
-   "line": 1931
+   "line": 1956
   }
  },
  {
@@ -5069,7 +5189,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/App.tsx",
-   "line": 1934
+   "line": 1959
   }
  },
  {
@@ -5079,7 +5199,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/App.tsx",
-   "line": 2003
+   "line": 2028
   }
  },
  {
@@ -5089,7 +5209,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/App.tsx",
-   "line": 2016
+   "line": 2041
   }
  },
  {
@@ -5099,7 +5219,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/App.tsx",
-   "line": 2018
+   "line": 2043
   }
  },
  {
@@ -5109,7 +5229,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/App.tsx",
-   "line": 2019
+   "line": 2044
   }
  },
  {
@@ -5119,7 +5239,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/App.tsx",
-   "line": 2061
+   "line": 2086
   }
  },
  {
@@ -5129,7 +5249,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/App.tsx",
-   "line": 2081
+   "line": 2106
   }
  },
  {
@@ -5139,7 +5259,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/App.tsx",
-   "line": 2094
+   "line": 2119
   }
  },
  {
@@ -5149,7 +5269,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/App.tsx",
-   "line": 2120
+   "line": 2145
   }
  },
  {
@@ -5159,7 +5279,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/App.tsx",
-   "line": 2134
+   "line": 2159
   }
  },
  {
@@ -5169,7 +5289,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/App.tsx",
-   "line": 2174
+   "line": 2199
   }
  },
  {
@@ -5179,7 +5299,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/App.tsx",
-   "line": 2178
+   "line": 2203
   }
  },
  {
@@ -5189,7 +5309,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/App.tsx",
-   "line": 2207
+   "line": 2232
   }
  },
  {
@@ -5199,7 +5319,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/App.tsx",
-   "line": 2208
+   "line": 2233
   }
  },
  {
@@ -5209,7 +5329,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/App.tsx",
-   "line": 2218
+   "line": 2243
   }
  },
  {
@@ -5219,7 +5339,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/App.tsx",
-   "line": 2219
+   "line": 2244
   }
  },
  {
@@ -5229,7 +5349,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/App.tsx",
-   "line": 2227
+   "line": 2252
   }
  },
  {
@@ -5239,7 +5359,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/App.tsx",
-   "line": 2232
+   "line": 2257
   }
  },
  {
@@ -5249,7 +5369,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/App.tsx",
-   "line": 2242
+   "line": 2267
   }
  },
  {
@@ -5259,7 +5379,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/App.tsx",
-   "line": 2243
+   "line": 2268
   }
  },
  {
@@ -5269,7 +5389,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/App.tsx",
-   "line": 2258
+   "line": 2283
   }
  },
  {
@@ -5279,7 +5399,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/App.tsx",
-   "line": 2260
+   "line": 2285
   }
  },
  {
@@ -5289,7 +5409,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/App.tsx",
-   "line": 2266
+   "line": 2291
   }
  },
  {
@@ -5299,7 +5419,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/App.tsx",
-   "line": 2268
+   "line": 2293
   }
  },
  {
@@ -5309,7 +5429,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/App.tsx",
-   "line": 2269
+   "line": 2294
   }
  },
  {
@@ -5319,7 +5439,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/App.tsx",
-   "line": 2285
+   "line": 2310
   }
  },
  {
@@ -5329,7 +5449,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/App.tsx",
-   "line": 2289
+   "line": 2314
   }
  },
  {
@@ -5339,7 +5459,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/App.tsx",
-   "line": 2293
+   "line": 2318
   }
  },
  {
@@ -5349,7 +5469,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/App.tsx",
-   "line": 2488
+   "line": 2513
   }
  },
  {
@@ -5359,7 +5479,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/App.tsx",
-   "line": 2508
+   "line": 2533
   }
  },
  {
@@ -5369,7 +5489,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/App.tsx",
-   "line": 2521
+   "line": 2546
   }
  },
  {
@@ -5379,7 +5499,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/App.tsx",
-   "line": 2532
+   "line": 2557
   }
  },
  {
@@ -5389,7 +5509,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/App.tsx",
-   "line": 2536
+   "line": 2561
   }
  },
  {
@@ -5399,7 +5519,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/App.tsx",
-   "line": 2556
+   "line": 2581
   }
  },
  {
@@ -5409,7 +5529,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/App.tsx",
-   "line": 2570
+   "line": 2595
   }
  },
  {
@@ -5419,7 +5539,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/App.tsx",
-   "line": 2715
+   "line": 2740
   }
  },
  {
@@ -5429,7 +5549,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/App.tsx",
-   "line": 2812
+   "line": 2837
   }
  },
  {
@@ -5439,7 +5559,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/App.tsx",
-   "line": 2815
+   "line": 2840
   }
  },
  {
@@ -5449,7 +5569,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/App.tsx",
-   "line": 2974
+   "line": 2999
   }
  },
  {
@@ -5459,7 +5579,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/App.tsx",
-   "line": 2974
+   "line": 2999
   }
  },
  {
@@ -5469,7 +5589,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/App.tsx",
-   "line": 2977
+   "line": 3002
   }
  },
  {
@@ -5479,7 +5599,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/App.tsx",
-   "line": 2980
+   "line": 3005
   }
  },
  {
@@ -15352,7 +15472,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/game/meta.ts",
-   "line": 278
+   "line": 289
   }
  },
  {
@@ -15362,7 +15482,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/game/meta.ts",
-   "line": 281
+   "line": 292
   }
  },
  {
@@ -15372,7 +15492,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/game/meta.ts",
-   "line": 320
+   "line": 331
   }
  },
  {
@@ -15382,7 +15502,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/game/meta.ts",
-   "line": 321
+   "line": 332
   }
  },
  {
@@ -15392,7 +15512,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/game/meta.ts",
-   "line": 322
+   "line": 333
   }
  },
  {
@@ -15402,7 +15522,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/game/meta.ts",
-   "line": 323
+   "line": 334
   }
  },
  {

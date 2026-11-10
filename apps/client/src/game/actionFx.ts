@@ -99,6 +99,34 @@ export const ACTION_FX: Record<string, ActionFx> = {
   swap_places: { sound: "draw", buzz: "aim" },
   /** One of yours goes back to the bin, which is what `discard` is. */
   recall_card: { sound: "discard", buzz: "aim" },
+
+  /* ── the three Or picked, 10 November 2026 ─────────────────────────── */
+  /**
+   * Your board goes dark on THEIR screen.
+   *
+   * The x-ray's sound backwards in meaning, so not the x-ray's sound: a
+   * ting says LOOK HERE and this card is the opposite instruction. `discard`
+   * is the softest close in the library — something being put away — which
+   * is what a board being covered sounds like from the side doing it.
+   */
+  fog: { sound: "discard", buzz: "hex" },
+  /**
+   * Twice the trophies, win or lose.
+   *
+   * `boost` and the growing buzz, because it is unambiguously an upward
+   * card at the moment you press it. What it does to a LOSS is a thing you
+   * find out later, and dressing the press itself as a warning would be the
+   * game telling a child not to take the bet it just offered him.
+   */
+  double: { sound: "boost", buzz: "boost" },
+  /**
+   * One of theirs becomes one of yours.
+   *
+   * `draw` is the sound of a card arriving in your hand, which is exactly
+   * what happens — the difference is only whose hand it left. The `hex`
+   * buzz, not `aim`, because it was done TO somebody.
+   */
+  thief: { sound: "draw", buzz: "hex" },
 };
 
 /**

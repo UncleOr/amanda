@@ -1716,6 +1716,31 @@ function Game() {
                     {m.coop ? t("sc84b632", "החצי שלך") : t("s502312f", "אתה")} <span className="side__way">⟵</span>
                   </>
                 )}
+                {/*
+                  ═══ A CARD THAT CHANGES NOTHING ON THE SCREEN IS A CARD
+                  THAT DOES NOT WORK ═══
+
+                  Or has thrown two cards out of this game for exactly that
+                  — *"both are effects that happen somewhere the player is
+                  not looking"* (catalog.ts). These two are the same shape:
+                  the fog hides a board on somebody else's screen and the
+                  double changes a number that does not exist until the
+                  match is over. Neither leaves a mark where it is played.
+
+                  So each leaves one here, on the label of the board it was
+                  played over, and it stays for the rest of the prep — which
+                  is also exactly as long as each of them lasts.
+                */}
+                {m.hidingBoard && (
+                  <span className="side__mark side__mark--fog" title={t("s1a82ea8", "היריב לא רואה את הלוח שלך")}>
+                    <Icon name="hidden" size={13} /> {t("s10b1ccc", "מוסתר")}
+                  </span>
+                )}
+                {m.doubled && (
+                  <span className="side__mark side__mark--double" title={t("s495f79f", "גביעים כפולים — לטוב ולרע")}>
+                    <Icon name="win" size={13} /> ×2
+                  </span>
+                )}
               </div>
               {m.frozenFor > 0 && (
                 <div className="frozen" role="status">

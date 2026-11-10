@@ -905,6 +905,10 @@ export interface MatchApi {
   targeting: string | null;
   /** True while this is Amanda's own mode. See sfx.amanda. */
   amandaMode: boolean;
+  /** True once the fog card has hidden this board from the opponent. */
+  hidingBoard: boolean;
+  /** True once the double card has been played: twice the trophies, either way. */
+  doubled: boolean;
   /** Cells flashing because an action card just improved them. */
   lit: Set<string>;
   mods: BattleMods;
@@ -1127,6 +1131,29 @@ export function useMatch(): MatchApi {
   const [lit, setLit] = useState<Set<string>>(() => new Set());
   const litTimer = useRef(0);
   const [xrayActive, setXrayActive] = useState(false);
+  /**
+   * The fog card has been played: this board is hidden from the opponent.
+   *
+   * Only ever read for the marker on your own half of the screen — the
+   * hiding is done by the match server, which is the only thing holding the
+   * board the other player is shown. See match.ts.
+   */
+  const [hidingBoard, setHidingBoard] = useState(false);
+  /**
+   * The double card has been played: this match is worth twice as much.
+   *
+   * Carried to the server when the match is paid, because trophies move in
+   * exactly one place and that place is not here. Both directions — Or:
+   * *"doubles the amount of trophies you win OR LOSE."*
+   */
+  const [doubled, setDoubled] = useState(false);
+  /*
+   * The same flag, for the code that reads it outside React's view of time:
+   * the battle-ended effect fires once and closes over the value it had when
+   * it was created, which is before the card was ever played.
+   */
+  const doubledRef = useRef(false);
+  doubledRef.current = doubled;
   const [targeting, setTargeting] = useState<string | null>(null);
   const [online, setOnline] = useState(false);
   const [netError, setNetError] = useState(false);
@@ -1761,6 +1788,21 @@ export function useMatch(): MatchApi {
   const canPlayAction = useCallback(
     (id: string): boolean => {
       const a = ACTIONS.get(id);
+      /*
+       * ⚠ THE FOG HAS NOBODY TO HIDE FROM IN A SOLO MATCH, and saying so is
+       * better than letting it be spent.
+       *
+       * The computer does not LOOK at your board: `generateAiPlan` is built
+       * from the deck at the start of the match and never consults what you
+       * have placed. So against a bot this card is not weak, it is inert —
+       * and an inert card that still costs you a slot in the bar is the kind
+       * of thing that teaches a child the game is lying to them.
+       *
+       * Greyed out rather than hidden: it is still in the deck, it is still
+       * worth having, and the moment there is somebody on the other side it
+       * works. Hiding it would be a different and worse lie.
+       */
+      if (a?.effect === "hideOwnBoard") return onlineRef.current;
       if (a?.effect !== "freezeOpponentPlacing") return true;
       return buildSecondsLeft() >= Number(a.params?.minBuildSecondsLeft ?? 10);
     },
@@ -2024,6 +2066,41 @@ export function useMatch(): MatchApi {
         if (onlineRef.current) netRef.current?.hex(id);
         setXrayActive(true);
         window.setTimeout(() => setXrayActive(false), XRAY_MS);
+      } else if (a?.effect === "hideOwnBoard") {
+        /*
+         * ═══ THE FOG, AND ONLY THE SERVER CAN RAISE IT ═══
+         *
+         * Or: *"Fog — your rows are hidden from the opponent. Including the
+         * first one. Also during the panic phase. (X-Ray goes through it.)"*
+         *
+         * The same shape as the x-ray and for the mirror-image reason. The
+         * x-ray could never work client-side because this client is not
+         * holding the board it wants to see; the fog cannot work client-side
+         * because the board it wants to hide is already on its way to
+         * somebody else. Forwarding it to them would mean sending the cards
+         * over and asking them not to draw them.
+         *
+         * So the request goes out and the flag goes up locally, which is
+         * only ever for the marker on your own board — the hiding itself is
+         * done by the server, in match.ts.
+         */
+        netRef.current?.hex(id);
+        setHidingBoard(true);
+      } else if (a?.effect === "doubleTrophies") {
+        /*
+         * Nothing happens now, which is the whole card: it changes what the
+         * match is WORTH, and what a match is worth is settled when it ends
+         * — by the server, which is the only place trophies move. All this
+         * does is remember that it was played, so that the result can say so.
+         */
+        /*
+         * Online it must reach the server, because online the server is the
+         * one that pays — and it believing its own eyes rather than this
+         * browser's word is the whole difference between the two modes. In
+         * solo it travels with the result instead (reportSolo, below).
+         */
+        if (onlineRef.current) netRef.current?.hex(id);
+        setDoubled(true);
       } else if (a?.effect === "shuffleEnemyFrontRow") shuffleEnemyFront();
       setUsedActions((u) => ({ ...u, [id]: true }));
       // What the card DID, rather than that a card was played. The two it
@@ -2342,6 +2419,17 @@ export function useMatch(): MatchApi {
     window.clearTimeout(litTimer.current);
     setLit(new Set());
     setXrayActive(false);
+    /*
+     * ⚠ BOTH OF THESE WOULD HAVE SURVIVED INTO THE NEXT MATCH, and the test
+     * that insists every piece of match state is cleared here is what said
+     * so — within a minute of them being added, before either had ever been
+     * played. A fog still raised on a board nobody has built yet, and a
+     * double still doubling a match it was never spent in: the second is a
+     * payout bug, which is the kind that is only ever noticed as "the
+     * numbers are wrong sometimes".
+     */
+    setHidingBoard(false);
+    setDoubled(false);
     setTargeting(null);
     setStacked({});
     setStackSlots(0);
@@ -2971,6 +3059,13 @@ export function useMatch(): MatchApi {
        * api.ts — only to stop paying when the two disagree.
        */
       won: w === mySideRef.current,
+      /*
+       * The double card, if it was played. Read from a ref rather than the
+       * state because this runs inside the battle-ended effect, which closes
+       * over whatever `doubled` was when the effect was made — and the card
+       * can be played at any point in the prep before it.
+       */
+      doubled: doubledRef.current,
     }).then((won) => {
       if (won.nachos || won.chests.length || won.moved.length) setAward(won);
       /*
@@ -3306,6 +3401,8 @@ export function useMatch(): MatchApi {
     playground,
     /** True while this is Amanda's own mode — she speaks only there. */
     amandaMode: soloAmandaRef.current,
+    hidingBoard,
+    doubled,
     editSide,
     setEditSide,
     startPlayground,

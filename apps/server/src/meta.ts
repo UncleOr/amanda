@@ -247,6 +247,30 @@ export async function awardMatch(
    * since the worst it can do is fail to pay a nacho.
    */
   opponentId?: string | null,
+  /**
+   * The double card was played: this match is worth twice as much.
+   *
+   * Or: *"Double — if you played it, it doubles the amount of trophies you
+   * win or lose in the match (only in matches with trophies)."*
+   *
+   * ⚠ BOTH DIRECTIONS, WHICH IS WHAT MAKES IT A DECISION. A card that only
+   * doubled the winnings would be a card you always play; one that doubles
+   * the fall as well is a bet, and a bet is the thing Or asked for.
+   *
+   * "Only in matches with trophies" needs no code: a match worth nothing is
+   * worth nothing twice, and `moveTrophies` already leaves on a zero.
+   *
+   * ⚠ WHERE THIS IS BELIEVED FROM, WHICH IS NOT THE SAME IN BOTH MODES.
+   * ONLINE the match server SAW the card played — it passes through the
+   * socket, so the flag is the server's own observation and cannot be
+   * forged by a browser. SOLO it is the browser's claim, because an action
+   * card played during the prep leaves no mark on the battle for the replay
+   * to check it against. The exposure is precisely one thing: a modified
+   * client claiming it only on matches it won. What bounds it is that solo
+   * trophies are capped per day anyway (withinDailyCap), so the most it can
+   * buy is reaching that cap sooner.
+   */
+  doubled = false,
 ): Promise<MetaAward> {
   try {
     const opponent = await whoThatWas(sb, playerId, botLevel, opponentId);
@@ -286,7 +310,7 @@ export async function awardMatch(
      * `trophiesFor` is the only answer now, and this is the only caller.
      * recordMatch no longer touches trophies at all.
      */
-    const won = await moveTrophies(sb, playerId, facts, opponent, now);
+    const won = await moveTrophies(sb, playerId, facts, opponent, now, doubled);
     /*
      * Write the match down. Every finished match comes through here —
      * against a person and against the computer — which makes this the one
@@ -374,8 +398,19 @@ async function moveTrophies(
   facts: MatchFacts,
   opponent: Opponent,
   now: Date,
+  doubled = false,
 ): Promise<{ gave: number; cappedOut: boolean }> {
-  const worth = trophiesFor({ won: facts.won, score: facts.score, opponent });
+  /*
+   * ⚠ DOUBLED BEFORE THE CAP, NOT AFTER. The daily cap on bot trophies is a
+   * ceiling on what a day can pay; doubling after it would lift the ceiling,
+   * which is not what the card says and not what the cap is for. Doubling
+   * first means the card gets you to the same ceiling in half the matches,
+   * which is exactly "twice as much, twice as fast".
+   *
+   * And a match worth nothing is still worth nothing — "only in matches with
+   * trophies" is the line below, which was already there.
+   */
+  const worth = trophiesFor({ won: facts.won, score: facts.score, opponent }) * (doubled ? 2 : 1);
   if (worth === 0) return { gave: 0, cappedOut: false };
 
   const today = israelDay(now);
@@ -426,9 +461,13 @@ export function awardMeta(
   facts: MatchFacts,
   /** The other player, so a loss to a friend can pay what Or asked it to. */
   opponentId?: string | null,
+  /** The double card, as the MATCH SERVER saw it played. See awardMatch. */
+  doubled = false,
 ): Promise<MetaAward> {
   const sb = db();
-  return sb ? awardMatch(sb, playerId, facts, new Date(), undefined, opponentId) : Promise.resolve(NONE);
+  return sb
+    ? awardMatch(sb, playerId, facts, new Date(), undefined, opponentId, doubled)
+    : Promise.resolve(NONE);
 }
 
 /**
