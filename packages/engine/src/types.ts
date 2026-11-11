@@ -1,4 +1,4 @@
-import type { Ability, Element, LocalizedString, Range, Targeting } from "@amanda/shared";
+import type { Ability, Element, LocalizedString, Range, SquareKind, Targeting } from "@amanda/shared";
 import type { Rng } from "./rng.js";
 
 /** Which side of the arena a unit belongs to. */
@@ -82,7 +82,18 @@ export interface Unit {
   /** Ground-floor card revealed when this unit dies (Stacking). */
   below: StackedCard | null;
   /** Runtime flags used by ability handlers (e.g. rooted, elementStolen). */
-  flags: Record<string, boolean | number>;
+  flags: Record<string, boolean | number | string>;
+  /**
+   * The special square this unit is standing on, if any.
+   *
+   * Or, 11 November: *"1-3 random positions on every board … possible for
+   * any card except the King."* Carried on the unit rather than looked up
+   * from the board, because a unit MOVES: the hospital heals whoever is
+   * standing on it at setup and goes on healing them as they walk away,
+   * which is the reading that makes it a property of the card rather than
+   * of a patch of floor they happened to cross.
+   */
+  square?: SquareKind | null;
 
   /*
    * ── the two facts a card needs about the battle so far ──
@@ -114,6 +125,34 @@ export interface Unit {
 /** A card sitting under another via the Stacking / "Ground Floor" mechanic. */
 export interface StackedCard {
   cardId: string;
+  /**
+   * And what is under THAT one.
+   *
+   * ═══ THE BUNKER MADE THIS A CHAIN ═══
+   *
+   * Or: *"the bunker — you can put up to 3 cards there one on top of the
+   * other."* Stacking has existed since the Ground Floor ability and it was
+   * exactly one deep: `below` held a card id, and `reveal` spawned that card
+   * with `below: null`, so a third could not be expressed at all.
+   *
+   * One link instead of one card, and the ability that used it is a chain of
+   * length one — which is the same thing it always was.
+   */
+  below: StackedCard | null;
+}
+
+/** A pile of card ids, top first, as the unit carries it. */
+export function stackOf(ids: readonly string[]): StackedCard | null {
+  let out: StackedCard | null = null;
+  for (let i = ids.length - 1; i >= 0; i--) out = { cardId: ids[i]!, below: out };
+  return out;
+}
+
+/** The same pile, back as a list of ids. */
+export function idsBelow(stack: StackedCard | null): string[] {
+  const out: string[] = [];
+  for (let s = stack; s; s = s.below) out.push(s.cardId);
+  return out;
 }
 
 export interface BattleEvent {
@@ -135,6 +174,15 @@ export interface BattleEvent {
      * Fires once, at spawn. `col` is where it came up.
      */
     | "dig"
+    /**
+     * A mine went off under somebody.
+     *
+     * Or: *"minefield — if the enemy steps there while it is free … he
+     * explodes. Once, only the first enemy soldier."* Its own event rather
+     * than a `hit` with no attacker, because the screen has to be able to
+     * draw a bang where there is nobody swinging.
+     */
+    | "explode"
     | "win";
   /** Acting unit. */
   uid?: string;
@@ -185,6 +233,16 @@ export interface BattleState {
   ended: boolean;
   nextUid: number;
   synergies: SynergyDef[];
+  /**
+   * Mines that have not gone off yet.
+   *
+   * Or: *"minefield — if the enemy steps there while it is free (say when
+   * our card died or walked/flew away) — he explodes. Once, only the first
+   * enemy soldier."* So a mine is a PLACE, not a card: it belongs to the
+   * board it was rolled on, it is armed only while nothing of that board's
+   * own is standing on it, and it is spent the first time it fires.
+   */
+  mines: Array<{ owner: Owner; col: number; lane: number; spent: boolean }>;
   /** Lanes in this arena — 4 normally, 8 in Amanda mode. */
   lanes: number;
 }

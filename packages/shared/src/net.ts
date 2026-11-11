@@ -18,13 +18,26 @@ export interface NetPlacement {
   x: number;
   y: number;
   king?: boolean;
-  below?: string;
+  /**
+   * What is stacked underneath. One id is the "Ground Floor" ability; a list
+   * is the bunker, which holds three — see squares.ts and the engine's
+   * StackedCard.
+   */
+  below?: string | readonly string[];
   buff?: NetBuff;
 }
 
 export interface NetBoard {
   owner: Side;
   placements: NetPlacement[];
+  /**
+   * The special squares rolled for this board, keyed "x-y".
+   *
+   * On the wire because both sides have to be looking at the SAME board: the
+   * squares are rolled once, by whoever owns the match, and a client that
+   * rolled its own would draw a hospital where the engine put a minefield.
+   */
+  squares?: Readonly<Record<string, string>>;
 }
 
 /** A fog-limited view of a board (cellKey → cardId, plus the King if revealed). */

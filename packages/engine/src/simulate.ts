@@ -1,4 +1,13 @@
-import { ARENA, COMBAT, KING, RANGE_REACH, SIMULATION, SUDDEN_DEATH, type Targeting } from "@amanda/shared";
+import {
+  ARENA,
+  COMBAT,
+  KING,
+  RANGE_REACH,
+  SIMULATION,
+  SUDDEN_DEATH,
+  TUNED,
+  type Targeting,
+} from "@amanda/shared";
 import {
   damageSharer,
   rowAttackTargets,
@@ -24,6 +33,7 @@ import {
   sharesLane,
 } from "./combat.js";
 import { buildBattle, createUnitFromCard, type BattleSetup } from "./setup.js";
+import { idsBelow } from "./types.js";
 import type {
   BattleFrame,
   BattleResult,
@@ -305,6 +315,31 @@ function pickTarget(state: BattleState, u: Unit): TargetPick | null {
    * counts as in front.
    */
   const level = 0.01;
+  /*
+   * ═══ THE MADMAN IN THE ASYLUM ═══
+   *
+   * Or: *"asylum — attacks his friends instead of the enemy. His friends
+   * cannot attack him."*
+   *
+   * The second half needs no code: nothing in this engine has ever been able
+   * to pick an ally, so his own side already cannot touch him. The first
+   * half is the whole of it, and it is a different QUESTION rather than a
+   * different answer — every search below asks "which of them is nearest",
+   * and for him "them" is his own side.
+   *
+   * ⚠ AND IT IGNORES WHICH WAY HE IS FACING. Everything else in this file
+   * hunts forwards, because the enemy is in front by construction. His own
+   * side is behind him, so a forward-only search would find nobody and he
+   * would walk quietly to the far wall doing nothing — which is the exact
+   * stall this file has been bitten by twice. He takes the nearest ally in
+   * any direction, and turns round to reach it.
+   */
+  if (u.square === "asylum") {
+    const mates = state.units.filter((e) => e.alive && e !== u && e.owner === u.owner);
+    const pick = nearestAnywhere(u, mates);
+    if (pick && aheadBy(u, pick.unit) < 0) u.facing = u.facing > 0 ? -1 : 1;
+    return pick ? { ...pick, crossLane: true } : null;
+  }
   const enemies = state.units.filter(
     (e) =>
       e.alive &&
@@ -556,8 +591,18 @@ export function runBattle(setup: BattleSetup): BattleResult {
       width: 1,
       facing: dead.facing,
       isKing: false,
-      below: null,
+      /*
+       * ⚠ WHAT IS UNDER THE ONE THAT WAS UNDER THIS ONE. The bunker stacks
+       * three (Or: *"up to 3 cards one on top of the other"*), so revealing
+       * the next card has to hand on the rest of the pile. This used to be
+       * `null`, which is why stacking was exactly one deep for as long as it
+       * existed.
+       */
+      below: dead.below.below ? idsBelow(dead.below.below) : [],
     });
+    // The revealed card inherits the square the pile is standing on: a
+    // bunker in a hospital goes on healing whatever is on top of it.
+    u.square = dead.square ?? null;
     state.units.push(u);
     state.events.push({
       tick: state.tick,
@@ -613,7 +658,7 @@ export function runBattle(setup: BattleSetup): BattleResult {
       width: u.width,
       facing: u.facing,
       isKing: u.isKing,
-      below: null,
+      below: [],
     });
     const pct = (v: unknown, fallback: number) => (typeof v === "number" ? v : fallback) / 100;
     born.maxHp = Math.max(1, Math.round(born.maxHp * pct(ab.params.hpPct, 75)));
@@ -930,9 +975,81 @@ export function runBattle(setup: BattleSetup): BattleResult {
     u.col = Math.min(ARENA.width - 1, Math.max(0, next));
   }
 
+  /**
+   * ═══ THE HOSPITAL, AND THE MINEFIELD ═══
+   *
+   * The two squares that need the battle to be running. Both are Or's own
+   * sentences and both are about a MOMENT rather than about a card:
+   *
+   *   *"hospital — the card there heals without stopping."*
+   *   *"minefield — if the enemy steps there while it is free (say when our
+   *   card died or walked/flew away) — he explodes. Once, only the first
+   *   enemy soldier."*
+   *
+   * ⚠ THE HOSPITAL FOLLOWS THE CARD, THE MINE STAYS ON THE FLOOR. A card
+   * that was standing in the hospital when the boards locked goes on healing
+   * as it walks across the arena; a mine belongs to the square. That is not
+   * an inconsistency, it is the difference between a thing that was done TO
+   * a card and a thing that is lying in a place — and it is also the reading
+   * that makes the hospital worth a square, since a card that stopped
+   * healing the moment it advanced would be a card you must never move.
+   */
+  function runSquares(): void {
+    for (const u of state.units) {
+      if (!u.alive || u.square !== "hospital") continue;
+      if (u.hp >= u.maxHp) continue;
+      u.hp = Math.min(u.maxHp, u.hp + TUNED.hospitalHealPerSecond * DT);
+    }
+
+    for (const mine of state.mines) {
+      if (mine.spent) continue;
+      /*
+       * ═══ "STEPPING ON IT" IS AN OVERLAP, NOT A CENTRE ═══
+       *
+       * The first version asked whether a unit's CENTRE was within half a
+       * column of the mine, and measured it: the mine never once went off.
+       * An attacker does not stand ON your front row, it stands at arm's
+       * length in FRONT of it — a walker coming at a King stops at column
+       * 3.60 and the front-row mine is at 3.00, so by centres it misses by a
+       * tenth of a column, every time, for ever.
+       *
+       * Bodies are a column wide. They are on the square when they overlap
+       * it, which is what a foot on a mine means.
+       */
+      const onIt = (u: Unit) =>
+        u.alive && u.lanes.includes(mine.lane) && Math.abs(u.col - mine.col) < (u.width + 1) / 2;
+      // Covered by one of its own: his sentence says "while it is free".
+      if (state.units.some((u) => u.owner === mine.owner && onIt(u))) continue;
+      const victim = state.units.find((u) => u.owner !== mine.owner && !u.isKing && onIt(u));
+      if (!victim) continue;
+      mine.spent = true;
+      state.events.push({
+        tick: state.tick,
+        type: "explode",
+        uid: victim.uid,
+        col: mine.col,
+        lanes: [mine.lane],
+        damage: TUNED.mineDamage,
+      });
+      /*
+       * Straight off the health, not through computeDamage: a mine has no
+       * element, no armour to beat and nobody to reflect it back at. The
+       * only shared step is the death bookkeeping, which has to be the
+       * same one everything else uses or the battle can end with a corpse
+       * still standing.
+       */
+      victim.hp -= TUNED.mineDamage;
+      if (victim.hp <= 0 && victim.alive) killUnit(victim, null);
+    }
+  }
+
   function step(): void {
     state.tick++;
     runAuras(state);
+    // The ground itself, before anybody acts on it: a card that is about to
+    // be healed should be healed before it is hit, and a card that is about
+    // to step on a mine should not get its swing in first.
+    runSquares();
     // Poison and burning lanes, after the auras that could have healed through
     // them and before anybody acts. Both can kill, so this runs with the
     // simulation's own death bookkeeping available to it.

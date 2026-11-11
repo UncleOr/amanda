@@ -70,6 +70,9 @@ export * from "./clubs.js";
 // What beating the computer is worth, and what the board can vouch for
 export * from "./soloTrophies.js";
 
+/** The special squares on a board — see squares.ts. */
+export * from "./squares.js";
+
 // How many nachos a match is worth, and how many fill a chest
 export * from "./nachos.js";
 

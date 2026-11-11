@@ -60,6 +60,25 @@ export const TUNED = {
    */
   soloTrophiesPerDay: 0,
   /*
+   * ═══ THE SPECIAL SQUARES ═══
+   *
+   * Or: *"from arena 2 or 3 … 1-3 random ones on every board."* The second
+   * arena opens at 150, which is a few evenings in — late enough that the
+   * first board a child ever builds is the plain one, early enough that it
+   * is not a thing they hear about and never meet. See squares.ts.
+   */
+  squaresFromTrophies: 150,
+  /** The most a board may get. The roll is 1..this. */
+  squaresPerBoard: 3,
+  /** How many cards fit in a bunker. Or: *"up to 3 cards one on top of the other."* */
+  bunkerDepth: 3,
+  /** What a black hole pays the rest of the board, as a percentage. Or's number. */
+  blackHolePct: 130,
+  /** What a mine does to the first enemy that steps on an empty one. */
+  mineDamage: 3000,
+  /** Health a hospital gives back every second to whoever stands on it. */
+  hospitalHealPerSecond: 120,
+  /*
    * ═══ AN UPGRADE COSTS DIAMONDS AS WELL AS COPIES ═══
    *
    * Or, asking for the upgrade button: *"'3/4 cards to upgrade', and then an
@@ -280,6 +299,26 @@ export const TUNABLES: Tunable[] = [
     step: 5,
     get: () => TUNED.soloTrophiesPerDay,
     set: (v) => (TUNED.soloTrophiesPerDay = v),
+  },
+  {
+    id: "squares.from",
+    he: "מאיזה ניקוד מופיעים מיקומים מיוחדים",
+    note: "בית חולים, חור שחור, בונקר וכל השאר. 150 = מהארנה השנייה. מספר גבוה מאוד מכבה אותם לגמרי.",
+    min: 0,
+    max: 5000,
+    step: 50,
+    get: () => TUNED.squaresFromTrophies,
+    set: (v) => (TUNED.squaresFromTrophies = v),
+  },
+  {
+    id: "squares.perBoard",
+    he: "כמה מיקומים מיוחדים בלוח",
+    note: "ההגרלה היא בין אחד למספר הזה, בכל לוח בנפרד. 0 מכבה אותם.",
+    min: 0,
+    max: 6,
+    step: 1,
+    get: () => TUNED.squaresPerBoard,
+    set: (v) => (TUNED.squaresPerBoard = v),
   },
   {
     id: "levels.diamonds",
