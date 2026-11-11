@@ -243,6 +243,15 @@ export async function reportSolo(opts: {
    */
   arenaId: string;
   /**
+   * The special squares each side was fought on.
+   *
+   * An input to the battle exactly as the boards and the ground are — a
+   * hospital changes who is left standing — so the server has to replay with
+   * the same ones or it will disagree about who won and pay nothing. See
+   * squaresOf in apps/server/src/solo.ts.
+   */
+  squares: { mine: Record<string, string>; theirs: Record<string, string> };
+  /**
    * Who the browser says won — what the player is looking at.
    *
    * The server does not believe it and does not pay on it. It re-runs the

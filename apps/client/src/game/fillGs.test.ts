@@ -2,7 +2,7 @@ import { describe, expect, it } from "vitest";
 import { __testing } from "./useMatch";
 
 const { fillGs, cellKey } = __testing;
-const base = { deck: [], hand: null, discard: [], placements: {}, king: null };
+const base = { deck: [], hand: null, discard: [], placements: {}, king: null, squares: {} };
 
 describe("fillGs — end-of-build board lock", () => {
   it("a Fill card fills an empty King slot instead of stealing a placed card", () => {
@@ -14,7 +14,7 @@ describe("fillGs — end-of-build board lock", () => {
   });
 
   it("keeps a King the player chose and still fills the rest", () => {
-    const s = { ...base, king: "dragons_10_sky_king" };
+    const s = { ...base, king: "dragons_10_sky_king", squares: {} };
     const out = fillGs(s, ["fill_lava"]);
     expect(out.king).toBe("dragons_10_sky_king");
     expect(Object.values(out.placements).filter((c) => c === "dragons_04_lava")).toHaveLength(3);
@@ -27,7 +27,7 @@ describe("fillGs — end-of-build board lock", () => {
   });
 
   it("fills every remaining slot with Crumb Demons", () => {
-    const out = fillGs({ ...base, king: "dragons_10_sky_king" }, []);
+    const out = fillGs({ ...base, king: "dragons_10_sky_king", squares: {} }, []);
     expect(Object.keys(out.placements)).toHaveLength(12);
     expect(Object.values(out.placements).every((c) => c === "crumb_demon")).toBe(true);
   });

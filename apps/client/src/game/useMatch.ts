@@ -8,6 +8,12 @@ import {
   PHASES,
   COOP_LANES,
   buildAmandaBoard,
+  TUNED,
+  cellCapacity,
+  fogSquares,
+  rollSquares,
+  squaresOpen,
+  type Squares,
   levelMultiplier,
   emojiFromSayId,
   shownAvatar,
@@ -699,7 +705,7 @@ export function takeFromBin<T extends { hand: string | null; discard: string[] }
 function buildPlayerBoard(
   state: GameState,
   mods: BattleMods,
-  stacked: Record<string, string> = {},
+  stacked: Record<string, string[]> = {},
   album?: Map<string, OwnedCard> | null,
   levelCap: number = LEVELS.max,
 ): BoardInput {
@@ -732,11 +738,18 @@ function buildPlayerBoard(
       x,
       y,
       buff: cellBuff(mods, key, cardId === "crumb_demon", levelOf(cardId)),
-      // Ground Floor: when the card on top dies, this one is revealed.
-      ...(stacked[key] ? { below: stacked[key] } : {}),
+      /*
+       * What is underneath, top of the pile first.
+       *
+       * One card is the Ground Floor ability, which is what this always was.
+       * Up to three is the BUNKER — Or: *"you can put up to 3 cards there
+       * one on top of the other"* — and the engine reveals them one at a
+       * time as the one above dies.
+       */
+      ...(stacked[key]?.length ? { below: stacked[key] } : {}),
     });
   }
-  return { owner: "A", placements: fillCrumbs(ps) };
+  return { owner: "A", placements: fillCrumbs(ps), squares: state.squares };
 }
 
 interface GameState {
@@ -745,6 +758,19 @@ interface GameState {
   discard: string[];
   placements: Record<string, string>;
   king: string | null;
+  /**
+   * The special squares on YOUR board for this match.
+   *
+   * Or, 11 November: *"1-3 random ones on every board (ours and the
+   * opponent's) with a unique colour and icon."* Rolled once when the match
+   * starts and never again — a board whose shape changed under you while
+   * you were building on it would be worse than no squares at all.
+   *
+   * Empty whenever they are off: below the trophy gate, in a lesson, on the
+   * playground bench. Every reader treats "no squares" as the plain board
+   * it has always been.
+   */
+  squares: Squares;
 }
 
 /**
@@ -863,6 +889,7 @@ function initialGameState(
   album?: Map<string, OwnedCard> | null,
   built?: readonly string[] | null,
   best?: number,
+  squares: Squares = {},
 ): GameState {
   return {
     deck: matchDeck(album, undefined, built, best),
@@ -870,7 +897,25 @@ function initialGameState(
     discard: [],
     placements: {},
     king: null,
+    squares,
   };
+}
+
+/**
+ * Roll a board's special squares, or nothing at all.
+ *
+ * ⚠ ONE PLACE DECIDES WHETHER THEY ARE ON, and every caller goes through it:
+ * the gate is the player's HIGH-WATER trophies, exactly like the tunnel and
+ * the families, so a bad evening cannot take the shape of the board away
+ * again halfway through a session.
+ *
+ * `TUNED.squaresPerBoard` at 0 turns them off for everybody without a
+ * deploy, which is the first thing to reach for if they turn out to be a
+ * mistake.
+ */
+function rollBoardSquares(best: number): Squares {
+  if (!squaresOpen(best) || TUNED.squaresPerBoard <= 0) return {};
+  return rollSquares(Math.random);
 }
 
 function drawIfEmpty(s: GameState): GameState {
@@ -899,6 +944,9 @@ function buildBenchBoard(view: BoardView, owner: Side): BoardInput {
     discard: [],
     placements: view.placements,
     king: view.king,
+    // The bench is a measuring instrument: no squares, on either side, so a
+    // comparison measures the cards and nothing else.
+    squares: {},
   };
   return {
     ...buildPlayerBoard(state, { boardPowerAdd: 0, boostedCells: {} }),
@@ -934,13 +982,27 @@ export interface MatchApi {
   /** True once "dark corners" has opened the four corners for stacking. */
   stackCorners: boolean;
   /** Which cells have a card hidden underneath. */
-  stacked: Record<string, string>;
+  stacked: Record<string, string[]>;
   /** True while the next action card played against you will be blocked. */
   shielded: boolean;
   /** First cell chosen for a two-step action, or null. */
   firstPick: string | null;
   placements: Record<string, string>;
   king: string | null;
+  /**
+   * The special squares on your board — see packages/shared/src/squares.ts.
+   * Empty whenever they are off: below the trophy gate, in a lesson, on the
+   * bench, and in a mirror match where both boards must be the same board.
+   */
+  squares: Squares;
+  /**
+   * And on theirs, already cut down to what you may see.
+   *
+   * Or: *"the opponent sees your positions and you see his according to the
+   * reveal stage."* Fogged inside the hook rather than by the screen, so
+   * there is exactly one copy of that rule.
+   */
+  foeSquares: Squares;
   result: BattleResult | null;
   hasKing: boolean;
   opponent: BoardView;
@@ -1272,8 +1334,14 @@ export function useMatch(): MatchApi {
    */
   const [myBack, setMyBack] = useState<string | null>(null);
   const [roomError, setRoomError] = useState<RoomError | null>(null);
-  /** Cards stacked underneath a placed card, revealed when the top one dies. */
-  const [stacked, setStacked] = useState<Record<string, string>>({});
+  /**
+   * Cards stacked underneath a placed card, top of the pile first.
+   *
+   * A list rather than a card since the bunker: Or, *"you can put up to 3
+   * cards there one on top of the other."* The Ground Floor ability is a
+   * list of one, which is what it always was.
+   */
+  const [stacked, setStacked] = useState<Record<string, string[]>>({});
   /** Cells "ground floor" has unlocked for stacking but not yet used. */
   const [stackSlots, setStackSlots] = useState(0);
   /** "Dark corners" opens the four corners for stacking, and never runs out. */
@@ -1347,7 +1415,12 @@ export function useMatch(): MatchApi {
   /** 2v2: the partner's and the two enemy halves, decided before the countdown. */
   const duoBoardsRef = useRef<{ mate: Placement[]; foes: Placement[] } | null>(null);
   /** The two boards of the match just fought, for reporting it. See startBattle. */
-  const soloBoardsRef = useRef<{ mine: Placement[]; theirs: Placement[] } | null>(null);
+  const soloBoardsRef = useRef<{
+    mine: Placement[];
+    theirs: Placement[];
+    /** The special squares each side was fought on. See startBattle. */
+    squares: { mine: Record<string, string>; theirs: Record<string, string> };
+  } | null>(null);
   /**
    * Which arena this bot match is being fought in — the ground, and so which
    * family fights 20% harder in it (arenas.ts).
@@ -1536,6 +1609,14 @@ export function useMatch(): MatchApi {
   timeLeftRef.current = timeLeft;
   const shieldedRef = useRef(shielded);
   shieldedRef.current = shielded;
+  /**
+   * The special squares on the OPPONENT's board.
+   *
+   * A ref rather than state because nothing re-renders on it changing: it is
+   * rolled once when the round begins and read by the board that draws the
+   * other side, which re-renders for its own reasons anyway.
+   */
+  const foeSquaresRef = useRef<Squares>({});
   const stackedRef = useRef(stacked);
   stackedRef.current = stacked;
   const mySideRef = useRef(mySide);
@@ -1696,13 +1777,32 @@ export function useMatch(): MatchApi {
       // Stacking: "ground floor" lets a card go on TOP of one already placed,
       // and the one underneath is revealed when the top card dies in battle.
       if (s.placements[key]) {
-        if (stackedRef.current[key]) return;
+        const pile = stackedRef.current[key] ?? [];
+        const cap = cellCapacity(s.squares, key);
+        /*
+         * ═══ THE BUNKER STACKS FOR FREE, AND THREE DEEP ═══
+         *
+         * Or: *"the bunker — you can put up to 3 cards there one on top of
+         * the other."* It is a property of the SQUARE, so it costs none of
+         * the slots the Ground Floor ability hands out and it does not care
+         * whether that ability was ever played. Everywhere else is the rule
+         * that was already here: one card under one card, paid for.
+         */
+        if (cap > 1) {
+          if (1 + pile.length >= cap) return; // the bunker is full
+          const under = s.placements[key]!;
+          setStacked((st) => ({ ...st, [key]: [under, ...(st[key] ?? [])] }));
+          setGs(refill({ ...s, placements: { ...s.placements, [key]: s.hand }, hand: null }));
+          landed();
+          return;
+        }
+        if (pile.length) return;
         // A corner opened by "dark corners" is free; anywhere else spends one
         // of the slots "ground floor" handed out.
         const onTheHouse = stackCornersRef.current && isCornerKey(key);
         if (!onTheHouse && stackSlotsRef.current <= 0) return;
         const under = s.placements[key]!;
-        setStacked((st) => ({ ...st, [key]: under }));
+        setStacked((st) => ({ ...st, [key]: [under] }));
         if (!onTheHouse) setStackSlots((n) => n - 1);
         setGs(refill({ ...s, placements: { ...s.placements, [key]: s.hand }, hand: null }));
         landed();
@@ -2497,7 +2597,21 @@ export function useMatch(): MatchApi {
       : duoRef.current
         ? // Two opposing boards, one above the other, across eight lanes.
           { owner: "B", placements: duoBoardsRef.current!.foes }
-        : { owner: "B", placements: fillCrumbs(aiPlanRef.current!) };
+        : {
+            owner: "B",
+            placements: fillCrumbs(aiPlanRef.current!),
+            /*
+             * ⚠ THE BOT GETS THE SQUARES AND DOES NOT KNOW ABOUT THEM. Its
+             * planner chooses placements from the cards alone (generateAiPlan)
+             * and has never heard of a hospital — so a charging station on its
+             * board is luck, and a black hole it happens to fill is a bonus it
+             * threw away. That is a real advantage to the player and it is the
+             * right place to start: the squares are a thing to learn, and a
+             * bot that played them perfectly on the first evening would teach
+             * nothing. Written down because it will look like a bug later.
+             */
+            squares: foeSquaresRef.current,
+          };
 
     let mine = buildPlayerBoard(
       gsRef.current,
@@ -2554,7 +2668,14 @@ export function useMatch(): MatchApi {
      * solo.ts). These are what it re-runs, so they are kept as they were
      * handed to the engine, after the filling and before anything else.
      */
-    soloBoardsRef.current = { mine: mine.placements, theirs: aiFull.placements };
+    soloBoardsRef.current = {
+      mine: mine.placements,
+      theirs: aiFull.placements,
+      // The server re-runs this battle before paying anything (solo.ts), so
+      // it has to be given the same ground: the same boards on different
+      // squares are a different battle and the replay would disagree.
+      squares: { mine: mine.squares ?? {}, theirs: aiFull.squares ?? {} },
+    };
     // Where this is being fought, and so which family fights harder in it.
     soloArenaRef.current = arenaFor(accountRef.current?.trophies ?? 0).id;
 
@@ -2600,7 +2721,23 @@ export function useMatch(): MatchApi {
    */
   const clearRound = useCallback(() => {
     aiPlanRef.current = generateAiPlan(undefined, botLevelRef.current, met());
-    setGs(initialGameState(accountRef.current?.album, builtRef.current, met()));
+    /*
+     * ═══ A NEW BOARD IS A NEW SHAPE ═══
+     *
+     * Or: *"1-3 random ones on every board (ours and the opponent's)."* Both
+     * sides are rolled here, together, because this is the one place a round
+     * begins — and separately, because two boards with the same squares in
+     * the same places would read as a mirror rather than as a roll.
+     */
+    foeSquaresRef.current = rollBoardSquares(met());
+    setGs(
+      initialGameState(
+        accountRef.current?.album,
+        builtRef.current,
+        met(),
+        rollBoardSquares(met()),
+      ),
+    );
     setResult(null);
     setAward(null);
     setRival(null);
@@ -3025,7 +3162,9 @@ export function useMatch(): MatchApi {
        */
       lessonCellsRef.current = lessonSquares(n);
       setLesson(n);
-      setGs({ deck: [...spec.deck], hand: null, discard: [], placements: {}, king: null });
+      // A lesson teaches the plain board. Special squares are a thing a
+      // player meets at the second arena, long after the three stages.
+      setGs({ deck: [...spec.deck], hand: null, discard: [], placements: {}, king: null, squares: {} });
       // A copy: the engine writes positions onto placements during a battle,
       // and a lesson has to be the same lesson the second time it is played.
       aiPlanRef.current = spec.opponent.map((p) => ({ ...p }));
@@ -3125,12 +3264,20 @@ export function useMatch(): MatchApi {
         (id) => !CATALOG.has(id),
       );
       const deck = shuffle([...result.mine, ...actions]);
-      setGs({ deck, hand: null, discard: [], placements: {}, king: null });
+      // The draft rolls its own shape, like any other match.
+      setGs({
+        deck,
+        hand: null,
+        discard: [],
+        placements: {},
+        king: null,
+        squares: rollBoardSquares(met()),
+      });
       // The cards you passed on, planned at the level you chose to play at.
       aiPlanRef.current = generateAiPlan(result.theirs, botLevelRef.current);
       setPhase("countdown");
     },
-    [clearMatch, faceTheBot],
+    [clearMatch, faceTheBot, met],
   );
 
   const startMirror = useCallback(() => {
@@ -3142,7 +3289,14 @@ export function useMatch(): MatchApi {
     setMirrorSeed(seed);
     // One deal, both sides — and still only the families this player has met.
     const deck = matchDeck(null, seed, null, met());
-    setGs({ deck, hand: null, discard: [], placements: {}, king: null });
+    /*
+     * ⚠ A MIRROR MATCH GETS NO SQUARES, AND THAT IS THE WHOLE MODE. "חפיסה
+     * זהה" promises the same cards on both sides so that the only thing left
+     * to be better at is where you put them. Two different shapes of board
+     * would be exactly the kind of difference it exists to remove.
+     */
+    setGs({ deck, hand: null, discard: [], placements: {}, king: null, squares: {} });
+    foeSquaresRef.current = {};
     aiPlanRef.current = generateAiPlan(deck, botLevelRef.current);
     setPhase("countdown");
   }, [clearMatch, met]);
@@ -3540,6 +3694,17 @@ export function useMatch(): MatchApi {
     firstPick,
     placements: gs.placements,
     king: gs.king,
+    /** The special squares on your board, and on theirs. See squares.ts. */
+    squares: gs.squares,
+    /*
+     * ⚠ FOGGED ON THE WAY OUT, NOT BY THE SCREEN. Or: *"the opponent sees
+     * your positions and you see his according to the reveal stage."* The
+     * same rule the cards follow, applied in the same direction, in the one
+     * place that knows both the phase and whether an x-ray is up — a screen
+     * that filtered this itself would be a second copy of the fog, and two
+     * copies of a rule is how they come apart.
+     */
+    foeSquares: xrayActive || playground ? foeSquaresRef.current : fogSquares(foeSquaresRef.current, phase),
     result,
     hasKing: gs.king !== null,
     opponent: opponentView,

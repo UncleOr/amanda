@@ -40,6 +40,7 @@ import {
   arenaFor,
   type Arena,
   type Deck,
+  type SquareKind,
 } from "@amanda/shared";
 import type { BattleResult } from "@amanda/engine";
 import { useMatch, COUNTDOWN_SECONDS, PREBATTLE_SECONDS } from "./game/useMatch";
@@ -56,6 +57,7 @@ import { AMANDA_CARD, tapVoice } from "./game/cardSound";
 import { music } from "./game/music";
 import { ACTIONS, CATALOG, cardPool, isEnemyTargeted, synergyGroups } from "./data/catalog";
 import { useSynergyFlash } from "./game/synergyFlash";
+import { SquareInfo } from "./components/SquareInfo";
 import { artUrl } from "./game/skins";
 import { warm, warmSoon } from "./game/preload";
 import { carryOf } from "./game/carry";
@@ -334,6 +336,19 @@ function Game() {
   const m = useMatch();
   const [detail, setDetail] = useState<string | null>(null);
   const [actionDetail, setActionDetail] = useState<string | null>(null);
+  /**
+   * The special square a tap asked about, with whatever is standing on it.
+   *
+   * Or: *"pressing a square (ours or the opponent's) opens a popup that shows
+   * what is in it."* One state for both boards, because it is one question
+   * with one answer — and a second copy would be a second way for the enemy's
+   * half to forget that what is ON the square may still be behind the fog.
+   */
+  const [squareInfo, setSquareInfo] = useState<{
+    kind: SquareKind;
+    cardId: string | null;
+    hidden: boolean;
+  } | null>(null);
   /*
    * Whether there is an update nobody has read.
    *
@@ -1786,6 +1801,10 @@ function Game() {
                 placements={m.placements}
                 king={m.king}
                 side="left"
+                squares={m.squares}
+                onSquareInfo={(kind, cell) =>
+                  setSquareInfo({ kind, cardId: m.placements[cell] ?? null, hidden: false })
+                }
                 /*
                  * ═══ A LESSON BOARD IS THE SIZE OF THE LESSON ═══
                  *
@@ -1937,6 +1956,24 @@ function Game() {
               <BoardGrid
                 placements={m.opponent.placements}
                 king={m.opponent.king}
+                squares={m.foeSquares}
+                /*
+                 * ⚠ AND WHAT IS STANDING ON IT MAY BE A SECRET WHILE THE
+                 * SQUARE IS NOT. The two are fogged by the same rule but
+                 * they are two facts — the ground was rolled before the
+                 * match and the card was placed during it — so a square you
+                 * can see with a card you cannot is a real state, and the
+                 * panel says so rather than showing an empty one.
+                 */
+                onSquareInfo={(kind, cell) => {
+                  const [x, y] = cell.split("-").map(Number) as [number, number];
+                  const shown = m.revealOpponentCell(x, y);
+                  setSquareInfo({
+                    kind,
+                    cardId: shown ? (m.opponent.placements[cell] ?? null) : null,
+                    hidden: !shown,
+                  });
+                }}
                 /*
                  * The same rule for his side, from the squares his own cards
                  * sit on. A three-square board facing a full enemy one would
@@ -3116,6 +3153,14 @@ function Game() {
             />
           );
         })()}
+      {squareInfo && (
+        <SquareInfo
+          kind={squareInfo.kind}
+          cardId={squareInfo.cardId}
+          hidden={squareInfo.hidden}
+          onClose={() => setSquareInfo(null)}
+        />
+      )}
     </div>
   );
 }

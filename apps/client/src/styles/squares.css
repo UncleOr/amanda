@@ -1,0 +1,123 @@
+/*
+ * ═══ THE SPECIAL SQUARES ═══
+ *
+ * Or, 11 November 2026: *"1-3 random ones on every board (ours and the
+ * opponent's) with a unique colour and icon."*
+ *
+ * ⚠ THE COLOUR IS THE FLOOR, NOT THE CARD. Every cell on this board already
+ * has three things that can light it up — the family bonus is a green ring,
+ * the thing being targeted is gold, a droppable cell is dashed — and all of
+ * them are about what is HAPPENING. A square is about where it is happening,
+ * which is why it is painted as the cell's own ground: a tinted fill and a
+ * coloured edge, under the card and under all three of those.
+ *
+ * The eight colours come from one place (packages/shared/src/squares.ts), so
+ * a kind cannot be amber on the board and green in the panel that explains
+ * it. They are written out here because CSS cannot read a TypeScript file,
+ * and squares.test.ts checks the two lists against each other.
+ */
+
+.slot--square {
+  /* Set per kind below. The rules under it all read these two. */
+  --sq: #888;
+  --sq-dim: rgba(136, 136, 136, 0.16);
+}
+
+/*
+ * Under everything: `::before` is free on a slot, `::after` is the family
+ * ring (chests.css), and the cell's own border belongs to the board.
+ */
+.slot--square::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: 10px;
+  background: var(--sq-dim);
+  box-shadow: inset 0 0 0 2px var(--sq);
+  pointer-events: none;
+  z-index: 0;
+}
+
+/*
+ * The badge that names it, and the only way to ask what it does.
+ *
+ * Or: *"pressing a square (ours or the opponent's) opens a popup that shows
+ * what is in it."* Top-INNER corner, away from the ℹ that opens the card:
+ * two round buttons in the same corner is a 44-point target split in half.
+ */
+.slot__square-mark {
+  position: absolute;
+  inset-block-start: 2px;
+  inset-inline-start: 2px;
+  z-index: 4;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 22px;
+  height: 22px;
+  padding: 0;
+  border-radius: 50%;
+  border: 1px solid var(--sq);
+  background: rgba(6, 9, 18, 0.82);
+  color: var(--sq);
+  cursor: pointer;
+}
+.slot__square-mark:hover {
+  background: var(--sq);
+  color: #06111f;
+}
+
+/* ── one colour each, from squares.ts ── */
+.slot--square-hospital { --sq: #4ade80; --sq-dim: rgba(74, 222, 128, 0.14); }
+.slot--square-mirror { --sq: #c084fc; --sq-dim: rgba(192, 132, 252, 0.14); }
+.slot--square-asylum { --sq: #fb923c; --sq-dim: rgba(251, 146, 60, 0.14); }
+.slot--square-charger { --sq: #facc15; --sq-dim: rgba(250, 204, 21, 0.14); }
+.slot--square-pancake { --sq: #f472b6; --sq-dim: rgba(244, 114, 182, 0.14); }
+.slot--square-bunker { --sq: #94a3b8; --sq-dim: rgba(148, 163, 184, 0.16); }
+.slot--square-blackhole { --sq: #818cf8; --sq-dim: rgba(129, 140, 248, 0.16); }
+.slot--square-minefield { --sq: #ef4444; --sq-dim: rgba(239, 68, 68, 0.14); }
+
+/*
+ * ═══ THE PANEL A TAP OPENS ═══
+ *
+ * One square, its name, and what it does — which is the whole of what Or
+ * asked for. No list of the other seven: a child who tapped THIS square
+ * asked about this square, and the day they want the rest they will tap the
+ * rest.
+ */
+.sqinfo {
+  display: flex;
+  align-items: center;
+  gap: var(--sp-3);
+  text-align: start;
+}
+.sqinfo__badge {
+  flex: none;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 54px;
+  height: 54px;
+  border-radius: 14px;
+  border: 2px solid var(--sq, #888);
+  background: var(--sq-dim, rgba(136, 136, 136, 0.16));
+  color: var(--sq, #888);
+}
+.sqinfo__name {
+  margin: 0 0 var(--sp-1);
+  font-size: var(--t-4);
+  font-weight: 800;
+  color: var(--text);
+}
+.sqinfo__note {
+  margin: 0;
+  font-size: var(--t-3);
+  line-height: 1.45;
+  color: var(--text);
+}
+/* What is standing on it, when anything is. A fact, not a sentence. */
+.sqinfo__who {
+  margin: var(--sp-2) 0 0;
+  font-size: var(--t-2);
+  color: var(--muted);
+}

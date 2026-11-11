@@ -30,7 +30,15 @@
  * climbed by grinding it.
  */
 import { runBattle, type BattleResult, type Placement, type PlacementBuff } from "@amanda/engine";
-import { ARENAS, BOARD, LEVELS, levelMultiplier, payableLevel, type BotLevel } from "@amanda/shared";
+import {
+  ARENAS,
+  BOARD,
+  LEVELS,
+  SQUARE_KINDS,
+  levelMultiplier,
+  payableLevel,
+  type BotLevel,
+} from "@amanda/shared";
 import { CATALOG, SYNERGIES } from "./content.js";
 
 /** The most placements one side can send: a 4x4 board, both halves in co-op. */
@@ -146,6 +154,41 @@ function board(raw: unknown): Placement[] | null {
   return out;
 }
 
+/**
+ * The special squares one side was fought on, as the browser reports them.
+ *
+ * ═══ TAKEN FROM THE REQUEST, LIKE THE BOARDS AND THE GROUND ═══
+ *
+ * Same bargain as `arenaId` above and for the same reason: this file exists
+ * so that the same inputs give the same answer on both sides, and the
+ * squares are an INPUT — a hospital changes who is left standing. Rolling
+ * them again here would produce a different battle from the one the player
+ * watched, and the replay would refuse to pay for a match they won.
+ *
+ * It costs nothing that was not already given away: this whole route is
+ * handed both BOARDS by the browser. The squares apply to whichever side
+ * they are on, a player who invents a charging station is also inventing it
+ * for the board they are fighting, and what bounds the payout is the
+ * difficulty cap in soloTrophies.ts, which none of this touches.
+ *
+ * ⚠ AND ONLY THE EIGHT NAMES. An unknown kind is dropped rather than passed
+ * on: the engine ignores it too, but a board is the one thing here that
+ * comes from somewhere else and it is cheaper to say no twice.
+ */
+function squaresOf(raw: unknown, side: "mine" | "theirs"): Record<string, string> {
+  const all = raw && typeof raw === "object" ? (raw as Record<string, unknown>) : null;
+  const one = all?.[side];
+  if (!one || typeof one !== "object") return {};
+  const out: Record<string, string> = {};
+  for (const [cell, kind] of Object.entries(one as Record<string, unknown>)) {
+    if (typeof kind !== "string") continue;
+    if (!(SQUARE_KINDS as readonly string[]).includes(kind)) continue;
+    if (!/^[0-3]-[0-3]$/.test(cell)) continue;
+    out[cell] = kind;
+  }
+  return out;
+}
+
 export interface SoloOutcome {
   result: BattleResult;
   /** The player's own board, for reading which row a card was put in. */
@@ -227,8 +270,8 @@ export function soloResult(raw: unknown): SoloOutcome | { error: string } {
       catalog: CATALOG,
       synergies: SYNERGIES,
       ...(arena ? { ground: arena.family } : {}),
-      a: { owner: "A", placements: mine },
-      b: { owner: "B", placements: theirs },
+      a: { owner: "A", placements: mine, squares: squaresOf(body.squares, "mine") },
+      b: { owner: "B", placements: theirs, squares: squaresOf(body.squares, "theirs") },
       recordFrames: false,
     });
     return {

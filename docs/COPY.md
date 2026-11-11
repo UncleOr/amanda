@@ -1,6 +1,6 @@
 # הטקסטים של אמנדה
 
-כל טקסט שהשחקן רואה — 1631 במספר, 1436 מהם כבר באנגלית.
+כל טקסט שהשחקן רואה — 1634 במספר, 1439 מהם כבר באנגלית.
 
 ## איך עורכים
 
@@ -1451,6 +1451,14 @@
 | se86ff27 | בלי חשבון אפשר לשחק ולאסוף — אבל הכול יושב רק בדפדפן הזה, וברגע שתנקה אותו או תעבור למכשיר אחר, הוא ייעלם. | | Without an account you can play and collect — but it all sits in this browser only, and the moment you clear it or move to another device, it is gone. |
 | s29640f4 | להתחבר | | Sign in |
 | s88dd08b | אחר כך | | Later |
+
+## components/SquareInfo.tsx
+
+| מזהה | טקסט נוכחי | טקסט חדש | אנגלית |
+| --- | --- | --- | --- |
+| s0c55223 | סגירה | | Close |
+| s6088ad8 | עומד כאן: {0} | | Standing here: {0} |
+| s02bd5a9 | יש כאן משהו. עוד אי אפשר לראות מה. | | Something is here. You cannot see what yet. |
 
 ## components/Tunnel.tsx
 

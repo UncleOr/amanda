@@ -3,7 +3,7 @@ import { CRUMB_DEMON, KING } from "@amanda/shared";
 import { __testing } from "./useMatch";
 
 const { fillGs, resolveKing, cellKey } = __testing;
-const base = { deck: [], hand: null, discard: [], placements: {}, king: null };
+const base = { deck: [], hand: null, discard: [], placements: {}, king: null, squares: {} };
 
 /**
  * A crumb demon must never wear the crown.

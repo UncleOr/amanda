@@ -1,5 +1,6 @@
 import { CardView, CardBack } from "./CardView";
-import { Icon } from "./Icon";
+import { Icon, type IconName } from "./Icon";
+import { SQUARES, type SquareKind, type Squares } from "@amanda/shared";
 import type { CSSProperties } from "react";
 import { BOARD_SIZE, cellKey, type BattleMods } from "../game/useMatch";
 import { isCornerKey } from "../data/catalog";
@@ -61,8 +62,14 @@ interface Props {
    * The ℹ corner still opens the card either way.
    */
   editing?: boolean;
-  /** Cells with a second card hidden underneath (Ground Floor). */
-  stacked?: Record<string, string>;
+  /**
+   * Cells with cards hidden underneath, top of the pile first.
+   *
+   * One card is the Ground Floor ability. Up to three is a bunker — Or:
+   * *"you can put up to 3 cards there one on top of the other"* — and the
+   * badge counts them rather than merely saying there is one.
+   */
+  stacked?: Record<string, string[]>;
   /**
    * Cells currently lit by a series bonus ("king" for the crown).
    *
@@ -80,6 +87,24 @@ interface Props {
    * makes the noise.
    */
   synergyNew?: ReadonlySet<string>;
+  /**
+   * The special squares on THIS board, keyed "x-y".
+   *
+   * Or, 11 November: *"1-3 random ones on every board (ours and the
+   * opponent's) with a unique colour and icon."* Already fogged by the time
+   * it arrives — what the enemy may see of theirs is decided where the rest
+   * of the fog is, not here.
+   */
+  squares?: Squares;
+  /**
+   * Tapping a square, which is the only way to find out what one does.
+   *
+   * Or: *"pressing a square (ours or the opponent's) opens a popup that
+   * shows what is in it."* The board itself says WHICH kind with a colour
+   * and an icon; the sentence under the name is a panel's job, because
+   * eight sentences on a 4x4 grid is not a board any more.
+   */
+  onSquareInfo?: (kind: SquareKind, cell: string) => void;
   /**
    * Cells flashing for a moment because an action card just improved them.
    *
@@ -164,6 +189,8 @@ export function BoardGrid({
   editing = false,
   synergy,
   synergyNew,
+  squares,
+  onSquareInfo,
   lit,
   stacked = {},
   lanes = BOARD_SIZE,
@@ -185,7 +212,8 @@ export function BoardGrid({
   /** Stackable either because a slot is left, or because this is a free corner. */
   const canStackOn = (key: string) => stackSlots > 0 || (stackCorners && isCornerKey(key));
   /** A cell already holding a card that will accept a second one on top. */
-  const stackableHere = (key: string, occ?: string) => !!occ && !stacked[key] && canStackOn(key);
+  const stackableHere = (key: string, occ?: string) =>
+    !!occ && !stacked[key]?.length && canStackOn(key);
 
   /** The King's 2×2, wherever it sits on a board of this depth. */
   const kingHere = (x: number, y: number) =>
@@ -303,7 +331,8 @@ export function BoardGrid({
               `${synergyNew?.has(key) ? " slot--synergy-new" : ""}` +
               `${lit?.has(key) ? " slot--lit" : ""}` +
               `${isGuardPost(x, y, kingLane) ? " slot--guard" : ""}` +
-              `${stacked[key] ? " slot--stacked" : ""}` +
+              `${stacked[key]?.length ? " slot--stacked" : ""}` +
+              `${squares?.[key] ? ` slot--square slot--square-${squares[key]}` : ""}` +
               `${stackableHere(key, occ) ? " slot--stackable" : ""}` +
               `${targeting && (targetEmpty ? !occ : !!occ) ? " slot--target" : ""}` +
               `${interactive && dragging && (!occ || stackableHere(key, occ)) ? " slot--droppable" : ""}` +
@@ -328,9 +357,37 @@ export function BoardGrid({
               else if (interactive && !occ) onCellClick?.(x, y);
             }}
           >
-            {stacked[key] && (
+            {/*
+              ═══ THE SQUARE ITSELF ═══
+
+              Under everything else in the cell on purpose: a card standing
+              on a hospital is still a card first. The colour is the cell's
+              own border and tint (see the CSS), and this is the badge that
+              names it — pressable, because that is the only way to find out
+              what it does.
+            */}
+            {squares?.[key] && (
+              <button
+                type="button"
+                className="slot__square-mark"
+                title={SQUARES[squares[key]!].he}
+                aria-label={SQUARES[squares[key]!].he}
+                onClick={(e) => {
+                  // Never the cell's own handler: tapping the badge asks
+                  // about the GROUND, and tapping the cell is about the card.
+                  e.stopPropagation();
+                  onSquareInfo?.(squares[key]!, key);
+                }}
+              >
+                <Icon name={SQUARES[squares[key]!].icon as IconName} size={14} />
+              </button>
+            )}
+            {!!stacked[key]?.length && (
               <span className="slot__stack-mark" title={t("s8845f5f", "יש קלף מתחת. הוא יצוץ כשהעליון ייפול.")}>
                 <Icon name="stacked" size={15} />
+                {/* The number only when there is more than one, because a
+                    "1" beside a stack icon says nothing the icon did not. */}
+                {stacked[key]!.length > 1 && <b>{stacked[key]!.length}</b>}
               </span>
             )}
             {isGuardPost(x, y, kingLane) && !occ && interactive && (
