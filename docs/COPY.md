@@ -1,6 +1,6 @@
 # הטקסטים של אמנדה
 
-כל טקסט שהשחקן רואה — 1629 במספר, 1434 מהם כבר באנגלית.
+כל טקסט שהשחקן רואה — 1630 במספר, 1435 מהם כבר באנגלית.
 
 ## איך עורכים
 
@@ -98,7 +98,7 @@
 | daa3fbd9 | פלדובוט | | Steelbot |
 | dc362321 | מטח ניטרונים — מכה שלושה נתיבים בבת אחת. | | A neutron volley — hits three lanes at once. |
 | ddbe8bbb | אם־המכונה | | The Mother Machine |
-| d0219548 | משריינת את כל מי שסביבה, ומפילה ארבעה חדשים כשהיא נופלת. | | Armours everything around it, and drops four more when it falls. |
+| df88d5d3 | צריח. יורה למרחק כפול, משריינת את כל מי שסביבה, ומפילה ארבעה חדשים כשהיא נופלת. | | A turret. Twice the reach, armours everything around it, and drops four more when it falls. |
 
 ## סדרה — הפרוותיים
 
@@ -1260,6 +1260,7 @@
 | מזהה | טקסט נוכחי | טקסט חדש | אנגלית |
 | --- | --- | --- | --- |
 | sedb65d6 | תיבה מחכה לך! | | A chest is waiting! |
+| s1cfe5c2 | תחנה נפתחה במנהרה! | | A station opened in the tunnel! |
 | s1b4740d | אתגר הושלם | | Challenge done |
 | s440773f | {0} אתגרים הושלמו | | {0} challenges done |
 | s854fe19 | מספיק גביעים מהבוט להיום — נאצ'וס ואתגרים ממשיכים | | No more bot trophies today. Nachos and challenges carry on. |

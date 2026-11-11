@@ -42,10 +42,31 @@ export function Payout({
    * find it is the longest possible route to a prize that is already won.
    */
   onChallenges,
+  /**
+   * Open the prize tunnel, at the station this match just reached.
+   *
+   * Or: *"could something be taken from the prize tunnel automatically? I
+   * need to go in and take it myself — and if there is a message at the end
+   * of a match, the button takes me to the tunnel and there I collect the
+   * prize and get the cool effect and the dopamine and everything."*
+   *
+   * Nothing is ever taken automatically, and nothing ever was: the only
+   * thing that hands a station over is a finger on that tile. What was
+   * missing is the other half of his sentence — crossing a station was
+   * SILENT, so the moment it was earned and the moment it was seen had
+   * nothing to do with each other.
+   *
+   * The third line on this row to work this way, and by now it is the
+   * screen's rule rather than a decision: the chest line opens the chest,
+   * the challenges line opens the challenges, and the sentence that names a
+   * thing is the thing.
+   */
+  onTunnel,
 }: {
   award: Award | null;
   onOpenChest?: () => void;
   onChallenges?: () => void;
+  onTunnel?: () => void;
 }) {
   if (!award) return null;
   const done = award.moved.filter((c) => c.done).length;
@@ -70,7 +91,8 @@ export function Payout({
     !award.chests.length &&
     !done &&
     !award.cappedOut &&
-    !award.noStakes
+    !award.noStakes &&
+    !award.tunnel
   )
     return null;
 
@@ -133,6 +155,27 @@ export function Payout({
           <Icon name="chest" size={19} /> {t("sedb65d6", "תיבה מחכה לך!")}
         </button>
       ))}
+      {/*
+        A station opened. It is a BUTTON for the same reason the chest is
+        one: it names a place, and being told where to go and then made to
+        find it is the longest possible route to a prize that is already
+        won. The prize itself is not handed over here — it is taken, on the
+        tile, which is what Or asked for and what the tunnel has always
+        done.
+      */}
+      {(award.tunnel ?? 0) > 0 && (
+        <button
+          type="button"
+          className="payout__bit payout__bit--tunnel"
+          onClick={(e) => {
+            pressed(e.currentTarget, { sound: "click", buzz: "gems" });
+            onTunnel?.();
+          }}
+          disabled={!onTunnel}
+        >
+          <Icon name="gem" size={17} /> {t("s1cfe5c2", "תחנה נפתחה במנהרה!")}
+        </button>
+      )}
       {done > 0 && (
         <button
           type="button"

@@ -874,9 +874,9 @@
   "en": "The Mother Machine"
  },
  {
-  "id": "d0219548",
+  "id": "df88d5d3",
   "section": "סדרה — המכונות",
-  "text": "משריינת את כל מי שסביבה, ומפילה ארבעה חדשים כשהיא נופלת.",
+  "text": "צריח. יורה למרחק כפול, משריינת את כל מי שסביבה, ומפילה ארבעה חדשים כשהיא נופלת.",
   "where": {
    "kind": "json",
    "file": "data/series/02-machines.json",
@@ -887,7 +887,7 @@
     "he"
    ]
   },
-  "en": "Armours everything around it, and drops four more when it falls."
+  "en": "A turret. Twice the reach, armours everything around it, and drops four more when it falls."
  },
  {
   "id": "da38e006",
@@ -11051,7 +11051,17 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/components/Payout.tsx",
-   "line": 133
+   "line": 155
+  }
+ },
+ {
+  "id": "s1cfe5c2",
+  "section": "components/Payout.tsx",
+  "text": "תחנה נפתחה במנהרה!",
+  "where": {
+   "kind": "source",
+   "file": "apps/client/src/components/Payout.tsx",
+   "line": 176
   }
  },
  {
@@ -11061,7 +11071,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/components/Payout.tsx",
-   "line": 151
+   "line": 194
   }
  },
  {
@@ -11071,7 +11081,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/components/Payout.tsx",
-   "line": 151
+   "line": 194
   }
  },
  {
@@ -11081,7 +11091,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/components/Payout.tsx",
-   "line": 167
+   "line": 210
   }
  },
  {
@@ -11091,7 +11101,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/components/Payout.tsx",
-   "line": 176
+   "line": 219
   }
  },
  {
@@ -11101,7 +11111,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/components/Payout.tsx",
-   "line": 207
+   "line": 250
   }
  },
  {
@@ -11601,7 +11611,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/components/ResultScreen.tsx",
-   "line": 174
+   "line": 178
   }
  },
  {
@@ -11611,7 +11621,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/components/ResultScreen.tsx",
-   "line": 175
+   "line": 179
   }
  },
  {
@@ -11621,7 +11631,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/components/ResultScreen.tsx",
-   "line": 177
+   "line": 181
   }
  },
  {
@@ -11631,7 +11641,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/components/ResultScreen.tsx",
-   "line": 178
+   "line": 182
   }
  },
  {
@@ -11641,7 +11651,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/components/ResultScreen.tsx",
-   "line": 183
+   "line": 187
   }
  },
  {
@@ -11651,7 +11661,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/components/ResultScreen.tsx",
-   "line": 192
+   "line": 196
   }
  },
  {
@@ -11661,7 +11671,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/components/ResultScreen.tsx",
-   "line": 202
+   "line": 206
   }
  },
  {
@@ -11671,7 +11681,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/components/ResultScreen.tsx",
-   "line": 208
+   "line": 212
   }
  },
  {
@@ -11681,7 +11691,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/components/ResultScreen.tsx",
-   "line": 221
+   "line": 225
   }
  },
  {
@@ -11691,7 +11701,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/components/ResultScreen.tsx",
-   "line": 224
+   "line": 228
   }
  },
  {
@@ -15502,7 +15512,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/game/meta.ts",
-   "line": 298
+   "line": 307
   }
  },
  {
@@ -15512,7 +15522,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/game/meta.ts",
-   "line": 301
+   "line": 310
   }
  },
  {
@@ -15522,7 +15532,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/game/meta.ts",
-   "line": 340
+   "line": 349
   }
  },
  {
@@ -15532,7 +15542,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/game/meta.ts",
-   "line": 341
+   "line": 350
   }
  },
  {
@@ -15542,7 +15552,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/game/meta.ts",
-   "line": 342
+   "line": 351
   }
  },
  {
@@ -15552,7 +15562,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/game/meta.ts",
-   "line": 343
+   "line": 352
   }
  },
  {

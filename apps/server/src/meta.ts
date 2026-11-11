@@ -32,6 +32,7 @@ import {
   nachosFor,
   progressFrom,
   soloTrophiesFor,
+  stopsReached,
   trophiesFor,
   SIMULATION,
   type Card,
@@ -231,6 +232,21 @@ export interface MetaAward {
    */
   noStakes: boolean;
   /**
+   * Prize-tunnel stations this match opened. Almost always 0, sometimes 1.
+   *
+   * Or: *"and if there is a message at the end of the match, the button
+   * takes me to the tunnel and there I collect the prize and get the cool
+   * effect and the dopamine and everything."* So the result screen can say
+   * a station opened, and pressing it is pressing the door — the same rule
+   * the chest line and the challenges line already follow.
+   *
+   * ⚠ IT IS AN EVENT, NOT A STATE. "How many prizes are sitting there" is a
+   * different question with a different home: the chip on the home screen
+   * carries that badge for as long as they are unclaimed. This is the
+   * moment, and it passes.
+   */
+  tunnel: number;
+  /**
    * The lifetime count AFTER this match.
    *
    * Here rather than worked out by the screen, because the screen's copy of
@@ -249,6 +265,7 @@ const NONE: MetaAward = {
   trophies: 0,
   cappedOut: false,
   noStakes: false,
+  tunnel: 0,
   total: 0,
   chests: [],
   moved: [],
@@ -368,6 +385,7 @@ export async function awardMatch(
       moved,
       trophies: won?.gave ?? 0,
       cappedOut: won?.cappedOut ?? false,
+      tunnel: won?.tunnel ?? 0,
       // Asked of the rules, not of the level's name: what would a flawless
       // win against this opponent have been worth? Nothing, for the easy bot.
       noStakes:
@@ -435,7 +453,7 @@ async function moveTrophies(
   opponent: Opponent,
   now: Date,
   doubled = false,
-): Promise<{ gave: number; cappedOut: boolean }> {
+): Promise<{ gave: number; cappedOut: boolean; tunnel: number }> {
   /*
    * ⚠ DOUBLED BEFORE THE CAP, NOT AFTER. The daily cap on bot trophies is a
    * ceiling on what a day can pay; doubling after it would lift the ceiling,
@@ -447,7 +465,7 @@ async function moveTrophies(
    * trophies" is the line below, which was already there.
    */
   const worth = trophiesFor({ won: facts.won, score: facts.score, opponent }) * (doubled ? 2 : 1);
-  if (worth === 0) return { gave: 0, cappedOut: false };
+  if (worth === 0) return { gave: 0, cappedOut: false, tunnel: 0 };
 
   const today = israelDay(now);
   const { data } = await sb
@@ -462,11 +480,37 @@ async function moveTrophies(
   if (worth > 0 && opponent.kind === "bot") {
     gave = withinDailyCap(already, worth);
     cappedOut = gave < worth;
-    if (gave <= 0) return { gave: 0, cappedOut: true };
+    if (gave <= 0) return { gave: 0, cappedOut: true, tunnel: 0 };
   }
 
   // Never below zero. A child who has just started cannot go into debt.
   const trophies = Math.max(0, (data?.trophies ?? 0) + gave);
+  /*
+   * ═══ AND DID THIS MATCH WALK PAST A PRIZE STATION ═══
+   *
+   * Or: *"could something be taken from the prize tunnel automatically? I
+   * need to go in and take it myself — and if there is a message at the end
+   * of a match, the button takes me to the tunnel and there I collect the
+   * prize and get the cool effect and the dopamine and everything."*
+   *
+   * Nothing is ever taken automatically and never was: the only thing in the
+   * game that hands a station over is `claimStop`, and the only thing that
+   * calls it is a finger on that tile (apps/server/src/tunnel.ts). His first
+   * question has always had the answer he wanted.
+   *
+   * The second half did not exist. Crossing a station was silent — the track
+   * simply had one more tile lit the next time you happened to open it — so
+   * the moment the thing was EARNED and the moment it was seen had nothing
+   * to do with each other, which is the whole of what he is describing.
+   *
+   * ⚠ MEASURED OFF `best_trophies`, NOT OFF `trophies`. The high-water mark
+   * only goes up, which is what makes a station open exactly once in a
+   * lifetime: a player who crosses 600, falls back to 550 and climbs again
+   * has not earned it twice, and would otherwise be told so twice.
+   */
+  const bestBefore = data?.best_trophies ?? 0;
+  const bestAfter = Math.max(bestBefore, trophies);
+  const tunnel = stopsReached(bestAfter) - stopsReached(bestBefore);
   await sb
     .from("players")
     .update({
@@ -474,13 +518,13 @@ async function moveTrophies(
       // Only ever goes up: it is the high-water mark the arena celebration
       // is measured against, so each arena pays exactly once in a lifetime
       // however many times you fall back through it.
-      best_trophies: Math.max(data?.best_trophies ?? 0, trophies),
+      best_trophies: bestAfter,
       ...(gave > 0 && opponent.kind === "bot"
         ? { solo_day: today, solo_trophies: already + gave }
         : {}),
     })
     .eq("id", playerId);
-  return { gave, cappedOut };
+  return { gave, cappedOut, tunnel };
 }
 
 

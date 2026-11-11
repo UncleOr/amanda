@@ -1,6 +1,8 @@
 import { describe, expect, it } from "vitest";
+import { readFileSync } from "node:fs";
+import { fileURLToPath } from "node:url";
 import type { SupabaseClient } from "@supabase/supabase-js";
-import { NACHOS_PER_CHEST, TUNED, type MatchFacts } from "@amanda/shared";
+import { NACHOS_PER_CHEST, TUNED, TUNNEL, type MatchFacts } from "@amanda/shared";
 import { awardMatch, claim, liveChallenges, standings } from "./meta.js";
 
 /**
@@ -692,5 +694,108 @@ describe("an opponent that pays nothing says so", () => {
     const got = await awardMatch(sb, ME, facts({ won: false, score: 3 }), DAY, "easy");
     expect(got.trophies).toBe(0);
     expect(got.noStakes).toBe(true);
+  });
+});
+
+/**
+ * **A prize station is announced, and never taken.**
+ *
+ * Or: *"could something be taken from the prize tunnel automatically? I need
+ * to go in and take it myself — and if there is a message at the end of a
+ * match, the button takes me to the tunnel and there I collect the prize and
+ * get the cool effect and the dopamine and everything."*
+ *
+ * Two halves and they had opposite answers. Nothing has EVER been taken
+ * automatically: the only thing in the game that hands a station over is
+ * `claimStop`, and the only thing that calls it is a finger on that tile.
+ * The other half did not exist — crossing a station was silent, so the
+ * moment it was earned and the moment it was seen had nothing to do with
+ * each other.
+ */
+describe("walking past a prize station", () => {
+  /** How many trophies the first stop stands at. */
+  const FIRST = TUNNEL[0]!.at;
+
+  it("says so, once, on the match that crossed it", async () => {
+    const { sb, state } = fakeDb({
+      players: { [ME]: { trophies: FIRST - 1, best_trophies: FIRST - 1 } },
+    });
+    const crossing = await awardMatch(sb, ME, facts(), DAY);
+    expect(crossing.tunnel, "crossing a station said nothing").toBe(1);
+    expect(state.players[ME]!.best_trophies).toBeGreaterThanOrEqual(FIRST);
+
+  });
+
+  it("says nothing on a match that does not reach the next one", async () => {
+    /*
+     * ⚠ AND THIS IS NOT THE SAME TEST TWICE. The stations are close together
+     * at the bottom of the track — 30, 70, 110 — and a win against a person
+     * is worth about 35, so two wins in a row really do cross two of them.
+     * The first draft of this file asserted "and not again next match" and
+     * failed against correct code for exactly that reason. What actually
+     * has to be true is that a station is announced when it is PASSED, so a
+     * player sitting between two of them hears nothing.
+     */
+    const { sb } = fakeDb({ players: { [ME]: { trophies: 30, best_trophies: 30 } } });
+    expect((await awardMatch(sb, ME, facts(), DAY)).tunnel).toBe(0);
+  });
+
+  it("is measured off the high-water mark, not off today's pile", async () => {
+    /*
+     * ⚠ THE BUG THIS SHAPE AVOIDS. A player who crosses the line, falls back
+     * below it and climbs again has not earned the station twice — and
+     * `trophies` goes down while `best_trophies` does not. Reading the wrong
+     * one would announce a prize that is already sitting there claimed,
+     * which is the kind of thing a child only has to see once.
+     */
+    const { sb } = fakeDb({
+      players: { [ME]: { trophies: 0, best_trophies: FIRST + 500 } },
+    });
+    expect((await awardMatch(sb, ME, facts(), DAY)).tunnel).toBe(0);
+  });
+
+  it("says nothing on a match that moved no trophies at all", async () => {
+    const { sb } = fakeDb({
+      players: { [ME]: { trophies: FIRST - 1, best_trophies: FIRST - 1 } },
+    });
+    // The easy bot: zero in both directions, so no line can be crossed.
+    expect((await awardMatch(sb, ME, facts(), DAY, "easy")).tunnel).toBe(0);
+  });
+
+  it("hands over nothing — the prize is still sitting on the tile", async () => {
+    /*
+     * ⚠ THIS IS THE ANSWER TO WHAT HE ACTUALLY ASKED, and it is checked
+     * rather than asserted in a comment: a station opening must not touch
+     * the diamonds, the album or the chest shelf. The only door is
+     * claimStop, and it is opened by a finger.
+     */
+    const { sb, state } = fakeDb({
+      players: { [ME]: { trophies: FIRST - 1, best_trophies: FIRST - 1, diamonds: 7 } },
+    });
+    const snapshot = () =>
+      JSON.stringify({
+        diamonds: state.players[ME]!.diamonds,
+        chests: state.chests.length,
+      });
+    const before = snapshot();
+    const got = await awardMatch(sb, ME, facts(), DAY);
+    expect(got.tunnel).toBe(1);
+    expect(snapshot(), "opening a station paid something out by itself").toBe(before);
+
+    /*
+     * And the other direction, from the source, because the fake database
+     * has no tunnel_claims table to be left untouched: this file must not
+     * know how to take a prize at all. The only thing that does is
+     * `claimStop`, and the only thing that calls it is a finger on a tile.
+     */
+    const src = readFileSync(
+      fileURLToPath(new URL("./meta.ts", import.meta.url)),
+      "utf8",
+    );
+    // ⚠ `claimStop(` with the bracket, not the bare word: this file NAMES
+    // claimStop in a comment, saying it is the only door. Matching the name
+    // would fail on the sentence that explains the rule.
+    for (const forbidden of ["tunnel_claims", "tunnelGives(", "claimStop("])
+      expect(src, `meta.ts can hand over a tunnel prize (${forbidden})`).not.toContain(forbidden);
   });
 });

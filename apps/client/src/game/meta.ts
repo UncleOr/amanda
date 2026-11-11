@@ -35,6 +35,15 @@ export interface Award {
    * server for the whole of it.
    */
   noStakes?: boolean;
+  /**
+   * Prize-tunnel stations this match opened. Almost always 0, sometimes 1.
+   *
+   * Or: *"if there is a message at the end of the match, the button takes me
+   * to the tunnel and there I collect the prize and get the cool effect and
+   * the dopamine and everything."* An EVENT, not a state — what is still
+   * waiting is the badge on the home screen's chip. See MetaAward.
+   */
+  tunnel?: number;
   /** The lifetime count after this match. The bar is this mod NACHOS_PER_CHEST. */
   total: number;
   /** Chest kinds the nacho bar filled. Usually none, sometimes one. */

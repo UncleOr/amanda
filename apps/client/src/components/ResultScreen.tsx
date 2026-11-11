@@ -140,6 +140,10 @@ export function ResultScreen({
             award={m.award}
             onOpenChest={onOpenChest}
             onChallenges={() => panel.show("challenges")}
+            /* And the tunnel, through the same panel as the challenges —
+               rendered at the top of App, outside every phase, so it opens
+               over the result exactly as it opens over the home screen. */
+            onTunnel={() => panel.show("tunnel")}
           />
           {/* The two of you, after the fact. The end-of-match lines unlock
               here — "good game" means nothing during the build phase. */}

@@ -51,3 +51,49 @@ describe("a win that paid nothing", () => {
     );
   });
 });
+
+/**
+ * **A station that opened is a door, not a prize.**
+ *
+ * Or: *"could something be taken from the prize tunnel automatically? I need
+ * to go in and take it myself — and if there is a message at the end of a
+ * match, the button takes me to the tunnel and there I collect the prize and
+ * get the cool effect and the dopamine and everything."*
+ *
+ * The first half was already true and had always been: the only thing in the
+ * game that hands a station over is `claimStop` on the server, and the only
+ * thing that calls it is a finger on that tile. The second half did not
+ * exist — crossing a station was silent, so the moment it was earned and the
+ * moment it was seen had nothing to do with each other.
+ */
+describe("a prize station that just opened", () => {
+  it("is a line on the result screen at all", () => {
+    expect(PAYOUT, "crossing a station is still silent").toContain("(award.tunnel ?? 0) > 0");
+    // And it counts as a reason to draw the row, like every other event.
+    const at = PAYOUT.indexOf("!award.cappedOut");
+    const guard = PAYOUT.slice(at, PAYOUT.indexOf("return null;", at));
+    expect(guard, "the row goes home before it can say so").toContain("!award.tunnel");
+  });
+
+  it("opens the tunnel rather than paying anything out", () => {
+    /*
+     * ⚠ THE WHOLE POINT, AND IT IS CHECKED ON BOTH SIDES. This component
+     * may only OPEN the panel — the prize is taken on the tile, where the
+     * effect and the noise are. A payout here would be the automatic grant
+     * Or was asking about, arriving by the back door.
+     */
+    expect(PAYOUT).toContain("onTunnel?.()");
+    expect(PAYOUT, "the result screen is handing the prize over itself").not.toMatch(
+      /claimStop|tunnelGives/,
+    );
+    // And the screen gives it a real door to open.
+    expect(read("./ResultScreen.tsx")).toContain('onTunnel={() => panel.show("tunnel")}');
+  });
+
+  it("is the third line on that row to work this way, and looks like one", () => {
+    // The chest and the challenges are already buttons for the same reason;
+    // a station that was styled as plain text would read as a notification
+    // rather than as somewhere to go.
+    expect(read("../styles/home-layout.css")).toContain(".payout__bit--tunnel");
+  });
+});
