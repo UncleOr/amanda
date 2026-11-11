@@ -801,6 +801,46 @@
 @media (prefers-reduced-motion: reduce) {
   .slot--synergy::after { animation: none; opacity: 0.9; }
 }
+/*
+ * ═══ AND THE INSTANT IT LOCKS IN ═══
+ *
+ * Or: *"when there are three of the same series — do some sound effect and a
+ * glow animation so it looks like the thing was received."*
+ *
+ * The ring above is a STATE: it says the bonus is on, and says nothing at
+ * the moment it switches on — which is the only moment the player did
+ * anything. So the same cells get a one-off bloom, over the top of the ring
+ * rather than instead of it, and it goes away by itself.
+ *
+ * ⚠ `::before`, BECAUSE `::after` IS THE RING. Putting the burst on the same
+ * pseudo-element would have replaced the thing being celebrated for the
+ * length of the celebration — the ring would blink off and back on, which
+ * reads as a glitch rather than as a reward.
+ */
+.slot--synergy-new::before {
+  content: "";
+  position: absolute;
+  inset: 1px;
+  border-radius: 8px;
+  border: 3px solid rgba(190, 255, 205, 1);
+  box-shadow:
+    0 0 26px 10px rgba(110, 231, 140, 0.85),
+    inset 0 0 28px rgba(190, 255, 205, 0.6);
+  pointer-events: none;
+  z-index: 4;
+  animation: synergy-lock 0.9s ease-out forwards;
+}
+@keyframes synergy-lock {
+  0% { opacity: 0; transform: scale(1.22); }
+  22% { opacity: 1; transform: scale(1); }
+  55% { opacity: 0.85; transform: scale(1.04); }
+  100% { opacity: 0; transform: scale(1); }
+}
+/* Movement is the message, so it is shortened rather than removed: without
+   it there is no event at all, only the steady ring that was already there. */
+@media (prefers-reduced-motion: reduce) {
+  .slot--synergy-new::before { animation-duration: 0.45s; }
+}
 
 /*
  * ═══ THE SQUARE THAT JUST GOT BETTER ═══

@@ -55,6 +55,7 @@ import { haptics } from "./game/haptics";
 import { AMANDA_CARD, tapVoice } from "./game/cardSound";
 import { music } from "./game/music";
 import { ACTIONS, CATALOG, cardPool, isEnemyTargeted, synergyGroups } from "./data/catalog";
+import { useSynergyFlash } from "./game/synergyFlash";
 import { artUrl } from "./game/skins";
 import { warm, warmSoon } from "./game/preload";
 import { carryOf } from "./game/carry";
@@ -694,6 +695,19 @@ function Game() {
       for (const cell of cells) lit.add(cell);
     return lit;
   }, [m.placements, m.king]);
+  /*
+   * And the MOMENT it happens, which the green ring never said.
+   *
+   * Or: *"when there are three of the same series — do some sound effect and
+   * a glow animation so it looks like the thing was received."* See
+   * game/synergyFlash.ts: the ring is a state, this is the event, and the
+   * two are drawn on the same cells.
+   *
+   * Here rather than inside BoardGrid because this is where the lit set is
+   * worked out, and a hook that had to be told the answer twice could be
+   * told two different ones.
+   */
+  const synergyFlash = useSynergyFlash(mySynergy);
 
   /*
    * The floor the two albums are lying on: the arena you have climbed to.
@@ -1795,6 +1809,7 @@ function Game() {
                 editing={m.playground}
                 dropSide={m.playground ? "me" : undefined}
                 synergy={mySynergy}
+                synergyNew={synergyFlash}
                 lit={m.lit}
                 handActive={m.hand !== null}
                 mods={m.mods}

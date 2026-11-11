@@ -489,11 +489,20 @@ export function Tutorial({ steps, onDone }: Props) {
             with an arrow animation to press, and on the second card show —
             you can also drag, with a marking and an animation."*
 
-            No words. The band under it is already a sentence; a label
-            saying "press" beside an arrow pressing is the thing this game
-            has spent a year taking back out. The tap pulses on the square;
-            the drag travels from the card to the square and does it again,
-            which is the whole instruction.
+            It shipped with no words at all, on the argument that the band
+            under it is already a sentence. Or looked at it and asked for one
+            back, on one of the two: *"and in stage 1 write 'you can drag
+            too!' on the second card."*
+
+            ⚠ AND ONLY ON THE DRAG, WHICH IS WHY HE IS RIGHT. A finger
+            pressing a square is a picture of pressing a square — nobody
+            needs it labelled. A finger TRAVELLING is ambiguous: it looks
+            like "the card goes there", which the player already knows, and
+            not like "you may carry it yourself". The animation shows the
+            path; the word is what makes it an offer.
+
+            So the tap stays silent and the drag speaks, which is the split
+            he drew.
           */}
           {step.hint === "tap" && (
             <div
@@ -524,7 +533,11 @@ export function Tutorial({ steps, onDone }: Props) {
                   };
                 })(),
               }}
-            />
+            >
+              {/* The label rides with the hand, so it arrives where the eye
+                  already is rather than asking it to go and find a caption. */}
+              <b>{t("sf198138", "אפשר גם לגרור!")}</b>
+            </div>
           )}
         </>
       )}

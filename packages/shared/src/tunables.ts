@@ -51,7 +51,14 @@ export const TUNED = {
    */
   soloTrophiesNormal: 8,
   soloTrophiesHard: 12,
-  soloTrophiesPerDay: 60,
+  /*
+   * ⚠ ZERO IS "NO CEILING", NOT "PAY NOTHING". Or, 11 November: *"give me
+   * unlimited trophies against the bot too. There are not enough users right
+   * now to limit it."* The rule is still written and still tested; this is
+   * the dial that turns it on again the day there are strangers to protect
+   * the ladder from. See withinDailyCap.
+   */
+  soloTrophiesPerDay: 0,
   /*
    * ═══ AN UPGRADE COSTS DIAMONDS AS WELL AS COPIES ═══
    *
@@ -267,7 +274,7 @@ export const TUNABLES: Tunable[] = [
   {
     id: "trophies.solo.perDay",
     he: "תקרת גביעים יומית מול הבוט",
-    note: "הכי הרבה שיום של משחק מול המחשב יכול להוסיף. בלי תקרה אפשר להגיע לארנה העליונה בלי לפגוש אף אחד.",
+    note: "הכי הרבה שיום של משחק מול המחשב יכול להוסיף. 0 = בלי תקרה בכלל (ככה זה עכשיו). עם תקרה אי אפשר לטפס לארנה העליונה בלי לפגוש אף אחד.",
     min: 0,
     max: 500,
     step: 5,

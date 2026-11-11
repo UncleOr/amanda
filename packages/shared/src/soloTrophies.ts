@@ -72,10 +72,17 @@ export function soloTrophiesLost(level: BotLevel): number {
 }
 
 /**
- * The most a day of playing the computer may add.
+ * The most a day of playing the computer may add, or 0 for no ceiling at all.
  *
- * Deliberately about five hard wins — enough that an evening alone moves you,
- * not enough to be a way up the ladder.
+ * It was about five hard wins — enough that an evening alone moves you, not
+ * enough to be a way up the ladder. That is the right shape for a ladder with
+ * people on it, and the wrong one for a ladder with two.
+ *
+ * Or: *"give me unlimited trophies against the bot too. There are not enough
+ * users right now to limit it."* So the default is OFF, and it is one dial in
+ * the admin panel — the day there are strangers on the board he turns it back
+ * on without a deploy. Nothing else about the ceiling was removed: the code
+ * below still works, still has its tests, and is one number from being live.
  */
 export function soloTrophyCap(): number {
   return TUNED.soloTrophiesPerDay;
@@ -86,8 +93,14 @@ export function soloTrophyCap(): number {
  *
  * `already` is what this player has had from the computer today. Returns what
  * to add, which is never negative and never takes the day past the ceiling.
+ *
+ * ⚠ ZERO MEANS NO CEILING, WHICH IS THE OPPOSITE OF WHAT IT USED TO MEAN. A
+ * cap of 0 would otherwise read as "a day of playing the computer pays
+ * nothing", which is a setting nobody would ever want and which the slider
+ * could reach. "Off" is the only sane reading of a disabled limit.
  */
 export function withinDailyCap(already: number, want: number): number {
+  if (soloTrophyCap() <= 0) return Math.max(0, want);
   return Math.max(0, Math.min(want, soloTrophyCap() - Math.max(0, already)));
 }
 

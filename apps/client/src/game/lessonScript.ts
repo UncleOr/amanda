@@ -87,6 +87,33 @@ const BACK_ROW = ["0-0", "0-1", "0-2", "0-3"];
 
 /** The drawer the action cards sit in, open or shut. */
 const BAR = ".actions";
+/**
+ * The control that takes the action card in your hand into the drawer.
+ *
+ * ═══ THIS SELECTOR WAS A DEAD END FOR WEEKS, AND IT STALLED STAGE THREE ═══
+ *
+ * Or: *"tutorial stage 3 gets stuck in the middle and does not explain
+ * action cards."*
+ *
+ * Five steps across the three lessons pointed at `.take-action` — a button
+ * that was DELETED when the action card in hand became the button itself.
+ * icons.test.ts even holds the removal (*"is gone from the hand as a
+ * separate button"*), so one test was guarding that the thing was gone
+ * while five tutorial steps went on waiting for it. Measured in a live
+ * match: `.take-action` matches 0 elements, `.hand .action-card__use`
+ * matches 1.
+ *
+ * And a scripted step is `patient`: it waits for its target however long
+ * that takes rather than skipping. That is right — the opening lines of a
+ * lesson are spoken before the board is painted — and it is exactly what
+ * turns a dead selector into a tutorial that stops dead. Every step from
+ * "take the x-ray" onwards was unreachable, which is the whole of the part
+ * that explains action cards.
+ *
+ * Scoped to `.hand` on purpose: the drawer draws action cards too, and the
+ * one being talked about is the one in your hand.
+ */
+const HAND_ACTION = ".hand .action-card__use";
 
 const cells = (list: readonly string[]) =>
   list.map((c) => `[data-drop="${c}"]`).join(", ");
@@ -122,7 +149,7 @@ export const LESSON_1: ScriptStep[] = [
   // ── the action card, and the drawer it lives in ──
   {
     id: "l1-boost",
-    target: ".take-action",
+    target: HAND_ACTION,
     awaits: { kind: "action", id: "energy_boost", where: "bar" },
   },
   { id: "l1-bar-open", target: ".actions__handle", press: "target" },
@@ -180,7 +207,7 @@ export const LESSON_2: ScriptStep[] = [
    */
   {
     id: "l2-xray-take",
-    target: ".take-action",
+    target: HAND_ACTION,
     awaits: { kind: "action", id: "xray", where: "bar" },
   },
   { id: "l2-xray-use", target: BAR, awaits: { kind: "action", id: "xray", where: "used" } },
@@ -222,7 +249,7 @@ export const LESSON_2: ScriptStep[] = [
   // ── timing: the boost is worth whatever is already down ──
   {
     id: "l2-boost-wait",
-    target: ".take-action",
+    target: HAND_ACTION,
     awaits: { kind: "action", id: "energy_boost", where: "bar" },
   },
   {
@@ -449,7 +476,7 @@ export const STAGE_3: ScriptStep[] = [
   // really connected there is nothing here to point at, which is the correct
   // failure rather than a line that lies.
   { id: "t3-synergy", target: ".side--me .slot--synergy" },
-  { id: "t3-xray", target: ".take-action", awaits: { kind: "action", id: "xray", where: "bar" } },
+  { id: "t3-xray", target: HAND_ACTION, awaits: { kind: "action", id: "xray", where: "bar" } },
   /*
    * ═══ POINT AT THE DRAWER, WHICH IS ALWAYS THERE ═══
    *
@@ -491,7 +518,7 @@ export const STAGE_3: ScriptStep[] = [
   { id: "t3-revealed", target: ".side--enemy" },
   {
     id: "t3-boost",
-    target: ".take-action",
+    target: HAND_ACTION,
     awaits: { kind: "action", id: "energy_boost", where: "bar" },
   },
   {

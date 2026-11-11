@@ -104,7 +104,16 @@ export type SoundName =
    * for — a prize and a result. See fanfare.ts.
    */
   | "boost"
-  | "lose";
+  | "lose"
+  /**
+   * Three of a family locking together, at the instant it happens.
+   *
+   * Or: *"when there are three of the same series — do some sound effect and
+   * a glow animation so it looks like the thing was received."* See the
+   * recipe below for why it is none of the three it could be mistaken for,
+   * and game/synergyFlash.ts for what decides the moment.
+   */
+  | "synergy";
 
 let ctx: AudioContext | null = null;
 let muted = false;
@@ -362,6 +371,31 @@ const RECIPES: Record<SoundName, () => void> = {
     );
   },
   lose: () => [392, 330, 262, 196].forEach((f, i) => tone(f, 260, { type: "sine", gain: 0.14, delayMs: i * 130 })),
+  /*
+   * ═══ THREE OF A FAMILY, LOCKING IN ═══
+   *
+   * Or: *"and generally in the game (and in the tutorial too) when there are
+   * three of the same series — do some sound effect and a glow animation so
+   * it looks like the thing was received."*
+   *
+   * The board has been lighting those three cells green for weeks, which is
+   * a STATE: it tells you the bonus is on, and says nothing at the instant
+   * it switches on. The instant is the part that is worth anything — it is
+   * the one moment the player did something clever.
+   *
+   * Deliberately not any of the three it could be confused with: `win` is a
+   * wide landing, `newcard` a high sparkle, `boost` a G major triad. This is
+   * a LOCK — two notes a fifth apart arriving together, then a short bloom
+   * above them. Short, because it happens while you are still arranging the
+   * board and will happen more than once in a match.
+   */
+  synergy: () => {
+    tone(392, 150, { type: "triangle", gain: 0.12 });
+    tone(587, 150, { type: "triangle", gain: 0.09 });
+    [784, 988, 1175].forEach((f, i) =>
+      tone(f, 220, { type: "sine", gain: 0.09 - i * 0.02, delayMs: 110 + i * 55 }),
+    );
+  },
 };
 
 /* ───────────── the recorded clips ───────────── */

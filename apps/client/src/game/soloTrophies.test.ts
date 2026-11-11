@@ -29,20 +29,51 @@ describe("the day's ceiling", () => {
     expect(withinDailyCap(0, 12)).toBe(12);
   });
 
-  it("pays only what is left, and then nothing", () => {
-    const cap = TUNED.soloTrophiesPerDay;
-    expect(withinDailyCap(cap - 5, 12)).toBe(5);
-    expect(withinDailyCap(cap, 12)).toBe(0);
-    expect(withinDailyCap(cap + 100, 12)).toBe(0);
+  /**
+   * ⚠ THE CEILING SHIPS TURNED OFF, SO THIS TURNS IT ON.
+   *
+   * Or, 11 November: *"give me unlimited trophies against the bot too. There
+   * are not enough users right now to limit it."* He is right about today;
+   * the rule is right about a ladder with strangers on it. So it stays
+   * written and stays tested, and `TUNED.soloTrophiesPerDay` is one dial in
+   * the admin panel — 0 means off.
+   */
+  const withCeiling = (cap: number, run: () => void) => {
+    const was = TUNED.soloTrophiesPerDay;
+    TUNED.soloTrophiesPerDay = cap;
+    try {
+      run();
+    } finally {
+      TUNED.soloTrophiesPerDay = was;
+    }
+  };
+
+  it("is off as it ships, and pays whatever the match was worth", () => {
+    expect(TUNED.soloTrophiesPerDay, "the ceiling is back on by default").toBe(0);
+    // However much of the day has already been played.
+    expect(withinDailyCap(0, 12)).toBe(12);
+    expect(withinDailyCap(1e9, 12)).toBe(12);
+  });
+
+  it("pays only what is left, and then nothing, once it is turned on", () => {
+    withCeiling(60, () => {
+      const cap = TUNED.soloTrophiesPerDay;
+      expect(withinDailyCap(cap - 5, 12)).toBe(5);
+      expect(withinDailyCap(cap, 12)).toBe(0);
+      expect(withinDailyCap(cap + 100, 12)).toBe(0);
+    });
   });
 
   it("never pays a negative number, whatever it is handed", () => {
-    for (const [already, want] of [
-      [-10, 5],
-      [0, -5],
-      [1e9, 12],
-    ] as const)
-      expect(withinDailyCap(already, want)).toBeGreaterThanOrEqual(0);
+    for (const cap of [0, 60])
+      withCeiling(cap, () => {
+        for (const [already, want] of [
+          [-10, 5],
+          [0, -5],
+          [1e9, 12],
+        ] as const)
+          expect(withinDailyCap(already, want)).toBeGreaterThanOrEqual(0);
+      });
   });
 });
 

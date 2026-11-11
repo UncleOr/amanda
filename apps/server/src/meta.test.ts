@@ -597,7 +597,47 @@ describe("trophies from the computer", () => {
     expect(TUNED.trophiesPerLoss).toBeLessThan(TUNED.trophiesPerWin);
   });
 
+  /**
+   * ⚠ THE CEILING IS OFF BY DEFAULT NOW, SO THESE TWO TURN IT ON.
+   *
+   * Or, 11 November: *"give me unlimited trophies against the bot too. There
+   * are not enough users right now to limit it."* He is right about today and
+   * the rule is right about a ladder with strangers on it, so the rule stays
+   * written and stays tested — `TUNED.soloTrophiesPerDay` is one dial in the
+   * admin panel and 0 means off.
+   *
+   * These set it the way the panel would, and put it back. A test that reads
+   * the live default would have gone green on a ceiling that never fires,
+   * which is how a rule rots without anybody noticing.
+   */
+  const withCeiling = async (cap: number, run: () => Promise<void>) => {
+    const was = TUNED.soloTrophiesPerDay;
+    TUNED.soloTrophiesPerDay = cap;
+    try {
+      await run();
+    } finally {
+      TUNED.soloTrophiesPerDay = was;
+    }
+  };
+
+  it("pays without limit against the computer, which is how it ships", async () => {
+    /*
+     * The default, measured rather than read off the tunable: forty hard
+     * wins pay forty hard wins. This is the behaviour Or asked for, and it
+     * is the one a player actually gets today.
+     */
+    const { sb } = fakeDb({ players: { [ME]: {} } });
+    let paid = 0;
+    for (let i = 0; i < 40; i++) {
+      const got = await awardMatch(sb, ME, facts(), DAY, "hard");
+      paid += got.trophies;
+      expect(got.cappedOut, "a ceiling fired with the ceiling turned off").toBe(false);
+    }
+    expect(paid).toBeGreaterThan(TUNED.soloTrophiesHard * 39);
+  });
+
   it("stops at the day's ceiling, and says that is why", async () => {
+    await withCeiling(60, async () => {
     const { sb, state } = fakeDb({ players: { [ME]: {} } });
     let paid = 0;
     // Far more wins than the ceiling can possibly cover.
@@ -614,9 +654,11 @@ describe("trophies from the computer", () => {
     // And the rest of the loop is untouched by the ceiling — a hard-bot win
     // is three nachos whether or not the trophies were trimmed.
     expect(after.nachos).toBe(3);
+    });
   });
 
   it("starts again tomorrow, without anything having to clear it", async () => {
+    await withCeiling(60, async () => {
     const { sb, state } = fakeDb({ players: { [ME]: {} } });
     for (let i = 0; i < 40; i++) await awardMatch(sb, ME, facts(), DAY, "hard");
     expect(state.players[ME]!.solo_trophies).toBe(TUNED.soloTrophiesPerDay);
@@ -628,6 +670,7 @@ describe("trophies from the computer", () => {
     // Yesterday's counter was never cleared — it was simply not read.
     expect(state.players[ME]!.solo_day).toBe("2026-10-08");
     expect(state.players[ME]!.solo_trophies).toBe(TUNED.soloTrophiesHard + bonus);
+    });
   });
 
   it("carries the best-ever mark up with it", async () => {

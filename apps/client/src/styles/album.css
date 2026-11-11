@@ -1255,6 +1255,34 @@ html[dir="ltr"] .intro__wash {
    */
   direction: ltr;
 }
+/*
+ * The word, riding with the travelling hand.
+ *
+ * Or: *"and in stage 1 write 'you can drag too!' on the second card."* It
+ * moves WITH the finger rather than sitting still beside the path, because
+ * a caption the eye has to go and find is a caption that is read after the
+ * animation has already finished saying it.
+ *
+ * ⚠ `direction: rtl` on the label and `ltr` on the box around it. The box
+ * is pinned to maths done in screen coordinates (see the trail below); the
+ * words inside it are Hebrew and have to lay themselves out the other way.
+ */
+.tut__hint--drag > b {
+  position: absolute;
+  inset-block-start: 22px;
+  inset-inline-start: 0;
+  transform: translateX(-50%);
+  white-space: nowrap;
+  direction: rtl;
+  padding: 3px 10px;
+  border-radius: 999px;
+  background: rgba(6, 9, 18, 0.82);
+  border: 1px solid rgba(255, 255, 255, 0.16);
+  color: var(--text);
+  font-size: var(--t-2);
+  font-weight: 800;
+  animation: tut-carry 2.2s ease-in-out infinite;
+}
 .tut__hint--drag::after {
   content: "";
   position: absolute;

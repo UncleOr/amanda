@@ -72,6 +72,15 @@ interface Props {
    */
   synergy?: Set<string>;
   /**
+   * The cells that joined the lit set THIS INSTANT, for the burst.
+   *
+   * Or: *"when there are three of the same series — do some sound effect and
+   * a glow animation so it looks like the thing was received."* `synergy` is
+   * the state and this is the event; see game/synergyFlash.ts, which also
+   * makes the noise.
+   */
+  synergyNew?: ReadonlySet<string>;
+  /**
    * Cells flashing for a moment because an action card just improved them.
    *
    * Or: *"and the card or cards that improved should glow for a moment."* A
@@ -154,6 +163,7 @@ export function BoardGrid({
   dragging = false,
   editing = false,
   synergy,
+  synergyNew,
   lit,
   stacked = {},
   lanes = BOARD_SIZE,
@@ -226,6 +236,7 @@ export function BoardGrid({
           // sentence under the hand that said the same thing in words.
           `${!king && interactive ? " slot--king-empty" : ""}` +
           `${synergy?.has(KING_KEY) ? " slot--synergy" : ""}` +
+          `${synergyNew?.has(KING_KEY) ? " slot--synergy-new" : ""}` +
           `${lit?.has(KING_KEY) ? " slot--lit" : ""}` +
           `${king && revealKing ? " slot--readable" : ""}` +
           `${targeting && king && !targetEmpty ? " slot--target" : ""}` +
@@ -289,6 +300,7 @@ export function BoardGrid({
             className={
               `slot${occ && shown ? " slot--filled slot--readable" : ""}` +
               `${synergy?.has(key) ? " slot--synergy" : ""}` +
+              `${synergyNew?.has(key) ? " slot--synergy-new" : ""}` +
               `${lit?.has(key) ? " slot--lit" : ""}` +
               `${isGuardPost(x, y, kingLane) ? " slot--guard" : ""}` +
               `${stacked[key] ? " slot--stacked" : ""}` +
