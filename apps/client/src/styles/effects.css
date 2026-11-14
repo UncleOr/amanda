@@ -73,8 +73,55 @@
   .actions__handle { font-size: 12px; padding: 5px 8px; }
 }
 
-/* ---- Ground Floor: a second card hidden under the one on the board ---- */
-.slot--stacked { box-shadow: 0 0 0 2px rgba(120, 200, 255, 0.5) inset; }
+/* ---- Ground Floor, and the bunker: cards under the one on the board ---- */
+/*
+ * ═══ A PILE LOOKS LIKE A PILE ═══
+ *
+ * Or: *"there needs to be some marking of a doubled card (say that you see
+ * edges like that) when there are cards one on top of the other."*
+ *
+ * There was a marking and it was not one: a 2px inset glow and a small icon
+ * in the corner, which says "something about this cell is different" and
+ * never says WHAT. What a stack looks like in every physical game is the
+ * cards underneath sticking out, so that is what this draws.
+ *
+ * ⚠ ONE `box-shadow`, NOT PSEUDO-ELEMENTS, AND THE FIRST VERSION LEARNED
+ * THAT THE HARD WAY. `::before` and `::after` on a slot are already spoken
+ * for — the family ring is one and the coloured ground of a special square
+ * is the other — so a bunker, which is the only cell that can hold three
+ * cards, was exactly the cell where there was nothing left to draw with.
+ * A shadow belongs to the element itself and collides with nothing.
+ *
+ * Hard offsets with no blur: a blurred shadow reads as "this is raised",
+ * which every card on this board already is. A hard one reads as another
+ * card behind this one, which is what it is.
+ */
+.slot--stacked {
+  /* The edges live outside the slot's own box. */
+  overflow: visible;
+  box-shadow:
+    5px -5px 0 -1px #0b1220,
+    5px -5px 0 0 rgba(150, 190, 230, 0.55);
+}
+.slot--stacked[data-pile="2"] {
+  box-shadow:
+    5px -5px 0 -1px #0b1220,
+    5px -5px 0 0 rgba(150, 190, 230, 0.55),
+    10px -10px 0 -1px #0b1220,
+    10px -10px 0 0 rgba(150, 190, 230, 0.4);
+}
+/* The card on top keeps its own ground, so the edges read as behind it. */
+.slot--stacked .card {
+  position: relative;
+  z-index: 2;
+}
+/* The badge counts a real pile now, so the number is worth reading. */
+.slot__stack-mark b {
+  margin-inline-start: 3px;
+  font-size: 11px;
+  font-weight: 800;
+}
+
 .slot--stackable { outline: 2px dashed rgba(120, 200, 255, 0.45); outline-offset: -3px; }
 .slot__stack-mark {
   position: absolute;

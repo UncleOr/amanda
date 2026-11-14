@@ -1,6 +1,6 @@
 import { CardView, CardBack } from "./CardView";
 import { Icon, type IconName } from "./Icon";
-import { SQUARES, type SquareKind, type Squares } from "@amanda/shared";
+import { SQUARES, cellCapacity, type SquareKind, type Squares } from "@amanda/shared";
 import type { CSSProperties } from "react";
 import { BOARD_SIZE, cellKey, type BattleMods } from "../game/useMatch";
 import { isCornerKey } from "../data/catalog";
@@ -211,9 +211,29 @@ export function BoardGrid({
   };
   /** Stackable either because a slot is left, or because this is a free corner. */
   const canStackOn = (key: string) => stackSlots > 0 || (stackCorners && isCornerKey(key));
-  /** A cell already holding a card that will accept a second one on top. */
+  /**
+   * A cell already holding a card that will accept another one on top.
+   *
+   * ═══ THE BUNKER WAS INVISIBLE TO THIS, AND SO IT DID NOT WORK ═══
+   *
+   * Or: *"and in the bunker I could not manage to put several cards one on
+   * top of the other."* He could not, and useMatch was not the problem —
+   * the rule there was right from the first day. THIS was: the board asked
+   * only whether the Ground Floor ability had a slot left, so a bunker cell
+   * with a card on it was drawn as "not droppable", carried no `data-drop`,
+   * and swallowed the tap before the rule could ever be reached.
+   *
+   * A square that holds three cards has to be a square the board knows
+   * holds three cards. Two different capacities, one question.
+   */
+  const roomInCell = (key: string) => (stacked[key]?.length ?? 0) + 1 < cellCapacity(squares, key);
   const stackableHere = (key: string, occ?: string) =>
-    !!occ && !stacked[key]?.length && canStackOn(key);
+    !!occ &&
+    (cellCapacity(squares, key) > 1
+      ? // The bunker stacks on its own account: it costs no slot and does
+        // not care whether the ability was ever played.
+        roomInCell(key)
+      : !stacked[key]?.length && canStackOn(key));
 
   /** The King's 2×2, wherever it sits on a board of this depth. */
   const kingHere = (x: number, y: number) =>
@@ -339,6 +359,9 @@ export function BoardGrid({
               `${dragOver === dropKey(key) && (!occ || stackableHere(key, occ)) ? " slot--dragover" : ""}`
             }
             data-drop={interactive && (!occ || stackableHere(key, occ)) ? dropKey(key) : undefined}
+            /* How many cards are UNDER the one on top, so the CSS can draw
+               that many edges sticking out behind it. See squares.css. */
+            data-pile={stacked[key]?.length ? String(stacked[key]!.length) : undefined}
             style={{ gridColumn: colForX(x), gridRow: rowForY(y) }}
             onClick={() => {
               if (targeting && interactive) {

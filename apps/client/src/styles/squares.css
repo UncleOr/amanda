@@ -121,3 +121,81 @@
   font-size: var(--t-2);
   color: var(--muted);
 }
+
+/*
+ * ═══ THE TWO SCREENS ═══
+ *
+ * Or: *"the first time you reach an arena and there is a special spot there
+ * will be a tutorial like that which shows it (2 screens like that), and
+ * that this tutorial is also in the settings."*
+ *
+ * Deliberately NOT the lesson band: that is a walkthrough, and these squares
+ * have no move to teach. See SquaresIntro.tsx.
+ */
+.sqintro {
+  max-width: min(520px, 92vw);
+  text-align: start;
+}
+.sqintro__title {
+  margin: 0 0 var(--sp-2);
+  font-size: var(--t-5);
+}
+.sqintro__line {
+  margin: 0 0 var(--sp-2);
+  font-size: var(--t-3);
+  line-height: 1.5;
+  color: var(--text);
+}
+.sqintro__line--last { margin-top: var(--sp-3); color: var(--muted); }
+/* One cell, drawn the way the board draws it, at the size the board uses. */
+.sqintro__cell {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 30px;
+  height: 30px;
+  flex: none;
+  border-radius: 8px;
+  border: 2px solid var(--sq, #888);
+  background: color-mix(in srgb, var(--sq, #888) 14%, transparent);
+  color: var(--sq, #888);
+}
+.sqintro__demo {
+  display: flex;
+  gap: var(--sp-2);
+  margin-top: var(--sp-3);
+}
+.sqintro__list {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: var(--sp-2);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+.sqintro__list li {
+  display: flex;
+  align-items: center;
+  gap: var(--sp-2);
+  min-width: 0;
+}
+.sqintro__list b {
+  font-size: var(--t-2);
+  font-weight: 700;
+  color: var(--text);
+}
+.sqintro__row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--sp-3);
+  margin-top: var(--sp-4);
+}
+.sqintro__dots { display: inline-flex; gap: 6px; }
+.sqintro__dots i {
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.25);
+}
+.sqintro__dots i.is-now { background: var(--accent); }

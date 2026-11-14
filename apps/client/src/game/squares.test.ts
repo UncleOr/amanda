@@ -146,6 +146,24 @@ describe("the bunker is the only cell that holds more than one", () => {
     expect(cellCapacity(undefined, "0-0")).toBe(1);
   });
 
+  it("is a question the BOARD asks too, which is why it did not work", () => {
+    /*
+     * ⚠ THE BUG OR FOUND: *"and in the bunker I could not manage to put
+     * several cards one on top of the other."*
+     *
+     * The rule in useMatch was right from the first day. BoardGrid was not:
+     * it asked only whether the Ground Floor ability had a slot left, so a
+     * bunker cell with a card on it was drawn as not droppable, carried no
+     * `data-drop`, and swallowed the tap before the rule could be reached.
+     *
+     * A square that holds three cards has to be a square the BOARD knows
+     * holds three cards — the same `cellCapacity`, asked in both places.
+     */
+    const grid = read("../components/BoardGrid.tsx");
+    expect(grid, "the board still cannot see a bunker").toContain("cellCapacity(squares, key)");
+    expect(grid).toContain("const roomInCell = (key: string) =>");
+  });
+
   it("stacks for free, where the Ground Floor ability has to be paid for", () => {
     /*
      * ⚠ THE TWO RULES MUST NOT MERGE. Stacking has cost a slot since the
@@ -159,6 +177,66 @@ describe("the bunker is the only cell that holds more than one", () => {
     const branch = src.slice(at, src.indexOf("if (pile.length) return;", at));
     expect(branch, "the bunker spends a stacking slot").not.toContain("setStackSlots");
     expect(branch).toContain("if (1 + pile.length >= cap) return;");
+  });
+});
+
+describe("a pile looks like a pile", () => {
+  it("draws one edge per card underneath, and nothing when there are none", () => {
+    /*
+     * Or: *"there needs to be some marking of a doubled card (say that you
+     * see edges like that) when there are cards one on top of the other."*
+     *
+     * ⚠ ONE `box-shadow`, NOT PSEUDO-ELEMENTS, and the first version learned
+     * that the hard way: `::before` and `::after` on a slot are already
+     * spoken for — the family ring is one and a special square's coloured
+     * ground is the other — so a BUNKER, the only cell that can hold three
+     * cards, was exactly the cell with nothing left to draw with.
+     */
+    const css = read("../styles/effects.css");
+    const at = css.indexOf(".slot--stacked {");
+    expect(at, "nothing marks a pile").toBeGreaterThan(-1);
+    const rule = css.slice(at, css.indexOf("}", at));
+    expect(rule, "the edges are drawn with a pseudo-element again").toContain("box-shadow:");
+    expect(css, "two cards underneath look the same as one").toContain(
+      '.slot--stacked[data-pile="2"]',
+    );
+    // And the board has to say how deep the pile is.
+    expect(read("../components/BoardGrid.tsx")).toContain("data-pile=");
+  });
+});
+
+describe("taking a card off a pile", () => {
+  it("takes the top one only, for the eraser and for the thief alike", () => {
+    /*
+     * Or: *"and it needs to be that if you use the card destroyer it only
+     * erases the top one (I do not know if you did it that way)."*
+     *
+     * It did not. Both of the things that reach into a cell of yours —
+     * the eraser and the thief — deleted the CELL, so a bunker holding
+     * three cards lost all three to one action card. Three times the value
+     * of every other target on the board for the price of aiming at the
+     * same square.
+     *
+     * ⚠ AND IT IS THE SAME RULE AS DYING. When the top card is killed in
+     * battle the next one comes up (`reveal` in the engine); when it is
+     * erased or stolen, the same. One rule for a pile, whichever way the
+     * top card leaves.
+     */
+    const src = read("./useMatch.ts");
+    expect(src, "there is no such helper").toContain("const takeTopAt = useCallback((cell: string)");
+    const at = src.indexOf("const takeTopAt = useCallback");
+    const body = src.slice(at, src.indexOf("  }, []);", at));
+    expect(body, "the pile is not consulted").toContain("const pile = stackedRef.current[cell] ?? []");
+    expect(body, "the next card never comes up").toContain("placements[cell] = pile[0]!");
+
+    // And both callers go through it rather than deleting the cell.
+    for (const effect of ["stealEnemyCard", "eraseEnemyCard"]) {
+      const from = src.indexOf(`a?.effect === "${effect}"`);
+      expect(from, `${effect} is gone`).toBeGreaterThan(-1);
+      const branch = src.slice(from, from + 420);
+      expect(branch, `${effect} still deletes the whole cell`).toContain("takeTopAt(cell)");
+      expect(branch, `${effect} deletes the cell by hand`).not.toContain("delete placements[cell]");
+    }
   });
 });
 

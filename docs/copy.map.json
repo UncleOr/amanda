@@ -4699,7 +4699,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/App.tsx",
-   "line": 154
+   "line": 155
   }
  },
  {
@@ -4709,7 +4709,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/App.tsx",
-   "line": 155
+   "line": 156
   }
  },
  {
@@ -4719,7 +4719,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/App.tsx",
-   "line": 173
+   "line": 174
   }
  },
  {
@@ -4729,7 +4729,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/App.tsx",
-   "line": 174
+   "line": 175
   }
  },
  {
@@ -4739,7 +4739,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/App.tsx",
-   "line": 177
+   "line": 178
   }
  },
  {
@@ -4749,7 +4749,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/App.tsx",
-   "line": 179
+   "line": 180
   }
  },
  {
@@ -4759,7 +4759,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/App.tsx",
-   "line": 291
+   "line": 292
   }
  },
  {
@@ -4769,7 +4769,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/App.tsx",
-   "line": 299
+   "line": 300
   }
  },
  {
@@ -4779,7 +4779,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/App.tsx",
-   "line": 1460
+   "line": 1484
   }
  },
  {
@@ -4789,7 +4789,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/App.tsx",
-   "line": 1461
+   "line": 1485
   }
  },
  {
@@ -4799,7 +4799,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/App.tsx",
-   "line": 1476
+   "line": 1500
   }
  },
  {
@@ -4809,7 +4809,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/App.tsx",
-   "line": 1498
+   "line": 1522
   }
  },
  {
@@ -4819,7 +4819,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/App.tsx",
-   "line": 1537
+   "line": 1561
   }
  },
  {
@@ -4829,7 +4829,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/App.tsx",
-   "line": 1537
+   "line": 1561
   }
  },
  {
@@ -4839,7 +4839,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/App.tsx",
-   "line": 1544
+   "line": 1568
   }
  },
  {
@@ -4849,7 +4849,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/App.tsx",
-   "line": 1554
+   "line": 1578
   }
  },
  {
@@ -4859,7 +4859,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/App.tsx",
-   "line": 1584
+   "line": 1608
   }
  },
  {
@@ -4869,7 +4869,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/App.tsx",
-   "line": 1607
+   "line": 1631
   }
  },
  {
@@ -4879,7 +4879,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/App.tsx",
-   "line": 1619
+   "line": 1643
   }
  },
  {
@@ -4889,7 +4889,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/App.tsx",
-   "line": 1659
+   "line": 1683
   }
  },
  {
@@ -4899,7 +4899,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/App.tsx",
-   "line": 1659
+   "line": 1683
   }
  },
  {
@@ -4909,7 +4909,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/App.tsx",
-   "line": 1659
+   "line": 1683
   }
  },
  {
@@ -4919,7 +4919,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/App.tsx",
-   "line": 1663
+   "line": 1687
   }
  },
  {
@@ -4929,7 +4929,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/App.tsx",
-   "line": 1664
+   "line": 1688
   }
  },
  {
@@ -4939,7 +4939,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/App.tsx",
-   "line": 1675
+   "line": 1699
   }
  },
  {
@@ -4949,7 +4949,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/App.tsx",
-   "line": 1675
+   "line": 1699
   }
  },
  {
@@ -4959,7 +4959,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/App.tsx",
-   "line": 1681
+   "line": 1705
   }
  },
  {
@@ -4969,7 +4969,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/App.tsx",
-   "line": 1688
+   "line": 1712
   }
  },
  {
@@ -4979,7 +4979,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/App.tsx",
-   "line": 1692
+   "line": 1716
   }
  },
  {
@@ -4989,7 +4989,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/App.tsx",
-   "line": 1692
+   "line": 1716
   }
  },
  {
@@ -4999,7 +4999,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/App.tsx",
-   "line": 1748
+   "line": 1772
   }
  },
  {
@@ -5009,7 +5009,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/App.tsx",
-   "line": 1755
+   "line": 1779
   }
  },
  {
@@ -5019,7 +5019,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/App.tsx",
-   "line": 1755
+   "line": 1779
   }
  },
  {
@@ -5029,7 +5029,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/App.tsx",
-   "line": 1774
+   "line": 1798
   }
  },
  {
@@ -5039,7 +5039,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/App.tsx",
-   "line": 1775
+   "line": 1799
   }
  },
  {
@@ -5049,7 +5049,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/App.tsx",
-   "line": 1779
+   "line": 1803
   }
  },
  {
@@ -5059,7 +5059,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/App.tsx",
-   "line": 1787
+   "line": 1811
   }
  },
  {
@@ -5069,7 +5069,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/App.tsx",
-   "line": 1789
+   "line": 1813
   }
  },
  {
@@ -5079,7 +5079,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/App.tsx",
-   "line": 1797
+   "line": 1821
   }
  },
  {
@@ -5089,7 +5089,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/App.tsx",
-   "line": 1883
+   "line": 1907
   }
  },
  {
@@ -5099,7 +5099,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/App.tsx",
-   "line": 1904
+   "line": 1928
   }
  },
  {
@@ -5109,7 +5109,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/App.tsx",
-   "line": 1923
+   "line": 1947
   }
  },
  {
@@ -5119,7 +5119,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/App.tsx",
-   "line": 1933
+   "line": 1957
   }
  },
  {
@@ -5129,7 +5129,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/App.tsx",
-   "line": 1946
+   "line": 1970
   }
  },
  {
@@ -5139,7 +5139,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/App.tsx",
-   "line": 1947
+   "line": 1971
   }
  },
  {
@@ -5149,7 +5149,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/App.tsx",
-   "line": 2031
+   "line": 2055
   }
  },
  {
@@ -5159,7 +5159,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/App.tsx",
-   "line": 2033
+   "line": 2057
   }
  },
  {
@@ -5169,7 +5169,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/App.tsx",
-   "line": 2034
+   "line": 2058
   }
  },
  {
@@ -5179,7 +5179,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/App.tsx",
-   "line": 2039
+   "line": 2063
   }
  },
  {
@@ -5189,7 +5189,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/App.tsx",
-   "line": 2042
+   "line": 2066
   }
  },
  {
@@ -5199,7 +5199,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/App.tsx",
-   "line": 2111
+   "line": 2135
   }
  },
  {
@@ -5209,7 +5209,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/App.tsx",
-   "line": 2124
+   "line": 2148
   }
  },
  {
@@ -5219,7 +5219,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/App.tsx",
-   "line": 2126
+   "line": 2150
   }
  },
  {
@@ -5229,7 +5229,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/App.tsx",
-   "line": 2127
+   "line": 2151
   }
  },
  {
@@ -5239,7 +5239,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/App.tsx",
-   "line": 2169
+   "line": 2193
   }
  },
  {
@@ -5249,7 +5249,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/App.tsx",
-   "line": 2189
+   "line": 2213
   }
  },
  {
@@ -5259,7 +5259,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/App.tsx",
-   "line": 2202
+   "line": 2226
   }
  },
  {
@@ -5269,7 +5269,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/App.tsx",
-   "line": 2228
+   "line": 2252
   }
  },
  {
@@ -5279,7 +5279,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/App.tsx",
-   "line": 2242
+   "line": 2266
   }
  },
  {
@@ -5289,7 +5289,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/App.tsx",
-   "line": 2282
+   "line": 2306
   }
  },
  {
@@ -5299,7 +5299,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/App.tsx",
-   "line": 2286
+   "line": 2310
   }
  },
  {
@@ -5309,7 +5309,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/App.tsx",
-   "line": 2315
+   "line": 2339
   }
  },
  {
@@ -5319,7 +5319,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/App.tsx",
-   "line": 2316
+   "line": 2340
   }
  },
  {
@@ -5329,7 +5329,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/App.tsx",
-   "line": 2326
+   "line": 2350
   }
  },
  {
@@ -5339,7 +5339,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/App.tsx",
-   "line": 2327
+   "line": 2351
   }
  },
  {
@@ -5349,7 +5349,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/App.tsx",
-   "line": 2335
+   "line": 2359
   }
  },
  {
@@ -5359,7 +5359,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/App.tsx",
-   "line": 2340
+   "line": 2364
   }
  },
  {
@@ -5369,7 +5369,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/App.tsx",
-   "line": 2350
+   "line": 2374
   }
  },
  {
@@ -5379,7 +5379,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/App.tsx",
-   "line": 2351
+   "line": 2375
   }
  },
  {
@@ -5389,7 +5389,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/App.tsx",
-   "line": 2366
+   "line": 2390
   }
  },
  {
@@ -5399,7 +5399,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/App.tsx",
-   "line": 2368
+   "line": 2392
   }
  },
  {
@@ -5409,7 +5409,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/App.tsx",
-   "line": 2374
+   "line": 2398
   }
  },
  {
@@ -5419,7 +5419,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/App.tsx",
-   "line": 2376
+   "line": 2400
   }
  },
  {
@@ -5429,7 +5429,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/App.tsx",
-   "line": 2377
+   "line": 2401
   }
  },
  {
@@ -5439,7 +5439,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/App.tsx",
-   "line": 2393
+   "line": 2417
   }
  },
  {
@@ -5449,7 +5449,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/App.tsx",
-   "line": 2397
+   "line": 2421
   }
  },
  {
@@ -5459,7 +5459,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/App.tsx",
-   "line": 2401
+   "line": 2425
   }
  },
  {
@@ -5469,7 +5469,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/App.tsx",
-   "line": 2596
+   "line": 2620
   }
  },
  {
@@ -5479,7 +5479,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/App.tsx",
-   "line": 2616
+   "line": 2640
   }
  },
  {
@@ -5489,7 +5489,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/App.tsx",
-   "line": 2629
+   "line": 2653
   }
  },
  {
@@ -5499,7 +5499,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/App.tsx",
-   "line": 2640
+   "line": 2664
   }
  },
  {
@@ -5509,7 +5509,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/App.tsx",
-   "line": 2644
+   "line": 2668
   }
  },
  {
@@ -5519,7 +5519,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/App.tsx",
-   "line": 2664
+   "line": 2688
   }
  },
  {
@@ -5529,7 +5529,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/App.tsx",
-   "line": 2678
+   "line": 2702
   }
  },
  {
@@ -5539,7 +5539,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/App.tsx",
-   "line": 2823
+   "line": 2848
   }
  },
  {
@@ -5549,7 +5549,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/App.tsx",
-   "line": 2920
+   "line": 2945
   }
  },
  {
@@ -5559,7 +5559,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/App.tsx",
-   "line": 2923
+   "line": 2948
   }
  },
  {
@@ -5569,7 +5569,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/App.tsx",
-   "line": 3082
+   "line": 3107
   }
  },
  {
@@ -5579,7 +5579,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/App.tsx",
-   "line": 3082
+   "line": 3107
   }
  },
  {
@@ -5589,7 +5589,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/App.tsx",
-   "line": 3085
+   "line": 3110
   }
  },
  {
@@ -5599,7 +5599,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/App.tsx",
-   "line": 3088
+   "line": 3113
   }
  },
  {
@@ -6899,7 +6899,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/components/BoardGrid.tsx",
-   "line": 312
+   "line": 332
   }
  },
  {
@@ -6909,7 +6909,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/components/BoardGrid.tsx",
-   "line": 313
+   "line": 333
   }
  },
  {
@@ -6919,7 +6919,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/components/BoardGrid.tsx",
-   "line": 386
+   "line": 409
   }
  },
  {
@@ -6929,7 +6929,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/components/BoardGrid.tsx",
-   "line": 394
+   "line": 417
   }
  },
  {
@@ -11801,8 +11801,8 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/components/Settings.tsx",
-   "line": 207,
-   "endLine": 207
+   "line": 216,
+   "endLine": 216
   }
  },
  {
@@ -11882,7 +11882,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/components/Settings.tsx",
-   "line": 141
+   "line": 150
   }
  },
  {
@@ -11892,7 +11892,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/components/Settings.tsx",
-   "line": 145
+   "line": 154
   }
  },
  {
@@ -11902,7 +11902,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/components/Settings.tsx",
-   "line": 158
+   "line": 167
   }
  },
  {
@@ -11912,7 +11912,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/components/Settings.tsx",
-   "line": 160
+   "line": 169
   }
  },
  {
@@ -11922,7 +11922,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/components/Settings.tsx",
-   "line": 160
+   "line": 169
   }
  },
  {
@@ -11932,7 +11932,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/components/Settings.tsx",
-   "line": 169
+   "line": 178
   }
  },
  {
@@ -11942,7 +11942,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/components/Settings.tsx",
-   "line": 171
+   "line": 180
   }
  },
  {
@@ -11952,7 +11952,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/components/Settings.tsx",
-   "line": 171
+   "line": 180
   }
  },
  {
@@ -11962,7 +11962,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/components/Settings.tsx",
-   "line": 187
+   "line": 196
   }
  },
  {
@@ -11972,7 +11972,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/components/Settings.tsx",
-   "line": 189
+   "line": 198
   }
  },
  {
@@ -11982,7 +11982,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/components/Settings.tsx",
-   "line": 189
+   "line": 198
   }
  },
  {
@@ -11992,7 +11992,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/components/Settings.tsx",
-   "line": 200
+   "line": 209
   }
  },
  {
@@ -12002,7 +12002,17 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/components/Settings.tsx",
-   "line": 264
+   "line": 273
+  }
+ },
+ {
+  "id": "s1f4f39b",
+  "section": "components/Settings.tsx",
+  "text": "הריבועים המיוחדים",
+  "where": {
+   "kind": "source",
+   "file": "apps/client/src/components/Settings.tsx",
+   "line": 294
   }
  },
  {
@@ -12012,7 +12022,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/components/Settings.tsx",
-   "line": 298
+   "line": 316
   }
  },
  {
@@ -12022,7 +12032,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/components/Settings.tsx",
-   "line": 299
+   "line": 317
   }
  },
  {
@@ -12032,7 +12042,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/components/Settings.tsx",
-   "line": 308
+   "line": 326
   }
  },
  {
@@ -12042,7 +12052,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/components/Settings.tsx",
-   "line": 314
+   "line": 332
   }
  },
  {
@@ -12052,7 +12062,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/components/Settings.tsx",
-   "line": 318
+   "line": 336
   }
  },
  {
@@ -12062,7 +12072,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/components/Settings.tsx",
-   "line": 321
+   "line": 339
   }
  },
  {
@@ -12072,7 +12082,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/components/Settings.tsx",
-   "line": 338
+   "line": 356
   }
  },
  {
@@ -12082,7 +12092,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/components/Settings.tsx",
-   "line": 343
+   "line": 361
   }
  },
  {
@@ -12092,7 +12102,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/components/Settings.tsx",
-   "line": 346
+   "line": 364
   }
  },
  {
@@ -12102,7 +12112,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/components/Settings.tsx",
-   "line": 367
+   "line": 385
   }
  },
  {
@@ -12112,7 +12122,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/components/Settings.tsx",
-   "line": 371
+   "line": 389
   }
  },
  {
@@ -12122,7 +12132,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/components/Settings.tsx",
-   "line": 373
+   "line": 391
   }
  },
  {
@@ -12132,7 +12142,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/components/Settings.tsx",
-   "line": 390
+   "line": 408
   }
  },
  {
@@ -12142,7 +12152,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/components/Settings.tsx",
-   "line": 390
+   "line": 408
   }
  },
  {
@@ -12152,7 +12162,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/components/Settings.tsx",
-   "line": 393
+   "line": 411
   }
  },
  {
@@ -12162,7 +12172,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/components/Settings.tsx",
-   "line": 403
+   "line": 421
   }
  },
  {
@@ -12172,7 +12182,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/components/Settings.tsx",
-   "line": 405
+   "line": 423
   }
  },
  {
@@ -12182,7 +12192,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/components/Settings.tsx",
-   "line": 406
+   "line": 424
   }
  },
  {
@@ -12192,7 +12202,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/components/Settings.tsx",
-   "line": 409
+   "line": 427
   }
  },
  {
@@ -12202,7 +12212,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/components/Settings.tsx",
-   "line": 428
+   "line": 446
   }
  },
  {
@@ -12212,7 +12222,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/components/Settings.tsx",
-   "line": 428
+   "line": 446
   }
  },
  {
@@ -12222,7 +12232,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/components/Settings.tsx",
-   "line": 431
+   "line": 449
   }
  },
  {
@@ -12593,6 +12603,86 @@
    "kind": "source",
    "file": "apps/client/src/components/SquareInfo.tsx",
    "line": 69
+  }
+ },
+ {
+  "id": "s5956a08",
+  "section": "components/SquaresIntro.tsx",
+  "text": "סגירה",
+  "where": {
+   "kind": "source",
+   "file": "apps/client/src/components/SquaresIntro.tsx",
+   "line": 56
+  }
+ },
+ {
+  "id": "s131483c",
+  "section": "components/SquaresIntro.tsx",
+  "text": "הלוח השתנה",
+  "where": {
+   "kind": "source",
+   "file": "apps/client/src/components/SquaresIntro.tsx",
+   "line": 62
+  }
+ },
+ {
+  "id": "s6bae97f",
+  "section": "components/SquaresIntro.tsx",
+  "text": "מהארנה השנייה יש על כל לוח כמה ריבועים מיוחדים — גם אצלך וגם אצל היריב. הם מוגרלים מחדש בכל משחק.",
+  "where": {
+   "kind": "source",
+   "file": "apps/client/src/components/SquaresIntro.tsx",
+   "line": 66
+  }
+ },
+ {
+  "id": "s2e4d402",
+  "section": "components/SquaresIntro.tsx",
+  "text": "כל ריבוע כזה עושה משהו לקלף שעומד עליו. לוחצים עליו ורואים מה הוא עושה.",
+  "where": {
+   "kind": "source",
+   "file": "apps/client/src/components/SquaresIntro.tsx",
+   "line": 72
+  }
+ },
+ {
+  "id": "s0f1fef6",
+  "section": "components/SquaresIntro.tsx",
+  "text": "שמונה ריבועים",
+  "where": {
+   "kind": "source",
+   "file": "apps/client/src/components/SquaresIntro.tsx",
+   "line": 93
+  }
+ },
+ {
+  "id": "s263e648",
+  "section": "components/SquaresIntro.tsx",
+  "text": "את הריבועים של היריב רואים בדיוק כמו את הקלפים שלו — קודם רק את השורה הראשונה, ובפאניקה עוד.",
+  "where": {
+   "kind": "source",
+   "file": "apps/client/src/components/SquaresIntro.tsx",
+   "line": 107
+  }
+ },
+ {
+  "id": "sfbacb23",
+  "section": "components/SquaresIntro.tsx",
+  "text": "יאללה",
+  "where": {
+   "kind": "source",
+   "file": "apps/client/src/components/SquaresIntro.tsx",
+   "line": 125
+  }
+ },
+ {
+  "id": "sf70973e",
+  "section": "components/SquaresIntro.tsx",
+  "text": "המשך ←",
+  "where": {
+   "kind": "source",
+   "file": "apps/client/src/components/SquaresIntro.tsx",
+   "line": 125
   }
  },
  {

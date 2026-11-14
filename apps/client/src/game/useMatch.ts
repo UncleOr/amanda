@@ -2066,13 +2066,51 @@ export function useMatch(): MatchApi {
     netRef.current.rematch();
   }, []);
 
+  /**
+   * Take the card off the TOP of a cell of your own, and no more than that.
+   *
+   * ═══ A PILE IS NOT A CARD ═══
+   *
+   * Or: *"and it needs to be that if you use the card destroyer it only
+   * erases the top one (I do not know if you did it that way)."*
+   *
+   * It did not. Both of the things that reach into a cell on your board —
+   * the eraser and the thief — deleted the CELL, so a bunker holding three
+   * cards lost all three to one action card. That is not what either card
+   * says, and it is three times the value of every other target on the
+   * board for the price of aiming at the same square.
+   *
+   * So the top one goes and the next one comes up, which is also exactly
+   * what happens when the top one DIES in the battle (see `reveal` in the
+   * engine). One rule for a pile, whichever way the top card leaves.
+   */
+  const takeTopAt = useCallback((cell: string) => {
+    setGs((st) => {
+      if (!st.placements[cell]) return st;
+      const pile = stackedRef.current[cell] ?? [];
+      const placements = { ...st.placements };
+      if (pile.length) {
+        placements[cell] = pile[0]!;
+        setStacked((was) => {
+          const next = { ...was };
+          if (pile.length > 1) next[cell] = pile.slice(1);
+          else delete next[cell];
+          return next;
+        });
+      } else {
+        delete placements[cell];
+      }
+      return { ...st, placements };
+    });
+  }, []);
+
   const receiveHex = useCallback((id: string, cell?: string) => {
     // This is what the steel wall was always for.
     if (shieldedRef.current) {
       setShielded(false);
       return;
     }
-    const a = ACTIONS.get(id);
+  const a = ACTIONS.get(id);
     if (a?.effect === "freezeOpponentPlacing") {
       setFrozenFor(Number(a.params?.seconds ?? 5));
       sfx.play("discard");
@@ -2101,12 +2139,7 @@ export function useMatch(): MatchApi {
      * message this build did not send and will not act on.
      */
     if (a?.effect === "stealEnemyCard" && cell && cell !== KING_KEY) {
-      setGs((st) => {
-        if (!st.placements[cell]) return st;
-        const placements = { ...st.placements };
-        delete placements[cell];
-        return { ...st, placements };
-      });
+      takeTopAt(cell);
       sfx.play("discard");
       return;
     }
@@ -2114,16 +2147,11 @@ export function useMatch(): MatchApi {
       if (cell === KING_KEY) {
         setKingWound(Number(a.params?.kingFlatDamage ?? 2000));
       } else {
-        setGs((s) => {
-          if (!s.placements[cell]) return s;
-          const placements = { ...s.placements };
-          delete placements[cell];
-          return { ...s, placements };
-        });
+        takeTopAt(cell);
       }
       sfx.play("discard");
     }
-  }, []);
+  }, [takeTopAt]);
 
   /**
    * The radioactive eraser, aimed at a cell on the opponent's board. An

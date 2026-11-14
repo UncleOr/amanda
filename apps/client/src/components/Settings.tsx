@@ -109,6 +109,7 @@ export function Settings({
   newsUnread,
   onNewsRead,
   onTutorial,
+  onSquaresIntro,
   onClose,
 }: {
   account: Account | null;
@@ -121,6 +122,14 @@ export function Settings({
   /** Start the tutorial again, from the top. */
   /** Start the tutorial at this stage, 1-3. */
   onTutorial: (stage: number) => void;
+  /**
+   * Open the two screens that explain the special squares.
+   *
+   * Or: *"and that this tutorial is also in the settings."* Beside the three
+   * stages rather than among them, because it is not one: the stages are a
+   * walkthrough you play and this is a thing you read.
+   */
+  onSquaresIntro: () => void;
   onClose: () => void;
 }) {
   const [muted, setMuted] = useState(sfx.muted);
@@ -275,6 +284,15 @@ export function Settings({
               </button>
             ))}
           </div>
+          <button
+            className="set__link"
+            onClick={() => {
+              onClose();
+              onSquaresIntro();
+            }}
+          >
+            {t("s1f4f39b", "הריבועים המיוחדים")}
+          </button>
           {DOCS.map((d) => (
             <button
               key={d.page}

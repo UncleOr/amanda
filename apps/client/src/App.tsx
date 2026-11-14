@@ -58,6 +58,7 @@ import { music } from "./game/music";
 import { ACTIONS, CATALOG, cardPool, isEnemyTargeted, synergyGroups } from "./data/catalog";
 import { useSynergyFlash } from "./game/synergyFlash";
 import { SquareInfo } from "./components/SquareInfo";
+import { SquaresIntro, markSquaresIntroSeen, squaresIntroSeen } from "./components/SquaresIntro";
 import { artUrl } from "./game/skins";
 import { warm, warmSoon } from "./game/preload";
 import { carryOf } from "./game/carry";
@@ -349,6 +350,29 @@ function Game() {
     cardId: string | null;
     hidden: boolean;
   } | null>(null);
+  /**
+   * The two screens that say what a special square is.
+   *
+   * Or: *"the first time you reach an arena and there is a special spot
+   * there will be a tutorial like that which shows it (2 screens like
+   * that), and that this tutorial is also in the settings."* So it is shown
+   * once, by the board that has one — and it is in Settings for ever after,
+   * because a thing you READ is a thing you may want to read again.
+   */
+  const [squaresIntro, setSquaresIntro] = useState(false);
+  /*
+   * ⚠ FIRED BY THE BOARD, NOT BY THE ARENA. "Reaching the arena" is the
+   * occasion, but the trophy that opens them and the first board that
+   * actually HAS one are two different moments — the gate is a high-water
+   * mark and the roll is a roll. Waiting for a square to really be there
+   * means the screen it explains is the screen behind it.
+   */
+  useEffect(() => {
+    if (squaresIntroSeen()) return;
+    if (!Object.keys(m.squares).length) return;
+    markSquaresIntroSeen();
+    setSquaresIntro(true);
+  }, [m.squares]);
   /*
    * Whether there is an update nobody has read.
    *
@@ -2788,6 +2812,7 @@ function Game() {
           newsUnread={newsUnread}
           onNewsRead={() => setNewsUnread(false)}
           onTutorial={replayTutorial}
+          onSquaresIntro={() => setSquaresIntro(true)}
           onClose={() => panel.close()}
         />
       )}
@@ -3153,6 +3178,7 @@ function Game() {
             />
           );
         })()}
+      {squaresIntro && <SquaresIntro onClose={() => setSquaresIntro(false)} />}
       {squareInfo && (
         <SquareInfo
           kind={squareInfo.kind}
