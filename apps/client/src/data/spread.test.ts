@@ -164,20 +164,26 @@ describe("going round the back is something most families can do", () => {
      * three divers that existed, the plants' dandelion was held back, and
      * the other two were an epic and a rare.
      *
-     * The one family still short is THE PLANTS, and not for want of a card:
-     * the dandelion that burrows is written, drawn and waiting on a release
-     * flag, and its only launched family member that moves is the creeping
-     * vine — which is the tutorial opponent's whole board, including its
-     * King. Giving the vine a way past the front row put four of three
-     * hundred tutorial runs into a loss, which is the one thing a lesson
-     * may never do, and the suite caught it. So the plants wait for the
-     * flag rather than for a card that is wrong.
+     * The plants were the last family short, and not for want of a card:
+     * the dandelion that burrows was written, drawn, and the only thing
+     * between it and the shelf was that flag. The alternative was to give
+     * the ability to the creeping vine, the only launched plant that moves
+     * — which is the tutorial opponent's whole board, including its King.
+     * That put four of three hundred tutorial runs into a loss, the one
+     * thing a lesson may never do, and the suite caught it inside a minute.
+     *
+     * Or, told which of the two it was: *"set launch true on the
+     * dandelion."* So the right card went out rather than the wrong card
+     * being bent to fit, and eight of the ten families can now do it.
+     *
+     * The two that cannot are a card each — the Demon King, who does not
+     * move, and Amanda — and a family of one has nothing to spare.
      */
     const families = new Set(LIVE.map((c) => c.seriesId));
     const withOne = [...families].filter((f) =>
       LIVE.some((c) => c.seriesId === f && c.abilities.some((a) => RTB.has(a.type))),
     );
-    expect(withOne.length, `only ${withOne.join(", ")} can go round the back`).toBeGreaterThanOrEqual(7);
+    expect(withOne.length, `only ${withOne.join(", ")} can go round the back`).toBeGreaterThanOrEqual(8);
   });
 
   it("calls it digging on land and diving in water, never the other way", () => {

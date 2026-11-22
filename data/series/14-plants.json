@@ -316,7 +316,7 @@
         "placeholderColor": "#9fd6e8",
         "sprite": "cards/plants_07_dandelion.webp"
       },
-      "launch": false,
+      "launch": true,
       "targeting": "sniperHunter"
     },
     {
