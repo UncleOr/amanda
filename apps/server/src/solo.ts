@@ -223,6 +223,14 @@ export interface SoloOutcome {
    * all when the two disagree. Null from a client too old to send it.
    */
   claimedWon: boolean | null;
+  /**
+   * The setting the browser SAID it was on, before the floor above had its
+   * say. Not paid on — `level` is — and used for one thing only: the result
+   * screen may say "the easy bot is for practice" when the child chose the
+   * easy bot, and must not say it when this server reached that conclusion
+   * on its own. See noStakes in meta.ts.
+   */
+  claimedLevel: BotLevel;
 }
 
 /**
@@ -244,7 +252,17 @@ export function soloResult(raw: unknown): SoloOutcome | { error: string } {
   // nothing — an unrecognised setting must never be the generous one.
   const claimed: BotLevel =
     body.level === "hard" || body.level === "normal" ? body.level : "easy";
-  const level = payableLevel(claimed, realCards(theirs));
+  /*
+   * How many of the opponent's cards the player's own action cards took off
+   * the board before the battle. See payableLevel: without it, two enemy-
+   * targeted cards in one hand turn a won hard match into the easy bot.
+   */
+  const removed = Number(body.removedFoeCards);
+  const level = payableLevel(
+    claimed,
+    realCards(theirs),
+    Number.isFinite(removed) ? removed : 0,
+  );
   /*
    * ═══ WHERE IT WAS FOUGHT, AS THE BROWSER SAYS ═══
    *
@@ -278,6 +296,7 @@ export function soloResult(raw: unknown): SoloOutcome | { error: string } {
       result,
       mine,
       level,
+      claimedLevel: claimed,
       doubled: body.doubled === true,
       claimedWon: typeof body.won === "boolean" ? body.won : null,
     };

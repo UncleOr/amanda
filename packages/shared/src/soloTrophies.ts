@@ -156,10 +156,57 @@ export function boardLooksReal(cards: number): boolean {
 }
 
 /**
+ * ═══ THE MOST ENEMY CARDS THE GAME CAN LEGITIMATELY TAKE OFF A BOARD ═══
+ *
+ * The action deck holds five cards, and the ones that reach across the
+ * midline — the Radioactive Eraser and the Thief — take one each. The
+ * freeze-the-placing effect the code still supports takes two. So five of
+ * the worst case is ten, and anything past that is not a card being played.
+ */
+export const MOST_REMOVABLE = 10;
+
+/**
  * The setting to PAY for: what the browser said, capped by what the board can
  * support. Nobody lies downward, so a claim of "easy" is simply believed.
+ *
+ * ═══ AND THE BOARD IS COUNTED AS IT WAS DEALT, NOT AS IT ARRIVED ═══
+ *
+ * Or, 22 November 2026: *"I had a bug just now — I beat the HARD bot and it
+ * told me you do not get trophies against the easy bot."*
+ *
+ * He had, and the sentence was the smaller half of it: the match paid
+ * nothing. The hard bot plans thirteen cards and this floor is twelve, so
+ * there is exactly ONE card of slack — and the Eraser and the Thief each
+ * take one off that board, with the empty cell refilled by a Crumb Demon
+ * that `realCards` deliberately does not count. Two enemy-targeted action
+ * cards in one match, which is a normal hand and exactly what he had been
+ * testing all evening, and a won hard match is scored as the easy bot:
+ * zero trophies, zero nachos, and a line of copy explaining a setting he
+ * had not chosen.
+ *
+ * So the count that matters is how many the board STARTED with, and
+ * `removed` carries the difference. It is the browser's word, clamped to
+ * what an action deck can actually do — and it is worth being clear about
+ * what that costs, because this file's whole job is not trusting the
+ * browser: a forged request can now claim ten removals and send a board
+ * ten cards thinner than a real one.
+ *
+ * What makes that acceptable is the comparison. The battle is still
+ * replayed and a claimed win that the replay scores as a loss still pays
+ * nothing, so the forgery buys an EASIER match at the same rate — not a
+ * free one. Weighed against it: every honest player who uses the two cards
+ * the game dealt them is paid zero and told something untrue. That is a
+ * real child on a real evening, and the cheat is a stranger who would have
+ * to rewrite the request anyway.
  */
-export function payableLevel(claimed: BotLevel, cards: number): BotLevel {
+export function payableLevel(claimed: BotLevel, cards: number, removed = 0): BotLevel {
   if (claimed === "easy") return "easy";
-  return boardLooksReal(cards) ? claimed : "easy";
+  // ⚠ NaN GUARDED FIRST. It arrives from `Number(body.removedFoeCards)` on a
+  // request that did not send one, every comparison against it is false, and
+  // without this line a board of thirteen becomes NaN and is paid as easy —
+  // which is the bug this function was just fixed for, reintroduced by the
+  // fix. Found by the test, on the value an older client sends.
+  const took = Number.isFinite(removed) ? Math.max(0, Math.floor(removed)) : 0;
+  const dealt = cards + Math.min(took, MOST_REMOVABLE);
+  return boardLooksReal(dealt) ? claimed : "easy";
 }

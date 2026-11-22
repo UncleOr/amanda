@@ -1,5 +1,6 @@
 import { describe, expect, it } from "vitest";
 import {
+  MOST_REMOVABLE,
   REAL_BOARD_CARDS,
   TUNED,
   boardLooksReal,
@@ -147,5 +148,62 @@ describe("the board has to vouch for the setting", () => {
       ...Array.from({ length: 6 }, () => ({ cardId: "crumb_demon" })),
     ];
     expect(payableLevel("hard", realCards(padded))).toBe("easy");
+  });
+});
+
+/**
+ * ═══ AND THE PART THAT KEPT "I BEAT THE HARD BOT" FROM BEING PAID ═══
+ *
+ * Or, 22 November 2026: *"I had a bug just now — I beat the HARD bot and it
+ * told me you do not get trophies against the easy bot."*
+ *
+ * Both halves of that were real and the copy was the smaller one. The hard
+ * planner builds thirteen cards, the floor is twelve, and the Eraser and the
+ * Thief each take one card OFF the opponent's board — the hole refilled by a
+ * Crumb Demon, which is deliberately not counted. Two enemy-targeted action
+ * cards, which is an ordinary hand, and a won hard match arrived at the
+ * server looking like the easy bot: no trophies, no nachos, and a sentence
+ * about a setting he had not chosen.
+ *
+ * So the board is now counted as it was DEALT, and these are the arithmetic.
+ */
+describe("the cards you took off their board still count as theirs", () => {
+  const HARD = 13;
+
+  it("pays the hard bot after the Eraser and the Thief have both landed", () => {
+    // The exact hand Or was playing: two cards that cross the midline.
+    expect(payableLevel("hard", HARD - 2, 2)).toBe("hard");
+    expect(payableLevel("hard", HARD - 2, 0), "this was the bug").toBe("easy");
+  });
+
+  it("survives a whole hand of them", () => {
+    expect(payableLevel("hard", HARD - 5, 5)).toBe("hard");
+  });
+
+  it("does not let a claim buy more than an action deck could take", () => {
+    /*
+     * Ten is five cards at two each, and the two that reach across the
+     * midline take one apiece. A request claiming more than the game can
+     * do gets the ten and no more — so an EMPTY board claiming a thousand
+     * removals still only reaches ten, which is under the floor.
+     */
+    expect(payableLevel("hard", 0, MOST_REMOVABLE)).toBe("easy");
+    expect(payableLevel("hard", 0, 9999)).toBe("easy");
+    // And three cards claiming fifty is three plus ten, which IS what a
+    // hard board looks like after a whole hand — the clamp is the cap, not
+    // a rejection. Written down because it looks like a hole and is the
+    // same board an honest player would have sent.
+    expect(payableLevel("hard", REAL_BOARD_CARDS - MOST_REMOVABLE, 50)).toBe("hard");
+    expect(payableLevel("hard", REAL_BOARD_CARDS - MOST_REMOVABLE - 1, 50)).toBe("easy");
+  });
+
+  it("ignores nonsense without throwing", () => {
+    for (const n of [-5, 0.5, Number.NaN])
+      expect(payableLevel("hard", HARD, n), String(n)).toBe("hard");
+    expect(payableLevel("hard", 0, -5)).toBe("easy");
+  });
+
+  it("still believes a claim of easy, which nobody makes to gain", () => {
+    expect(payableLevel("easy", HARD, 10)).toBe("easy");
   });
 });

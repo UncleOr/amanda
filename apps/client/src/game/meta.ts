@@ -236,6 +236,16 @@ export async function reportSolo(opts: {
    */
   level: BotLevel;
   /**
+   * How many of the opponent's cards our own action cards took off their
+   * board before the battle.
+   *
+   * The server decides what a bot match is worth partly by counting the
+   * cards on the opponent's board, and the Eraser and the Thief each take
+   * one — so without this a won HARD match that used both arrives looking
+   * like the easy bot and pays nothing. See payableLevel in shared.
+   */
+  removedFoeCards?: number;
+  /**
    * Which arena it was fought in — the ground, and so which family fought
    * 20% harder in it. The server replays the battle with it for the same
    * reason it is given the boards: a replay on different ground is a

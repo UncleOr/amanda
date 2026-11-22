@@ -742,6 +742,11 @@ async function handleMeta(req: IncomingMessage, res: ServerResponse, path: strin
       outcome.level,
       null,
       outcome.doubled,
+      // What the browser SAID it was on. Only used to decide whether the
+      // screen may say "the easy bot is for practice" — which it must not,
+      // when the easy bot is this server's conclusion rather than the
+      // child's choice. See noStakes in meta.ts.
+      outcome.claimedLevel,
     );
     // The score comes back from HERE even though the browser graded the same
     // battle itself: one authority, so a bug in either grader shows up as a

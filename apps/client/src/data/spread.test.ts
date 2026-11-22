@@ -174,16 +174,25 @@ describe("going round the back is something most families can do", () => {
      *
      * Or, told which of the two it was: *"set launch true on the
      * dandelion."* So the right card went out rather than the wrong card
-     * being bent to fit, and eight of the ten families can now do it.
+     * being bent to fit.
      *
-     * The two that cannot are a card each — the Demon King, who does not
-     * move, and Amanda — and a family of one has nothing to spare.
+     * ⚠ AND THE DRAGONS ARE NOW IN EXACTLY THE SAME POSITION, found the
+     * same way. Their only launched card that moves is the Flame Dragon,
+     * which is the top common AND sits in lesson two's hand — and sending
+     * it round the back takes the child's strongest card out of their line.
+     * One of three hundred tutorial runs then ended in a loss. The Ghost
+     * Dragon has the ability instead, which is the right card for it twice
+     * over, and waits on the same one-word flag the dandelion did.
+     *
+     * So seven families on the shelf, not eight. The two that can never
+     * have one are a card each — the Demon King, who does not move, and
+     * Amanda — and a family of one has nothing to spare.
      */
     const families = new Set(LIVE.map((c) => c.seriesId));
     const withOne = [...families].filter((f) =>
       LIVE.some((c) => c.seriesId === f && c.abilities.some((a) => RTB.has(a.type))),
     );
-    expect(withOne.length, `only ${withOne.join(", ")} can go round the back`).toBeGreaterThanOrEqual(8);
+    expect(withOne.length, `only ${withOne.join(", ")} can go round the back`).toBeGreaterThanOrEqual(7);
   });
 
   it("calls it digging on land and diving in water, never the other way", () => {

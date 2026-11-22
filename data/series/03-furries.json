@@ -59,11 +59,6 @@
           "type": "armorBreak",
           "trigger": "onHit",
           "params": {}
-        },
-        {
-          "type": "burrow",
-          "trigger": "onSpawn",
-          "params": {}
         }
       ],
       "role": {
@@ -109,6 +104,11 @@
           "params": {
             "pct": 25
           }
+        },
+        {
+          "type": "burrow",
+          "trigger": "onSpawn",
+          "params": {}
         }
       ],
       "role": {

@@ -61,11 +61,6 @@
           "type": "trample",
           "trigger": "onKill",
           "params": {}
-        },
-        {
-          "type": "burrow",
-          "trigger": "onSpawn",
-          "params": {}
         }
       ],
       "role": {
@@ -369,6 +364,11 @@
             "spiritHp": 50,
             "spiritPower": 100
           }
+        },
+        {
+          "type": "burrow",
+          "trigger": "onSpawn",
+          "params": {}
         }
       ],
       "role": {

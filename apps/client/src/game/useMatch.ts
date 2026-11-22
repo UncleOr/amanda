@@ -1718,6 +1718,24 @@ export function useMatch(): MatchApi {
   const modsRef = useRef<BattleMods>({ boardPowerAdd: 0, boostedCells: {} });
   modsRef.current = { boardPowerAdd, boostedCells, kingWound };
   const aiPlanRef = useRef<Placement[] | null>(null);
+  /*
+   * ═══ HOW MANY OF THE BOT'S CARDS WE TOOK OFF ITS BOARD ═══
+   *
+   * Or: *"I had a bug just now — I beat the HARD bot and it told me you do
+   * not get trophies against the easy bot."*
+   *
+   * The server decides what a bot match pays by counting the real cards on
+   * the opponent's board: thirteen means normal or hard, ten means easy,
+   * and the floor sits at twelve. The Eraser and the Thief each take one
+   * card OFF that board, and the hole is refilled with a Crumb Demon which
+   * does not count — so playing the two cards the game dealt you drops a
+   * hard board to eleven and the whole match is paid as the easy bot.
+   *
+   * This is the missing number: what was taken, so the server can count
+   * the board as it was DEALT. See payableLevel in shared for why it is
+   * worth sending and what trusting it costs.
+   */
+  const foeRemovedRef = useRef(0);
   if (!aiPlanRef.current) aiPlanRef.current = generateAiPlan(undefined, botLevelRef.current, met());
 
   /** Refill the hand, preferring cards already drawn ahead by "triple draw". */
@@ -2042,6 +2060,7 @@ export function useMatch(): MatchApi {
       .slice(0, lose)
       .map(({ i }) => i);
     aiPlanRef.current = plan.filter((_, i) => !weakest.includes(i));
+    foeRemovedRef.current += weakest.length;
   }, []);
 
   /** An action card the opponent played at us. */
@@ -2251,7 +2270,13 @@ export function useMatch(): MatchApi {
     }
     const [x, y] = key.split("-").map(Number) as [number, number];
     const at = plan.findIndex((p) => !p.king && p.x === x && p.y === y);
-    if (at >= 0) plan.splice(at, 1);
+    if (at >= 0) {
+      plan.splice(at, 1);
+      // Counted HERE rather than at the card, because this is the one line
+      // that actually makes the board smaller — the eraser and the thief
+      // both arrive through it, and so would anything added later.
+      foeRemovedRef.current += 1;
+    }
   }, []);
 
   /**
@@ -2798,6 +2823,10 @@ export function useMatch(): MatchApi {
    */
   const clearRound = useCallback(() => {
     aiPlanRef.current = generateAiPlan(undefined, botLevelRef.current, met());
+    // A fresh board has had nothing taken off it. Reset HERE, beside the
+    // plan it counts against, so a rematch cannot carry last round's
+    // removals into the payment for this one.
+    foeRemovedRef.current = 0;
     /*
      * ═══ A NEW BOARD IS A NEW SHAPE ═══
      *
@@ -3498,6 +3527,10 @@ export function useMatch(): MatchApi {
       seed: BATTLE_SEED,
       ...boards,
       level: botLevelRef.current,
+      // What our own action cards took off their board. Without it a won
+      // hard match that used the Eraser and the Thief is paid as the easy
+      // bot — see foeRemovedRef.
+      removedFoeCards: foeRemovedRef.current,
       arenaId: soloArenaRef.current,
       /*
        * What this screen is SHOWING, so the server can tell whether its own

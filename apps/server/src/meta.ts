@@ -319,6 +319,14 @@ export async function awardMatch(
    * buy is reaching that cap sooner.
    */
   doubled = false,
+  /**
+   * The setting the BROWSER said it was on, before the anti-forgery floor
+   * had its say. Only ever compared with `botLevel` — see `noStakes`, where
+   * the two disagreeing is the difference between saying nothing and saying
+   * something untrue. Defaults to `botLevel`, so a caller that does not care
+   * gets the old behaviour.
+   */
+  claimedLevel: BotLevel | undefined = botLevel
 ): Promise<MetaAward> {
   try {
     const opponent = await whoThatWas(sb, playerId, botLevel, opponentId);
@@ -386,9 +394,26 @@ export async function awardMatch(
       trophies: won?.gave ?? 0,
       cappedOut: won?.cappedOut ?? false,
       tunnel: won?.tunnel ?? 0,
-      // Asked of the rules, not of the level's name: what would a flawless
-      // win against this opponent have been worth? Nothing, for the easy bot.
+      /*
+       * Asked of the rules, not of the level's name: what would a flawless
+       * win against this opponent have been worth? Nothing, for the easy bot.
+       *
+       * ⚠ AND ONLY WHEN THE PLAYER CHOSE IT, which is the second half of a
+       * bug Or hit on 22 November: *"I beat the HARD bot and it told me you
+       * do not get trophies against the easy bot."* `opponent` is the level
+       * this server decided to PAY for, and that is not always the level the
+       * child pressed — a board that fails the anti-forgery floor is paid as
+       * easy however it was played. Reading this flag off it put a sentence
+       * about the easy bot on the screen of somebody who had just beaten the
+       * hard one.
+       *
+       * The floor's own bug is fixed (see payableLevel), so the two now
+       * agree for anybody honest. This is the line that makes a future
+       * disagreement show up as SILENCE rather than as a lie about which
+       * button they pressed.
+       */
       noStakes:
+        (!botLevel || botLevel === claimedLevel) &&
         nachosFor(opponent, true) === 0 &&
         trophiesFor({ won: true, score: 10, opponent }) === 0,
     };
