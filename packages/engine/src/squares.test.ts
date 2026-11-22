@@ -338,22 +338,56 @@ describe("the bunker", () => {
 });
 
 describe("the secret door", () => {
-  it("starts the card behind the enemy board, facing home", () => {
+  /*
+   * Or, 22 November 2026: *"the secret door needs to arrive at the matching
+   * position on the opponent's board."*
+   *
+   * ⚠ THE OLD TEST WOULD STILL PASS AND THAT IS WHY IT IS GONE. It put the
+   * door in the back corner and asked only "did it move, did it turn" —
+   * both of which the old far-corner rule also did, from every square. The
+   * whole of what he asked for is the DIFFERENCE between two squares, so
+   * the test is now two squares.
+   *
+   * Side A's local x maps to arena column x; side B's is mirrored into
+   * 7 - x, so "the same cell on their board" is column 7 - x, and the two
+   * doors below have to come out somewhere different.
+   */
+  const at = (x: number, y: number, door: boolean) =>
+    find(
+      set(
+        [
+          { cardId: "crown", x: 1, y: 1, king: true },
+          { cardId: "walker", x, y },
+        ],
+        door ? { [`${x}-${y}`]: "secretdoor" } : undefined,
+      ),
+      "walker",
+    );
+
+  it("comes out at the same cell on the other board, not at a fixed corner", () => {
+    const back = at(0, 0, true);
+    const front = at(3, 0, true);
+    expect(back.col, "the back corner comes out in their back corner").toBe(7);
+    expect(front.col, "the front row comes out in their front row").toBe(4);
+    expect(back.col, "two doors, one destination — this is the old rule").not.toBe(
+      front.col,
+    );
+    expect(back.flags.dug && front.flags.dug).toBe(true);
+  });
+
+  it("keeps the lane it was placed in", () => {
+    expect(at(0, 3, true).lanes).toEqual(at(0, 3, false).lanes);
+  });
+
+  it("faces the crown it surfaced beside, from either end", () => {
     /*
-     * Or picked this out of six, and it was the cheapest of them: the
-     * engine already knows the move — the Round-the-Back abilities put a
-     * card at the far end of the arena and TURN it. This hands that to a
-     * square instead of to a card.
+     * Always turning round was right for the back corner and wrong for the
+     * front row, which would have walked home. Their crown sits at column
+     * 5.5, so a card at 7 turns and a card at 4 does not.
      */
-    const board = [
-      { cardId: "crown", x: 1, y: 1, king: true },
-      { cardId: "walker", x: 0, y: 0 },
-    ];
-    const plain = find(set(board), "walker");
-    const through = find(set(board, { "0-0": "secretdoor" }), "walker");
-    expect(through.col, "it did not go anywhere").toBeGreaterThan(plain.col);
-    expect(through.facing, "it did not turn round").toBe(-plain.facing);
-    expect(through.flags.dug).toBe(true);
+    const plain = at(0, 0, false).facing;
+    expect(at(0, 0, true).facing, "behind the crown: turn and come back").toBe(-plain);
+    expect(at(3, 0, true).facing, "in front of the crown: keep going").toBe(plain);
   });
 });
 

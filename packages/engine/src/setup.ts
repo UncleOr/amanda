@@ -288,11 +288,19 @@ function applySquare(
     /*
      * ═══ THE DOOR OPENS BEFORE A TICK HAS RUN ═══
      *
-     * Or picked this one out of six, and it was the cheapest of them
-     * because the engine already knows the move: the Round-the-Back
-     * abilities put a card at the far end of the arena and TURN it, and
-     * everything else follows from the turn — what is "ahead" of it is now
-     * the enemy's back row and their King's back.
+     * Or, 22 November 2026: *"the secret door needs to arrive at the
+     * MATCHING position on the opponent's board."*
+     *
+     * It used to drop the card at the far end of the arena, the way the
+     * Round-the-Back abilities do — which made the door a second copy of
+     * `dive`, and made the square you put the card on irrelevant. Now the
+     * square you choose is the whole decision: the door comes out at the
+     * SAME cell on their board. Your back corner is their back corner,
+     * behind the crown; your front row is their front row, in the brawl.
+     *
+     * ⚠ The cell is never inside their crown, and that is not luck:
+     * `placeableCells()` cuts the King's 2×2 out of the board, so a door
+     * cannot be on x 1..2 / y 1..2 and therefore cannot come out there.
      *
      * ⚠ NEVER A KING, and the reason is written down twice now. The King's
      * Trap is the rule that a crowned monster gives up its movement, and a
@@ -301,8 +309,19 @@ function applySquare(
      * called for a non-King (see the caller), and this is the second lock.
      */
     if (unit.isKing) return;
-    unit.col = unit.facing > 0 ? ARENA.width - 1 : 0;
-    unit.facing = unit.facing > 0 ? -1 : 1;
+    const foe: Owner = unit.owner === "A" ? "B" : "A";
+    unit.col = toArenaCol(foe, placement.x);
+    /*
+     * And it comes out FACING THEIR CROWN, wherever the door put it.
+     *
+     * Keeping the old "always turn round" would have walked a card that
+     * surfaced in their front row straight back home. The crown's centre
+     * is always a half-column (1.5 or 5.5) and a card's column is always a
+     * whole one, so this never has to decide a tie.
+     */
+    const crown =
+      (toArenaCol(foe, BOARD.kingSlot.x) + toArenaCol(foe, BOARD.kingSlot.x + 1)) / 2;
+    unit.facing = unit.col > crown ? -1 : 1;
     unit.flags.dug = true;
     state.events.push({ tick: 0, type: "dig", uid: unit.uid, col: unit.col });
     return;

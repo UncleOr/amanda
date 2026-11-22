@@ -291,7 +291,15 @@ export function TunnelStrip({ best, onOpen }: { best: number; onOpen: () => void
       onClick={onOpen}
       title={t("se42beed", "מנהרת השגעות")}
     >
-      <span className="tunnel-strip__arch" aria-hidden="true" />
+      {/*
+        Two brushes, because a car wash is read by its rollers and a
+        pseudo-element pair was already spent on the gantry beam and the
+        foam. See tunnel.css.
+      */}
+      <span className="tunnel-strip__arch" aria-hidden="true">
+        <i className="tunnel-strip__brush" />
+        <i className="tunnel-strip__brush" />
+      </span>
       <span className="tunnel-strip__text">
         <b>{t("s4d48f87", "מנהרת השגעות")}</b>
         <span className="tunnel-strip__bar" aria-hidden="true">

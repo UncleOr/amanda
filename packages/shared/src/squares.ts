@@ -37,12 +37,14 @@ export const SQUARE_KINDS = [
   "blackhole",
   "minefield",
   /**
-   * The card here starts the battle BEHIND the enemy's board.
+   * The card here starts the battle at the SAME cell on the enemy's board.
    *
-   * Or picked it from a list of six on 14 November and it was the one with
-   * the lowest price, because the engine already knows how to do it: the
-   * Round-the-Back abilities put a card at the far end of the arena and
-   * turn it round. This is that, handed to a square instead of to a card.
+   * Or picked it from a list of six on 14 November, and on 22 November he
+   * said where it comes out: *"the secret door needs to arrive at the
+   * matching position on the opponent's board."* Which turned it from a
+   * second `dive` — any door, same far corner — into the one spot where
+   * the square you choose IS the decision. Back corner to back corner,
+   * behind their crown; front row to front row, into the brawl.
    *
    * ⚠ WHICH MAKES IT THE ONLY SPOT THAT MOVES A CARD BEFORE A TICK HAS RUN,
    * so it is also the only one a player can misread as "my card vanished".
@@ -132,7 +134,7 @@ export const SQUARES: Readonly<Record<SquareKind, SquareDef>> = {
   },
   secretdoor: {
     he: "דלת סודית",
-    note: "הקלף כאן מתחיל את הקרב מאחורי הלוח של היריב, ונלחם משם קדימה.",
+    note: "הקלף כאן מתחיל את הקרב באותו מקום בדיוק בלוח של היריב, ופונה לכתר שלו.",
     icon: "split",
     colour: "#2dd4bf",
   },
