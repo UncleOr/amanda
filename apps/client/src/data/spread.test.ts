@@ -84,29 +84,28 @@ describe("the combinations Or asked for by name", () => {
     });
   }
 
-  it("has an avenger in the air and one standing still, and not yet one that walks", () => {
+  it("has an avenger in the air, one standing still AND one that walks", () => {
+    /*
+     * ⚠ THE RATCHET TICKED OVER, WHICH IS WHAT IT WAS FOR. This line read
+     * "and not yet one that walks" for a fortnight and recorded a gap: Or
+     * had named "walking — avenger" as one of the combinations he wanted,
+     * and then taken the Stone Colossus off the list because he wanted it
+     * to stay the plainest giant there is.
+     *
+     * The 22 November redeal closed it without touching the Colossus. The
+     * Siren is an avenger and now swims instead of sitting on her rock, and
+     * the Armoured Beetle walks behind her in the catalogue.
+     *
+     * ⚠ AND THE FLYING ONE NEARLY WENT, which is the other thing this test
+     * earned. The redeal's first table moved the Vengeful Wasp from avenger
+     * to border guard — a card whose NAME is the mode — and took the only
+     * airborne avenger in the game with it. The test went red on the run
+     * that mattered.
+     */
     const shapes = new Set(of("avenger").map(moves));
     expect(shapes.has("flies"), "the flying avenger went away").toBe(true);
     expect(shapes.has("still"), "the standing avenger went away").toBe(true);
-    /*
-     * ⚠ THE ONE OF OR'S FOUR EXAMPLES THAT IS STILL MISSING, and it is
-     * missing on purpose. The Stone Colossus was going to be it — it
-     * already returns damage, and measured it cost nothing: zero winners
-     * changed in six hundred battles. He took it off the list for a reason
-     * that has nothing to do with balance:
-     *
-     *   *"except the Stone Colossus, which should be the most ordinary
-     *   giant there is: he walks and he kills the King."*
-     *
-     * Which is a description of the DEFAULT, and the default already does
-     * it — a lane card whose lane has been cleared falls through to hunting
-     * the crown (see pickTarget). Giving him a mode would have put the
-     * plainest card in the game into an archetype filter.
-     *
-     * So this records a gap rather than a wish, and it stays until Or
-     * names the card.
-     */
-    expect(shapes.has("walks"), "there is a walking avenger now — tick this over").toBe(false);
+    expect(shapes.has("walks"), "the walking avenger went away").toBe(true);
   });
 });
 

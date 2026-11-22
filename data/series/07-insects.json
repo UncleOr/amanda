@@ -64,7 +64,9 @@
         "placeholderColor": "#8a6d3b",
         "sprite": "cards/insects_01_ant_soldier.webp"
       },
-      "launch": true
+      "launch": true,
+      "hits": "ground",
+      "targeting": "lane"
     },
     {
       "id": "insects_02_ant_queen",
@@ -106,7 +108,9 @@
         "placeholderColor": "#8a6d3b",
         "sprite": "cards/insects_02_ant_queen.webp"
       },
-      "launch": true
+      "launch": true,
+      "hits": "ground",
+      "targeting": "bodyguard"
     },
     {
       "id": "insects_03_venom_scorpion",
@@ -147,7 +151,8 @@
         "sprite": "cards/insects_03_venom_scorpion.webp"
       },
       "launch": true,
-      "targeting": "king"
+      "targeting": "king",
+      "hits": "ground"
     },
     {
       "id": "insects_04_toxic_moth",
@@ -188,7 +193,8 @@
         "sprite": "cards/insects_04_toxic_moth.webp"
       },
       "launch": false,
-      "targeting": "sniperHunter"
+      "targeting": "sniperHunter",
+      "hits": "air"
     },
     {
       "id": "insects_05_armored_beetle",
@@ -234,7 +240,8 @@
         "sprite": "cards/insects_05_armored_beetle.webp"
       },
       "launch": false,
-      "targeting": "avenger"
+      "targeting": "avenger",
+      "hits": "ground"
     },
     {
       "id": "insects_06_ambush_spider",
@@ -272,7 +279,9 @@
         "placeholderColor": "#4b2e6b",
         "sprite": "cards/insects_06_ambush_spider.webp"
       },
-      "launch": false
+      "launch": false,
+      "hits": "both",
+      "targeting": "lane"
     },
     {
       "id": "insects_07_aggressive_wasp",
@@ -313,7 +322,8 @@
         "sprite": "cards/insects_07_aggressive_wasp.webp"
       },
       "launch": true,
-      "targeting": "avenger"
+      "targeting": "avenger",
+      "hits": "air"
     },
     {
       "id": "insects_08_firefly",
@@ -354,7 +364,8 @@
         "sprite": "cards/insects_08_firefly.webp"
       },
       "launch": true,
-      "targeting": "champion"
+      "targeting": "champion",
+      "hits": "air"
     },
     {
       "id": "insects_09_bombardier",
@@ -397,7 +408,8 @@
         "sprite": "cards/insects_09_bombardier.webp"
       },
       "launch": false,
-      "targeting": "wallbreaker"
+      "targeting": "wallbreaker",
+      "hits": "both"
     },
     {
       "id": "insects_10_insect_empress",
@@ -443,7 +455,8 @@
         "sprite": "cards/insects_10_insect_empress.webp"
       },
       "launch": true,
-      "targeting": "invader"
+      "targeting": "invader",
+      "hits": "both"
     }
   ]
 }

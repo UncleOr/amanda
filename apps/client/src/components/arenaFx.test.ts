@@ -130,9 +130,23 @@ describe("how a card walks", () => {
    * says the other thing out loud, that standing still is no longer the same
    * as being animated by nothing.
    */
-  it("leaves the majority standing still, which is what the cards say", () => {
+  it("leaves a good share of them standing still, which is what the cards say", () => {
+    /*
+     * ⚠ IT USED TO SAY "THE MAJORITY" AND THAT STOPPED BEING TRUE ON 22
+     * NOVEMBER, deliberately. Or: *"run over all the cards from beginning to
+     * end and divide everything again evenly... walkers, flyers, hoverers
+     * and diggers."* Three cards that should always have moved were given a
+     * pace — a crusher drives, a siren swims, a blob oozes — and two more
+     * were put in the air where they belong.
+     *
+     * The number that matters here is not "most", it is "plenty": the bot
+     * planner holds its two guard posts with cards that will not wander off
+     * them (see aiplan.test.ts), and a shelf with almost nothing static is a
+     * shelf that cannot man a post. A third is a long way clear of that and
+     * a long way from "nothing in the battle moves".
+     */
     const still = cardPool().filter((id) => CATALOG.get(id)!.stats.moveSpeed === 0);
-    expect(still.length).toBeGreaterThan(cardPool().length / 2);
+    expect(still.length).toBeGreaterThan(cardPool().length / 3);
     const walks = cardPool().map((id) => combatLook(id).walk);
     expect(new Set(walks).size, "and the ones that do move do not all move alike")
       .toBeGreaterThan(2);

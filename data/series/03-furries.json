@@ -69,7 +69,9 @@
         "placeholderColor": "#f5c21b",
         "sprite": "cards/furries_01_chuppy.webp"
       },
-      "launch": true
+      "launch": true,
+      "hits": "air",
+      "targeting": "invader"
     },
     {
       "id": "furries_02_kioory",
@@ -122,7 +124,8 @@
       "launch": true,
       "drag": {
         "sound": "steps"
-      }
+      },
+      "hits": "ground"
     }
   ]
 }

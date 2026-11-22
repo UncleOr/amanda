@@ -125,12 +125,21 @@ describe("what a card sounds like while it is carried", () => {
   });
 
   it("mixes the same wings with ice into an Ice Dragon", () => {
-    expect(clips("dragons_06_frost_breath")).toEqual(["ing-ice"]);
-    // It does not fly, so it is ice and nothing else — which is the recipe
-    // doing what the data says rather than what the name suggests.
-    expect(CATALOG.get("dragons_06_frost_breath")!.flying).toBe(false);
-    // The one that does both:
-    expect(clips("dragons_09_typhoon_dragon")).toContain("ing-wings-dragon");
+    /*
+     * ⚠ THIS TEST USED TO RECORD THE OPPOSITE, and the change is the point.
+     * Or's own example was *"wings + cracking ice = Ice Dragon"* — and the
+     * Ice Dragon could not make that sound, because it was a dragon
+     * standing on the floor. The 22 November redeal put it in the air where
+     * it belongs, and his example exists now.
+     */
+    expect(clips("dragons_06_frost_breath")).toEqual(["ing-ice", "ing-wings-dragon"]);
+    /*
+     * And the half that still has to hold: the recipe reads the DATA, not
+     * the name. The Frost Giant is made of ice and walks, so it is ice and
+     * nothing else — no wings on a thing without them.
+     */
+    expect(clips("giants_06_frost_giant")).not.toContain("ing-wings-dragon");
+    expect(CATALOG.get("giants_06_frost_giant")!.flying).toBe(false);
   });
 
   it("gives dragons and insects different wings", () => {

@@ -6459,7 +6459,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/components/CardDetailModal.tsx",
-   "line": 43
+   "line": 44
   }
  },
  {
@@ -6469,7 +6469,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/components/CardDetailModal.tsx",
-   "line": 116
+   "line": 117
   }
  },
  {
@@ -6479,7 +6479,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/components/CardDetailModal.tsx",
-   "line": 116
+   "line": 117
   }
  },
  {
@@ -6489,7 +6489,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/components/CardDetailModal.tsx",
-   "line": 121
+   "line": 122
   }
  },
  {
@@ -6499,7 +6499,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/components/CardDetailModal.tsx",
-   "line": 124
+   "line": 125
   }
  },
  {
@@ -6509,7 +6509,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/components/CardDetailModal.tsx",
-   "line": 132
+   "line": 133
   }
  },
  {
@@ -6519,7 +6519,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/components/CardDetailModal.tsx",
-   "line": 155
+   "line": 156
   }
  },
  {
@@ -6529,7 +6529,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/components/CardDetailModal.tsx",
-   "line": 161
+   "line": 162
   }
  },
  {
@@ -6539,7 +6539,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/components/CardDetailModal.tsx",
-   "line": 167
+   "line": 168
   }
  },
  {
@@ -6549,7 +6549,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/components/CardDetailModal.tsx",
-   "line": 168
+   "line": 169
   }
  },
  {
@@ -6559,7 +6559,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/components/CardDetailModal.tsx",
-   "line": 169
+   "line": 170
   }
  },
  {
@@ -6569,7 +6569,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/components/CardDetailModal.tsx",
-   "line": 169
+   "line": 170
   }
  },
  {
@@ -6579,7 +6579,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/components/CardDetailModal.tsx",
-   "line": 190
+   "line": 191
   }
  },
  {
@@ -6589,7 +6589,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/components/CardDetailModal.tsx",
-   "line": 194
+   "line": 195
   }
  },
  {
@@ -6599,7 +6599,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/components/CardDetailModal.tsx",
-   "line": 195
+   "line": 196
   }
  },
  {
@@ -6609,7 +6609,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/components/CardDetailModal.tsx",
-   "line": 197
+   "line": 198
   }
  },
  {
@@ -6619,7 +6619,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/components/CardDetailModal.tsx",
-   "line": 198
+   "line": 199
   }
  },
  {
@@ -6629,37 +6629,17 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/components/CardDetailModal.tsx",
-   "line": 217
+   "line": 218
   }
  },
  {
-  "id": "sd4de546",
+  "id": "sb9c6214",
   "section": "חלון פרטי מפלצת",
-  "text": "תוקף את השומרים שבדרך, ואז את המלך.",
+  "text": "יורה באויב הרחוק ביותר בקו שלו",
   "where": {
    "kind": "source",
    "file": "apps/client/src/components/CardDetailModal.tsx",
-   "line": 234
-  }
- },
- {
-  "id": "sa8cdca7",
-  "section": "חלון פרטי מפלצת",
-  "text": "יורה באויב הרחוק ביותר בקו שלו.",
-  "where": {
-   "kind": "source",
-   "file": "apps/client/src/components/CardDetailModal.tsx",
-   "line": 236
-  }
- },
- {
-  "id": "s7815a19",
-  "section": "חלון פרטי מפלצת",
-  "text": "תוקף את מי שמולו בקו שלו.",
-  "where": {
-   "kind": "source",
-   "file": "apps/client/src/components/CardDetailModal.tsx",
-   "line": 237
+   "line": 253
   }
  },
  {
@@ -6669,7 +6649,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/components/CardDetailModal.tsx",
-   "line": 275
+   "line": 315
   }
  },
  {
@@ -9424,13 +9404,23 @@
   }
  },
  {
+  "id": "s53aeba3",
+  "section": "components/DeckBuilder.tsx",
+  "text": "במי הם פוגעים",
+  "where": {
+   "kind": "source",
+   "file": "apps/client/src/components/DeckBuilder.tsx",
+   "line": 244
+  }
+ },
+ {
   "id": "sb784b9a",
   "section": "components/DeckBuilder.tsx",
   "text": "על מי הם הולכים",
   "where": {
    "kind": "source",
    "file": "apps/client/src/components/DeckBuilder.tsx",
-   "line": 251
+   "line": 280
   }
  },
  {
@@ -9440,7 +9430,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/components/DeckBuilder.tsx",
-   "line": 264
+   "line": 293
   }
  },
  {
@@ -9450,7 +9440,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/components/DeckBuilder.tsx",
-   "line": 269
+   "line": 298
   }
  },
  {
@@ -9460,7 +9450,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/components/DeckBuilder.tsx",
-   "line": 274
+   "line": 303
   }
  },
  {
@@ -9470,7 +9460,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/components/DeckBuilder.tsx",
-   "line": 290
+   "line": 319
   }
  },
  {
@@ -9480,7 +9470,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/components/DeckBuilder.tsx",
-   "line": 301
+   "line": 330
   }
  },
  {
@@ -9490,7 +9480,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/components/DeckBuilder.tsx",
-   "line": 561
+   "line": 590
   }
  },
  {
@@ -9500,7 +9490,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/components/DeckBuilder.tsx",
-   "line": 619
+   "line": 648
   }
  },
  {
@@ -9510,7 +9500,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/components/DeckBuilder.tsx",
-   "line": 625
+   "line": 654
   }
  },
  {
@@ -9520,7 +9510,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/components/DeckBuilder.tsx",
-   "line": 644
+   "line": 673
   }
  },
  {
@@ -9530,7 +9520,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/components/DeckBuilder.tsx",
-   "line": 682
+   "line": 711
   }
  },
  {
@@ -9540,7 +9530,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/components/DeckBuilder.tsx",
-   "line": 691
+   "line": 720
   }
  },
  {
@@ -9550,7 +9540,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/components/DeckBuilder.tsx",
-   "line": 707
+   "line": 736
   }
  },
  {
@@ -9560,7 +9550,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/components/DeckBuilder.tsx",
-   "line": 753
+   "line": 782
   }
  },
  {
@@ -9570,7 +9560,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/components/DeckBuilder.tsx",
-   "line": 792
+   "line": 821
   }
  },
  {
@@ -9580,7 +9570,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/components/DeckBuilder.tsx",
-   "line": 805
+   "line": 834
   }
  },
  {
@@ -9590,7 +9580,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/components/DeckBuilder.tsx",
-   "line": 835
+   "line": 864
   }
  },
  {
@@ -9600,7 +9590,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/components/DeckBuilder.tsx",
-   "line": 850
+   "line": 879
   }
  },
  {
@@ -9610,7 +9600,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/components/DeckBuilder.tsx",
-   "line": 851
+   "line": 880
   }
  },
  {
@@ -9620,7 +9610,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/components/DeckBuilder.tsx",
-   "line": 854
+   "line": 883
   }
  },
  {
@@ -9630,7 +9620,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/components/DeckBuilder.tsx",
-   "line": 857
+   "line": 886
   }
  },
  {
@@ -9640,7 +9630,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/components/DeckBuilder.tsx",
-   "line": 864
+   "line": 893
   }
  },
  {
@@ -9650,7 +9640,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/components/DeckBuilder.tsx",
-   "line": 934
+   "line": 963
   }
  },
  {
@@ -9660,7 +9650,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/components/DeckBuilder.tsx",
-   "line": 940
+   "line": 969
   }
  },
  {
@@ -9670,7 +9660,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/components/DeckBuilder.tsx",
-   "line": 944
+   "line": 973
   }
  },
  {
@@ -9680,7 +9670,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/components/DeckBuilder.tsx",
-   "line": 985
+   "line": 1014
   }
  },
  {
@@ -9690,7 +9680,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/components/DeckBuilder.tsx",
-   "line": 992
+   "line": 1021
   }
  },
  {
@@ -15662,7 +15652,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/game/meta.ts",
-   "line": 316
+   "line": 326
   }
  },
  {
@@ -15672,7 +15662,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/game/meta.ts",
-   "line": 319
+   "line": 329
   }
  },
  {
@@ -15682,7 +15672,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/game/meta.ts",
-   "line": 358
+   "line": 368
   }
  },
  {
@@ -15692,7 +15682,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/game/meta.ts",
-   "line": 359
+   "line": 369
   }
  },
  {
@@ -15702,7 +15692,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/game/meta.ts",
-   "line": 360
+   "line": 370
   }
  },
  {
@@ -15712,7 +15702,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/game/meta.ts",
-   "line": 361
+   "line": 371
   }
  },
  {
@@ -16242,7 +16232,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/game/vocab.ts",
-   "line": 48
+   "line": 49
   }
  },
  {
@@ -16252,7 +16242,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/game/vocab.ts",
-   "line": 48
+   "line": 49
   }
  },
  {
@@ -16262,7 +16252,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/game/vocab.ts",
-   "line": 49
+   "line": 50
   }
  },
  {
@@ -16272,7 +16262,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/game/vocab.ts",
-   "line": 49
+   "line": 50
   }
  },
  {
@@ -16282,7 +16272,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/game/vocab.ts",
-   "line": 50
+   "line": 51
   }
  },
  {
@@ -16292,7 +16282,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/game/vocab.ts",
-   "line": 50
+   "line": 51
   }
  },
  {
@@ -16302,7 +16292,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/game/vocab.ts",
-   "line": 51
+   "line": 52
   }
  },
  {
@@ -16312,7 +16302,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/game/vocab.ts",
-   "line": 51
+   "line": 52
   }
  },
  {
@@ -16322,7 +16312,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/game/vocab.ts",
-   "line": 52
+   "line": 53
   }
  },
  {
@@ -16332,7 +16322,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/game/vocab.ts",
-   "line": 52
+   "line": 53
   }
  },
  {
@@ -16342,7 +16332,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/game/vocab.ts",
-   "line": 53
+   "line": 54
   }
  },
  {
@@ -16352,7 +16342,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/game/vocab.ts",
-   "line": 53
+   "line": 54
   }
  },
  {
@@ -16362,7 +16352,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/game/vocab.ts",
-   "line": 54
+   "line": 55
   }
  },
  {
@@ -16372,7 +16362,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/game/vocab.ts",
-   "line": 54
+   "line": 55
   }
  },
  {
@@ -16382,7 +16372,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/game/vocab.ts",
-   "line": 59
+   "line": 60
   }
  },
  {
@@ -16392,7 +16382,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/game/vocab.ts",
-   "line": 59
+   "line": 60
   }
  },
  {
@@ -16402,7 +16392,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/game/vocab.ts",
-   "line": 60
+   "line": 61
   }
  },
  {
@@ -16412,7 +16402,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/game/vocab.ts",
-   "line": 60
+   "line": 61
   }
  },
  {
@@ -16422,7 +16412,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/game/vocab.ts",
-   "line": 61
+   "line": 62
   }
  },
  {
@@ -16432,7 +16422,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/game/vocab.ts",
-   "line": 61
+   "line": 62
   }
  },
  {
@@ -16442,7 +16432,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/game/vocab.ts",
-   "line": 62
+   "line": 63
   }
  },
  {
@@ -16452,7 +16442,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/game/vocab.ts",
-   "line": 62
+   "line": 63
   }
  },
  {
@@ -16462,7 +16452,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/game/vocab.ts",
-   "line": 63
+   "line": 64
   }
  },
  {
@@ -16472,7 +16462,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/game/vocab.ts",
-   "line": 63
+   "line": 64
   }
  },
  {
@@ -16482,7 +16472,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/game/vocab.ts",
-   "line": 64
+   "line": 65
   }
  },
  {
@@ -16492,7 +16482,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/game/vocab.ts",
-   "line": 64
+   "line": 65
   }
  },
  {
@@ -16502,7 +16492,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/game/vocab.ts",
-   "line": 65
+   "line": 66
   }
  },
  {
@@ -16512,7 +16502,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/game/vocab.ts",
-   "line": 65
+   "line": 66
   }
  },
  {
@@ -16522,7 +16512,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/game/vocab.ts",
-   "line": 67
+   "line": 68
   }
  },
  {
@@ -16532,7 +16522,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/game/vocab.ts",
-   "line": 67
+   "line": 68
   }
  },
  {
@@ -16542,7 +16532,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/game/vocab.ts",
-   "line": 68
+   "line": 69
   }
  },
  {
@@ -16552,7 +16542,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/game/vocab.ts",
-   "line": 68
+   "line": 69
   }
  },
  {
@@ -16562,7 +16552,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/game/vocab.ts",
-   "line": 69
+   "line": 70
   }
  },
  {
@@ -16572,7 +16562,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/game/vocab.ts",
-   "line": 69
+   "line": 70
   }
  },
  {
@@ -16582,7 +16572,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/game/vocab.ts",
-   "line": 70
+   "line": 71
   }
  },
  {
@@ -16592,7 +16582,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/game/vocab.ts",
-   "line": 70
+   "line": 71
   }
  },
  {
@@ -16602,7 +16592,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/game/vocab.ts",
-   "line": 71
+   "line": 72
   }
  },
  {
@@ -16612,7 +16602,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/game/vocab.ts",
-   "line": 71
+   "line": 72
   }
  },
  {
@@ -16622,7 +16612,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/game/vocab.ts",
-   "line": 72
+   "line": 73
   }
  },
  {
@@ -16632,7 +16622,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/game/vocab.ts",
-   "line": 72
+   "line": 73
   }
  },
  {
@@ -16642,7 +16632,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/game/vocab.ts",
-   "line": 73
+   "line": 74
   }
  },
  {
@@ -16652,7 +16642,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/game/vocab.ts",
-   "line": 73
+   "line": 74
   }
  },
  {
@@ -16662,7 +16652,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/game/vocab.ts",
-   "line": 74
+   "line": 75
   }
  },
  {
@@ -16672,7 +16662,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/game/vocab.ts",
-   "line": 74
+   "line": 75
   }
  },
  {
@@ -16682,7 +16672,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/game/vocab.ts",
-   "line": 75
+   "line": 76
   }
  },
  {
@@ -16692,7 +16682,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/game/vocab.ts",
-   "line": 75
+   "line": 76
   }
  },
  {
@@ -16702,7 +16692,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/game/vocab.ts",
-   "line": 76
+   "line": 77
   }
  },
  {
@@ -16712,7 +16702,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/game/vocab.ts",
-   "line": 76
+   "line": 77
   }
  },
  {
@@ -16722,7 +16712,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/game/vocab.ts",
-   "line": 86
+   "line": 87
   }
  },
  {
@@ -16732,7 +16722,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/game/vocab.ts",
-   "line": 86
+   "line": 87
   }
  },
  {
@@ -16742,7 +16732,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/game/vocab.ts",
-   "line": 87
+   "line": 88
   }
  },
  {
@@ -16752,7 +16742,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/game/vocab.ts",
-   "line": 88
+   "line": 89
   }
  },
  {
@@ -16762,7 +16752,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/game/vocab.ts",
-   "line": 89
+   "line": 90
   }
  },
  {
@@ -16772,7 +16762,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/game/vocab.ts",
-   "line": 90
+   "line": 91
   }
  },
  {
@@ -16782,7 +16772,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/game/vocab.ts",
-   "line": 91
+   "line": 92
   }
  },
  {
@@ -16792,7 +16782,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/game/vocab.ts",
-   "line": 92
+   "line": 93
   }
  },
  {
@@ -16802,7 +16792,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/game/vocab.ts",
-   "line": 93
+   "line": 94
   }
  },
  {
@@ -16812,7 +16802,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/game/vocab.ts",
-   "line": 94
+   "line": 95
   }
  },
  {
@@ -16822,7 +16812,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/game/vocab.ts",
-   "line": 95
+   "line": 96
   }
  },
  {
@@ -16832,7 +16822,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/game/vocab.ts",
-   "line": 97
+   "line": 98
   }
  },
  {
@@ -16842,7 +16832,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/game/vocab.ts",
-   "line": 98
+   "line": 99
   }
  },
  {
@@ -16852,7 +16842,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/game/vocab.ts",
-   "line": 99
+   "line": 100
   }
  },
  {
@@ -16862,7 +16852,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/game/vocab.ts",
-   "line": 100
+   "line": 101
   }
  },
  {
@@ -16872,7 +16862,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/game/vocab.ts",
-   "line": 101
+   "line": 102
   }
  },
  {
@@ -16882,7 +16872,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/game/vocab.ts",
-   "line": 102
+   "line": 103
   }
  },
  {
@@ -16892,7 +16882,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/game/vocab.ts",
-   "line": 103
+   "line": 104
   }
  },
  {
@@ -16902,7 +16892,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/game/vocab.ts",
-   "line": 104
+   "line": 105
   }
  },
  {
@@ -16912,7 +16902,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/game/vocab.ts",
-   "line": 105
+   "line": 106
   }
  },
  {
@@ -16922,7 +16912,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/game/vocab.ts",
-   "line": 106
+   "line": 107
   }
  },
  {
@@ -16932,7 +16922,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/game/vocab.ts",
-   "line": 107
+   "line": 108
   }
  },
  {
@@ -16942,7 +16932,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/game/vocab.ts",
-   "line": 107
+   "line": 108
   }
  },
  {
@@ -16952,7 +16942,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/game/vocab.ts",
-   "line": 113
+   "line": 114
   }
  },
  {
@@ -16962,7 +16952,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/game/vocab.ts",
-   "line": 114
+   "line": 115
   }
  },
  {
@@ -16972,7 +16962,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/game/vocab.ts",
-   "line": 115
+   "line": 116
   }
  },
  {
@@ -16982,7 +16972,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/game/vocab.ts",
-   "line": 116
+   "line": 117
   }
  },
  {
@@ -16992,7 +16982,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/game/vocab.ts",
-   "line": 117
+   "line": 118
   }
  },
  {
@@ -17002,7 +16992,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/game/vocab.ts",
-   "line": 118
+   "line": 119
   }
  },
  {
@@ -17012,7 +17002,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/game/vocab.ts",
-   "line": 119
+   "line": 120
   }
  },
  {
@@ -17022,7 +17012,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/game/vocab.ts",
-   "line": 120
+   "line": 121
   }
  },
  {
@@ -17032,7 +17022,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/game/vocab.ts",
-   "line": 121
+   "line": 122
   }
  },
  {
@@ -17042,7 +17032,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/game/vocab.ts",
-   "line": 122
+   "line": 123
   }
  },
  {
@@ -17052,7 +17042,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/game/vocab.ts",
-   "line": 126
+   "line": 127
   }
  },
  {
@@ -17062,7 +17052,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/game/vocab.ts",
-   "line": 126
+   "line": 127
   }
  },
  {
@@ -17072,7 +17062,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/game/vocab.ts",
-   "line": 127
+   "line": 128
   }
  },
  {
@@ -17082,7 +17072,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/game/vocab.ts",
-   "line": 128
+   "line": 129
   }
  },
  {
@@ -17092,7 +17082,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/game/vocab.ts",
-   "line": 128
+   "line": 129
   }
  },
  {
@@ -17102,7 +17092,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/game/vocab.ts",
-   "line": 146
+   "line": 147
   }
  },
  {
@@ -17112,7 +17102,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/game/vocab.ts",
-   "line": 146
+   "line": 147
   }
  },
  {
@@ -17122,7 +17112,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/game/vocab.ts",
-   "line": 147
+   "line": 148
   }
  },
  {
@@ -17132,7 +17122,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/game/vocab.ts",
-   "line": 147
+   "line": 148
   }
  },
  {
@@ -17142,7 +17132,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/game/vocab.ts",
-   "line": 148
+   "line": 149
   }
  },
  {
@@ -17152,7 +17142,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/game/vocab.ts",
-   "line": 148
+   "line": 149
   }
  },
  {
@@ -17162,7 +17152,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/game/vocab.ts",
-   "line": 149
+   "line": 150
   }
  },
  {
@@ -17172,7 +17162,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/game/vocab.ts",
-   "line": 149
+   "line": 150
   }
  },
  {
@@ -17182,7 +17172,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/game/vocab.ts",
-   "line": 150
+   "line": 151
   }
  },
  {
@@ -17192,7 +17182,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/game/vocab.ts",
-   "line": 150
+   "line": 151
   }
  },
  {
@@ -17202,7 +17192,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/game/vocab.ts",
-   "line": 151
+   "line": 152
   }
  },
  {
@@ -17212,7 +17202,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/game/vocab.ts",
-   "line": 151
+   "line": 152
   }
  },
  {
@@ -17222,7 +17212,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/game/vocab.ts",
-   "line": 152
+   "line": 153
   }
  },
  {
@@ -17232,7 +17222,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/game/vocab.ts",
-   "line": 152
+   "line": 153
   }
  },
  {
@@ -17242,7 +17232,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/game/vocab.ts",
-   "line": 158
+   "line": 159
   }
  },
  {
@@ -17252,7 +17242,67 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/game/vocab.ts",
-   "line": 158
+   "line": 159
+  }
+ },
+ {
+  "id": "s7743221",
+  "section": "game/vocab.ts",
+  "text": "יורה רק בקרקע",
+  "where": {
+   "kind": "source",
+   "file": "apps/client/src/game/vocab.ts",
+   "line": 176
+  }
+ },
+ {
+  "id": "s6a99065",
+  "section": "game/vocab.ts",
+  "text": "לא יכול לפגוע במי שבאוויר",
+  "where": {
+   "kind": "source",
+   "file": "apps/client/src/game/vocab.ts",
+   "line": 176
+  }
+ },
+ {
+  "id": "s584075c",
+  "section": "game/vocab.ts",
+  "text": "יורה רק באוויר",
+  "where": {
+   "kind": "source",
+   "file": "apps/client/src/game/vocab.ts",
+   "line": 177
+  }
+ },
+ {
+  "id": "s48a484a",
+  "section": "game/vocab.ts",
+  "text": "לא יכול לפגוע במי שעל הקרקע",
+  "where": {
+   "kind": "source",
+   "file": "apps/client/src/game/vocab.ts",
+   "line": 177
+  }
+ },
+ {
+  "id": "s3c3b9ff",
+  "section": "game/vocab.ts",
+  "text": "יורה בקרקע ובאוויר",
+  "where": {
+   "kind": "source",
+   "file": "apps/client/src/game/vocab.ts",
+   "line": 178
+  }
+ },
+ {
+  "id": "sab90700",
+  "section": "game/vocab.ts",
+  "text": "אין משהו שהוא לא יכול לפגוע בו",
+  "where": {
+   "kind": "source",
+   "file": "apps/client/src/game/vocab.ts",
+   "line": 178
   }
  },
  {
@@ -17262,7 +17312,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/game/vocab.ts",
-   "line": 162
+   "line": 182
   }
  },
  {
@@ -17272,7 +17322,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/game/vocab.ts",
-   "line": 163
+   "line": 183
   }
  },
  {
@@ -17282,7 +17332,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/game/vocab.ts",
-   "line": 164
+   "line": 184
   }
  },
  {
@@ -17292,7 +17342,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/game/vocab.ts",
-   "line": 165
+   "line": 185
   }
  },
  {
@@ -17302,7 +17352,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/game/vocab.ts",
-   "line": 172
+   "line": 192
   }
  },
  {
@@ -17312,7 +17362,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/game/vocab.ts",
-   "line": 173
+   "line": 193
   }
  },
  {
@@ -17322,7 +17372,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/game/vocab.ts",
-   "line": 174
+   "line": 194
   }
  },
  {
@@ -17332,7 +17382,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/game/vocab.ts",
-   "line": 175
+   "line": 195
   }
  },
  {
@@ -17342,7 +17392,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/game/vocab.ts",
-   "line": 176
+   "line": 196
   }
  },
  {
@@ -17352,7 +17402,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/game/vocab.ts",
-   "line": 177
+   "line": 197
   }
  },
  {
@@ -17362,7 +17412,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/game/vocab.ts",
-   "line": 178
+   "line": 198
   }
  },
  {
@@ -17372,7 +17422,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/game/vocab.ts",
-   "line": 179
+   "line": 199
   }
  },
  {
@@ -17382,7 +17432,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/game/vocab.ts",
-   "line": 180
+   "line": 200
   }
  },
  {
@@ -17392,7 +17442,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/game/vocab.ts",
-   "line": 181
+   "line": 201
   }
  },
  {
@@ -17402,7 +17452,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/game/vocab.ts",
-   "line": 182
+   "line": 202
   }
  },
  {
@@ -17412,7 +17462,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/game/vocab.ts",
-   "line": 203
+   "line": 223
   }
  },
  {
@@ -17422,7 +17472,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/game/vocab.ts",
-   "line": 203
+   "line": 223
   }
  },
  {
@@ -17432,7 +17482,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/game/vocab.ts",
-   "line": 204
+   "line": 224
   }
  },
  {
@@ -17442,7 +17492,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/game/vocab.ts",
-   "line": 204
+   "line": 224
   }
  },
  {
@@ -17452,7 +17502,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/game/vocab.ts",
-   "line": 205
+   "line": 225
   }
  },
  {
@@ -17462,7 +17512,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/game/vocab.ts",
-   "line": 205
+   "line": 225
   }
  },
  {
@@ -17472,7 +17522,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/game/vocab.ts",
-   "line": 206
+   "line": 226
   }
  },
  {
@@ -17482,7 +17532,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/game/vocab.ts",
-   "line": 207
+   "line": 227
   }
  },
  {
@@ -17492,7 +17542,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/game/vocab.ts",
-   "line": 208
+   "line": 228
   }
  },
  {
@@ -17502,7 +17552,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/game/vocab.ts",
-   "line": 210
+   "line": 230
   }
  },
  {
@@ -17512,7 +17562,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/game/vocab.ts",
-   "line": 211
+   "line": 231
   }
  },
  {
@@ -17522,7 +17572,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/game/vocab.ts",
-   "line": 212
+   "line": 232
   }
  },
  {
@@ -17532,7 +17582,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/game/vocab.ts",
-   "line": 213
+   "line": 233
   }
  },
  {
@@ -17542,7 +17592,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/game/vocab.ts",
-   "line": 214
+   "line": 234
   }
  },
  {
@@ -17552,7 +17602,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/game/vocab.ts",
-   "line": 215
+   "line": 235
   }
  },
  {
@@ -17562,7 +17612,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/game/vocab.ts",
-   "line": 217
+   "line": 237
   }
  },
  {
@@ -17572,7 +17622,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/game/vocab.ts",
-   "line": 218
+   "line": 238
   }
  },
  {
@@ -17582,7 +17632,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/game/vocab.ts",
-   "line": 220
+   "line": 240
   }
  },
  {
@@ -17592,7 +17642,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/game/vocab.ts",
-   "line": 221
+   "line": 241
   }
  },
  {
@@ -17602,7 +17652,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/game/vocab.ts",
-   "line": 222
+   "line": 242
   }
  },
  {
@@ -17612,7 +17662,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/game/vocab.ts",
-   "line": 223
+   "line": 243
   }
  },
  {
@@ -17622,7 +17672,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/game/vocab.ts",
-   "line": 224
+   "line": 244
   }
  },
  {
@@ -17632,7 +17682,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/game/vocab.ts",
-   "line": 225
+   "line": 245
   }
  },
  {
@@ -17642,7 +17692,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/game/vocab.ts",
-   "line": 227
+   "line": 247
   }
  },
  {
@@ -17652,7 +17702,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/game/vocab.ts",
-   "line": 229
+   "line": 249
   }
  },
  {
@@ -17662,7 +17712,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/game/vocab.ts",
-   "line": 231
+   "line": 251
   }
  },
  {
@@ -17672,7 +17722,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/game/vocab.ts",
-   "line": 233
+   "line": 253
   }
  },
  {
@@ -17682,7 +17732,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/game/vocab.ts",
-   "line": 235
+   "line": 255
   }
  },
  {
@@ -17692,7 +17742,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/game/vocab.ts",
-   "line": 239
+   "line": 259
   }
  },
  {
@@ -17702,7 +17752,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/game/vocab.ts",
-   "line": 242
+   "line": 262
   }
  },
  {
@@ -17712,7 +17762,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/game/vocab.ts",
-   "line": 243
+   "line": 263
   }
  },
  {
@@ -17722,7 +17772,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/game/vocab.ts",
-   "line": 244
+   "line": 264
   }
  },
  {
@@ -17732,7 +17782,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/game/vocab.ts",
-   "line": 245
+   "line": 265
   }
  },
  {
@@ -17742,7 +17792,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/game/vocab.ts",
-   "line": 246
+   "line": 266
   }
  },
  {
@@ -17752,7 +17802,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/game/vocab.ts",
-   "line": 257
+   "line": 277
   }
  },
  {
@@ -17762,7 +17812,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/game/vocab.ts",
-   "line": 257
+   "line": 277
   }
  },
  {
@@ -17772,7 +17822,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/game/vocab.ts",
-   "line": 258
+   "line": 278
   }
  },
  {
@@ -17782,7 +17832,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/game/vocab.ts",
-   "line": 258
+   "line": 278
   }
  },
  {
@@ -17792,7 +17842,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/game/vocab.ts",
-   "line": 259
+   "line": 279
   }
  },
  {
@@ -17802,7 +17852,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/game/vocab.ts",
-   "line": 259
+   "line": 279
   }
  },
  {
@@ -17812,7 +17862,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/game/vocab.ts",
-   "line": 272
+   "line": 292
   }
  },
  {
@@ -17822,7 +17872,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/game/vocab.ts",
-   "line": 272
+   "line": 292
   }
  },
  {
@@ -17832,7 +17882,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/game/vocab.ts",
-   "line": 273
+   "line": 293
   }
  },
  {
@@ -17842,7 +17892,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/game/vocab.ts",
-   "line": 273
+   "line": 293
   }
  }
 ]

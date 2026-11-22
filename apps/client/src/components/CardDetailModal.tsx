@@ -6,6 +6,7 @@ import { LEVELS, RANGE_REACH, hovers, levelCost, levelDiamonds, levelMultiplier 
 import { Overlay } from "./Overlay";
 import { artUrl, spriteFor } from "../game/skins";
 import { say } from "../game/lang";
+import { HITS_HE, TARGETING_HE } from "../game/vocab";
 import { line as t, lineF as tf } from "../game/copy";
 
 export function CardDetailModal({
@@ -220,22 +221,61 @@ export function CardDetailModal({
         </div>
 
         {/*
-          And WHO it hits, in what order — Or asked for this in the same
-          breath as the number, and it is the half the number cannot say.
-          Every line here is the engine's rule in pickTarget (simulate.ts):
-          a king-hunter works through the guards in the way first, a sniper
-          picks the FARTHEST enemy in its lane rather than the nearest, and
-          everything else fights what is in front of it.
+          ═══ WHO IT GOES AFTER, AND WHAT IT CAN REACH ═══
 
-          DRAFT COPY — Or's words, Or's to finish.
+          Or, 22 November 2026, looking at a family: *"I just looked at the
+          plants — every one of them says 'attacks whoever is in front of it
+          in a straight line' in the description."*
+
+          He was right and it was this block. It knew exactly three answers —
+          King-hunter, sniper, everything else — while the engine had seven
+          targeting modes, so six of them printed the seventh one's sentence.
+          The plants happened to be the family where nothing had been given a
+          mode, so the same line appeared ten times in a row and the whole
+          family read as one card.
+
+          ⚠ SO IT READS THE VOCABULARY NOW AND NOT A LADDER OF ifs. One
+          sentence per mode, in the one place the game keeps them
+          (TARGETING_HE in vocab.ts), which is also where the deck-builder
+          filter takes its names from — so a card and the button that finds
+          it can never call the same thing two things.
+
+          The sniper line stays on top of it, because a sniper's reach
+          changes WHICH of the enemies it prefers, not which kind it hunts.
         */}
         <p className="modal__aim">
-          {card.targeting === "king"
-            ? t("sd4de546", "תוקף את השומרים שבדרך, ואז את המלך.")
-            : card.stats.range === "sniper"
-              ? t("sa8cdca7", "יורה באויב הרחוק ביותר בקו שלו.")
-              : t("s7815a19", "תוקף את מי שמולו בקו שלו.")}
+          {say(TARGETING_HE[card.targeting])}
+          {/* ⚠ Not inside a template literal: the copy inventory reads t()
+              calls out of the source and does not look inside one, so the
+              string became unfindable and copy-verify could not settle its
+              id. A separate node costs nothing and stays in the document. */}
+          {card.stats.range === "sniper" && (
+            <> · {t("sb9c6214", "יורה באויב הרחוק ביותר בקו שלו")}</>
+          )}
         </p>
+
+        {/*
+          ═══ AND WHETHER IT CAN SHOOT UPWARDS ═══
+
+          Or: *"we need to make a difference between attacking aerial and
+          ground targets. There will be ones that attack only on the ground,
+          only in the air, and both."*
+
+          Said on the card because it is the one property a player cannot
+          work out by looking at the monster: a dragon that cannot hit
+          dragons is a real card and nothing about the picture says so.
+
+          Only the two that RESTRICT are printed. "Both" is what most of the
+          shelf is and what a child assumes, and a line saying "this card can
+          attack anything" on half the cards in the game is the kind of
+          sentence this screen has been told twice to stop writing.
+        */}
+        {card.hits !== "both" && (
+          <p className="modal__aim modal__aim--hits">
+            <Icon name={card.hits === "air" ? "fly" : "move"} size={13} />{" "}
+            {say(HITS_HE[card.hits])}
+          </p>
+        )}
 
         {/*
           ═══ ONE SECTION, NOT TWO ═══

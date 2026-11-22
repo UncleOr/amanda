@@ -46,7 +46,7 @@ import { CardDetailModal } from "./CardDetailModal";
 import { Overlay } from "./Overlay";
 import { Icon } from "./Icon";
 import { say } from "../game/lang";
-import { TARGETING_HE } from "../game/vocab";
+import { HITS_HE, TARGETING_HE } from "../game/vocab";
 import { line as t, lineF as tf } from "../game/copy";
 import type { Account } from "../game/account";
 
@@ -220,6 +220,35 @@ export const FIXED_GROUPS: Group[] = [
         test: (c) => c.stats.range === "sniper",
       },
     ],
+  },
+  /*
+   * ═══ WHAT THEY CAN SHOOT AT: THE GROUND, THE AIR, OR BOTH ═══
+   *
+   * Or: *"we need to make a difference between attacking aerial and ground
+   * targets. There will be ones that attack only on the ground, only in
+   * the air, and both. Divide it evenly."*
+   *
+   * ⚠ ALL THREE ARE BUTTONS HERE, INCLUDING "BOTH", which is the opposite
+   * of the rule on the card itself — the card prints only the two that
+   * restrict, because a line saying "can attack anything" on half the shelf
+   * is noise. A FILTER is the other way round: "show me the ones with no
+   * blind spot" is exactly the question somebody building a deck asks, and
+   * it is the largest of the three groups, so leaving it out would mean the
+   * two buttons together never add up to the shelf.
+   *
+   * Measured over the whole catalogue on the day it was dealt: ground 29,
+   * both 23, air 22. None of these three finds a handful.
+   */
+  {
+    id: "hits",
+    label: () => t("s53aeba3", "במי הם פוגעים"),
+    choices: (["ground", "air", "both"] as const).map((id) => ({
+      id,
+      // The card's own words, from the one vocabulary — so a filter and a
+      // card never call the same thing two things.
+      label: () => say(HITS_HE[id]),
+      test: (c: Card) => (c.hits ?? "both") === id,
+    })),
   },
   /*
    * ═══ WHO THEY SHOOT AT ═══

@@ -66,7 +66,9 @@
         "placeholderColor": "#6fbf3b",
         "sprite": "cards/plants_01_thorn_sprout.webp"
       },
-      "launch": false
+      "launch": false,
+      "hits": "ground",
+      "targeting": "lane"
     },
     {
       "id": "plants_02_ancient_tree",
@@ -106,7 +108,9 @@
         "placeholderColor": "#8a6d3b",
         "sprite": "cards/plants_02_ancient_tree.webp"
       },
-      "launch": true
+      "launch": true,
+      "hits": "ground",
+      "targeting": "lane"
     },
     {
       "id": "plants_03_healing_bloom",
@@ -146,7 +150,9 @@
         "placeholderColor": "#f5f0d0",
         "sprite": "cards/plants_03_healing_bloom.webp"
       },
-      "launch": true
+      "launch": true,
+      "hits": "both",
+      "targeting": "bodyguard"
     },
     {
       "id": "plants_04_venus_trap",
@@ -186,7 +192,9 @@
         "placeholderColor": "#6fbf3b",
         "sprite": "cards/plants_04_venus_trap.webp"
       },
-      "launch": false
+      "launch": false,
+      "hits": "ground",
+      "targeting": "king"
     },
     {
       "id": "plants_05_creeping_vine",
@@ -228,7 +236,9 @@
         "placeholderColor": "#6fbf3b",
         "sprite": "cards/plants_05_creeping_vine.webp"
       },
-      "launch": true
+      "launch": true,
+      "hits": "ground",
+      "targeting": "invader"
     },
     {
       "id": "plants_06_toxic_mushroom",
@@ -269,7 +279,8 @@
         "sprite": "cards/plants_06_toxic_mushroom.webp"
       },
       "launch": true,
-      "targeting": "invader"
+      "targeting": "champion",
+      "hits": "air"
     },
     {
       "id": "plants_07_dandelion",
@@ -317,7 +328,8 @@
         "sprite": "cards/plants_07_dandelion.webp"
       },
       "launch": true,
-      "targeting": "sniperHunter"
+      "targeting": "sniperHunter",
+      "hits": "air"
     },
     {
       "id": "plants_08_cactus",
@@ -370,7 +382,8 @@
         "sprite": "cards/plants_08_cactus.webp"
       },
       "launch": false,
-      "targeting": "avenger"
+      "targeting": "avenger",
+      "hits": "both"
     },
     {
       "id": "plants_09_sunflower",
@@ -410,7 +423,9 @@
         "placeholderColor": "#f5f0d0",
         "sprite": "cards/plants_09_sunflower.webp"
       },
-      "launch": false
+      "launch": false,
+      "hits": "air",
+      "targeting": "wallbreaker"
     },
     {
       "id": "plants_10_great_mother_tree",
@@ -457,7 +472,9 @@
         "placeholderColor": "#8a6d3b",
         "sprite": "cards/plants_10_great_mother_tree.webp"
       },
-      "launch": true
+      "launch": true,
+      "hits": "both",
+      "targeting": "lane"
     }
   ]
 }

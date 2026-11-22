@@ -58,7 +58,9 @@
         "placeholderColor": "#9aa4ad",
         "sprite": "cards/machines_01_boltling.webp"
       },
-      "launch": true
+      "launch": true,
+      "hits": "ground",
+      "targeting": "lane"
     },
     {
       "id": "machines_02_drone",
@@ -92,7 +94,8 @@
         "sprite": "cards/machines_02_drone.webp"
       },
       "launch": true,
-      "targeting": "sniperHunter"
+      "targeting": "sniperHunter",
+      "hits": "air"
     },
     {
       "id": "machines_03_bolt_mine",
@@ -136,7 +139,8 @@
         "sprite": "cards/machines_03_bolt_mine.webp"
       },
       "launch": true,
-      "targeting": "invader"
+      "targeting": "invader",
+      "hits": "ground"
     },
     {
       "id": "machines_04_assembly_line",
@@ -178,7 +182,9 @@
         "placeholderColor": "#9aa4ad",
         "sprite": "cards/machines_04_assembly_line.webp"
       },
-      "launch": true
+      "launch": true,
+      "hits": "ground",
+      "targeting": "wallbreaker"
     },
     {
       "id": "machines_05_repair_rig",
@@ -226,7 +232,9 @@
         "placeholderColor": "#9aa4ad",
         "sprite": "cards/machines_05_repair_rig.webp"
       },
-      "launch": true
+      "launch": true,
+      "hits": "both",
+      "targeting": "lane"
     },
     {
       "id": "machines_06_mandroid",
@@ -266,7 +274,8 @@
         "sprite": "cards/machines_06_mandroid.webp"
       },
       "launch": true,
-      "targeting": "sniperHunter"
+      "targeting": "king",
+      "hits": "both"
     },
     {
       "id": "machines_07_magnetros",
@@ -309,7 +318,8 @@
         "sprite": "cards/machines_07_magnetros.webp"
       },
       "launch": true,
-      "targeting": "bodyguard"
+      "targeting": "bodyguard",
+      "hits": "air"
     },
     {
       "id": "machines_08_crusher",
@@ -327,7 +337,7 @@
         "hp": 1150,
         "power": 700,
         "attackSpeed": 3.8,
-        "moveSpeed": 0,
+        "moveSpeed": 0.8,
         "range": "melee"
       },
       "flying": false,
@@ -349,7 +359,9 @@
         "placeholderColor": "#9aa4ad",
         "sprite": "cards/machines_08_crusher.webp"
       },
-      "launch": true
+      "launch": true,
+      "hits": "ground",
+      "targeting": "lane"
     },
     {
       "id": "machines_09_steelbot",
@@ -395,7 +407,8 @@
         "sprite": "cards/machines_09_steelbot.webp"
       },
       "launch": true,
-      "targeting": "champion"
+      "targeting": "champion",
+      "hits": "both"
     },
     {
       "id": "machines_10_mother_machine",
@@ -446,7 +459,8 @@
         "sprite": "cards/machines_10_mother_machine.webp"
       },
       "launch": true,
-      "targeting": "avenger"
+      "targeting": "avenger",
+      "hits": "air"
     }
   ]
 }

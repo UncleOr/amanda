@@ -89,15 +89,43 @@ describe("the card's own screen", () => {
   });
 
   /*
-   * And who it hits, in what order. Each line is pickTarget's rule in
-   * simulate.ts: a king-hunter clears the guards in the way first, a sniper
-   * takes the FARTHEST enemy in its lane, everything else fights what is in
-   * front of it.
+   * ═══ AND WHO IT HITS — ONE SENTENCE PER MODE, NOT THREE FOR SEVEN ═══
+   *
+   * Or, 22 November 2026: *"I just looked at the plants — every one of them
+   * says 'attacks whoever is in front of it in a straight line' in the
+   * description."*
+   *
+   * He was right, and this test was part of why. It pinned a LADDER OF ifs
+   * — King-hunter, sniper, everything else — and the engine has seven
+   * targeting modes, so six of them printed the seventh one's sentence.
+   * Pinning the shape of the code meant the test went green on a card panel
+   * that was telling a child something untrue about six cards in ten.
+   *
+   * So what is pinned now is the SOURCE: the screen reads the same
+   * vocabulary the deck-builder filter reads, which is the only way a card
+   * and the button that finds it cannot call the same thing two things.
    */
-  it("says who it attacks, by the rule the battle uses", () => {
+  it("says who it attacks in that mode's own words, from the one vocabulary", () => {
     const aim = between(MODAL, 'className="modal__aim"', "</p>");
-    expect(aim).toContain('card.targeting === "king"');
+    expect(aim, "a ladder of ifs cannot cover seven modes").not.toContain(
+      'card.targeting === "king"',
+    );
+    expect(aim).toContain("TARGETING_HE[card.targeting]");
+    // The sniper line sits ON TOP of the mode: its reach changes which enemy
+    // it prefers, not which kind it hunts.
     expect(aim).toContain('card.stats.range === "sniper"');
+  });
+
+  /*
+   * Or: *"we need to make a difference between attacking aerial and ground
+   * targets."* Said on the card because it is the one property a player
+   * cannot work out from the picture — and said ONLY when it restricts,
+   * because "this card can attack anything" on half the shelf is the kind
+   * of sentence this screen has been told twice to stop writing.
+   */
+  it("says what it can reach only when that is a limit", () => {
+    expect(MODAL).toContain('card.hits !== "both"');
+    expect(MODAL).toContain("HITS_HE[card.hits]");
   });
 
   /*

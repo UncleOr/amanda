@@ -69,7 +69,9 @@
         "placeholderColor": "#8a6d3b",
         "sprite": "cards/slimes_01_basic_slime.webp"
       },
-      "launch": true
+      "launch": true,
+      "hits": "ground",
+      "targeting": "lane"
     },
     {
       "id": "slimes_02_gelatinous_cube",
@@ -110,7 +112,8 @@
         "sprite": "cards/slimes_02_gelatinous_cube.webp"
       },
       "launch": true,
-      "targeting": "wallbreaker"
+      "targeting": "wallbreaker",
+      "hits": "ground"
     },
     {
       "id": "slimes_03_acid_ooze",
@@ -158,7 +161,9 @@
         "placeholderColor": "#6fbf3b",
         "sprite": "cards/slimes_03_acid_ooze.webp"
       },
-      "launch": false
+      "launch": false,
+      "hits": "air",
+      "targeting": "sniperHunter"
     },
     {
       "id": "slimes_04_splitting_blob",
@@ -176,7 +181,7 @@
         "hp": 500,
         "power": 400,
         "attackSpeed": 2,
-        "moveSpeed": 0,
+        "moveSpeed": 0.8,
         "range": "melee"
       },
       "flying": false,
@@ -200,7 +205,9 @@
         "placeholderColor": "#2f7fe2",
         "sprite": "cards/slimes_04_splitting_blob.webp"
       },
-      "launch": false
+      "launch": false,
+      "hits": "ground",
+      "targeting": "invader"
     },
     {
       "id": "slimes_05_sticky_rug",
@@ -242,7 +249,9 @@
         "placeholderColor": "#8a6d3b",
         "sprite": "cards/slimes_05_sticky_rug.webp"
       },
-      "launch": true
+      "launch": true,
+      "hits": "ground",
+      "targeting": "lane"
     },
     {
       "id": "slimes_07_floating_brain",
@@ -287,7 +296,8 @@
         "sprite": "cards/slimes_07_floating_brain.webp"
       },
       "launch": false,
-      "targeting": "champion"
+      "targeting": "champion",
+      "hits": "air"
     },
     {
       "id": "slimes_08_assimilator",
@@ -329,7 +339,9 @@
         "placeholderColor": "#b06fd6",
         "sprite": "cards/slimes_08_assimilator.webp"
       },
-      "launch": true
+      "launch": true,
+      "hits": "both",
+      "targeting": "king"
     },
     {
       "id": "slimes_09_pudding_shield",
@@ -373,7 +385,9 @@
         "placeholderColor": "#f5f0d0",
         "sprite": "cards/slimes_09_pudding_shield.webp"
       },
-      "launch": true
+      "launch": true,
+      "hits": "both",
+      "targeting": "bodyguard"
     },
     {
       "id": "slimes_10_zelig_giant_ooze",
@@ -415,7 +429,9 @@
         "placeholderColor": "#2f7fe2",
         "sprite": "cards/slimes_10_zelig_giant_ooze.webp"
       },
-      "launch": true
+      "launch": true,
+      "hits": "both",
+      "targeting": "lane"
     },
     {
       "id": "slimes_11_thing_in_the_bin",
@@ -457,7 +473,9 @@
         "placeholderColor": "#4a4550",
         "sprite": "cards/slimes_11_thing_in_the_bin.webp"
       },
-      "launch": true
+      "launch": true,
+      "hits": "air",
+      "targeting": "avenger"
     }
   ]
 }

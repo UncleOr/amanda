@@ -66,7 +66,9 @@
         "placeholderColor": "#8a6d3b",
         "sprite": "cards/giants_01_stone_colossus.webp"
       },
-      "launch": true
+      "launch": true,
+      "hits": "ground",
+      "targeting": "lane"
     },
     {
       "id": "giants_02_steel_warden",
@@ -107,7 +109,8 @@
         "sprite": "cards/giants_02_steel_warden.webp"
       },
       "launch": true,
-      "targeting": "bodyguard"
+      "targeting": "bodyguard",
+      "hits": "ground"
     },
     {
       "id": "giants_03_hill_giant",
@@ -153,7 +156,8 @@
         "sprite": "cards/giants_03_hill_giant.webp"
       },
       "launch": false,
-      "targeting": "wallbreaker"
+      "targeting": "wallbreaker",
+      "hits": "both"
     },
     {
       "id": "giants_04_rock_troll",
@@ -194,7 +198,8 @@
         "sprite": "cards/giants_04_rock_troll.webp"
       },
       "launch": false,
-      "targeting": "champion"
+      "targeting": "champion",
+      "hits": "air"
     },
     {
       "id": "giants_05_wall_breaker",
@@ -233,7 +238,8 @@
         "sprite": "cards/giants_05_wall_breaker.webp"
       },
       "launch": true,
-      "targeting": "wallbreaker"
+      "targeting": "wallbreaker",
+      "hits": "ground"
     },
     {
       "id": "giants_06_frost_giant",
@@ -273,7 +279,9 @@
         "placeholderColor": "#2f7fe2",
         "sprite": "cards/giants_06_frost_giant.webp"
       },
-      "launch": true
+      "launch": true,
+      "hits": "air",
+      "targeting": "king"
     },
     {
       "id": "giants_07_iron_bulwark",
@@ -313,7 +321,9 @@
         "placeholderColor": "#9aa4ad",
         "sprite": "cards/giants_07_iron_bulwark.webp"
       },
-      "launch": false
+      "launch": false,
+      "hits": "ground",
+      "targeting": "lane"
     },
     {
       "id": "giants_08_vengeful_rok",
@@ -334,7 +344,7 @@
         "moveSpeed": 0.75,
         "range": "melee"
       },
-      "flying": false,
+      "flying": true,
       "midBoss": false,
       "abilities": [
         {
@@ -354,7 +364,8 @@
         "sprite": "cards/giants_08_vengeful_rok.webp"
       },
       "launch": false,
-      "targeting": "avenger"
+      "targeting": "avenger",
+      "hits": "air"
     },
     {
       "id": "giants_09_thunder_giant",
@@ -400,7 +411,9 @@
         "placeholderColor": "#f2c530",
         "sprite": "cards/giants_09_thunder_giant.webp"
       },
-      "launch": true
+      "launch": true,
+      "hits": "both",
+      "targeting": "invader"
     },
     {
       "id": "giants_10_titan_king",
@@ -444,7 +457,9 @@
         "placeholderColor": "#8a6d3b",
         "sprite": "cards/giants_10_titan_king.webp"
       },
-      "launch": true
+      "launch": true,
+      "hits": "both",
+      "targeting": "lane"
     }
   ]
 }

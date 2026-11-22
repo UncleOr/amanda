@@ -71,7 +71,9 @@
         "placeholderColor": "#e2492f",
         "sprite": "cards/dragons_01_flame_dragon.webp"
       },
-      "launch": true
+      "launch": true,
+      "hits": "both",
+      "targeting": "lane"
     },
     {
       "id": "dragons_02_obsidian_egg",
@@ -117,7 +119,9 @@
         "placeholderColor": "#8a6d3b",
         "sprite": "cards/dragons_02_obsidian_egg.webp"
       },
-      "launch": true
+      "launch": true,
+      "hits": "ground",
+      "targeting": "lane"
     },
     {
       "id": "dragons_03_thunderwing",
@@ -151,7 +155,8 @@
         "sprite": "cards/dragons_03_thunderwing.webp"
       },
       "launch": true,
-      "targeting": "king"
+      "targeting": "king",
+      "hits": "air"
     },
     {
       "id": "dragons_04_lava",
@@ -201,7 +206,8 @@
         "sprite": "cards/dragons_04_lava.webp"
       },
       "launch": true,
-      "targeting": "invader"
+      "targeting": "invader",
+      "hits": "ground"
     },
     {
       "id": "dragons_05_spike",
@@ -243,7 +249,8 @@
         "sprite": "cards/dragons_05_spike.webp"
       },
       "launch": false,
-      "targeting": "avenger"
+      "targeting": "avenger",
+      "hits": "ground"
     },
     {
       "id": "dragons_06_frost_breath",
@@ -265,7 +272,7 @@
         "moveSpeed": 0,
         "range": "ranged"
       },
-      "flying": false,
+      "flying": true,
       "midBoss": false,
       "abilities": [
         {
@@ -285,7 +292,9 @@
         "placeholderColor": "#2f7fe2",
         "sprite": "cards/dragons_06_frost_breath.webp"
       },
-      "launch": false
+      "launch": false,
+      "hits": "air",
+      "targeting": "bodyguard"
     },
     {
       "id": "dragons_07_gold_horn",
@@ -331,7 +340,8 @@
         "sprite": "cards/dragons_07_gold_horn.webp"
       },
       "launch": false,
-      "targeting": "champion"
+      "targeting": "champion",
+      "hits": "ground"
     },
     {
       "id": "dragons_08_ghost_dragon",
@@ -380,7 +390,8 @@
         "sprite": "cards/dragons_08_ghost_dragon.webp"
       },
       "launch": false,
-      "targeting": "sniperHunter"
+      "targeting": "sniperHunter",
+      "hits": "both"
     },
     {
       "id": "dragons_09_typhoon_dragon",
@@ -426,7 +437,8 @@
         "sprite": "cards/dragons_09_typhoon_dragon.webp"
       },
       "launch": true,
-      "targeting": "king"
+      "targeting": "king",
+      "hits": "air"
     },
     {
       "id": "dragons_10_sky_king",
@@ -467,7 +479,9 @@
         "placeholderColor": "#9fd6e8",
         "sprite": "cards/dragons_10_sky_king.webp"
       },
-      "launch": true
+      "launch": true,
+      "hits": "both",
+      "targeting": "wallbreaker"
     }
   ]
 }

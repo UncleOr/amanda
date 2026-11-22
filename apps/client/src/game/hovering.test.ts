@@ -34,19 +34,28 @@ describe("the one question behind the two words", () => {
     expect(hovers({ flying: false, stats: { moveSpeed: 0 } } as never)).toBe(false);
   });
 
-  it("is five real cards, and they are the ones Or was looking at", () => {
+  it("is seven real cards, and the list is the point", () => {
     /*
      * Read off the catalogue rather than written down, so a card that joins
      * them — or one that is given a speed — shows up here rather than in a
      * screenshot. The Typhoon Dragon is the one that started it.
+     *
+     * ⚠ IT WAS FIVE UNTIL 22 NOVEMBER and the two that joined are the
+     * reason to spell the list out rather than count it. Or: *"run over all
+     * the cards and divide everything again evenly... walkers, flyers,
+     * hoverers and diggers."* A dragon whose whole card is a breath of ice
+     * and a jellyfish were both standing on the floor; both float now, and
+     * both appear here the moment they do.
      */
     const hovering = [...CATALOG.values()].filter((c) => hovers(c)).map((c) => c.id);
     expect(hovering).toContain("dragons_09_typhoon_dragon");
     expect(hovering.sort()).toEqual([
       "dragons_03_thunderwing",
+      "dragons_06_frost_breath",
       "dragons_09_typhoon_dragon",
       "dragons_10_sky_king",
       "insects_10_insect_empress",
+      "sea_02_jellyfish",
       "slimes_07_floating_brain",
     ]);
   });

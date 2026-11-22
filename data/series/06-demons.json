@@ -81,7 +81,9 @@
         "placeholderColor": "#4a4550",
         "sprite": "cards/demons_01_alley_king.webp"
       },
-      "launch": true
+      "launch": true,
+      "hits": "both",
+      "targeting": "lane"
     }
   ]
 }

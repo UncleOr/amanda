@@ -30,6 +30,7 @@ import type {
   DragFx,
   DragSound,
   Element,
+  Hits,
   Range,
   Rarity,
   Targeting,
@@ -156,6 +157,25 @@ export const TARGETING_HE: Record<Targeting, Named> = {
    * victim — so the name is a job, not a hunt.
    */
   bodyguard: { he: "שומר ראש", note: "על מי שכבר פגע במלך שלך" },
+};
+
+/**
+ * ═══ THE GROUND, THE AIR, OR BOTH ═══
+ *
+ * Or, 22 November 2026: *"we need to make a difference between attacking
+ * aerial and ground targets. There will be ones that attack only on the
+ * ground, only in the air, and both."*
+ *
+ * ⚠ ONLY THE TWO THAT RESTRICT ARE EVER SHOWN. "Both" is what most of the
+ * shelf is and what a child already assumes, and a line saying "this card
+ * can attack anything" on half the cards is the kind of sentence this game
+ * has been told twice to stop writing. It is here so that the deck-builder
+ * filter has a word for its third button, and nowhere else.
+ */
+export const HITS_HE: Record<Hits, Named> = {
+  ground: { he: "יורה רק בקרקע", note: "לא יכול לפגוע במי שבאוויר" },
+  air: { he: "יורה רק באוויר", note: "לא יכול לפגוע במי שעל הקרקע" },
+  both: { he: "יורה בקרקע ובאוויר", note: "אין משהו שהוא לא יכול לפגוע בו" },
 };
 
 export const RARITY_HE: Record<Rarity, string> = {

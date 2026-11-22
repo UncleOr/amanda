@@ -59,7 +59,8 @@
         "sprite": "cards/sea_01_minnow.webp"
       },
       "launch": true,
-      "targeting": "sniperHunter"
+      "targeting": "sniperHunter",
+      "hits": "ground"
     },
     {
       "id": "sea_02_jellyfish",
@@ -80,7 +81,7 @@
         "moveSpeed": 0,
         "range": "melee"
       },
-      "flying": false,
+      "flying": true,
       "midBoss": false,
       "abilities": [
         {
@@ -99,7 +100,9 @@
         "placeholderColor": "#2f7fe2",
         "sprite": "cards/sea_02_jellyfish.webp"
       },
-      "launch": true
+      "launch": true,
+      "hits": "both",
+      "targeting": "bodyguard"
     },
     {
       "id": "sea_03_rock_clam",
@@ -138,7 +141,9 @@
         "placeholderColor": "#8a6d3b",
         "sprite": "cards/sea_03_rock_clam.webp"
       },
-      "launch": true
+      "launch": true,
+      "hits": "ground",
+      "targeting": "lane"
     },
     {
       "id": "sea_04_squid",
@@ -180,7 +185,8 @@
         "sprite": "cards/sea_04_squid.webp"
       },
       "launch": true,
-      "targeting": "wallbreaker"
+      "targeting": "wallbreaker",
+      "hits": "both"
     },
     {
       "id": "sea_05_surge",
@@ -226,7 +232,8 @@
         "sprite": "cards/sea_05_surge.webp"
       },
       "launch": true,
-      "targeting": "invader"
+      "targeting": "invader",
+      "hits": "ground"
     },
     {
       "id": "sea_06_frozen",
@@ -274,7 +281,8 @@
         "sprite": "cards/sea_06_frozen.webp"
       },
       "launch": true,
-      "targeting": "champion"
+      "targeting": "champion",
+      "hits": "air"
     },
     {
       "id": "sea_07_siren",
@@ -293,7 +301,7 @@
         "hp": 510,
         "power": 720,
         "attackSpeed": 1.8,
-        "moveSpeed": 0,
+        "moveSpeed": 0.8,
         "range": "melee"
       },
       "flying": false,
@@ -316,7 +324,8 @@
         "sprite": "cards/sea_07_siren.webp"
       },
       "launch": true,
-      "targeting": "avenger"
+      "targeting": "avenger",
+      "hits": "air"
     },
     {
       "id": "sea_08_ocean",
@@ -358,7 +367,8 @@
         "sprite": "cards/sea_08_ocean.webp"
       },
       "launch": true,
-      "targeting": "invader"
+      "targeting": "invader",
+      "hits": "air"
     },
     {
       "id": "sea_09_shark",
@@ -397,7 +407,8 @@
         "placeholderColor": "#2f7fe2",
         "sprite": "cards/sea_09_shark.webp"
       },
-      "launch": true
+      "launch": true,
+      "hits": "ground"
     },
     {
       "id": "sea_10_leviathan",
@@ -444,7 +455,9 @@
         "placeholderColor": "#2f7fe2",
         "sprite": "cards/sea_10_leviathan.webp"
       },
-      "launch": true
+      "launch": true,
+      "hits": "both",
+      "targeting": "lane"
     }
   ]
 }

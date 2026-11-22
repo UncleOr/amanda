@@ -73,7 +73,9 @@
         "placeholderColor": "#3bbfd6",
         "sprite": "cards/legends_01_amanda.webp"
       },
-      "launch": false
+      "launch": false,
+      "hits": "both",
+      "targeting": "lane"
     }
   ]
 }
