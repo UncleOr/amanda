@@ -151,7 +151,23 @@ function huntKing(state: BattleState, u: Unit, enemies: Unit[]): TargetPick | nu
   }
   if (!king) return null;
 
-  const guards = guardsOf(state, u, king);
+  /*
+   * ⚠ A GUARD YOU CANNOT SHOOT AT IS NOT A DOOR, SO IT IS NOT IN THE WAY.
+   *
+   * `guardsOf` reads the whole board, so without this filter it hands back
+   * cards this hunter has no way of hitting — and the one thing it is then
+   * told to do is attack them. That is how an anti-air gun ended up
+   * shooting a card standing on the ground: not through pickTarget's own
+   * filter, which was right, but through the crown's shield, which was
+   * looked up separately. The test caught it on the first run.
+   *
+   * Dropping them is also the right RULE and not only the convenient one.
+   * It is the same shape as the hoverer that does not shield a crown from a
+   * walker (see the comment in pickTarget): a body only blocks you if you
+   * could have fought it. If nothing is left after the filter, the crown is
+   * what this card goes for — and the crown is reachable by everybody.
+   */
+  const guards = guardsOf(state, u, king).filter((g) => canReach(u, g));
   // The King is only reachable once nothing of its own stands in the way.
   const prey = guards.length ? guards : [king];
   let best = prey[0]!;
@@ -304,6 +320,53 @@ function huntPrey(u: Unit, enemies: Unit[]): TargetPick | null {
  * discipline that makes a battle readable is untouched: this only ever
  * happens when there is nothing left in the lane to be disciplined about.
  */
+/**
+ * ═══ CAN THIS ONE EVEN SHOOT AT THAT ONE ═══
+ *
+ * Or: *"we need a difference between attacking aerial and ground targets.
+ * There will be ones that attack only on the ground, only in the air, and
+ * both."*
+ *
+ * `flying` already said what a card could get PAST — a flyer crosses a
+ * blocked lane, and a shield in front of a King is made of ground cards.
+ * Nothing had ever said what a card could REACH, so every monster could hit
+ * every other monster and being airborne cost the enemy nothing.
+ *
+ * ⚠ THE KING IS ALWAYS REACHABLE AND THAT IS NOT AN EXCEPTION, IT IS THE
+ * RULE THAT MAKES THE REST SAFE. A crowned monster gives up its movement
+ * and sits on the crown — it is the building the match is about, not a bird
+ * — and the alternative is a crowned flyer that half the catalogue is
+ * physically unable to attack, which is a match nobody can win and a child
+ * watching a timer run out. Every other unit can be out of reach; the crown
+ * never is.
+ *
+ * ⚠ AND NOTHING FALLS BACK. Everywhere else in this file, a card that
+ * cannot find the KIND of enemy it prefers fights like anything else —
+ * because a sniper-hunter on a board with no snipers should still fight.
+ * This is the opposite: a ground-only card facing nothing but flyers is
+ * supposed to be unable to help, because that is the whole mechanic. It
+ * stands there, and the player who built an all-ground board against an
+ * all-flying one has learned something. The crown rule above is what stops
+ * that from becoming a match with no end.
+ */
+export function canReach(u: Unit, e: Unit): boolean {
+  if (e.isKing) return true;
+  /*
+   * ⚠ WRITTEN AS "ONLY THESE TWO RESTRICT", NOT AS "BOTH ALLOWS". The first
+   * draft asked `u.hits === "both"` and let everything else fall through to
+   * the ground rule — which made a unit whose `hits` is missing entirely
+   * unable to shoot at anything airborne. Several test catalogues cast
+   * their cards through `unknown`, so the field is simply absent on them,
+   * and a board arriving over the wire is parsed from ids rather than from
+   * whole cards. The schema's default is "both", so absent must mean both,
+   * and the only way to guarantee that is to make restriction the thing
+   * that has to be asked for.
+   */
+  if (u.hits === "ground") return !e.flying;
+  if (u.hits === "air") return e.flying;
+  return true;
+}
+
 function pickTarget(state: BattleState, u: Unit): TargetPick | null {
   /*
    * ⚠ A CARD THAT CAME UP AMONG THEM CAN HIT WHAT IT IS STANDING NEXT TO.
@@ -344,6 +407,7 @@ function pickTarget(state: BattleState, u: Unit): TargetPick | null {
     (e) =>
       e.alive &&
       e.owner !== u.owner &&
+      canReach(u, e) &&
       (isAhead(u, e) || (u.flags.dug === true && Math.abs(e.col - u.col) < level)),
   );
   if (enemies.length === 0) return null;
@@ -480,7 +544,12 @@ function freeShot(state: BattleState, u: Unit): Unit | null {
   let best: Unit | null = null;
   let bestGap = Infinity;
   for (const e of state.units) {
-    if (!e.alive || e.owner === u.owner || !isAhead(u, e)) continue;
+    // ⚠ canReach HERE TOO, AND IT WAS MISSED THE FIRST TIME. A card that is
+    // stuck fires at whatever it can already see, and this loop builds its
+    // own list rather than asking pickTarget — so a ground-only gun that
+    // never moved shot every flyer on the board, which is the whole of what
+    // the rule was supposed to stop. The test caught it on the first run.
+    if (!e.alive || e.owner === u.owner || !canReach(u, e) || !isAhead(u, e)) continue;
     const gap = gapAhead(u, e);
     if (gap < bestGap) {
       best = e;
@@ -542,6 +611,9 @@ export function runBattle(setup: BattleSetup): BattleResult {
       moveSpeed: proto.moveSpeed,
       range: "melee",
       flying: false,
+      // A spawned swarm hits whatever is in front of it. Nothing that
+      // appears mid-battle is built around half the board.
+      hits: "both",
       targeting: "lane",
       isKing: false,
       col: proto.col,

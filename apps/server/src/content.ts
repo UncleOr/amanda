@@ -29,6 +29,7 @@ CATALOG.set("crumb_demon", {
     range: "melee",
   },
   flying: false,
+  hits: "both",
   targeting: "lane",
   midBoss: false,
   launch: false,

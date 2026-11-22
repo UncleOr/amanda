@@ -1,4 +1,12 @@
-import type { Ability, Element, LocalizedString, Range, SquareKind, Targeting } from "@amanda/shared";
+import type {
+  Ability,
+  Element,
+  Hits,
+  LocalizedString,
+  Range,
+  SquareKind,
+  Targeting,
+} from "@amanda/shared";
 import type { Rng } from "./rng.js";
 
 /** Which side of the arena a unit belongs to. */
@@ -35,6 +43,12 @@ export interface Unit {
   moveSpeed: number;
   range: Range;
   flying: boolean;
+  /**
+   * Which half of the battlefield its attacks can touch: the ground, the
+   * air, or both. See `hits` on the card and canReach in simulate.ts — and
+   * note that the King is reachable by everybody regardless.
+   */
+  hits: Hits;
   /** Who it goes after. Seven answers — see schemas/targeting.ts. */
   targeting: Targeting;
   isKing: boolean;

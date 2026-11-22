@@ -147,6 +147,7 @@ export function createUnitFromCard(
     moveSpeed: p.isKing ? 0 : card.stats.moveSpeed, // King's Trap: rooted
     range: card.stats.range,
     flying: card.flying,
+    hits: card.hits,
     targeting: card.targeting,
     isKing: p.isKing,
     col: p.col,

@@ -41,6 +41,7 @@ const CRUMB: Card = {
     range: "melee",
   },
   flying: false,
+  hits: "both",
   targeting: "lane",
   midBoss: false,
   launch: false,

@@ -147,6 +147,7 @@ export const CRUMB_DEMON_CARD: Card = {
     range: "melee",
   },
   flying: false,
+  hits: "both",
   targeting: "lane",
   midBoss: false,
   launch: false,

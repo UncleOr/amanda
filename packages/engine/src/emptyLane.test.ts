@@ -35,6 +35,7 @@ function card(id: string, hp: number, power: number, moveSpeed = 1): Card {
     rarity: "common",
     stats: { hp, power, attackSpeed: 1, moveSpeed, range: "melee" },
     flying: false,
+    hits: "both",
     targeting: "lane",
     midBoss: false,
     launch: true,

@@ -34,6 +34,16 @@ export const StatsSchema = z.object({
 });
 export type Stats = z.infer<typeof StatsSchema>;
 
+/**
+ * Which half of the battlefield a card's attacks can touch.
+ *
+ * "both" is the default and stays the most common answer: a game where most
+ * cards can only hit half the board is a game of stalemates.
+ */
+export const HITS = ["ground", "air", "both"] as const;
+export const HitsSchema = z.enum(HITS);
+export type Hits = z.infer<typeof HitsSchema>;
+
 export const CardSchema = z.object({
   /** Globally unique id, e.g. "dragons_01_flame_dragon". */
   id: z.string().regex(/^[a-z0-9_]+$/),
@@ -58,6 +68,28 @@ export const CardSchema = z.object({
   stats: StatsSchema,
   /** Aerial/hovering units can pass over ground obstacles. */
   flying: z.boolean().default(false),
+  /**
+   * ═══ WHAT IT CAN SHOOT AT: THE GROUND, THE AIR, OR BOTH ═══
+   *
+   * Or, 22 November 2026: *"we need to make a difference between attacking
+   * aerial and ground targets. There will be ones that attack only on the
+   * ground, only in the air, and both. Divide it evenly."*
+   *
+   * ⚠ THIS IS THE OTHER HALF OF `flying`, AND IT HAD BEEN MISSING. Flying
+   * already decided what a card can get PAST — a flyer crosses a blocked
+   * lane, a shield is made of ground cards — but nothing had ever decided
+   * what a card can REACH. Every monster in the game could hit every other
+   * monster, so a sky full of dragons cost the player on the ground
+   * nothing, and a family built around flight had no weakness to build a
+   * counter for.
+   *
+   * ⚠ THE CROWN IS NEVER OUT OF REACH, whatever this says, and that is a
+   * rule rather than an exception. A monster placed on the crown gives up
+   * its movement and becomes the thing the whole match is about; a board
+   * whose King could not be attacked by half the cards in the game is a
+   * match that cannot be won on purpose. See canReach in simulate.ts.
+   */
+  hits: HitsSchema.default("both"),
   /**
    * Who this card goes after. The whole list, and what each one means, is in
    * schemas/targeting.ts — seven of them since Or asked for more than

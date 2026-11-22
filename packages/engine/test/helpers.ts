@@ -1,4 +1,4 @@
-import type { Ability, Card, Element, Range } from "@amanda/shared";
+import type { Ability, Card, Element, Hits, Range } from "@amanda/shared";
 
 /** Build a fully-formed Card for tests without repeating boilerplate. */
 export function testCard(input: {
@@ -10,6 +10,8 @@ export function testCard(input: {
   moveSpeed?: number;
   range?: Range;
   flying?: boolean;
+  /** Ground, air, or both. Defaults to "both", which is what most cards are. */
+  hits?: Hits;
   targeting?: "lane" | "king";
   abilities?: Ability[];
 }): Card {
@@ -28,6 +30,7 @@ export function testCard(input: {
       range: input.range ?? "melee",
     },
     flying: input.flying ?? false,
+    hits: input.hits ?? "both",
     targeting: input.targeting ?? "lane",
     midBoss: false,
     launch: true,
