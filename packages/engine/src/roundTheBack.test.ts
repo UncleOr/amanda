@@ -1,12 +1,13 @@
 /**
  * **The card that goes round the back.**
  *
- * Or: *"I want another movement ability too: dive / teleport / burrow (it is
- * the same thing, but one for the machines and one for the sea creatures and
- * one for the plants). It basically bypasses everyone and reaches the back
- * part of the board, and then turns around and attacks backwards."*
+ * Or: *"I want another movement ability too... it basically bypasses
+ * everyone and reaches the back part of the board, and then turns around
+ * and attacks backwards."* And, on 22 November, how many names it gets:
+ * *"make it either DIGGING for the land ones or DIVING for the water ones.
+ * And that is it."*
  *
- * Three names, one mechanic, and the thing worth pinning is not that a flag
+ * Two names, one mechanic, and the thing worth pinning is not that a flag
  * gets set: it is that the card ENDS UP somewhere else and hits things no
  * ordinary card of the same stats could reach. So every test here compares
  * it against an identical card without the ability.
@@ -52,7 +53,6 @@ const spawn = (type: string): Ability => ({ type, trigger: "onSpawn", params: {}
 const CATALOG = new Map<string, Card>([
   ["plain", card("plain", { power: 300, move: 1 })],
   ["diver", card("diver", { power: 300, move: 1, abilities: [spawn("dive")] })],
-  ["teleporter", card("teleporter", { power: 300, move: 1, abilities: [spawn("teleport")] })],
   ["burrower", card("burrower", { power: 300, move: 1, abilities: [spawn("burrow")] })],
   /** A front line thick enough that nothing walks through it. */
   ["wall", card("wall", { hp: 200000 })],
@@ -80,7 +80,7 @@ function fight(attacker: string) {
   return { me, hp, events: r.events };
 }
 
-describe("dive, teleport and burrow", () => {
+describe("diving and digging", () => {
   it("start the battle at the far end of the enemy's board", () => {
     /*
      * A is placed at its own back row (x 0 → column 0) and comes up at
@@ -88,7 +88,7 @@ describe("dive, teleport and burrow", () => {
      * rather than at the end, because it does not stay there — it walks
      * home from the back, which is the other half of the ability.
      */
-    for (const id of ["diver", "teleporter", "burrower"]) {
+    for (const id of ["diver", "burrower"]) {
       const dig = fight(id).events.find((e) => e.type === "dig");
       expect(dig?.col, id).toBe(ARENA.width - 1);
       expect(fight(id).me.col, `${id} finished in their half`).toBeGreaterThan(4);
@@ -118,12 +118,12 @@ describe("dive, teleport and burrow", () => {
     expect(fight("diver").hp.get("artillery")!, "the diver is behind it").toBeLessThan(9000);
   });
 
-  it("are the same mechanic under three names", () => {
-    // Or asked for one per family. If these ever differ, one of them has
-    // been given a rule of its own and the cards stop being comparable.
-    const [a, b, c] = ["diver", "teleporter", "burrower"].map((id) => fight(id).hp.get("artillery"));
+  it("are the same mechanic under two names", () => {
+    // One word for the water and one for the land, and nothing else may
+    // differ. If these ever come apart, one of them has been given a rule
+    // of its own and the two stop being the same move.
+    const [a, b] = ["diver", "burrower"].map((id) => fight(id).hp.get("artillery"));
     expect(a).toBe(b);
-    expect(b).toBe(c);
   });
 
   it("but a King never leaves its crown", () => {

@@ -172,18 +172,18 @@ export const FIXED_GROUPS: Group[] = [
          * at the far end of the enemy's board, facing home. That is the
          * biggest movement in the game and it was the only one a player
          * could not search for, because it is an ABILITY rather than a
-         * number: `dive`, `teleport` and `burrow` are three names for one
-         * arrival (ROUND_THE_BACK in the schema), and the filter asks the
-         * schema rather than listing them again here.
+         * number: `burrow` and `dive` are two names for one arrival
+         * (ROUND_THE_BACK in the schema), and the filter asks the schema
+         * rather than listing them again here.
          */
         id: "dive",
         /*
-         * ⚠ TWO WORDS BECAUSE IT IS ONE ACTION WITH EIGHT NAMES. Or, after
-         * pressing it: *"so it should be divers/diggers."* A button called
-         * only צוללים asks a child to guess that the dandelion that BURROWS
-         * and the giant that STRIDES are behind it too.
+         * ⚠ BOTH WORDS, BECAUSE THERE ARE EXACTLY TWO AND THEY ARE THE
+         * BUTTON. Or: *"the filter says digging/diving."* One word would
+         * ask a child to guess that the ant which DIGS is behind the same
+         * button as the sea card that DIVES.
          */
-        label: () => t("s6dad7ed", "צוללים/חופרים"),
+        label: () => t("sc65be6c", "חפירה/צלילה"),
         test: (c) => c.abilities.some((a) => ROUND_THE_BACK.includes(a.type)),
       },
     ],

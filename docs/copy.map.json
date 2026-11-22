@@ -9374,9 +9374,9 @@
   }
  },
  {
-  "id": "s6dad7ed",
+  "id": "sc65be6c",
   "section": "components/DeckBuilder.tsx",
-  "text": "צוללים/חופרים",
+  "text": "חפירה/צלילה",
   "where": {
    "kind": "source",
    "file": "apps/client/src/components/DeckBuilder.tsx",
@@ -17812,37 +17812,17 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/game/vocab.ts",
-   "line": 279
+   "line": 272
   }
  },
  {
-  "id": "s3c5e0c9",
+  "id": "s10597e6",
   "section": "game/vocab.ts",
-  "text": "מתחיל בקצה האחורי של הלוח של היריב, מסתובב ותוקף אחורה. ליצורי ים",
+  "text": "מתחיל בקצה האחורי של הלוח של היריב, מסתובב ותוקף אחורה. ליצורי מים",
   "where": {
    "kind": "source",
    "file": "apps/client/src/game/vocab.ts",
-   "line": 279
-  }
- },
- {
-  "id": "s0437a85",
-  "section": "game/vocab.ts",
-  "text": "טלפורטציה",
-  "where": {
-   "kind": "source",
-   "file": "apps/client/src/game/vocab.ts",
-   "line": 280
-  }
- },
- {
-  "id": "s398f358",
-  "section": "game/vocab.ts",
-  "text": "מתחיל בקצה האחורי של הלוח של היריב, מסתובב ותוקף אחורה. למכונות",
-  "where": {
-   "kind": "source",
-   "file": "apps/client/src/game/vocab.ts",
-   "line": 280
+   "line": 272
   }
  },
  {
@@ -17852,117 +17832,17 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/game/vocab.ts",
-   "line": 281
+   "line": 273
   }
  },
  {
-  "id": "sbfe7c68",
+  "id": "s81a17c8",
   "section": "game/vocab.ts",
-  "text": "מתחיל בקצה האחורי של הלוח של היריב, מסתובב ותוקף אחורה. לצמחים",
+  "text": "מתחיל בקצה האחורי של הלוח של היריב, מסתובב ותוקף אחורה. ליבשתיים",
   "where": {
    "kind": "source",
    "file": "apps/client/src/game/vocab.ts",
-   "line": 281
-  }
- },
- {
-  "id": "sf627e2b",
-  "section": "game/vocab.ts",
-  "text": "גיחה",
-  "where": {
-   "kind": "source",
-   "file": "apps/client/src/game/vocab.ts",
-   "line": 282
-  }
- },
- {
-  "id": "s2cef189",
-  "section": "game/vocab.ts",
-  "text": "מתחיל בקצה האחורי של הלוח של היריב, מסתובב ותוקף אחורה. לדרקונים",
-  "where": {
-   "kind": "source",
-   "file": "apps/client/src/game/vocab.ts",
-   "line": 282
-  }
- },
- {
-  "id": "s7b12c48",
-  "section": "game/vocab.ts",
-  "text": "מחילה",
-  "where": {
-   "kind": "source",
-   "file": "apps/client/src/game/vocab.ts",
-   "line": 283
-  }
- },
- {
-  "id": "s9df5f76",
-  "section": "game/vocab.ts",
-  "text": "מתחיל בקצה האחורי של הלוח של היריב, מסתובב ותוקף אחורה. לפרוותיים",
-  "where": {
-   "kind": "source",
-   "file": "apps/client/src/game/vocab.ts",
-   "line": 283
-  }
- },
- {
-  "id": "s6c6c4b2",
-  "section": "game/vocab.ts",
-  "text": "פסיעה",
-  "where": {
-   "kind": "source",
-   "file": "apps/client/src/game/vocab.ts",
-   "line": 284
-  }
- },
- {
-  "id": "s90905b2",
-  "section": "game/vocab.ts",
-  "text": "מתחיל בקצה האחורי של הלוח של היריב, מסתובב ותוקף אחורה. לענקים",
-  "where": {
-   "kind": "source",
-   "file": "apps/client/src/game/vocab.ts",
-   "line": 284
-  }
- },
- {
-  "id": "se1cc07c",
-  "section": "game/vocab.ts",
-  "text": "זחילה",
-  "where": {
-   "kind": "source",
-   "file": "apps/client/src/game/vocab.ts",
-   "line": 285
-  }
- },
- {
-  "id": "s1ecaa3d",
-  "section": "game/vocab.ts",
-  "text": "מתחיל בקצה האחורי של הלוח של היריב, מסתובב ותוקף אחורה. לחרקים",
-  "where": {
-   "kind": "source",
-   "file": "apps/client/src/game/vocab.ts",
-   "line": 285
-  }
- },
- {
-  "id": "s3b11fa7",
-  "section": "game/vocab.ts",
-  "text": "חלחול",
-  "where": {
-   "kind": "source",
-   "file": "apps/client/src/game/vocab.ts",
-   "line": 286
-  }
- },
- {
-  "id": "s3060512",
-  "section": "game/vocab.ts",
-  "text": "מתחיל בקצה האחורי של הלוח של היריב, מסתובב ותוקף אחורה. לדביקים",
-  "where": {
-   "kind": "source",
-   "file": "apps/client/src/game/vocab.ts",
-   "line": 286
+   "line": 273
   }
  }
 ]

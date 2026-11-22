@@ -61,7 +61,7 @@
           "params": {}
         },
         {
-          "type": "warren",
+          "type": "burrow",
           "trigger": "onSpawn",
           "params": {}
         }

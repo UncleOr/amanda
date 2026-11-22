@@ -63,7 +63,7 @@
           "params": {}
         },
         {
-          "type": "swoop",
+          "type": "burrow",
           "trigger": "onSpawn",
           "params": {}
         }

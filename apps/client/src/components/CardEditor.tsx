@@ -119,30 +119,22 @@ function clone(card: Card): Card {
  * ABILITIES list, which is not where anybody looks for a way of getting
  * about. It is one of four answers to one question now.
  *
- * ⚠ IT IS STILL ONE MECHANIC UNDER ONE NAME PER FAMILY (Or: "one for the
- * machines and one for the sea creatures and one for the plants"), so the
- * editor picks the name that fits the card rather than asking a question
- * whose answer is already on the card. The ability shows up in the list
- * above as צלילה / טלפורטציה / חפירה / גיחה / מחילה / פסיעה / זחילה /
- * חלחול, and can be changed there.
+ * ⚠ IT IS STILL ONE MECHANIC UNDER TWO NAMES. Or: *"make it either
+ * DIGGING for the land ones or DIVING for the water ones. And that is
+ * it."* So the word follows the GROUND and not the creature — a giant, a
+ * beetle and a dandelion all dig, and only the sea dives. The ability
+ * shows up in the list above as צלילה or חפירה, and can be changed there.
  *
- * ⚠ A FAMILY THAT IS NOT IN THIS MAP FALLS BACK TO "dive", which is the
- * sea's word and wrong on anything else. So a new family needs a row here
- * the day its first card is written — and the five below were added on 22
- * November for exactly that reason, after Or filtered for divers and got
- * an empty shelf.
+ * ⚠ WHICH IS WHY THE MAP HOLDS THE WATER AND NOT THE LAND. Digging is the
+ * fallback, so a family written tomorrow digs without anybody remembering
+ * to add a row — and the only row that ever has to be added is a new
+ * family that lives in water.
  */
-const DIVE_BY_SERIES: Record<string, (typeof ROUND_THE_BACK)[number]> = {
-  machines: "teleport",
-  plants: "burrow",
+const WATER_FAMILIES: Record<string, (typeof ROUND_THE_BACK)[number]> = {
   sea: "dive",
-  dragons: "swoop",
-  furries: "warren",
-  giants: "stride",
-  insects: "scuttle",
-  slimes: "seep",
 };
 
+const diveWordFor = (seriesId: string) => WATER_FAMILIES[seriesId] ?? "burrow";
 /*
  * ═══ חמש אפשרויות, לא ארבע ═══
  *
@@ -457,7 +449,7 @@ export function CardEditor({ call, say, upload, notes, reloadNotes }: CardEditor
           ? [
               ...without,
               (diveOf(d) ?? {
-                type: DIVE_BY_SERIES[d.seriesId] ?? "dive",
+                type: diveWordFor(d.seriesId),
                 trigger: "onSpawn",
                 params: {},
               }) as Ability,

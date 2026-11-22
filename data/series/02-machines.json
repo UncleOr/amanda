@@ -381,7 +381,7 @@
           }
         },
         {
-          "type": "teleport",
+          "type": "burrow",
           "trigger": "onSpawn",
           "params": {}
         }

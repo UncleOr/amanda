@@ -79,16 +79,25 @@ describe("still, walking, flying or diving", () => {
     expect(SRC).toContain('he: "צולל"');
   });
 
-  it("gives the diver the name its own family uses", () => {
+  it("digs on land and dives in water, and names only the water", () => {
     /*
-     * One mechanic under three names — Or: *"one for the machines and one
-     * for the sea creatures and one for the plants"* — so the editor picks
-     * the one that fits the card rather than asking a question the card has
-     * already answered.
+     * One mechanic under two names — Or: *"make it either DIGGING for the
+     * land ones or DIVING for the water ones. And that is it."* — so the
+     * editor picks the one that fits the ground rather than asking a
+     * question the card has already answered.
+     *
+     * ⚠ AND THE MAP HOLDS THE WATER, NOT THE LAND. Digging is the fallback,
+     * so a family written tomorrow digs without anybody remembering to add
+     * a row; the only row anyone ever has to add is a new water family. A
+     * map listing the land families instead would hand "dive" to the next
+     * one that was forgotten, which is the one mistake the two words exist
+     * to prevent.
      */
-    expect(SRC).toContain('machines: "teleport"');
-    expect(SRC).toContain('plants: "burrow"');
     expect(SRC).toContain('sea: "dive"');
+    expect(SRC).toContain('?? "burrow"');
+    expect(SRC, "the land must not be listed — it is the fallback").not.toContain(
+      'plants: "burrow"',
+    );
   });
 
   it("adds the ability when you choose it, and takes it away when you do not", () => {

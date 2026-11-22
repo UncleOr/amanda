@@ -51,7 +51,7 @@
       "midBoss": false,
       "abilities": [
         {
-          "type": "scuttle",
+          "type": "burrow",
           "trigger": "onSpawn",
           "params": {}
         }

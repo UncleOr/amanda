@@ -56,7 +56,7 @@
           "params": {}
         },
         {
-          "type": "seep",
+          "type": "burrow",
           "trigger": "onSpawn",
           "params": {}
         }

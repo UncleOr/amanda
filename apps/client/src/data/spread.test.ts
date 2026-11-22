@@ -180,29 +180,25 @@ describe("going round the back is something most families can do", () => {
     expect(withOne.length, `only ${withOne.join(", ")} can go round the back`).toBeGreaterThanOrEqual(7);
   });
 
-  it("calls it by the family's own word, never by somebody else's", () => {
+  it("calls it digging on land and diving in water, never the other way", () => {
     /*
-     * ⚠ THE TRAP THIS CATCHES. The card editor maps a family to its word
-     * and FALLS BACK TO "dive" — the sea's word — for a family it has
-     * never heard of. A giant that "dives" is the exact thing the eight
-     * names exist to prevent, and it would ship silently.
+     * Or, cutting eight names back to two: *"make it either DIGGING for
+     * the land ones or DIVING for the water ones."*
+     *
+     * ⚠ THE TRAP THIS CATCHES is the one the fallback creates. The card
+     * editor digs by default and names only the families that live in
+     * water, which is right for every family written so far and silently
+     * wrong the day a second water family arrives: its cards would be
+     * given "burrow", and a shark that DIGS is the exact thing the two
+     * words exist to prevent.
      */
-    const WORD: Record<string, string> = {
-      sea: "dive",
-      machines: "teleport",
-      plants: "burrow",
-      dragons: "swoop",
-      furries: "warren",
-      giants: "stride",
-      insects: "scuttle",
-      slimes: "seep",
-    };
+    const WATER = new Set(["sea"]);
     for (const c of divers) {
       const ability = c.abilities.find((a) => RTB.has(a.type))!;
       expect(
         ability.type,
         `${c.name.he} is a ${c.seriesId} card calling it "${ability.type}"`,
-      ).toBe(WORD[c.seriesId]);
+      ).toBe(WATER.has(c.seriesId) ? "dive" : "burrow");
     }
   });
 

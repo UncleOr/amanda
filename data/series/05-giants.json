@@ -387,7 +387,7 @@
           }
         },
         {
-          "type": "stride",
+          "type": "burrow",
           "trigger": "onSpawn",
           "params": {}
         }

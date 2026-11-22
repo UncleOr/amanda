@@ -116,39 +116,34 @@ export const ABILITY_TYPES = [
    * reaches the back part of the board, and then turns around and attacks
    * backwards."*
    *
-   * One mechanic, one name per family, and the names are the point: a
-   * machine that BURROWS is wrong and a plant that TELEPORTS is wrong, and
-   * a card whose ability does not fit the creature is a card a child stops
-   * believing. The engine treats every one of them identically.
+   * ═══ TWO NAMES, AND ONLY TWO ═══
+   *
+   * It began as three — one for the machines, one for the sea creatures,
+   * one for the plants — because a machine that BURROWS is wrong. Then, on
+   * 22 November, it briefly became eight, one per family, after Or pressed
+   * the new filter and found nothing behind it.
+   *
+   * He cut it back the same evening: *"no need. Make it either DIGGING for
+   * the land ones or DIVING for the water ones. And that is it. The filter
+   * says digging/diving."*
+   *
+   * Which is the better rule and not only the shorter one. A name per
+   * family is a name a player has to learn ten times to recognise one
+   * thing; and the thing being named was never the family, it was the
+   * GROUND — you go under it or you go through the water. A giant and a
+   * beetle and a dandelion all dig. Only the sea dives.
+   *
+   * ⚠ SO THE WORD FOLLOWS THE FAMILY'S ELEMENT, NOT ITS NAME. See
+   * DIVE_BY_SERIES in CardEditor.tsx, which is where a new water family
+   * would be named — everything else digs, by fallback, correctly.
    *
    * It happens at spawn, so the card is simply standing at the far end when
    * the battle begins — no walk across, nothing to intercept, which is what
    * "bypasses everyone" means. And then it is facing the other way, with
    * the enemy's back row and its King's back in front of it.
-   *
-   * ═══ WHY THERE ARE EIGHT OF THEM AND NOT THREE ═══
-   *
-   * Or, 22 November 2026, after filtering for divers and getting an empty
-   * shelf: *"so it should be divers/diggers — and let there be plants
-   * (roots?) and giants and so on that do the same thing, say 1 in every
-   * series. It is exactly the same action, just with a different name
-   * according to the series."*
-   *
-   * Measured, he was right and it was worse than "I have none": across
-   * every account on the live database, the player with 49 cards owned
-   * ZERO of the three, and only one player in the top eight owned any at
-   * all. Three cards in ten families, two of them rare and epic, is a
-   * filter button that returns nothing for almost everybody who presses
-   * it. The mechanic was fine; the shelf was empty.
    */
-  "dive", // the sea
-  "teleport", // the machines
-  "burrow", // the plants
-  "swoop", // the dragons
-  "warren", // the furries
-  "stride", // the giants
-  "scuttle", // the insects
-  "seep", // the slimes
+  "dive", // through the water — the sea
+  "burrow", // under the ground — everybody else
 ] as const;
 
 
@@ -156,24 +151,14 @@ export const AbilityTypeSchema = z.enum(ABILITY_TYPES);
 export type AbilityType = z.infer<typeof AbilityTypeSchema>;
 
 /**
- * The ones that go round the back — one mechanic under one name per family.
+ * The two that go round the back — one mechanic under two names.
  *
- * ⚠ EVERYTHING THAT ASKS "IS THIS A DIVER" ASKS THIS LIST, and that is why
- * adding five names cost five lines rather than five edits: the engine's
+ * ⚠ EVERYTHING THAT ASKS "IS THIS A DIVER" ASKS THIS LIST: the engine's
  * spawn, the deck-builder filter, the card editor's movement question and
- * the admin panel all read it. A ninth family needs its name here and its
- * word in vocab.ts, and nothing else.
+ * the admin panel. A third name, if the ground ever gets a third kind,
+ * needs a line here and a word in vocab.ts, and nothing else.
  */
-export const ROUND_THE_BACK: readonly AbilityType[] = [
-  "dive",
-  "teleport",
-  "burrow",
-  "swoop",
-  "warren",
-  "stride",
-  "scuttle",
-  "seep",
-];
+export const ROUND_THE_BACK: readonly AbilityType[] = ["dive", "burrow"];
 
 /**
  * A single data-driven behavior. `params` is an open bag of numbers/strings so
