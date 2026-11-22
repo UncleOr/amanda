@@ -76,6 +76,8 @@
 .slot--square-bunker { --sq: #94a3b8; --sq-dim: rgba(148, 163, 184, 0.16); }
 .slot--square-blackhole { --sq: #818cf8; --sq-dim: rgba(129, 140, 248, 0.16); }
 .slot--square-minefield { --sq: #ef4444; --sq-dim: rgba(239, 68, 68, 0.14); }
+.slot--square-secretdoor { --sq: #2dd4bf; --sq-dim: rgba(45, 212, 191, 0.14); }
+.slot--square-revival { --sq: #fbbf24; --sq-dim: rgba(251, 191, 36, 0.14); }
 
 /*
  * ═══ THE PANEL A TAP OPENS ═══

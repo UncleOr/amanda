@@ -12006,9 +12006,9 @@
   }
  },
  {
-  "id": "s1f4f39b",
+  "id": "s333a42b",
   "section": "components/Settings.tsx",
-  "text": "הריבועים המיוחדים",
+  "text": "הספוטים",
   "where": {
    "kind": "source",
    "file": "apps/client/src/components/Settings.tsx",
@@ -12626,9 +12626,9 @@
   }
  },
  {
-  "id": "s6bae97f",
+  "id": "s6de79ee",
   "section": "components/SquaresIntro.tsx",
-  "text": "מהארנה השנייה יש על כל לוח כמה ריבועים מיוחדים — גם אצלך וגם אצל היריב. הם מוגרלים מחדש בכל משחק.",
+  "text": "מהארנה השנייה יש על כל לוח כמה ספוטים — גם אצלך וגם אצל היריב. הם מוגרלים מחדש בכל משחק.",
   "where": {
    "kind": "source",
    "file": "apps/client/src/components/SquaresIntro.tsx",
@@ -12636,9 +12636,9 @@
   }
  },
  {
-  "id": "s2e4d402",
+  "id": "s0cb5115",
   "section": "components/SquaresIntro.tsx",
-  "text": "כל ריבוע כזה עושה משהו לקלף שעומד עליו. לוחצים עליו ורואים מה הוא עושה.",
+  "text": "כל ספוט עושה משהו לקלף שעומד עליו. לוחצים עליו ורואים מה הוא עושה.",
   "where": {
    "kind": "source",
    "file": "apps/client/src/components/SquaresIntro.tsx",
@@ -12646,9 +12646,9 @@
   }
  },
  {
-  "id": "s0f1fef6",
+  "id": "s6b2a759",
   "section": "components/SquaresIntro.tsx",
-  "text": "שמונה ריבועים",
+  "text": "שמונה ספוטים",
   "where": {
    "kind": "source",
    "file": "apps/client/src/components/SquaresIntro.tsx",
@@ -12656,9 +12656,9 @@
   }
  },
  {
-  "id": "s263e648",
+  "id": "s29b9b76",
   "section": "components/SquaresIntro.tsx",
-  "text": "את הריבועים של היריב רואים בדיוק כמו את הקלפים שלו — קודם רק את השורה הראשונה, ובפאניקה עוד.",
+  "text": "את הספוטים של היריב רואים בדיוק כמו את הקלפים שלו — קודם רק את השורה הראשונה, ובפאניקה עוד.",
   "where": {
    "kind": "source",
    "file": "apps/client/src/components/SquaresIntro.tsx",

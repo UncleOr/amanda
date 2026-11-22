@@ -337,6 +337,91 @@ describe("the bunker", () => {
   });
 });
 
+describe("the secret door", () => {
+  it("starts the card behind the enemy board, facing home", () => {
+    /*
+     * Or picked this out of six, and it was the cheapest of them: the
+     * engine already knows the move — the Round-the-Back abilities put a
+     * card at the far end of the arena and TURN it. This hands that to a
+     * square instead of to a card.
+     */
+    const board = [
+      { cardId: "crown", x: 1, y: 1, king: true },
+      { cardId: "walker", x: 0, y: 0 },
+    ];
+    const plain = find(set(board), "walker");
+    const through = find(set(board, { "0-0": "secretdoor" }), "walker");
+    expect(through.col, "it did not go anywhere").toBeGreaterThan(plain.col);
+    expect(through.facing, "it did not turn round").toBe(-plain.facing);
+    expect(through.flags.dug).toBe(true);
+  });
+});
+
+describe("the revival room", () => {
+  /*
+   * ⚠ ITS OWN TINY BOARD, AND THAT IS THE POINT OF THE TEST RATHER THAN A
+   * CONVENIENCE. The first draft reused the shared board and both runs came
+   * back with the card dying on the same tick — not because the room failed
+   * (the flag was spent, so it had fired) but because a 9,000hp crown and
+   * two giants made a battle where the exchange being measured was buried
+   * under three others. A rule about ONE card wants a board with one card
+   * on it.
+   */
+  const ROOM = new Map<string, Card>([
+    ["patient", card("patient", { hp: 1000, power: 100 })],
+    ["hitter", card("hitter", { hp: 4000, power: 700 })],
+    ["crown", card("crown", { hp: 1000, power: 100 })],
+  ]);
+  const run = (squares?: Squares) =>
+    runBattle({
+      a: {
+        owner: "A",
+        placements: [
+          { cardId: "crown", x: 1, y: 1, king: true },
+          { cardId: "patient", x: 3, y: 0 },
+        ],
+        squares,
+      },
+      b: {
+        owner: "B",
+        placements: [
+          { cardId: "crown", x: 1, y: 1, king: true },
+          { cardId: "hitter", x: 3, y: 0 },
+        ],
+      },
+      seed: 21,
+      catalog: ROOM,
+      synergies: [],
+    });
+  const patient = (r: ReturnType<typeof run>) =>
+    r.finalUnits.find((u) => u.owner === "A" && u.cardId === "patient")!;
+  const diedAt = (r: ReturnType<typeof run>) =>
+    r.events.find((e) => e.type === "death" && e.uid === patient(r).uid)?.tick ?? Infinity;
+
+  it("gets the card up once, on half its health", () => {
+    /*
+     * ⚠ MEASURED ON WHEN IT DIES, NOT ON HOW MANY TIMES. A card that is
+     * revived on half its health with the same attacker still standing in
+     * front of it dies again a moment later — one death event, further
+     * down the battle, which is exactly what the card says.
+     *
+     * The death that is CANCELLED is the first one, and that matters for
+     * more than bookkeeping: a death that went through would have fired
+     * onDeath, been counted as a loss in the report, and — for a King —
+     * ended the battle before the card got up.
+     */
+    const plain = diedAt(run());
+    const saved = diedAt(run({ "3-0": "revival" }));
+    expect(plain, "the control card never died").toBeLessThan(Infinity);
+    expect(saved, "the room bought it no time at all").toBeGreaterThan(plain);
+  });
+
+  it("spends the second life, so it is only ever one", () => {
+    const r = run({ "3-0": "revival" });
+    expect(patient(r).flags.revives, "it could come back for ever").toBe(false);
+  });
+});
+
 describe("and none of them touches the crown", () => {
   it("leaves a King alone even if a square is rolled under it", () => {
     /*

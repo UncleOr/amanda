@@ -101,3 +101,59 @@ describe("the drawer, once a card has been played", () => {
     expect(calls, "the only call is the one inside playAction").toHaveLength(1);
   });
 });
+
+/**
+ * **Two of the same card are two cards.**
+ *
+ * Or, 22 November 2026: *"erasing / stealing from the opponent does not work
+ * again."*
+ *
+ * ═══ WHAT WAS ACTUALLY WRONG ═══
+ *
+ * Not the erasing. The bar holds three cards and a deck can deal you the
+ * same one twice — and "which cards have been spent" was keyed by the CARD
+ * ID. So the moment either copy went off, `usedActions[id]` was true and the
+ * other copy arrived in the bar already greyed out, with `activateAction`
+ * refusing it on its first line. A player who drew two erasers had one
+ * eraser, and nothing on the screen said why.
+ *
+ * Found by driving the playground: two chips in the bar, both reading
+ * "נוצל", one of which had never been aimed at anything. Then fixed and
+ * driven again — two erasers, two enemy cards, both erased.
+ *
+ * ⚠ A SLOT IS A PLACE, so the index is the key. The bar only grows within a
+ * round and is emptied between rounds, so an index cannot come to mean a
+ * different card while it matters.
+ */
+describe("the bar counts slots, not card names", () => {
+  const SRC = readFileSync(fileURLToPath(new URL("./useMatch.ts", import.meta.url)), "utf8");
+
+  it("remembers which slot was spent, not which card", () => {
+    expect(SRC).toContain("const [usedActions, setUsedActions] = useState<Record<number, boolean>>");
+    expect(SRC, "the bar still reports used by card id").toContain(
+      "used: !!usedActions[i],",
+    );
+  });
+
+  it("arms the first copy that has not been spent", () => {
+    expect(SRC).toContain(
+      "const slot = barRef.current.findIndex((a, i) => a === id && !usedRef.current[i]);",
+    );
+    // And refuses when every copy is gone, which is the old guard's job.
+    expect(SRC).toContain("if (slot < 0) return;");
+  });
+
+  it("holds the slot across an aim, and lets it go when the aim is called off", () => {
+    /*
+     * A targeted card is chosen now and spent later — the player is pointing
+     * at something in between — so the slot has to be carried. And a slot
+     * still marked armed after a cancel would be spent by the NEXT aim,
+     * which is the same bug wearing different clothes.
+     */
+    expect(SRC).toContain("const armedSlot = useRef(-1);");
+    expect(SRC).toContain("armedSlot.current = slot;");
+    const at = SRC.indexOf("const cancelTargeting = useCallback");
+    const body = SRC.slice(at, at + 400);
+    expect(body, "a cancelled aim keeps the slot armed").toContain("armedSlot.current = -1;");
+  });
+});

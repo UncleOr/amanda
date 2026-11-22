@@ -36,6 +36,27 @@ export const SQUARE_KINDS = [
   "bunker",
   "blackhole",
   "minefield",
+  /**
+   * The card here starts the battle BEHIND the enemy's board.
+   *
+   * Or picked it from a list of six on 14 November and it was the one with
+   * the lowest price, because the engine already knows how to do it: the
+   * Round-the-Back abilities put a card at the far end of the arena and
+   * turn it round. This is that, handed to a square instead of to a card.
+   *
+   * ⚠ WHICH MAKES IT THE ONLY SPOT THAT MOVES A CARD BEFORE A TICK HAS RUN,
+   * so it is also the only one a player can misread as "my card vanished".
+   * That is what the panel is for.
+   */
+  "secretdoor",
+  /**
+   * The card here comes back once, with half its health.
+   *
+   * The other of the two he chose. Together they are the two that change
+   * the SHAPE of a battle rather than a number in it, which is what made
+   * them worth building over the four that add a multiplier.
+   */
+  "revival",
 ] as const;
 
 export type SquareKind = (typeof SQUARE_KINDS)[number];
@@ -105,9 +126,21 @@ export const SQUARES: Readonly<Record<SquareKind, SquareDef>> = {
   },
   minefield: {
     he: "שדה מוקשים",
-    note: "אם הריבוע ריק והאויב דורך עליו — הוא מתפוצץ. פעם אחת, על הראשון שמגיע.",
+    note: "אם הספוט ריק והאויב דורך עליו — הוא מתפוצץ. פעם אחת, על הראשון שמגיע.",
     icon: "explode",
     colour: "#ef4444",
+  },
+  secretdoor: {
+    he: "דלת סודית",
+    note: "הקלף כאן מתחיל את הקרב מאחורי הלוח של היריב, ונלחם משם קדימה.",
+    icon: "split",
+    colour: "#2dd4bf",
+  },
+  revival: {
+    he: "חדר החייאה",
+    note: "כשהקלף כאן נופל, הוא קם פעם אחת עם חצי מהחיים.",
+    icon: "again",
+    colour: "#fbbf24",
   },
 };
 

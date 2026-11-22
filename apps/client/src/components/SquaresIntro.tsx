@@ -62,14 +62,14 @@ export function SquaresIntro({ onClose }: { onClose: () => void }) {
             <h2 className="sqintro__title">{t("s131483c", "הלוח השתנה")}</h2>
             <p className="sqintro__line">
               {t(
-                "s6bae97f",
-                "מהארנה השנייה יש על כל לוח כמה ריבועים מיוחדים — גם אצלך וגם אצל היריב. הם מוגרלים מחדש בכל משחק.",
+                "s6de79ee",
+                "מהארנה השנייה יש על כל לוח כמה ספוטים — גם אצלך וגם אצל היריב. הם מוגרלים מחדש בכל משחק.",
               )}
             </p>
             <p className="sqintro__line">
               {t(
-                "s2e4d402",
-                "כל ריבוע כזה עושה משהו לקלף שעומד עליו. לוחצים עליו ורואים מה הוא עושה.",
+                "s0cb5115",
+                "כל ספוט עושה משהו לקלף שעומד עליו. לוחצים עליו ורואים מה הוא עושה.",
               )}
             </p>
             {/*
@@ -90,7 +90,7 @@ export function SquaresIntro({ onClose }: { onClose: () => void }) {
           </>
         ) : (
           <>
-            <h2 className="sqintro__title">{t("s0f1fef6", "שמונה ריבועים")}</h2>
+            <h2 className="sqintro__title">{t("s6b2a759", "שמונה ספוטים")}</h2>
             <ul className="sqintro__list">
               {SQUARE_KINDS.map((kind) => (
                 <li key={kind} style={{ ["--sq" as string]: SQUARES[kind].colour }}>
@@ -103,8 +103,8 @@ export function SquaresIntro({ onClose }: { onClose: () => void }) {
             </ul>
             <p className="sqintro__line sqintro__line--last">
               {t(
-                "s263e648",
-                "את הריבועים של היריב רואים בדיוק כמו את הקלפים שלו — קודם רק את השורה הראשונה, ובפאניקה עוד.",
+                "s29b9b76",
+                "את הספוטים של היריב רואים בדיוק כמו את הקלפים שלו — קודם רק את השורה הראשונה, ובפאניקה עוד.",
               )}
             </p>
           </>

@@ -689,6 +689,26 @@ export function runBattle(setup: BattleSetup): BattleResult {
   const killUnit: BattleOps["killUnit"] = (u) => {
     if (!u.alive) return;
     if (hatch(u)) return;
+    /*
+     * ═══ חדר החייאה — THE REVIVAL ROOM ═══
+     *
+     * Or, picking two spots out of six: *"when the card here falls, it gets
+     * up once with half its health."*
+     *
+     * ⚠ BEFORE THE DEATH IS WRITTEN DOWN, not after, and that is the whole
+     * of it: a card that died and came back has fired onDeath, been counted
+     * as a loss in the report, and — if it was a King — ended the battle.
+     * Getting up afterwards would be getting up in a battle that is over.
+     * So this is a death that does not happen, like the egg above it.
+     *
+     * Once: the flag is spent, so the second time it is an ordinary corpse.
+     */
+    if (u.flags.revives) {
+      u.flags.revives = false;
+      u.hp = Math.max(1, Math.round(u.maxHp / 2));
+      state.events.push({ tick: state.tick, type: "reveal", uid: u.uid, revealedCardId: u.cardId });
+      return;
+    }
     u.alive = false;
     u.hp = 0;
     state.events.push({ tick: state.tick, type: "death", uid: u.uid });

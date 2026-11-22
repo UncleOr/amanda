@@ -291,7 +291,7 @@ export function Settings({
               onSquaresIntro();
             }}
           >
-            {t("s1f4f39b", "הריבועים המיוחדים")}
+            {t("s333a42b", "הספוטים")}
           </button>
           {DOCS.map((d) => (
             <button

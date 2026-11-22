@@ -1380,7 +1380,7 @@
 | sdb41019 | כבוי | |  |
 | s46dcd47 | שפה | | Language |
 | s15c7730 | איך משחקים | | How to play |
-| s1f4f39b | הריבועים המיוחדים | | The special squares |
+| s333a42b | הספוטים | | The spots |
 | s8e11615 | מה חדש | | What's new |
 | s6eed161 | יש עדכון שלא קראתם | | There is an update you have not read |
 | s50fb087 | משהו לא עובד? | | Something not working? |
@@ -1467,10 +1467,10 @@
 | --- | --- | --- | --- |
 | s5956a08 | סגירה | | Close |
 | s131483c | הלוח השתנה | | The board has changed |
-| s6bae97f | מהארנה השנייה יש על כל לוח כמה ריבועים מיוחדים — גם אצלך וגם אצל היריב. הם מוגרלים מחדש בכל משחק. | | From the second arena on, every board has a few special squares — yours and your opponent's. They are rolled again every match. |
-| s2e4d402 | כל ריבוע כזה עושה משהו לקלף שעומד עליו. לוחצים עליו ורואים מה הוא עושה. | | Each one does something to the card standing on it. Tap it to see what. |
-| s0f1fef6 | שמונה ריבועים | | Eight squares |
-| s263e648 | את הריבועים של היריב רואים בדיוק כמו את הקלפים שלו — קודם רק את השורה הראשונה, ובפאניקה עוד. | | You see their squares exactly as you see their cards — the front row first, and more once panic starts. |
+| s6de79ee | מהארנה השנייה יש על כל לוח כמה ספוטים — גם אצלך וגם אצל היריב. הם מוגרלים מחדש בכל משחק. | | From the second arena on, every board has a few spots — yours and your opponent's. They are rolled again every match. |
+| s0cb5115 | כל ספוט עושה משהו לקלף שעומד עליו. לוחצים עליו ורואים מה הוא עושה. | | Each spot does something to the card standing on it. Tap it to see what. |
+| s6b2a759 | שמונה ספוטים | | Eight spots |
+| s29b9b76 | את הספוטים של היריב רואים בדיוק כמו את הקלפים שלו — קודם רק את השורה הראשונה, ובפאניקה עוד. | | You see their spots exactly as you see their cards — the front row first, and more once panic starts. |
 | sfbacb23 | יאללה | | Let us go |
 | sf70973e | המשך ← | | Next → |
 

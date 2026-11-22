@@ -284,6 +284,38 @@ function applySquare(
     unit.targeting = crumb.targeting;
     return;
   }
+  if (kind === "secretdoor") {
+    /*
+     * ═══ THE DOOR OPENS BEFORE A TICK HAS RUN ═══
+     *
+     * Or picked this one out of six, and it was the cheapest of them
+     * because the engine already knows the move: the Round-the-Back
+     * abilities put a card at the far end of the arena and TURN it, and
+     * everything else follows from the turn — what is "ahead" of it is now
+     * the enemy's back row and their King's back.
+     *
+     * ⚠ NEVER A KING, and the reason is written down twice now. The King's
+     * Trap is the rule that a crowned monster gives up its movement, and a
+     * dive is the biggest movement in the game; a King behind the enemy's
+     * board is a board with no crown on it. `applySquare` is only ever
+     * called for a non-King (see the caller), and this is the second lock.
+     */
+    if (unit.isKing) return;
+    unit.col = unit.facing > 0 ? ARENA.width - 1 : 0;
+    unit.facing = unit.facing > 0 ? -1 : 1;
+    unit.flags.dug = true;
+    state.events.push({ tick: 0, type: "dig", uid: unit.uid, col: unit.col });
+    return;
+  }
+  if (kind === "revival") {
+    /*
+     * Marked here and acted on where units die, because "comes back once"
+     * is a thing that happens to a corpse rather than to a card. See
+     * killUnit in simulate.ts.
+     */
+    unit.flags.revives = true;
+    return;
+  }
   if (kind === "mirror") {
     /*
      * ⚠ "IF IT TAKES THE KING'S POWER IT TAKES IT PLAIN, WITHOUT THE ×3."

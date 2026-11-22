@@ -1229,7 +1229,34 @@ export function useMatch(): MatchApi {
   /** Who is on the other side. See the `opponent` message in net.ts. */
   const [rival, setRival] = useState<PlayerCard | null>(null);
   const [actionBar, setActionBar] = useState<string[]>([]);
-  const [usedActions, setUsedActions] = useState<Record<string, boolean>>({});
+  /**
+   * Which SLOTS of the action bar have been spent, by position.
+   *
+   * ═══ IT USED TO BE BY CARD ID, AND THAT IS A BUG WITH A NAME ═══
+   *
+   * Or: *"erasing / stealing from the opponent does not work again."* It
+   * does not: the bar holds three cards and the deck can deal you the same
+   * one twice, and `usedActions[id] = true` marked BOTH copies the moment
+   * either was spent. The second arrived in the bar already greyed out and
+   * `activateAction` refused it on the next line — so a player who drew two
+   * erasers had one eraser, and no way to tell why.
+   *
+   * Found by driving the playground: two chips in the bar, both saying
+   * "נוצל", one of which had never been aimed at anything.
+   *
+   * A slot is a place, so the index is the key. The bar only ever grows
+   * within a round and is emptied between rounds (clearRound), so an index
+   * cannot come to mean a different card while it matters.
+   */
+  const [usedActions, setUsedActions] = useState<Record<number, boolean>>({});
+  /**
+   * The bar slot the armed card came out of.
+   *
+   * A targeted card is chosen now and spent later — in between, the player
+   * is pointing at something — so the slot has to be remembered or the aim
+   * would land and mark whichever copy happened to be first.
+   */
+  const armedSlot = useRef(-1);
   /** This throw has already been undone. Cleared by the next throw. */
   const [binUsed, setBinUsed] = useState(false);
   const binUsedRef = useRef(false);
@@ -2268,8 +2295,17 @@ export function useMatch(): MatchApi {
 
   const activateAction = useCallback(
     (id: string) => {
-      if (isPassiveAction(id) || usedRef.current[id]) return;
+      if (isPassiveAction(id)) return;
+      /*
+       * The first copy of this card in the bar that has not been spent.
+       * `id` is what the screen hands over — the chip knows which card it
+       * is showing, not which of two identical chips it is — so the slot is
+       * worked out here, once, and remembered.
+       */
+      const slot = barRef.current.findIndex((a, i) => a === id && !usedRef.current[i]);
+      if (slot < 0) return;
       if (!canPlayAction(id)) return;
+      armedSlot.current = slot;
       if (isTargetedAction(id)) {
         setTargeting(id);
         sfx.play("click");
@@ -2360,7 +2396,7 @@ export function useMatch(): MatchApi {
         if (onlineRef.current) netRef.current?.hex(id);
         setDoubled(true);
       } else if (a?.effect === "shuffleEnemyFrontRow") shuffleEnemyFront();
-      setUsedActions((u) => ({ ...u, [id]: true }));
+      setUsedActions((u) => ({ ...u, [slot]: true }));
       // What the card DID, rather than that a card was played. The two it
       // used to play for all six of these are the fallback.
       spend(id, { sound: "draw", buzz: "action" });
@@ -2484,7 +2520,15 @@ export function useMatch(): MatchApi {
       // client can really do it — all this side can do is say where.
       netRef.current?.hex(id, key);
     }
-    setUsedActions((u) => ({ ...u, [id]: true }));
+    // The slot the armed card came out of — see armedSlot. Falling back to
+    // the first unspent copy keeps an aim that somehow arrived without one
+    // from marking every copy, which is the bug this replaced.
+    const slot =
+      armedSlot.current >= 0
+        ? armedSlot.current
+        : barRef.current.findIndex((a, i) => a === id && !usedRef.current[i]);
+    if (slot >= 0) setUsedActions((u) => ({ ...u, [slot]: true }));
+    armedSlot.current = -1;
     setTargeting(null);
     setFirstPick(null);
     /*
@@ -2530,7 +2574,12 @@ export function useMatch(): MatchApi {
     if (!isEnemyTargeted(id) && !gsRef.current.king) return;
     applyTargetTo(id, KING_KEY);
   }, [applyTargetTo]);
-  const cancelTargeting = useCallback(() => setTargeting(null), []);
+  const cancelTargeting = useCallback(() => {
+    // Put the card back: an aim that was called off has spent nothing, and
+    // a slot still marked as armed would be spent by the NEXT aim.
+    armedSlot.current = -1;
+    setTargeting(null);
+  }, []);
 
   const readyRef = useRef(ready);
   readyRef.current = ready;
@@ -2772,6 +2821,9 @@ export function useMatch(): MatchApi {
     soloBoardsRef.current = null;
     setActionBar([]);
     setUsedActions({});
+    // An armed card that outlived its match would spend the next match's
+    // slot of the same number, which is the shape of the bug this replaced.
+    armedSlot.current = -1;
     binUsedRef.current = false;
     setBinUsed(false);
     setKingWound(0);
@@ -3738,7 +3790,11 @@ export function useMatch(): MatchApi {
     opponent: opponentView,
     revealOpponentCell,
     revealOpponentKing: playground || xrayActive || phase === "panic" || phase === "prebattle",
-    actionBar: actionBar.map((id) => ({ id, used: !!usedActions[id], passive: isPassiveAction(id) })),
+    actionBar: actionBar.map((id, i) => ({
+      id,
+      used: !!usedActions[i],
+      passive: isPassiveAction(id),
+    })),
     barFull: actionBar.length >= ACTION_SLOTS,
     targeting,
     /** Cells flashing because an action card just improved them. */
