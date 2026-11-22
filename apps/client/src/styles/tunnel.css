@@ -80,15 +80,77 @@
  * A half-round arch with a lit rim and a dark throat — the same two
  * gradients the stations use, at thumbnail size.
  */
+/*
+ * ═══ A TUNNEL, NOT A ROUNDED RECTANGLE ═══
+ *
+ * Or: *"change the tunnel icon on the main screen — it looks a bit bland,
+ * make it prettier."* He is right and the reason is in what it was: one
+ * box, one gradient, one radius. An arch shape with a wash over it, which
+ * at 34x38 is a doorway at best and a lozenge at worst.
+ *
+ * A tunnel is not a shape, it is a DEPTH — rings going away from you and a
+ * light at the far end. So: a stone rim, two inner arches each darker and
+ * smaller than the last, and the light. Three elements, no art, and it
+ * reads at the size it is actually drawn.
+ *
+ * ⚠ AND THE LIGHT IS THE STATE. When something is waiting to be collected
+ * the strip already lights its border; the light at the end of the tunnel
+ * brightens and breathes with it, so the icon is saying the same thing the
+ * border is rather than sitting there being decorative.
+ */
 .tunnel-strip__arch {
+  position: relative;
   flex: none;
   width: 34px;
   height: 38px;
-  border-radius: 17px 17px 5px 5px;
-  background:
-    radial-gradient(60% 70% at 50% 110%, rgba(0, 0, 0, 0.85), transparent 70%),
-    linear-gradient(180deg, rgba(255, 176, 32, 0.35), rgba(74, 163, 255, 0.18));
-  box-shadow: inset 0 0 0 1px var(--line-lit);
+  border-radius: 17px 17px 4px 4px;
+  /* The stonework: a cool rim catching the light from above. */
+  background: linear-gradient(180deg, #5b6780, #2b3346 60%, #1b2231);
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.35),
+    0 1px 3px rgba(0, 0, 0, 0.5);
+  overflow: hidden;
+}
+/* The mouth: the first step inwards, and the darkness behind it. */
+.tunnel-strip__arch::before {
+  content: "";
+  position: absolute;
+  inset: 4px 4px 0;
+  border-radius: 13px 13px 2px 2px;
+  background: linear-gradient(180deg, #1a2030, #090d16 70%);
+  box-shadow: inset 0 2px 5px rgba(0, 0, 0, 0.9);
+}
+/*
+ * The light at the end, and the glow it throws back up the walls. Low and
+ * small on purpose — a far-away light is a small light, and making it big
+ * turns the tunnel back into a doorway.
+ */
+.tunnel-strip__arch::after {
+  content: "";
+  position: absolute;
+  inset-inline: 0;
+  inset-block-end: 7px;
+  margin-inline: auto;
+  width: 9px;
+  height: 7px;
+  border-radius: 50%;
+  background: radial-gradient(circle, #ffe9a8, #ffb020 60%, rgba(255, 176, 32, 0) 72%);
+  box-shadow: 0 0 10px 3px rgba(255, 176, 32, 0.55);
+  animation: tunnel-far-light 2.6s ease-in-out infinite alternate;
+}
+@keyframes tunnel-far-light {
+  from { opacity: 0.55; transform: scale(0.88); }
+  to { opacity: 1; transform: scale(1.06); }
+}
+/* Something is waiting: the far light comes up, with the lit border. */
+.tunnel-strip--due .tunnel-strip__arch::after {
+  width: 11px;
+  height: 9px;
+  box-shadow: 0 0 16px 5px rgba(255, 176, 32, 0.85);
+  animation-duration: 1.3s;
+}
+@media (prefers-reduced-motion: reduce) {
+  .tunnel-strip__arch::after { animation: none; opacity: 0.95; }
 }
 .tunnel-strip__text {
   flex: 1;

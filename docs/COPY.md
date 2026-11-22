@@ -1,6 +1,6 @@
 # הטקסטים של אמנדה
 
-כל טקסט שהשחקן רואה — 1643 במספר, 1448 מהם כבר באנגלית.
+כל טקסט שהשחקן רואה — 1645 במספר, 1449 מהם כבר באנגלית.
 
 ## איך עורכים
 
@@ -1022,9 +1022,11 @@
 | s3fc66d9 | סטטיים | | Static |
 | s1d926cf | עפים | | Flying |
 | s5248986 | מרחפים | | Hovering |
-| sfeaf273 | קרב | | Combat |
+| sd1b4c4d | צוללים | | Divers |
+| s11e9465 | טווח | | Reach |
+| s3b8b29c | מכים מקרוב | | Hit up close |
 | s2e7ed39 | יורים מרחוק | | Ranged |
-| s2845407 | רודפים את המלך | | Hunts the King |
+| s14a134d | צלפים | | Snipers |
 | sb784b9a | על מי הם הולכים | | Who they go for |
 | sb15ae7e | יכולת | | Ability |
 | scae68e4 | חיים אחרי המוות | | Life after death |
@@ -1469,7 +1471,7 @@
 | s131483c | הלוח השתנה | | The board has changed |
 | s6de79ee | מהארנה השנייה יש על כל לוח כמה ספוטים — גם אצלך וגם אצל היריב. הם מוגרלים מחדש בכל משחק. | | From the second arena on, every board has a few spots — yours and your opponent's. They are rolled again every match. |
 | s0cb5115 | כל ספוט עושה משהו לקלף שעומד עליו. לוחצים עליו ורואים מה הוא עושה. | | Each spot does something to the card standing on it. Tap it to see what. |
-| s6b2a759 | שמונה ספוטים | | Eight spots |
+| s74baab0 | כל הספוטים | |  |
 | s29b9b76 | את הספוטים של היריב רואים בדיוק כמו את הקלפים שלו — קודם רק את השורה הראשונה, ובפאניקה עוד. | | You see their spots exactly as you see their cards — the front row first, and more once panic starts. |
 | sfbacb23 | יאללה | | Let us go |
 | sf70973e | המשך ← | | Next → |

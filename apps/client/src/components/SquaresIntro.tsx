@@ -90,7 +90,7 @@ export function SquaresIntro({ onClose }: { onClose: () => void }) {
           </>
         ) : (
           <>
-            <h2 className="sqintro__title">{t("s6b2a759", "שמונה ספוטים")}</h2>
+            <h2 className="sqintro__title">{t("s74baab0", "כל הספוטים")}</h2>
             <ul className="sqintro__list">
               {SQUARE_KINDS.map((kind) => (
                 <li key={kind} style={{ ["--sq" as string]: SQUARES[kind].colour }}>

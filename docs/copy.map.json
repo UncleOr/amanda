@@ -9280,7 +9280,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/components/DeckBuilder.tsx",
-   "line": 90
+   "line": 91
   }
  },
  {
@@ -9290,7 +9290,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/components/DeckBuilder.tsx",
-   "line": 91
+   "line": 92
   }
  },
  {
@@ -9300,7 +9300,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/components/DeckBuilder.tsx",
-   "line": 92
+   "line": 93
   }
  },
  {
@@ -9310,7 +9310,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/components/DeckBuilder.tsx",
-   "line": 93
+   "line": 94
   }
  },
  {
@@ -9320,7 +9320,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/components/DeckBuilder.tsx",
-   "line": 94
+   "line": 95
   }
  },
  {
@@ -9330,7 +9330,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/components/DeckBuilder.tsx",
-   "line": 152
+   "line": 153
   }
  },
  {
@@ -9340,7 +9340,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/components/DeckBuilder.tsx",
-   "line": 154
+   "line": 155
   }
  },
  {
@@ -9350,7 +9350,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/components/DeckBuilder.tsx",
-   "line": 155
+   "line": 156
   }
  },
  {
@@ -9360,7 +9360,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/components/DeckBuilder.tsx",
-   "line": 158
+   "line": 159
   }
  },
  {
@@ -9370,17 +9370,37 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/components/DeckBuilder.tsx",
-   "line": 162
+   "line": 163
   }
  },
  {
-  "id": "sfeaf273",
+  "id": "sd1b4c4d",
   "section": "components/DeckBuilder.tsx",
-  "text": "קרב",
+  "text": "צוללים",
   "where": {
    "kind": "source",
    "file": "apps/client/src/components/DeckBuilder.tsx",
-   "line": 167
+   "line": 180
+  }
+ },
+ {
+  "id": "s11e9465",
+  "section": "components/DeckBuilder.tsx",
+  "text": "טווח",
+  "where": {
+   "kind": "source",
+   "file": "apps/client/src/components/DeckBuilder.tsx",
+   "line": 199
+  }
+ },
+ {
+  "id": "s3b8b29c",
+  "section": "components/DeckBuilder.tsx",
+  "text": "מכים מקרוב",
+  "where": {
+   "kind": "source",
+   "file": "apps/client/src/components/DeckBuilder.tsx",
+   "line": 203
   }
  },
  {
@@ -9390,17 +9410,17 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/components/DeckBuilder.tsx",
-   "line": 171
+   "line": 208
   }
  },
  {
-  "id": "s2845407",
+  "id": "s14a134d",
   "section": "components/DeckBuilder.tsx",
-  "text": "רודפים את המלך",
+  "text": "צלפים",
   "where": {
    "kind": "source",
    "file": "apps/client/src/components/DeckBuilder.tsx",
-   "line": 176
+   "line": 213
   }
  },
  {
@@ -9410,7 +9430,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/components/DeckBuilder.tsx",
-   "line": 209
+   "line": 246
   }
  },
  {
@@ -9420,7 +9440,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/components/DeckBuilder.tsx",
-   "line": 222
+   "line": 259
   }
  },
  {
@@ -9430,7 +9450,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/components/DeckBuilder.tsx",
-   "line": 227
+   "line": 264
   }
  },
  {
@@ -9440,7 +9460,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/components/DeckBuilder.tsx",
-   "line": 232
+   "line": 269
   }
  },
  {
@@ -9450,7 +9470,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/components/DeckBuilder.tsx",
-   "line": 248
+   "line": 285
   }
  },
  {
@@ -9460,7 +9480,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/components/DeckBuilder.tsx",
-   "line": 259
+   "line": 296
   }
  },
  {
@@ -9470,7 +9490,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/components/DeckBuilder.tsx",
-   "line": 519
+   "line": 556
   }
  },
  {
@@ -9480,7 +9500,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/components/DeckBuilder.tsx",
-   "line": 577
+   "line": 614
   }
  },
  {
@@ -9490,7 +9510,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/components/DeckBuilder.tsx",
-   "line": 583
+   "line": 620
   }
  },
  {
@@ -9500,7 +9520,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/components/DeckBuilder.tsx",
-   "line": 602
+   "line": 639
   }
  },
  {
@@ -9510,7 +9530,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/components/DeckBuilder.tsx",
-   "line": 640
+   "line": 677
   }
  },
  {
@@ -9520,7 +9540,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/components/DeckBuilder.tsx",
-   "line": 649
+   "line": 686
   }
  },
  {
@@ -9530,7 +9550,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/components/DeckBuilder.tsx",
-   "line": 665
+   "line": 702
   }
  },
  {
@@ -9540,7 +9560,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/components/DeckBuilder.tsx",
-   "line": 711
+   "line": 748
   }
  },
  {
@@ -9550,7 +9570,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/components/DeckBuilder.tsx",
-   "line": 750
+   "line": 787
   }
  },
  {
@@ -9560,7 +9580,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/components/DeckBuilder.tsx",
-   "line": 763
+   "line": 800
   }
  },
  {
@@ -9570,7 +9590,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/components/DeckBuilder.tsx",
-   "line": 793
+   "line": 830
   }
  },
  {
@@ -9580,7 +9600,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/components/DeckBuilder.tsx",
-   "line": 808
+   "line": 845
   }
  },
  {
@@ -9590,7 +9610,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/components/DeckBuilder.tsx",
-   "line": 809
+   "line": 846
   }
  },
  {
@@ -9600,7 +9620,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/components/DeckBuilder.tsx",
-   "line": 812
+   "line": 849
   }
  },
  {
@@ -9610,7 +9630,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/components/DeckBuilder.tsx",
-   "line": 815
+   "line": 852
   }
  },
  {
@@ -9620,7 +9640,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/components/DeckBuilder.tsx",
-   "line": 822
+   "line": 859
   }
  },
  {
@@ -9630,7 +9650,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/components/DeckBuilder.tsx",
-   "line": 892
+   "line": 929
   }
  },
  {
@@ -9640,7 +9660,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/components/DeckBuilder.tsx",
-   "line": 898
+   "line": 935
   }
  },
  {
@@ -9650,7 +9670,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/components/DeckBuilder.tsx",
-   "line": 902
+   "line": 939
   }
  },
  {
@@ -9660,7 +9680,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/components/DeckBuilder.tsx",
-   "line": 943
+   "line": 980
   }
  },
  {
@@ -9670,7 +9690,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/components/DeckBuilder.tsx",
-   "line": 950
+   "line": 987
   }
  },
  {
@@ -12646,9 +12666,9 @@
   }
  },
  {
-  "id": "s6b2a759",
+  "id": "s74baab0",
   "section": "components/SquaresIntro.tsx",
-  "text": "שמונה ספוטים",
+  "text": "כל הספוטים",
   "where": {
    "kind": "source",
    "file": "apps/client/src/components/SquaresIntro.tsx",

@@ -34,6 +34,7 @@ import {
   cardCost,
   deckCost,
   hovers,
+  ROUND_THE_BACK,
   myBacks,
   type Card,
   type Deck,
@@ -160,21 +161,57 @@ export const FIXED_GROUPS: Group[] = [
         test: (c) => c.flying && c.stats.moveSpeed > 0,
       },
       { id: "hover", label: () => t("s5248986", "מרחפים"), test: (c) => hovers(c) },
+      {
+        /*
+         * ═══ THE ONE KIND OF MOVEMENT THAT HAD NO BUTTON ═══
+         *
+         * Or: *"add all the filter options: every kind of movement (right
+         * now there is no diver), every kind of shooter."*
+         *
+         * A diver does not move faster or further — it starts the battle
+         * at the far end of the enemy's board, facing home. That is the
+         * biggest movement in the game and it was the only one a player
+         * could not search for, because it is an ABILITY rather than a
+         * number: `dive`, `teleport` and `burrow` are three names for one
+         * arrival (ROUND_THE_BACK in the schema), and the filter asks the
+         * schema rather than listing them again here.
+         */
+        id: "dive",
+        label: () => t("sd1b4c4d", "צוללים"),
+        test: (c) => c.abilities.some((a) => ROUND_THE_BACK.includes(a.type)),
+      },
     ],
   },
+  /*
+   * ═══ HOW FAR THEY REACH ═══
+   *
+   * Or: *"every kind of shooter."* This was one button — "shoot from a
+   * distance" — covering both of the two that are not melee, so the
+   * catalogue's three snipers were unfindable among ten cards.
+   *
+   * ⚠ AND THE KING-HUNTER LEFT THIS GROUP. It used to sit here beside
+   * "shoots from a distance", which put a RANGE and a choice of victim in
+   * one box; it now lives in "על מי הם הולכים" with the other nine, where
+   * it is one of a kind rather than an exception.
+   */
   {
-    id: "fight",
-    label: () => t("sfeaf273", "קרב"),
+    id: "reach",
+    label: () => t("s11e9465", "טווח"),
     choices: [
+      {
+        id: "melee",
+        label: () => t("s3b8b29c", "מכים מקרוב"),
+        test: (c) => c.stats.range === "melee",
+      },
       {
         id: "ranged",
         label: () => t("s2e7ed39", "יורים מרחוק"),
-        test: (c) => c.stats.range !== "melee",
+        test: (c) => c.stats.range === "ranged",
       },
       {
-        id: "king",
-        label: () => t("s2845407", "רודפים את המלך"),
-        test: (c) => c.targeting === "king",
+        id: "sniper",
+        label: () => t("s14a134d", "צלפים"),
+        test: (c) => c.stats.range === "sniper",
       },
     ],
   },
@@ -191,18 +228,17 @@ export const FIXED_GROUPS: Group[] = [
    *
    * ⚠ `lane` IS NOT A BUTTON, and that is the rule this file already
    * states: a filter that returns most of the shelf is a button that does
-   * nothing. Measured over the launched cards, "straight ahead" is 33 of
-   * 53 — it is the DEFAULT, not an archetype, and a player looking for one
+   * nothing. Measured over the whole catalogue, "straight ahead" is 37 of
+   * 74 — it is the DEFAULT, not an archetype, and a player looking for one
    * of these is looking for the card that does something unusual.
    *
-   * Measured, the rest: hunts the King 5 · border guard 5 · wall-breaker 3
-   * · bodyguard 2 · sniper-hunter 2 · champion-hunter 2 · avenger 1. Thin
-   * at the bottom and Or has the table — see the note in vocab.ts.
+   * Measured, the rest: avenger 7 · border guard 6 · champion-hunter 6 ·
+   * sniper-hunter 6 · hunts the King 5 · wall-breaker 5 · bodyguard 2.
+   * Only the bodyguard is thin — see the note in vocab.ts.
    *
-   * The King-hunter stays where it also is, in "קרב", because it was there
-   * first and a player who has learned where it lives should not have to
-   * learn again. It is the same test either way, so ticking both is just
-   * the same set twice.
+   * The King-hunter used to ALSO sit in the range group, beside "shoots
+   * from a distance", which put a reach and a choice of victim in one box.
+   * It lives here now and only here.
    */
   {
     id: "aim",
