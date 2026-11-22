@@ -164,10 +164,37 @@ export type ServerMessage =
    * `coop` means Amanda mode: both players build on side A, each in their own
    * half of an eight-lane board, and `lane` says which half is yours.
    */
-  | { t: "start"; side: Side; coop?: boolean; lane?: number }
+  | {
+      t: "start";
+      side: Side;
+      coop?: boolean;
+      lane?: number;
+      /**
+       * The special spots rolled for YOUR board in this match.
+       *
+       * ═══ THE SERVER ROLLS THEM, BOTH SIDES, ONCE ═══
+       *
+       * Or: *"1-3 random ones on every board (ours and the opponent's)."*
+       * Solo the browser rolls its own, which is safe because it is also
+       * the only thing playing. Online there are two browsers and one
+       * battle: if each rolled, the two screens would show different
+       * boards and the server's replay would agree with neither.
+       *
+       * So it comes down with the hand-out that starts the match, and the
+       * opponent's half arrives fogged, by the same rule as the cards (see
+       * the `opp` message).
+       */
+      squares?: Readonly<Record<string, string>>;
+    }
   | { t: "phase"; phase: string; timeLeft: number }
-  /** Fogged view of the opponent's board for the current phase. */
-  | { t: "opp"; view: BoardView }
+  /**
+   * Fogged view of the opponent's board for the current phase.
+   *
+   * `squares` is their SPOTS, cut down by the same rule the cards follow —
+   * the front column while building, three once panic starts, all of it
+   * afterwards — and lifted whole by an x-ray, exactly as the view is.
+   */
+  | { t: "opp"; view: BoardView; squares?: Readonly<Record<string, string>> }
   /**
    * Amanda mode only: your partner's half, with NO fog.
    *

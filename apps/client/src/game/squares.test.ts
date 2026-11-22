@@ -135,7 +135,33 @@ describe("what the other side may see of yours", () => {
      * whether an x-ray is up — not in the screen that draws the board.
      */
     const src = read("./useMatch.ts");
-    expect(src).toContain("xrayActive || playground ? foeSquaresRef.current : fogSquares(");
+    expect(src).toContain("online || xrayActive || playground");
+    expect(src).toContain("fogSquares(foeSquaresRef.current, phase)");
+  });
+});
+
+describe("online, the server does the rolling", () => {
+  it("takes the server's board instead of the one this client rolled", () => {
+    /*
+     * ⚠ `clearRound` rolls a board for EVERY match, because solo needs one
+     * — and online that roll is wrong by construction: two browsers, one
+     * battle, and only the server can give them both the same ground.
+     */
+    const src = read("./useMatch.ts");
+    expect(src).toContain("onStart: (side, isCoop, lane, squares) => {");
+    expect(src, "the server's roll is thrown away").toContain(
+      "setGs((st) => ({ ...st, squares }));",
+    );
+  });
+
+  it("does not fog an opponent board that is already fogged", () => {
+    /*
+     * The server is the only side that knows whether an x-ray is up on
+     * this match, so it cuts the spots down exactly as it cuts the cards.
+     * A second pass here would quietly undo an x-ray the moment this
+     * client's own flag and the server's disagreed.
+     */
+    expect(read("./useMatch.ts")).toContain("online || xrayActive || playground");
   });
 });
 

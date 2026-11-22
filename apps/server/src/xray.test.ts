@@ -102,3 +102,58 @@ describe("the hex that is not forwarded", () => {
     expect(branch, "and stops, rather than also forwarding it").toContain("return;");
   });
 });
+
+/**
+ * **The spots follow the cards, through the same three answers.**
+ *
+ * Or asked for the online half on 22 November: solo the browser rolls its
+ * own spots, which is safe because it is also the only thing playing.
+ * Online there are two browsers and ONE battle — if each rolled, the two
+ * screens would show different boards and the replay this process runs
+ * would agree with neither.
+ *
+ * ⚠ AND THE FOG IS THE SAME FOG. Two rules that disagreed about what
+ * "revealed" means would be two rules, so the spots are cut down beside the
+ * view, in the same function, in the same order: an x-ray shows the lot,
+ * the fog card takes the lot away, and otherwise the phase decides.
+ */
+describe("the opponent's spots", () => {
+  const SRC = readFileSync(fileURLToPath(new URL("./match.ts", import.meta.url)), "utf8");
+
+  it("are rolled once, by the server, for both sides", () => {
+    expect(SRC).toContain("const spots = !coop && squaresOpen(bothReached)");
+    expect(SRC).toContain("A: spots ? rollSquares(Math.random) : {},");
+    expect(SRC).toContain("B: spots ? rollSquares(Math.random) : {},");
+  });
+
+  it("open on the LOWER of the two rungs, like the ground they fight on", () => {
+    /*
+     * The pair is fought on one arena — `ground` is already the lower of
+     * the two — so a board with hospitals facing a board without would be
+     * a different game on each screen.
+     */
+    expect(SRC).toContain(
+      "const bothReached = Math.min(profileOf(wsA).trophies ?? 0, profileOf(wsB).trophies ?? 0);",
+    );
+  });
+
+  it("are hidden by the same three answers as the cards, in the same order", () => {
+    const at = SRC.indexOf("const squares = this.peeking[p.side]");
+    expect(at, "the spots are not fogged at all").toBeGreaterThan(-1);
+    const body = SRC.slice(at, SRC.indexOf("this.send(p, { t: \"opp\"", at));
+    expect(body, "an x-ray does not reach them").toContain("this.squares[other.side]");
+    expect(body, "the fog card does not reach them").toContain("? {}");
+    expect(body, "the phase does not reach them").toContain("fogSquares(");
+  });
+
+  it("are the ones the battle is actually fought on", () => {
+    expect(SRC).toContain("squares: this.squares.A");
+    expect(SRC).toContain("squares: this.squares.B");
+  });
+
+  it("are never rolled in Amanda mode, where a side has two owners", () => {
+    // `!coop` in the gate above: her board is written down in advance and
+    // the two players share a side, so a spot has no single owner.
+    expect(SRC).toContain("const spots = !coop &&");
+  });
+});

@@ -7,10 +7,15 @@ import {
   emojiFromSayId,
   ownedEmoji,
   tauntById,
+  TUNED,
+  fogSquares,
+  rollSquares,
+  squaresOpen,
   type BoardView,
   type NetBoard,
   type ServerMessage,
   type Side,
+  type Squares,
 } from "@amanda/shared";
 import { runBattle, type BattleResult, type Placement } from "@amanda/engine";
 import { CATALOG, SYNERGIES } from "./content.js";
@@ -158,6 +163,14 @@ export class Match {
    */
   private readonly amanda: NetBoard | null;
   /**
+   * The special spots for each side, rolled once in the constructor.
+   *
+   * On the server because there are two browsers and one battle — see the
+   * note where they are rolled. Fogged on the way out, by the same rule the
+   * cards follow.
+   */
+  private readonly squares: Record<Side, Squares>;
+  /**
    * ═══ WHOSE GROUND THE TWO OF THEM ARE MEETING ON ═══
    *
    * The family that fights 20% harder in this match (arenas.ts), decided
@@ -189,11 +202,48 @@ export class Match {
     this.coop = coop;
     this.amanda = coop ? amandaBoard() : null;
     this.ground = groundFor(Math.min(profileOf(wsA).trophies ?? 0, profileOf(wsB).trophies ?? 0));
+    /*
+     * ═══ THE SPOTS, ROLLED HERE AND NOWHERE ELSE ═══
+     *
+     * Or: *"1-3 random ones on every board (ours and the opponent's)."*
+     * Solo the browser rolls its own, which is safe because it is also the
+     * only thing playing. Online there are two browsers and ONE battle: if
+     * each rolled, the two screens would show different boards and the
+     * replay this process runs would agree with neither.
+     *
+     * ⚠ AND THE GATE IS THE PAIR, NOT THE PLAYER. The two of them are
+     * fought on one arena — `ground` above is already the LOWER of their
+     * two rungs — so the spots open when both have reached them. A board
+     * with hospitals facing a board without would be a different game on
+     * each screen.
+     *
+     * Amanda mode gets none: her board is written down in advance
+     * (amandaBoard) and the two players share a side, so a spot rolled for
+     * "the board" has no single owner to belong to.
+     */
+    const bothReached = Math.min(profileOf(wsA).trophies ?? 0, profileOf(wsB).trophies ?? 0);
+    const spots = !coop && squaresOpen(bothReached) && TUNED.squaresPerBoard > 0;
+    this.squares = {
+      A: spots ? rollSquares(Math.random) : {},
+      B: spots ? rollSquares(Math.random) : {},
+    };
     this.a = { ws: wsA, side: "A", view: emptyView(), board: null, playerId: idA, lastSaid: 0, saidCount: 0 };
     this.b = { ws: wsB, side: "B", view: emptyView(), board: null, playerId: idB, lastSaid: 0, saidCount: 0 };
     // In Amanda mode both are side A; `lane` tells each which half is theirs.
-    this.send(this.a, { t: "start", side: "A", coop, ...(coop ? { lane: 0 } : {}) });
-    this.send(this.b, { t: "start", side: coop ? "A" : "B", coop, ...(coop ? { lane: LANE_B } : {}) });
+    this.send(this.a, {
+      t: "start",
+      side: "A",
+      coop,
+      ...(coop ? { lane: 0 } : {}),
+      squares: this.squares.A,
+    });
+    this.send(this.b, {
+      t: "start",
+      side: coop ? "A" : "B",
+      coop,
+      ...(coop ? { lane: LANE_B } : {}),
+      squares: this.squares.B,
+    });
     /*
      * Who each of them is about to fight.
      *
@@ -298,7 +348,18 @@ export class Match {
       : this.hiding[other.side]
         ? { placements: {}, king: null }
         : fog(other.view, this.phase);
-    this.send(p, { t: "opp", view });
+    /*
+     * Their spots, cut down the same way and by the same three answers: an
+     * x-ray shows the lot, the fog card takes the lot away, and otherwise
+     * the phase decides. Two rules that disagreed about what "revealed"
+     * means would be two rules, so this follows the view exactly.
+     */
+    const squares = this.peeking[p.side]
+      ? this.squares[other.side]
+      : this.hiding[other.side]
+        ? {}
+        : fogSquares(this.squares[other.side], this.phase);
+    this.send(p, { t: "opp", view, squares });
   }
 
   /**
@@ -537,8 +598,10 @@ export class Match {
     // Amanda mode: the two players become ONE side, and she is the other.
     const boardA = this.coop
       ? joinBoards(this.a.board, this.b.board)
-      : (this.a.board ?? fallback("A"));
-    const boardB = this.coop ? (this.amanda ?? amandaBoard()) : (this.b.board ?? fallback("B"));
+      : { ...(this.a.board ?? fallback("A")), squares: this.squares.A };
+    const boardB = this.coop
+      ? (this.amanda ?? amandaBoard())
+      : { ...(this.b.board ?? fallback("B")), squares: this.squares.B };
     let winner: Side | null = null;
     // Kept outside the try: the nacho and challenge award below needs the
     // battle itself, not just who won.

@@ -2956,7 +2956,15 @@ export function useMatch(): MatchApi {
       onLevelCap: (cap) => {
         levelCapRef.current = Math.max(1, Math.min(LEVELS.max, cap));
       },
-      onStart: (side, isCoop, lane) => {
+      onStart: (side, isCoop, lane, squares) => {
+        /*
+         * ⚠ THE SERVER'S ROLL REPLACES THE ONE THIS CLIENT ALREADY MADE.
+         * `clearRound` rolls a board for every match, because solo needs
+         * one — and online that roll is wrong by construction: there are
+         * two browsers and one battle, and only the server can give them
+         * both the same ground. See match.ts.
+         */
+        setGs((st) => ({ ...st, squares }));
         matchStartedRef.current = true;
         setMySide(side);
         setCoop(isCoop);
@@ -3004,7 +3012,12 @@ export function useMatch(): MatchApi {
           if (p === "build") setGs((s) => drawIfEmpty(s));
         }
       },
-      onOpp: (view) => setNetOpp(view),
+      onOpp: (view, squares) => {
+        setNetOpp(view);
+        // Already fogged by the server, which is the only side that knows
+        // whether an x-ray is up. See showOthers in match.ts.
+        foeSquaresRef.current = squares;
+      },
       onMate: (view) => setMate(view),
       onHexed: (id, cell) => receiveHex(id, cell),
       onOppReady: (r) => setOppReady(r),
@@ -3784,7 +3797,18 @@ export function useMatch(): MatchApi {
      * that filtered this itself would be a second copy of the fog, and two
      * copies of a rule is how they come apart.
      */
-    foeSquares: xrayActive || playground ? foeSquaresRef.current : fogSquares(foeSquaresRef.current, phase),
+    /*
+     * ⚠ ONLINE IT IS ALREADY CUT DOWN AND MUST NOT BE CUT AGAIN. The server
+     * is the only side that knows whether an x-ray is up on this match, so
+     * it fogs the spots exactly as it fogs the cards (showOthers) — and a
+     * second pass here would quietly undo an x-ray the moment this client's
+     * own flag and the server's disagreed, which is the shape of every
+     * enemy-targeted bug this game has had.
+     */
+    foeSquares:
+      online || xrayActive || playground
+        ? foeSquaresRef.current
+        : fogSquares(foeSquaresRef.current, phase),
     result,
     hasKing: gs.king !== null,
     opponent: opponentView,

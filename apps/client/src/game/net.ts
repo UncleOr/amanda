@@ -7,6 +7,7 @@ import {
   type RoomError,
   type ServerMessage,
   type Side,
+  type Squares,
 } from "@amanda/shared";
 
 /**
@@ -51,11 +52,17 @@ export interface NetHandlers {
   /** A private room was opened — share this code. */
   onRoom?: (code: string) => void;
   onRoomError?: (reason: RoomError) => void;
-  onStart?: (side: Side, coop: boolean, lane: number) => void;
+  /**
+   * `squares` is the spots the SERVER rolled for your board. Online there
+   * are two browsers and one battle, so neither of them rolls — see the
+   * note in apps/server/src/match.ts.
+   */
+  onStart?: (side: Side, coop: boolean, lane: number, squares: Squares) => void;
   /** The highest level either board may fight at — a private room only. */
   onLevelCap?: (cap: number) => void;
   onPhase?: (phase: string, timeLeft: number) => void;
-  onOpp?: (view: BoardView) => void;
+  /** Their board, and their spots, both already fogged by the server. */
+  onOpp?: (view: BoardView, squares: Squares) => void;
   /** Amanda mode: your partner's half, unfogged, and which half it is. */
   onMate?: (view: BoardView, lane: number) => void;
   onResult?: (r: {
@@ -212,13 +219,18 @@ export class Net {
           this.handlers.onLevelCap?.(msg.cap);
           break;
         case "start":
-          this.handlers.onStart?.(msg.side, msg.coop ?? false, msg.lane ?? 0);
+          this.handlers.onStart?.(
+            msg.side,
+            msg.coop ?? false,
+            msg.lane ?? 0,
+            (msg.squares ?? {}) as Squares,
+          );
           break;
         case "phase":
           this.handlers.onPhase?.(msg.phase, msg.timeLeft);
           break;
         case "opp":
-          this.handlers.onOpp?.(msg.view);
+          this.handlers.onOpp?.(msg.view, (msg.squares ?? {}) as Squares);
           break;
         case "mate":
           this.handlers.onMate?.(msg.view, msg.lane);
