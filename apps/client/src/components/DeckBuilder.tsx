@@ -177,7 +177,13 @@ export const FIXED_GROUPS: Group[] = [
          * schema rather than listing them again here.
          */
         id: "dive",
-        label: () => t("sd1b4c4d", "צוללים"),
+        /*
+         * ⚠ TWO WORDS BECAUSE IT IS ONE ACTION WITH EIGHT NAMES. Or, after
+         * pressing it: *"so it should be divers/diggers."* A button called
+         * only צוללים asks a child to guess that the dandelion that BURROWS
+         * and the giant that STRIDES are behind it too.
+         */
+        label: () => t("s6dad7ed", "צוללים/חופרים"),
         test: (c) => c.abilities.some((a) => ROUND_THE_BACK.includes(a.type)),
       },
     ],

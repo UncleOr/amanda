@@ -54,6 +54,11 @@
           "type": "knockbackImmune",
           "trigger": "passive",
           "params": {}
+        },
+        {
+          "type": "seep",
+          "trigger": "onSpawn",
+          "params": {}
         }
       ],
       "role": {

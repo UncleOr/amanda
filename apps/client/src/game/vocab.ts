@@ -262,12 +262,26 @@ export const EFFECT_HE: Record<AbilityType, Effect> = {
    * ── יכולת תנועה: מסביב לגב ──
    *
    * Or: *"it is the same thing, but one for the machines and one for the sea
-   * creatures and one for the plants."* So the note is identical on all
-   * three and the NAME is what fits the creature — a machine that burrows
+   * creatures and one for the plants."* So the note is identical on all of
+   * them and the NAME is what fits the creature — a machine that burrows
    * is wrong, and a card whose ability does not fit the monster is a card a
    * child stops believing.
+   *
+   * And on 22 November, after the filter came back empty: *"it is exactly
+   * the same action, just with a different name according to the series."*
+   * Which is what the three already were — there were simply only three of
+   * them, in ten families. Five more, same sentence, one word changed.
+   *
+   * ⚠ THE WORDS ARE MINE AND THEY ARE ONE LINE EACH. Or is the copywriter
+   * here; these are placed so the thing works tonight, and any of them can
+   * be swapped without touching anything else. See ROUND_THE_BACK.
    */
   dive: { he: "צלילה", note: "מתחיל בקצה האחורי של הלוח של היריב, מסתובב ותוקף אחורה. ליצורי ים" },
   teleport: { he: "טלפורטציה", note: "מתחיל בקצה האחורי של הלוח של היריב, מסתובב ותוקף אחורה. למכונות" },
   burrow: { he: "חפירה", note: "מתחיל בקצה האחורי של הלוח של היריב, מסתובב ותוקף אחורה. לצמחים" },
+  swoop: { he: "גיחה", note: "מתחיל בקצה האחורי של הלוח של היריב, מסתובב ותוקף אחורה. לדרקונים" },
+  warren: { he: "מחילה", note: "מתחיל בקצה האחורי של הלוח של היריב, מסתובב ותוקף אחורה. לפרוותיים" },
+  stride: { he: "פסיעה", note: "מתחיל בקצה האחורי של הלוח של היריב, מסתובב ותוקף אחורה. לענקים" },
+  scuttle: { he: "זחילה", note: "מתחיל בקצה האחורי של הלוח של היריב, מסתובב ותוקף אחורה. לחרקים" },
+  seep: { he: "חלחול", note: "מתחיל בקצה האחורי של הלוח של היריב, מסתובב ותוקף אחורה. לדביקים" },
 };

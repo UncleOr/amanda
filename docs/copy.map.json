@@ -9374,13 +9374,13 @@
   }
  },
  {
-  "id": "sd1b4c4d",
+  "id": "s6dad7ed",
   "section": "components/DeckBuilder.tsx",
-  "text": "צוללים",
+  "text": "צוללים/חופרים",
   "where": {
    "kind": "source",
    "file": "apps/client/src/components/DeckBuilder.tsx",
-   "line": 180
+   "line": 186
   }
  },
  {
@@ -9390,7 +9390,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/components/DeckBuilder.tsx",
-   "line": 199
+   "line": 205
   }
  },
  {
@@ -9400,7 +9400,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/components/DeckBuilder.tsx",
-   "line": 203
+   "line": 209
   }
  },
  {
@@ -9410,7 +9410,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/components/DeckBuilder.tsx",
-   "line": 208
+   "line": 214
   }
  },
  {
@@ -9420,7 +9420,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/components/DeckBuilder.tsx",
-   "line": 213
+   "line": 219
   }
  },
  {
@@ -9430,7 +9430,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/components/DeckBuilder.tsx",
-   "line": 246
+   "line": 251
   }
  },
  {
@@ -9440,7 +9440,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/components/DeckBuilder.tsx",
-   "line": 259
+   "line": 264
   }
  },
  {
@@ -9450,7 +9450,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/components/DeckBuilder.tsx",
-   "line": 264
+   "line": 269
   }
  },
  {
@@ -9460,7 +9460,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/components/DeckBuilder.tsx",
-   "line": 269
+   "line": 274
   }
  },
  {
@@ -9470,7 +9470,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/components/DeckBuilder.tsx",
-   "line": 285
+   "line": 290
   }
  },
  {
@@ -9480,7 +9480,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/components/DeckBuilder.tsx",
-   "line": 296
+   "line": 301
   }
  },
  {
@@ -9490,7 +9490,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/components/DeckBuilder.tsx",
-   "line": 556
+   "line": 561
   }
  },
  {
@@ -9500,7 +9500,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/components/DeckBuilder.tsx",
-   "line": 614
+   "line": 619
   }
  },
  {
@@ -9510,7 +9510,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/components/DeckBuilder.tsx",
-   "line": 620
+   "line": 625
   }
  },
  {
@@ -9520,7 +9520,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/components/DeckBuilder.tsx",
-   "line": 639
+   "line": 644
   }
  },
  {
@@ -9530,7 +9530,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/components/DeckBuilder.tsx",
-   "line": 677
+   "line": 682
   }
  },
  {
@@ -9540,7 +9540,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/components/DeckBuilder.tsx",
-   "line": 686
+   "line": 691
   }
  },
  {
@@ -9550,7 +9550,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/components/DeckBuilder.tsx",
-   "line": 702
+   "line": 707
   }
  },
  {
@@ -9560,7 +9560,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/components/DeckBuilder.tsx",
-   "line": 748
+   "line": 753
   }
  },
  {
@@ -9570,7 +9570,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/components/DeckBuilder.tsx",
-   "line": 787
+   "line": 792
   }
  },
  {
@@ -9580,7 +9580,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/components/DeckBuilder.tsx",
-   "line": 800
+   "line": 805
   }
  },
  {
@@ -9590,7 +9590,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/components/DeckBuilder.tsx",
-   "line": 830
+   "line": 835
   }
  },
  {
@@ -9600,7 +9600,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/components/DeckBuilder.tsx",
-   "line": 845
+   "line": 850
   }
  },
  {
@@ -9610,7 +9610,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/components/DeckBuilder.tsx",
-   "line": 846
+   "line": 851
   }
  },
  {
@@ -9620,7 +9620,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/components/DeckBuilder.tsx",
-   "line": 849
+   "line": 854
   }
  },
  {
@@ -9630,7 +9630,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/components/DeckBuilder.tsx",
-   "line": 852
+   "line": 857
   }
  },
  {
@@ -9640,7 +9640,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/components/DeckBuilder.tsx",
-   "line": 859
+   "line": 864
   }
  },
  {
@@ -9650,7 +9650,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/components/DeckBuilder.tsx",
-   "line": 929
+   "line": 934
   }
  },
  {
@@ -9660,7 +9660,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/components/DeckBuilder.tsx",
-   "line": 935
+   "line": 940
   }
  },
  {
@@ -9670,7 +9670,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/components/DeckBuilder.tsx",
-   "line": 939
+   "line": 944
   }
  },
  {
@@ -9680,7 +9680,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/components/DeckBuilder.tsx",
-   "line": 980
+   "line": 985
   }
  },
  {
@@ -9690,7 +9690,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/components/DeckBuilder.tsx",
-   "line": 987
+   "line": 992
   }
  },
  {
@@ -12782,7 +12782,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/components/Tunnel.tsx",
-   "line": 296
+   "line": 304
   }
  },
  {
@@ -12792,7 +12792,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/components/Tunnel.tsx",
-   "line": 313
+   "line": 321
   }
  },
  {
@@ -12802,7 +12802,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/components/Tunnel.tsx",
-   "line": 313
+   "line": 321
   }
  },
  {
@@ -12812,7 +12812,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/components/Tunnel.tsx",
-   "line": 316
+   "line": 324
   }
  },
  {
@@ -12822,7 +12822,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/components/Tunnel.tsx",
-   "line": 319
+   "line": 327
   }
  },
  {
@@ -12832,7 +12832,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/components/Tunnel.tsx",
-   "line": 368
+   "line": 376
   }
  },
  {
@@ -12842,7 +12842,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/components/Tunnel.tsx",
-   "line": 373
+   "line": 381
   }
  },
  {
@@ -12852,7 +12852,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/components/Tunnel.tsx",
-   "line": 587
+   "line": 595
   }
  },
  {
@@ -12862,7 +12862,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/components/Tunnel.tsx",
-   "line": 590
+   "line": 598
   }
  },
  {
@@ -12872,7 +12872,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/components/Tunnel.tsx",
-   "line": 606
+   "line": 614
   }
  },
  {
@@ -12882,7 +12882,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/components/Tunnel.tsx",
-   "line": 608
+   "line": 616
   }
  },
  {
@@ -17812,7 +17812,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/game/vocab.ts",
-   "line": 270
+   "line": 279
   }
  },
  {
@@ -17822,7 +17822,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/game/vocab.ts",
-   "line": 270
+   "line": 279
   }
  },
  {
@@ -17832,7 +17832,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/game/vocab.ts",
-   "line": 271
+   "line": 280
   }
  },
  {
@@ -17842,7 +17842,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/game/vocab.ts",
-   "line": 271
+   "line": 280
   }
  },
  {
@@ -17852,7 +17852,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/game/vocab.ts",
-   "line": 272
+   "line": 281
   }
  },
  {
@@ -17862,7 +17862,107 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/game/vocab.ts",
-   "line": 272
+   "line": 281
+  }
+ },
+ {
+  "id": "sf627e2b",
+  "section": "game/vocab.ts",
+  "text": "גיחה",
+  "where": {
+   "kind": "source",
+   "file": "apps/client/src/game/vocab.ts",
+   "line": 282
+  }
+ },
+ {
+  "id": "s2cef189",
+  "section": "game/vocab.ts",
+  "text": "מתחיל בקצה האחורי של הלוח של היריב, מסתובב ותוקף אחורה. לדרקונים",
+  "where": {
+   "kind": "source",
+   "file": "apps/client/src/game/vocab.ts",
+   "line": 282
+  }
+ },
+ {
+  "id": "s7b12c48",
+  "section": "game/vocab.ts",
+  "text": "מחילה",
+  "where": {
+   "kind": "source",
+   "file": "apps/client/src/game/vocab.ts",
+   "line": 283
+  }
+ },
+ {
+  "id": "s9df5f76",
+  "section": "game/vocab.ts",
+  "text": "מתחיל בקצה האחורי של הלוח של היריב, מסתובב ותוקף אחורה. לפרוותיים",
+  "where": {
+   "kind": "source",
+   "file": "apps/client/src/game/vocab.ts",
+   "line": 283
+  }
+ },
+ {
+  "id": "s6c6c4b2",
+  "section": "game/vocab.ts",
+  "text": "פסיעה",
+  "where": {
+   "kind": "source",
+   "file": "apps/client/src/game/vocab.ts",
+   "line": 284
+  }
+ },
+ {
+  "id": "s90905b2",
+  "section": "game/vocab.ts",
+  "text": "מתחיל בקצה האחורי של הלוח של היריב, מסתובב ותוקף אחורה. לענקים",
+  "where": {
+   "kind": "source",
+   "file": "apps/client/src/game/vocab.ts",
+   "line": 284
+  }
+ },
+ {
+  "id": "se1cc07c",
+  "section": "game/vocab.ts",
+  "text": "זחילה",
+  "where": {
+   "kind": "source",
+   "file": "apps/client/src/game/vocab.ts",
+   "line": 285
+  }
+ },
+ {
+  "id": "s1ecaa3d",
+  "section": "game/vocab.ts",
+  "text": "מתחיל בקצה האחורי של הלוח של היריב, מסתובב ותוקף אחורה. לחרקים",
+  "where": {
+   "kind": "source",
+   "file": "apps/client/src/game/vocab.ts",
+   "line": 285
+  }
+ },
+ {
+  "id": "s3b11fa7",
+  "section": "game/vocab.ts",
+  "text": "חלחול",
+  "where": {
+   "kind": "source",
+   "file": "apps/client/src/game/vocab.ts",
+   "line": 286
+  }
+ },
+ {
+  "id": "s3060512",
+  "section": "game/vocab.ts",
+  "text": "מתחיל בקצה האחורי של הלוח של היריב, מסתובב ותוקף אחורה. לדביקים",
+  "where": {
+   "kind": "source",
+   "file": "apps/client/src/game/vocab.ts",
+   "line": 286
   }
  }
 ]

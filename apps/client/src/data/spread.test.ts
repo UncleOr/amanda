@@ -27,7 +27,7 @@
  * finds nothing.
  */
 import { describe, expect, it } from "vitest";
-import { TARGETINGS, type Targeting } from "@amanda/shared";
+import { ROUND_THE_BACK, TARGETINGS, type Targeting } from "@amanda/shared";
 import { CATALOG } from "./catalog";
 
 const LIVE = [...CATALOG.values()].filter((c) => c.launch !== false);
@@ -107,5 +107,108 @@ describe("the combinations Or asked for by name", () => {
      * names the card.
      */
     expect(shapes.has("walks"), "there is a walking avenger now — tick this over").toBe(false);
+  });
+});
+
+/**
+ * ═══ AND THE DIVERS, WHICH WERE A BUTTON THAT FOUND NOTHING ═══
+ *
+ * Or, 22 November 2026, having pressed the filter that had just been built
+ * for him: *"I filtered by divers. I do not have a single card? So it
+ * should be divers/diggers — and let there be plants (roots?) and giants
+ * and so on that do the same thing, say 1 in every series. It is exactly
+ * the same action, just with a different name according to the series."*
+ *
+ * The filter was right and the shelf was empty. Measured on the live
+ * database that evening: the account holding 49 cards owned ZERO of the
+ * three, and one player in the top eight owned any at all. Three cards
+ * across ten families — rare, epic, and a common in the fourteenth series
+ * — is a button that returns nothing for nearly everyone who presses it.
+ *
+ * ⚠ A RATCHET LIKE THE REST OF THIS FILE. It does not say which card in a
+ * family should go round the back; it says the families that HAVE one keep
+ * one, and that nobody is ever handed the wrong word for it.
+ */
+describe("going round the back is something most families can do", () => {
+  const RTB = new Set<string>(ROUND_THE_BACK);
+  const divers = LIVE.filter((c) => c.abilities.some((a) => RTB.has(a.type)));
+
+  it("is on a card in every family big enough to spare one", () => {
+    /*
+     * Two of the ten are a single card each — the Demon King, who does not
+     * move, and Amanda herself — and a family of one has no card to spare
+     * without becoming a different card. Everything with a real shelf has
+     * one, and this asks the CATALOGUE rather than the launch roster: a
+     * family that has written its diver has written it, whether or not the
+     * card has been let out of the gate yet.
+     */
+    const all = [...CATALOG.values()];
+    for (const family of new Set(all.map((c) => c.seriesId))) {
+      const shelf = all.filter((c) => c.seriesId === family);
+      if (shelf.length < 3) continue;
+      expect(
+        shelf.some((c) => c.abilities.some((a) => RTB.has(a.type))),
+        `nothing in "${family}" goes round the back — a whole family with no way past a front row`,
+      ).toBe(true);
+    }
+  });
+
+  it("is on the SHELF in almost every family, which is the part he pressed", () => {
+    /*
+     * ⚠ THE DISTINCTION THAT COST AN HOUR. A card can exist, be balanced,
+     * have its art, and still be `launch: false` — held back for a content
+     * update — and a held-back card cannot be won, so it is not on anybody's
+     * shelf and not behind anybody's filter.
+     *
+     * That is exactly why the shelf was empty when Or pressed it: of the
+     * three divers that existed, the plants' dandelion was held back, and
+     * the other two were an epic and a rare.
+     *
+     * The one family still short is THE PLANTS, and not for want of a card:
+     * the dandelion that burrows is written, drawn and waiting on a release
+     * flag, and its only launched family member that moves is the creeping
+     * vine — which is the tutorial opponent's whole board, including its
+     * King. Giving the vine a way past the front row put four of three
+     * hundred tutorial runs into a loss, which is the one thing a lesson
+     * may never do, and the suite caught it. So the plants wait for the
+     * flag rather than for a card that is wrong.
+     */
+    const families = new Set(LIVE.map((c) => c.seriesId));
+    const withOne = [...families].filter((f) =>
+      LIVE.some((c) => c.seriesId === f && c.abilities.some((a) => RTB.has(a.type))),
+    );
+    expect(withOne.length, `only ${withOne.join(", ")} can go round the back`).toBeGreaterThanOrEqual(7);
+  });
+
+  it("calls it by the family's own word, never by somebody else's", () => {
+    /*
+     * ⚠ THE TRAP THIS CATCHES. The card editor maps a family to its word
+     * and FALLS BACK TO "dive" — the sea's word — for a family it has
+     * never heard of. A giant that "dives" is the exact thing the eight
+     * names exist to prevent, and it would ship silently.
+     */
+    const WORD: Record<string, string> = {
+      sea: "dive",
+      machines: "teleport",
+      plants: "burrow",
+      dragons: "swoop",
+      furries: "warren",
+      giants: "stride",
+      insects: "scuttle",
+      slimes: "seep",
+    };
+    for (const c of divers) {
+      const ability = c.abilities.find((a) => RTB.has(a.type))!;
+      expect(
+        ability.type,
+        `${c.name.he} is a ${c.seriesId} card calling it "${ability.type}"`,
+      ).toBe(WORD[c.seriesId]);
+    }
+  });
+
+  it("is a handful of cards and not half the game", () => {
+    // It bypasses the whole board. One per family is a tactic; a shelf of
+    // them is a game where the front row stopped mattering.
+    expect(divers.length).toBeLessThanOrEqual(LIVE.length / 5);
   });
 });

@@ -116,27 +116,64 @@ export const ABILITY_TYPES = [
    * reaches the back part of the board, and then turns around and attacks
    * backwards."*
    *
-   * One mechanic, three names, and the names are the point: a machine that
-   * BURROWS is wrong and a plant that TELEPORTS is wrong, and a card whose
-   * ability does not fit the creature is a card a child stops believing.
-   * The engine treats all three identically.
+   * One mechanic, one name per family, and the names are the point: a
+   * machine that BURROWS is wrong and a plant that TELEPORTS is wrong, and
+   * a card whose ability does not fit the creature is a card a child stops
+   * believing. The engine treats every one of them identically.
    *
    * It happens at spawn, so the card is simply standing at the far end when
    * the battle begins — no walk across, nothing to intercept, which is what
    * "bypasses everyone" means. And then it is facing the other way, with
    * the enemy's back row and its King's back in front of it.
+   *
+   * ═══ WHY THERE ARE EIGHT OF THEM AND NOT THREE ═══
+   *
+   * Or, 22 November 2026, after filtering for divers and getting an empty
+   * shelf: *"so it should be divers/diggers — and let there be plants
+   * (roots?) and giants and so on that do the same thing, say 1 in every
+   * series. It is exactly the same action, just with a different name
+   * according to the series."*
+   *
+   * Measured, he was right and it was worse than "I have none": across
+   * every account on the live database, the player with 49 cards owned
+   * ZERO of the three, and only one player in the top eight owned any at
+   * all. Three cards in ten families, two of them rare and epic, is a
+   * filter button that returns nothing for almost everybody who presses
+   * it. The mechanic was fine; the shelf was empty.
    */
   "dive", // the sea
   "teleport", // the machines
   "burrow", // the plants
+  "swoop", // the dragons
+  "warren", // the furries
+  "stride", // the giants
+  "scuttle", // the insects
+  "seep", // the slimes
 ] as const;
 
 
 export const AbilityTypeSchema = z.enum(ABILITY_TYPES);
 export type AbilityType = z.infer<typeof AbilityTypeSchema>;
 
-/** The three that go round the back — one mechanic under three names. */
-export const ROUND_THE_BACK: readonly AbilityType[] = ["dive", "teleport", "burrow"];
+/**
+ * The ones that go round the back — one mechanic under one name per family.
+ *
+ * ⚠ EVERYTHING THAT ASKS "IS THIS A DIVER" ASKS THIS LIST, and that is why
+ * adding five names cost five lines rather than five edits: the engine's
+ * spawn, the deck-builder filter, the card editor's movement question and
+ * the admin panel all read it. A ninth family needs its name here and its
+ * word in vocab.ts, and nothing else.
+ */
+export const ROUND_THE_BACK: readonly AbilityType[] = [
+  "dive",
+  "teleport",
+  "burrow",
+  "swoop",
+  "warren",
+  "stride",
+  "scuttle",
+  "seep",
+];
 
 /**
  * A single data-driven behavior. `params` is an open bag of numbers/strings so

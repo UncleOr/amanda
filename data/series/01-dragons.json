@@ -61,6 +61,11 @@
           "type": "trample",
           "trigger": "onKill",
           "params": {}
+        },
+        {
+          "type": "swoop",
+          "trigger": "onSpawn",
+          "params": {}
         }
       ],
       "role": {

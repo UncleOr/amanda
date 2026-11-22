@@ -385,6 +385,11 @@
             "lanes": 2,
             "knockback": 1
           }
+        },
+        {
+          "type": "stride",
+          "trigger": "onSpawn",
+          "params": {}
         }
       ],
       "role": {

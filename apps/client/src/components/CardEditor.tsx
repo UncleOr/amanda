@@ -119,16 +119,28 @@ function clone(card: Card): Card {
  * ABILITIES list, which is not where anybody looks for a way of getting
  * about. It is one of four answers to one question now.
  *
- * ⚠ IT IS STILL ONE MECHANIC UNDER THREE NAMES, one per family (Or: "one
- * for the machines and one for the sea creatures and one for the plants"),
- * so the editor picks the name that fits the card rather than asking a
- * question whose answer is already on the card. The ability shows up in the
- * list above as צלילה / טלפורטציה / חפירה, and can be changed there.
+ * ⚠ IT IS STILL ONE MECHANIC UNDER ONE NAME PER FAMILY (Or: "one for the
+ * machines and one for the sea creatures and one for the plants"), so the
+ * editor picks the name that fits the card rather than asking a question
+ * whose answer is already on the card. The ability shows up in the list
+ * above as צלילה / טלפורטציה / חפירה / גיחה / מחילה / פסיעה / זחילה /
+ * חלחול, and can be changed there.
+ *
+ * ⚠ A FAMILY THAT IS NOT IN THIS MAP FALLS BACK TO "dive", which is the
+ * sea's word and wrong on anything else. So a new family needs a row here
+ * the day its first card is written — and the five below were added on 22
+ * November for exactly that reason, after Or filtered for divers and got
+ * an empty shelf.
  */
 const DIVE_BY_SERIES: Record<string, (typeof ROUND_THE_BACK)[number]> = {
   machines: "teleport",
   plants: "burrow",
   sea: "dive",
+  dragons: "swoop",
+  furries: "warren",
+  giants: "stride",
+  insects: "scuttle",
+  slimes: "seep",
 };
 
 /*
