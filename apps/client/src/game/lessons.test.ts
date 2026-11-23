@@ -1,5 +1,6 @@
 import { describe, expect, it } from "vitest";
 import { runBattle, type BoardInput, type Placement } from "@amanda/engine";
+import { ROUND_THE_BACK } from "@amanda/shared";
 import { CATALOG, SYNERGIES, ACTIONS } from "../data/catalog";
 import { LESSONS, STAGE_LESSONS, type Lesson } from "./lessons";
 
@@ -124,6 +125,31 @@ describe("the tutorial matches are won", () => {
     for (const lesson of LESSONS)
       for (const p of lesson.opponent)
         expect(CATALOG.has(p.cardId), `${p.cardId} is not a card`).toBe(true);
+  });
+
+  /*
+   * ═══ NOTHING ON AN OPPONENT BOARD GOES ROUND THE BACK ═══
+   *
+   * The dandelion sat on three of these boards for four months, and the
+   * dandelion burrows. Measured, in every run of lesson one: both of the
+   * opponent's only real cards left their squares on tick 0 and surfaced
+   * behind the child's board. The lesson was still WON, so the three suites
+   * above stayed green the whole time — a win is the only thing they look
+   * at, and a tutorial has a second promise, which is that it makes sense.
+   *
+   * This is the test for the second promise. It costs nothing and it is the
+   * only thing standing between a future rebalance and a seven-year-old
+   * watching the enemy disappear.
+   */
+  it("no card the tutorial opponent plays digs or dives away on tick 0", () => {
+    for (const set of [LESSONS, STAGE_LESSONS])
+      for (const lesson of set)
+        for (const p of lesson.opponent) {
+          const card = CATALOG.get(p.cardId);
+          if (!card) continue;
+          const goes = (card.abilities ?? []).map((a) => a.type).filter((t) => ROUND_THE_BACK.includes(t));
+          expect(goes, `${p.cardId} is on a lesson board and ${goes.join("/")}s`).toEqual([]);
+        }
   });
 
   it("each lesson deals enough monsters to fill a board decision", () => {

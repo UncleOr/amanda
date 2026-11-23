@@ -2522,9 +2522,9 @@
   "en": "Fires poison spores from afar."
  },
  {
-  "id": "d1845f96",
+  "id": "df35c425",
   "section": "סדרה — הצמחים",
-  "text": "שן הארי",
+  "text": "דנדליין",
   "where": {
    "kind": "json",
    "file": "data/series/14-plants.json",
@@ -15612,7 +15612,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/game/lessons.ts",
-   "line": 132
+   "line": 145
   }
  },
  {
@@ -15622,7 +15622,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/game/lessons.ts",
-   "line": 209
+   "line": 222
   }
  },
  {
@@ -15632,7 +15632,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/game/lessons.ts",
-   "line": 230
+   "line": 243
   }
  },
  {
@@ -15642,7 +15642,7 @@
   "where": {
    "kind": "source",
    "file": "apps/client/src/game/lessons.ts",
-   "line": 262
+   "line": 276
   }
  },
  {

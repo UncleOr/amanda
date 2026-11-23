@@ -108,8 +108,21 @@ export const LESSONS: Lesson[] = [
      */
     opponent: [
       { cardId: "crumb_demon", x: 1, y: 1, king: true },
-      { cardId: "plants_07_dandelion", x: 3, y: 1 },
-      { cardId: "plants_07_dandelion", x: 3, y: 2 },
+      /*
+       * NOT A DIGGER, and that is the whole reason this is a Venus Trap.
+       *
+       * These two cells held the dandelion until 2026-11-23, and the
+       * dandelion burrows: on tick 0 both of the opponent's only real cards
+       * left the board and surfaced BEHIND the child's — measured, every
+       * single run. The lesson was still won, because they are small, so
+       * nothing went red and nobody looked for four months. But the first
+       * battle a seven-year-old ever watches should not open with the enemy
+       * board vanishing.
+       *
+       * So whatever stands here stays put: moveSpeed 0, and no burrow.
+       */
+      { cardId: "plants_04_venus_trap", x: 3, y: 1 },
+      { cardId: "plants_04_venus_trap", x: 3, y: 2 },
       ...fill("crumb_demon", [
         [3, 1],
         [3, 2],
@@ -240,8 +253,9 @@ export const STAGE_LESSONS: Lesson[] = [
     ],
     opponent: [
       { cardId: "crumb_demon", x: 1, y: 1, king: true },
-      { cardId: "plants_07_dandelion", x: 3, y: 1 },
-      { cardId: "plants_07_dandelion", x: 3, y: 2 },
+      // Stationary, and no burrow. The reason is written out in lesson one.
+      { cardId: "plants_04_venus_trap", x: 3, y: 1 },
+      { cardId: "plants_04_venus_trap", x: 3, y: 2 },
       { cardId: "crumb_demon", x: 3, y: 0 },
       { cardId: "crumb_demon", x: 3, y: 3 },
       { cardId: "crumb_demon", x: 0, y: 1 },
@@ -281,8 +295,9 @@ export const STAGE_LESSONS: Lesson[] = [
     ],
     opponent: [
       { cardId: "crumb_demon", x: 1, y: 1, king: true },
-      { cardId: "plants_07_dandelion", x: 3, y: 1 },
-      { cardId: "plants_07_dandelion", x: 3, y: 2 },
+      // Stationary, and no burrow. The reason is written out in lesson one.
+      { cardId: "plants_04_venus_trap", x: 3, y: 1 },
+      { cardId: "plants_04_venus_trap", x: 3, y: 2 },
       { cardId: "crumb_demon", x: 3, y: 0 },
     ],
   },
